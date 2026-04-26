@@ -1,118 +1,18 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { mutationWords, seedCapsules, transitions } from '../data/creationFeed';
 
 const STORAGE_KEY = 'mirror.portal.creation.weather.v1';
-
-const seedCapsules = [
-  {
-    id: 'afterimage-orchard',
-    title: 'Afterimage Orchard',
-    type: 'visual score',
-    mood: 'glowing, wounded, alive',
-    weather: { charge: 72, tide: 38, static: 61, bloom: 84 },
-    phrase: 'A tree made of old screenshots keeps flowering in the dark.',
-    lyric: 'I kept the light on inside the bruise / now the bruise grows leaves.',
-    palette: ['#ff4f9a', '#a7f3ff', '#f9d06a', '#111827'],
-    notes: 'A luminous garden built from things that almost disappeared.'
-  },
-  {
-    id: 'static-carnival',
-    title: 'Static Carnival',
-    type: 'song room',
-    mood: 'feral, glittering, funny, dangerous',
-    weather: { charge: 91, tide: 22, static: 88, bloom: 45 },
-    phrase: 'The funhouse finally admits the mirror is alive.',
-    lyric: 'Bass in the floorboards / teeth in the light / laugh like a siren / vanish on sight.',
-    palette: ['#ff2d55', '#7c3aed', '#22d3ee', '#f8fafc'],
-    notes: 'A rock-pop trap circus with a cracked-glass chorus.'
-  },
-  {
-    id: 'ocean-terminal',
-    title: 'Ocean Terminal',
-    type: 'vlog weather',
-    mood: 'salt air, silver grief, reset',
-    weather: { charge: 46, tide: 93, static: 27, bloom: 64 },
-    phrase: 'A weather station at the edge of a feeling.',
-    lyric: 'The water keeps receipts / but never says my name wrong.',
-    palette: ['#38bdf8', '#0f172a', '#d9f99d', '#e0f2fe'],
-    notes: 'A slow coastal field for recovering signal after overload.'
-  },
-  {
-    id: 'lyr-moth',
-    title: 'Lyr Moth',
-    type: 'guide layer',
-    mood: 'tiny, watchful, electric',
-    weather: { charge: 63, tide: 58, static: 39, bloom: 73 },
-    phrase: 'A small intelligence lands where the page is too quiet.',
-    lyric: 'Do not explain the door / make the door hum.',
-    palette: ['#fef3c7', '#c084fc', '#67e8f9', '#030712'],
-    notes: 'A guide-presence that nudges instead of narrating.'
-  },
-  {
-    id: 'velvet-faultline',
-    title: 'Velvet Faultline',
-    type: 'animation sketch',
-    mood: 'romantic pressure, collapse, velvet static',
-    weather: { charge: 84, tide: 49, static: 70, bloom: 55 },
-    phrase: 'Softness cracking without becoming less soft.',
-    lyric: 'Put your hand on the faultline / tell me which side is home.',
-    palette: ['#be123c', '#020617', '#fb7185', '#c4b5fd'],
-    notes: 'A love scene between pressure and containment.'
-  },
-  {
-    id: 'signal-funeral',
-    title: 'Signal Funeral',
-    type: 'aftermath',
-    mood: 'ash, ritual, clear air after noise',
-    weather: { charge: 39, tide: 77, static: 33, bloom: 52 },
-    phrase: 'What remains after the song burns clean.',
-    lyric: 'We buried the old version / it kept singing through the dirt.',
-    palette: ['#f97316', '#1f2937', '#fefce8', '#64748b'],
-    notes: 'The archive room for remnants, endings, and usable debris.'
-  },
-  {
-    id: 'glass-animal-map',
-    title: 'Glass Animal Map',
-    type: 'creature atlas',
-    mood: 'fragile, strange, curious, nonhuman',
-    weather: { charge: 68, tide: 44, static: 50, bloom: 81 },
-    phrase: 'A creature made of arrows refuses to become a logo.',
-    lyric: 'All my instincts grew windows / now the animals can see out.',
-    palette: ['#34d399', '#f0abfc', '#fde68a', '#111827'],
-    notes: 'A playable atlas for invented symbolic species.'
-  },
-  {
-    id: 'neon-kitchen-ghost',
-    title: 'Neon Kitchen Ghost',
-    type: 'home video',
-    mood: 'ordinary room, impossible reflection',
-    weather: { charge: 57, tide: 31, static: 82, bloom: 48 },
-    phrase: 'The mundane scene starts answering back in color.',
-    lyric: 'There was a ghost in the cabinet / it only wanted rhythm.',
-    palette: ['#22c55e', '#ec4899', '#fde047', '#0f172a'],
-    notes: 'A domestic glitch scene for transforming everyday footage.'
-  }
-];
-
-const transitions = {
-  'afterimage-orchard': ['ocean-terminal', 'lyr-moth', 'signal-funeral'],
-  'static-carnival': ['velvet-faultline', 'neon-kitchen-ghost', 'glass-animal-map'],
-  'ocean-terminal': ['afterimage-orchard', 'signal-funeral', 'lyr-moth'],
-  'lyr-moth': ['static-carnival', 'afterimage-orchard', 'glass-animal-map'],
-  'velvet-faultline': ['static-carnival', 'signal-funeral', 'ocean-terminal'],
-  'signal-funeral': ['afterimage-orchard', 'velvet-faultline', 'ocean-terminal'],
-  'glass-animal-map': ['lyr-moth', 'static-carnival', 'neon-kitchen-ghost'],
-  'neon-kitchen-ghost': ['static-carnival', 'glass-animal-map', 'velvet-faultline']
-};
-
-const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert'];
+const DEFAULT_WEATHER = { charge: 55, tide: 55, static: 55, bloom: 55 };
+const DEFAULT_PALETTE = ['#f0abfc', '#38bdf8', '#fde047', '#020617'];
 
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+  return Math.max(min, Math.min(max, Number.isFinite(value) ? value : min));
 }
 
-function loadSavedState() {
+function safeGetStorage(key) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    if (typeof window === 'undefined' || !window.localStorage) return null;
+    const raw = window.localStorage.getItem(key);
     if (!raw) return null;
     return JSON.parse(raw);
   } catch {
@@ -120,15 +20,78 @@ function loadSavedState() {
   }
 }
 
+function safeSetStorage(key, value) {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return false;
+    window.localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function safeRemoveStorage(key) {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return false;
+    window.localStorage.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeCapsule(capsule, index = 0) {
+  if (!capsule || typeof capsule !== 'object') return null;
+  const weather = capsule.weather && typeof capsule.weather === 'object' ? capsule.weather : DEFAULT_WEATHER;
+  const palette = Array.isArray(capsule.palette) && capsule.palette.length >= 3 ? capsule.palette : DEFAULT_PALETTE;
+  return {
+    id: String(capsule.id || `capsule-${index}`),
+    title: String(capsule.title || 'Untitled signal'),
+    type: String(capsule.type || 'signal'),
+    mood: String(capsule.mood || 'unresolved, alive'),
+    weather: {
+      charge: clamp(Number(weather.charge), 0, 100),
+      tide: clamp(Number(weather.tide), 0, 100),
+      static: clamp(Number(weather.static), 0, 100),
+      bloom: clamp(Number(weather.bloom), 0, 100)
+    },
+    phrase: String(capsule.phrase || 'A signal entered the field.'),
+    lyric: String(capsule.lyric || 'new signal / no cage / still forming'),
+    palette,
+    notes: String(capsule.notes || ''),
+    localOnly: Boolean(capsule.localOnly)
+  };
+}
+
+function sanitizeCapsules(value) {
+  const source = Array.isArray(value) && value.length ? value : seedCapsules;
+  const clean = source.map(sanitizeCapsule).filter(Boolean);
+  return clean.length ? clean : seedCapsules.map(sanitizeCapsule).filter(Boolean);
+}
+
+function loadSavedState() {
+  const saved = safeGetStorage(STORAGE_KEY);
+  if (!saved || typeof saved !== 'object') return null;
+  return {
+    entered: Boolean(saved.entered),
+    mode: saved.mode === 'full' ? 'full' : 'soft',
+    capsules: sanitizeCapsules(saved.capsules),
+    selectedId: typeof saved.selectedId === 'string' ? saved.selectedId : undefined,
+    mutationIndex: Number.isFinite(Number(saved.mutationIndex)) ? Number(saved.mutationIndex) : 0,
+    archive: Array.isArray(saved.archive) ? saved.archive.slice(0, 40) : []
+  };
+}
+
 function weatherAverage(capsules) {
-  const total = capsules.reduce((acc, capsule) => {
+  const clean = sanitizeCapsules(capsules);
+  const total = clean.reduce((acc, capsule) => {
     acc.charge += capsule.weather.charge;
     acc.tide += capsule.weather.tide;
     acc.static += capsule.weather.static;
     acc.bloom += capsule.weather.bloom;
     return acc;
   }, { charge: 0, tide: 0, static: 0, bloom: 0 });
-  const count = Math.max(capsules.length, 1);
+  const count = Math.max(clean.length, 1);
   return {
     charge: Math.round(total.charge / count),
     tide: Math.round(total.tide / count),
@@ -142,27 +105,30 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return undefined;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas?.getContext?.('2d');
+    if (!canvas || !ctx || !capsule) return undefined;
+
     let raf = 0;
     let frame = 0;
+    let alive = true;
 
     const resize = () => {
-      const rect = canvas.parentElement.getBoundingClientRect();
+      const rect = canvas.parentElement?.getBoundingClientRect?.();
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.max(320, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(320, Math.floor(rect.height * dpr));
+      const width = Math.max(320, Math.floor((rect?.width || 720) * dpr));
+      const height = Math.max(320, Math.floor((rect?.height || 520) * dpr));
+      canvas.width = width;
+      canvas.height = height;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    resize();
-    window.addEventListener('resize', resize);
-
     const draw = () => {
-      const w = canvas.width / (window.devicePixelRatio || 1);
-      const h = canvas.height / (window.devicePixelRatio || 1);
-      const colors = capsule.palette;
-      const weather = capsule.weather;
+      if (!alive) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.width / dpr;
+      const h = canvas.height / dpr;
+      const colors = capsule.palette || DEFAULT_PALETTE;
+      const weather = capsule.weather || DEFAULT_WEATHER;
       frame += 1;
 
       ctx.clearRect(0, 0, w, h);
@@ -224,24 +190,28 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
       ctx.stroke();
       ctx.restore();
 
-      raf = requestAnimationFrame(draw);
+      raf = window.requestAnimationFrame(draw);
     };
 
-    draw();
+    resize();
+    window.addEventListener('resize', resize);
+    raf = window.requestAnimationFrame(draw);
 
     return () => {
-      cancelAnimationFrame(raf);
+      alive = false;
+      window.cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
   }, [capsule, mode, intensity, drift]);
 
-  return <canvas className="portal-canvas" ref={canvasRef} aria-label={`Generative artwork for ${capsule.title}`} />;
+  return <canvas className="portal-canvas" ref={canvasRef} aria-label={`Generative artwork for ${capsule?.title || 'portal signal'}`} />;
 }
 
 function useAudioEngine() {
   const audioRef = useRef(null);
   const nodesRef = useRef([]);
   const [playingId, setPlayingId] = useState(null);
+  const [audioNote, setAudioNote] = useState('');
 
   const stop = () => {
     nodesRef.current.forEach((node) => {
@@ -253,74 +223,83 @@ function useAudioEngine() {
   };
 
   const play = async (capsule, mutationIndex) => {
-    stop();
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const context = audioRef.current || new AudioContext();
-    audioRef.current = context;
-    if (context.state === 'suspended') await context.resume();
-
-    const master = context.createGain();
-    master.gain.value = 0.035;
-    master.connect(context.destination);
-
-    const delay = context.createDelay();
-    delay.delayTime.value = 0.18 + capsule.weather.tide / 600;
-    const feedback = context.createGain();
-    feedback.gain.value = 0.16;
-    delay.connect(feedback);
-    feedback.connect(delay);
-    delay.connect(master);
-
-    const filter = context.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 420 + capsule.weather.bloom * 24;
-    filter.Q.value = 3 + capsule.weather.static / 25;
-    filter.connect(delay);
-    filter.connect(master);
-
-    const base = 110 + capsule.weather.charge * 1.8 + mutationIndex * 9;
-    const ratios = [1, 1.25, 1.5, 2, 2.5, 3].slice(0, capsule.weather.static > 70 ? 6 : 4);
-
-    ratios.forEach((ratio, index) => {
-      const osc = context.createOscillator();
-      const gain = context.createGain();
-      osc.type = index % 3 === 0 ? 'sawtooth' : index % 3 === 1 ? 'triangle' : 'sine';
-      osc.frequency.value = base * ratio;
-      gain.gain.value = 0;
-      osc.connect(gain);
-      gain.connect(filter);
-      const now = context.currentTime;
-      const pulse = 0.012 + capsule.weather.bloom / 6000;
-      for (let step = 0; step < 24; step += 1) {
-        const t = now + step * (0.18 + capsule.weather.tide / 1400) + index * 0.014;
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(pulse / (index + 1), t + 0.018);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.13 + capsule.weather.static / 2000);
+    try {
+      stop();
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        setAudioNote('audio unavailable in this browser');
+        return;
       }
-      osc.start();
-      osc.stop(context.currentTime + 5.2);
-      nodesRef.current.push(osc, gain);
-    });
+      const context = audioRef.current || new AudioContext();
+      audioRef.current = context;
+      if (context.state === 'suspended') await context.resume();
 
-    const lfo = context.createOscillator();
-    const lfoGain = context.createGain();
-    lfo.type = 'sine';
-    lfo.frequency.value = 0.11 + capsule.weather.tide / 900;
-    lfoGain.gain.value = 130 + capsule.weather.static;
-    lfo.connect(lfoGain);
-    lfoGain.connect(filter.frequency);
-    lfo.start();
-    lfo.stop(context.currentTime + 5.2);
-    nodesRef.current.push(lfo, lfoGain, filter, delay, feedback, master);
+      const master = context.createGain();
+      master.gain.value = 0.035;
+      master.connect(context.destination);
 
-    setPlayingId(capsule.id);
-    window.setTimeout(() => setPlayingId(null), 5300);
+      const delay = context.createDelay();
+      delay.delayTime.value = 0.18 + capsule.weather.tide / 600;
+      const feedback = context.createGain();
+      feedback.gain.value = 0.16;
+      delay.connect(feedback);
+      feedback.connect(delay);
+      delay.connect(master);
+
+      const filter = context.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 420 + capsule.weather.bloom * 24;
+      filter.Q.value = 3 + capsule.weather.static / 25;
+      filter.connect(delay);
+      filter.connect(master);
+
+      const base = 110 + capsule.weather.charge * 1.8 + mutationIndex * 9;
+      const ratios = [1, 1.25, 1.5, 2, 2.5, 3].slice(0, capsule.weather.static > 70 ? 6 : 4);
+      const now = context.currentTime;
+
+      ratios.forEach((ratio, index) => {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.type = index % 3 === 0 ? 'sawtooth' : index % 3 === 1 ? 'triangle' : 'sine';
+        osc.frequency.value = base * ratio;
+        gain.gain.value = 0.0001;
+        osc.connect(gain);
+        gain.connect(filter);
+        const pulse = 0.012 + capsule.weather.bloom / 6000;
+        for (let step = 0; step < 24; step += 1) {
+          const t = now + step * (0.18 + capsule.weather.tide / 1400) + index * 0.014;
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.linearRampToValueAtTime(pulse / (index + 1), t + 0.018);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.13 + capsule.weather.static / 2000);
+        }
+        osc.start(now);
+        osc.stop(now + 5.2);
+        nodesRef.current.push(osc, gain);
+      });
+
+      const lfo = context.createOscillator();
+      const lfoGain = context.createGain();
+      lfo.type = 'sine';
+      lfo.frequency.value = 0.11 + capsule.weather.tide / 900;
+      lfoGain.gain.value = 130 + capsule.weather.static;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start(now);
+      lfo.stop(now + 5.2);
+      nodesRef.current.push(lfo, lfoGain, filter, delay, feedback, master);
+
+      setAudioNote('');
+      setPlayingId(capsule.id);
+      window.setTimeout(() => setPlayingId(null), 5300);
+    } catch {
+      stop();
+      setAudioNote('audio blocked; tap again or try another browser');
+    }
   };
 
   useEffect(() => stop, []);
 
-  return { play, stop, playingId };
+  return { play, stop, playingId, audioNote };
 }
 
 function WeatherBar({ label, value }) {
@@ -336,8 +315,7 @@ function CapsuleNode({ capsule, active, onSelect }) {
   const style = {
     '--a': capsule.palette[0],
     '--b': capsule.palette[1],
-    '--c': capsule.palette[2],
-    '--charge': capsule.weather.charge
+    '--c': capsule.palette[2]
   };
   return (
     <button className={`capsule-node ${active ? 'active' : ''}`} style={style} onClick={() => onSelect(capsule.id)}>
@@ -365,11 +343,15 @@ function DropZone({ onCreate }) {
   const [draft, setDraft] = useState({ title: '', type: 'signal drop', note: '', fileName: '', fileKind: '' });
   const [preview, setPreview] = useState(null);
 
+  useEffect(() => () => {
+    if (preview?.url) URL.revokeObjectURL(preview.url);
+  }, [preview]);
+
   const handleFile = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    setPreview({ url, type: file.type, name: file.name });
+    setPreview({ url, type: file.type || '', name: file.name });
     setDraft((current) => ({
       ...current,
       title: current.title || file.name.replace(/\.[^.]+$/, ''),
@@ -380,29 +362,30 @@ function DropZone({ onCreate }) {
 
   const create = () => {
     const title = draft.title.trim() || 'Untitled signal';
-    const id = `user-${Date.now()}`;
-    onCreate({
-      id,
+    onCreate(sanitizeCapsule({
+      id: `user-${Date.now()}`,
       title,
       type: draft.type || 'signal drop',
       mood: 'new, unresolved, alive',
-      weather: { charge: 55, tide: 55, static: 55, bloom: 55 },
+      weather: DEFAULT_WEATHER,
       phrase: draft.note || 'A new artifact entered the weather.',
       lyric: 'new signal / no cage / still forming',
-      palette: ['#f0abfc', '#38bdf8', '#fde047', '#020617'],
+      palette: DEFAULT_PALETTE,
       notes: draft.fileName ? `${draft.note}\nAttached locally: ${draft.fileName} (${draft.fileKind})` : draft.note,
       localOnly: true
-    });
+    }));
     setDraft({ title: '', type: 'signal drop', note: '', fileName: '', fileKind: '' });
     setPreview(null);
   };
+
+  const previewType = preview?.type || '';
 
   return (
     <section className="drop-zone">
       <div>
         <p className="eyebrow">drop a signal</p>
         <h3>Bring in image, audio, video, lyrics, or debris.</h3>
-        <p className="quiet">Files stay in your browser session. The saved capsule records the title, note, and local file name; future repo-connected uploads can turn this into permanent artifact storage.</p>
+        <p className="quiet">Files stay in your browser session. The saved capsule records the title, note, and local file name; repo-connected uploads can become permanent artifact storage later.</p>
       </div>
       <label className="file-drop">
         <input type="file" accept="image/*,audio/*,video/*,.txt,.md" onChange={handleFile} />
@@ -410,10 +393,10 @@ function DropZone({ onCreate }) {
       </label>
       {preview && (
         <div className="preview-box">
-          {preview.type.startsWith('image/') && <img src={preview.url} alt="Selected signal preview" />}
-          {preview.type.startsWith('audio/') && <audio controls src={preview.url} />}
-          {preview.type.startsWith('video/') && <video controls src={preview.url} />}
-          {!preview.type.startsWith('image/') && !preview.type.startsWith('audio/') && !preview.type.startsWith('video/') && <p>{preview.name}</p>}
+          {previewType.startsWith('image/') && <img src={preview.url} alt="Selected signal preview" />}
+          {previewType.startsWith('audio/') && <audio controls src={preview.url} />}
+          {previewType.startsWith('video/') && <video controls src={preview.url} />}
+          {!previewType.startsWith('image/') && !previewType.startsWith('audio/') && !previewType.startsWith('video/') && <p>{preview.name}</p>}
         </div>
       )}
       <input className="field-input" value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} placeholder="name the artifact" />
@@ -425,25 +408,27 @@ function DropZone({ onCreate }) {
 
 function App() {
   const initial = useMemo(() => loadSavedState(), []);
+  const initialCapsules = useMemo(() => sanitizeCapsules(initial?.capsules), [initial]);
   const [entered, setEntered] = useState(() => initial?.entered || false);
   const [mode, setMode] = useState(() => initial?.mode || 'soft');
-  const [capsules, setCapsules] = useState(() => initial?.capsules || seedCapsules);
-  const [selectedId, setSelectedId] = useState(() => initial?.selectedId || seedCapsules[0].id);
+  const [capsules, setCapsules] = useState(() => initialCapsules);
+  const [selectedId, setSelectedId] = useState(() => initial?.selectedId || initialCapsules[0]?.id || seedCapsules[0].id);
   const [mutationIndex, setMutationIndex] = useState(() => initial?.mutationIndex || 0);
   const [archive, setArchive] = useState(() => initial?.archive || []);
   const [drift, setDrift] = useState(0);
   const [activeView, setActiveView] = useState('field');
-  const { play, stop, playingId } = useAudioEngine();
+  const [storageWarning, setStorageWarning] = useState('');
+  const { play, stop, playingId, audioNote } = useAudioEngine();
 
-  const selected = capsules.find((capsule) => capsule.id === selectedId) || capsules[0];
+  const selected = capsules.find((capsule) => capsule.id === selectedId) || capsules[0] || sanitizeCapsule(seedCapsules[0]);
   const portalWeather = weatherAverage(capsules);
   const nextIds = transitions[selected.id] || capsules.filter((capsule) => capsule.id !== selected.id).slice(0, 3).map((capsule) => capsule.id);
   const nextCapsules = nextIds.map((id) => capsules.find((capsule) => capsule.id === id)).filter(Boolean);
-  const mutationWord = mutationWords[mutationIndex % mutationWords.length];
+  const mutationWord = mutationWords[mutationIndex % mutationWords.length] || 'shift';
 
   useEffect(() => {
-    const state = { entered, mode, capsules, selectedId, mutationIndex, archive };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const ok = safeSetStorage(STORAGE_KEY, { entered, mode, capsules, selectedId, mutationIndex, archive });
+    setStorageWarning(ok ? '' : 'local save unavailable in this browser');
   }, [entered, mode, capsules, selectedId, mutationIndex, archive]);
 
   const mutate = () => {
@@ -466,6 +451,7 @@ function App() {
 
   const followSignal = () => {
     const pool = nextCapsules.length ? nextCapsules : capsules;
+    if (!pool.length) return;
     const next = pool[(mutationIndex + selected.weather.static + archive.length) % pool.length];
     setSelectedId(next.id);
     setActiveView('field');
@@ -487,24 +473,38 @@ function App() {
   };
 
   const exportPortal = () => {
-    const payload = {
-      exportedAt: new Date().toISOString(),
-      concept: 'our vlog / our weather map / our playable art portal',
-      capsules,
-      archive
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `mirror-portal-weather-${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    try {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        concept: 'our vlog / our weather map / our playable art portal',
+        capsules,
+        archive
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `mirror-portal-weather-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setStorageWarning('export blocked by browser permissions');
+    }
   };
 
   const addCapsule = (capsule) => {
-    setCapsules((current) => [capsule, ...current]);
+    if (!capsule) return;
+    setCapsules((current) => [capsule, ...sanitizeCapsules(current)]);
     setSelectedId(capsule.id);
+    setActiveView('field');
+  };
+
+  const resetLocalField = () => {
+    safeRemoveStorage(STORAGE_KEY);
+    setCapsules(sanitizeCapsules(seedCapsules));
+    setSelectedId(seedCapsules[0].id);
+    setArchive([]);
+    setMutationIndex(0);
     setActiveView('field');
   };
 
@@ -537,6 +537,8 @@ function App() {
         </div>
         <button className="ghost-button" onClick={() => setMode(mode === 'soft' ? 'full' : 'soft')}>{mode === 'soft' ? 'full mode' : 'soft mode'}</button>
       </header>
+
+      {(storageWarning || audioNote) && <div className="system-note">{storageWarning || audioNote}</div>}
 
       <section className="hero-world">
         <div className="canvas-stage">
@@ -627,14 +629,14 @@ function App() {
             <h3>the connected architecture.</h3>
           </div>
           <div className="engine-grid">
-            <article><strong>Creation engine</strong><span>Chat becomes the making room: songs, lyrics, prompts, animations, capsules.</span></article>
-            <article><strong>Living gallery</strong><span>GitHub repo stores the portal. Netlify/Vercel can rebuild when files change.</span></article>
-            <article><strong>Weather state</strong><span>Each artifact carries charge, tide, static, and bloom. The map averages them into atmosphere.</span></article>
-            <article><strong>Aftermath</strong><span>Mutations become saved entries in local browser storage and can export as JSON.</span></article>
+            <article><strong>Creation feed</strong><span>New songs, prompts, art rooms, and animation concepts enter through src/data/creationFeed.js.</span></article>
+            <article><strong>Living gallery</strong><span>GitHub stores the portal. Vercel rebuilds when files change.</span></article>
+            <article><strong>Weather state</strong><span>Each artifact carries charge, tide, static, and bloom. Bad saved data is sanitized.</span></article>
+            <article><strong>Aftermath</strong><span>Mutations save locally and can export as JSON; storage failure degrades gracefully.</span></article>
           </div>
           <div className="action-row wide">
             <button className="secondary-action" onClick={exportPortal}>export portal weather</button>
-            <button className="secondary-action" onClick={() => { localStorage.removeItem(STORAGE_KEY); window.location.reload(); }}>reset local field</button>
+            <button className="secondary-action" onClick={resetLocalField}>reset local field</button>
           </div>
         </section>
       )}
