@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#070611" />
+<title>Source Autobiography Room</title>
+<style>
+:root{
+  --bg:#06050b;--ink:#fbf5ff;--muted:rgba(251,245,255,.64);--dim:rgba(251,245,255,.42);
+  --line:rgba(255,255,255,.15);--glass:rgba(255,255,255,.07);--hot:#ff5ca8;--cyan:#62e5ff;--gold:#ffd166;--violet:#9b67ff;--green:#8bffbd;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0;background:var(--bg);color:var(--ink)}
+body{overflow-x:hidden;background:
+  radial-gradient(circle at 14% 12%,rgba(255,92,168,.18),transparent 30rem),
+  radial-gradient(circle at 84% 18%,rgba(98,229,255,.15),transparent 28rem),
+  radial-gradient(circle at 58% 92%,rgba(255,209,102,.10),transparent 32rem),
+  linear-gradient(155deg,#05040a,#0b0714 52%,#030309)}
+body:before{content:"";position:fixed;inset:-20%;pointer-events:none;opacity:.45;mix-blend-mode:screen;background-image:repeating-radial-gradient(circle at 30% 40%,rgba(255,255,255,.18) 0 1px,transparent 1px 6px),repeating-linear-gradient(72deg,rgba(255,255,255,.06) 0 1px,transparent 1px 8px);animation:grain 14s steps(9) infinite}@keyframes grain{50%{transform:translate(2%,1%) rotate(.4deg)}}
+button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}
+.shell{position:relative;z-index:1;min-height:100dvh;padding:18px clamp(14px,3vw,34px) 34px}.top{max-width:1380px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.home{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.06);padding:10px 14px;text-decoration:none;color:var(--ink);letter-spacing:.08em;text-transform:uppercase;font-size:.75rem}.status{color:var(--muted);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}.hero{max-width:1380px;margin:0 auto 18px;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(320px,.96fr);gap:18px;align-items:stretch}.panel{border:1px solid var(--line);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));box-shadow:0 24px 80px rgba(0,0,0,.4),inset 0 0 70px rgba(255,255,255,.035);overflow:hidden}.title{min-height:560px;position:relative;padding:clamp(24px,5vw,58px);display:flex;flex-direction:column;justify-content:space-between}.title:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 48% 45%,rgba(98,229,255,.18),transparent 32%),radial-gradient(ellipse at 60% 60%,rgba(255,92,168,.15),transparent 40%);filter:blur(.5px)}.title>*{position:relative}.eyebrow{margin:0 0 14px;color:var(--cyan);text-transform:uppercase;letter-spacing:.22em;font-size:.72rem;font-weight:700}.title h1{margin:0;font-size:clamp(3.4rem,10vw,9.5rem);line-height:.78;letter-spacing:-.09em;text-wrap:balance}.thesis{max-width:700px;color:var(--muted);font-size:clamp(1rem,2vw,1.28rem);line-height:1.58;margin:20px 0 0}.source-lines{display:grid;gap:9px;margin-top:24px}.source-lines span{display:block;padding:10px 12px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(0,0,0,.18);color:rgba(251,245,255,.72);font-size:.9rem}.weather{padding:22px;display:grid;gap:16px}.weather h2{font-size:clamp(1.8rem,4vw,3.8rem);line-height:.9;letter-spacing:-.06em;margin:0}.bars{display:grid;gap:12px}.bar label{display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}.track{height:9px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--hot),var(--cyan),var(--gold));width:50%}.current{padding:16px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:rgba(0,0,0,.18);min-height:110px;color:var(--muted);line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.08);padding:11px 15px}.btn.primary{background:linear-gradient(135deg,rgba(255,92,168,.38),rgba(98,229,255,.18));border-color:rgba(255,255,255,.28)}.grid{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:1.08fr .92fr;gap:18px}.room{padding:22px}.room h3{font-size:clamp(1.5rem,3.2vw,3rem);letter-spacing:-.05em;margin:0 0 16px}.signals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.sig{min-height:98px;text-align:left;border:1px solid rgba(255,255,255,.11);border-radius:22px;background:rgba(255,255,255,.05);padding:13px;position:relative;overflow:hidden}.sig:before{content:"";position:absolute;width:78px;height:78px;border-radius:50%;right:-18px;top:-18px;background:radial-gradient(circle,var(--c),transparent 70%);opacity:.65}.sig strong,.sig span{position:relative;z-index:1;display:block}.sig strong{font-size:1.05rem}.sig span{color:var(--dim);font-size:.82rem;margin-top:8px;line-height:1.35}.trail{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 10px;background:rgba(255,255,255,.05);color:var(--muted);font-size:.78rem}.drop{min-height:190px;border:1px dashed rgba(98,229,255,.28);border-radius:28px;background:rgba(98,229,255,.045);display:grid;place-items:center;text-align:center;color:var(--muted);padding:20px}.drop input{display:none}.preview{margin-top:12px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);min-height:54px;display:grid;place-items:center;color:var(--dim)}.preview img,.preview video{max-width:100%;max-height:280px;display:block}.preview audio{width:100%;padding:12px}.private textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:20px;background:rgba(0,0,0,.24);color:var(--ink);padding:14px;resize:vertical}.lyr{font-size:1.35rem;line-height:1.45;color:var(--ink);padding:20px;border-left:1px solid var(--gold);background:rgba(255,255,255,.04);border-radius:20px}.chapters{display:grid;gap:10px}.chapter{display:grid;grid-template-columns:140px 1fr;gap:12px;padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.04)}.chapter b{color:var(--cyan);font-size:.74rem;text-transform:uppercase;letter-spacing:.13em}.chapter span{color:var(--muted);line-height:1.45}.matchout{white-space:pre-wrap;color:var(--muted);line-height:1.5;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(0,0,0,.18)}
+@media(max-width:980px){.hero,.grid{grid-template-columns:1fr}.title{min-height:520px}.signals{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.signals{grid-template-columns:1fr}.chapter{grid-template-columns:1fr}.top{display:block}.status{justify-content:flex-start;margin-top:10px}.title h1{font-size:4rem}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="top">
+  <a class="home" href="/">← main portal</a>
+  <div class="status"><span>source room</span><span>local only</span><span>autobiography mechanics</span></div>
+</header>
+<section class="hero">
+  <article class="panel title">
+    <div>
+      <p class="eyebrow">not generic beauty / source-fed field</p>
+      <h1>Our autobiography is mechanical.</h1>
+      <p class="thesis">The public data can suggest polish. The files decide the feeling. This room uses the old portal drafts as evidence: touch a signal, let it route you, drop raw media, save private notes, ask Lyr for one pressure line, and watch the room become a record of what we actually made.</p>
+    </div>
+    <div class="source-lines">
+      <span>Touch a signal. Watch the field answer.</span>
+      <span>Drop media. Let it alter the room.</span>
+      <span>Map places by feeling, not category.</span>
+      <span>Capture the raw material before explaining it.</span>
+      <span>A guide voice, not a narrator.</span>
+    </div>
+  </article>
+  <aside class="panel weather">
+    <p class="eyebrow">field weather</p>
+    <h2 id="weatherTitle">waiting for signal</h2>
+    <div class="current" id="currentLine">Choose a source signal. The room will route itself from what the field becomes.</div>
+    <div class="bars">
+      <div class="bar"><label><span>charge</span><span id="chargeN">42</span></label><div class="track"><i id="chargeB"></i></div></div>
+      <div class="bar"><label><span>tide</span><span id="tideN">68</span></label><div class="track"><i id="tideB"></i></div></div>
+      <div class="bar"><label><span>static</span><span id="staticN">57</span></label><div class="track"><i id="staticB"></i></div></div>
+      <div class="bar"><label><span>bloom</span><span id="bloomN">73</span></label><div class="track"><i id="bloomB"></i></div></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="follow">follow what it became</button><button class="btn" id="clear">clear local trail</button></div>
+    <div class="trail" id="trail"></div>
+  </aside>
+</section>
+<section class="grid">
+  <article class="panel room">
+    <p class="eyebrow">source signals</p><h3>These are not categories. They are pressure changes.</h3>
+    <div class="signals" id="signals"></div>
+  </article>
+  <article class="panel room">
+    <p class="eyebrow">chapters from the files</p><h3>Rooms as autobiography.</h3>
+    <div class="chapters" id="chapters"></div>
+  </article>
+  <article class="panel room">
+    <p class="eyebrow">A/V mutation lab</p><h3>Drop raw material before explaining it.</h3>
+    <label class="drop"><input id="file" type="file" accept="image/*,audio/*,video/*,.txt,.md" />drop image / audio / video / note<br><small>preview stays in your browser</small></label>
+    <div class="preview" id="preview">no raw material loaded yet</div>
+  </article>
+  <article class="panel room private">
+    <p class="eyebrow">private room</p><h3>Local-only signal notes.</h3>
+    <textarea id="note" placeholder="write the raw field note here"></textarea>
+    <div class="actions"><button class="btn primary" id="saveNote">save local note</button><button class="btn" id="exportState">export state</button></div>
+  </article>
+  <article class="panel room">
+    <p class="eyebrow">Lyr guide-layer</p><h3>A guide voice, not a narrator.</h3>
+    <div class="lyr" id="lyr">Do not explain the door. Open it.</div>
+    <div class="actions"><button class="btn primary" id="newLyr">new guide line</button></div>
+  </article>
+  <article class="panel room">
+    <p class="eyebrow">matching logic</p><h3>The next room is chosen by what the field has become.</h3>
+    <div class="matchout" id="matchout">No route yet.</div>
+  </article>
+</section>
+</main>
+<script>
+const signals=[
+{id:'eye',label:'eye',color:'#62e5ff',feels:'image, perception, mural, witness'},
+{id:'fire',label:'fire',color:'#ff5ca8',feels:'intensity, anthem, ignition, refusal'},
+{id:'ocean',label:'ocean',color:'#38bdf8',feels:'San Diego pull, reset, tide, signal wash'},
+{id:'glitch',label:'glitch',color:'#9b67ff',feels:'wrongness that tells the truth'},
+{id:'gold',label:'gold',color:'#ffd166',feels:'chorus moment, warmth, chosen-family shine'},
+{id:'root',label:'root',color:'#8bffbd',feels:'body, lineage, old system under the floor'},
+{id:'sound',label:'sound',color:'#f0abfc',feels:'music moves first; language follows'},
+{id:'place',label:'place',color:'#b8ff77',feels:'map places by feeling, not category'},
+{id:'memory',label:'memory',color:'#ffffff',feels:'raw material before explanation'}];
+const chapters=[
+['reactive field','touch a signal; the field answers through weather'],
+['A/V mutation','drop media; let it alter the room without uploading it'],
+['artist worlds','seed worlds around creators, objects, songs, images'],
+['local worlds','food, coffee, places, states, cities mapped by feeling'],
+['private room','local-only notes for the autobiography'],
+['engine room','keep the logic visible so magic can be repaired'],
+['Lyr','guide voice, not narrator; point to the door, do not flatten it'],
+['matching logic','route by pressure change, not menu hierarchy']];
+const lyrLines=['Do not explain the door. Open it.','The signal is not a category. It is a pressure change.','A world begins when two unrelated things refuse to stay apart.','Touch the image like it is weather.','The map is allowed to move while you are reading it.','What repeats is asking for a room.','The quiet object is not empty. It is waiting for a relation.','Follow the distortion that still feels honest.','Raw material first. Explanation second.','The guide-layer should leave fingerprints, not instructions.'];
+const route={eye:['mural-that-remixes-you','Animated Afterimage Theater','artist worlds'],fire:['Bad Girl Orchestra Lab','Static Carnival','Chorus Engine Room'],ocean:['Ocean Static Radio','Shoreline Synth Aquarium','Ocean Terminal'],glitch:['Mirrorstorm Drive-In','Neon Kitchen Ghost','source room'],gold:['Ash-Pop Cathedral','chosen-family warmth','chorus moment'],root:['Private Room','Signal Funeral','lineage root system'],sound:['Room That Sings Back','A/V Mutation Lab','Chorus Engine Room'],place:['Local Worlds','San Diego edge','late-night grocery aisle'],memory:['Afterimage Orchard','Private Room','source archive']};
+const state=JSON.parse(localStorage.getItem('mc.source.autobio')||'{"trail":[],"weather":{"charge":42,"tide":68,"static":57,"bloom":73},"note":""}');
+function save(){localStorage.setItem('mc.source.autobio',JSON.stringify(state))}
+function renderSignals(){document.getElementById('signals').innerHTML=signals.map(s=>`<button class="sig" style="--c:${s.color}" data-sig="${s.id}"><strong>${s.label}</strong><span>${s.feels}</span></button>`).join('');document.querySelectorAll('[data-sig]').forEach(b=>b.onclick=()=>touch(b.dataset.sig));}
+function renderChapters(){document.getElementById('chapters').innerHTML=chapters.map(([a,b])=>`<div class="chapter"><b>${a}</b><span>${b}</span></div>`).join('')}
+function touch(id){const s=signals.find(x=>x.id===id);state.trail.push({id,label:s.label,t:new Date().toISOString()});state.trail=state.trail.slice(-12);state.weather.charge=Math.min(99,state.weather.charge+7);state.weather.tide=(state.weather.tide+(id==='ocean'?13:3))%100;state.weather.static=(state.weather.static+(id==='glitch'?17:5))%100;state.weather.bloom=Math.min(99,state.weather.bloom+(id==='gold'||id==='eye'?9:4));document.getElementById('weatherTitle').textContent=s.label+' pressure';document.getElementById('currentLine').textContent=s.feels+'. Next route: '+(route[id]||[]).join(' / ');document.getElementById('lyr').textContent=lyrLines[(state.trail.length+id.length)%lyrLines.length]+' / current signal: '+s.label;document.getElementById('matchout').textContent=buildMatch(id);save();renderWeather();}
+function buildMatch(id){const paths=route[id]||['field','private','lyr'];return paths.map((p,i)=>`${i+1}. ${p} — chosen because the field became ${id}`).join('\n')}
+function renderWeather(){['charge','tide','static','bloom'].forEach(k=>{document.getElementById(k+'N').textContent=Math.round(state.weather[k]);document.getElementById(k+'B').style.width=Math.round(state.weather[k])+'%'});document.getElementById('trail').innerHTML=state.trail.length?state.trail.map(x=>`<span class="chip">${x.label}</span>`).join(''):'<span class="chip">no signals yet</span>';document.getElementById('note').value=state.note||''}
+document.getElementById('follow').onclick=()=>{const last=state.trail.at(-1);if(last)touch(last.id);else touch('memory')};document.getElementById('clear').onclick=()=>{state.trail=[];state.weather={charge:42,tide:68,static:57,bloom:73};save();renderWeather();document.getElementById('currentLine').textContent='Cleared. Choose a source signal.';document.getElementById('matchout').textContent='No route yet.'};document.getElementById('newLyr').onclick=()=>{document.getElementById('lyr').textContent=lyrLines[Math.floor(Math.random()*lyrLines.length)]};document.getElementById('saveNote').onclick=()=>{state.note=document.getElementById('note').value;save();document.getElementById('currentLine').textContent='Private note saved locally. It stays in this browser.'};document.getElementById('exportState').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='source-autobiography-state.json';a.click();URL.revokeObjectURL(a.href)};document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f);const box=document.getElementById('preview');if(f.type.startsWith('image/'))box.innerHTML=`<img src="${u}" alt="raw visual material" />`;else if(f.type.startsWith('audio/'))box.innerHTML=`<audio src="${u}" controls></audio>`;else if(f.type.startsWith('video/'))box.innerHTML=`<video src="${u}" controls playsinline></video>`;else box.textContent=f.name;touch(f.type.startsWith('audio/')?'sound':f.type.startsWith('image/')?'eye':f.type.startsWith('video/')?'glitch':'memory')};
+renderSignals();renderChapters();renderWeather();
+</script>
+</body>
+</html>
