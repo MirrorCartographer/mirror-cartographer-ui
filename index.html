@@ -9,6 +9,19 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    try {
+      const feedVersion = 'portal-feed-2026-04-26-episode-001';
+      const versionKey = 'mirror.portal.feed.version';
+      const stateKey = 'mirror.portal.creation.weather.v1';
+      if (window.localStorage && window.localStorage.getItem(versionKey) !== feedVersion) {
+        window.localStorage.removeItem(stateKey);
+        window.localStorage.setItem(versionKey, feedVersion);
+      }
+    } catch (error) {
+      console.warn('Mirror Portal feed-version guard skipped:', error);
+    }
+  </script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
