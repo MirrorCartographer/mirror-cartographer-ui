@@ -1,0 +1,20 @@
+.system-note {
+  max-width: 1480px;
+  margin: 0 auto 18px;
+  padding: 12px 16px;
+  border: 1px solid rgba(253, 230, 138, 0.28);
+  border-radius: 999px;
+  background: rgba(253, 230, 138, 0.08);
+  color: rgba(254, 243, 199, 0.9);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  backdrop-filter: blur(14px);
+}
+
+@media (max-width: 680px) {
+  .system-note {
+    border-radius: 18px;
+    text-align: left;
+  }
+}
