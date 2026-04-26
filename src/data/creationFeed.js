@@ -1,5 +1,49 @@
 export const seedCapsules = [
   {
+    id: 'episode-003-ocean-static-radio',
+    title: 'Episode 003: Ocean Static Radio',
+    type: 'creation episode',
+    mood: 'coastal, haunted, glitter-loud, signal-rich',
+    weather: { charge: 81, tide: 96, static: 74, bloom: 87 },
+    phrase: 'A shoreline radio station with salt on the speakers, pink static in the antenna, and a night-ocean chorus trying to break through.',
+    lyric: 'Salt in the speakers / moon on the wire / every lost signal comes back as fire.',
+    palette: ['#38bdf8', '#f0abfc', '#facc15', '#020617'],
+    notes: 'Play this as the third portal episode: ocean noise, static pulses, diary-weather, and a moving mural that behaves like music.'
+  },
+  {
+    id: 'bad-girl-orchestra-lab',
+    title: 'Bad Girl Orchestra Lab',
+    type: 'song room',
+    mood: 'orchestral swagger, rock nerve, cinematic entrance',
+    weather: { charge: 98, tide: 51, static: 68, bloom: 79 },
+    phrase: 'A black-marble rehearsal room where strings, drums, electric guitar, and attitude walk in like they own the building.',
+    lyric: 'Black boots on marble / violins in my teeth / I do not ask the room to make space for me.',
+    palette: ['#ef4444', '#f97316', '#f8fafc', '#111827'],
+    notes: 'This is for big anthem energy: badass mom songs, cinematic revenge-pop, rock drops, and one unmistakable signature moment.'
+  },
+  {
+    id: 'shoreline-synth-aquarium',
+    title: 'Shoreline Synth Aquarium',
+    type: 'music room',
+    mood: 'watery synths, glass bass, strange comfort',
+    weather: { charge: 62, tide: 98, static: 58, bloom: 82 },
+    phrase: 'A glowing aquarium where every fish is a melody line, every bubble is percussion, and the bass moves like a tidepool creature.',
+    lyric: 'I put the beat underwater / it came back breathing blue.',
+    palette: ['#0ea5e9', '#67e8f9', '#d9f99d', '#020617'],
+    notes: 'Use this as a gentler sound-room: blue-light loops, underwater vocals, low bass, and slow visualizer drift.'
+  },
+  {
+    id: 'mural-that-remixes-you',
+    title: 'The Mural That Remixes You',
+    type: 'visual score',
+    mood: 'museum-wall, alive paint, glitch tenderness',
+    weather: { charge: 86, tide: 64, static: 84, bloom: 91 },
+    phrase: 'A wall-sized artwork that changes its composition when the portal remembers a song, image, or emotional weather pattern.',
+    lyric: 'Paint me once / then let me mutate / I am not finished just because I am visible.',
+    palette: ['#ec4899', '#a855f7', '#22d3ee', '#030712'],
+    notes: 'This room is the art wall: generated images, animation loops, symbolic debris, color scars, and beautiful wrong turns.'
+  },
+  {
     id: 'episode-002-blacklight-vlog',
     title: 'Episode 002: Blacklight Vlog',
     type: 'creation episode',
@@ -8,7 +52,7 @@ export const seedCapsules = [
     phrase: 'A vlog entry that refuses to be normal footage: every thought turns into light, weather, and a moving room.',
     lyric: 'I do not post the storm / I build a door inside it.',
     palette: ['#a855f7', '#22d3ee', '#fb7185', '#030712'],
-    notes: 'A capsule for the portal-as-vlog idea: private broadcasts, diary fragments, art clips, music drafts, and the emotional weather around them.'
+    notes: 'A private broadcast room: diary fragments, art clips, music drafts, blacklight captions, and emotional weather instead of social media performance.'
   },
   {
     id: 'episode-001-glitter-weather',
@@ -19,7 +63,7 @@ export const seedCapsules = [
     phrase: 'A private broadcast from inside the portal: glitter, thunder, shoreline, and a song trying to become a room.',
     lyric: 'I made a weather map out of the noise / then walked through it wearing light.',
     palette: ['#ff4f9a', '#67e8f9', '#fde047', '#050816'],
-    notes: 'The first real creation episode: a hybrid vlog/weather/music room that makes the portal feel like ours instead of like a generic AI app.'
+    notes: 'The first portal weather episode: not a product intro, not an AI demo, just our creation field coming online.'
   },
   {
     id: 'room-that-sings-back',
@@ -30,7 +74,7 @@ export const seedCapsules = [
     phrase: 'A room where every button press becomes a harmony and every harmony paints the walls brighter.',
     lyric: 'I sang to the ceiling / the ceiling learned the hook.',
     palette: ['#f472b6', '#facc15', '#38bdf8', '#111827'],
-    notes: 'A future interactive music area: chorus fragments, harmonies, call-and-response lyrics, and generated room-weather.'
+    notes: 'A playable call-and-response room: chorus fragments, doubled vocals, echo hooks, and walls that feel like they are listening.'
   },
   {
     id: 'ash-pop-cathedral',
@@ -41,7 +85,7 @@ export const seedCapsules = [
     phrase: 'A cathedral made of burnt pop songs, candle smoke, stained glass, and one impossible dance floor.',
     lyric: 'Light the match / keep the hymn / make the ashes dance again.',
     palette: ['#fb923c', '#fef3c7', '#ec4899', '#020617'],
-    notes: 'A room for the aftermath of songs: what remains after a track, image, or video burns down into symbol.'
+    notes: 'The aftermath chapel: the place a song goes after it burns down and leaves behind color, rhythm, and usable ash.'
   },
   {
     id: 'mirrorstorm-drive-in',
@@ -52,7 +96,7 @@ export const seedCapsules = [
     phrase: 'An abandoned drive-in where every screen plays a different possible version of the same night.',
     lyric: 'Parked under lightning / watching my doubles run.',
     palette: ['#60a5fa', '#e879f9', '#f43f5e', '#020617'],
-    notes: 'A future video theater for AI clips, cinematic fragments, music videos, and recursive portal trailers.'
+    notes: 'A video theater for night-road scenes, portal trailers, impossible reflections, and music-video fragments.'
   },
   {
     id: 'chorus-engine-room',
@@ -63,7 +107,7 @@ export const seedCapsules = [
     phrase: 'A chorus machine under the floorboards builds hooks from sparks, breath, drums, and broken mirror-light.',
     lyric: 'Give me the drop when the room turns gold / give me the line that refuses to fold.',
     palette: ['#f97316', '#ec4899', '#22d3ee', '#111827'],
-    notes: 'A room for future songs: lyrics, bridge ideas, hook fragments, beat-drop concepts, and arrangement weather.'
+    notes: 'The hook-forge: verse pressure, bridge lift, beat-drop timing, vocal swing, and the line that makes the room turn.'
   },
   {
     id: 'animated-afterimage-theater',
@@ -74,7 +118,7 @@ export const seedCapsules = [
     phrase: 'A wall-sized animation where every frame leaves a ghost, and the ghosts start choreographing the next scene.',
     lyric: 'Frame one, I vanish / frame two, I bloom / frame three, the light learns my name.',
     palette: ['#c084fc', '#f0abfc', '#a7f3ff', '#020617'],
-    notes: 'A future video/animation wing: generated sequences, museum-wall loops, portal transitions, and aftermath visuals.'
+    notes: 'A loop theater: museum-wall motion, hand-drawn voltage, frame ghosts, and beautiful animation residue.'
   },
   {
     id: 'afterimage-orchard',
@@ -85,7 +129,7 @@ export const seedCapsules = [
     phrase: 'A tree made of old screenshots keeps flowering in the dark.',
     lyric: 'I kept the light on inside the bruise / now the bruise grows leaves.',
     palette: ['#ff4f9a', '#a7f3ff', '#f9d06a', '#111827'],
-    notes: 'A luminous garden built from things that almost disappeared.'
+    notes: 'A luminous garden built from almost-lost images, old drafts, and emotional screenshots that became flora.'
   },
   {
     id: 'static-carnival',
@@ -96,7 +140,7 @@ export const seedCapsules = [
     phrase: 'The funhouse finally admits the mirror is alive.',
     lyric: 'Bass in the floorboards / teeth in the light / laugh like a siren / vanish on sight.',
     palette: ['#ff2d55', '#7c3aed', '#22d3ee', '#f8fafc'],
-    notes: 'A rock-pop trap circus with a cracked-glass chorus.'
+    notes: 'A cracked pop-circus room for feral hooks, distorted laughter, carnival drums, and mirror-teeth glitter.'
   },
   {
     id: 'ocean-terminal',
@@ -107,7 +151,7 @@ export const seedCapsules = [
     phrase: 'A weather station at the edge of a feeling.',
     lyric: 'The water keeps receipts / but never says my name wrong.',
     palette: ['#38bdf8', '#0f172a', '#d9f99d', '#e0f2fe'],
-    notes: 'A slow coastal field for recovering signal after overload.'
+    notes: 'A reset dock: walk here after overload, let the field cool, let the water sort signal from noise.'
   },
   {
     id: 'lyr-moth',
@@ -118,7 +162,7 @@ export const seedCapsules = [
     phrase: 'A small intelligence lands where the page is too quiet.',
     lyric: 'Do not explain the door / make the door hum.',
     palette: ['#fef3c7', '#c084fc', '#67e8f9', '#030712'],
-    notes: 'A guide-presence that nudges instead of narrating.'
+    notes: 'A guide-light, not a narrator: it points to the strange object, then gets out of the way.'
   },
   {
     id: 'velvet-faultline',
@@ -129,7 +173,7 @@ export const seedCapsules = [
     phrase: 'Softness cracking without becoming less soft.',
     lyric: 'Put your hand on the faultline / tell me which side is home.',
     palette: ['#be123c', '#020617', '#fb7185', '#c4b5fd'],
-    notes: 'A love scene between pressure and containment.'
+    notes: 'A pressure-room: soft collapse, romantic static, velvet rupture, and controlled emotional fault lines.'
   },
   {
     id: 'signal-funeral',
@@ -140,7 +184,7 @@ export const seedCapsules = [
     phrase: 'What remains after the song burns clean.',
     lyric: 'We buried the old version / it kept singing through the dirt.',
     palette: ['#f97316', '#1f2937', '#fefce8', '#64748b'],
-    notes: 'The archive room for remnants, endings, and usable debris.'
+    notes: 'The archive for endings: dead drafts, useful ash, clean air, and the tiny part that keeps singing.'
   },
   {
     id: 'glass-animal-map',
@@ -151,7 +195,7 @@ export const seedCapsules = [
     phrase: 'A creature made of arrows refuses to become a logo.',
     lyric: 'All my instincts grew windows / now the animals can see out.',
     palette: ['#34d399', '#f0abfc', '#fde68a', '#111827'],
-    notes: 'A playable atlas for invented symbolic species.'
+    notes: 'An atlas of invented creatures, instinct-shapes, glass animals, and arrows that do not want to behave.'
   },
   {
     id: 'neon-kitchen-ghost',
@@ -162,11 +206,15 @@ export const seedCapsules = [
     phrase: 'The mundane scene starts answering back in color.',
     lyric: 'There was a ghost in the cabinet / it only wanted rhythm.',
     palette: ['#22c55e', '#ec4899', '#fde047', '#0f172a'],
-    notes: 'A domestic glitch scene for transforming everyday footage.'
+    notes: 'A domestic-glitch room: kitchen light, cabinet ghosts, everyday footage that mutates into rhythm.'
   }
 ];
 
 export const transitions = {
+  'episode-003-ocean-static-radio': ['shoreline-synth-aquarium', 'bad-girl-orchestra-lab', 'mural-that-remixes-you'],
+  'bad-girl-orchestra-lab': ['chorus-engine-room', 'static-carnival', 'ash-pop-cathedral'],
+  'shoreline-synth-aquarium': ['ocean-terminal', 'episode-003-ocean-static-radio', 'room-that-sings-back'],
+  'mural-that-remixes-you': ['animated-afterimage-theater', 'afterimage-orchard', 'mirrorstorm-drive-in'],
   'episode-002-blacklight-vlog': ['room-that-sings-back', 'mirrorstorm-drive-in', 'episode-001-glitter-weather'],
   'episode-001-glitter-weather': ['chorus-engine-room', 'animated-afterimage-theater', 'ocean-terminal'],
   'room-that-sings-back': ['chorus-engine-room', 'ash-pop-cathedral', 'static-carnival'],
@@ -184,4 +232,4 @@ export const transitions = {
   'neon-kitchen-ghost': ['static-carnival', 'glass-animal-map', 'velvet-faultline']
 };
 
-export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert', 'amplify', 'loop', 'shatter', 'chorus', 'blacklight', 'rewind', 'strobe', 'weather'];
+export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert', 'amplify', 'loop', 'shatter', 'chorus', 'blacklight', 'rewind', 'strobe', 'weather', 'radio', 'tide', 'orchestra', 'mural', 'signal', 'salt', 'velvet'];
