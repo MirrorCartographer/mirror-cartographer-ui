@@ -4,6 +4,7 @@
 
 [build.environment]
   NPM_FLAGS = "--no-package-lock"
+  GIT_SUBMODULE_STRATEGY = "none"
 
 [[redirects]]
   from = "/*"
