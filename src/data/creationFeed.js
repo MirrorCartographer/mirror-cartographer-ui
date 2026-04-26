@@ -1,5 +1,38 @@
 export const seedCapsules = [
   {
+    id: 'episode-001-glitter-weather',
+    title: 'Episode 001: Glitter Weather',
+    type: 'creation episode',
+    mood: 'badass, tender, neon-storm alive',
+    weather: { charge: 96, tide: 61, static: 77, bloom: 90 },
+    phrase: 'A private broadcast from inside the portal: glitter, thunder, shoreline, and a song trying to become a room.',
+    lyric: 'I made a weather map out of the noise / then walked through it wearing light.',
+    palette: ['#ff4f9a', '#67e8f9', '#fde047', '#050816'],
+    notes: 'The first real creation episode: a hybrid vlog/weather/music room that makes the portal feel like ours instead of like a generic AI app.'
+  },
+  {
+    id: 'chorus-engine-room',
+    title: 'Chorus Engine Room',
+    type: 'music lab',
+    mood: 'full band, cinematic pressure, almost-radio but stranger',
+    weather: { charge: 88, tide: 54, static: 69, bloom: 76 },
+    phrase: 'A chorus machine under the floorboards builds hooks from sparks, breath, drums, and broken mirror-light.',
+    lyric: 'Give me the drop when the room turns gold / give me the line that refuses to fold.',
+    palette: ['#f97316', '#ec4899', '#22d3ee', '#111827'],
+    notes: 'A room for future songs: lyrics, bridge ideas, hook fragments, beat-drop concepts, and arrangement weather.'
+  },
+  {
+    id: 'animated-afterimage-theater',
+    title: 'Animated Afterimage Theater',
+    type: 'animation sketch',
+    mood: 'moving mural, glitch ballet, hand-drawn electricity',
+    weather: { charge: 74, tide: 47, static: 86, bloom: 83 },
+    phrase: 'A wall-sized animation where every frame leaves a ghost, and the ghosts start choreographing the next scene.',
+    lyric: 'Frame one, I vanish / frame two, I bloom / frame three, the light learns my name.',
+    palette: ['#c084fc', '#f0abfc', '#a7f3ff', '#020617'],
+    notes: 'A future video/animation wing: generated sequences, museum-wall loops, portal transitions, and aftermath visuals.'
+  },
+  {
     id: 'afterimage-orchard',
     title: 'Afterimage Orchard',
     type: 'visual score',
@@ -90,6 +123,9 @@ export const seedCapsules = [
 ];
 
 export const transitions = {
+  'episode-001-glitter-weather': ['chorus-engine-room', 'animated-afterimage-theater', 'ocean-terminal'],
+  'chorus-engine-room': ['static-carnival', 'velvet-faultline', 'episode-001-glitter-weather'],
+  'animated-afterimage-theater': ['afterimage-orchard', 'glass-animal-map', 'signal-funeral'],
   'afterimage-orchard': ['ocean-terminal', 'lyr-moth', 'signal-funeral'],
   'static-carnival': ['velvet-faultline', 'neon-kitchen-ghost', 'glass-animal-map'],
   'ocean-terminal': ['afterimage-orchard', 'signal-funeral', 'lyr-moth'],
@@ -100,4 +136,4 @@ export const transitions = {
   'neon-kitchen-ghost': ['static-carnival', 'glass-animal-map', 'velvet-faultline']
 };
 
-export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert'];
+export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert', 'amplify', 'loop', 'shatter', 'chorus'];
