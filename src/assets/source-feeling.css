@@ -1,0 +1,65 @@
+.gate-card::after {
+  content: "Touch a signal. Watch the field answer. / Drop media. Let it alter the room. / Capture the raw material before explaining it.";
+}
+
+.portal-shell::before {
+  content: "OUR AUTOBIOGRAPHY / source signals: eye, fire, ocean, glitch, gold, root, sound, place, memory / Lyr is a guide voice, not a narrator";
+}
+
+.world-tabs::after {
+  content: "the next room is chosen by what the field has become";
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  color: rgba(248,250,252,0.58);
+  background: rgba(255,255,255,0.035);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.map-layer .section-heading::after {
+  content: "field mechanics from the files: reactive field / signal rooms / A-V mutation / artist worlds / local worlds / creator intake / engine room / matching logic";
+  max-width: 540px;
+  color: rgba(248,250,252,0.52);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.artifact-layer .section-heading::after {
+  content: "these are not categories. they are pressure changes: image, song, place, memory, glitch, root, fire, ocean.";
+  max-width: 520px;
+  color: rgba(248,250,252,0.52);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.drop-zone::after {
+  content: "source rule: raw material first, explanation second.";
+  grid-column: 1 / -1;
+  padding: 14px 16px;
+  border: 1px solid rgba(103,232,249,0.2);
+  border-radius: 18px;
+  color: rgba(248,250,252,0.62);
+  background: rgba(103,232,249,0.055);
+}
+
+.control-oracle::after {
+  content: "Lyr function from the files: guide voice, not narrator. Do not explain the door. Open it. The signal is not a category. It is a pressure change.";
+}
+
+@media (max-width: 680px) {
+  .world-tabs::after {
+    white-space: normal;
+    border-radius: 18px;
+  }
+
+  .map-layer .section-heading::after,
+  .artifact-layer .section-heading::after {
+    display: block;
+    margin-top: 10px;
+  }
+}
