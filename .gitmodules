@@ -1,0 +1,3 @@
+[submodule "mirror-cartographer-next"]
+	path = mirror-cartographer-next
+	url = https://github.com/MirrorCartographer/mirror-cartographer-ui.git
