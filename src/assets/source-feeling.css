@@ -1,3 +1,32 @@
+.source-autobiography-link {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 80;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 12px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,92,168,0.18), rgba(98,229,255,0.12), rgba(255,209,102,0.1));
+  color: rgba(248,250,252,0.88);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.38), inset 0 0 30px rgba(255,255,255,0.035);
+  backdrop-filter: blur(18px);
+}
+
+.source-autobiography-link::before {
+  content: "↳ ";
+  color: rgba(253,230,138,0.95);
+}
+
+.source-autobiography-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(253,230,138,0.45);
+}
+
 .gate-card::after {
   content: "Touch a signal. Watch the field answer. / Drop media. Let it alter the room. / Capture the raw material before explaining it.";
 }
@@ -52,6 +81,14 @@
 }
 
 @media (max-width: 680px) {
+  .source-autobiography-link {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    text-align: center;
+    border-radius: 20px;
+  }
+
   .world-tabs::after {
     white-space: normal;
     border-radius: 18px;
