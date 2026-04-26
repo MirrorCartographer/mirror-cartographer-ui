@@ -4,6 +4,7 @@ import App from './components/App';
 import ErrorBoundary from './components/ErrorBoundary';
 import './assets/styles.css';
 import './assets/failsafe.css';
+import './assets/autobiography.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
