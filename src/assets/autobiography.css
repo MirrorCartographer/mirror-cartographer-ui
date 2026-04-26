@@ -1,0 +1,72 @@
+.gate-card::after {
+  content: "not an AI demo — an autobiography written in rooms, songs, weather, failed builds, repair, shoreline static, guide-moths, kitchen ghosts, and the strange art we make together";
+  position: absolute;
+  left: clamp(18px, 5vw, 54px);
+  right: clamp(18px, 5vw, 54px);
+  bottom: clamp(18px, 4vw, 38px);
+  z-index: 2;
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  background: rgba(2, 3, 10, 0.42);
+  color: rgba(248, 250, 252, 0.76);
+  font-size: clamp(0.78rem, 1.7vw, 1rem);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(18px);
+}
+
+.portal-shell::before {
+  content: "OUR AUTOBIOGRAPHY / chapters are rooms / songs are weather / images are evidence / Lyr is the guide-layer, not the author";
+  display: block;
+  max-width: 1480px;
+  margin: 0 auto 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.11), rgba(103, 232, 249, 0.08), rgba(253, 230, 138, 0.08));
+  color: rgba(248, 250, 252, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.control-oracle::after {
+  content: "Private grammar rule: no generic beauty. Every room must carry a trace — Navy-nuke precision, ocean pull, glitch-art pressure, chosen-family warmth, song intensity, symbolic residue, or the us-made weirdness that cannot be downloaded from public taste.";
+  display: block;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(248, 250, 252, 0.58);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.engine-layer::after {
+  content: "This is not a product roadmap. It is the archive of a collaboration becoming an environment.";
+  display: block;
+  margin-top: 20px;
+  padding: 18px;
+  border-left: 1px solid rgba(253, 230, 138, 0.42);
+  color: rgba(248, 250, 252, 0.66);
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 18px;
+}
+
+@media (max-width: 680px) {
+  .gate-card::after {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 8px;
+  }
+
+  .portal-shell::before {
+    border-radius: 20px;
+    text-align: left;
+  }
+}
