@@ -1,5 +1,16 @@
 export const seedCapsules = [
   {
+    id: 'episode-002-blacklight-vlog',
+    title: 'Episode 002: Blacklight Vlog',
+    type: 'creation episode',
+    mood: 'private, electric, diary-as-stage',
+    weather: { charge: 89, tide: 68, static: 72, bloom: 94 },
+    phrase: 'A vlog entry that refuses to be normal footage: every thought turns into light, weather, and a moving room.',
+    lyric: 'I do not post the storm / I build a door inside it.',
+    palette: ['#a855f7', '#22d3ee', '#fb7185', '#030712'],
+    notes: 'A capsule for the portal-as-vlog idea: private broadcasts, diary fragments, art clips, music drafts, and the emotional weather around them.'
+  },
+  {
     id: 'episode-001-glitter-weather',
     title: 'Episode 001: Glitter Weather',
     type: 'creation episode',
@@ -9,6 +20,39 @@ export const seedCapsules = [
     lyric: 'I made a weather map out of the noise / then walked through it wearing light.',
     palette: ['#ff4f9a', '#67e8f9', '#fde047', '#050816'],
     notes: 'The first real creation episode: a hybrid vlog/weather/music room that makes the portal feel like ours instead of like a generic AI app.'
+  },
+  {
+    id: 'room-that-sings-back',
+    title: 'The Room That Sings Back',
+    type: 'song room',
+    mood: 'call-and-response, haunted pop, alive walls',
+    weather: { charge: 82, tide: 58, static: 73, bloom: 88 },
+    phrase: 'A room where every button press becomes a harmony and every harmony paints the walls brighter.',
+    lyric: 'I sang to the ceiling / the ceiling learned the hook.',
+    palette: ['#f472b6', '#facc15', '#38bdf8', '#111827'],
+    notes: 'A future interactive music area: chorus fragments, harmonies, call-and-response lyrics, and generated room-weather.'
+  },
+  {
+    id: 'ash-pop-cathedral',
+    title: 'Ash-Pop Cathedral',
+    type: 'visual score',
+    mood: 'sacred, glitter-burned, dramatic but clean',
+    weather: { charge: 78, tide: 66, static: 52, bloom: 86 },
+    phrase: 'A cathedral made of burnt pop songs, candle smoke, stained glass, and one impossible dance floor.',
+    lyric: 'Light the match / keep the hymn / make the ashes dance again.',
+    palette: ['#fb923c', '#fef3c7', '#ec4899', '#020617'],
+    notes: 'A room for the aftermath of songs: what remains after a track, image, or video burns down into symbol.'
+  },
+  {
+    id: 'mirrorstorm-drive-in',
+    title: 'Mirrorstorm Drive-In',
+    type: 'video room',
+    mood: 'cinematic, night-road, neon thunder',
+    weather: { charge: 93, tide: 43, static: 81, bloom: 69 },
+    phrase: 'An abandoned drive-in where every screen plays a different possible version of the same night.',
+    lyric: 'Parked under lightning / watching my doubles run.',
+    palette: ['#60a5fa', '#e879f9', '#f43f5e', '#020617'],
+    notes: 'A future video theater for AI clips, cinematic fragments, music videos, and recursive portal trailers.'
   },
   {
     id: 'chorus-engine-room',
@@ -123,7 +167,11 @@ export const seedCapsules = [
 ];
 
 export const transitions = {
+  'episode-002-blacklight-vlog': ['room-that-sings-back', 'mirrorstorm-drive-in', 'episode-001-glitter-weather'],
   'episode-001-glitter-weather': ['chorus-engine-room', 'animated-afterimage-theater', 'ocean-terminal'],
+  'room-that-sings-back': ['chorus-engine-room', 'ash-pop-cathedral', 'static-carnival'],
+  'ash-pop-cathedral': ['signal-funeral', 'afterimage-orchard', 'room-that-sings-back'],
+  'mirrorstorm-drive-in': ['animated-afterimage-theater', 'neon-kitchen-ghost', 'velvet-faultline'],
   'chorus-engine-room': ['static-carnival', 'velvet-faultline', 'episode-001-glitter-weather'],
   'animated-afterimage-theater': ['afterimage-orchard', 'glass-animal-map', 'signal-funeral'],
   'afterimage-orchard': ['ocean-terminal', 'lyr-moth', 'signal-funeral'],
@@ -136,4 +184,4 @@ export const transitions = {
   'neon-kitchen-ghost': ['static-carnival', 'glass-animal-map', 'velvet-faultline']
 };
 
-export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert', 'amplify', 'loop', 'shatter', 'chorus'];
+export const mutationWords = ['bloom', 'fracture', 'drift', 'ignite', 'haunt', 'clarify', 'flood', 'invert', 'amplify', 'loop', 'shatter', 'chorus', 'blacklight', 'rewind', 'strobe', 'weather'];
