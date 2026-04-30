@@ -1,0 +1,66 @@
+name: ARC Training Smoke Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'engines/arc/**'
+      - '.github/workflows/arc-training-smoke.yml'
+  push:
+    branches:
+      - mc-arc-training-smoke-run
+
+jobs:
+  training-smoke:
+    name: ARC training smoke benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Mirror Cartographer repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Clone ARC-AGI-2 public data
+        run: git clone --depth 1 https://github.com/arcprize/ARC-AGI-2.git /tmp/ARC-AGI-2
+
+      - name: Prepare first 20 training tasks
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/mc-arc-training-20
+          find /tmp/ARC-AGI-2/data/training -maxdepth 1 -name '*.json' | sort | head -n 20 | xargs -I{} cp {} /tmp/mc-arc-training-20/
+          echo "Prepared $(find /tmp/mc-arc-training-20 -maxdepth 1 -name '*.json' | wc -l) training tasks"
+
+      - name: Run training smoke benchmark
+        run: |
+          python engines/arc/run_public_benchmark.py \
+            --data-dir /tmp/mc-arc-training-20 \
+            --out reports/arc/training_smoke_20_result.json
+
+      - name: Print benchmark summary
+        run: |
+          python - <<'PY'
+          import json
+          path = 'reports/arc/training_smoke_20_result.json'
+          with open(path, 'r', encoding='utf-8') as f:
+              result = json.load(f)
+          print(json.dumps({
+              'dataset': 'training_smoke_20',
+              'items_total': result.get('items_total'),
+              'attempt1_correct': result.get('attempt1_correct'),
+              'attempt2_correct': result.get('attempt2_correct'),
+              'pass2_correct': result.get('pass2_correct'),
+              'pass2_accuracy': result.get('pass2_accuracy'),
+              'convergence_total': result.get('convergence_total'),
+              'convergence_accuracy': result.get('convergence_accuracy'),
+              'failure_count': result.get('failure_count'),
+              'claim_scope': result.get('claim_scope'),
+          }, indent=2))
+          PY
+
+      - name: Upload smoke result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: arc-training-smoke-20-result
+          path: reports/arc/training_smoke_20_result.json
