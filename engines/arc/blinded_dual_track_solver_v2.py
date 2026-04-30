@@ -45,6 +45,18 @@ def alternating_tile_2x2_to_6x6(grid: Grid) -> Grid:
     return [top, bottom, top_flipped, bottom_flipped, top, bottom]
 
 
+def mask_background_color(grid: Grid) -> int:
+    """Choose the blank color for mask expansion.
+
+    ARC mask tasks often use 0 as blank even when 0 is not the most common
+    color. Prefer 0 when present; otherwise fall back to the generic background
+    heuristic.
+    """
+    if any(cell == 0 for row in grid for cell in row):
+        return 0
+    return background_color(grid)
+
+
 def self_mask_expand(grid: Grid) -> Grid:
     """Use the input grid as a mask over copies of itself.
 
@@ -56,7 +68,7 @@ def self_mask_expand(grid: Grid) -> Grid:
     width = len(grid[0]) if grid else 0
     if height == 0 or width == 0:
         raise ValueError("self_mask_expand requires a non-empty grid")
-    bg = background_color(grid)
+    bg = mask_background_color(grid)
     output = [[bg for _ in range(width * width)] for _ in range(height * height)]
     for block_row in range(height):
         for block_col in range(width):
