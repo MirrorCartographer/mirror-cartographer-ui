@@ -27,10 +27,19 @@ jobs:
 
       - name: Prepare first 20 training tasks
         run: |
-          set -euo pipefail
-          mkdir -p /tmp/mc-arc-training-20
-          find /tmp/ARC-AGI-2/data/training -maxdepth 1 -name '*.json' | sort | head -n 20 | xargs -I{} cp {} /tmp/mc-arc-training-20/
-          echo "Prepared $(find /tmp/mc-arc-training-20 -maxdepth 1 -name '*.json' | wc -l) training tasks"
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          src = Path('/tmp/ARC-AGI-2/data/training')
+          dst = Path('/tmp/mc-arc-training-20')
+          dst.mkdir(parents=True, exist_ok=True)
+          files = sorted(src.glob('*.json'))[:20]
+          for path in files:
+              shutil.copy2(path, dst / path.name)
+          print(f'Prepared {len(files)} training tasks in {dst}')
+          if len(files) != 20:
+              raise SystemExit(f'Expected 20 training tasks, found {len(files)}')
+          PY
 
       - name: Run training smoke benchmark
         run: |
