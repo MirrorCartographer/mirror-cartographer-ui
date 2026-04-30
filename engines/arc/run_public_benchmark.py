@@ -11,6 +11,13 @@ python engines/arc/run_public_benchmark.py --data-dir path/to/ARC-AGI-2/data/tra
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
+import sys
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from engines.arc.benchmark_harness import run_benchmark
 from engines.arc.blinded_dual_track_solver import solve_task_blinded
 
