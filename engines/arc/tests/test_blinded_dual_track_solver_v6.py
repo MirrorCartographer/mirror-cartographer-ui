@@ -51,6 +51,27 @@ def test_make_learned_single_component_translation_rule_solves_training_style_ca
     ]
 
 
+def test_learned_translation_rule_rejects_cluttered_training_examples():
+    train = [
+        {
+            "input": [
+                [0, 0, 0, 0, 0],
+                [0, 8, 8, 0, 1],
+                [0, 8, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+            ],
+            "output": [
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 8, 8],
+                [0, 0, 0, 8, 0],
+                [0, 0, 0, 0, 1],
+            ],
+        }
+    ]
+
+    assert make_learned_single_component_translation_rule(train) is None
+
+
 def test_solver_v6_solves_single_component_translation_task():
     task = {
         "train": [
