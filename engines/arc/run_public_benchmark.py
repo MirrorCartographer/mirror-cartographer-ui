@@ -19,7 +19,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from engines.arc.benchmark_harness import run_benchmark
-from engines.arc.blinded_dual_track_solver_v2 import solve_task_blinded_v2
+from engines.arc.blinded_dual_track_solver_v3 import solve_task_blinded_v3
 
 
 def main() -> None:
@@ -28,7 +28,7 @@ def main() -> None:
     parser.add_argument("--out", default="reports/arc/public_result.json", help="Where to write the result JSON.")
     args = parser.parse_args()
 
-    result = run_benchmark(args.data_dir, args.out, solve_task_blinded_v2)
+    result = run_benchmark(args.data_dir, args.out, solve_task_blinded_v3)
     print("WROTE", args.out)
     print("items_total", result["items_total"])
     print("attempt1_correct", result["attempt1_correct"])
