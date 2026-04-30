@@ -4,7 +4,7 @@ Mirror Cartographer ARC blinded dual-track solver v6.
 Voice-readable behavior:
 Solver v6 keeps solver v5 intact and wires the v6 relation-composition movement primitives into the candidate system.
 
-The new generator learns whether exactly one component moves by the same row/column vector across the training pairs. If that proof holds, it applies the learned translation to the test grid. This is the first solver layer where the object-relation "hands" are used inside the two-track ARC solver.
+The new generator learns whether exactly one foreground component moves by the same row/column vector across the training pairs. If that proof holds, it applies the learned translation to the test grid only when the test grid also has exactly one foreground component.
 
 This file does not claim a score improvement by itself. The benchmark workflow must prove whether the smoke result moves from 4/20 to 5/20.
 """
@@ -20,28 +20,43 @@ from engines.arc.blinded_dual_track_solver import (
 )
 from engines.arc.blinded_dual_track_solver_v3 import _select_candidate
 from engines.arc.blinded_dual_track_solver_v5 import _base_rules as _v5_base_rules
+from engines.arc.object_relations import extract_components
 from engines.arc.relation_composition import (
     apply_learned_single_component_translation,
     learn_consistent_translation,
 )
 
 
+def _has_exactly_one_foreground_component(grid: Grid) -> bool:
+    return len(extract_components(grid)) == 1
+
+
 def make_learned_single_component_translation_rule(train: List[Dict[str, Grid]]) -> Optional[Callable[[Grid], Grid]]:
     """Infer a reusable single-component translation rule from training pairs.
 
     The rule is deliberately conservative:
-    - every training pair must show exactly one same-shape, same-color component moving;
-    - the movement vector must be identical across all training pairs;
-    - runtime application raises if no plausible component can be moved safely.
+    - every training input and output must have exactly one foreground component;
+    - that component must move by the same vector across all training pairs;
+    - runtime application requires the test grid to also have exactly one foreground component.
+
+    This guardrail prevents the rule from choosing the largest or unique-color object in cluttered grids and creating false independent convergence.
     """
     if not train:
         return None
+
+    for pair in train:
+        if not _has_exactly_one_foreground_component(pair["input"]):
+            return None
+        if not _has_exactly_one_foreground_component(pair["output"]):
+            return None
 
     vector = learn_consistent_translation(train)
     if vector is None:
         return None
 
     def transform(grid: Grid) -> Grid:
+        if not _has_exactly_one_foreground_component(grid):
+            raise ValueError("learned translation requires exactly one foreground component in test grid")
         return apply_learned_single_component_translation(train, grid)
 
     return transform
