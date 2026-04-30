@@ -5,6 +5,7 @@ on:
     paths:
       - 'engines/arc/**'
       - '.github/workflows/arc-training-smoke.yml'
+      - 'reports/arc/**'
   push:
     branches:
       - mc-arc-training-smoke-run
@@ -25,10 +26,11 @@ jobs:
       - name: Clone ARC-AGI-2 public data
         run: git clone --depth 1 https://github.com/arcprize/ARC-AGI-2.git /tmp/ARC-AGI-2
 
-      - name: Prepare first 20 training tasks
+      - name: Prepare first 20 training tasks and manifest
         run: |
           python - <<'PY'
           from pathlib import Path
+          import json
           import shutil
           src = Path('/tmp/ARC-AGI-2/data/training')
           dst = Path('/tmp/mc-arc-training-20')
@@ -36,7 +38,18 @@ jobs:
           files = sorted(src.glob('*.json'))[:20]
           for path in files:
               shutil.copy2(path, dst / path.name)
+          manifest = {
+              'dataset': 'training_smoke_20',
+              'source': 'arcprize/ARC-AGI-2 data/training',
+              'selection_rule': 'first 20 JSON task files in sorted filename order',
+              'task_ids': [path.stem for path in files],
+              'task_files': [path.name for path in files],
+          }
+          reports = Path('reports/arc')
+          reports.mkdir(parents=True, exist_ok=True)
+          (reports / 'training_smoke_20_manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
           print(f'Prepared {len(files)} training tasks in {dst}')
+          print(json.dumps(manifest, indent=2))
           if len(files) != 20:
               raise SystemExit(f'Expected 20 training tasks, found {len(files)}')
           PY
@@ -51,11 +64,15 @@ jobs:
         run: |
           python - <<'PY'
           import json
-          path = 'reports/arc/training_smoke_20_result.json'
-          with open(path, 'r', encoding='utf-8') as f:
+          result_path = 'reports/arc/training_smoke_20_result.json'
+          manifest_path = 'reports/arc/training_smoke_20_manifest.json'
+          with open(result_path, 'r', encoding='utf-8') as f:
               result = json.load(f)
+          with open(manifest_path, 'r', encoding='utf-8') as f:
+              manifest = json.load(f)
           print(json.dumps({
               'dataset': 'training_smoke_20',
+              'task_ids': manifest.get('task_ids'),
               'items_total': result.get('items_total'),
               'attempt1_correct': result.get('attempt1_correct'),
               'attempt2_correct': result.get('attempt2_correct'),
@@ -72,4 +89,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: arc-training-smoke-20-result
-          path: reports/arc/training_smoke_20_result.json
+          path: |
+            reports/arc/training_smoke_20_result.json
+            reports/arc/training_smoke_20_manifest.json
