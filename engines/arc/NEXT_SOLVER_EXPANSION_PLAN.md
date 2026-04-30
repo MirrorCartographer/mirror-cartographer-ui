@@ -2,16 +2,16 @@
 
 ## Voice-readable summary
 
-The first real ARC smoke benchmark scored 0 out of 20. The benchmark system worked, but the solver is too shallow. The next build should not add random tricks. It should add missing capability families and then rerun the same 20-task smoke benchmark.
+The first real ARC smoke benchmark scored 0 out of 20. The benchmark system worked, but the solver was too shallow. The next build should not add random tricks. It should add missing capability families and then rerun the same 20-task smoke benchmark.
 
 ## Current baseline
 
 - Dataset: first 20 public ARC-AGI-2 training tasks
-- Pass-at-two score: 0/20
-- Convergence cases: 3
-- Convergence correct: 0
+- Original pass-at-two score: 0/20
+- Original convergence cases: 3
+- Original convergence correct: 0
 
-## Goal for next solver branch
+## First expansion target
 
 Move from baseline 0/20 to at least one correct task on the same 20-task smoke set.
 
@@ -76,3 +76,7 @@ Benchmark reports should summarize failure labels so the next build chooses the 
 ## Claim boundary
 
 A solver improvement claim is only allowed if the same smoke benchmark improves or the failure labels become materially more informative.
+
+## v2 note
+
+Solver v2 adds two concrete generators discovered from smoke-set inspection: alternating 2x2 tiling and self-mask expansion. The claim is not broad ARC capability; the claim is only that this branch should be measured against the same 20-task smoke set.
