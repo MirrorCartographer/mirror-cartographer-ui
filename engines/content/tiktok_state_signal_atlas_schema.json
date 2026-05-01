@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TikTok State Signal Atlas Entry",
+  "type": "object",
+  "required": [
+    "video_url",
+    "platform",
+    "status"
+  ],
+  "properties": {
+    "video_url": {"type": "string"},
+    "platform": {"type": "string"},
+    "collection_source": {"type": "string"},
+    "caption": {"type": "string"},
+    "hashtags": {"type": "array", "items": {"type": "string"}},
+    "visible_text": {"type": "string"},
+    "manual_note": {"type": "string"},
+    "state_or_region": {"type": "string"},
+    "city_or_area": {"type": "string"},
+    "business_type": {"type": "string"},
+    "signal_type": {"type": "string"},
+    "origin_vibe": {"type": "string"},
+    "local_translation": {"type": "string"},
+    "proof_observed": {"type": "string"},
+    "emotional_need": {"type": "string"},
+    "use_case": {"type": "string"},
+    "score_originality": {"type": "integer", "minimum": 1, "maximum": 5},
+    "score_traction": {"type": "integer", "minimum": 1, "maximum": 5},
+    "score_local_adaptability": {"type": "integer", "minimum": 1, "maximum": 5},
+    "score_business_usefulness": {"type": "integer", "minimum": 1, "maximum": 5},
+    "score_emotional_resonance": {"type": "integer", "minimum": 1, "maximum": 5},
+    "score_state_relevance": {"type": "integer", "minimum": 1, "maximum": 5},
+    "total_score": {"type": "integer", "minimum": 0, "maximum": 30},
+    "status": {
+      "type": "string",
+      "enum": [
+        "Needs Content Review",
+        "Categorized",
+        "Ambiguous",
+        "Manual Priority",
+        "Exported"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
