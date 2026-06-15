@@ -100,7 +100,17 @@ function weatherAverage(capsules) {
   };
 }
 
-function PortalCanvas({ capsule, mode, intensity, drift }) {
+function soundSignature(weather) {
+  const w = weather || DEFAULT_WEATHER;
+  if (w.tide >= 85 && w.static >= 65) return 'ocean static radio';
+  if (w.charge >= 88 && w.static >= 70) return 'glitter thunder engine';
+  if (w.bloom >= 85 && w.charge < 75) return 'soft bloom choir';
+  if (w.static >= 82) return 'feral mirror pulse';
+  if (w.tide >= 80) return 'slow water antenna';
+  return 'low mirror hum';
+}
+
+function PortalCanvas({ capsule, mode, intensity, drift, soundActive }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -141,7 +151,7 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
 
       const bands = mode === 'full' ? 22 : 13;
       for (let i = 0; i < bands; i += 1) {
-        const t = frame * 0.008 + i * 0.63 + drift;
+        const t = frame * (soundActive ? 0.011 : 0.008) + i * 0.63 + drift;
         const x = w * (0.5 + Math.sin(t * 0.74) * 0.34);
         const y = h * (0.5 + Math.cos(t * 0.91) * 0.26);
         const rx = 28 + (weather.bloom * 0.55) + Math.sin(t) * 18;
@@ -149,8 +159,8 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(t * 0.28);
-        ctx.strokeStyle = `${colors[i % colors.length]}${mode === 'full' ? '66' : '42'}`;
-        ctx.lineWidth = 0.7 + (weather.charge / 120);
+        ctx.strokeStyle = `${colors[i % colors.length]}${soundActive ? '88' : mode === 'full' ? '66' : '42'}`;
+        ctx.lineWidth = 0.7 + (weather.charge / 120) + (soundActive ? 0.7 : 0);
         ctx.beginPath();
         ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
         ctx.stroke();
@@ -160,13 +170,13 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
       const particles = mode === 'full' ? 90 : 42;
       for (let i = 0; i < particles; i += 1) {
         const base = i * 91.7;
-        const speed = 0.0025 + weather.static / 52000;
+        const speed = 0.0025 + weather.static / 52000 + (soundActive ? 0.0016 : 0);
         const angle = base + frame * speed * (i % 7 + 1) + drift;
         const orbit = 40 + ((i * 29) % Math.min(w, h)) * 0.48;
         const x = w / 2 + Math.cos(angle) * orbit + Math.sin(frame * 0.004 + i) * weather.static * 0.12;
         const y = h / 2 + Math.sin(angle * 1.17) * orbit * 0.68 + Math.cos(frame * 0.006 + i) * weather.tide * 0.09;
-        const size = 0.9 + ((i % 5) * 0.5) + intensity * 0.02;
-        ctx.fillStyle = `${colors[(i + frame) % colors.length]}${mode === 'full' ? 'cc' : '88'}`;
+        const size = 0.9 + ((i % 5) * 0.5) + intensity * 0.02 + (soundActive ? 0.9 : 0);
+        ctx.fillStyle = `${colors[(i + frame) % colors.length]}${soundActive ? 'ee' : mode === 'full' ? 'cc' : '88'}`;
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
@@ -175,7 +185,7 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate(Math.sin(frame * 0.004 + drift) * 0.18);
-      const radius = Math.min(w, h) * (0.14 + weather.bloom / 900);
+      const radius = Math.min(w, h) * (0.14 + weather.bloom / 900 + (soundActive ? 0.025 : 0));
       const portal = ctx.createRadialGradient(0, 0, 4, 0, 0, radius * 1.8);
       portal.addColorStop(0, `${colors[2]}dd`);
       portal.addColorStop(0.25, `${colors[1]}88`);
@@ -186,7 +196,7 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
       ctx.ellipse(0, 0, radius * 0.72, radius * 1.18, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = `${colors[2]}aa`;
-      ctx.lineWidth = 1.1;
+      ctx.lineWidth = soundActive ? 2.1 : 1.1;
       ctx.stroke();
       ctx.restore();
 
@@ -202,104 +212,212 @@ function PortalCanvas({ capsule, mode, intensity, drift }) {
       window.cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
-  }, [capsule, mode, intensity, drift]);
+  }, [capsule, mode, intensity, drift, soundActive]);
 
   return <canvas className="portal-canvas" ref={canvasRef} aria-label={`Generative artwork for ${capsule?.title || 'portal signal'}`} />;
 }
 
-function useAudioEngine() {
-  const audioRef = useRef(null);
+function createNoiseBuffer(context, seconds = 1.2) {
+  const length = Math.floor(context.sampleRate * seconds);
+  const buffer = context.createBuffer(1, length, context.sampleRate);
+  const data = buffer.getChannelData(0);
+  let previous = 0;
+  for (let i = 0; i < length; i += 1) {
+    const white = Math.random() * 2 - 1;
+    previous = previous * 0.82 + white * 0.18;
+    data[i] = previous;
+  }
+  return buffer;
+}
+
+function useMirrorSoundEngine() {
+  const contextRef = useRef(null);
   const nodesRef = useRef([]);
+  const timerRef = useRef(null);
+  const [armed, setArmed] = useState(false);
   const [playingId, setPlayingId] = useState(null);
   const [audioNote, setAudioNote] = useState('');
 
+  const disconnectNode = (node) => {
+    try { node.stop?.(); } catch {}
+    try { node.disconnect?.(); } catch {}
+  };
+
   const stop = () => {
-    nodesRef.current.forEach((node) => {
-      try { node.stop?.(); } catch {}
-      try { node.disconnect?.(); } catch {}
-    });
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = null;
+    nodesRef.current.forEach(disconnectNode);
     nodesRef.current = [];
     setPlayingId(null);
   };
 
-  const play = async (capsule, mutationIndex) => {
+  const ensureContext = async () => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) throw new Error('Audio unavailable in this browser.');
+    const context = contextRef.current || new AudioContext();
+    contextRef.current = context;
+    if (context.state === 'suspended') await context.resume();
+    setArmed(true);
+    return context;
+  };
+
+  const arm = async () => {
+    try {
+      const context = await ensureContext();
+      const now = context.currentTime;
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 222;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.022, now + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+      osc.connect(gain);
+      gain.connect(context.destination);
+      osc.start(now);
+      osc.stop(now + 0.38);
+      nodesRef.current.push(osc, gain);
+      setAudioNote('sound layer armed — tap a capsule or sound the field');
+      window.setTimeout(() => setAudioNote(''), 1500);
+    } catch (error) {
+      setAudioNote(error.message || 'audio blocked; tap again or try another browser');
+    }
+  };
+
+  const playCapsule = async (capsule, mutationIndex, voice = 'portal') => {
+    if (!capsule) return;
     try {
       stop();
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) {
-        setAudioNote('audio unavailable in this browser');
-        return;
-      }
-      const context = audioRef.current || new AudioContext();
-      audioRef.current = context;
-      if (context.state === 'suspended') await context.resume();
-
+      const context = await ensureContext();
+      const weather = capsule.weather || DEFAULT_WEATHER;
+      const now = context.currentTime;
+      const duration = 7.5 + weather.tide / 90;
       const master = context.createGain();
-      master.gain.value = 0.035;
-      master.connect(context.destination);
-
-      const delay = context.createDelay();
-      delay.delayTime.value = 0.18 + capsule.weather.tide / 600;
-      const feedback = context.createGain();
-      feedback.gain.value = 0.16;
-      delay.connect(feedback);
-      feedback.connect(delay);
-      delay.connect(master);
+      const compressor = context.createDynamicsCompressor();
+      compressor.threshold.value = -24;
+      compressor.knee.value = 22;
+      compressor.ratio.value = 9;
+      compressor.attack.value = 0.01;
+      compressor.release.value = 0.25;
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.linearRampToValueAtTime(0.06, now + 0.22);
+      master.gain.linearRampToValueAtTime(0.052, now + duration - 0.7);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      master.connect(compressor);
+      compressor.connect(context.destination);
 
       const filter = context.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.value = 420 + capsule.weather.bloom * 24;
-      filter.Q.value = 3 + capsule.weather.static / 25;
-      filter.connect(delay);
-      filter.connect(master);
+      filter.frequency.setValueAtTime(260 + weather.bloom * 24, now);
+      filter.frequency.linearRampToValueAtTime(420 + weather.charge * 28, now + duration * 0.62);
+      filter.Q.value = 1.2 + weather.static / 38;
 
-      const base = 110 + capsule.weather.charge * 1.8 + mutationIndex * 9;
-      const ratios = [1, 1.25, 1.5, 2, 2.5, 3].slice(0, capsule.weather.static > 70 ? 6 : 4);
-      const now = context.currentTime;
+      const delay = context.createDelay();
+      delay.delayTime.value = 0.08 + weather.tide / 420;
+      const feedback = context.createGain();
+      feedback.gain.value = 0.08 + weather.static / 900;
+      delay.connect(feedback);
+      feedback.connect(delay);
+
+      const wet = context.createGain();
+      wet.gain.value = 0.32;
+      filter.connect(master);
+      filter.connect(delay);
+      delay.connect(wet);
+      wet.connect(master);
+
+      const base = 82 + weather.charge * 1.55 + mutationIndex * 4.5;
+      const voiceRatios = {
+        portal: [1, 1.5, 2, 2.5],
+        ocean: [0.5, 1, 1.333, 2],
+        thunder: [0.5, 1, 1.25, 1.875, 2.5],
+        moth: [1, 1.125, 1.5, 2.25]
+      };
+      const ratios = voiceRatios[voice] || voiceRatios.portal;
+      const wave = voice === 'thunder' ? 'sawtooth' : voice === 'moth' ? 'triangle' : 'sine';
 
       ratios.forEach((ratio, index) => {
         const osc = context.createOscillator();
         const gain = context.createGain();
-        osc.type = index % 3 === 0 ? 'sawtooth' : index % 3 === 1 ? 'triangle' : 'sine';
-        osc.frequency.value = base * ratio;
-        gain.gain.value = 0.0001;
+        const pan = context.createStereoPanner ? context.createStereoPanner() : null;
+        osc.type = index === 0 && voice !== 'ocean' ? wave : index % 2 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(base * ratio, now);
+        osc.detune.setValueAtTime((index - 1.5) * (weather.static / 10), now);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime((0.018 + weather.bloom / 5200) / (index + 1), now + 0.4 + index * 0.12);
+        gain.gain.linearRampToValueAtTime((0.012 + weather.tide / 9000) / (index + 1), now + duration - 0.9);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
         osc.connect(gain);
-        gain.connect(filter);
-        const pulse = 0.012 + capsule.weather.bloom / 6000;
-        for (let step = 0; step < 24; step += 1) {
-          const t = now + step * (0.18 + capsule.weather.tide / 1400) + index * 0.014;
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.linearRampToValueAtTime(pulse / (index + 1), t + 0.018);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.13 + capsule.weather.static / 2000);
+        if (pan) {
+          pan.pan.value = -0.38 + index * (0.76 / Math.max(ratios.length - 1, 1));
+          gain.connect(pan);
+          pan.connect(filter);
+          nodesRef.current.push(pan);
+        } else {
+          gain.connect(filter);
         }
         osc.start(now);
-        osc.stop(now + 5.2);
+        osc.stop(now + duration);
         nodesRef.current.push(osc, gain);
       });
 
-      const lfo = context.createOscillator();
-      const lfoGain = context.createGain();
-      lfo.type = 'sine';
-      lfo.frequency.value = 0.11 + capsule.weather.tide / 900;
-      lfoGain.gain.value = 130 + capsule.weather.static;
-      lfo.connect(lfoGain);
-      lfoGain.connect(filter.frequency);
-      lfo.start(now);
-      lfo.stop(now + 5.2);
-      nodesRef.current.push(lfo, lfoGain, filter, delay, feedback, master);
+      const pulseCount = voice === 'thunder' ? 18 : 24;
+      const pulseInterval = 0.16 + weather.tide / 1500;
+      for (let i = 0; i < pulseCount; i += 1) {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        const t = now + 0.35 + i * pulseInterval;
+        osc.type = voice === 'thunder' ? 'square' : 'triangle';
+        osc.frequency.value = base * (1 + ((i % 5) * 0.125));
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.006 + weather.charge / 15000, t + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09 + weather.static / 1800);
+        osc.connect(gain);
+        gain.connect(filter);
+        osc.start(t);
+        osc.stop(t + 0.2);
+        nodesRef.current.push(osc, gain);
+      }
 
-      setAudioNote('');
+      const noise = context.createBufferSource();
+      const noiseGain = context.createGain();
+      const noiseFilter = context.createBiquadFilter();
+      noise.buffer = createNoiseBuffer(context, 1.6);
+      noise.loop = true;
+      noiseFilter.type = voice === 'ocean' ? 'bandpass' : 'highpass';
+      noiseFilter.frequency.value = voice === 'ocean' ? 680 + weather.tide * 6 : 1300 + weather.static * 16;
+      noiseFilter.Q.value = voice === 'ocean' ? 0.8 : 3.4;
+      noiseGain.gain.setValueAtTime(0.0001, now);
+      noiseGain.gain.linearRampToValueAtTime(0.006 + weather.static / 9000, now + 0.5);
+      noiseGain.gain.linearRampToValueAtTime(0.002 + weather.tide / 12000, now + duration - 0.5);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(filter);
+      noise.start(now);
+      noise.stop(now + duration);
+      nodesRef.current.push(noise, noiseGain, noiseFilter, filter, delay, feedback, wet, master, compressor);
+
+      setAudioNote(`${soundSignature(weather)} — ${capsule.title}`);
       setPlayingId(capsule.id);
-      window.setTimeout(() => setPlayingId(null), 5300);
-    } catch {
+      timerRef.current = window.setTimeout(() => {
+        setPlayingId(null);
+        setAudioNote('');
+      }, Math.ceil(duration * 1000) + 100);
+    } catch (error) {
       stop();
-      setAudioNote('audio blocked; tap again or try another browser');
+      setAudioNote(error.message || 'audio blocked; tap sound again');
     }
   };
 
-  useEffect(() => stop, []);
+  useEffect(() => () => {
+    stop();
+    if (contextRef.current?.state !== 'closed') {
+      try { contextRef.current?.close?.(); } catch {}
+    }
+  }, []);
 
-  return { play, stop, playingId, audioNote };
+  return { armed, arm, playCapsule, stop, playingId, audioNote };
 }
 
 function WeatherBar({ label, value }) {
@@ -311,31 +429,77 @@ function WeatherBar({ label, value }) {
   );
 }
 
-function CapsuleNode({ capsule, active, onSelect }) {
+function CapsuleNode({ capsule, active, onSelect, onSound, sounding }) {
   const style = {
     '--a': capsule.palette[0],
     '--b': capsule.palette[1],
     '--c': capsule.palette[2]
   };
   return (
-    <button className={`capsule-node ${active ? 'active' : ''}`} style={style} onClick={() => onSelect(capsule.id)}>
-      <span className="node-orb" />
-      <span className="node-copy">
-        <strong>{capsule.title}</strong>
-        <em>{capsule.type}</em>
-      </span>
-    </button>
+    <article className={`capsule-node ${active ? 'active' : ''} ${sounding ? 'sounding' : ''}`} style={style}>
+      <button className="node-main" onClick={() => onSelect(capsule.id)}>
+        <span className="node-orb" />
+        <span className="node-copy">
+          <strong>{capsule.title}</strong>
+          <em>{capsule.type}</em>
+          <small>{soundSignature(capsule.weather)}</small>
+        </span>
+      </button>
+      <button className="node-sound" onClick={() => onSound(capsule)} aria-label={`Play sound for ${capsule.title}`}>
+        {sounding ? 'humming' : 'sound'}
+      </button>
+    </article>
   );
 }
 
-function ArtifactCard({ capsule, selected, onOpen }) {
+function ArtifactCard({ capsule, selected, onOpen, onSound, sounding }) {
   return (
-    <button className={`artifact-card ${selected ? 'selected' : ''}`} onClick={() => onOpen(capsule.id)} style={{ '--a': capsule.palette[0], '--b': capsule.palette[1], '--c': capsule.palette[2] }}>
-      <span className="artifact-glow" />
-      <span className="artifact-type">{capsule.type}</span>
-      <strong>{capsule.title}</strong>
-      <span>{capsule.mood}</span>
-    </button>
+    <article className={`artifact-card ${selected ? 'selected' : ''} ${sounding ? 'sounding' : ''}`} style={{ '--a': capsule.palette[0], '--b': capsule.palette[1], '--c': capsule.palette[2] }}>
+      <button className="artifact-open" onClick={() => onOpen(capsule.id)}>
+        <span className="artifact-glow" />
+        <span className="artifact-type">{capsule.type}</span>
+        <strong>{capsule.title}</strong>
+        <span>{capsule.mood}</span>
+      </button>
+      <button className="node-sound artifact-sound" onClick={() => onSound(capsule)}>
+        {sounding ? 'humming' : 'sound'}
+      </button>
+    </article>
+  );
+}
+
+function SoundConsole({ selected, portalWeather, armed, playingId, audioNote, onArm, onSound, onStop, voice, setVoice }) {
+  const signature = soundSignature(selected?.weather);
+  return (
+    <section className="sound-console" aria-label="Mirror Cartographer sound layer">
+      <div>
+        <p className="eyebrow">sound layer</p>
+        <h3>{armed ? signature : 'silent until touched'}</h3>
+        <p className="quiet">Sound is opt-in. It maps capsule weather into pulse, tide, static, bloom, and a short living hum.</p>
+      </div>
+      <div className="sound-readout">
+        <span>charge {selected.weather.charge}</span>
+        <span>tide {selected.weather.tide}</span>
+        <span>static {selected.weather.static}</span>
+        <span>bloom {selected.weather.bloom}</span>
+      </div>
+      <label className="voice-picker">
+        <span>voice</span>
+        <select value={voice} onChange={(event) => setVoice(event.target.value)}>
+          <option value="portal">portal glass</option>
+          <option value="ocean">ocean static</option>
+          <option value="thunder">glitter thunder</option>
+          <option value="moth">lyr moth</option>
+        </select>
+      </label>
+      <div className="action-row">
+        <button className="primary-action" onClick={armed ? onSound : onArm}>
+          {armed ? (playingId === selected.id ? 'field humming' : 'sound the field') : 'wake sound'}
+        </button>
+        <button className="secondary-action" onClick={onStop}>hush</button>
+      </div>
+      <p className="sound-status">{audioNote || `portal weather ${portalWeather.charge}/${portalWeather.tide}/${portalWeather.static}/${portalWeather.bloom}`}</p>
+    </section>
   );
 }
 
@@ -406,6 +570,150 @@ function DropZone({ onCreate }) {
   );
 }
 
+function SoundLayerStyles() {
+  return (
+    <style>{`
+      .sound-console {
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 28px;
+        padding: 18px;
+        background:
+          radial-gradient(circle at 16% 8%, rgba(103,232,249,0.18), transparent 34%),
+          radial-gradient(circle at 85% 90%, rgba(236,72,153,0.14), transparent 36%),
+          rgba(255,255,255,0.045);
+        box-shadow: inset 0 0 42px rgba(255,255,255,0.035);
+        display: grid;
+        gap: 14px;
+      }
+
+      .sound-console h3 {
+        margin: 8px 0 6px;
+        font-size: clamp(1.6rem, 3vw, 2.55rem);
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+      }
+
+      .sound-readout {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .sound-readout span,
+      .sound-status,
+      .node-copy small {
+        color: var(--dim);
+        font-size: 0.74rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .sound-readout span {
+        padding: 9px 10px;
+        border: 1px solid rgba(255,255,255,0.11);
+        border-radius: 999px;
+        background: rgba(0,0,0,0.2);
+      }
+
+      .voice-picker {
+        display: grid;
+        gap: 8px;
+      }
+
+      .voice-picker span {
+        color: var(--dim);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .voice-picker select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(0,0,0,0.28);
+        color: var(--ink);
+        padding: 11px 12px;
+      }
+
+      .capsule-node,
+      .artifact-card {
+        display: grid;
+        align-content: stretch;
+      }
+
+      .capsule-node.sounding,
+      .artifact-card.sounding {
+        border-color: rgba(103,232,249,0.72);
+        box-shadow: 0 0 42px color-mix(in srgb, var(--b), transparent 78%), inset 0 0 26px rgba(255,255,255,0.04);
+      }
+
+      .node-main,
+      .artifact-open {
+        all: unset;
+        cursor: pointer;
+        display: block;
+        min-height: 100%;
+      }
+
+      .artifact-open {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .node-sound {
+        position: relative;
+        z-index: 2;
+        justify-self: start;
+        align-self: end;
+        margin-top: 12px;
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 999px;
+        padding: 7px 10px;
+        background: rgba(2,3,10,0.42);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 0.72rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .artifact-sound {
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        margin: 0;
+      }
+
+      .sound-status {
+        margin: 0;
+      }
+
+      .system-note {
+        max-width: 1480px;
+        margin: 0 auto 14px;
+        border: 1px solid rgba(253,230,138,0.28);
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: rgba(253,230,138,0.08);
+        color: var(--gold);
+      }
+
+      @supports not (background: color-mix(in srgb, red, transparent 50%)) {
+        .capsule-node.sounding,
+        .artifact-card.sounding {
+          box-shadow: 0 0 38px rgba(103,232,249,0.2);
+        }
+      }
+    `}</style>
+  );
+}
+
 function App() {
   const initial = useMemo(() => loadSavedState(), []);
   const initialCapsules = useMemo(() => sanitizeCapsules(initial?.capsules), [initial]);
@@ -418,7 +726,8 @@ function App() {
   const [drift, setDrift] = useState(0);
   const [activeView, setActiveView] = useState('field');
   const [storageWarning, setStorageWarning] = useState('');
-  const { play, stop, playingId, audioNote } = useAudioEngine();
+  const [voice, setVoice] = useState('portal');
+  const sound = useMirrorSoundEngine();
 
   const selected = capsules.find((capsule) => capsule.id === selectedId) || capsules[0] || sanitizeCapsule(seedCapsules[0]);
   const portalWeather = weatherAverage(capsules);
@@ -430,6 +739,12 @@ function App() {
     const ok = safeSetStorage(STORAGE_KEY, { entered, mode, capsules, selectedId, mutationIndex, archive });
     setStorageWarning(ok ? '' : 'local save unavailable in this browser');
   }, [entered, mode, capsules, selectedId, mutationIndex, archive]);
+
+  const playCapsule = (capsule = selected) => {
+    setSelectedId(capsule.id);
+    setDrift((value) => value + 0.21);
+    sound.playCapsule(capsule, mutationIndex, voice);
+  };
 
   const mutate = () => {
     setMutationIndex((index) => index + 1);
@@ -466,6 +781,7 @@ function App() {
       phrase: selected.phrase,
       lyric: selected.lyric,
       weather: selected.weather,
+      sound: soundSignature(selected.weather),
       createdAt: new Date().toISOString()
     };
     setArchive((items) => [entry, ...items].slice(0, 40));
@@ -477,6 +793,11 @@ function App() {
       const payload = {
         exportedAt: new Date().toISOString(),
         concept: 'our vlog / our weather map / our playable art portal',
+        soundLayer: {
+          status: 'opt-in Web Audio capsule sonification',
+          voices: ['portal', 'ocean', 'thunder', 'moth'],
+          maps: ['charge -> pitch/pulse force', 'tide -> delay/drift', 'static -> noise/filter texture', 'bloom -> harmony/attack softness']
+        },
         capsules,
         archive
       };
@@ -501,6 +822,7 @@ function App() {
 
   const resetLocalField = () => {
     safeRemoveStorage(STORAGE_KEY);
+    sound.stop();
     setCapsules(sanitizeCapsules(seedCapsules));
     setSelectedId(seedCapsules[0].id);
     setArchive([]);
@@ -511,6 +833,7 @@ function App() {
   if (!entered) {
     return (
       <main className="gate-screen">
+        <SoundLayerStyles />
         <div className="ambient-grid" />
         <section className="gate-card">
           <p className="eyebrow">mirror portal</p>
@@ -519,7 +842,7 @@ function App() {
           <button className="enter-button" onClick={() => setEntered(true)}>
             <span>enter</span>
           </button>
-          <p className="quiet">no dashboard first. no product pitch. just the field.</p>
+          <p className="quiet">sound stays silent until you wake it. no autoplay. no jump scare. just the field.</p>
         </section>
       </main>
     );
@@ -527,24 +850,26 @@ function App() {
 
   return (
     <main className={`portal-shell ${mode}`}>
+      <SoundLayerStyles />
       <div className="noise-layer" />
       <header className="topline">
         <button className="ghost-button" onClick={() => setEntered(false)}>gate</button>
         <div className="status-line">
           <span>our vlog</span>
           <span>weather {portalWeather.charge}/{portalWeather.tide}/{portalWeather.static}/{portalWeather.bloom}</span>
+          <span>{sound.armed ? 'sound armed' : 'silent'}</span>
           <span>{mode}</span>
         </div>
         <button className="ghost-button" onClick={() => setMode(mode === 'soft' ? 'full' : 'soft')}>{mode === 'soft' ? 'full mode' : 'soft mode'}</button>
       </header>
 
-      {(storageWarning || audioNote) && <div className="system-note">{storageWarning || audioNote}</div>}
+      {(storageWarning || sound.audioNote) && <div className="system-note">{storageWarning || sound.audioNote}</div>}
 
       <section className="hero-world">
         <div className="canvas-stage">
-          <PortalCanvas capsule={selected} mode={mode} intensity={portalWeather.charge} drift={drift} />
+          <PortalCanvas capsule={selected} mode={mode} intensity={portalWeather.charge} drift={drift} soundActive={sound.playingId === selected.id} />
           <div className="floating-title">
-            <p className="eyebrow">now playing</p>
+            <p className="eyebrow">{sound.playingId === selected.id ? 'now sounding' : 'now playing'}</p>
             <h2>{selected.title}</h2>
             <p>{selected.phrase}</p>
           </div>
@@ -558,10 +883,18 @@ function App() {
             <WeatherBar label="static" value={selected.weather.static} />
             <WeatherBar label="bloom" value={selected.weather.bloom} />
           </div>
-          <div className="action-row">
-            <button className="primary-action" onClick={() => play(selected, mutationIndex)}>{playingId === selected.id ? 'playing' : 'play sound'}</button>
-            <button className="secondary-action" onClick={stop}>hush</button>
-          </div>
+          <SoundConsole
+            selected={selected}
+            portalWeather={portalWeather}
+            armed={sound.armed}
+            playingId={sound.playingId}
+            audioNote={sound.audioNote}
+            onArm={sound.arm}
+            onSound={() => playCapsule(selected)}
+            onStop={sound.stop}
+            voice={voice}
+            setVoice={setVoice}
+          />
           <div className="action-row">
             <button className="secondary-action" onClick={mutate}>mutate: {mutationWord}</button>
             <button className="secondary-action" onClick={followSignal}>follow signal</button>
@@ -580,10 +913,19 @@ function App() {
         <section className="map-layer">
           <div className="section-heading">
             <p className="eyebrow">signal field</p>
-            <h3>touch an object. the weather changes.</h3>
+            <h3>touch an object. the weather changes. sound gives it a body.</h3>
           </div>
           <div className="node-map">
-            {capsules.map((capsule) => <CapsuleNode key={capsule.id} capsule={capsule} active={capsule.id === selected.id} onSelect={setSelectedId} />)}
+            {capsules.map((capsule) => (
+              <CapsuleNode
+                key={capsule.id}
+                capsule={capsule}
+                active={capsule.id === selected.id}
+                sounding={sound.playingId === capsule.id}
+                onSelect={setSelectedId}
+                onSound={playCapsule}
+              />
+            ))}
           </div>
         </section>
       )}
@@ -595,7 +937,16 @@ function App() {
             <h3>gallery of generated creation capsules.</h3>
           </div>
           <div className="artifact-grid">
-            {capsules.map((capsule) => <ArtifactCard key={capsule.id} capsule={capsule} selected={capsule.id === selected.id} onOpen={setSelectedId} />)}
+            {capsules.map((capsule) => (
+              <ArtifactCard
+                key={capsule.id}
+                capsule={capsule}
+                selected={capsule.id === selected.id}
+                sounding={sound.playingId === capsule.id}
+                onOpen={setSelectedId}
+                onSound={playCapsule}
+              />
+            ))}
           </div>
         </section>
       )}
@@ -609,13 +960,13 @@ function App() {
             <h3>what the portal kept after you touched it.</h3>
           </div>
           <div className="archive-list">
-            {archive.length === 0 && <p className="quiet">No aftermath saved yet. Mutate something, then save it.</p>}
+            {archive.length === 0 && <p className="quiet">No aftermath saved yet. Mutate something, sound it, then save it.</p>}
             {archive.map((item) => (
               <article className="archive-item" key={item.id}>
                 <span>{new Date(item.createdAt).toLocaleString()}</span>
                 <strong>{item.title}</strong>
                 <em>{item.mutation}</em>
-                <p>{item.lyric}</p>
+                <p>{item.sound ? `${item.sound} — ${item.lyric}` : item.lyric}</p>
               </article>
             ))}
           </div>
@@ -632,7 +983,7 @@ function App() {
             <article><strong>Creation feed</strong><span>New songs, prompts, art rooms, and animation concepts enter through src/data/creationFeed.js.</span></article>
             <article><strong>Living gallery</strong><span>GitHub stores the portal. Vercel rebuilds when files change.</span></article>
             <article><strong>Weather state</strong><span>Each artifact carries charge, tide, static, and bloom. Bad saved data is sanitized.</span></article>
-            <article><strong>Aftermath</strong><span>Mutations save locally and can export as JSON; storage failure degrades gracefully.</span></article>
+            <article><strong>Sound layer</strong><span>Web Audio maps charge to pulse, tide to delay, static to noise, and bloom to harmonic softness. It stays silent until user activation.</span></article>
           </div>
           <div className="action-row wide">
             <button className="secondary-action" onClick={exportPortal}>export portal weather</button>
