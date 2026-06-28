@@ -1,61 +1,69 @@
-# Field Log — Living Synthesis Pass 06
+# Living Synthesis Field Log Pass 06
 
 Status labels
 
-- Source status: derived from this public-safe repository pass, file-library architecture comparison, and current external research scan.
-- Claim status: synthesis note, not final product specification.
+- Source status: derived from current GitHub mind state, public-safe synthesis, and current public research scan.
+- Claim status: field log and repository synthesis note.
 - Privacy status: public-safe abstraction.
-- Missingness: no prototype or user testing.
-- Revision reason: created to preserve the moment when private/public split became a multi-view consent architecture.
+- Missingness: no direct user testing, no implemented prototype, no external reviewer comparison.
+- Revision reason: updated to preserve the moment when private/public split became a multi-view consent architecture.
 
-## What changed
+## Field observation
 
-The repository moved from `private system versus public system` to `one state object, multiple consent-bounded views`.
+The clearest new pattern is the split between:
 
-This is a structural upgrade.
+- private continuity
+- professional usefulness
+- care-team coordination
+- research-safe pattern discovery
+- public-safe method sharing
 
-It means the private self, professional handoff, and public-safe index do not compete.
+These should not be forced into one surface.
 
-They are routed derivatives.
+They should be connected through a router.
 
-## Key synthesis
+## What changed in this pass
 
-MC should not ask whether a note is private or professional.
+The repository gained a continuity architecture:
 
-It should ask:
+`ContinuityLensRecordRouter`
 
-- what is the underlying invariant?
-- who is the audience?
-- what is the purpose?
-- what is the risk level?
-- what claim strength is allowed?
-- what must be withheld?
-- what transformation trace must be preserved?
+This object connects several prior artifacts and makes them operational as views of the same underlying record.
 
-## Public-safe finding
+## Persistent practical lanes
 
-The most defensible biological/social-care claim is:
+### Income
 
-`MC can improve information flow around care conversations, which may indirectly improve decisions and support continuity. It should not claim direct biological intervention.`
+The clearest product wedge is now an AI literacy demo:
 
-## Practical finding
+`Private Notes to Professional Summary: Output Autopsy`
 
-The most realistic demo package is:
+This teaches provenance, privacy boundaries, and claim control through a concrete before-and-after transformation.
 
-`Private Notes, Professional Handoff`
+### Care/social support
 
-It can be shown with fictional content and sold as AI literacy/provenance workflow design rather than as medical software.
+The clearest bounded care lane is:
 
-## Next action
+`PersonalPrivateRecord` to `ProfessionalAccessibleSummary`
 
-Build the fictional proof:
+This supports communication without claiming diagnosis, treatment, triage, or clinical authority.
 
-`The Same Note, Three Doors`
+## Meaning preserved
 
-It should include:
+The private record remains rich.
 
-1. private view
-2. professional handoff view
-3. public-safe research index
-4. contrast trace
-5. evaluation score
+The professional view remains bounded.
+
+The care-team view remains permissioned.
+
+The research view remains aggregate.
+
+The public view remains methodological.
+
+The transformation trace is the bridge.
+
+## Next build target
+
+`One Record, Five Doors`
+
+A fictional, public-safe prototype showing five permitted views of one invariant structure.
