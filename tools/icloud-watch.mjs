@@ -1,12 +1,21 @@
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
 const targetUrl = process.argv[2] || process.env.ICLOUD_SHARE_URL || 'https://share.icloud.com/photos/0c0cpN5VJ9yVCZYSS9XDjaFNw';
-const outDir = process.argv[3] || path.join(process.cwd(), 'artifacts', 'icloud-watch');
+const browserName = (process.argv[3] || process.env.BROWSER || 'chromium').toLowerCase();
+const outRoot = process.argv[4] || path.join(process.cwd(), 'artifacts', 'icloud-watch');
+const outDir = path.join(outRoot, browserName);
 const headless = process.env.HEADLESS === 'true';
 const timeoutMs = Number(process.env.ICLOUD_TIMEOUT_MS || 90000);
+
+const engines = { chromium, firefox, webkit };
+const engine = engines[browserName];
+if (!engine) {
+  console.error(`Unknown browser "${browserName}". Use chromium, firefox, or webkit.`);
+  process.exit(1);
+}
 
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -36,17 +45,33 @@ function classify(url = '', contentType = '') {
   return 'other';
 }
 
-const browser = await chromium.launch({ headless });
+const userAgents = {
+  chromium: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 MirrorCartographerICloudProbe/1.1',
+  firefox: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14.6; rv:127.0) Gecko/20100101 Firefox/127.0 MirrorCartographerICloudProbe/1.1',
+  webkit: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15 MirrorCartographerICloudProbe/1.1'
+};
+
+const browser = await engine.launch({ headless });
 const context = await browser.newContext({
   viewport: { width: 1440, height: 1200 },
   deviceScaleFactor: 1,
-  userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 MirrorCartographerICloudProbe/1.0'
+  userAgent: userAgents[browserName]
 });
 const page = await context.newPage();
 
 const requests = [];
 const mediaResponses = [];
 const responseBodies = [];
+const consoleMessages = [];
+const pageErrors = [];
+
+page.on('console', (message) => {
+  consoleMessages.push({ type: message.type(), text: message.text() });
+});
+
+page.on('pageerror', (error) => {
+  pageErrors.push(String(error?.message || error));
+});
 
 page.on('request', (request) => {
   requests.push({
@@ -66,6 +91,7 @@ page.on('response', async (response) => {
     status: response.status(),
     contentType,
     kind: classify(url, contentType),
+    browserName,
     headers: {
       contentLength: headers['content-length'] || null,
       acceptRanges: headers['accept-ranges'] || null,
@@ -136,14 +162,15 @@ const dom = await page.evaluate(() => {
 
 const candidates = uniqueRows([
   ...mediaResponses,
-  ...dom.images.flatMap((img) => [img.currentSrc, img.src].filter(Boolean).map((url) => ({ url, kind: 'image', source: 'dom-image' }))),
-  ...dom.videos.flatMap((video) => [video.currentSrc, video.src, video.poster, ...video.sources.map((s) => s.src)].filter(Boolean).map((url) => ({ url, kind: classify(url, ''), source: 'dom-video' }))),
-  ...dom.sources.map((source) => ({ url: source.src, contentType: source.type, kind: classify(source.src, source.type), source: 'dom-source' }))
+  ...dom.images.flatMap((img) => [img.currentSrc, img.src].filter(Boolean).map((url) => ({ url, kind: 'image', source: 'dom-image', browserName }))),
+  ...dom.videos.flatMap((video) => [video.currentSrc, video.src, video.poster, ...video.sources.map((s) => s.src)].filter(Boolean).map((url) => ({ url, kind: classify(url, ''), source: 'dom-video', browserName }))),
+  ...dom.sources.map((source) => ({ url: source.src, contentType: source.type, kind: classify(source.src, source.type), source: 'dom-source', browserName }))
 ]);
 
 const manifest = {
   schema: 'mirror-cartographer.icloud-watch.v1',
   createdAt: new Date().toISOString(),
+  browserName,
   targetUrl,
   navigationError,
   finalUrl: dom.url,
@@ -154,9 +181,13 @@ const manifest = {
     candidates: candidates.length,
     domImages: dom.images.length,
     domVideos: dom.videos.length,
-    jsonBodies: responseBodies.length
+    jsonBodies: responseBodies.length,
+    consoleMessages: consoleMessages.length,
+    pageErrors: pageErrors.length
   },
   candidates,
+  consoleMessages,
+  pageErrors,
   domSummary: {
     text: dom.text,
     meta: dom.meta,
@@ -192,6 +223,7 @@ fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, nu
 
 console.log(JSON.stringify({
   outDir,
+  browserName,
   targetUrl,
   finalUrl: dom.url,
   navigationError,
