@@ -1,16 +1,26 @@
-# Museum Note: One Record, Five Doors
+# Museum Exhibit: One Record, Five Doors
 
 Status labels
 
-- Source status: derived from current public-safe repository evolution, existing GitHub mind artifacts, File Library search snippets, and current external research alignment.
+- Source status: derived from current public-safe repository evolution, known-path repository comparison, and current external research alignment.
 - Claim status: museum marker and product metaphor; not implemented software, validation, clinical proof, legal compliance, security certification, or revenue proof.
 - Privacy status: public-safe abstraction.
 - Missingness: no finished interface, visual prototype, fictional demo record, scoring run, professional review, or security model.
-- Revision reason: updated to preserve the conceptual transformation from dual-view privacy to permissioned continuity with visible ViewDiffs.
+- Revision reason: updated to preserve the transformation from permissioned continuity to discovery demonstration.
 
 ## Exhibit title
 
 One Record, Five Doors
+
+## Exhibit plaque
+
+A record is not one thing.
+
+It becomes different things depending on who is allowed to see it, why they are seeing it, what they are allowed to do with it, and what must be removed before it crosses a boundary.
+
+Mirror Cartographer's discovery here is simple:
+
+`the transformation is part of the meaning.`
 
 ## What became museum-worthy
 
@@ -31,12 +41,32 @@ visible transformation trace.
 ## The five doors
 
 1. Private meaning view.
-2. Self-review view.
-3. Professional handoff view.
-4. Care-team continuity view.
-5. Public-safe method view.
+2. Professional handoff view.
+3. Care-team accessible view.
+4. Public-safe method view.
+5. Research-safe aggregate view.
 
-A sixth research-safe aggregate view can exist only when de-identification and aggregation are strong enough to avoid exposing individual records.
+## What the viewer should see
+
+One fictional record appears five times.
+
+Each version is honest.
+
+None is complete.
+
+Each has a different job.
+
+The private view keeps richness.
+
+The professional handoff keeps usefulness.
+
+The care-team view keeps coordination.
+
+The public-safe view keeps method.
+
+The research-safe view keeps pattern.
+
+The ledger keeps the truth of what changed.
 
 ## Why it matters
 
@@ -58,6 +88,8 @@ The handoff is not the diagnosis.
 
 The research aggregate is not the individual.
 
+The transformation trace is not decoration; it is evidence of responsible movement.
+
 ## Artifact lineage
 
 This exhibit descends from:
@@ -71,22 +103,18 @@ This exhibit descends from:
 - Continuity Lens Record Router
 - Artifact Lifecycle Ecology
 
-## Preserved phrase
+## Preserved phrases
 
 `Continuity without collapse.`
 
-## New preserved phrase
-
 `Consent shapes the artifact.`
 
-## Next exhibit requirement
+`The transformation is part of the meaning.`
 
-Build a visual card where each door shows:
+## Museum status
 
-- audience
-- purpose
-- included fields
-- excluded fields
-- claim strength
-- missingness
-- transformation trace
+Seed exhibit.
+
+Promote to growing exhibit after a rendered card demo exists.
+
+Promote to tested exhibit only after reader testing shows that users can correctly identify source, claim, privacy, missingness, and transformation boundaries.
