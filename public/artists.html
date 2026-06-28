@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#02030a" />
+    <title>Mirror Cartographer Artists Gallery</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #02030a;
+        --ink: #f8fafc;
+        --muted: rgba(248, 250, 252, 0.68);
+        --dim: rgba(248, 250, 252, 0.44);
+        --line: rgba(255, 255, 255, 0.14);
+        --glass: rgba(255, 255, 255, 0.07);
+        --pink: #ff4f9a;
+        --blue: #67e8f9;
+        --gold: #fde68a;
+        --violet: #a78bfa;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 8%, rgba(255, 79, 154, 0.2), transparent 28%),
+          radial-gradient(circle at 88% 10%, rgba(103, 232, 249, 0.16), transparent 28%),
+          radial-gradient(circle at 48% 100%, rgba(253, 230, 138, 0.1), transparent 35%),
+          var(--bg);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.32;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 54px 54px;
+        mask-image: radial-gradient(circle at center, black, transparent 74%);
+      }
+
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; color: inherit; }
+
+      .shell {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        padding: max(18px, env(safe-area-inset-top, 0px)) 16px max(38px, env(safe-area-inset-bottom, 0px));
+        position: relative;
+        z-index: 1;
+      }
+
+      .topbar {
+        position: sticky;
+        top: max(10px, env(safe-area-inset-top, 0px));
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(2, 3, 10, 0.74);
+        backdrop-filter: blur(22px);
+        box-shadow: 0 18px 54px rgba(0,0,0,0.34);
+      }
+
+      .back-link,
+      .pill {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--glass);
+        padding: 10px 14px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .status-strip {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .status-strip::-webkit-scrollbar { display: none; }
+
+      .hero {
+        min-height: min(720px, calc(100svh - 88px));
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+        align-items: stretch;
+        gap: 16px;
+        padding-block: 18px;
+      }
+
+      .hero-card,
+      .graph-card,
+      .artist-card,
+      .network-card {
+        border: 1px solid var(--line);
+        border-radius: 34px;
+        background:
+          linear-gradient(145deg, rgba(255,255,255,0.095), rgba(255,255,255,0.035)),
+          rgba(2,3,10,0.36);
+        box-shadow: 0 28px 90px rgba(0,0,0,0.34), inset 0 0 60px rgba(255,255,255,0.03);
+        overflow: hidden;
+      }
+
+      .hero-card {
+        position: relative;
+        min-height: 560px;
+        padding: clamp(24px, 6vw, 70px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        isolation: isolate;
+      }
+
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        inset: 8%;
+        z-index: -1;
+        background:
+          radial-gradient(ellipse at 50% 42%, rgba(253,230,138,0.26), rgba(103,232,249,0.18) 30%, rgba(255,79,154,0.12) 55%, transparent 72%);
+        filter: blur(2px);
+        animation: breathe 6s ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%, 100% { transform: scale(0.92) rotate(-2deg); opacity: 0.62; }
+        50% { transform: scale(1.06) rotate(2deg); opacity: 0.94; }
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--blue);
+        font-size: 0.72rem;
+        font-weight: 850;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+      h1 {
+        max-width: 9ch;
+        margin: 16px 0 18px;
+        font-size: clamp(3.4rem, 11vw, 8.8rem);
+        line-height: 0.78;
+        letter-spacing: -0.085em;
+        text-wrap: balance;
+      }
+
+      .hero-copy {
+        max-width: 54ch;
+        color: var(--muted);
+        font-size: clamp(1rem, 2.1vw, 1.28rem);
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .primary {
+        min-height: 50px;
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 999px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, rgba(255,79,154,0.48), rgba(103,232,249,0.22));
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .graph-card {
+        padding: clamp(18px, 4vw, 30px);
+        display: grid;
+        align-content: space-between;
+        gap: 20px;
+      }
+
+      .graph-card h2,
+      .section-heading h2 {
+        margin: 8px 0 0;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        line-height: 0.9;
+        letter-spacing: -0.065em;
+      }
+
+      .signal-bars {
+        display: grid;
+        gap: 13px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 82px 1fr 34px;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 760;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .bar-track {
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.09);
+        overflow: hidden;
+      }
+      .bar-track span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--pink), var(--blue), var(--gold));
+      }
+
+      .radar {
+        aspect-ratio: 1;
+        width: min(100%, 440px);
+        margin: 0 auto;
+        border-radius: 32px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0 2px, transparent 3px),
+          conic-gradient(from 45deg, rgba(255,79,154,0.24), rgba(103,232,249,0.22), rgba(253,230,138,0.2), rgba(167,139,250,0.18), rgba(255,79,154,0.24));
+        position: relative;
+        overflow: hidden;
+      }
+      .radar::before {
+        content: "";
+        position: absolute;
+        inset: 16%;
+        clip-path: polygon(50% 2%, 95% 45%, 62% 96%, 10% 72%, 22% 20%);
+        background: rgba(2,3,10,0.78);
+        border: 1px solid rgba(255,255,255,0.24);
+        box-shadow: 0 0 60px rgba(103,232,249,0.2) inset;
+      }
+      .radar::after {
+        content: "artist weather graph";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 14ch;
+        color: rgba(248,250,252,0.72);
+        font-size: 0.72rem;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        line-height: 1.35;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+        margin: 16px 0;
+      }
+      .section-heading p:last-child {
+        max-width: 46ch;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .artist-card {
+        min-height: 360px;
+        position: relative;
+        display: grid;
+        align-content: space-between;
+        padding: 18px;
+        isolation: isolate;
+      }
+      .artist-card::before {
+        content: "";
+        position: absolute;
+        inset: -12%;
+        z-index: -1;
+        background:
+          radial-gradient(circle at 28% 18%, var(--a), transparent 34%),
+          radial-gradient(circle at 82% 78%, var(--b), transparent 42%),
+          radial-gradient(circle at 52% 50%, var(--c), transparent 30%);
+        opacity: 0.34;
+        filter: blur(10px);
+      }
+
+      .artist-orb {
+        width: 118px;
+        height: 118px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at 38% 32%, rgba(255,255,255,0.72), transparent 18%),
+          radial-gradient(circle at center, var(--c), var(--b) 42%, transparent 70%);
+        box-shadow: 0 0 70px color-mix(in srgb, var(--b), transparent 54%);
+      }
+
+      .artist-card h3 {
+        margin: 16px 0 8px;
+        font-size: clamp(1.7rem, 4vw, 2.7rem);
+        line-height: 0.94;
+        letter-spacing: -0.055em;
+      }
+      .artist-card p {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .mini-graph {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        align-items: end;
+        gap: 8px;
+        min-height: 92px;
+        margin-top: 18px;
+      }
+      .mini-graph span {
+        min-height: 10px;
+        border-radius: 999px 999px 8px 8px;
+        background: linear-gradient(180deg, var(--gold), var(--blue), var(--pink));
+        position: relative;
+      }
+      .mini-graph span::after {
+        content: attr(data-label);
+        position: absolute;
+        left: 50%;
+        bottom: -22px;
+        transform: translateX(-50%);
+        color: var(--dim);
+        font-size: 0.58rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .network-card {
+        margin: 16px 0 0;
+        padding: clamp(18px, 4vw, 32px);
+      }
+      .network-map {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .network-node {
+        min-height: 86px;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 22px;
+        padding: 12px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(103,232,249,0.18), transparent 38%),
+          rgba(255,255,255,0.045);
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 1040px) {
+        .hero { grid-template-columns: 1fr; }
+        .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .network-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 680px) {
+        .shell { padding-inline: 10px; }
+        .topbar { border-radius: 24px; }
+        .status-strip .pill:nth-child(n+3) { display: none; }
+        .hero { min-height: auto; gap: 10px; }
+        .hero-card { min-height: min(620px, calc(100svh - 92px)); border-radius: 28px; }
+        .graph-card, .artist-card, .network-card { border-radius: 26px; }
+        .hero-actions { flex-direction: column; }
+        .primary { width: 100%; }
+        .section-heading { display: block; }
+        .gallery-grid { grid-template-columns: 1fr; gap: 10px; }
+        .artist-card { min-height: 330px; }
+        .network-map { grid-template-columns: 1fr 1fr; }
+      }
+
+      @media (max-width: 390px) {
+        h1 { font-size: 3.2rem; }
+        .bar-row { grid-template-columns: 72px 1fr 30px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar" aria-label="Gallery navigation">
+        <a class="back-link" href="/">portal</a>
+        <div class="status-strip" aria-label="Gallery status">
+          <span class="pill">artists</span>
+          <span class="pill">graphs</span>
+          <span class="pill">weather mapped</span>
+          <span class="pill">mobile first</span>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <article class="hero-card">
+          <div>
+            <p class="eyebrow">Mirror Cartographer / artists gallery</p>
+            <h1>rooms that behave like artists</h1>
+            <p class="hero-copy">This gallery treats each creation room as an artist-profile: voice, atmosphere, medium, and measurable emotional weather. The graphs are not decoration. They show what kind of force each room carries before someone enters it.</p>
+          </div>
+          <div class="hero-actions">
+            <a class="primary" href="#gallery">enter gallery</a>
+            <a class="primary" href="#network">see the network</a>
+          </div>
+        </article>
+
+        <aside class="graph-card" aria-label="Overall artist weather graph">
+          <div>
+            <p class="eyebrow">field average</p>
+            <h2>gallery weather</h2>
+          </div>
+          <div class="radar" aria-hidden="true"></div>
+          <div class="signal-bars">
+            <div class="bar-row"><span>charge</span><div class="bar-track"><span style="width: 77%"></span></div><strong>77</strong></div>
+            <div class="bar-row"><span>tide</span><div class="bar-track"><span style="width: 63%"></span></div><strong>63</strong></div>
+            <div class="bar-row"><span>static</span><div class="bar-track"><span style="width: 66%"></span></div><strong>66</strong></div>
+            <div class="bar-row"><span>bloom</span><div class="bar-track"><span style="width: 75%"></span></div><strong>75</strong></div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="gallery" aria-labelledby="gallery-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">artist rooms</p>
+            <h2 id="gallery-title">the gallery</h2>
+          </div>
+          <p>Each card is a possible artist identity inside the larger MC site: music, animation, visual score, guide layer, aftermath, home-video glitch, creature atlas, and portal episode.</p>
+        </div>
+
+        <div class="gallery-grid">
+          <article class="artist-card" style="--a:#38bdf8;--b:#f0abfc;--c:#facc15">
+            <div><span class="artist-orb"></span><h3>Ocean Static Radio</h3><p>Coastal signal artist. Salt, antenna, night-ocean chorus, pink noise becoming song.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:81%"></span><span data-label="tide" style="height:96%"></span><span data-label="stat" style="height:74%"></span><span data-label="blm" style="height:87%"></span></div>
+          </article>
+
+          <article class="artist-card" style="--a:#ef4444;--b:#f97316;--c:#f8fafc">
+            <div><span class="artist-orb"></span><h3>Bad Girl Orchestra Lab</h3><p>Cinematic anthem artist. Strings, drums, guitar, swagger, entrance energy.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:98%"></span><span data-label="tide" style="height:51%"></span><span data-label="stat" style="height:68%"></span><span data-label="blm" style="height:79%"></span></div>
+          </article>
+
+          <article class="artist-card" style="--a:#ec4899;--b:#a855f7;--c:#22d3ee">
+            <div><span class="artist-orb"></span><h3>The Mural That Remixes You</h3><p>Visual-score artist. A wall that mutates when memory, music, and color collide.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:86%"></span><span data-label="tide" style="height:64%"></span><span data-label="stat" style="height:84%"></span><span data-label="blm" style="height:91%"></span></div>
+          </article>
+
+          <article class="artist-card" style="--a:#60a5fa;--b:#e879f9;--c:#f43f5e">
+            <div><span class="artist-orb"></span><h3>Mirrorstorm Drive-In</h3><p>Video-room artist. Night-road cinema, thunder screens, doubles running in parallel.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:93%"></span><span data-label="tide" style="height:43%"></span><span data-label="stat" style="height:81%"></span><span data-label="blm" style="height:69%"></span></div>
+          </article>
+
+          <article class="artist-card" style="--a:#c084fc;--b:#f0abfc;--c:#a7f3ff">
+            <div><span class="artist-orb"></span><h3>Animated Afterimage Theater</h3><p>Animation artist. Frame ghosts, glitch ballet, hand-drawn electricity learning motion.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:74%"></span><span data-label="tide" style="height:47%"></span><span data-label="stat" style="height:86%"></span><span data-label="blm" style="height:83%"></span></div>
+          </article>
+
+          <article class="artist-card" style="--a:#ff2d55;--b:#7c3aed;--c:#22d3ee">
+            <div><span class="artist-orb"></span><h3>Static Carnival</h3><p>Feral-pop artist. Funhouse mirror, distorted laughter, carnival drums, teeth in the light.</p></div>
+            <div class="mini-graph"><span data-label="chg" style="height:91%"></span><span data-label="tide" style="height:22%"></span><span data-label="stat" style="height:88%"></span><span data-label="blm" style="height:45%"></span></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="network" class="network-card" aria-labelledby="network-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">graph logic</p>
+            <h2 id="network-title">how the artists connect</h2>
+          </div>
+          <p>This is the next layer: not just cards, but a navigable graph of influence. Clickable nodes can later open the matching artist room, sound, capsule, or source artifact.</p>
+        </div>
+        <div class="network-map">
+          <span class="network-node">ocean static</span>
+          <span class="network-node">orchestra lab</span>
+          <span class="network-node">mural remix</span>
+          <span class="network-node">drive-in</span>
+          <span class="network-node">afterimage</span>
+          <span class="network-node">static carnival</span>
+          <span class="network-node">chorus engine</span>
+          <span class="network-node">signal funeral</span>
+          <span class="network-node">lyr moth</span>
+          <span class="network-node">glass animal</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
