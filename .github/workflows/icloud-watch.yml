@@ -1,0 +1,101 @@
+name: iCloud media browser probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      icloud_url:
+        description: "iCloud shared photo/video URL to inspect"
+        required: true
+        default: "https://share.icloud.com/photos/0c0cpN5VJ9yVCZYSS9XDjaFNw"
+      browser:
+        description: "Browser engine: chromium, webkit, firefox, or all"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - chromium
+          - webkit
+          - firefox
+      download_limit:
+        description: "Maximum discovered media candidates to download per browser"
+        required: true
+        default: "20"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit firefox
+
+      - name: Run selected browser probe
+        if: ${{ github.event.inputs.browser != 'all' }}
+        env:
+          HEADLESS: "true"
+          ICLOUD_DOWNLOAD_LIMIT: ${{ github.event.inputs.download_limit }}
+          ICLOUD_TIMEOUT_MS: "120000"
+        run: npm run icloud:watch -- "${{ github.event.inputs.icloud_url }}" "${{ github.event.inputs.browser }}"
+
+      - name: Run Chromium probe
+        if: ${{ github.event.inputs.browser == 'all' }}
+        env:
+          HEADLESS: "true"
+          ICLOUD_DOWNLOAD_LIMIT: ${{ github.event.inputs.download_limit }}
+          ICLOUD_TIMEOUT_MS: "120000"
+        run: npm run icloud:watch -- "${{ github.event.inputs.icloud_url }}" chromium
+
+      - name: Run WebKit probe
+        if: ${{ github.event.inputs.browser == 'all' }}
+        env:
+          HEADLESS: "true"
+          ICLOUD_DOWNLOAD_LIMIT: ${{ github.event.inputs.download_limit }}
+          ICLOUD_TIMEOUT_MS: "120000"
+        run: npm run icloud:watch -- "${{ github.event.inputs.icloud_url }}" webkit
+
+      - name: Run Firefox probe
+        if: ${{ github.event.inputs.browser == 'all' }}
+        env:
+          HEADLESS: "true"
+          ICLOUD_DOWNLOAD_LIMIT: ${{ github.event.inputs.download_limit }}
+          ICLOUD_TIMEOUT_MS: "120000"
+        run: npm run icloud:watch -- "${{ github.event.inputs.icloud_url }}" firefox
+
+      - name: Summarize probe results
+        if: always()
+        run: |
+          echo "# iCloud media browser probe" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source: ${{ github.event.inputs.icloud_url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Browser input: ${{ github.event.inputs.browser }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          find artifacts/icloud-watch -name manifest.json -print | while read file; do
+            echo "## $file" >> "$GITHUB_STEP_SUMMARY"
+            node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync(process.argv[1])); console.log(JSON.stringify({browser:m.browserName,title:m.title,finalUrl:m.finalUrl,navigationError:m.navigationError,counts:m.counts,candidateKinds:m.candidates.reduce((a,c)=>{a[c.kind]=(a[c.kind]||0)+1;return a}, {})}, null, 2))" "$file" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Upload browser probe artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: icloud-watch-${{ github.run_id }}
+          path: artifacts/icloud-watch
+          if-no-files-found: warn
+          retention-days: 14
