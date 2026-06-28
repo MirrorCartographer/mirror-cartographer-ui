@@ -6,6 +6,7 @@ import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
 import './assets/source-feeling.css';
+import './assets/mobile-enter.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
