@@ -1,998 +1,397 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { mutationWords, seedCapsules, transitions } from '../data/creationFeed';
+import React, { useEffect, useMemo, useState } from 'react';
+import { seedCapsules } from '../data/creationFeed';
 
-const STORAGE_KEY = 'mirror.portal.creation.weather.v1';
-const DEFAULT_WEATHER = { charge: 55, tide: 55, static: 55, bloom: 55 };
-const DEFAULT_PALETTE = ['#f0abfc', '#38bdf8', '#fde047', '#020617'];
+const STORAGE_KEY = 'mirror.cartographer.atlas.v2';
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, Number.isFinite(value) ? value : min));
-}
+const DEFAULT_OBSERVATION = {
+  title: "O'Malley: FIV + lymph nodes + breathing concern",
+  body: 'FIV-positive cat with multiple enlarged lymph nodes and possible breathing effect. Need to separate FIV baseline from lymphoma, infection, inflammation, or structural compression.',
+  domain: 'animal health / retrovirus / diagnostics',
+  risk: 'high if breathing is truly affected',
+  evidence: 'Known FIV+ status, owner-observed enlarged lymph nodes, possible respiratory effect.',
+  unknowns: 'Node cytology, FeLV status, CBC/chemistry/urinalysis, thoracic imaging, viral load/strain, lymphoma status.',
+};
 
-function safeGetStorage(key) {
+const workflowSteps = [
+  {
+    id: 'observe',
+    title: '1. Observe',
+    subtitle: 'name the scene without pretending it is solved',
+    body: 'Mirror Cartographer starts with the actual visible world: animal, symptom, artifact, feeling, contradiction, image, song, or research question.',
+    output: 'A structured observation with domain, risk, evidence, and unknowns.',
+  },
+  {
+    id: 'separate',
+    title: '2. Separate layers',
+    subtitle: 'stop one label from eating the whole problem',
+    body: 'For FIV, the label “FIV+” cannot be allowed to erase lymphoma, infection, anemia, oral disease, lung disease, or stress. Each layer gets its own test path.',
+    output: 'Competing hypotheses instead of one collapsed explanation.',
+  },
+  {
+    id: 'test',
+    title: '3. Test the next physical hinge',
+    subtitle: 'choose the observation that changes reality fastest',
+    body: 'The hinge for O’Malley is not a miracle cure claim. It is lymph-node cytology, CBC/chemistry/urinalysis, FeLV confirmation, and thoracic imaging if breathing is affected.',
+    output: 'A concrete test/procedure/research method with why, how, result meanings, limits, and next action.',
+  },
+  {
+    id: 'map',
+    title: '4. Map the unrealized cure space',
+    subtitle: 'current medicine is the wall, not the horizon',
+    body: 'The cure map tracks proviral erasure, latency lock, expose-and-clear, entry-proof immune replacement, nonprogressor conversion, and vaccine/prevention design.',
+    output: 'A research roadmap that marks what is known, unknown, plausible, dangerous, and testable.',
+  },
+  {
+    id: 'archive',
+    title: '5. Archive provenance',
+    subtitle: 'make thought inspectable',
+    body: 'The repo stores the evolution: maps, logs, assumptions, recommended tests, procedures, research methods, and prevention logic. The website becomes the window into that engine.',
+    output: 'A living cognition atlas instead of a vague chatbot.',
+  },
+];
+
+const cureGates = [
+  {
+    gate: 'Erase',
+    target: 'Integrated FIV provirus',
+    method: 'Multiplex CRISPR, base editing, prime editing, or RNA-guided disabling of conserved FIV regions.',
+    proof: 'No replication-competent virus after maximal stimulation; acceptable feline-genome off-target profile.',
+  },
+  {
+    gate: 'Lock',
+    target: 'Viral transcription / LTR reactivation',
+    method: 'Block-and-lock tools: targeted epigenetic repression, CRISPR interference, durable promoter silencing.',
+    proof: 'Provirus may remain, but infectious rebound does not occur after inflammatory activation.',
+  },
+  {
+    gate: 'Expose + clear',
+    target: 'Latent infected cells',
+    method: 'Latency reversal paired with antibodies, therapeutic vaccination, CAR-like feline immune cells, or bispecific clearance.',
+    proof: 'Reactivated infected cells are selectively killed without dangerous inflammation or rebound.',
+  },
+  {
+    gate: 'Armor',
+    target: 'FIV entry and replication habitat',
+    method: 'Entry-resistant immune cells, CD134/CXCR4 separation-of-function mapping, restriction-factor enhancement.',
+    proof: 'Feline immune cells remain functional but resist FIV entry/replication.',
+  },
+  {
+    gate: 'Convert ecology',
+    target: 'Chronic immune activation / progression terrain',
+    method: 'Study long-term nonprogressors, reduce inflammatory sinks, identify protective immune signatures.',
+    proof: 'Disease stops progressing with low viral activity and preserved immune function.',
+  },
+  {
+    gate: 'Prevent',
+    target: 'FIV-negative cats',
+    method: 'Test before mixing, prevent deep bites, indoor/no-roaming design, vet-guided vaccine decision only where available, future DIVA-compatible vaccine design.',
+    proof: 'No transmission events, clean testing records, and no false confidence from incomplete vaccine protection.',
+  },
+];
+
+function safeRead() {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return null;
-    const raw = window.localStorage.getItem(key);
-    if (!raw) return null;
-    return JSON.parse(raw);
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-function safeSetStorage(key, value) {
+function safeWrite(value) {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
-    window.localStorage.setItem(key, JSON.stringify(value));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
     return true;
   } catch {
     return false;
   }
 }
 
-function safeRemoveStorage(key) {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return false;
-    window.localStorage.removeItem(key);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function sanitizeCapsule(capsule, index = 0) {
-  if (!capsule || typeof capsule !== 'object') return null;
-  const weather = capsule.weather && typeof capsule.weather === 'object' ? capsule.weather : DEFAULT_WEATHER;
-  const palette = Array.isArray(capsule.palette) && capsule.palette.length >= 3 ? capsule.palette : DEFAULT_PALETTE;
-  return {
-    id: String(capsule.id || `capsule-${index}`),
-    title: String(capsule.title || 'Untitled signal'),
-    type: String(capsule.type || 'signal'),
-    mood: String(capsule.mood || 'unresolved, alive'),
-    weather: {
-      charge: clamp(Number(weather.charge), 0, 100),
-      tide: clamp(Number(weather.tide), 0, 100),
-      static: clamp(Number(weather.static), 0, 100),
-      bloom: clamp(Number(weather.bloom), 0, 100)
-    },
-    phrase: String(capsule.phrase || 'A signal entered the field.'),
-    lyric: String(capsule.lyric || 'new signal / no cage / still forming'),
-    palette,
-    notes: String(capsule.notes || ''),
-    localOnly: Boolean(capsule.localOnly)
-  };
-}
-
-function sanitizeCapsules(value) {
-  const source = Array.isArray(value) && value.length ? value : seedCapsules;
-  const clean = source.map(sanitizeCapsule).filter(Boolean);
-  return clean.length ? clean : seedCapsules.map(sanitizeCapsule).filter(Boolean);
-}
-
-function loadSavedState() {
-  const saved = safeGetStorage(STORAGE_KEY);
-  if (!saved || typeof saved !== 'object') return null;
-  return {
-    entered: Boolean(saved.entered),
-    mode: saved.mode === 'full' ? 'full' : 'soft',
-    capsules: sanitizeCapsules(saved.capsules),
-    selectedId: typeof saved.selectedId === 'string' ? saved.selectedId : undefined,
-    mutationIndex: Number.isFinite(Number(saved.mutationIndex)) ? Number(saved.mutationIndex) : 0,
-    archive: Array.isArray(saved.archive) ? saved.archive.slice(0, 40) : []
-  };
-}
-
-function weatherAverage(capsules) {
-  const clean = sanitizeCapsules(capsules);
-  const total = clean.reduce((acc, capsule) => {
-    acc.charge += capsule.weather.charge;
-    acc.tide += capsule.weather.tide;
-    acc.static += capsule.weather.static;
-    acc.bloom += capsule.weather.bloom;
-    return acc;
-  }, { charge: 0, tide: 0, static: 0, bloom: 0 });
-  const count = Math.max(clean.length, 1);
-  return {
-    charge: Math.round(total.charge / count),
-    tide: Math.round(total.tide / count),
-    static: Math.round(total.static / count),
-    bloom: Math.round(total.bloom / count)
-  };
-}
-
-function soundSignature(weather) {
-  const w = weather || DEFAULT_WEATHER;
-  if (w.tide >= 85 && w.static >= 65) return 'ocean static radio';
-  if (w.charge >= 88 && w.static >= 70) return 'glitter thunder engine';
-  if (w.bloom >= 85 && w.charge < 75) return 'soft bloom choir';
-  if (w.static >= 82) return 'feral mirror pulse';
-  if (w.tide >= 80) return 'slow water antenna';
-  return 'low mirror hum';
-}
-
-function PortalCanvas({ capsule, mode, intensity, drift, soundActive }) {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext?.('2d');
-    if (!canvas || !ctx || !capsule) return undefined;
-
-    let raf = 0;
-    let frame = 0;
-    let alive = true;
-
-    const resize = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect?.();
-      const dpr = window.devicePixelRatio || 1;
-      const width = Math.max(320, Math.floor((rect?.width || 720) * dpr));
-      const height = Math.max(320, Math.floor((rect?.height || 520) * dpr));
-      canvas.width = width;
-      canvas.height = height;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const draw = () => {
-      if (!alive) return;
-      const dpr = window.devicePixelRatio || 1;
-      const w = canvas.width / dpr;
-      const h = canvas.height / dpr;
-      const colors = capsule.palette || DEFAULT_PALETTE;
-      const weather = capsule.weather || DEFAULT_WEATHER;
-      frame += 1;
-
-      ctx.clearRect(0, 0, w, h);
-      const bg = ctx.createRadialGradient(w * 0.5, h * 0.45, 20, w * 0.5, h * 0.5, Math.max(w, h) * 0.72);
-      bg.addColorStop(0, `${colors[1]}33`);
-      bg.addColorStop(0.38, `${colors[0]}18`);
-      bg.addColorStop(1, '#02030a');
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, w, h);
-
-      const bands = mode === 'full' ? 22 : 13;
-      for (let i = 0; i < bands; i += 1) {
-        const t = frame * (soundActive ? 0.011 : 0.008) + i * 0.63 + drift;
-        const x = w * (0.5 + Math.sin(t * 0.74) * 0.34);
-        const y = h * (0.5 + Math.cos(t * 0.91) * 0.26);
-        const rx = 28 + (weather.bloom * 0.55) + Math.sin(t) * 18;
-        const ry = 42 + (weather.tide * 0.45) + Math.cos(t * 1.2) * 15;
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(t * 0.28);
-        ctx.strokeStyle = `${colors[i % colors.length]}${soundActive ? '88' : mode === 'full' ? '66' : '42'}`;
-        ctx.lineWidth = 0.7 + (weather.charge / 120) + (soundActive ? 0.7 : 0);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      const particles = mode === 'full' ? 90 : 42;
-      for (let i = 0; i < particles; i += 1) {
-        const base = i * 91.7;
-        const speed = 0.0025 + weather.static / 52000 + (soundActive ? 0.0016 : 0);
-        const angle = base + frame * speed * (i % 7 + 1) + drift;
-        const orbit = 40 + ((i * 29) % Math.min(w, h)) * 0.48;
-        const x = w / 2 + Math.cos(angle) * orbit + Math.sin(frame * 0.004 + i) * weather.static * 0.12;
-        const y = h / 2 + Math.sin(angle * 1.17) * orbit * 0.68 + Math.cos(frame * 0.006 + i) * weather.tide * 0.09;
-        const size = 0.9 + ((i % 5) * 0.5) + intensity * 0.02 + (soundActive ? 0.9 : 0);
-        ctx.fillStyle = `${colors[(i + frame) % colors.length]}${soundActive ? 'ee' : mode === 'full' ? 'cc' : '88'}`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.save();
-      ctx.translate(w / 2, h / 2);
-      ctx.rotate(Math.sin(frame * 0.004 + drift) * 0.18);
-      const radius = Math.min(w, h) * (0.14 + weather.bloom / 900 + (soundActive ? 0.025 : 0));
-      const portal = ctx.createRadialGradient(0, 0, 4, 0, 0, radius * 1.8);
-      portal.addColorStop(0, `${colors[2]}dd`);
-      portal.addColorStop(0.25, `${colors[1]}88`);
-      portal.addColorStop(0.58, `${colors[0]}44`);
-      portal.addColorStop(1, 'transparent');
-      ctx.fillStyle = portal;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, radius * 0.72, radius * 1.18, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = `${colors[2]}aa`;
-      ctx.lineWidth = soundActive ? 2.1 : 1.1;
-      ctx.stroke();
-      ctx.restore();
-
-      raf = window.requestAnimationFrame(draw);
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-    raf = window.requestAnimationFrame(draw);
-
-    return () => {
-      alive = false;
-      window.cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-    };
-  }, [capsule, mode, intensity, drift, soundActive]);
-
-  return <canvas className="portal-canvas" ref={canvasRef} aria-label={`Generative artwork for ${capsule?.title || 'portal signal'}`} />;
-}
-
-function createNoiseBuffer(context, seconds = 1.2) {
-  const length = Math.floor(context.sampleRate * seconds);
-  const buffer = context.createBuffer(1, length, context.sampleRate);
-  const data = buffer.getChannelData(0);
-  let previous = 0;
-  for (let i = 0; i < length; i += 1) {
-    const white = Math.random() * 2 - 1;
-    previous = previous * 0.82 + white * 0.18;
-    data[i] = previous;
-  }
-  return buffer;
-}
-
-function useMirrorSoundEngine() {
-  const contextRef = useRef(null);
-  const nodesRef = useRef([]);
-  const timerRef = useRef(null);
-  const [armed, setArmed] = useState(false);
-  const [playingId, setPlayingId] = useState(null);
-  const [audioNote, setAudioNote] = useState('');
-
-  const disconnectNode = (node) => {
-    try { node.stop?.(); } catch {}
-    try { node.disconnect?.(); } catch {}
-  };
-
-  const stop = () => {
-    if (timerRef.current) window.clearTimeout(timerRef.current);
-    timerRef.current = null;
-    nodesRef.current.forEach(disconnectNode);
-    nodesRef.current = [];
-    setPlayingId(null);
-  };
-
-  const ensureContext = async () => {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) throw new Error('Audio unavailable in this browser.');
-    const context = contextRef.current || new AudioContext();
-    contextRef.current = context;
-    if (context.state === 'suspended') await context.resume();
-    setArmed(true);
-    return context;
-  };
-
-  const arm = async () => {
-    try {
-      const context = await ensureContext();
-      const now = context.currentTime;
-      const osc = context.createOscillator();
-      const gain = context.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 222;
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.linearRampToValueAtTime(0.022, now + 0.035);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
-      osc.connect(gain);
-      gain.connect(context.destination);
-      osc.start(now);
-      osc.stop(now + 0.38);
-      nodesRef.current.push(osc, gain);
-      setAudioNote('sound layer armed — tap a capsule or sound the field');
-      window.setTimeout(() => setAudioNote(''), 1500);
-    } catch (error) {
-      setAudioNote(error.message || 'audio blocked; tap again or try another browser');
-    }
-  };
-
-  const playCapsule = async (capsule, mutationIndex, voice = 'portal') => {
-    if (!capsule) return;
-    try {
-      stop();
-      const context = await ensureContext();
-      const weather = capsule.weather || DEFAULT_WEATHER;
-      const now = context.currentTime;
-      const duration = 7.5 + weather.tide / 90;
-      const master = context.createGain();
-      const compressor = context.createDynamicsCompressor();
-      compressor.threshold.value = -24;
-      compressor.knee.value = 22;
-      compressor.ratio.value = 9;
-      compressor.attack.value = 0.01;
-      compressor.release.value = 0.25;
-      master.gain.setValueAtTime(0.0001, now);
-      master.gain.linearRampToValueAtTime(0.06, now + 0.22);
-      master.gain.linearRampToValueAtTime(0.052, now + duration - 0.7);
-      master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-      master.connect(compressor);
-      compressor.connect(context.destination);
-
-      const filter = context.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(260 + weather.bloom * 24, now);
-      filter.frequency.linearRampToValueAtTime(420 + weather.charge * 28, now + duration * 0.62);
-      filter.Q.value = 1.2 + weather.static / 38;
-
-      const delay = context.createDelay();
-      delay.delayTime.value = 0.08 + weather.tide / 420;
-      const feedback = context.createGain();
-      feedback.gain.value = 0.08 + weather.static / 900;
-      delay.connect(feedback);
-      feedback.connect(delay);
-
-      const wet = context.createGain();
-      wet.gain.value = 0.32;
-      filter.connect(master);
-      filter.connect(delay);
-      delay.connect(wet);
-      wet.connect(master);
-
-      const base = 82 + weather.charge * 1.55 + mutationIndex * 4.5;
-      const voiceRatios = {
-        portal: [1, 1.5, 2, 2.5],
-        ocean: [0.5, 1, 1.333, 2],
-        thunder: [0.5, 1, 1.25, 1.875, 2.5],
-        moth: [1, 1.125, 1.5, 2.25]
-      };
-      const ratios = voiceRatios[voice] || voiceRatios.portal;
-      const wave = voice === 'thunder' ? 'sawtooth' : voice === 'moth' ? 'triangle' : 'sine';
-
-      ratios.forEach((ratio, index) => {
-        const osc = context.createOscillator();
-        const gain = context.createGain();
-        const pan = context.createStereoPanner ? context.createStereoPanner() : null;
-        osc.type = index === 0 && voice !== 'ocean' ? wave : index % 2 ? 'triangle' : 'sine';
-        osc.frequency.setValueAtTime(base * ratio, now);
-        osc.detune.setValueAtTime((index - 1.5) * (weather.static / 10), now);
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.linearRampToValueAtTime((0.018 + weather.bloom / 5200) / (index + 1), now + 0.4 + index * 0.12);
-        gain.gain.linearRampToValueAtTime((0.012 + weather.tide / 9000) / (index + 1), now + duration - 0.9);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-        osc.connect(gain);
-        if (pan) {
-          pan.pan.value = -0.38 + index * (0.76 / Math.max(ratios.length - 1, 1));
-          gain.connect(pan);
-          pan.connect(filter);
-          nodesRef.current.push(pan);
-        } else {
-          gain.connect(filter);
-        }
-        osc.start(now);
-        osc.stop(now + duration);
-        nodesRef.current.push(osc, gain);
-      });
-
-      const pulseCount = voice === 'thunder' ? 18 : 24;
-      const pulseInterval = 0.16 + weather.tide / 1500;
-      for (let i = 0; i < pulseCount; i += 1) {
-        const osc = context.createOscillator();
-        const gain = context.createGain();
-        const t = now + 0.35 + i * pulseInterval;
-        osc.type = voice === 'thunder' ? 'square' : 'triangle';
-        osc.frequency.value = base * (1 + ((i % 5) * 0.125));
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.linearRampToValueAtTime(0.006 + weather.charge / 15000, t + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09 + weather.static / 1800);
-        osc.connect(gain);
-        gain.connect(filter);
-        osc.start(t);
-        osc.stop(t + 0.2);
-        nodesRef.current.push(osc, gain);
-      }
-
-      const noise = context.createBufferSource();
-      const noiseGain = context.createGain();
-      const noiseFilter = context.createBiquadFilter();
-      noise.buffer = createNoiseBuffer(context, 1.6);
-      noise.loop = true;
-      noiseFilter.type = voice === 'ocean' ? 'bandpass' : 'highpass';
-      noiseFilter.frequency.value = voice === 'ocean' ? 680 + weather.tide * 6 : 1300 + weather.static * 16;
-      noiseFilter.Q.value = voice === 'ocean' ? 0.8 : 3.4;
-      noiseGain.gain.setValueAtTime(0.0001, now);
-      noiseGain.gain.linearRampToValueAtTime(0.006 + weather.static / 9000, now + 0.5);
-      noiseGain.gain.linearRampToValueAtTime(0.002 + weather.tide / 12000, now + duration - 0.5);
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-      noise.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(filter);
-      noise.start(now);
-      noise.stop(now + duration);
-      nodesRef.current.push(noise, noiseGain, noiseFilter, filter, delay, feedback, wet, master, compressor);
-
-      setAudioNote(`${soundSignature(weather)} — ${capsule.title}`);
-      setPlayingId(capsule.id);
-      timerRef.current = window.setTimeout(() => {
-        setPlayingId(null);
-        setAudioNote('');
-      }, Math.ceil(duration * 1000) + 100);
-    } catch (error) {
-      stop();
-      setAudioNote(error.message || 'audio blocked; tap sound again');
-    }
-  };
-
-  useEffect(() => () => {
-    stop();
-    if (contextRef.current?.state !== 'closed') {
-      try { contextRef.current?.close?.(); } catch {}
-    }
-  }, []);
-
-  return { armed, arm, playCapsule, stop, playingId, audioNote };
-}
-
-function WeatherBar({ label, value }) {
+function FieldCanvas({ active }) {
   return (
-    <div className="weather-bar">
-      <div className="weather-label"><span>{label}</span><span>{value}</span></div>
-      <div className="weather-track"><span style={{ width: `${value}%` }} /></div>
+    <div className="mc-orbit" aria-label="Mirror Cartographer field visualization">
+      <span className="ring ring-one" />
+      <span className="ring ring-two" />
+      <span className="ring ring-three" />
+      <span className="core" />
+      <span className="label north">evidence</span>
+      <span className="label east">symbol</span>
+      <span className="label south">body</span>
+      <span className="label west">unknown</span>
+      <strong>{active}</strong>
     </div>
   );
 }
 
-function CapsuleNode({ capsule, active, onSelect, onSound, sounding }) {
-  const style = {
-    '--a': capsule.palette[0],
-    '--b': capsule.palette[1],
-    '--c': capsule.palette[2]
-  };
+function ObservationForm({ observation, setObservation, onRun }) {
+  const update = (field, value) => setObservation((current) => ({ ...current, [field]: value }));
   return (
-    <article className={`capsule-node ${active ? 'active' : ''} ${sounding ? 'sounding' : ''}`} style={style}>
-      <button className="node-main" onClick={() => onSelect(capsule.id)}>
-        <span className="node-orb" />
-        <span className="node-copy">
-          <strong>{capsule.title}</strong>
-          <em>{capsule.type}</em>
-          <small>{soundSignature(capsule.weather)}</small>
-        </span>
-      </button>
-      <button className="node-sound" onClick={() => onSound(capsule)} aria-label={`Play sound for ${capsule.title}`}>
-        {sounding ? 'humming' : 'sound'}
-      </button>
-    </article>
-  );
-}
-
-function ArtifactCard({ capsule, selected, onOpen, onSound, sounding }) {
-  return (
-    <article className={`artifact-card ${selected ? 'selected' : ''} ${sounding ? 'sounding' : ''}`} style={{ '--a': capsule.palette[0], '--b': capsule.palette[1], '--c': capsule.palette[2] }}>
-      <button className="artifact-open" onClick={() => onOpen(capsule.id)}>
-        <span className="artifact-glow" />
-        <span className="artifact-type">{capsule.type}</span>
-        <strong>{capsule.title}</strong>
-        <span>{capsule.mood}</span>
-      </button>
-      <button className="node-sound artifact-sound" onClick={() => onSound(capsule)}>
-        {sounding ? 'humming' : 'sound'}
-      </button>
-    </article>
-  );
-}
-
-function SoundConsole({ selected, portalWeather, armed, playingId, audioNote, onArm, onSound, onStop, voice, setVoice }) {
-  const signature = soundSignature(selected?.weather);
-  return (
-    <section className="sound-console" aria-label="Mirror Cartographer sound layer">
-      <div>
-        <p className="eyebrow">sound layer</p>
-        <h3>{armed ? signature : 'silent until touched'}</h3>
-        <p className="quiet">Sound is opt-in. It maps capsule weather into pulse, tide, static, bloom, and a short living hum.</p>
-      </div>
-      <div className="sound-readout">
-        <span>charge {selected.weather.charge}</span>
-        <span>tide {selected.weather.tide}</span>
-        <span>static {selected.weather.static}</span>
-        <span>bloom {selected.weather.bloom}</span>
-      </div>
-      <label className="voice-picker">
-        <span>voice</span>
-        <select value={voice} onChange={(event) => setVoice(event.target.value)}>
-          <option value="portal">portal glass</option>
-          <option value="ocean">ocean static</option>
-          <option value="thunder">glitter thunder</option>
-          <option value="moth">lyr moth</option>
-        </select>
+    <section className="mc-panel observation-panel">
+      <p className="eyebrow">live input</p>
+      <h2>Drop one real-world signal.</h2>
+      <label>
+        <span>Title</span>
+        <input value={observation.title} onChange={(event) => update('title', event.target.value)} />
       </label>
-      <div className="action-row">
-        <button className="primary-action" onClick={armed ? onSound : onArm}>
-          {armed ? (playingId === selected.id ? 'field humming' : 'sound the field') : 'wake sound'}
-        </button>
-        <button className="secondary-action" onClick={onStop}>hush</button>
+      <label>
+        <span>Observation</span>
+        <textarea value={observation.body} onChange={(event) => update('body', event.target.value)} />
+      </label>
+      <div className="two-fields">
+        <label>
+          <span>Domain</span>
+          <input value={observation.domain} onChange={(event) => update('domain', event.target.value)} />
+        </label>
+        <label>
+          <span>Risk</span>
+          <input value={observation.risk} onChange={(event) => update('risk', event.target.value)} />
+        </label>
       </div>
-      <p className="sound-status">{audioNote || `portal weather ${portalWeather.charge}/${portalWeather.tide}/${portalWeather.static}/${portalWeather.bloom}`}</p>
+      <label>
+        <span>Known evidence</span>
+        <textarea value={observation.evidence} onChange={(event) => update('evidence', event.target.value)} />
+      </label>
+      <label>
+        <span>Unknowns</span>
+        <textarea value={observation.unknowns} onChange={(event) => update('unknowns', event.target.value)} />
+      </label>
+      <button className="primary-action" onClick={onRun}>map this signal</button>
     </section>
   );
 }
 
-function DropZone({ onCreate }) {
-  const [draft, setDraft] = useState({ title: '', type: 'signal drop', note: '', fileName: '', fileKind: '' });
-  const [preview, setPreview] = useState(null);
-
-  useEffect(() => () => {
-    if (preview?.url) URL.revokeObjectURL(preview.url);
-  }, [preview]);
-
-  const handleFile = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreview({ url, type: file.type || '', name: file.name });
-    setDraft((current) => ({
-      ...current,
-      title: current.title || file.name.replace(/\.[^.]+$/, ''),
-      fileName: file.name,
-      fileKind: file.type || 'unknown'
-    }));
-  };
-
-  const create = () => {
-    const title = draft.title.trim() || 'Untitled signal';
-    onCreate(sanitizeCapsule({
-      id: `user-${Date.now()}`,
-      title,
-      type: draft.type || 'signal drop',
-      mood: 'new, unresolved, alive',
-      weather: DEFAULT_WEATHER,
-      phrase: draft.note || 'A new artifact entered the weather.',
-      lyric: 'new signal / no cage / still forming',
-      palette: DEFAULT_PALETTE,
-      notes: draft.fileName ? `${draft.note}\nAttached locally: ${draft.fileName} (${draft.fileKind})` : draft.note,
-      localOnly: true
-    }));
-    setDraft({ title: '', type: 'signal drop', note: '', fileName: '', fileKind: '' });
-    setPreview(null);
-  };
-
-  const previewType = preview?.type || '';
+function ResearchOutput({ observation, runCount }) {
+  const tests = useMemo(() => [
+    `Clarify immediate danger: ${observation.risk}`,
+    'If breathing is affected: resting respiratory rate log, video, gum color check, and vet-directed thoracic imaging.',
+    'If lymph nodes are enlarged: anatomical node map and FNA/cytology of the most abnormal accessible node.',
+    'Baseline body-state tests: CBC with differential, chemistry panel, urinalysis, FeLV confirmation if not documented.',
+    'Research layer: sequence/strain identification, reservoir-cell map, conserved-target search, delivery-platform scoring.',
+    'Prevention layer for FIV-negative cats: test before mixing, prevent deep bites, indoor/no-roaming design, vaccine discussion only if available and justified.',
+  ], [observation.risk]);
 
   return (
-    <section className="drop-zone">
-      <div>
-        <p className="eyebrow">drop a signal</p>
-        <h3>Bring in image, audio, video, lyrics, or debris.</h3>
-        <p className="quiet">Files stay in your browser session. The saved capsule records the title, note, and local file name; repo-connected uploads can become permanent artifact storage later.</p>
+    <section className="mc-panel result-panel">
+      <p className="eyebrow">mapped output #{runCount}</p>
+      <h2>{observation.title}</h2>
+      <div className="result-grid">
+        <article>
+          <strong>Observation</strong>
+          <p>{observation.body}</p>
+        </article>
+        <article>
+          <strong>Domain</strong>
+          <p>{observation.domain}</p>
+        </article>
+        <article>
+          <strong>Known evidence</strong>
+          <p>{observation.evidence}</p>
+        </article>
+        <article>
+          <strong>Unknowns</strong>
+          <p>{observation.unknowns}</p>
+        </article>
       </div>
-      <label className="file-drop">
-        <input type="file" accept="image/*,audio/*,video/*,.txt,.md" onChange={handleFile} />
-        <span>{preview ? preview.name : 'choose a file'}</span>
-      </label>
-      {preview && (
-        <div className="preview-box">
-          {previewType.startsWith('image/') && <img src={preview.url} alt="Selected signal preview" />}
-          {previewType.startsWith('audio/') && <audio controls src={preview.url} />}
-          {previewType.startsWith('video/') && <video controls src={preview.url} />}
-          {!previewType.startsWith('image/') && !previewType.startsWith('audio/') && !previewType.startsWith('video/') && <p>{preview.name}</p>}
-        </div>
-      )}
-      <input className="field-input" value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} placeholder="name the artifact" />
-      <textarea value={draft.note} onChange={(event) => setDraft({ ...draft, note: event.target.value })} placeholder="what is the weather around it?" />
-      <button className="primary-action" onClick={create}>add to the portal</button>
+      <h3>Next physical hinges</h3>
+      <ol className="hinge-list">
+        {tests.map((test) => <li key={test}>{test}</li>)}
+      </ol>
     </section>
   );
 }
 
-function SoundLayerStyles() {
+function PathCard({ step, active, onClick }) {
   return (
-    <style>{`
-      .sound-console {
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 28px;
-        padding: 18px;
-        background:
-          radial-gradient(circle at 16% 8%, rgba(103,232,249,0.18), transparent 34%),
-          radial-gradient(circle at 85% 90%, rgba(236,72,153,0.14), transparent 36%),
-          rgba(255,255,255,0.045);
-        box-shadow: inset 0 0 42px rgba(255,255,255,0.035);
-        display: grid;
-        gap: 14px;
-      }
-
-      .sound-console h3 {
-        margin: 8px 0 6px;
-        font-size: clamp(1.6rem, 3vw, 2.55rem);
-        line-height: 0.95;
-        letter-spacing: -0.06em;
-      }
-
-      .sound-readout {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      .sound-readout span,
-      .sound-status,
-      .node-copy small {
-        color: var(--dim);
-        font-size: 0.74rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .sound-readout span {
-        padding: 9px 10px;
-        border: 1px solid rgba(255,255,255,0.11);
-        border-radius: 999px;
-        background: rgba(0,0,0,0.2);
-      }
-
-      .voice-picker {
-        display: grid;
-        gap: 8px;
-      }
-
-      .voice-picker span {
-        color: var(--dim);
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .voice-picker select {
-        width: 100%;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(0,0,0,0.28);
-        color: var(--ink);
-        padding: 11px 12px;
-      }
-
-      .capsule-node,
-      .artifact-card {
-        display: grid;
-        align-content: stretch;
-      }
-
-      .capsule-node.sounding,
-      .artifact-card.sounding {
-        border-color: rgba(103,232,249,0.72);
-        box-shadow: 0 0 42px color-mix(in srgb, var(--b), transparent 78%), inset 0 0 26px rgba(255,255,255,0.04);
-      }
-
-      .node-main,
-      .artifact-open {
-        all: unset;
-        cursor: pointer;
-        display: block;
-        min-height: 100%;
-      }
-
-      .artifact-open {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        gap: 10px;
-        flex: 1;
-      }
-
-      .node-sound {
-        position: relative;
-        z-index: 2;
-        justify-self: start;
-        align-self: end;
-        margin-top: 12px;
-        border: 1px solid rgba(255,255,255,0.16);
-        border-radius: 999px;
-        padding: 7px 10px;
-        background: rgba(2,3,10,0.42);
-        color: var(--ink);
-        cursor: pointer;
-        font-size: 0.72rem;
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
-      }
-
-      .artifact-sound {
-        position: absolute;
-        left: 18px;
-        top: 18px;
-        margin: 0;
-      }
-
-      .sound-status {
-        margin: 0;
-      }
-
-      .system-note {
-        max-width: 1480px;
-        margin: 0 auto 14px;
-        border: 1px solid rgba(253,230,138,0.28);
-        border-radius: 999px;
-        padding: 10px 14px;
-        background: rgba(253,230,138,0.08);
-        color: var(--gold);
-      }
-
-      @supports not (background: color-mix(in srgb, red, transparent 50%)) {
-        .capsule-node.sounding,
-        .artifact-card.sounding {
-          box-shadow: 0 0 38px rgba(103,232,249,0.2);
-        }
-      }
-    `}</style>
+    <button className={`path-card ${active ? 'active' : ''}`} onClick={onClick}>
+      <span>{step.title}</span>
+      <strong>{step.subtitle}</strong>
+      <em>{step.output}</em>
+    </button>
   );
 }
 
 function App() {
-  const initial = useMemo(() => loadSavedState(), []);
-  const initialCapsules = useMemo(() => sanitizeCapsules(initial?.capsules), [initial]);
-  const [entered, setEntered] = useState(() => initial?.entered || false);
-  const [mode, setMode] = useState(() => initial?.mode || 'soft');
-  const [capsules, setCapsules] = useState(() => initialCapsules);
-  const [selectedId, setSelectedId] = useState(() => initial?.selectedId || initialCapsules[0]?.id || seedCapsules[0].id);
-  const [mutationIndex, setMutationIndex] = useState(() => initial?.mutationIndex || 0);
-  const [archive, setArchive] = useState(() => initial?.archive || []);
-  const [drift, setDrift] = useState(0);
-  const [activeView, setActiveView] = useState('field');
-  const [storageWarning, setStorageWarning] = useState('');
-  const [voice, setVoice] = useState('portal');
-  const sound = useMirrorSoundEngine();
+  const saved = typeof window !== 'undefined' ? safeRead() : null;
+  const [view, setView] = useState(saved?.view || 'atlas');
+  const [activeStep, setActiveStep] = useState(saved?.activeStep || workflowSteps[0].id);
+  const [observation, setObservation] = useState(saved?.observation || DEFAULT_OBSERVATION);
+  const [runCount, setRunCount] = useState(saved?.runCount || 1);
+  const [notice, setNotice] = useState('');
 
-  const selected = capsules.find((capsule) => capsule.id === selectedId) || capsules[0] || sanitizeCapsule(seedCapsules[0]);
-  const portalWeather = weatherAverage(capsules);
-  const nextIds = transitions[selected.id] || capsules.filter((capsule) => capsule.id !== selected.id).slice(0, 3).map((capsule) => capsule.id);
-  const nextCapsules = nextIds.map((id) => capsules.find((capsule) => capsule.id === id)).filter(Boolean);
-  const mutationWord = mutationWords[mutationIndex % mutationWords.length] || 'shift';
+  const active = workflowSteps.find((step) => step.id === activeStep) || workflowSteps[0];
 
   useEffect(() => {
-    const ok = safeSetStorage(STORAGE_KEY, { entered, mode, capsules, selectedId, mutationIndex, archive });
-    setStorageWarning(ok ? '' : 'local save unavailable in this browser');
-  }, [entered, mode, capsules, selectedId, mutationIndex, archive]);
+    const ok = safeWrite({ view, activeStep, observation, runCount });
+    setNotice(ok ? '' : 'local browser save unavailable; the atlas still runs in memory');
+  }, [view, activeStep, observation, runCount]);
 
-  const playCapsule = (capsule = selected) => {
-    setSelectedId(capsule.id);
-    setDrift((value) => value + 0.21);
-    sound.playCapsule(capsule, mutationIndex, voice);
+  const runMap = () => {
+    setRunCount((count) => count + 1);
+    setView('demo');
+    setActiveStep('test');
   };
 
-  const mutate = () => {
-    setMutationIndex((index) => index + 1);
-    setDrift((value) => value + 0.77);
-    setCapsules((current) => current.map((capsule) => {
-      if (capsule.id !== selected.id) return capsule;
-      const shift = mutationIndex + 1;
-      return {
-        ...capsule,
-        weather: {
-          charge: clamp(capsule.weather.charge + ((shift % 3) - 1) * 7 + 3, 5, 99),
-          tide: clamp(capsule.weather.tide + ((shift % 4) - 2) * 5 + 2, 5, 99),
-          static: clamp(capsule.weather.static + ((shift % 5) - 2) * 6, 5, 99),
-          bloom: clamp(capsule.weather.bloom + ((shift % 6) - 3) * 4 + 4, 5, 99)
-        }
-      };
-    }));
-  };
-
-  const followSignal = () => {
-    const pool = nextCapsules.length ? nextCapsules : capsules;
-    if (!pool.length) return;
-    const next = pool[(mutationIndex + selected.weather.static + archive.length) % pool.length];
-    setSelectedId(next.id);
-    setActiveView('field');
-    setDrift((value) => value + 0.41);
-  };
-
-  const saveAftermath = () => {
-    const entry = {
-      id: `aftermath-${Date.now()}`,
-      title: selected.title,
-      mutation: mutationWord,
-      phrase: selected.phrase,
-      lyric: selected.lyric,
-      weather: selected.weather,
-      sound: soundSignature(selected.weather),
-      createdAt: new Date().toISOString()
+  const exportMap = () => {
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      system: 'Mirror Cartographer atlas prototype',
+      observation,
+      workflowSteps,
+      cureGates,
+      sourceCapsules: seedCapsules.slice(0, 6).map(({ id, title, type, mood, phrase }) => ({ id, title, type, mood, phrase })),
     };
-    setArchive((items) => [entry, ...items].slice(0, 40));
-    setActiveView('aftermath');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mirror-cartographer-map-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
-
-  const exportPortal = () => {
-    try {
-      const payload = {
-        exportedAt: new Date().toISOString(),
-        concept: 'our vlog / our weather map / our playable art portal',
-        soundLayer: {
-          status: 'opt-in Web Audio capsule sonification',
-          voices: ['portal', 'ocean', 'thunder', 'moth'],
-          maps: ['charge -> pitch/pulse force', 'tide -> delay/drift', 'static -> noise/filter texture', 'bloom -> harmony/attack softness']
-        },
-        capsules,
-        archive
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `mirror-portal-weather-${new Date().toISOString().slice(0, 10)}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      setStorageWarning('export blocked by browser permissions');
-    }
-  };
-
-  const addCapsule = (capsule) => {
-    if (!capsule) return;
-    setCapsules((current) => [capsule, ...sanitizeCapsules(current)]);
-    setSelectedId(capsule.id);
-    setActiveView('field');
-  };
-
-  const resetLocalField = () => {
-    safeRemoveStorage(STORAGE_KEY);
-    sound.stop();
-    setCapsules(sanitizeCapsules(seedCapsules));
-    setSelectedId(seedCapsules[0].id);
-    setArchive([]);
-    setMutationIndex(0);
-    setActiveView('field');
-  };
-
-  if (!entered) {
-    return (
-      <main className="gate-screen">
-        <SoundLayerStyles />
-        <div className="ambient-grid" />
-        <section className="gate-card">
-          <p className="eyebrow">mirror portal</p>
-          <h1>our weather map for the things we make</h1>
-          <p className="gate-line">artifacts, songs, fragments, videos, afterimages, guide-signals.</p>
-          <button className="enter-button" onClick={() => setEntered(true)}>
-            <span>enter</span>
-          </button>
-          <p className="quiet">sound stays silent until you wake it. no autoplay. no jump scare. just the field.</p>
-        </section>
-      </main>
-    );
-  }
 
   return (
-    <main className={`portal-shell ${mode}`}>
-      <SoundLayerStyles />
-      <div className="noise-layer" />
-      <header className="topline">
-        <button className="ghost-button" onClick={() => setEntered(false)}>gate</button>
-        <div className="status-line">
-          <span>our vlog</span>
-          <span>weather {portalWeather.charge}/{portalWeather.tide}/{portalWeather.static}/{portalWeather.bloom}</span>
-          <span>{sound.armed ? 'sound armed' : 'silent'}</span>
-          <span>{mode}</span>
-        </div>
-        <button className="ghost-button" onClick={() => setMode(mode === 'soft' ? 'full' : 'soft')}>{mode === 'soft' ? 'full mode' : 'soft mode'}</button>
+    <main className="mc-shell">
+      <style>{styles}</style>
+      <div className="mc-background" />
+      <header className="mc-header">
+        <button className="brand" onClick={() => setView('atlas')}>Mirror Cartographer</button>
+        <nav aria-label="Mirror Cartographer sections">
+          {['atlas', 'demo', 'cures', 'prevention', 'engine'].map((item) => (
+            <button key={item} className={view === item ? 'active' : ''} onClick={() => setView(item)}>{item}</button>
+          ))}
+        </nav>
       </header>
 
-      {(storageWarning || sound.audioNote) && <div className="system-note">{storageWarning || sound.audioNote}</div>}
+      {notice && <p className="mc-notice">{notice}</p>}
 
-      <section className="hero-world">
-        <div className="canvas-stage">
-          <PortalCanvas capsule={selected} mode={mode} intensity={portalWeather.charge} drift={drift} soundActive={sound.playingId === selected.id} />
-          <div className="floating-title">
-            <p className="eyebrow">{sound.playingId === selected.id ? 'now sounding' : 'now playing'}</p>
-            <h2>{selected.title}</h2>
-            <p>{selected.phrase}</p>
+      {view === 'atlas' && (
+        <section className="hero-grid">
+          <div className="hero-copy">
+            <p className="eyebrow">working atlas prototype</p>
+            <h1>A navigable system for turning felt signal into evidence, tests, research maps, and stored provenance.</h1>
+            <p className="lead">Not a generic chatbot. Not a static journal. Mirror Cartographer is a cognition interface: it separates layers, names unknowns, chooses physical hinges, and keeps the trail inspectable.</p>
+            <div className="hero-actions">
+              <button className="primary-action" onClick={() => setView('demo')}>run the FIV demo</button>
+              <button className="secondary-action" onClick={() => setView('engine')}>show the engine</button>
+            </div>
           </div>
-        </div>
-        <aside className="control-oracle">
-          <p className="eyebrow">Lyr says</p>
-          <blockquote>{selected.lyric}</blockquote>
-          <div className="weather-panel">
-            <WeatherBar label="charge" value={selected.weather.charge} />
-            <WeatherBar label="tide" value={selected.weather.tide} />
-            <WeatherBar label="static" value={selected.weather.static} />
-            <WeatherBar label="bloom" value={selected.weather.bloom} />
-          </div>
-          <SoundConsole
-            selected={selected}
-            portalWeather={portalWeather}
-            armed={sound.armed}
-            playingId={sound.playingId}
-            audioNote={sound.audioNote}
-            onArm={sound.arm}
-            onSound={() => playCapsule(selected)}
-            onStop={sound.stop}
-            voice={voice}
-            setVoice={setVoice}
-          />
-          <div className="action-row">
-            <button className="secondary-action" onClick={mutate}>mutate: {mutationWord}</button>
-            <button className="secondary-action" onClick={followSignal}>follow signal</button>
-          </div>
-          <button className="save-action" onClick={saveAftermath}>save aftermath</button>
-        </aside>
-      </section>
-
-      <nav className="world-tabs" aria-label="Portal layers">
-        {['field', 'artifacts', 'drop', 'aftermath', 'engine'].map((view) => (
-          <button key={view} className={activeView === view ? 'active' : ''} onClick={() => setActiveView(view)}>{view}</button>
-        ))}
-      </nav>
-
-      {activeView === 'field' && (
-        <section className="map-layer">
-          <div className="section-heading">
-            <p className="eyebrow">signal field</p>
-            <h3>touch an object. the weather changes. sound gives it a body.</h3>
-          </div>
-          <div className="node-map">
-            {capsules.map((capsule) => (
-              <CapsuleNode
-                key={capsule.id}
-                capsule={capsule}
-                active={capsule.id === selected.id}
-                sounding={sound.playingId === capsule.id}
-                onSelect={setSelectedId}
-                onSound={playCapsule}
-              />
-            ))}
-          </div>
+          <FieldCanvas active={active.title.replace(/^\d\. /, '')} />
         </section>
       )}
 
-      {activeView === 'artifacts' && (
-        <section className="artifact-layer">
-          <div className="section-heading">
-            <p className="eyebrow">made / imagined / playable</p>
-            <h3>gallery of generated creation capsules.</h3>
-          </div>
-          <div className="artifact-grid">
-            {capsules.map((capsule) => (
-              <ArtifactCard
-                key={capsule.id}
-                capsule={capsule}
-                selected={capsule.id === selected.id}
-                sounding={sound.playingId === capsule.id}
-                onOpen={setSelectedId}
-                onSound={playCapsule}
-              />
-            ))}
-          </div>
+      {view === 'demo' && (
+        <section className="demo-grid">
+          <ObservationForm observation={observation} setObservation={setObservation} onRun={runMap} />
+          <ResearchOutput observation={observation} runCount={runCount} />
         </section>
       )}
 
-      {activeView === 'drop' && <DropZone onCreate={addCapsule} />}
-
-      {activeView === 'aftermath' && (
-        <section className="aftermath-layer">
-          <div className="section-heading">
-            <p className="eyebrow">aftermath archive</p>
-            <h3>what the portal kept after you touched it.</h3>
-          </div>
-          <div className="archive-list">
-            {archive.length === 0 && <p className="quiet">No aftermath saved yet. Mutate something, sound it, then save it.</p>}
-            {archive.map((item) => (
-              <article className="archive-item" key={item.id}>
-                <span>{new Date(item.createdAt).toLocaleString()}</span>
-                <strong>{item.title}</strong>
-                <em>{item.mutation}</em>
-                <p>{item.sound ? `${item.sound} — ${item.lyric}` : item.lyric}</p>
+      {view === 'cures' && (
+        <section className="mc-panel wide-panel">
+          <p className="eyebrow">FIV cure-discovery gates</p>
+          <h2>Current medicine is the wall. These are the gates that could break it.</h2>
+          <div className="gate-grid">
+            {cureGates.slice(0, 5).map((gate) => (
+              <article key={gate.gate} className="gate-card">
+                <span>{gate.gate}</span>
+                <h3>{gate.target}</h3>
+                <p>{gate.method}</p>
+                <strong>Proof needed: {gate.proof}</strong>
               </article>
             ))}
           </div>
         </section>
       )}
 
-      {activeView === 'engine' && (
-        <section className="engine-layer">
-          <div className="section-heading">
-            <p className="eyebrow">under the floorboards</p>
-            <h3>the connected architecture.</h3>
+      {view === 'prevention' && (
+        <section className="mc-panel wide-panel">
+          <p className="eyebrow">FIV-negative cat prevention</p>
+          <h2>Prevention is exposure architecture first, vaccine decision second.</h2>
+          <div className="result-grid">
+            <article><strong>Test before mixing</strong><p>Document FIV/FeLV status before introductions, after unknown-risk exposure, and before any vaccine discussion.</p></article>
+            <article><strong>Prevent deep bites</strong><p>FIV prevention mostly means preventing fighting: resources, space, slow introductions, separation during stress, and no outdoor roaming.</p></article>
+            <article><strong>Vaccine method</strong><p>Where available, the vaccine decision must be vet-guided, risk-based, documented, and understood as incomplete protection with possible antibody-test confusion.</p></article>
+            <article><strong>Future vaccine research</strong><p>Better prevention requires subtype coverage, conserved epitopes, DIVA-compatible testing, and proof against heterologous challenge.</p></article>
           </div>
-          <div className="engine-grid">
-            <article><strong>Creation feed</strong><span>New songs, prompts, art rooms, and animation concepts enter through src/data/creationFeed.js.</span></article>
-            <article><strong>Living gallery</strong><span>GitHub stores the portal. Vercel rebuilds when files change.</span></article>
-            <article><strong>Weather state</strong><span>Each artifact carries charge, tide, static, and bloom. Bad saved data is sanitized.</span></article>
-            <article><strong>Sound layer</strong><span>Web Audio maps charge to pulse, tide to delay, static to noise, and bloom to harmonic softness. It stays silent until user activation.</span></article>
+        </section>
+      )}
+
+      {view === 'engine' && (
+        <section className="engine-layout">
+          <div className="mc-panel">
+            <p className="eyebrow">workflow spine</p>
+            <h2>{active.title}</h2>
+            <p>{active.body}</p>
+            <strong>{active.output}</strong>
           </div>
-          <div className="action-row wide">
-            <button className="secondary-action" onClick={exportPortal}>export portal weather</button>
-            <button className="secondary-action" onClick={resetLocalField}>reset local field</button>
+          <div className="path-list">
+            {workflowSteps.map((step) => (
+              <PathCard key={step.id} step={step} active={step.id === activeStep} onClick={() => setActiveStep(step.id)} />
+            ))}
+          </div>
+          <div className="mc-panel">
+            <p className="eyebrow">repo as engine</p>
+            <h2>What I can build from here</h2>
+            <p>I can commit React code, research maps, logs, data files, and public/private corpus structure to GitHub. If Vercel is connected to this repository, it should rebuild from commits. If Vercel is failing because of project settings, environment variables, or domain configuration, that requires Vercel access or deployment logs.</p>
+            <button className="secondary-action" onClick={exportMap}>export current map</button>
           </div>
         </section>
       )}
     </main>
   );
 }
+
+const styles = `
+  :root { color-scheme: dark; --ink: #f8fafc; --dim: #a7b0c3; --line: rgba(255,255,255,.16); --pink: #f0abfc; --blue: #67e8f9; --gold: #fde047; --bg: #030712; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  button, input, textarea { font: inherit; }
+  .mc-shell { min-height: 100vh; position: relative; overflow-x: hidden; padding: 22px; }
+  .mc-background { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 18% 12%, rgba(240,171,252,.22), transparent 30%), radial-gradient(circle at 82% 22%, rgba(103,232,249,.18), transparent 28%), radial-gradient(circle at 50% 88%, rgba(253,224,71,.10), transparent 32%), linear-gradient(135deg, #020617, #060816 45%, #090015); }
+  .mc-header { max-width: 1480px; margin: 0 auto 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand, .mc-header nav button, .secondary-action, .primary-action { border: 1px solid var(--line); color: var(--ink); background: rgba(255,255,255,.055); border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+  .brand { letter-spacing: .12em; text-transform: uppercase; }
+  .mc-header nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .mc-header nav button.active { border-color: rgba(103,232,249,.75); background: rgba(103,232,249,.12); }
+  .primary-action { background: linear-gradient(135deg, rgba(240,171,252,.92), rgba(103,232,249,.84)); color: #020617; font-weight: 800; border: none; }
+  .secondary-action { background: rgba(255,255,255,.07); }
+  .hero-grid, .demo-grid, .engine-layout { max-width: 1480px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); gap: 22px; align-items: stretch; }
+  .hero-copy, .mc-panel { border: 1px solid var(--line); border-radius: 34px; background: rgba(255,255,255,.055); box-shadow: 0 24px 90px rgba(0,0,0,.32); padding: clamp(22px, 4vw, 42px); backdrop-filter: blur(18px); }
+  .hero-copy h1 { font-size: clamp(2.3rem, 6vw, 6.8rem); line-height: .88; letter-spacing: -.08em; margin: 10px 0 18px; max-width: 1000px; }
+  .lead { color: var(--dim); font-size: clamp(1.05rem, 1.8vw, 1.42rem); line-height: 1.5; max-width: 850px; }
+  .eyebrow { color: var(--blue); text-transform: uppercase; letter-spacing: .18em; font-size: .76rem; margin: 0 0 10px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .mc-orbit { min-height: 580px; border: 1px solid var(--line); border-radius: 34px; position: relative; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle, rgba(240,171,252,.12), rgba(2,6,23,.82)); }
+  .mc-orbit .ring { position: absolute; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; animation: spin 18s linear infinite; }
+  .ring-one { width: 68%; aspect-ratio: 1; border-color: rgba(103,232,249,.35); }
+  .ring-two { width: 48%; aspect-ratio: 1.42; border-color: rgba(240,171,252,.38); animation-duration: 24s !important; }
+  .ring-three { width: 78%; aspect-ratio: 1.7; border-color: rgba(253,224,71,.25); animation-duration: 31s !important; animation-direction: reverse !important; }
+  .core { width: 130px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, var(--gold), var(--blue) 38%, transparent 70%); filter: blur(.2px); box-shadow: 0 0 80px rgba(103,232,249,.48); }
+  .mc-orbit strong { position: absolute; bottom: 34px; max-width: 70%; text-align: center; font-size: clamp(1.2rem, 2vw, 2rem); letter-spacing: -.04em; }
+  .label { position: absolute; color: var(--dim); text-transform: uppercase; letter-spacing: .16em; font-size: .72rem; }
+  .north { top: 30px; } .south { bottom: 88px; } .east { right: 28px; } .west { left: 28px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .observation-panel label { display: grid; gap: 8px; margin-top: 14px; color: var(--dim); }
+  input, textarea { width: 100%; border: 1px solid var(--line); background: rgba(0,0,0,.28); color: var(--ink); border-radius: 18px; padding: 12px 14px; }
+  textarea { min-height: 104px; resize: vertical; }
+  .two-fields, .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .result-grid article, .gate-card { border: 1px solid var(--line); border-radius: 24px; background: rgba(0,0,0,.18); padding: 18px; }
+  .result-grid p, .gate-card p, .mc-panel p, .path-card em { color: var(--dim); line-height: 1.5; }
+  .hinge-list { display: grid; gap: 10px; color: var(--ink); }
+  .wide-panel { max-width: 1480px; margin: 0 auto; }
+  .wide-panel h2, .mc-panel h2 { font-size: clamp(2rem, 4vw, 4.4rem); line-height: .92; letter-spacing: -.07em; margin: 0 0 18px; }
+  .gate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 22px; }
+  .gate-card span { color: var(--gold); text-transform: uppercase; letter-spacing: .16em; font-size: .72rem; }
+  .gate-card h3 { font-size: 1.35rem; margin: 10px 0; }
+  .gate-card strong { display: block; color: var(--blue); line-height: 1.4; }
+  .engine-layout { grid-template-columns: .95fr 1.1fr .95fr; align-items: start; }
+  .path-list { display: grid; gap: 10px; }
+  .path-card { width: 100%; text-align: left; border: 1px solid var(--line); border-radius: 24px; padding: 18px; color: var(--ink); background: rgba(255,255,255,.05); cursor: pointer; display: grid; gap: 8px; }
+  .path-card.active { border-color: rgba(103,232,249,.76); background: rgba(103,232,249,.12); }
+  .path-card span { color: var(--gold); font-size: .8rem; text-transform: uppercase; letter-spacing: .15em; }
+  .path-card strong { font-size: 1.15rem; }
+  .mc-notice { max-width: 1480px; margin: 0 auto 14px; color: var(--gold); border: 1px solid rgba(253,224,71,.3); border-radius: 999px; padding: 10px 14px; background: rgba(253,224,71,.08); }
+  @media (max-width: 920px) { .mc-shell { padding: 14px; } .mc-header, .hero-grid, .demo-grid, .engine-layout { grid-template-columns: 1fr; } .mc-header { align-items: flex-start; flex-direction: column; } .two-fields, .result-grid { grid-template-columns: 1fr; } .mc-orbit { min-height: 430px; } }
+`;
 
 export default App;
