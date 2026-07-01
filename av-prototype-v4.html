@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>Mirror Cartographer — AV Prototype v4</title>
+<style>
+:root{--bg:#0d0f12;--panel:rgba(18,20,25,.78);--line:rgba(255,255,255,.08);--text:#ede7de;--muted:#b6aea3}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;font-family:Inter,Arial,sans-serif}
+#wrap{position:fixed;inset:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:#eadbc3}
+#hud{position:absolute;top:14px;left:14px;z-index:20}
+#panel{width:min(360px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 50px rgba(0,0,0,.3);backdrop-filter:blur(14px);color:var(--text);padding:14px}
+.collapsed #panelBody{display:none}
+.titleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.title{font-size:14px;font-weight:700;letter-spacing:.03em}
+.sub{font-size:11px;line-height:1.35;color:var(--muted);margin-top:3px}
+button{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);border-radius:12px;padding:9px 11px;font-size:11px;cursor:pointer;margin:0 8px 8px 0}
+button:hover{background:rgba(255,255,255,.08)}
+.active{background:rgba(255,255,255,.12)}
+.group{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+label{display:block;font-size:10px;color:#d7d0c7;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+input[type=range]{width:100%}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tiny{font-size:10px;color:var(--muted);line-height:1.35}
+#status{position:absolute;right:14px;bottom:14px;z-index:20;background:rgba(18,19,24,.52);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#ddd6cb;font-size:11px;letter-spacing:.04em}
+#centerStart{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:25;background:radial-gradient(circle at center, rgba(16,17,20,.30), rgba(16,17,20,.84));backdrop-filter:blur(2px)}
+#startCard{width:min(600px,88vw);padding:22px;border-radius:22px;background:rgba(22,23,28,.86);border:1px solid rgba(255,255,255,.08);color:var(--text);box-shadow:0 16px 60px rgba(0,0,0,.3)}
+#startCard h1{margin:0 0 10px 0;font-size:22px}
+#startCard p{margin:0 0 14px 0;color:#d4ccc1;font-size:13px;line-height:1.55}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{font-size:11px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+#flash{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:24;background:white}
+</style>
+</head>
+<body>
+<div id='wrap'>
+<canvas id='c'></canvas>
+<div id='hud'><div id='shell'><div id='panel'>
+<div class='titleRow'><div><div class='title'>Mirror Cartographer v4</div><div class='sub'>recursive memory field — image / motion / sound</div></div><button id='togglePanel'>hide</button></div>
+<div id='panelBody'>
+<div class='group'><div class='grid'>
+<div><label>Pressure</label><input id='pressure' type='range' min='0' max='100' value='44'></div>
+<div><label>Conflict</label><input id='conflict' type='range' min='0' max='100' value='31'></div>
+<div><label>Curiosity</label><input id='curiosity' type='range' min='0' max='100' value='61'></div>
+<div><label>Clarity</label><input id='clarity' type='range' min='0' max='100' value='27'></div>
+<div><label>Presence</label><input id='presence' type='range' min='0' max='100' value='68'></div>
+<div><label>Autonomy</label><input id='autonomy' type='range' min='0' max='100' value='61'></div>
+</div></div>
+<div class='group'><div class='grid'>
+<div><label>Volume</label><input id='volume' type='range' min='0' max='100' value='42'></div>
+<div><label>Brightness</label><input id='brightness' type='range' min='0' max='100' value='42'></div>
+<div><label>Low texture</label><input id='lowTexture' type='range' min='0' max='100' value='66'></div>
+<div><label>Fracture</label><input id='fracture' type='range' min='0' max='100' value='41'></div>
+<div><label>Memory pull</label><input id='memoryPull' type='range' min='0' max='100' value='58'></div>
+<div><label>Personality</label><input id='personality' type='range' min='0' max='100' value='54'></div>
+</div></div>
+<div class='group'><label>Influence</label><div class='tools'>
+<button data-tool='mark' class='active'>mark</button><button data-tool='erase'>erase</button><button data-tool='interrupt'>interrupt</button><button data-tool='trace'>trace</button></div></div>
+<div class='group'><div class='tools'>
+<button id='saveStill'>export still</button><button id='recordClip'>record clip</button><button id='saveMemory'>save memory</button><button id='clearMemory'>clear memory</button></div>
+<div class='tiny' style='margin-top:8px'>v4 stores gesture traces and aggregated memory-state tendencies. Memory returns as drift, echo, contamination, and ghost structure rather than literal replay.</div></div>
+</div></div></div></div>
+<div id='status'>latent</div><div id='flash'></div>
+<div id='centerStart'><div id='startCard'><h1>Enter the living memory field</h1><p>This version accumulates prior state tendencies over time. The field does not merely remember gestures — it remembers what kinds of pressure, fracture, spread, and fragile coherence have shaped it before, and lets those memories distort future behavior.</p><div class='chips'><div class='chip'>shared state</div><div class='chip'>memory-state accumulation</div><div class='chip'>fragile harmonic pockets</div><div class='chip'>deeper bodily low texture</div><div class='chip'>export still / clip</div></div><button id='startBtn'>enter</button></div></div>
+</div>
+<script>
+const STORAGE_KEY='mc_av_v4_memory';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),statusEl=document.getElementById('status'),flash=document.getElementById('flash');
+let W=0,H=0,dpr=1;
+function resize(){dpr=Math.max(1,window.devicePixelRatio||1);W=canvas.clientWidth=window.innerWidth;H=canvas.clientHeight=window.innerHeight;canvas.width=Math.floor(W*dpr);canvas.height=Math.floor(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}window.addEventListener('resize',resize);resize();
+
+const controls={pressure,conflict,curiosity,clarity,presence,autonomy,volume,brightness,lowTexture,fracture,memoryPull,personality};
+const state={density:.3,interruption:.2,repetition:.4,erasure:.15,spread:.2,drift:.2,clarityPulse:0,presence:.5,autonomy:.5,memoryPull:.5,personality:.5};
+const liveInput={pressure:.44,conflict:.31,curiosity:.61,clarity:.27,presence:.68,autonomy:.61,memoryPull:.58,personality:.54};
+
+const memoryState={
+  avgDensity:0.32, avgInterruption:0.24, avgRepetition:0.42, avgErasure:0.16, avgSpread:0.22, avgDrift:0.20,
+  moodBias:0.0, tonalBias:0.0, fractureBias:0.0, sessions:0
+};
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function lerp(a,b,t){return a+(b-a)*t}
+function mapInput(){
+  liveInput.pressure=+controls.pressure.value/100; liveInput.conflict=+controls.conflict.value/100; liveInput.curiosity=+controls.curiosity.value/100; liveInput.clarity=+controls.clarity.value/100;
+  liveInput.presence=+controls.presence.value/100; liveInput.autonomy=+controls.autonomy.value/100; liveInput.memoryPull=+controls.memoryPull.value/100; liveInput.personality=+controls.personality.value/100;
+  state.memoryPull=liveInput.memoryPull; state.personality=liveInput.personality;
+
+  const mem = state.memoryPull * 0.45;
+  const pressure=liveInput.pressure, conflict=liveInput.conflict, curiosity=liveInput.curiosity, clarity=liveInput.clarity, presence=liveInput.presence, autonomy=liveInput.autonomy;
+
+  const targetDensity=.10+pressure*.68+(1-clarity)*.04;
+  const targetInterruption=.06+conflict*.66+pressure*.06;
+  const targetRepetition=.10+curiosity*.36+clarity*.24+presence*.08;
+  const targetErasure=.04+conflict*.24+(1-clarity)*.26;
+  const targetSpread=.10+curiosity*.24+conflict*.08+presence*.10;
+  const targetDrift=.09+pressure*.10+conflict*.11+curiosity*.12+(1-clarity)*.12;
+
+  state.density=lerp(targetDensity,memoryState.avgDensity,mem);
+  state.interruption=lerp(targetInterruption,memoryState.avgInterruption,mem);
+  state.repetition=lerp(targetRepetition,memoryState.avgRepetition,mem);
+  state.erasure=lerp(targetErasure,memoryState.avgErasure,mem);
+  state.spread=lerp(targetSpread,memoryState.avgSpread,mem);
+  state.drift=lerp(targetDrift,memoryState.avgDrift,mem);
+  state.presence=presence; state.autonomy=autonomy;
+}
+Object.values(controls).forEach(el=>el.addEventListener('input',mapInput)); mapInput();
+
+const palette=[[23,22,24],[56,82,99],[177,96,49],[122,44,57],[89,69,126],[222,165,89],[71,124,141]];
+function rgba(arr,a){return 'rgba('+arr[0]+','+arr[1]+','+arr[2]+','+a+')'} function rand(a,b){return a+Math.random()*(b-a)}
+
+let currentTool='mark'; document.querySelectorAll('button[data-tool]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('button[data-tool]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentTool=btn.dataset.tool}));
+togglePanel.addEventListener('click',()=>{shell.classList.toggle('collapsed');togglePanel.textContent=shell.classList.contains('collapsed')?'show':'hide'});
+
+const seeds=[],washes=[],ghosts=[],userHistory=[];
+function addSeed(x,y,tool,strength=1,fromMemory=false){
+  const personalitySkew = 1 + (state.personality-.5)*0.7;
+  const s={x,y,tool,t:0,strength,driftX:rand(-1,1),driftY:rand(-1,1),branch:rand(.76,1.38)*personalitySkew,hueShift:Math.floor(rand(0,palette.length)),fromMemory};
+  seeds.push(s); if(seeds.length>420) seeds.shift(); return s;
+}
+
+let pointerDown=false;
+canvas.addEventListener('pointerdown',e=>{pointerDown=true;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;addSeed(x,y,currentTool,1,false);userHistory.push({x:x/W,y:y/H,tool:currentTool,strength:1,t:Date.now()})});
+canvas.addEventListener('pointerup',()=>pointerDown=false); canvas.addEventListener('pointerleave',()=>pointerDown=false);
+canvas.addEventListener('pointermove',e=>{if(!pointerDown)return;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;addSeed(x,y,currentTool,.45,false);userHistory.push({x:x/W,y:y/H,tool:currentTool,strength:.45,t:Date.now()})});
+
+function drawPaper(){ctx.fillStyle='#eadbc3';ctx.fillRect(0,0,W,H);for(let i=0;i<8200;i++){const x=Math.random()*W,y=Math.random()*H,v=224+Math.floor(Math.random()*16);ctx.fillStyle='rgba('+v+','+(v-8)+','+(v-15)+',0.06)';ctx.fillRect(x,y,1,1)}}
+function renderWash(w){const g=ctx.createRadialGradient(w.x,w.y,0,w.x,w.y,w.r);g.addColorStop(0,rgba(w.color,w.alpha*.88));g.addColorStop(.65,rgba(w.color,w.alpha*.24));g.addColorStop(1,rgba(w.color,0));ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(w.x,w.y,w.r,w.r*(.55+w.shape*.95),w.rot,0,Math.PI*2);ctx.fill()}
+function renderGhost(g){ctx.strokeStyle=rgba(g.color,g.alpha);ctx.lineWidth=g.width;ctx.beginPath();ctx.moveTo(g.points[0].x,g.points[0].y);for(let i=1;i<g.points.length;i++)ctx.lineTo(g.points[i].x,g.points[i].y);ctx.stroke()}
+
+function renderSeed(s,time){
+  const age=s.t, localDrift=state.drift*(.65+s.branch*.45), localInterrupt=state.interruption*(.72+s.branch*.42), localRep=state.repetition*(.82+s.branch*.42), base=8+age*.56+s.strength*8, colIndex=s.hueShift%palette.length;
+  if(s.tool==='mark'||s.tool==='trace'){
+    const layers=3+Math.floor(localRep*12)+(s.fromMemory?1:0);
+    for(let L=0;L<layers;L++){
+      ctx.beginPath(); ctx.lineWidth=s.tool==='trace'?.8+L*.08:1.18+L*.16;
+      ctx.strokeStyle=rgba(palette[(colIndex+L)%palette.length],.10+L*.03+(s.fromMemory?.03:0));
+      const start=rand(0,Math.PI*2); let px=s.x,py=s.y;
+      for(let a=0;a<Math.PI*2+localRep*2.4;a+=.16){
+        const rr=base+L*7+Math.sin(a*3+age*.05)*9*localInterrupt;
+        const memWarp = s.fromMemory ? 1.4 : 1.0;
+        const sx=s.x+Math.cos(a+start)*rr+Math.sin(time*.0003+a*1.5)*(28*localDrift*memWarp);
+        const sy=s.y+Math.sin(a+start)*(rr*(.68+state.spread*.94))+Math.cos(time*.0002+a)*(18*localDrift*memWarp);
+        if(a===0||Math.random()<.03+localInterrupt*.14) ctx.moveTo(sx,sy);
+        else { const bx=(sx+px)/2+Math.sin(a*4+time*.0011)*state.spread*9, by=(sy+py)/2+Math.cos(a*3+time*.0012)*state.drift*8; ctx.quadraticCurveTo(bx,by,sx,sy); }
+        px=sx; py=sy;
+      }
+      ctx.stroke();
+    }
+  }
+  if(s.tool==='interrupt'){
+    ctx.strokeStyle=rgba(palette[colIndex],.16+state.interruption*.2+(s.fromMemory?.04:0)); ctx.lineWidth=1+state.interruption*3.8;
+    for(let i=0;i<4+Math.floor(state.interruption*8);i++){ctx.beginPath(); let x=s.x+rand(-20,20),y=s.y+rand(-20,20); ctx.moveTo(x,y);
+      for(let k=0;k<8;k++){x+=rand(-62,62)+Math.sin(time*.001+k)*16*state.spread; y+=rand(-34,34)+Math.cos(time*.0013+i)*13*state.drift; if(Math.random()<.18+state.interruption*.36) ctx.moveTo(x,y); else ctx.lineTo(x,y)} ctx.stroke()}
+  }
+  if(s.tool==='erase'){
+    ctx.save(); ctx.globalCompositeOperation='destination-out'; const rad=12+age*.76+state.erasure*88*s.strength, g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,rad);
+    g.addColorStop(0,'rgba(0,0,0,0.24)'); g.addColorStop(.56,'rgba(0,0,0,0.08)'); g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(s.x,s.y,rad,rad*(.6+s.branch*.45),Math.sin(age*.02),0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+  if(Math.random()<.016+state.spread*.06+(s.fromMemory?.02:0)){ghosts.push({points:[{x:s.x+rand(-18,18),y:s.y+rand(-18,18)},{x:s.x+rand(-46,46),y:s.y+rand(-28,28)},{x:s.x+rand(-72,72),y:s.y+rand(-42,42)}],color:palette[(colIndex+2)%palette.length],alpha:.04+state.erasure*.09+(s.fromMemory?.02:0),width:.8+rand(0,1.1),life:100}); if(ghosts.length>300) ghosts.shift()}
+}
+
+function renderField(time){
+  drawPaper();
+  const clusters=11+Math.floor(state.density*24);
+  for(let i=0;i<clusters;i++){
+    const row=i%5, x=(i/clusters)*W+Math.sin(i*1.9+time*.00013)*(24+state.drift*96)+rand(-56,56), y=H*(.11+row*.16)+Math.cos(i*.9+time*.00017)*(12+state.spread*34)+rand(-40,40), rr=18+state.density*112+rand(-8,34), col=palette[i%palette.length];
+    ctx.fillStyle=rgba(col,.024+state.density*.11); ctx.beginPath(); ctx.ellipse(x,y,rr,rr*(.54+Math.random()*.95),rand(0,Math.PI),0,Math.PI*2); ctx.fill();
+  }
+  washes.forEach(renderWash); ghosts.forEach(renderGhost); seeds.forEach(s=>renderSeed(s,time));
+  for(let i=0;i<86+state.interruption*124;i++){const x1=rand(0,W),y1=rand(0,H),x2=x1+rand(-150,150),y2=y1+rand(-94,94);ctx.strokeStyle=rgba(palette[Math.floor(rand(0,palette.length))],.03+rand(0,.10));ctx.lineWidth=rand(.4,2.0);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
+  for(let i=0;i<1700+state.density*2500;i++){const x=rand(0,W),y=rand(0,H),r=rand(.42,2.05);ctx.fillStyle=rgba(palette[Math.floor(rand(0,palette.length))],.05+Math.random()*.22);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
+  ctx.fillStyle='rgba(255,255,255,'+(.02+state.erasure*.045)+')'; for(let i=0;i<150;i++) ctx.fillRect(rand(0,W),rand(0,H),rand(10,96),1);
+  const vg=ctx.createRadialGradient(W*.5,H*.5,Math.min(W,H)*.2,W*.5,H*.5,Math.max(W,H)*.7); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,0.14)'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+}
+
+let memoryGesturePool=[];
+function updateMemoryStateFromLive(){
+  const mix = .008 + state.memoryPull*.01;
+  memoryState.avgDensity = lerp(memoryState.avgDensity, state.density, mix);
+  memoryState.avgInterruption = lerp(memoryState.avgInterruption, state.interruption, mix);
+  memoryState.avgRepetition = lerp(memoryState.avgRepetition, state.repetition, mix);
+  memoryState.avgErasure = lerp(memoryState.avgErasure, state.erasure, mix);
+  memoryState.avgSpread = lerp(memoryState.avgSpread, state.spread, mix);
+  memoryState.avgDrift = lerp(memoryState.avgDrift, state.drift, mix);
+  memoryState.tonalBias = lerp(memoryState.tonalBias, (+controls.brightness.value/100)-.5, .01);
+  memoryState.fractureBias = lerp(memoryState.fractureBias, (+controls.fracture.value/100)-.5, .01);
+  memoryState.moodBias = lerp(memoryState.moodBias, (state.density+state.interruption-state.clarityPulse*.25)-.4, .01);
+}
+function selfModify(time){
+  updateMemoryStateFromLive();
+
+  if(Math.random()<.01+state.presence*.02){state.clarityPulse=Math.min(1,state.clarityPulse+.18); addSeed(rand(W*.18,W*.82),rand(H*.18,H*.82),'trace',.65+state.presence*.35,false);} else state.clarityPulse*=.985;
+
+  const autonomyFactor=state.autonomy;
+  if(Math.random()<.055+state.spread*.06*autonomyFactor){washes.push({x:rand(0,W),y:rand(0,H),r:20+rand(0,90)+state.density*66,shape:rand(0,1),rot:rand(0,Math.PI),color:palette[Math.floor(rand(0,palette.length))],alpha:.02+rand(0,.08)}); if(washes.length>56) washes.shift();}
+  if(Math.random()<.03+state.spread*.08*autonomyFactor){let t='mark', r=Math.random(); if(r<state.interruption*.40)t='interrupt'; else if(r<state.interruption*.40+state.erasure*.22)t='erase'; addSeed(rand(0,W),rand(0,H),t,rand(.25,.9),false);}
+
+  // memory returns altered, not literal
+  if(memoryGesturePool.length && Math.random()<.018+state.presence*.022+state.memoryPull*.02){
+    const m=memoryGesturePool[Math.floor(Math.random()*memoryGesturePool.length)];
+    const t = Math.random()<.22 ? (m.tool==='mark'?'trace':'mark') : m.tool;
+    addSeed(m.x*W+rand(-26,26)+(memoryState.avgSpread-.2)*80, m.y*H+rand(-26,26)+(memoryState.avgDrift-.2)*60, t, m.strength*(.65+state.memoryPull*.5), true);
+  }
+
+  seeds.forEach(s=>{s.t+=1; s.x+=s.driftX*(.36+state.drift*1.3); s.y+=s.driftY*(.36+state.drift*1.2); s.driftX+=rand(-.08,.08)*state.drift; s.driftY+=rand(-.08,.08)*state.drift; if(s.x<-80)s.x=W+40; if(s.x>W+80)s.x=-40; if(s.y<-80)s.y=H+40; if(s.y>H+80)s.y=-40;});
+  ghosts.forEach(g=>g.life-=1); for(let i=ghosts.length-1;i>=0;i--) if(ghosts[i].life<=0) ghosts.splice(i,1);
+  if(seeds.length>420) seeds.splice(0,seeds.length-420);
+}
+
+function loadMemory(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return;
+    const parsed=JSON.parse(raw);
+    if(parsed && Array.isArray(parsed.gestures)) memoryGesturePool=parsed.gestures.slice(-1000);
+    if(parsed && parsed.memoryState){Object.assign(memoryState, parsed.memoryState);}
+  }catch(e){}
+}
+function saveMemoryNow(){
+  const gestures=memoryGesturePool.concat(userHistory).slice(-1400);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({gestures, memoryState, savedAt:Date.now()}));
+  memoryGesturePool=gestures; pulseStatus('memory saved');
+}
+function clearMemoryNow(){localStorage.removeItem(STORAGE_KEY); memoryGesturePool=[]; Object.assign(memoryState,{avgDensity:.32,avgInterruption:.24,avgRepetition:.42,avgErasure:.16,avgSpread:.22,avgDrift:.20,moodBias:0,tonalBias:0,fractureBias:0,sessions:0}); pulseStatus('memory cleared'); mapInput();}
+loadMemory(); mapInput();
+saveMemory.addEventListener('click', saveMemoryNow); clearMemory.addEventListener('click', clearMemoryNow);
+
+// audio
+let audioStarted=false,audioCtx,masterGain,lowpassNode,bandpassNode,compressor,osc1,osc2,osc3,bassOsc,harmonicOsc,g1,g2,g3,bassGain,harmonicGain,noiseGain,panner1,panner2,noiseNode,delayNode,feedbackNode,rhythmicLfo,pulseGain,clipRecorder=null,clipChunks=[];
+function makeNoiseBuffer(ctx){const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),data=buffer.getChannelData(0); for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*(1-(i/data.length)*.10); return buffer;}
+function startAudio(){
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)(); masterGain=audioCtx.createGain(); masterGain.gain.value=.2;
+  compressor=audioCtx.createDynamicsCompressor(); compressor.threshold.value=-28; compressor.knee.value=16; compressor.ratio.value=2.4; compressor.attack.value=.02; compressor.release.value=.3;
+  lowpassNode=audioCtx.createBiquadFilter(); lowpassNode.type='lowpass'; lowpassNode.frequency.value=2200;
+  bandpassNode=audioCtx.createBiquadFilter(); bandpassNode.type='bandpass'; bandpassNode.frequency.value=380; bandpassNode.Q.value=.9;
+  delayNode=audioCtx.createDelay(1); delayNode.delayTime.value=.26; feedbackNode=audioCtx.createGain(); feedbackNode.gain.value=.14; delayNode.connect(feedbackNode); feedbackNode.connect(delayNode);
+  panner1=audioCtx.createStereoPanner(); panner2=audioCtx.createStereoPanner();
+  osc1=audioCtx.createOscillator(); osc2=audioCtx.createOscillator(); osc3=audioCtx.createOscillator(); bassOsc=audioCtx.createOscillator(); harmonicOsc=audioCtx.createOscillator();
+  osc1.type='sine'; osc2.type='triangle'; osc3.type='sawtooth'; bassOsc.type='sine'; harmonicOsc.type='triangle';
+  g1=audioCtx.createGain(); g2=audioCtx.createGain(); g3=audioCtx.createGain(); bassGain=audioCtx.createGain(); harmonicGain=audioCtx.createGain(); pulseGain=audioCtx.createGain();
+  osc1.connect(g1); g1.connect(panner1); panner1.connect(lowpassNode);
+  osc2.connect(g2); g2.connect(panner2); panner2.connect(lowpassNode);
+  osc3.connect(g3); g3.connect(bandpassNode); bandpassNode.connect(lowpassNode);
+  bassOsc.connect(bassGain); bassGain.connect(lowpassNode);
+  harmonicOsc.connect(harmonicGain); harmonicGain.connect(delayNode); delayNode.connect(lowpassNode);
+  const noiseBuffer=makeNoiseBuffer(audioCtx); noiseNode=audioCtx.createBufferSource(); noiseNode.buffer=noiseBuffer; noiseNode.loop=true; noiseGain=audioCtx.createGain(); noiseGain.gain.value=0; noiseNode.connect(noiseGain); noiseGain.connect(bandpassNode);
+  rhythmicLfo=audioCtx.createOscillator(); const rhythmicGain=audioCtx.createGain(); rhythmicLfo.type='square'; rhythmicLfo.frequency.value=2.1; rhythmicGain.gain.value=.03; rhythmicLfo.connect(rhythmicGain); rhythmicGain.connect(pulseGain.gain);
+  lowpassNode.connect(pulseGain); pulseGain.connect(compressor); compressor.connect(masterGain); masterGain.connect(audioCtx.destination);
+  osc1.start(); osc2.start(); osc3.start(); bassOsc.start(); harmonicOsc.start(); noiseNode.start(); rhythmicLfo.start(); audioStarted=true;
+}
+function updateAudio(time){
+  if(!audioStarted) return;
+  const vol=+controls.volume.value/100, bright=+controls.brightness.value/100, lowTexture=+controls.lowTexture.value/100, fracture=+controls.fracture.value/100;
+  const memMood = memoryState.moodBias*0.25, memTone = memoryState.tonalBias*0.18, memFracture = memoryState.fractureBias*0.25;
+  masterGain.gain.setTargetAtTime(vol*.44, audioCtx.currentTime,.05);
+  const base=88+state.presence*20+bright*20 + memTone*18, driftOffset=(Math.sin(time*.00042)+Math.cos(time*.00018)*.4+(Math.random()-.5)*.7)*state.drift*36;
+  osc1.frequency.setTargetAtTime(base+driftOffset,audioCtx.currentTime,.04);
+  osc2.frequency.setTargetAtTime(base*(1.21+state.repetition*.18)-driftOffset*.35,audioCtx.currentTime,.05);
+  osc3.frequency.setTargetAtTime(base*(.50+state.density*.12)+driftOffset*.75,audioCtx.currentTime,.06);
+  bassOsc.frequency.setTargetAtTime(38+state.density*26+lowTexture*20+memMood*14+Math.sin(time*.00021)*3,audioCtx.currentTime,.08);
+  const harmonicPocket=.05+state.clarityPulse*.18+(state.presence*(1-state.interruption))*.03+(state.memoryPull*.04);
+  harmonicOsc.frequency.setTargetAtTime(base*(1.5+state.clarityPulse*.12+(memTone*.04)),audioCtx.currentTime,.07);
+  g1.gain.setTargetAtTime(state.density*.14+state.presence*.02,audioCtx.currentTime,.05);
+  g2.gain.setTargetAtTime(state.repetition*.12+harmonicPocket*.05,audioCtx.currentTime,.05);
+  g3.gain.setTargetAtTime(state.density*.05+state.interruption*.04+(memFracture*.02),audioCtx.currentTime,.06);
+  bassGain.gain.setTargetAtTime(lowTexture*.15+state.density*.08+Math.max(0,memMood)*.04,audioCtx.currentTime,.08);
+  harmonicGain.gain.setTargetAtTime(harmonicPocket,audioCtx.currentTime,.07);
+  lowpassNode.frequency.setTargetAtTime(340+(1-state.erasure)*(1500+bright*2600)-Math.max(0,memMood)*220,audioCtx.currentTime,.07);
+  bandpassNode.frequency.setTargetAtTime(130+state.interruption*900+state.drift*260+memFracture*120,audioCtx.currentTime,.07);
+  bandpassNode.Q.setTargetAtTime(.6+state.repetition*2.8+fracture*1.2+Math.abs(memFracture)*.8,audioCtx.currentTime,.06);
+  delayNode.delayTime.setTargetAtTime(.18+state.spread*.22+state.drift*.07,audioCtx.currentTime,.08);
+  feedbackNode.gain.setTargetAtTime(.08+state.erasure*.10+state.clarityPulse*.06+state.memoryPull*.04,audioCtx.currentTime,.08);
+  panner1.pan.setTargetAtTime(Math.sin(time*.00061)*state.spread,audioCtx.currentTime,.08); panner2.pan.setTargetAtTime(Math.cos(time*.00046+.7)*state.spread,audioCtx.currentTime,.08);
+  noiseGain.gain.setTargetAtTime(state.density*.018+state.erasure*.018+state.interruption*.026+fracture*.018+Math.abs(memFracture)*.02,audioCtx.currentTime,.05);
+  rhythmicLfo.frequency.setTargetAtTime(1.4+state.repetition*2.8+fracture*2.2+state.drift*.6+Math.abs(memFracture)*.8,audioCtx.currentTime,.07);
+  pulseGain.gain.setTargetAtTime(.86,audioCtx.currentTime,.03);
+  if(Math.random()<(state.interruption*.015+fracture*.03+Math.abs(memFracture)*.01)){g1.gain.setTargetAtTime(g1.gain.value*.25,audioCtx.currentTime,.01); g2.gain.setTargetAtTime(g2.gain.value*.40,audioCtx.currentTime,.015); if(Math.random()<.45) lowpassNode.frequency.setTargetAtTime(180+Math.random()*600,audioCtx.currentTime,.01);}
+}
+
+saveStill.addEventListener('click',()=>{flashNow(); const a=document.createElement('a'); a.download='mirror_cartographer_v4_still.png'; a.href=canvas.toDataURL('image/png'); a.click(); pulseStatus('still exported');});
+recordClip.addEventListener('click',()=>{ if(clipRecorder&&clipRecorder.state==='recording') return; const stream=canvas.captureStream(30); clipChunks=[]; clipRecorder=new MediaRecorder(stream,{mimeType:'video/webm'}); clipRecorder.ondataavailable=e=>{if(e.data.size) clipChunks.push(e.data)}; clipRecorder.onstop=()=>{const blob=new Blob(clipChunks,{type:'video/webm'}), a=document.createElement('a'); a.download='mirror_cartographer_v4_clip.webm'; a.href=URL.createObjectURL(blob); a.click(); pulseStatus('clip exported');}; clipRecorder.start(); pulseStatus('recording 12s'); setTimeout(()=>{if(clipRecorder&&clipRecorder.state==='recording') clipRecorder.stop();},12000);});
+function flashNow(){flash.style.transition='none'; flash.style.opacity='.22'; requestAnimationFrame(()=>{flash.style.transition='opacity 600ms ease'; flash.style.opacity='0';});}
+function pulseStatus(text){statusEl.textContent=text; clearTimeout(pulseStatus._t); pulseStatus._t=setTimeout(()=>statusEl.textContent='active',1800);}
+
+startBtn.addEventListener('click', async()=>{ if(!audioStarted) startAudio(); if(audioCtx&&audioCtx.state==='suspended') await audioCtx.resume(); centerStart.style.display='none'; pulseStatus('active');});
+function tick(time){ selfModify(time); renderField(time); updateAudio(time); requestAnimationFrame(tick); }
+requestAnimationFrame(tick);
+window.addEventListener('beforeunload',()=>{ if(userHistory.length) saveMemoryNow(); });
+</script>
+</body>
+</html>
