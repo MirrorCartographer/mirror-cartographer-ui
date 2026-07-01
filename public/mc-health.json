@@ -1,0 +1,8 @@
+{
+  "app": "Mirror Cartographer",
+  "status": "react-atlas-entrypoint-fixed",
+  "expectedRoot": "Vite React app mounted from /src/main.jsx",
+  "fixCommit": "c23af2314c536e41fae75a7227b5eafe97dbc6ac",
+  "createdAt": "2026-07-01",
+  "purpose": "If this file is visible at /mc-health.json, Vercel is serving the current repo build."
+}
