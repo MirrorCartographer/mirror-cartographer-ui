@@ -1,184 +1,445 @@
-# FIV Cure Map
+# FIV Cure Map: Discovery-Oriented Version
 
-Status: evidence map, not a guaranteed cure protocol  
+Status: cure-discovery hypothesis map, not a treatment protocol  
 Subject: Feline Immunodeficiency Virus (FIV)  
-Primary use case: O'Malley / FIV+ cat health planning  
+Primary use case: O'Malley / FIV+ cat health planning and cure search  
 Last reviewed: 2026-07-01
 
-## Core truth boundary
+## Intent correction
 
-As of this review, FIV does not have a confirmed, clinically available sterilizing cure. The practical cure map must therefore separate four layers:
+This document is not only a map of current veterinary management. That is too small.
 
-1. **Confirmed supportive care available now**: reduce immune burden, treat secondary disease early, preserve weight, mouth health, lymph-node status, breathing, and quality of life.
-2. **Veterinary-directed antiviral or immunomodulatory options**: possible symptom benefit in selected cats, but not a proven cure and not safe to use casually.
-3. **Disease-modifier monitoring**: detect lymphoma, anemia, oral inflammation, renal disease, chronic infection, neurologic involvement, and co-infections early enough to act.
-4. **Future cure research**: gene-editing / proviral-eradication approaches are plausible research paths, not home treatment.
+The point is to find the cure possibility where it is not already found yet.
 
-A cure map is useful only if it does not lie. For FIV, the honest map is: **remove what accelerates immune collapse, treat what is currently injuring the body, and track emerging eradication research without pretending it is available clinical medicine.**
+So the map has two simultaneous layers:
 
-## What FIV physically does
+1. **Protect the living cat now**: do not let the search for a future cure delay diagnostics, breathing support, lymphoma workup, infection control, nutrition, or pain relief.
+2. **Search the unrealized cure space**: name mechanisms that could logically eliminate, neutralize, silence, outcompete, or make harmless FIV even if they are not standard veterinary medicine today.
 
-FIV is a feline lentivirus. It infects immune cells, especially lymphocyte populations, and can integrate into host-cell genetic material. The cat may look normal for years, but immune reserve can erode. The danger is often not the virus alone; it is the secondary stack that the weakened immune system can no longer contain.
+A real cure for FIV probably will not look like “one better supplement.” It will likely require solving at least one of these hard problems:
 
-Common downstream problem zones:
+- Integrated proviral DNA persists inside host cells.
+- Reservoir cells may be rare, distributed, and hard to identify.
+- Viral sequence diversity may let FIV escape single-target interventions.
+- Immune exhaustion/inflammation may remain even when viral replication falls.
+- Entry receptors such as CD134 and CXCR4 have normal immune functions, so blocking them recklessly could injure the cat.
+- Delivery is the wall: getting the curative tool into the right cells without damaging the organism.
 
-- Mouth/gums: stomatitis, gingivitis, dental infection.
-- Skin/ears: recurrent bacterial, fungal, parasitic, or inflammatory disease.
-- Respiratory tract: chronic infection or inflammation.
-- GI tract: diarrhea, weight loss, poor absorption, chronic inflammatory disease.
-- Blood/immune: anemia, leukopenia, abnormal globulins, chronic inflammatory load.
-- Lymph nodes: reactive enlargement, lymphoma concern, other cancer/infection differentials.
-- Kidneys/urinary: proteinuria or renal stress reported in FIV-associated disease literature.
-- Nervous system: possible neurologic signs in some cats.
+## Core cure question
 
-## Available-now care map
+A true FIV cure must answer:
 
-### 1. Confirm the actual disease layer
+**Where is the virus hiding, what exact molecular dependency keeps it alive, and what intervention removes that dependency without killing the cat?**
 
-Do not let “FIV+” become a lazy label for every symptom. For an FIV+ cat with enlarged lymph nodes or breathing effects, the correct next layer is diagnostic sorting.
+That creates five main cure gates:
 
-Minimum useful diagnostic stack to discuss with a veterinarian:
+1. **Erase**: remove or disable integrated FIV provirus.
+2. **Lock**: permanently silence provirus so it cannot reactivate.
+3. **Expose and clear**: wake infected cells and eliminate them safely.
+4. **Replace or armor**: rebuild immune cells that FIV cannot enter or exploit.
+5. **Ecologically suppress**: change the immune/microbial/inflammatory terrain so FIV loses its damaging effect even if fragments remain.
 
-- Repeat FIV/FeLV status if history is uncertain.
-- CBC with differential.
-- Chemistry panel.
-- Urinalysis plus urine protein:creatinine if kidney/protein loss concern.
-- Total protein, globulin, albumin:globulin ratio.
-- Lymph-node exam and measurement log.
-- Fine needle aspirate (FNA) / cytology of enlarged lymph nodes when persistent, asymmetric, large, painful, rapidly growing, or affecting breathing/swallowing.
-- Thoracic imaging if breathing is affected.
-- Oral exam/dental imaging if mouth inflammation, drooling, odor, pain, or poor eating.
-- Fecal/parasite testing if diarrhea or weight loss.
-- Mycoplasma hemofelis / hemotropic Mycoplasma testing if anemia, fever, lethargy, or pale gums.
-- Toxoplasma testing only when signs fit; do not shotgun without a reason.
+## Mechanism map
 
-### 2. Reduce immune burden
+### Gate 1: Proviral excision / disabling
 
-The practical aim is to make the cat’s immune system spend less every day.
+Hypothesis:
 
-High-value interventions:
+FIV can be cured if all replication-competent integrated proviral copies are cut out, broken, or mutated into permanent nonfunction.
 
-- Keep indoors to reduce bite exposure, pathogens, parasites, and trauma.
-- Aggressive flea control for every animal in the household, using vet-approved products only.
-- Maintain dental/oral health; mouth disease is a major inflammatory sink.
-- Treat bacterial/fungal/parasitic disease early, based on exam/cytology/culture where possible.
-- Maintain stable calories and hydration.
-- Avoid raw diets because FIV+ cats have less margin against foodborne pathogens.
-- Avoid chronic stress where possible: safe hiding, predictable routine, clean litter, low conflict, stable feeding stations.
-- Separate only when needed for fighting, illness, or exposure risk; stable non-fighting household coexistence may be possible under veterinary guidance.
+Candidate tools:
 
-### 3. Track body-state signals
+- CRISPR-Cas systems targeting conserved FIV LTR, gag, pol, env, rev, or essential splice/regulatory regions.
+- Multiplex guide RNAs to prevent viral escape through mutation.
+- Prime editing or base editing to install disabling mutations without large double-strand breaks.
+- RNA-guided editors aimed at proviral transcripts or replication intermediates.
+- Nanoblade, lipid nanoparticle, viral vector, exosome, or cell-targeted delivery systems.
 
-A lightweight weekly log is more valuable than vague fear.
+Why this could be real:
 
-Track:
+- FIV, like HIV, is a lentivirus that integrates into host-cell DNA.
+- A cure therefore likely requires direct reservoir targeting, not merely lowering symptoms.
+- CRISPR/proviral-eradication work is already being explored in retroviral cure science, including FIV-specific research directions.
 
-- Weight.
-- Appetite.
-- Water intake changes.
-- Breathing rate at rest.
-- Gum color.
-- Mouth odor/drooling/pawing.
-- Stool quality.
-- Lymph node size/location.
-- Energy and hiding.
-- Skin scabs, ear debris, wounds.
-- Sneezing, eye/nose discharge.
+Failure modes:
 
-Escalate quickly for:
+- Off-target editing in feline genome.
+- Incomplete delivery to reservoir cells.
+- Viral sequence escape.
+- Cutting provirus may create genome instability or defective but inflammatory remnants.
+- Need to distinguish sterilizing cure from temporary reduction.
 
-- Open-mouth breathing.
-- Resting respiratory distress.
-- Not eating >24 hours.
-- Pale/white/yellow gums.
-- Rapid lymph-node growth.
-- Weight loss.
-- Fever, collapse, severe lethargy.
-- Painful mouth preventing eating.
+Experiments that matter:
 
-## Vet-directed antiviral / adjunctive layer
+- Sequence O'Malley-like FIV isolates to identify conserved target sites.
+- Test multiplex CRISPR guides against diverse FIV subtypes in infected feline cells.
+- Measure replication-competent virus after editing, not only PCR reduction.
+- Test whether edited cells rebound after immune activation.
+- Build delivery tropism toward feline CD4+ T cells, CD8+ T cells, B cells, monocytes/macrophages, and other known FIV-permissive reservoirs.
 
-### Zidovudine / AZT
+Evidence threshold:
 
-Evidence suggests AZT may help selected FIV+ cats with severe stomatitis or neurologic disease, but it has not been shown to reliably prolong survival and can cause serious adverse effects, especially anemia or marrow suppression. It belongs in the “specialist-supervised option” layer, not the home-experiment layer.
+- No replication-competent FIV recovered after maximal latency activation in cell culture.
+- No rebound in controlled infected-cat model after intervention and immune challenge.
+- Off-target profile acceptable in feline genome.
 
-Questions for vet:
+### Gate 2: Deep latency lock
 
-- Is there severe stomatitis or neurologic disease that makes AZT worth considering?
-- What baseline CBC is needed first?
-- How often would CBC monitoring happen after starting?
-- What stopping rules would be used for anemia or appetite decline?
-- Are there drug interactions with the cat’s current meds?
+Hypothesis:
 
-### Recombinant feline interferon-omega
+FIV might not need to be removed if it can be pushed into irreversible silence: a “block-and-lock” cure.
 
-Some studies report reduced clinical signs, but current evidence quality is weak and not enough to call it a cure. It may be considered in symptomatic cats not responding to supportive therapy, depending on country availability, clinician experience, and risk profile.
+Candidate tools:
 
-Questions for vet:
+- Epigenetic repressors targeted to FIV LTR.
+- CRISPR interference (dCas9-KRAB-like repression) aimed at viral promoter regions.
+- Small molecules that suppress viral transcription networks.
+- Synthetic transcriptional repressors that leave host immune genes intact.
 
-- Is this available and legal where we are?
-- Are the cat’s signs the type most likely to benefit?
-- What outcome would prove it is helping: appetite, oral inflammation, lymph node size, infection frequency, weight, lab values?
-- What would make us stop?
+Why this could be real:
 
-### Other antiretroviral combinations
+- Lentiviral disease depends on transcriptional reactivation from integrated provirus.
+- If FIV transcription is permanently blocked, the cat may become functionally cured even if proviral DNA remains.
 
-Human HIV-style combinations have not translated cleanly into a proven FIV cure. Some experimental combinations have failed to suppress chronic FIV adequately or raised side-effect concerns. These should not be improvised.
+Failure modes:
 
-## Future cure research layer
+- Repression may decay over time.
+- Stress, infection, inflammation, or steroids may reactivate virus.
+- Broad epigenetic suppression could harm host immune cells.
 
-The most plausible true-cure direction is not “immune boosting.” It is **proviral targeting**: finding cells where FIV has integrated and disabling/removing viral genetic material without destroying the cat’s body.
+Experiments that matter:
 
-Current research directions:
+- Identify FIV promoter/enhancer control points.
+- Test durable silencing after inflammatory stimulation.
+- Compare ordinary PCR positivity against viral RNA, protein, and infectious virus recovery.
 
-- CRISPR-Cas approaches aimed at cutting or disabling FIV provirus.
-- FIV-targeting gene-editing delivery systems, including nanoblade-style platforms.
-- RNA-directed editing strategies intended to reduce viral replication or proviral persistence.
-- Broader retroviral eradication research influenced by HIV cure science.
+Evidence threshold:
 
-This is the future-cure shelf, not the treatment shelf. The practical action now is to monitor legitimate veterinary trials and not confuse research funding announcements with available clinical care.
+- Provirus remains detectable but cannot produce infectious virus after repeated stimulation.
+- Immune function improves without broad gene suppression.
 
-## O'Malley-specific triage map
+### Gate 3: Shock / expose / clear
 
-Known: FIV+, multiple enlarged lymph nodes, possible breathing effect, lymphoma concern.
+Hypothesis:
 
-Highest-yield next action:
+If latent FIV cells can be forced to reveal themselves while the cat’s immune system or engineered immune effectors eliminate them, reservoirs could be purged.
 
-1. Ask vet for FNA/cytology of enlarged lymph node(s).
-2. Ask whether thoracic imaging is indicated because breathing is affected.
-3. Run CBC/chemistry/urinalysis if not recent.
-4. Track node size, appetite, weight, respiratory rate, and gum color.
-5. Treat any confirmed secondary infection/inflammation quickly.
+Candidate tools:
 
-Script for vet:
+- Latency-reversing agents paired with antiviral blockade.
+- Therapeutic vaccination before latency reversal.
+- Engineered antibodies or antibody-drug conjugates against FIV envelope-expressing cells.
+- CAR-T or CAR-NK-like feline immune-cell approaches against FIV-expressing cells.
+- Bispecific molecules linking infected cells to cytotoxic immune cells.
 
-> O'Malley is FIV-positive and has multiple enlarged lymph nodes, and I am worried they may be affecting breathing. I understand FIV itself has no confirmed cure, but I do not want every sign dismissed as just FIV. I want to sort reactive nodes versus lymphoma or another treatable infection/inflammatory process. Can we do FNA/cytology of the enlarged node(s), CBC/chemistry/urinalysis, and discuss whether chest imaging is needed because of the breathing concern?
+Why this could be real:
 
-## Cure-path logic
+- Reservoir eradication requires infected cells to become visible.
+- HIV cure research shows that latency reversal alone is probably insufficient; clearance machinery must be paired with it.
 
-The map should be read as a ladder:
+Failure modes:
 
-1. **Do not worsen the terrain**: indoor safety, parasite control, no raw diet, low stress, stable calories.
-2. **Find what is treatable**: infections, dental disease, anemia, kidney disease, parasites, wounds, lymphoma, inflammatory disease.
-3. **Use vet-supervised disease modifiers only when signs justify risk**: AZT, interferon-omega, specialist-directed care.
-4. **Track true cure research**: CRISPR/proviral eradication, but do not pretend it is ready.
-5. **Define success honestly**: longer stable life, fewer infections, preserved appetite/weight/breathing, reduced inflammatory burden, earlier detection of cancer or secondary disease.
+- Activating too many infected cells at once could worsen inflammation.
+- Latency reversal may not reach all reservoirs.
+- FIV expression may be too transient or low for immune clearance.
+- The cat may not have enough immune reserve for a purge strategy.
+
+Experiments that matter:
+
+- Find feline-safe latency reversal windows.
+- Identify surface markers on reactivated FIV-infected cells.
+- Test whether immune effectors actually kill those cells.
+- Model cytokine storm / inflammatory toxicity risk.
+
+Evidence threshold:
+
+- Reservoir falls by orders of magnitude, not tiny percentage shifts.
+- No rebound after treatment stop and immune stimulation.
+
+### Gate 4: Entry-proof immune replacement
+
+Hypothesis:
+
+If susceptible immune cells are replaced or armored so FIV cannot enter them, the virus loses its habitat.
+
+Candidate tools:
+
+- Hematopoietic stem cell editing followed by immune reconstitution.
+- Editing or modulating feline CD134/OX40 interaction sites needed by FIV.
+- Editing CXCR4 interaction surfaces only if a feline-safe separation from normal CXCR4 function exists.
+- Adding antiviral restriction factors that block lentiviral replication inside cells.
+- Engineered soluble decoy receptors that bind FIV before cell entry.
+
+Why this could be real:
+
+- HIV cure cases in humans point toward immune-system replacement/entry resistance as one possible cure logic.
+- FIV entry depends on feline CD134 and CXCR4-related steps, so entry architecture is a rational target.
+
+Major caution:
+
+CXCR4 is not disposable. It has major roles in immune-cell trafficking and hematopoietic stem-cell biology. CD134 also has immune functions. A cure cannot simply “turn off receptors” without proving the cat can survive and remain immunologically competent.
+
+Failure modes:
+
+- Edited cells fail to engraft.
+- FIV uses alternative tropism or adapts.
+- Receptor edits damage normal immune function.
+- Stem-cell transplant risk is too high for routine cats.
+
+Experiments that matter:
+
+- Map exact FIV-contact residues on feline CD134/CXCR4 versus normal ligand-binding/function residues.
+- Search for naturally resistant felids or cats with altered receptor usage.
+- Test receptor separation-of-function edits in feline cells.
+- Test engineered restriction factors against diverse FIV isolates.
+
+Evidence threshold:
+
+- Edited feline immune cells remain functional but resist FIV entry/replication.
+- Reconstituted immune system becomes resistant without severe immune defects.
+
+### Gate 5: Immune ecological conversion
+
+Hypothesis:
+
+A cat might become functionally cured if the host environment shifts from FIV-permissive chronic inflammation to nonprogressive control, similar to natural lentiviral hosts that carry virus without immunodeficiency.
+
+Candidate tools:
+
+- Identify immune signatures of FIV elite controllers or long-term nonprogressors.
+- Reduce chronic immune activation rather than merely boosting immunity.
+- Repair gut barrier / oral inflammatory burden / microbiome drivers that keep immune cells activated and infectable.
+- Target senescent, exhausted, or hyperactivated T-cell states.
+- Therapeutic vaccines that create durable cell-mediated control without overstimulation.
+
+Why this could be real:
+
+- In lentiviral disease, immune activation can be as damaging as viral load.
+- Natural host models for related lentiviruses show that nonprogression can come from host-pathogen equilibrium, not total viral absence.
+
+Failure modes:
+
+- Functional control is not sterilizing cure.
+- Immune modulation can suppress needed defenses.
+- Microbiome/inflammation changes may be too weak to alter reservoirs.
+
+Experiments that matter:
+
+- Compare FIV progressors vs nonprogressors using single-cell immune profiling.
+- Map oral/gut inflammatory load against viral activity and lymph-node enlargement.
+- Test whether reducing inflammation lowers activated target-cell availability.
+
+Evidence threshold:
+
+- Viral replication and immune activation decline together.
+- Clinical disease stops progressing without broad immunosuppression.
+
+## Hidden possibility search: where to look next
+
+### 1. Naturally resistant cats or felids
+
+Question:
+
+Are there cats or wild felids exposed to FIV who resist infection, carry lower-pathogenic variants, or avoid immunodeficiency?
+
+Why it matters:
+
+Natural resistance can reveal receptor variants, restriction factors, immune-control signatures, or viral weaknesses that current medicine has not copied yet.
+
+Search targets:
+
+- Felid species with endemic FIV but low disease progression.
+- Domestic-cat long-term nonprogressors.
+- Cats repeatedly exposed through bite networks but uninfected.
+- Cats with unusual CD134/CXCR4 sequence variants.
+
+### 2. Viral dependency audit
+
+Question:
+
+What does FIV absolutely require that the cat does not?
+
+Candidate dependencies:
+
+- Reverse transcriptase.
+- Integrase.
+- Protease.
+- Env-CD134-CXCR4 conformational steps.
+- LTR transcriptional activation.
+- Vif-mediated evasion of host restriction factors.
+- Host-cell activation state.
+
+The cure is probably hidden at a dependency split: something essential to virus, optional or bypassable for cat.
+
+### 3. Reservoir map
+
+Question:
+
+Which cells keep replication-competent FIV alive in the body?
+
+Known likely zones:
+
+- Activated T cells.
+- CD4+ and CD8+ lymphocyte subsets.
+- B cells.
+- Monocytes/macrophages.
+- Possibly tissue reservoirs depending on disease stage.
+
+The cure cannot be designed until the reservoir is anatomically and cellularly mapped.
+
+### 4. Delivery map
+
+Question:
+
+What delivery vehicle can reach feline reservoir cells safely?
+
+Possibilities:
+
+- Ex vivo edited autologous immune/stem cells.
+- In vivo lipid nanoparticles tuned for feline leukocytes.
+- Viral vectors with controlled tropism.
+- Engineered extracellular vesicles.
+- Nanoblade-like transient delivery of editing machinery.
+- Antibody-targeted particles recognizing infected or reservoir-prone cells.
+
+The “medicine” may already conceptually exist; the missing piece may be feline-specific delivery.
+
+### 5. Cure measurement map
+
+Question:
+
+How would we know a cure happened?
+
+Do not rely on one negative PCR.
+
+Required measurements:
+
+- Plasma viral RNA.
+- Cell-associated FIV DNA.
+- Intact / replication-competent provirus assay if available.
+- Viral outgrowth after cell activation.
+- Antibody status over time.
+- CD4/CD8 and broader lymphocyte function.
+- Lymph-node pathology.
+- Clinical state: weight, appetite, breathing, infections, oral disease.
+
+## O'Malley-specific application
+
+Known concern:
+
+FIV+, multiple enlarged lymph nodes, possible breathing effect, lymphoma concern.
+
+Discovery lens:
+
+Do not assume “FIV is the whole problem.” Enlarged lymph nodes may be:
+
+- Reactive immune activation.
+- Secondary infection.
+- Lymphoma.
+- Other inflammatory or neoplastic disease.
+- Mixed disease: FIV plus a separate treatable process.
+
+The path that most increases cure possibility for O'Malley now is diagnostic separation:
+
+1. FNA/cytology of enlarged lymph node(s).
+2. CBC/chemistry/urinalysis baseline.
+3. Thoracic imaging if breathing is affected.
+4. Viral and immune-state baseline if accessible.
+5. Identify whether this is active infection, cancer, inflammation, or structural compression.
+
+Why this belongs in a cure map:
+
+A future FIV cure would not fix lymphoma by magic. A lymphoma treatment would not erase FIV by magic. O'Malley needs the layers separated so each layer can be attacked correctly.
+
+## The strongest cure hypotheses ranked
+
+### Highest plausibility: multiplex proviral disabling
+
+A CRISPR/base/prime-editing style approach that hits conserved regions of FIV, delivered to reservoir cells, with enough guide diversity to prevent escape.
+
+Reason:
+
+It attacks the lentiviral root: integrated provirus.
+
+Main wall:
+
+Delivery and safety.
+
+### High plausibility: block-and-lock functional cure
+
+Permanent transcriptional repression of FIV provirus.
+
+Reason:
+
+May require less complete physical eradication than excision.
+
+Main wall:
+
+Durability and avoiding broad host-gene suppression.
+
+### Medium-high plausibility: engineered immune clearance
+
+Expose infected cells and clear them with antibodies, CAR-like cells, or therapeutic vaccination.
+
+Reason:
+
+The immune system already clears visible infected cells; the hard part is visibility and exhaustion.
+
+Main wall:
+
+Latency, inflammation, and feline-specific immune engineering.
+
+### Medium plausibility: entry-proof immune reconstitution
+
+Create immune cells FIV cannot enter while preserving normal immune function.
+
+Reason:
+
+Entry resistance can collapse the viral habitat.
+
+Main wall:
+
+CD134/CXCR4 are biologically important; transplant/editing burden may be high.
+
+### Medium plausibility: nonprogressor ecological conversion
+
+Make the cat resemble a lentiviral nonprogressor: low immune activation, strong control, stable tissue function.
+
+Reason:
+
+Disease may be driven by immune activation as much as viral presence.
+
+Main wall:
+
+May control disease without curing infection.
+
+## Research questions to keep alive
+
+- What exact FIV subtype/strain does O'Malley have?
+- Which FIV sequences are conserved enough for multiplex editing?
+- What feline cell types hold replication-competent reservoir in naturally infected cats?
+- Are there domestic cats with durable FIV nonprogression, and what makes them different?
+- Can feline CD134 be modified to block FIV while preserving OX40 immune signaling?
+- Can CXCR4 interaction surfaces be shielded without disrupting stem-cell homing and immune trafficking?
+- Can FIV-infected cells be tagged by a unique surface marker after latency reversal?
+- Are oral/gut inflammatory sinks increasing activated target cells and viral persistence?
+- Could lymphoma or chronic lymphadenopathy create a reservoir niche?
+- What delivery platform reaches feline lymphoid tissue best?
 
 ## Source anchors
 
-- Cornell Feline Health Center: FIV overview, long asymptomatic periods, immune suppression, limited viral treatment, AZT caveats, prevention by avoiding exposure/bites.
-- AAFP 2020 Feline Retrovirus Testing and Management Guidelines: current clinical framework for retrovirus testing and management.
-- Merck Veterinary Manual: FIV effects, transmission, secondary infections, cancer risk.
-- Hartmann 2015 antiviral review: limits and adverse effects of antiviral therapy in FIV.
-- Veterinary Evidence review on recombinant feline interferon-omega: weak evidence; possible symptom improvement but not definitive.
-- EveryCat 2025 grant EC25S-074: CRISPR-Cas9 nanoblade-style FIV genetic cure research direction.
-- Murphy et al. 2020 RNA-directed gene editing strategy: early steps toward proviral eradication.
+- FIV is a lentivirus that can integrate into host-cell genetic material and can remain dormant; FIV entry involves CD134 followed by CXCR4 interaction.
+- HIV cure research is relevant by analogy because integrated lentiviral reservoirs are a central cure barrier.
+- Latent reservoir models suggest large reservoir reductions may be needed to prevent rebound; small reductions may not equal cure.
+- Human HIV cure and gene-editing research point toward reservoir excision, receptor/entry resistance, latency control, and immune clearance as major cure categories.
+- Current veterinary FIV care remains management-focused; that fact defines the starting wall, not the endpoint.
 
 ## Bottom line
 
-FIV cure work has two meanings:
+The possibility is not “find the current FIV medicine.”
 
-- **Clinical now**: stabilize the organism by reducing immune load and treating every fixable secondary process early.
-- **Scientific future**: eradicate or disable integrated viral material through gene-editing or related retroviral cure technology.
+The possibility is:
 
-For O'Malley, the immediate cure-adjacent move is not a supplement or miracle antiviral. It is diagnostic force: lymph-node cytology, breathing assessment, blood/urine baseline, and aggressive treatment of anything currently stealing immune reserve.
+**Find the exact split between what FIV requires and what the cat can live without, then build a tool that hits that split in every reservoir cell.**
+
+For O'Malley right now, the practical and discovery paths meet at one place: diagnose the lymph-node/breathing layer accurately while building the research map around reservoir eradication, receptor-entry resistance, latency lock, immune clearance, and nonprogressor conversion.
