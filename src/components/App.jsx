@@ -1,105 +1,117 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import archiveManifest from '../data/mcArchiveManifest.json';
 
-const STORAGE_KEY = 'mirror.cartographer.labyrinth.v1';
-
-const chambers = [
-  { id: 'threshold', glyph: '✶', title: 'The Threshold', subtitle: 'entry is a change in attention', text: 'The first room does not ask for a task. It asks for orientation: a symbol, a mood, a pressure, a fragment, a doorway. The map begins where ordinary pages stop.', sigil: 'eye / light / door', prompt: 'What symbol is standing in the doorway today?' },
-  { id: 'mirror', glyph: '◌', title: 'The Mirror Hall', subtitle: 'symbolism is the engine', text: 'A mirror does not replace the person looking. It returns echo, distortion, recurrence, contradiction, and the bright detail that keeps appearing until it becomes a coordinate.', sigil: 'reflection / recursion / return', prompt: 'What keeps coming back?' },
-  { id: 'body', glyph: '☿', title: 'The Body Cloister', subtitle: 'sensation becomes location', text: 'Sensation is kept as map-data before interpretation. Heat, weight, motion, fatigue, and attention become coordinates in the room rather than noise.', sigil: 'chest / eye / foot / breath', prompt: 'Where is the signal located?' },
-  { id: 'animals', glyph: '♢', title: 'The Guardian Kennel', subtitle: 'living anchors hold the map', text: 'Bugsy, O’Malley, Griffey, and Nimbus are not side notes. They are part of the field: care, timing, memory, urgency, love, and practical next steps.', sigil: 'Bugsy / O’Malley / Griffey / Nimbus', prompt: 'Which living anchor matters first?' },
-  { id: 'proof', glyph: '△', title: 'The Evidence Chapel', subtitle: 'symbols and facts need different labels', text: 'Every claim receives a kind: fact, inference, action, symbolic hypothesis, aesthetic truth, or unanswered question. The symbolic and the scientific stop fighting and start sorting.', sigil: 'claim / source / boundary', prompt: 'What would make this stronger or real?' },
-  { id: 'forge', glyph: '☼', title: 'The Artifact Forge', subtitle: 'the maze should make something', text: 'A mapped signal can become a page, packet, film, report, glyph, ritual, offer, or tool. The output has to carry structure and atmosphere at the same time.', sigil: 'page / packet / film / offer', prompt: 'What artifact should this become?' },
-  { id: 'home', glyph: '⌂', title: 'The House Beyond', subtitle: 'the final room is safe life', text: 'The map points toward a real outside: animals cared for, money that holds, travel, ocean light, a livable home, and a mind that does not have to cut off its symbols to be understood.', sigil: 'van / ocean / animal sleep / sanctuary', prompt: 'What would make the world feel inhabitable?' },
+const STATES = [
+  { id: 'hush', mark: '◌', name: 'hush', hue: 38, pulse: 9, depth: 0.18, curve: '42% 58% 52% 48%' },
+  { id: 'pull', mark: '⌁', name: 'pull', hue: 205, pulse: 5, depth: 0.36, curve: '64% 36% 45% 55%' },
+  { id: 'ache', mark: '●', name: 'ache', hue: 348, pulse: 7, depth: 0.52, curve: '38% 62% 68% 32%' },
+  { id: 'spark', mark: '✶', name: 'spark', hue: 52, pulse: 3, depth: 0.72, curve: '50% 50% 28% 72%' },
+  { id: 'float', mark: '◇', name: 'float', hue: 167, pulse: 12, depth: 0.28, curve: '72% 28% 62% 38%' },
+  { id: 'return', mark: '↺', name: 'return', hue: 280, pulse: 10, depth: 0.44, curve: '47% 53% 39% 61%' },
 ];
 
-const correspondences = [
-  ['eye', 'attention, witness, lighthouse, proof'],
-  ['light', 'orientation, exposure, revelation'],
-  ['chair / Char', 'self-position, rest, object becoming name'],
-  ['Bugsy', 'guardian signal, urgency, love with a pulse'],
-  ['labyrinth', 'not lost: patterned wandering with a center'],
-  ['serif', 'manuscript, gravity, old book, serious spell'],
-  ['threshold', 'where ordinary interface turns ritual'],
-  ['mirror', 'return without erasure; seeing the pattern twice'],
-];
-
-const proofKinds = ['seed', 'symbol', 'inference', 'action', 'artifact'];
-
-function readState() {
-  try { const raw = window.localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; }
-}
-function saveState(value) {
-  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value)); return true; } catch { return false; }
-}
-function classifyEntry(entry) {
-  const text = entry.toLowerCase();
-  const weighted = chambers.map((room) => {
-    const words = `${room.title} ${room.subtitle} ${room.text} ${room.sigil}`.toLowerCase().split(/[^a-z0-9’]+/).filter((word) => word.length > 3);
-    const score = words.reduce((sum, word) => sum + (text.includes(word) ? 1 : 0), 0);
-    return { ...room, score };
-  }).sort((a, b) => b.score - a.score);
-  return weighted[0]?.score ? weighted[0] : chambers[1];
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
-function LabyrinthMark({ active, setActive }) {
+function nearestState(x, y) {
+  const centerX = x - 0.5;
+  const centerY = y - 0.5;
+  const angle = (Math.atan2(centerY, centerX) + Math.PI * 2) % (Math.PI * 2);
+  return STATES[Math.floor((angle / (Math.PI * 2)) * STATES.length) % STATES.length];
+}
+
+function useMotion() {
+  const [motion, setMotion] = useState({ x: 0.5, y: 0.5, speed: 0, lastX: 0.5, lastY: 0.5 });
+  useEffect(() => {
+    let last = { x: 0.5, y: 0.5, t: performance.now() };
+    const move = (event) => {
+      const touch = event.touches?.[0];
+      const clientX = touch ? touch.clientX : event.clientX;
+      const clientY = touch ? touch.clientY : event.clientY;
+      const x = clamp(clientX / window.innerWidth, 0, 1);
+      const y = clamp(clientY / window.innerHeight, 0, 1);
+      const now = performance.now();
+      const distance = Math.hypot(x - last.x, y - last.y);
+      const speed = clamp(distance / Math.max(16, now - last.t) * 900, 0, 1);
+      setMotion({ x, y, speed, lastX: last.x, lastY: last.y });
+      last = { x, y, t: now };
+    };
+    window.addEventListener('pointermove', move, { passive: true });
+    window.addEventListener('touchmove', move, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('touchmove', move);
+    };
+  }, []);
+  return motion;
+}
+
+function BreathingLabyrinth({ state, motion, setState }) {
+  const rings = Array.from({ length: 9 });
+  const symbols = STATES.map((item, index) => {
+    const angle = (index / STATES.length) * Math.PI * 2 - Math.PI / 2;
+    const left = 50 + Math.cos(angle) * 39;
+    const top = 50 + Math.sin(angle) * 39;
+    return { ...item, left, top };
+  });
   return (
-    <section className="labyrinth-mark" aria-label="Interactive Mirror Cartographer labyrinth">
-      <div className="maze-lines" />
-      <div className="maze-center"><span>MC</span><small>{active.title}</small></div>
-      {chambers.map((room, index) => {
-        const angle = (index / chambers.length) * Math.PI * 2 - Math.PI / 2;
-        const radius = index % 2 === 0 ? 39 : 31;
-        const left = 50 + Math.cos(angle) * radius;
-        const top = 50 + Math.sin(angle) * radius;
-        return <button key={room.id} className={`maze-room ${active.id === room.id ? 'active' : ''}`} style={{ left: `${left}%`, top: `${top}%` }} onClick={() => setActive(room)} aria-label={`Open ${room.title}`}><span>{room.glyph}</span><em>{room.title.replace('The ', '')}</em></button>;
-      })}
+    <section className="field" aria-label="somatic labyrinth">
+      <div className="aperture" />
+      <div className="human" />
+      <div className="ai" />
+      <div className="thread" />
+      <div className="labyrinth">
+        {rings.map((_, index) => <i key={index} className={`ring r${index}`} />)}
+        <div className="center-mark"><span>{state.mark}</span></div>
+        {symbols.map((item) => (
+          <button key={item.id} className={`sense ${state.id === item.id ? 'active' : ''}`} style={{ left: `${item.left}%`, top: `${item.top}%` }} onClick={() => setState(item)} aria-label={item.name}>
+            {item.mark}
+          </button>
+        ))}
+      </div>
+      <div className="trace" style={{ left: `${motion.x * 100}%`, top: `${motion.y * 100}%` }} />
     </section>
   );
-}
-
-function ChamberPanel({ active, entry, setEntry, setActive }) {
-  const routed = useMemo(() => classifyEntry(entry), [entry]);
-  const kind = proofKinds[Math.min(proofKinds.length - 1, Math.floor(entry.trim().length / 38))];
-  return (
-    <section className="chamber-panel">
-      <p className="overline">current chamber</p>
-      <h2><span>{active.glyph}</span>{active.title}</h2>
-      <p className="subtitle">{active.subtitle}</p>
-      <p>{active.text}</p>
-      <dl className="sigil-list"><div><dt>sigil</dt><dd>{active.sigil}</dd></div><div><dt>question</dt><dd>{active.prompt}</dd></div><div><dt>archive mass</dt><dd>{archiveManifest.conversationCount} conversations held as substrate</dd></div></dl>
-      <div className="entry-box"><label htmlFor="entry">write into the maze</label><textarea id="entry" value={entry} onChange={(event) => setEntry(event.target.value)} /></div>
-      <div className="route-card"><p className="overline">the maze hears this as</p><strong>{routed.glyph} {routed.title}</strong><span>current form: {kind}</span><button onClick={() => setActive(routed)}>walk there</button></div>
-    </section>
-  );
-}
-
-function CorrespondenceIndex() {
-  return <section className="index-panel"><p className="overline">correspondence index</p><h2>Symbols have jobs.</h2><div className="correspondence-grid">{correspondences.map(([symbol, meaning]) => <article key={symbol}><h3>{symbol}</h3><p>{meaning}</p></article>)}</div></section>;
-}
-function PassageStrip({ setActive }) {
-  return <nav className="passage-strip" aria-label="Labyrinth passages">{chambers.map((room) => <button key={room.id} onClick={() => setActive(room)}><span>{room.glyph}</span>{room.title.replace('The ', '')}</button>)}</nav>;
 }
 
 function App() {
-  const saved = typeof window !== 'undefined' ? readState() : null;
-  const [active, setActive] = useState(chambers.find((room) => room.id === saved?.activeId) || chambers[0]);
-  const [entry, setEntry] = useState(saved?.entry || 'Eye. Light. Chair became Char. Bugsy is the guardian. Make the site feel like a labyrinth, not a dashboard.');
-  useEffect(() => { saveState({ activeId: active.id, entry }); }, [active, entry]);
+  const motion = useMotion();
+  const [state, setState] = useState(STATES[0]);
+  const autoState = useMemo(() => nearestState(motion.x, motion.y), [motion.x, motion.y]);
+
+  useEffect(() => {
+    if (motion.speed > 0.05) setState(autoState);
+  }, [autoState, motion.speed]);
+
+  const vars = {
+    '--mx': motion.x,
+    '--my': motion.y,
+    '--speed': motion.speed,
+    '--hue': state.hue,
+    '--pulse': `${state.pulse}s`,
+    '--depth': state.depth,
+    '--curve': state.curve,
+  };
+
   return (
-    <main className="site-shell">
-      <style>{styles}</style><div className="paper-grain" />
-      <header className="site-header"><p className="seal">✶ ◌ △ ♢ ☼</p><h1>Mirror Cartographer</h1><p className="thesis">A symbolic labyrinth for turning sensation, animal urgency, memory, contradiction, and proof into navigable form.</p></header>
-      <PassageStrip setActive={setActive} />
-      <section className="main-grid"><LabyrinthMark active={active} setActive={setActive} /><ChamberPanel active={active} entry={entry} setEntry={setEntry} setActive={setActive} /></section>
-      <CorrespondenceIndex />
-      <footer className="footer-inscription"><span>not a dashboard</span><span>not a mood board</span><span>a symbolic instrument</span><span>evidence boundaries intact</span></footer>
+    <main className="somatic-shell" style={vars}>
+      <style>{styles}</style>
+      <div className="grain" />
+      <header className="quiet-title" aria-label="Mirror Cartographer">
+        <b>Mirror Cartographer</b>
+        <span>{state.mark}</span>
+      </header>
+      <BreathingLabyrinth state={state} motion={motion} setState={setState} />
+      <nav className="feeling-keys" aria-label="feeling keys">
+        {STATES.map((item) => <button key={item.id} className={state.id === item.id ? 'active' : ''} onClick={() => setState(item)}>{item.mark}</button>)}
+      </nav>
+      <footer className="barely">move slowly</footer>
     </main>
   );
 }
 
 const styles = `
-:root{color-scheme:dark;--ink:#f6ead7;--dim:#cbbda7;--muted:#9d8d76;--black:#080604;--panel:rgba(34,24,17,.72);--line:rgba(246,234,215,.2);--line2:rgba(216,180,105,.38);--gold:#d8b469;--rose:#b86f6f;--blue:#8fb9c9}*{box-sizing:border-box}html,body,#root{min-height:100%}body{margin:0;background:var(--black);color:var(--ink);font-family:Georgia,'Times New Roman',serif}button,textarea{font:inherit}button{cursor:pointer;color:inherit}.site-shell{min-height:100vh;position:relative;overflow:hidden;padding:28px;background:radial-gradient(circle at 50% 18%,rgba(184,111,111,.18),transparent 28%),radial-gradient(circle at 18% 70%,rgba(143,185,201,.12),transparent 30%),linear-gradient(135deg,#090604,#17100c 45%,#040302)}.paper-grain{position:fixed;inset:0;pointer-events:none;opacity:.34;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),radial-gradient(circle at center,transparent,rgba(0,0,0,.72));background-size:34px 34px,34px 34px,100% 100%;mix-blend-mode:screen}.site-header{max-width:1320px;margin:0 auto 20px;text-align:center;position:relative}.seal{letter-spacing:.9em;color:var(--gold);font-size:.85rem;margin:0 0 14px;text-indent:.9em}.site-header h1{font-size:clamp(4.4rem,13vw,12.5rem);line-height:.72;margin:0;letter-spacing:-.085em;font-weight:500;text-shadow:0 0 34px rgba(216,180,105,.16)}.thesis{max-width:780px;margin:22px auto 0;color:var(--dim);font-size:clamp(1.05rem,2.2vw,1.45rem);line-height:1.45}.passage-strip{max-width:1320px;margin:22px auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.passage-strip button{border:1px solid var(--line);border-radius:999px;background:rgba(246,234,215,.045);padding:9px 13px;color:var(--dim);box-shadow:inset 0 0 18px rgba(216,180,105,.03)}.passage-strip span{color:var(--gold);margin-right:7px}.passage-strip button:hover{border-color:var(--line2);color:var(--ink);background:rgba(216,180,105,.09)}.main-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:minmax(360px,.92fr) minmax(0,1.08fr);gap:22px;align-items:stretch}.labyrinth-mark{min-height:680px;border:1px solid var(--line2);border-radius:42px;position:relative;background:radial-gradient(circle at center,rgba(216,180,105,.11),transparent 24%),linear-gradient(135deg,rgba(246,234,215,.07),rgba(246,234,215,.025));box-shadow:0 40px 140px rgba(0,0,0,.42),inset 0 0 90px rgba(0,0,0,.35);overflow:hidden}.maze-lines{position:absolute;inset:8%;border:2px solid rgba(216,180,105,.5);border-radius:50%;box-shadow:0 0 0 42px rgba(216,180,105,.025),0 0 0 84px rgba(246,234,215,.025),0 0 0 126px rgba(216,180,105,.018)}.maze-lines:before,.maze-lines:after{content:'';position:absolute;inset:12%;border:1px solid rgba(246,234,215,.22);border-radius:24% 50% 35% 48%;transform:rotate(38deg)}.maze-lines:after{inset:26%;border-color:rgba(143,185,201,.2);transform:rotate(-28deg);border-radius:50% 28% 48% 34%}.maze-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:176px;height:176px;border:1px solid var(--line2);border-radius:50%;display:grid;place-items:center;text-align:center;background:rgba(8,6,4,.82);box-shadow:0 0 70px rgba(216,180,105,.2),inset 0 0 38px rgba(246,234,215,.04);padding:22px}.maze-center span{font-size:4rem;line-height:.8;letter-spacing:-.14em}.maze-center small{display:block;color:var(--dim);font-style:italic;line-height:1.15}.maze-room{position:absolute;transform:translate(-50%,-50%);width:118px;min-height:88px;border:1px solid rgba(246,234,215,.22);border-radius:60px 60px 16px 16px;background:rgba(20,13,9,.78);display:grid;place-items:center;padding:10px;box-shadow:0 18px 50px rgba(0,0,0,.35);transition:transform .25s ease,border-color .25s ease,background .25s ease}.maze-room span{font-size:1.55rem;color:var(--gold)}.maze-room em{font-size:.78rem;color:var(--dim);font-style:italic;text-align:center}.maze-room:hover,.maze-room.active{transform:translate(-50%,-50%) scale(1.06);border-color:var(--gold);background:rgba(68,43,25,.9)}.maze-room.active:after{content:'';position:absolute;inset:-9px;border:1px solid rgba(216,180,105,.36);border-radius:inherit}.chamber-panel,.index-panel{border:1px solid var(--line);border-radius:42px;background:linear-gradient(145deg,var(--panel),rgba(12,8,5,.76));box-shadow:0 30px 110px rgba(0,0,0,.38);padding:30px;position:relative;overflow:hidden}.chamber-panel:before,.index-panel:before{content:'';position:absolute;inset:14px;border:1px solid rgba(246,234,215,.08);border-radius:32px;pointer-events:none}.overline{text-transform:uppercase;letter-spacing:.26em;color:var(--gold);font-size:.72rem;margin:0 0 12px;font-family:ui-sans-serif,system-ui,sans-serif;font-weight:800}.chamber-panel h2,.index-panel h2{font-weight:500;font-size:clamp(2.5rem,6vw,5.8rem);line-height:.82;letter-spacing:-.06em;margin:0 0 16px}.chamber-panel h2 span{color:var(--gold);margin-right:14px}.subtitle{font-size:1.35rem;color:var(--blue);font-style:italic;margin:0 0 18px}.chamber-panel p,.index-panel p{color:var(--dim);line-height:1.62;font-size:1.04rem}.sigil-list{display:grid;gap:10px;margin:22px 0}.sigil-list div{border-top:1px solid rgba(246,234,215,.12);padding-top:10px;display:grid;grid-template-columns:130px 1fr;gap:12px}.sigil-list dt{text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-size:.72rem;font-family:ui-sans-serif,system-ui,sans-serif}.sigil-list dd{margin:0;color:var(--ink)}.entry-box{margin-top:22px}.entry-box label{display:block;color:var(--gold);font-style:italic;margin-bottom:8px}textarea{width:100%;min-height:150px;border:1px solid rgba(246,234,215,.18);border-radius:24px;background:rgba(5,3,2,.66);color:var(--ink);padding:18px;resize:vertical;outline:none;line-height:1.45}textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(216,180,105,.11)}.route-card{margin-top:14px;border:1px solid rgba(216,180,105,.28);border-radius:24px;padding:16px;background:rgba(216,180,105,.07)}.route-card strong,.route-card span{display:block}.route-card strong{font-size:1.35rem;font-weight:500}.route-card span{color:var(--dim);margin:4px 0 12px}.route-card button{border:1px solid var(--line2);border-radius:999px;background:rgba(216,180,105,.1);padding:9px 13px}.index-panel{max-width:1320px;margin:22px auto 0}.correspondence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}.correspondence-grid article{border:1px solid rgba(246,234,215,.14);border-radius:24px;padding:16px;background:rgba(246,234,215,.045)}.correspondence-grid h3{font-size:1.4rem;font-weight:500;margin:0 0 8px;color:var(--ink)}.correspondence-grid p{font-size:.96rem;margin:0}.footer-inscription{max-width:1320px;margin:18px auto 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;color:var(--muted);font-family:ui-sans-serif,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem}.footer-inscription span{border:1px solid rgba(246,234,215,.12);border-radius:999px;padding:8px 10px;background:rgba(246,234,215,.035)}@media(max-width:980px){.site-shell{padding:16px}.main-grid{grid-template-columns:1fr}.labyrinth-mark{min-height:560px}.site-header h1{font-size:clamp(3.4rem,18vw,7rem)}.correspondence-grid{grid-template-columns:1fr 1fr}.sigil-list div{grid-template-columns:1fr}.maze-room{width:94px;min-height:74px}.maze-center{width:142px;height:142px}.maze-center span{font-size:3rem}}@media(max-width:560px){.correspondence-grid{grid-template-columns:1fr}.labyrinth-mark{min-height:500px}.maze-room{width:82px;min-height:66px}.maze-room em{font-size:.68rem}.chamber-panel,.index-panel{padding:22px;border-radius:30px}.chamber-panel h2,.index-panel h2{font-size:2.7rem}.seal{letter-spacing:.45em;text-indent:.45em}}
+:root{color-scheme:dark}*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0}body{background:#030201;overflow:hidden;font-family:Georgia,'Times New Roman',serif}.somatic-shell{--x:calc(var(--mx)*100%);--y:calc(var(--my)*100%);min-height:100vh;position:relative;overflow:hidden;color:hsl(var(--hue) 70% 88%);background:radial-gradient(circle at var(--x) var(--y),hsl(var(--hue) 72% 56% / calc(.18 + var(--speed)*.24)),transparent calc(18% + var(--speed)*15%)),radial-gradient(circle at calc((1 - var(--mx))*100%) calc((1 - var(--my))*100%),hsl(calc(var(--hue) + 80) 60% 48% / .18),transparent 31%),linear-gradient(120deg,#050302,#120907 48%,#020202);filter:saturate(calc(.82 + var(--speed)*.8))}.grain{position:fixed;inset:0;pointer-events:none;opacity:.33;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),radial-gradient(circle at 50% 50%,transparent,rgba(0,0,0,.72));background-size:42px 42px,42px 42px,100% 100%;mix-blend-mode:screen}.quiet-title{position:fixed;z-index:5;top:24px;left:28px;right:28px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}.quiet-title b{font-size:clamp(1.3rem,3vw,2.8rem);font-weight:400;letter-spacing:-.06em;text-shadow:0 0 24px hsl(var(--hue) 90% 70% / .2)}.quiet-title span{font-size:clamp(1.4rem,4vw,4rem);text-shadow:0 0 34px currentColor}.field{position:absolute;inset:0;display:grid;place-items:center;perspective:900px}.aperture{position:absolute;width:74vmin;height:74vmin;border-radius:var(--curve);border:1px solid hsl(var(--hue) 70% 72% / .22);box-shadow:0 0 0 12vmin hsl(var(--hue) 70% 55% / .025),0 0 0 23vmin hsl(calc(var(--hue) + 40) 62% 55% / .018),inset 0 0 12vmin rgba(0,0,0,.42);animation:breathe var(--pulse) ease-in-out infinite;transform:rotate(calc((var(--mx) - .5)*34deg)) scale(calc(.88 + var(--depth)*.18 + var(--speed)*.1))}.labyrinth{width:min(78vmin,760px);height:min(78vmin,760px);position:relative;transform:rotateX(calc((.5 - var(--my))*16deg)) rotateY(calc((var(--mx) - .5)*18deg)) rotateZ(calc((var(--mx) - .5)*9deg));transition:transform .25s ease-out}.ring{position:absolute;inset:calc(5% + var(--i,0)*4%);border:1px solid hsl(var(--hue) 70% 75% / .16);border-radius:45% 55% 52% 48%;transform:rotate(calc(var(--i,0)*13deg));animation:drift calc(var(--pulse) + var(--i,0)*1s) ease-in-out infinite}.r0{--i:0}.r1{--i:1}.r2{--i:2}.r3{--i:3}.r4{--i:4}.r5{--i:5}.r6{--i:6}.r7{--i:7}.r8{--i:8}.center-mark{position:absolute;left:50%;top:50%;translate:-50% -50%;width:20vmin;height:20vmin;border-radius:50%;display:grid;place-items:center;border:1px solid hsl(var(--hue) 80% 80% / .24);background:radial-gradient(circle,hsl(var(--hue) 55% 40% / .18),rgba(0,0,0,.58));box-shadow:0 0 9vmin hsl(var(--hue) 80% 62% / .18)}.center-mark span{font-size:9vmin;line-height:1;filter:blur(calc(var(--speed)*1.2px));animation:softPulse var(--pulse) ease-in-out infinite}.sense{position:absolute;translate:-50% -50%;width:9vmin;height:9vmin;min-width:54px;min-height:54px;border-radius:50%;border:1px solid hsl(var(--hue) 80% 82% / .2);background:rgba(10,6,4,.5);color:inherit;font-size:clamp(1.4rem,4vw,3.2rem);display:grid;place-items:center;box-shadow:0 18px 60px rgba(0,0,0,.36);transition:scale .35s ease,border-color .35s ease,filter .35s ease,background .35s ease}.sense:hover,.sense.active{scale:1.18;border-color:hsl(var(--hue) 90% 76% / .7);background:hsl(var(--hue) 60% 40% / .16);filter:drop-shadow(0 0 18px hsl(var(--hue) 90% 70% / .4))}.human,.ai{position:absolute;width:18vmin;height:18vmin;border-radius:50%;pointer-events:none;filter:blur(18px);opacity:.7}.human{left:calc(var(--mx)*100% - 9vmin);top:calc(var(--my)*100% - 9vmin);background:hsl(var(--hue) 80% 70% / .32)}.ai{left:calc((1 - var(--mx))*100% - 9vmin);top:calc((1 - var(--my))*100% - 9vmin);background:hsl(calc(var(--hue) + 120) 75% 65% / .24)}.thread{position:absolute;width:100vmax;height:1px;background:linear-gradient(90deg,transparent,hsl(var(--hue) 80% 75% / .22),transparent);rotate:calc((var(--mx) - .5)*70deg + (var(--my) - .5)*35deg);filter:blur(.4px)}.trace{position:absolute;width:11px;height:11px;border-radius:50%;translate:-50% -50%;background:currentColor;box-shadow:0 0 22px currentColor,0 0 60px hsl(var(--hue) 90% 70% / .5);pointer-events:none}.feeling-keys{position:fixed;z-index:5;left:50%;bottom:26px;translate:-50% 0;display:flex;gap:12px;padding:10px 12px;border:1px solid hsl(var(--hue) 70% 80% / .14);border-radius:999px;background:rgba(0,0,0,.26);backdrop-filter:blur(18px)}.feeling-keys button{width:44px;height:44px;border-radius:50%;border:1px solid hsl(var(--hue) 70% 80% / .18);background:rgba(255,255,255,.035);color:inherit;font-size:1.25rem}.feeling-keys button.active{border-color:currentColor;box-shadow:0 0 18px hsl(var(--hue) 85% 70% / .32);background:hsl(var(--hue) 55% 42% / .14)}.barely{position:fixed;right:28px;bottom:34px;color:hsl(var(--hue) 50% 82% / .48);font-size:.82rem;letter-spacing:.24em;text-transform:uppercase;font-family:ui-sans-serif,system-ui,sans-serif}@keyframes breathe{0%,100%{border-radius:var(--curve);filter:blur(.1px)}50%{border-radius:54% 46% 38% 62%;filter:blur(1.2px)}}@keyframes drift{0%,100%{scale:1;rotate:0deg}50%{scale:calc(.94 + var(--depth)*.12);rotate:6deg}}@keyframes softPulse{0%,100%{scale:.96;opacity:.72}50%{scale:1.05;opacity:1}}@media(max-width:720px){.quiet-title{top:16px;left:16px;right:16px}.labyrinth{width:88vmin;height:88vmin}.aperture{width:86vmin;height:86vmin}.feeling-keys{bottom:16px;gap:8px}.feeling-keys button{width:40px;height:40px}.barely{display:none}}@media(prefers-reduced-motion:reduce){.aperture,.ring,.center-mark span{animation:none}.labyrinth,.sense{transition:none}}
 `;
 
 export default App;
