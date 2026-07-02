@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirror-cartographer.local/schemas/lockfile-provenance-report.v1.schema.json",
+  "title": "Lockfile Provenance Report v1",
+  "description": "Machine-readable output contract for the schema-governance lockfile provenance preflight. This schema describes the report produced by the checker; it is not used by the checker itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "status",
+    "exit_code",
+    "package_json",
+    "package_lock",
+    "ajv",
+    "checks"
+  ],
+  "properties": {
+    "report_version": {
+      "const": "lockfile-provenance-report.v1"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail"]
+    },
+    "exit_code": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99
+    },
+    "package_json": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "has_ajv_dependency", "has_ajv_dev_dependency"],
+      "properties": {
+        "path": { "const": "package.json" },
+        "sha256": { "$ref": "#/$defs/sha256_or_null" },
+        "has_ajv_dependency": { "type": "boolean" },
+        "has_ajv_dev_dependency": { "type": "boolean" }
+      }
+    },
+    "package_lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "present", "sha256", "lockfile_version"],
+      "properties": {
+        "path": { "const": "package-lock.json" },
+        "present": { "type": "boolean" },
+        "sha256": { "$ref": "#/$defs/sha256_or_null" },
+        "lockfile_version": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "ajv": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "version", "source"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "version": {
+          "anyOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": ["devDependency", "dependency", "missing", "invalid"]
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/check" }
+    }
+  },
+  "$defs": {
+    "sha256_or_null": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        { "type": "null" }
+      ]
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "status", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail"]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
