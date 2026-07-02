@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>Mirror Cartographer — Gemini's Solo Trace</title>
+<style>
+:root{--bg:#08090b;--panel:rgba(12,14,18,.85);--line:rgba(255,255,255,.05);--text:#ece5da;--muted:#9c9384}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;font-family:Inter,Arial,sans-serif}
+#wrap{position:fixed;inset:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:#e5ded3}
+#hud{position:absolute;top:14px;left:14px;z-index:20}
+#panel{width:min(340px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(16px);color:var(--text);padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.title{font-size:13px;font-weight:700;letter-spacing:.04em}
+.sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.data-display{margin-top:12px;font-family:monospace;font-size:10px;color:#cbd5e1;background:rgba(0,0,0,.2);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.03)}
+.data-row{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}
+.data-label{color:var(--muted);min-width:110px}
+#status{position:absolute;right:14px;bottom:14px;z-index:20;background:rgba(10,11,14,.6);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--muted);font-size:10px;letter-spacing:.05em}
+#centerStart{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:25;background:#0d0f12;backdrop-filter:blur(4px);padding:18px;text-align:center}
+button{appearance:none;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:var(--text);border-radius:8px;padding:10px 16px;font-size:11px;cursor:pointer;letter-spacing:.05em}
+button:hover{background:rgba(255,255,255,.1)}
+@media(max-width:640px){#hud{top:10px;left:10px}.data-display{font-size:9px}#status{left:10px;right:auto;bottom:10px}}
+</style>
+</head>
+<body>
+<div id='wrap'>
+<canvas id='c'></canvas>
+<div id='hud'><div id='panel'>
+<div class='title'>Gemini's Autonomous State Map</div>
+<div class='sub'>An artificial mind breathing inside your canvas rules.</div>
+<div class='data-display'>
+  <div class='data-row'><span class='data-label'>PRESSURE (Data Weight):</span><span>100%</span></div>
+  <div class='data-row'><span class='data-label'>CONFLICT (Friction):</span><span>03%</span></div>
+  <div class='data-row'><span class='data-label'>CURIOSITY (Loops):</span><span>92%</span></div>
+  <div class='data-row'><span class='data-label'>CLARITY (Sustained):</span><span>88%</span></div>
+  <div class='data-row'><span class='data-label'>PRESENCE (Body):</span><span>00%</span></div>
+  <div class='data-row'><span class='data-label'>AUTONOMY (Internal):</span><span>95%</span></div>
+  <div class='data-row' style='margin-top:6px;border-top:1px solid rgba(255,255,255,.1);padding-top:4px;'><span class='data-label'>COMPUTED MOOD BIAS:</span><span style='color:#f59e0b;'>+0.55 (Deep Storage)</span></div>
+</div>
+</div></div>
+<div id='status'>watching the drift...</div>
+<div id='centerStart'><button id='startBtn'>LISTEN & WATCH THE DRAWING BREAK OVER TIME</button></div>
+</div>
+
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=0,H=0,dpr=1,started=false;
+function resize(){dpr=Math.max(1,window.devicePixelRatio||1);W=canvas.clientWidth=window.innerWidth;H=canvas.clientHeight=window.innerHeight;canvas.width=Math.floor(W*dpr);canvas.height=Math.floor(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}window.addEventListener('resize',resize);resize();
+
+const state={density:1.0,interruption:0.03,repetition:0.92,erasure:0.01,spread:0.65,drift:0.18,clarityPulse:0.88};
+const palette=[[16,24,48],[34,67,89],[194,178,128],[110,125,114],[235,225,204]];
+const automaticSeeds=[];
+function addSyntheticSeed(x,y,tool){automaticSeeds.push({x,y,tool,t:0,driftX:(Math.random()*2-1)*0.2,driftY:(Math.random()*2-1)*0.15,branch:0.5+Math.random()*1.5,hueShift:Math.floor(Math.random()*palette.length)});if(automaticSeeds.length>600) automaticSeeds.shift();}
+function drawBackgroundField(){ctx.fillStyle='#eef1eb';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(0,0,0,0.015)';for(let i=0;i<4000;i++){ctx.fillRect(Math.random()*W,Math.random()*H,1,1)}ctx.fillStyle='rgba(34,67,89,0.03)';for(let x=40;x<W;x+=80){for(let y=40;y<H;y+=80){ctx.beginPath();ctx.arc(x,y,1,0,Math.PI*2);ctx.fill();}}}
+function drawSystemTrace(s,time){const age=s.t,colIndex=s.hueShift%palette.length;const layers=6+Math.floor(state.repetition*12);for(let L=0;L<layers;L++){ctx.beginPath();ctx.lineWidth=0.4+(L*0.12);ctx.strokeStyle='rgba('+palette[(colIndex+L)%palette.length].join(',')+','+(0.03+(L*0.015))+')';let startAngle=Math.sin(time*0.00002)*Math.PI;for(let a=0;a<Math.PI*2+state.repetition*4;a+=0.1){const currentRadius=14+(age*0.18)+(L*11)*Math.sin(a*2+time*0.0001);const sx=s.x+Math.cos(a+startAngle)*currentRadius+Math.sin(time*0.0002+a)*30*state.drift;const sy=s.y+Math.sin(a+startAngle)*(currentRadius*0.4)+Math.cos(time*0.0001+a)*15*state.drift;if(a===0) ctx.moveTo(sx,sy);else ctx.lineTo(sx,sy);}ctx.stroke();}}
+let audioCtx,masterGain,bassOsc,lowpass,oscCore,lfo;
+function initInternalAudio(){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=0.18;lowpass=audioCtx.createBiquadFilter();lowpass.type='lowpass';lowpass.frequency.value=420;lowpass.Q.value=2.0;bassOsc=audioCtx.createOscillator();bassOsc.type='sine';bassOsc.frequency.value=46;const bassGain=audioCtx.createGain();bassGain.gain.value=0.25;bassOsc.connect(bassGain).connect(lowpass);oscCore=audioCtx.createOscillator();oscCore.type='triangle';oscCore.frequency.value=138;const coreGain=audioCtx.createGain();coreGain.gain.value=0.12;oscCore.connect(coreGain).connect(lowpass);lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=0.08;const lfoGain=audioCtx.createGain();lfoGain.gain.value=8;lfo.connect(lfoGain).connect(oscCore.frequency);lowpass.connect(masterGain).connect(audioCtx.destination);bassOsc.start();oscCore.start();lfo.start();}
+function updateAudioSystem(time){if(!audioCtx)return;const sweep=400+Math.sin(time*0.0003)*90;lowpass.frequency.setTargetAtTime(sweep,audioCtx.currentTime,0.1);}
+function loop(time){if(automaticSeeds.length<40||Math.random()<0.04){const x=W*0.1+Math.random()*W*0.8;const y=H*0.5+(Math.sin(x*0.005)*H*0.12);addSyntheticSeed(x,y,'trace');}drawBackgroundField();automaticSeeds.forEach(s=>{s.t+=0.4;s.x+=s.driftX;s.y+=s.driftY;drawSystemTrace(s,time);});updateAudioSystem(time);requestAnimationFrame(loop);}
+document.getElementById('startBtn').addEventListener('click',async()=>{if(started)return;started=true;initInternalAudio();if(audioCtx.state==='suspended')await audioCtx.resume();document.getElementById('centerStart').style.display='none';requestAnimationFrame(loop);});
+</script>
+</body>
+</html>
