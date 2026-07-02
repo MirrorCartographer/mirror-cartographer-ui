@@ -1,0 +1,39 @@
+{
+  "report_version": "lockfile-provenance-report.v1",
+  "status": "fail",
+  "exit_code": 20,
+  "package_json": {
+    "path": "package.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "has_ajv_dependency": false,
+    "has_ajv_dev_dependency": true
+  },
+  "package_lock": {
+    "path": "package-lock.json",
+    "present": false,
+    "sha256": null,
+    "lockfile_version": null
+  },
+  "ajv": {
+    "present": true,
+    "version": "8.17.1",
+    "source": "devDependency"
+  },
+  "checks": [
+    {
+      "code": "package_json_readable",
+      "status": "pass",
+      "message": "package.json was read and hashed."
+    },
+    {
+      "code": "package_lock_readable",
+      "status": "fail",
+      "message": "package-lock.json is missing; validator generation must not run."
+    },
+    {
+      "code": "ajv_dev_only",
+      "status": "pass",
+      "message": "Ajv is present only as a devDependency."
+    }
+  ]
+}
