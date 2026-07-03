@@ -1,0 +1,65 @@
+{
+  "schema_version": "governance.replay.artifact.manifest.v1",
+  "artifact_kind": "governance.canonical-json.replay",
+  "generated_at_utc": "2026-07-03T20:45:34Z",
+  "producer": {
+    "name": "tools/replay-governance-canonical-json-fixtures.mjs",
+    "version": "0.1.0",
+    "command": "node tools/replay-governance-canonical-json-fixtures.mjs"
+  },
+  "public_safety": {
+    "classification": "abstracted-public-safe",
+    "forbidden_material_policy": [
+      "no-raw-private-source-text",
+      "no-secret-bearing-logs",
+      "no-environment-dumps",
+      "no-unbounded-validator-internals",
+      "no-personal-identifiers"
+    ]
+  },
+  "root_policy": {
+    "declared_root": "artifacts/governance/canonical-json-replay",
+    "resolved_root": "artifacts/governance/canonical-json-replay",
+    "path_separator": "/",
+    "child_paths_owned_by": "producer-tool"
+  },
+  "source_result_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "manifest_self_policy": {
+    "mode": "excluded-from-files",
+    "reason": "Self-hashing a manifest changes the manifest; v1 excludes manifest.json from files and records that policy explicitly."
+  },
+  "files": [
+    {
+      "relative_path": "result.json",
+      "role": "source-result",
+      "required": true,
+      "media_type": "application/json",
+      "byte_count": 128,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "derived_from": ["fixture-input", "normalized-checks"]
+    },
+    {
+      "relative_path": "summary.md",
+      "role": "human-summary",
+      "required": true,
+      "media_type": "text/markdown; charset=utf-8",
+      "byte_count": 96,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_from": ["result.json"]
+    },
+    {
+      "relative_path": "annotations.ndjson",
+      "role": "annotation-stream",
+      "required": true,
+      "media_type": "application/x-ndjson",
+      "byte_count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "derived_from": ["normalized-checks"]
+    }
+  ],
+  "ingestion": {
+    "entrypoints": ["manifest.json", "result.json"],
+    "status_source": "result.json",
+    "dashboard_safe": true
+  }
+}
