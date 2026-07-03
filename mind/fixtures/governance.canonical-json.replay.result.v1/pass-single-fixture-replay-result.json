@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "governance.canonical-json.replay.result.v1",
+  "kind": "governance-canonical-json-replay-result",
+  "tool": {
+    "name": "replay-governance-canonical-json-fixtures",
+    "contractVersion": "v1",
+    "implementationPath": "tools/replay-governance-canonical-json-fixtures.mjs"
+  },
+  "run": {
+    "mode": "fixture-replay",
+    "status": "passed",
+    "exitCode": 0,
+    "generatedAtPolicy": "fixed-fixture",
+    "canonicalizationPolicy": {
+      "algorithm": "RFC8785-JCS-compatible",
+      "hashAlgorithm": "sha256",
+      "hashEncoding": "hex"
+    }
+  },
+  "summary": {
+    "fixtureCount": 1,
+    "passedCount": 1,
+    "warningCount": 0,
+    "failedCount": 0
+  },
+  "fixtures": [
+    {
+      "fixtureId": "pass-object-key-order",
+      "fixturePath": "mind/fixtures/governance.canonical-json.v1/pass-object-key-order.json",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "actualStatus": "passed",
+      "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonicalJsonHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "expectedCanonicalJsonHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "diagnostics": []
+    }
+  ],
+  "checks": [
+    {
+      "code": "GOVERNANCE_CANONICAL_JSON_REPLAY/REPLAY_PASSED",
+      "level": "notice",
+      "title": "Canonical JSON replay passed",
+      "message": "All canonical JSON fixture expectations matched stable replay output.",
+      "fixtureId": "pass-object-key-order",
+      "path": "mind/fixtures/governance.canonical-json.v1/pass-object-key-order.json"
+    }
+  ],
+  "artifacts": {
+    "jsonResultPath": "mind/generated/governance.canonical-json.replay.result.v1/result.json",
+    "markdownSummaryPath": "mind/generated/governance.canonical-json.replay.result.v1/summary.md"
+  },
+  "publicSafety": {
+    "classification": "public-safe",
+    "personalMaterialPolicy": "No private, personal, medical, identity, account, or conversation-derived material is allowed in committed replay fixtures or generated summaries."
+  }
+}
