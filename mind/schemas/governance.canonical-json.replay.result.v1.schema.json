@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.dev/schemas/governance.canonical-json.replay.result.v1.schema.json",
+  "title": "governance.canonical-json.replay.result.v1",
+  "description": "Stable result envelope for replaying canonical JSON fixtures as governance artifacts.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "kind",
+    "tool",
+    "run",
+    "summary",
+    "fixtures",
+    "checks",
+    "artifacts"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "governance.canonical-json.replay.result.v1"
+    },
+    "kind": {
+      "const": "governance-canonical-json-replay-result"
+    },
+    "tool": {
+      "type": "object",
+      "required": ["name", "contractVersion"],
+      "properties": {
+        "name": {
+          "const": "replay-governance-canonical-json-fixtures"
+        },
+        "contractVersion": {
+          "type": "string",
+          "pattern": "^v[0-9]+$"
+        },
+        "implementationPath": {
+          "type": "string",
+          "pattern": "^tools/.*\\.mjs$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "run": {
+      "type": "object",
+      "required": ["mode", "status", "exitCode", "generatedAtPolicy", "canonicalizationPolicy"],
+      "properties": {
+        "mode": {
+          "enum": ["dry-run", "fixture-replay", "ci"]
+        },
+        "status": {
+          "enum": ["passed", "warning", "failed"]
+        },
+        "exitCode": {
+          "type": "integer",
+          "enum": [0, 1, 2]
+        },
+        "generatedAtPolicy": {
+          "description": "Timestamp policy for stable artifacts. Use omitted/fixed in committed fixtures; use runtime timestamp only in ephemeral CI output.",
+          "enum": ["omitted", "fixed-fixture", "runtime-ephemeral"]
+        },
+        "canonicalizationPolicy": {
+          "type": "object",
+          "required": ["algorithm", "hashAlgorithm", "hashEncoding"],
+          "properties": {
+            "algorithm": {
+              "const": "RFC8785-JCS-compatible"
+            },
+            "hashAlgorithm": {
+              "const": "sha256"
+            },
+            "hashEncoding": {
+              "const": "hex"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["fixtureCount", "passedCount", "warningCount", "failedCount"],
+      "properties": {
+        "fixtureCount": {"type": "integer", "minimum": 0},
+        "passedCount": {"type": "integer", "minimum": 0},
+        "warningCount": {"type": "integer", "minimum": 0},
+        "failedCount": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/fixtureResult"}
+    },
+    "checks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/check"}
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["jsonResultPath", "markdownSummaryPath"],
+      "properties": {
+        "jsonResultPath": {
+          "type": "string",
+          "pattern": "^mind/generated/.*\\.json$"
+        },
+        "markdownSummaryPath": {
+          "type": "string",
+          "pattern": "^mind/generated/.*\\.md$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "publicSafety": {
+      "type": "object",
+      "required": ["classification", "personalMaterialPolicy"],
+      "properties": {
+        "classification": {
+          "const": "public-safe"
+        },
+        "personalMaterialPolicy": {
+          "const": "No private, personal, medical, identity, account, or conversation-derived material is allowed in committed replay fixtures or generated summaries."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "fixtureResult": {
+      "type": "object",
+      "required": ["fixtureId", "fixturePath", "status", "expectedStatus", "actualStatus", "inputHash", "canonicalJsonHash"],
+      "properties": {
+        "fixtureId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+        },
+        "fixturePath": {
+          "type": "string",
+          "pattern": "^mind/fixtures/governance\\.canonical-json\\.v1/.*\\.json$"
+        },
+        "status": {
+          "enum": ["passed", "warning", "failed"]
+        },
+        "expectedStatus": {
+          "enum": ["passed", "warning", "failed"]
+        },
+        "actualStatus": {
+          "enum": ["passed", "warning", "failed"]
+        },
+        "inputHash": {
+          "$ref": "#/$defs/sha256Hex"
+        },
+        "canonicalJsonHash": {
+          "$ref": "#/$defs/sha256Hex"
+        },
+        "expectedCanonicalJsonHash": {
+          "$ref": "#/$defs/sha256Hex"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/diagnostic"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["code", "level", "title", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^GOVERNANCE_CANONICAL_JSON_REPLAY/[A-Z0-9_]+$"
+        },
+        "level": {
+          "enum": ["notice", "warning", "error"]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "fixtureId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+        },
+        "path": {
+          "type": "string"
+        },
+        "jsonPointer": {
+          "type": "string",
+          "pattern": "^(/([^/~]|~0|~1)*)*$"
+        },
+        "problem": {
+          "$ref": "#/$defs/problem"
+        }
+      },
+      "additionalProperties": false
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^GOVERNANCE_CANONICAL_JSON_REPLAY/[A-Z0-9_]+$"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jsonPointer": {
+          "type": "string",
+          "pattern": "^(/([^/~]|~0|~1)*)*$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "problem": {
+      "type": "object",
+      "required": ["type", "title", "detail"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "instance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sha256Hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}
