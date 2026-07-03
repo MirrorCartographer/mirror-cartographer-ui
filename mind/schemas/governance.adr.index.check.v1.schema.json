@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.dev/schemas/governance.adr.index.check.v1.schema.json",
+  "title": "governance.adr.index.check.v1",
+  "description": "Machine-readable check envelope for ADR index validation and CI summaries. Public-safe: no private source text, personal details, secrets, or raw internal notes are allowed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "tool",
+    "status",
+    "summary",
+    "checks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "governance.adr.index.check.v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "build-governance-adr-index" },
+        "version": {
+          "type": "string",
+          "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "runtime": { "type": "string" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail", "warning"]
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adr_records_scanned",
+        "checks_total",
+        "errors_total",
+        "warnings_total",
+        "human_summary"
+      ],
+      "properties": {
+        "adr_records_scanned": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checks_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "errors_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warnings_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "human_summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "ci_summary_markdown": {
+      "type": "string",
+      "description": "Optional GitHub Actions job-summary markdown. Must be generated from checks, not hand-authored as a conflicting source of truth.",
+      "maxLength": 12000
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "status",
+        "message",
+        "remediation"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^GOVERNANCE_ADR_INDEX/[A-Z0-9_]+$"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "warning", "skipped"]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "remediation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "location": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string",
+              "pattern": "^(mind/)[^\\u0000]+$"
+            },
+            "json_pointer": {
+              "type": "string",
+              "pattern": "^(/([^/~]|~0|~1)*)*$"
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "related_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "problem": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Problem Details-inspired object for machine-readable failure identity without HTTP-specific coupling.",
+          "required": ["type", "title"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "format": "uri-reference"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 140
+            },
+            "detail": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "instance": {
+              "type": "string",
+              "format": "uri-reference"
+            }
+          }
+        },
+        "validator_output": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Normalized JSON Schema output fields when a schema validator produced the check.",
+          "properties": {
+            "keywordLocation": { "type": "string" },
+            "absoluteKeywordLocation": { "type": "string", "format": "uri-reference" },
+            "instanceLocation": { "type": "string" },
+            "error": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
