@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirror-cartographer.dev/schemas/governance.replay.artifact.manifest.v1.schema.json",
+  "title": "Governance Replay Artifact Manifest v1",
+  "description": "Public-safe manifest for a governance replay artifact directory. The manifest inventories generated files, digests, producer metadata, and ingestion hints without storing private source material or environment dumps.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "generated_at_utc",
+    "producer",
+    "public_safety",
+    "root_policy",
+    "source_result_sha256",
+    "manifest_self_policy",
+    "files",
+    "ingestion"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "governance.replay.artifact.manifest.v1"
+    },
+    "artifact_kind": {
+      "type": "string",
+      "enum": [
+        "governance.canonical-json.replay",
+        "governance.adr-index.replay"
+      ]
+    },
+    "generated_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "command"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    },
+    "public_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "forbidden_material_policy"],
+      "properties": {
+        "classification": {
+          "const": "abstracted-public-safe"
+        },
+        "forbidden_material_policy": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "no-raw-private-source-text",
+              "no-secret-bearing-logs",
+              "no-environment-dumps",
+              "no-unbounded-validator-internals",
+              "no-personal-identifiers"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "root_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declared_root", "resolved_root", "path_separator", "child_paths_owned_by"],
+      "properties": {
+        "declared_root": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "resolved_root": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "path_separator": {
+          "const": "/"
+        },
+        "child_paths_owned_by": {
+          "const": "producer-tool"
+        }
+      }
+    },
+    "source_result_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "manifest_self_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "reason"],
+      "properties": {
+        "mode": {
+          "enum": ["excluded-from-files", "listed-with-placeholder-self-hash"]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "relative_path",
+          "role",
+          "required",
+          "media_type",
+          "byte_count",
+          "sha256",
+          "derived_from"
+        ],
+        "properties": {
+          "relative_path": {
+            "$ref": "#/$defs/relativePath"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "source-result",
+              "human-summary",
+              "annotation-stream",
+              "fixture-detail",
+              "debug-diagnostic"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "application/json",
+              "application/x-ndjson",
+              "text/markdown; charset=utf-8"
+            ]
+          },
+          "byte_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "derived_from": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "result.json",
+                "fixture-input",
+                "normalized-checks",
+                "producer-runtime"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "ingestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entrypoints", "status_source", "dashboard_safe"],
+      "properties": {
+        "entrypoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          },
+          "uniqueItems": true
+        },
+        "status_source": {
+          "const": "result.json"
+        },
+        "dashboard_safe": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$"
+    }
+  }
+}
