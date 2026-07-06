@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirror-cartographer.local/schemas/counterfactual_validation_packet.schema.json",
+  "title": "CounterfactualValidationPacket",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "claim",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "domain",
+    "evidence_items",
+    "measurable_variables",
+    "counterfactuals",
+    "decision_boundary",
+    "missingness",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 6},
+    "claim": {"type": "string", "minLength": 20},
+    "source_status": {"enum": ["primary", "institutional", "preprint", "review", "news", "synthetic", "mixed", "unknown"]},
+    "claim_status": {"enum": ["hypothesis", "infrastructure_requirement", "evaluation_criterion", "prototype_requirement", "collaborator_target", "rejected", "needs_review"]},
+    "privacy_status": {"enum": ["public_safe", "synthetic_only", "deidentified", "sensitive_private_rejected", "unknown"]},
+    "domain": {"enum": ["scientific_ai", "medical_ai", "mechanistic_biology", "neuroscience", "longitudinal_health_data", "animal_health_research_infrastructure", "hci", "privacy_preserving_memory", "hypothesis_generation", "symbolic_to_operational_translation"]},
+    "evidence_items": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_type", "citation_or_url", "supports", "limitation"],
+        "properties": {
+          "source_type": {"enum": ["primary", "institutional", "preprint", "review", "benchmark", "dataset", "open_source_tool", "news"]},
+          "citation_or_url": {"type": "string", "minLength": 8},
+          "supports": {"type": "string", "minLength": 10},
+          "limitation": {"type": "string", "minLength": 10}
+        }
+      }
+    },
+    "measurable_variables": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"type": "string", "minLength": 3}
+    },
+    "counterfactuals": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["condition", "expected_decision_change", "measurement"],
+        "properties": {
+          "condition": {"type": "string", "minLength": 12},
+          "expected_decision_change": {"type": "string", "minLength": 12},
+          "measurement": {"type": "string", "minLength": 8}
+        }
+      }
+    },
+    "decision_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["promote_if", "hold_if", "reject_if"],
+      "properties": {
+        "promote_if": {"type": "string", "minLength": 12},
+        "hold_if": {"type": "string", "minLength": 12},
+        "reject_if": {"type": "string", "minLength": 12}
+      }
+    },
+    "missingness": {"type": "string", "minLength": 5},
+    "revision_reason": {"type": "string", "minLength": 10},
+    "implementation_status": {"enum": ["specified", "implemented", "tested", "blocked", "deprecated"]},
+    "evidence_strength": {"enum": ["weak", "moderate", "strong", "unknown"]},
+    "falsification_route": {"type": "string", "minLength": 15},
+    "next_executable_action": {"type": "string", "minLength": 10}
+  }
+}
