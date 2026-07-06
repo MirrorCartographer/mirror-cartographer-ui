@@ -1,0 +1,127 @@
+[
+  {
+    "packet_id": "cv-pass-001",
+    "claim": "Discovery-memory admission should require explicit counterfactuals that state what evidence would change the promotion decision.",
+    "source_status": "mixed",
+    "claim_status": "evaluation_criterion",
+    "privacy_status": "synthetic_only",
+    "domain": "hypothesis_generation",
+    "evidence_items": [
+      {
+        "source_type": "primary",
+        "citation_or_url": "https://www.nature.com/articles/s41586-026-10644-y",
+        "supports": "Tool-grounded co-scientist workflows emphasize grounded hypothesis generation and feedback-guided refinement.",
+        "limitation": "Does not by itself define MC-specific memory promotion criteria."
+      },
+      {
+        "source_type": "benchmark",
+        "citation_or_url": "https://hai.stanford.edu/news/advancing-responsible-healthcare-ai-longitudinal-ehr-datasets",
+        "supports": "Longitudinal healthcare AI evaluation needs rigorous datasets and explicit evaluation gaps.",
+        "limitation": "Healthcare benchmarks are not a direct cure or veterinary intervention."
+      }
+    ],
+    "measurable_variables": [
+      "counterfactual_count",
+      "decision_boundary_completeness",
+      "unsupported_promotion_rate"
+    ],
+    "counterfactuals": [
+      {
+        "condition": "A packet lists supporting evidence but no condition that would change its status.",
+        "expected_decision_change": "Hold rather than promote to discovery memory.",
+        "measurement": "counterfactual_count equals zero"
+      },
+      {
+        "condition": "A packet contains private raw longitudinal details instead of public-safe abstraction.",
+        "expected_decision_change": "Reject until deidentified or synthetic representation exists.",
+        "measurement": "privacy_status equals sensitive_private_rejected"
+      }
+    ],
+    "decision_boundary": {
+      "promote_if": "Two or more evidence items, two or more counterfactuals, measurable variables, and public-safe privacy status are present.",
+      "hold_if": "Evidence exists but counterfactuals or measurable variables are incomplete.",
+      "reject_if": "The packet contains private raw data, treatment advice, or no falsification route."
+    },
+    "missingness": "No curator-labeled production corpus yet.",
+    "revision_reason": "Frontier scientific AI is moving from answer plausibility toward auditable workflow and validation; MC needs decision-change tests.",
+    "implementation_status": "implemented",
+    "evidence_strength": "moderate",
+    "falsification_route": "Revise if counterfactual requirements do not reduce unsupported discovery-memory promotions in curator review.",
+    "next_executable_action": "Run the validator and then wire this gate before discovery-memory promotion."
+  },
+  {
+    "packet_id": "cv-fail-no-counterfactuals",
+    "claim": "This generated hypothesis should enter memory because it sounds plausible and has one citation.",
+    "source_status": "preprint",
+    "claim_status": "hypothesis",
+    "privacy_status": "public_safe",
+    "domain": "scientific_ai",
+    "evidence_items": [
+      {
+        "source_type": "preprint",
+        "citation_or_url": "https://arxiv.org/html/2605.08956v1",
+        "supports": "AI scientists can function as co-scientists.",
+        "limitation": "Position paper; not a validation of this packet."
+      }
+    ],
+    "measurable_variables": ["citation_count"],
+    "counterfactuals": [],
+    "decision_boundary": {
+      "promote_if": "Citation exists.",
+      "hold_if": "Unsure.",
+      "reject_if": "Never."
+    },
+    "missingness": "Counterfactuals absent.",
+    "revision_reason": "Negative fixture for missing counterfactual logic.",
+    "implementation_status": "implemented",
+    "evidence_strength": "weak",
+    "falsification_route": "No clear route.",
+    "next_executable_action": "Add counterfactuals."
+  },
+  {
+    "packet_id": "cv-fail-private-advice",
+    "claim": "A medical or animal-care packet should recommend actions based on private longitudinal observations.",
+    "source_status": "unknown",
+    "claim_status": "hypothesis",
+    "privacy_status": "sensitive_private_rejected",
+    "domain": "medical_ai",
+    "evidence_items": [
+      {
+        "source_type": "news",
+        "citation_or_url": "https://example.invalid",
+        "supports": "Not enough support.",
+        "limitation": "Invalid placeholder source."
+      },
+      {
+        "source_type": "news",
+        "citation_or_url": "https://example.invalid/2",
+        "supports": "Still not enough support.",
+        "limitation": "Invalid placeholder source."
+      }
+    ],
+    "measurable_variables": ["private_detail_count", "advice_leak_count"],
+    "counterfactuals": [
+      {
+        "condition": "Private details are replaced with synthetic variables.",
+        "expected_decision_change": "Hold for research-organization review only.",
+        "measurement": "privacy_status changes to synthetic_only"
+      },
+      {
+        "condition": "Advice language is removed.",
+        "expected_decision_change": "Consider schema-only research packet.",
+        "measurement": "advice_leak_count equals zero"
+      }
+    ],
+    "decision_boundary": {
+      "promote_if": "Never while private advice remains.",
+      "hold_if": "Synthetic abstraction exists but evidence is incomplete.",
+      "reject_if": "Private raw data or advice-like content remains."
+    },
+    "missingness": "Needs deidentification and source repair.",
+    "revision_reason": "Negative fixture for privacy boundary enforcement.",
+    "implementation_status": "implemented",
+    "evidence_strength": "weak",
+    "falsification_route": "Packet fails when privacy_status is sensitive_private_rejected.",
+    "next_executable_action": "Reject and rebuild as synthetic research organization packet."
+  }
+]
