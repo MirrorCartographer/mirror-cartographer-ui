@@ -1,159 +1,157 @@
 import React, { useMemo, useState } from 'react';
 
-const citations = [
-  ['Cornell Feline Health Center', 'No commercially available FIV vaccine in North America; core prevention remains exposure control, testing, and indoor management.', 'https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center/health-information/feline-health-topics/feline-immunodeficiency-virus-fiv'],
-  ['Westman et al., Viruses 2021', 'Vaccination created anti-p24 and anti-gp40 antibodies in PCR-negative cats; SNAP Combo showed 0% specificity in annually vaccinated cats, while Witness and Anigen Rapid showed 100% specificity in that annual-booster cohort.', 'https://www.mdpi.com/1999-4915/13/3/470'],
-  ['Frontiers in Veterinary Science 2025', 'FIV genetic diversity and subtypes block universal vaccine performance; field effectiveness remains uncertain; HIV-derived antivirals are limited by toxicity, resistance, and poor feline-specific evidence.', 'https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2025.1665999/full'],
-  ['McDonnel, Sparger & Murphy, Retrovirology 2013', 'FIV latency makes cure a reservoir problem: integrated proviral DNA can persist beyond free-virus suppression.', 'https://retrovirology.biomedcentral.com/articles/10.1186/1742-4690-10-69'],
-  ['Pu et al., JFMS 2005', 'Dual-subtype Fel-O-Vax protected vaccinated cats against one heterologous subtype B challenge, showing protection is biologically possible under defined conditions.', 'https://doi.org/10.1016/j.jfms.2004.08.005'],
-  ['Stickney et al., Veterinary Microbiology 2020', 'A New Zealand field study reported lack of protection among vaccinated outdoor-access domestic cats, highlighting the lab-to-field gap.', 'https://doi.org/10.1016/j.vetmic.2020.108865']
-];
-
-const missingPieces = [
+const contexts = [
   {
-    title: '1. A feline-safe suppressive backbone',
-    text: 'Before cure, replication must be held down safely. HIV drugs cannot simply be copied into cats: some are ineffective, toxic, or resistance-prone. The missing object is a cat-compatible combination therapy with good pharmacokinetics, low toxicity, broad clade activity, and a high resistance barrier.'
+    id: 'builder',
+    name: 'Builder',
+    color: '#7dd3fc',
+    description: 'Turns intent into executable systems.',
+    signals: ['build', 'code', 'github', 'vercel', 'app', 'website', 'system', 'proof', 'tool', 'demo'],
+    assumptions: ['The user wants a working artifact.', 'Constraints should become interface rules.'],
+    enables: ['architecture', 'implementation steps', 'test surfaces', 'shipping plan'],
+    suppresses: ['vague abstraction', 'pure commentary'],
+    answer: 'Build the object. Show state, transitions, and a proof surface the user can operate.'
   },
   {
-    title: '2. A live reservoir assay',
-    text: 'A cure cannot be proven by a cat looking better. The missing assay must quantify integrated proviral DNA, inducible reservoir, and rebound risk. Without that, every therapy is only symptom management or partial suppression.'
+    id: 'symbolic',
+    name: 'Symbolic',
+    color: '#f0abfc',
+    description: 'Reads image, archetype, rhythm, and resonance as structured data.',
+    signals: ['mirror', 'symbol', 'archetype', 'ocean', 'drum', 'pulse', 'glyph', 'dream', 'ritual', 'thread'],
+    assumptions: ['Symbols are compressed state.', 'Metaphor becomes useful when mapped.'],
+    enables: ['archetype mapping', 'emotion-to-symbol translation', 'narrative coherence'],
+    suppresses: ['over-literal reduction', 'premature flattening'],
+    answer: 'Name the symbol, locate it in body or story, map the archetype, and choose an embodied action.'
   },
   {
-    title: '3. A reservoir intervention',
-    text: 'Sterilizing cure needs hidden infected cells eliminated or permanently silenced. Functional cure needs durable immune control without continuous therapy. The missing intervention is either shock-and-kill, block-and-lock, gene editing, immune clearance, or a hybrid that works in feline cells safely.'
+    id: 'stability',
+    name: 'Stability',
+    color: '#86efac',
+    description: 'Protects pacing, embodiment, reality-testing, and safe next action.',
+    signals: ['overload', 'fear', 'risk', 'health', 'sleep', 'anchor', 'ground', 'steady', 'safe'],
+    assumptions: ['High-meaning states need calibration.', 'Good systems include exits and anchors.'],
+    enables: ['pacing', 'grounding', 'state check', 'ordinary next step'],
+    suppresses: ['escalation', 'unbounded loops'],
+    answer: 'Keep the meaning, reduce intensity, and convert the next move into something grounded and reversible.'
   },
   {
-    title: '4. A diagnostic-aware vaccine',
-    text: 'The vaccine must be designed with a companion test from the first experiment. That means either DIVA logic, antigen panels not confused by vaccine antibodies, PCR/proviral confirmation, or immune signatures that separate vaccination from infection.'
+    id: 'research',
+    name: 'Research',
+    color: '#fde68a',
+    description: 'Separates claim, evidence, uncertainty, and tests.',
+    signals: ['research', 'source', 'evidence', 'prove', 'test', 'paper', 'data', 'study', 'hypothesis'],
+    assumptions: ['Claims need visible support.', 'Novel ideas need pressure-testing.'],
+    enables: ['evidence ledger', 'hypothesis test', 'unknowns list', 'falsification path'],
+    suppresses: ['unsupported certainty', 'story-only answers'],
+    answer: 'Split the idea into known, plausible, unproven, and testable; then design the smallest honest test.'
   },
   {
-    title: '5. Field-generalizing immunity',
-    text: 'The vaccine must protect against diverse circulating FIV subtypes and recombinant strains, not only a lab challenge strain. The missing immune target is broad, durable protection: neutralization plus T-cell and mucosal defense against realistic bite/saliva exposure.'
+    id: 'plain',
+    name: 'Plain Reality',
+    color: '#e5e7eb',
+    description: 'Answers directly without extra mythology.',
+    signals: ['simple', 'plain', 'generic', 'real', 'honest', 'direct', 'normal', 'actually'],
+    assumptions: ['Sometimes direct is highest value.', 'Not every signal should be amplified.'],
+    enables: ['short answer', 'clean distinction', 'ordinary action'],
+    suppresses: ['excessive framing', 'ornament'],
+    answer: 'Say what is true, what is unknown, and what concrete thing to do next.'
   }
 ];
 
-const diagnosticChain = [
-  ['Vaccination event', 'Fel-O-Vax exposes the immune system to inactivated whole-virus / infected-cell antigens.'],
-  ['Antibody production', 'The cat produces antibodies against viral proteins such as p24 capsid and gp40 transmembrane envelope.'],
-  ['Old test logic', 'Many point-of-care tests ask: “Are anti-FIV antibodies present?” That question does not ask whether active infection exists.'],
-  ['Collision', 'Vaccinated-uninfected cats can look serologically similar to infected cats, especially when a test detects vaccine-induced antibody targets.'],
-  ['Public-health harm', 'In shelters, rescues, adoption, and multi-cat homes, an ambiguous positive can lead to isolation, stigma, failed adoption, or euthanasia.'],
-  ['Fix', 'Use diagnostic-aware design: vaccine antigen choices + tests that distinguish vaccine antibodies from infection antibodies + PCR/proviral confirmation where ambiguity matters.']
+const examples = [
+  'Build proof in GitHub and show why the context changed.',
+  'The ocean, drums, mirror, and pulse feel connected.',
+  'Give me the plain answer with no mythology.',
+  'Prove the claim with sources and tests.',
+  'Make this steady and usable.'
 ];
 
-const failureReasons = [
-  {
-    name: 'Diagnostic interference',
-    details: 'The vaccine trained the immune system to make antibodies that some tests also use as infection markers. That broke trust in routine testing.'
-  },
-  {
-    name: 'Subtype diversity',
-    details: 'FIV is not one fixed target. Subtypes and recombinant strains mean a vaccine that works against one challenge may fail against another.'
-  },
-  {
-    name: 'Lab-to-field gap',
-    details: 'Controlled challenge studies can show protection, while outdoor-access field populations face different strains, doses, timing, bite exposures, and immune histories.'
-  },
-  {
-    name: 'Non-core status',
-    details: 'Because FIV risk is concentrated in cats with outdoor access/fighting exposure, the vaccine never became a simple universal kitten-series object like core vaccines.'
-  },
-  {
-    name: 'Commercial trust collapse',
-    details: 'When a product complicates diagnosis and has variable field protection, veterinarians, shelters, and owners cannot use it as a clean public-health instrument.'
-  }
-];
+function rankContexts(prompt) {
+  const text = prompt.toLowerCase();
+  return contexts.map((context) => {
+    const hits = context.signals.filter((signal) => text.includes(signal));
+    const buildBoost = context.id === 'builder' && /build|code|github|vercel|website|app/.test(text) ? 0.3 : 0;
+    const score = Math.min(0.99, 0.08 + hits.length * 0.14 + buildBoost);
+    return { ...context, hits, score };
+  }).sort((a, b) => b.score - a.score);
+}
 
-const cureHypothesis = [
-  'Suppress active replication with feline-specific combination antiretroviral therapy or equivalent anti-entry/integrase strategy.',
-  'Measure the reservoir with ddPCR/proviral DNA plus inducible virus assays so cure endpoints are not imaginary.',
-  'Stratify cats by subtype, viral load, age, oral inflammation, lymph-node status, coinfections, and immune exhaustion.',
-  'Apply a reservoir strategy: latency reversal plus immune clearance, permanent transcriptional silencing, targeted gene editing, or therapeutic vaccination.',
-  'Prove non-rebound after treatment interruption or spacing, with strict rescue criteria and welfare oversight.',
-  'Pair preventive vaccine development with a DIVA-compatible diagnostic algorithm so vaccination never destroys infection truth again.'
-];
-
-const vaccineHypothesis = [
-  'Build a multi-epitope or mosaic vaccine covering conserved Env/Gag/Pol regions across FIV subtypes, not only historical subtype A/D strains.',
-  'Induce mucosal immunity relevant to saliva/bite exposure, cytotoxic T-cell responses for infected-cell control, and broadly neutralizing or entry-blocking antibodies where possible.',
-  'Use adjuvants and delivery routes validated for cats, not merely borrowed immunology.',
-  'Pre-register challenge endpoints: sterilizing protection, reduced proviral integration, reduced viral set point, and blocked transmission.',
-  'Co-develop companion diagnostics: gp40-focused tests, multiplex antibody patterning, PCR/proviral confirmation, and vaccination records/markers.',
-  'Test under field-like conditions with natural subtype surveillance before calling it universal.'
-];
-
-const workups = [
-  ['Clinical floor', 'CBC/chemistry, dental/oral disease staging, lymph-node map, weight trend, fever/infection history, kidney/urinary monitoring.'],
-  ['Viral identity', 'Confirm FIV status with antibody + appropriate confirmatory testing; use PCR/proviral DNA when vaccination history or discordance creates ambiguity.'],
-  ['Subtype map', 'Sequence viral regions where possible. A universal vaccine cannot be proven without knowing which FIV diversity it covers.'],
-  ['Reservoir quantification', 'Track proviral DNA and inducible reservoir, not only free virus or symptoms.'],
-  ['Immune state', 'Measure CD4/CD8 patterns, T-cell exhaustion/function, inflammatory burden, and coinfections where research resources permit.'],
-  ['Trial gates', 'Safety, suppression, reservoir effect, rebound, transmission risk, field replication. No gate can be skipped.']
-];
-
-function Card({ title, children }) {
-  return <article className="card"><h3>{title}</h3>{children}</article>;
+function answerFor(prompt, context) {
+  const next = {
+    builder: 'Next: expose candidate contexts, chosen frame, reason, enabled inferences, and manual override.',
+    symbolic: 'Next: turn the image into a context object rather than a mood.',
+    stability: 'Next: create a clear entry, exit, and reset rule.',
+    research: 'Next: write claims as tests and mark evidence level.',
+    plain: 'Next: keep only what survives a direct explanation.'
+  }[context.id];
+  return `${context.answer} ${next}`;
 }
 
 export default function App() {
-  const [view, setView] = useState('cure');
-  const hypothesis = useMemo(() => view === 'cure' ? cureHypothesis : vaccineHypothesis, [view]);
+  const [prompt, setPrompt] = useState('Build proof in GitHub and show why the context changed.');
+  const [forced, setForced] = useState(null);
+  const ranked = useMemo(() => rankContexts(prompt), [prompt]);
+  const selected = forced ? ranked.find((c) => c.id === forced) || ranked[0] : ranked[0];
+  const reason = selected.hits.length
+    ? `${selected.name} is active because it matched: ${selected.hits.join(', ')}.`
+    : `${selected.name} is active by default because no stronger signal won.`;
 
   return (
     <main className="page">
       <style>{styles}</style>
       <section className="hero">
-        <p className="eyebrow">Mirror Cartographer / FIV proof case file</p>
-        <h1>The missing cure piece is reservoir control with diagnostic truth.</h1>
-        <p className="lede">The strongest honest claim is not “FIV is cured.” The strongest claim is that FIV cure and vaccine development are blocked by specific, solvable engineering-biological failures: latent integrated reservoir, feline-safe suppression, strain diversity, field validation, and vaccine-test confusion.</p>
-        <div className="thesis"><b>Central hypothesis:</b> FIV becomes curable when active replication can be safely suppressed, latent reservoir can be measured and reduced or permanently silenced, immune clearance can be rebuilt, and vaccine-induced immunity can be separated from true infection.</div>
+        <p className="eyebrow">Mirror Cartographer / Context Engine</p>
+        <h1>Context is visible now.</h1>
+        <p className="lede">This is the proof: the site does not just answer. It shows the context candidates, why one won, what it enables, what it suppresses, and how the same prompt changes when you switch frames.</p>
+        <div className="inputPanel">
+          <label>Prompt</label>
+          <textarea value={prompt} onChange={(event) => { setPrompt(event.target.value); setForced(null); }} />
+          <div className="examples">{examples.map((x) => <button key={x} onClick={() => { setPrompt(x); setForced(null); }}>{x}</button>)}</div>
+        </div>
       </section>
 
-      <section className="section split">
-        <div><p className="eyebrow">Missing piece</p><h2>Not one molecule. A linked system.</h2></div>
-        <div className="stack">{missingPieces.map(x => <Card key={x.title} title={x.title}><p>{x.text}</p></Card>)}</div>
+      <section className="section grid">
+        <div>
+          <p className="eyebrow">Router</p>
+          <h2>Candidate contexts compete.</h2>
+          <p>Click a context to override the automatic router. The answer updates because the assumptions changed.</p>
+        </div>
+        <div className="panel">
+          <div className="pills">{ranked.map((context) => <button className={context.id === selected.id ? 'pill active' : 'pill'} style={{ '--accent': context.color }} key={context.id} onClick={() => setForced(context.id)}><span>{context.name}</span><b>{Math.round(context.score * 100)}%</b></button>)}</div>
+          <p className="reason"><b>Chosen:</b> {selected.name}<br /><b>Reason:</b> {reason}</p>
+        </div>
+      </section>
+
+      <section className="section two">
+        <article className="panel" style={{ '--accent': selected.color }}>
+          <p className="eyebrow">Active context object</p>
+          <h3>{selected.name}</h3>
+          <p>{selected.description}</p>
+          <div className="lists"><div><b>Assumptions</b>{selected.assumptions.map((x) => <span key={x}>{x}</span>)}</div><div><b>Enables</b>{selected.enables.map((x) => <span key={x}>{x}</span>)}</div><div><b>Suppresses</b>{selected.suppresses.map((x) => <span key={x}>{x}</span>)}</div></div>
+        </article>
+        <article className="panel answer" style={{ '--accent': selected.color }}>
+          <p className="eyebrow">Output</p>
+          <h3>Answer through {selected.name}</h3>
+          <p>{answerFor(prompt, selected)}</p>
+          <button className="reset" onClick={() => setForced(null)}>Return to automatic router</button>
+        </article>
       </section>
 
       <section className="section dark">
-        <p className="eyebrow">Why antibody testing broke</p>
-        <h2>Vaccination and infection shared the same visible signal.</h2>
-        <div className="chain">{diagnosticChain.map(([a,b],i)=><div className="node" key={a}><span>{i+1}</span><h3>{a}</h3><p>{b}</p></div>)}</div>
-        <div className="fix"><h3>The fix</h3><p>Do not rely on a single yes/no antibody result after vaccination. Use a DIVA-style strategy: choose vaccine antigens that do not duplicate diagnostic targets, use tests validated in vaccinated cats, add PCR/proviral DNA confirmation where stakes are high, and build vaccination history into the diagnostic algorithm. The 2021 Westman study shows this is partly fixable because different point-of-care kits behaved very differently in vaccinated PCR-negative cats.</p></div>
+        <p className="eyebrow">Multi-context comparison</p>
+        <h2>Same input. Different reasoning surface.</h2>
+        <div className="answers">{contexts.map((context) => <article key={context.id} style={{ '--accent': context.color }}><b>{context.name}</b><p>{answerFor(prompt, context)}</p></article>)}</div>
       </section>
 
-      <section className="section">
-        <p className="eyebrow">Why the old vaccine failed as public health</p>
-        <h2>It was biologically interesting but operationally unstable.</h2>
-        <div className="cards">{failureReasons.map(x => <Card key={x.name} title={x.name}><p>{x.details}</p></Card>)}</div>
-      </section>
-
-      <section className="section dark">
-        <div className="sectionrow"><div><p className="eyebrow">Next hypothesis</p><h2>{view === 'cure' ? 'What must happen next to make a cure' : 'What must happen next to make a vaccine'}</h2></div><div className="tabs"><button className={view==='cure'?'active':''} onClick={()=>setView('cure')}>Cure</button><button className={view==='vaccine'?'active':''} onClick={()=>setView('vaccine')}>Vaccine</button></div></div>
-        <ol className="hypothesis">{hypothesis.map(x => <li key={x}>{x}</li>)}</ol>
-      </section>
-
-      <section className="section split">
-        <div><p className="eyebrow">Diagnostics / workup</p><h2>What must be measured so the work cannot fool itself.</h2></div>
-        <div className="stack">{workups.map(([a,b]) => <Card key={a} title={a}><p>{b}</p></Card>)}</div>
-      </section>
-
-      <section className="section matrix">
-        <p className="eyebrow">Chain trails</p>
-        <h2>Where the cure is blocked</h2>
-        <div className="trail"><b>Virus trail:</b> exposure → infection → reverse transcription → proviral integration → latent reservoir → immune evasion → rebound risk.</div>
-        <div className="trail"><b>Therapy trail:</b> drug candidate → feline cell activity → cat pharmacokinetics → toxicity ceiling → resistance barrier → long-term adherence → field cost.</div>
-        <div className="trail"><b>Vaccine trail:</b> antigen choice → adjuvant/delivery → mucosal + T-cell + antibody response → subtype coverage → challenge protection → field protection → diagnostic compatibility.</div>
-        <div className="trail"><b>Diagnostic trail:</b> antibody target → vaccine antibody overlap → false positive risk → shelter/adoption harm → validated alternate kit/PCR → trust restored.</div>
-      </section>
-
-      <section className="section sources">
-        <p className="eyebrow">Evidence ledger</p>
-        <h2>Load-bearing sources</h2>
-        <div className="sourcegrid">{citations.map(([name, claim, url]) => <a className="source" href={url} target="_blank" rel="noreferrer" key={url}><strong>{name}</strong><span>{claim}</span></a>)}</div>
+      <section className="section final">
+        <p className="eyebrow">Claim</p>
+        <h2>This is not hidden magic. It is inspectable routing.</h2>
+        <p className="lede">Current chat systems compress context selection into the final answer. This prototype makes that selection an object the user can see, challenge, edit, and reuse.</p>
       </section>
     </main>
   );
 }
 
 const styles = `
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#05040a;color:#fff7ef;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.page{background:radial-gradient(circle at 8% 0%,rgba(255,91,137,.22),transparent 32%),radial-gradient(circle at 86% 10%,rgba(89,216,255,.18),transparent 32%),linear-gradient(180deg,#05040a,#100813 45%,#04050a);min-height:100vh}.hero{min-height:86vh;display:grid;place-content:center;padding:72px 24px 44px}.hero>*{max-width:1160px}.eyebrow{color:#ffda8a;text-transform:uppercase;letter-spacing:.18em;font-weight:900;font-size:12px;margin:0 0 16px}.hero h1{font-size:clamp(48px,8vw,118px);line-height:.84;letter-spacing:-.08em;margin:0 0 24px;text-wrap:balance}.lede{font-size:clamp(18px,2.2vw,28px);line-height:1.35;color:#eadfec;max-width:980px}.thesis{border:1px solid rgba(255,255,255,.16);background:linear-gradient(135deg,rgba(255,218,138,.16),rgba(89,216,255,.08));border-radius:28px;padding:22px;margin-top:28px;font-size:20px;line-height:1.45}.section{max-width:1220px;margin:0 auto;padding:72px 24px}.section h2{font-size:clamp(34px,5vw,70px);line-height:.92;letter-spacing:-.06em;margin:0 0 28px}.split{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px}.stack{display:grid;gap:14px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card,.node,.fix,.trail,.source{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.055);border-radius:26px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.24);backdrop-filter:blur(18px)}.card h3,.node h3,.fix h3{font-size:24px;line-height:1.05;margin:0 0 12px;letter-spacing:-.035em}.card p,.node p,.fix p,.trail,.source span,.hypothesis li{color:#ded4e3;line-height:1.55;font-size:16px}.dark{max-width:none;background:rgba(255,255,255,.035)}.dark>*{max-width:1220px;margin-left:auto;margin-right:auto}.chain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.node span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#ffda8a;color:#13050c;font-weight:1000;margin-bottom:16px}.fix{margin-top:16px;background:linear-gradient(135deg,rgba(255,218,138,.13),rgba(255,91,137,.08))}.sectionrow{display:flex;align-items:end;justify-content:space-between;gap:22px}.tabs{display:flex;gap:10px}.tabs button{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.06);color:white;font-weight:1000;padding:12px 16px;cursor:pointer}.tabs button.active{background:#fff7ef;color:#08040a}.hypothesis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0;padding:0;list-style:none}.hypothesis li{border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:18px;background:rgba(255,255,255,.05)}.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.matrix h2,.matrix .eyebrow{grid-column:1/-1}.trail b{color:#ffda8a}.sourcegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.source{display:block;color:#fff;text-decoration:none;transition:.2s ease}.source:hover{transform:translateY(-2px);background:rgba(255,255,255,.09)}.source strong{display:block;color:#ffda8a;margin-bottom:8px;font-size:18px}@media(max-width:950px){.split,.cards,.chain,.hypothesis,.matrix,.sourcegrid{grid-template-columns:1fr}.sectionrow{display:block}.tabs{margin-bottom:22px}.hero{min-height:auto}.section{padding:48px 18px}}`;
+*{box-sizing:border-box}body{margin:0;background:#04050a;color:#fff8ef;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.page{min-height:100vh;background:radial-gradient(circle at 12% 4%,rgba(125,211,252,.2),transparent 30%),radial-gradient(circle at 84% 0%,rgba(240,171,252,.18),transparent 28%),linear-gradient(180deg,#04050a,#110817 52%,#04050a)}.hero{min-height:90vh;display:grid;place-content:center;padding:72px 22px}.hero>*{width:min(1180px,100%)}.eyebrow{margin:0 0 14px;text-transform:uppercase;letter-spacing:.18em;color:#fde68a;font-size:12px;font-weight:900}.hero h1{font-size:clamp(56px,10vw,138px);line-height:.78;letter-spacing:-.09em;margin:0 0 24px}.lede{font-size:clamp(18px,2.2vw,28px);line-height:1.36;color:#eadfec;max-width:1000px}.inputPanel,.panel{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);border-radius:30px;padding:22px;box-shadow:0 28px 90px rgba(0,0,0,.28)}.inputPanel{margin-top:32px}label{display:block;font-weight:900;margin-bottom:10px}textarea{width:100%;min-height:116px;border:1px solid rgba(255,255,255,.18);background:#080812;color:#fff8ef;border-radius:22px;padding:18px;font:inherit;font-size:18px;line-height:1.45;resize:vertical}.examples{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{cursor:pointer}.examples button,.reset{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff8ef;border-radius:999px;padding:10px 14px;font-weight:800}.section{width:min(1220px,100%);margin:0 auto;padding:72px 22px}.section h2{font-size:clamp(36px,5.8vw,78px);line-height:.88;letter-spacing:-.07em;margin:0 0 20px}.grid,.two{display:grid;grid-template-columns:1fr 1.2fr;gap:22px}.pills{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.pill{display:flex;justify-content:space-between;gap:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.06);color:#fff8ef;border-radius:18px;padding:14px;font-weight:900}.pill b{color:var(--accent)}.pill.active{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 18%,transparent),rgba(255,255,255,.07))}.reason{line-height:1.55;color:#e7ddec}.panel h3{font-size:34px;margin:0 0 12px}.lists{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.lists div{border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:14px;background:rgba(0,0,0,.18)}.lists b{display:block;color:var(--accent);margin-bottom:10px}.lists span{display:block;color:#ded4e4;font-size:14px;line-height:1.42;margin:8px 0}.answer{border-color:color-mix(in srgb,var(--accent) 42%,rgba(255,255,255,.12))}.answer p{font-size:22px;line-height:1.45}.dark{width:100%;max-width:none;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025));border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}.dark>*{width:min(1220px,100%);margin-left:auto;margin-right:auto}.answers{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.answers article{border:1px solid color-mix(in srgb,var(--accent) 38%,rgba(255,255,255,.12));border-radius:24px;padding:18px;background:rgba(255,255,255,.055)}.answers b{color:var(--accent)}.answers p{line-height:1.45;color:#e6dce8}.final{padding-bottom:110px}@media (max-width:880px){.hero{min-height:auto}.grid,.two{grid-template-columns:1fr}.pills,.lists,.answers{grid-template-columns:1fr}.section{padding:50px 16px}.hero h1{font-size:clamp(52px,16vw,92px)}}
+`;
