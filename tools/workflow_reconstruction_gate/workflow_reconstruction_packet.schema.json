@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/workflow_reconstruction_packet.schema.json",
+  "title": "Workflow Reconstruction Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "created_at",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "missingness",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action",
+    "claim",
+    "workflow_trace",
+    "boundaries",
+    "human_checkpoint",
+    "blocked_inferences",
+    "source_map"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 8},
+    "created_at": {"type": "string", "format": "date-time"},
+    "source_status": {"enum": ["primary", "institutional", "preprint", "benchmark", "open_source", "policy_analysis", "mixed"]},
+    "claim_status": {"enum": ["hypothesis", "test", "schema", "evaluation_criterion", "source_map", "prototype_requirement", "collaborator_target", "opportunity_target"]},
+    "privacy_status": {"enum": ["public_safe", "synthetic_only", "deidentified", "sensitive_requires_review", "blocked_private_data"]},
+    "missingness": {"type": "array", "items": {"type": "string", "minLength": 3}, "minItems": 1},
+    "revision_reason": {"type": "string", "minLength": 20},
+    "implementation_status": {"enum": ["proposed", "implemented", "validated_synthetic", "validated_real_world", "deprecated"]},
+    "evidence_strength": {"enum": ["low", "moderate", "high", "mixed"]},
+    "falsification_route": {"type": "string", "minLength": 20},
+    "next_executable_action": {"type": "string", "minLength": 10},
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "domain", "intended_use", "not_medical_or_veterinary_advice"],
+      "properties": {
+        "summary": {"type": "string", "minLength": 20},
+        "domain": {"type": "array", "items": {"enum": ["scientific_ai", "medical_ai", "mechanistic_biology", "neuroscience", "longitudinal_health", "animal_health", "hci", "privacy_memory", "hypothesis_generation"]}, "minItems": 1},
+        "intended_use": {"type": "string", "minLength": 10},
+        "not_medical_or_veterinary_advice": {"const": true}
+      }
+    },
+    "workflow_trace": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step", "input", "operation", "output", "audit_note"],
+        "properties": {
+          "step": {"type": "integer", "minimum": 1},
+          "input": {"type": "string", "minLength": 3},
+          "operation": {"type": "string", "minLength": 3},
+          "output": {"type": "string", "minLength": 3},
+          "audit_note": {"type": "string", "minLength": 10}
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_boundary", "data_boundary", "model_boundary", "species_boundary", "temporal_boundary", "privacy_boundary"],
+      "properties": {
+        "tool_boundary": {"type": "string", "minLength": 5},
+        "data_boundary": {"type": "string", "minLength": 5},
+        "model_boundary": {"type": "string", "minLength": 5},
+        "species_boundary": {"type": "string", "minLength": 5},
+        "temporal_boundary": {"type": "string", "minLength": 5},
+        "privacy_boundary": {"type": "string", "minLength": 5}
+      }
+    },
+    "human_checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "who", "checkpoint_reason"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "who": {"type": "string", "minLength": 3},
+        "checkpoint_reason": {"type": "string", "minLength": 10}
+      }
+    },
+    "blocked_inferences": {"type": "array", "items": {"type": "string", "minLength": 5}, "minItems": 1},
+    "source_map": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url", "status", "claim_supported", "caveat"],
+        "properties": {
+          "title": {"type": "string", "minLength": 3},
+          "url": {"type": "string", "minLength": 10},
+          "status": {"enum": ["peer_reviewed", "preprint", "institutional", "benchmark", "policy_analysis", "open_source"]},
+          "claim_supported": {"type": "string", "minLength": 10},
+          "caveat": {"type": "string", "minLength": 5}
+        }
+      }
+    }
+  }
+}
