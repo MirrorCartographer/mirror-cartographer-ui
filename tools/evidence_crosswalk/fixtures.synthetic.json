@@ -1,0 +1,101 @@
+{
+  "fixtures": [
+    {
+      "name": "valid_support_and_constraint_mapping",
+      "expected_valid": true,
+      "record": {
+        "crosswalk_id": "xcw_valid_001",
+        "artifact_reference": {
+          "artifact_type": "prediction",
+          "artifact_id": "pred_synthetic_001"
+        },
+        "evidence_items": [
+          {
+            "evidence_id": "ev_synth_support_001",
+            "evidence_type": "synthetic_fixture",
+            "alignment": "supports",
+            "summary": "Synthetic benchmark output matches the predicted direction under controlled public-safe conditions.",
+            "limitation": "Fixture evidence does not establish external validity.",
+            "minimum_use": "May justify evaluation-priority increase but not a real-world claim."
+          },
+          {
+            "evidence_id": "ev_synth_constraint_001",
+            "evidence_type": "negative_result",
+            "alignment": "constrains",
+            "summary": "A boundary fixture fails when one required input is removed.",
+            "limitation": "The boundary may reflect fixture construction rather than a domain constraint.",
+            "minimum_use": "May narrow the prediction contract."
+          }
+        ],
+        "claim_status": "evidence_mapping",
+        "source_status": "synthetic",
+        "privacy_status": "public",
+        "missingness": "No external literature or real-world dataset has been attached.",
+        "revision_reason": "Convert evidence support into an auditable crosswalk with limitations and contradiction routes.",
+        "implementation_status": "synthetic_fixture",
+        "testability": "Validator must accept this record and preserve item-level alignments.",
+        "falsification_route": "If the validator cannot distinguish support from constraint records, the crosswalk semantics are inadequate.",
+        "next_executable_action": "Route accepted crosswalks into scoring and promotion gates."
+      }
+    },
+    {
+      "name": "invalid_missing_limitation",
+      "expected_valid": false,
+      "record": {
+        "crosswalk_id": "xcw_invalid_001",
+        "artifact_reference": {
+          "artifact_type": "hypothesis",
+          "artifact_id": "hyp_synthetic_001"
+        },
+        "evidence_items": [
+          {
+            "evidence_id": "ev_missing_limitation",
+            "evidence_type": "synthetic_fixture",
+            "alignment": "supports",
+            "summary": "Support exists but limitation is omitted.",
+            "minimum_use": "Should fail validation."
+          }
+        ],
+        "claim_status": "evidence_mapping",
+        "source_status": "synthetic",
+        "privacy_status": "public",
+        "missingness": "limitation missing",
+        "revision_reason": "fixture",
+        "implementation_status": "synthetic_fixture",
+        "testability": "Should fail.",
+        "falsification_route": "Accepting this fixture falsifies the limitation requirement.",
+        "next_executable_action": "Fix validator if accepted."
+      }
+    },
+    {
+      "name": "invalid_private_marker",
+      "expected_valid": false,
+      "record": {
+        "crosswalk_id": "xcw_invalid_private",
+        "artifact_reference": {
+          "artifact_type": "prediction",
+          "artifact_id": "pred_synthetic_private"
+        },
+        "evidence_items": [
+          {
+            "evidence_id": "ev_private_marker",
+            "evidence_type": "synthetic_fixture",
+            "alignment": "supports",
+            "summary": "Contains private household marker and must be rejected.",
+            "limitation": "private marker present",
+            "minimum_use": "Should fail."
+          }
+        ],
+        "claim_status": "evidence_mapping",
+        "source_status": "synthetic",
+        "privacy_status": "private",
+        "missingness": "privacy violation",
+        "revision_reason": "fixture",
+        "implementation_status": "synthetic_fixture",
+        "testability": "Should fail.",
+        "falsification_route": "Accepting this fixture falsifies the privacy boundary.",
+        "next_executable_action": "Fix validator if accepted."
+      }
+    }
+  ]
+}
