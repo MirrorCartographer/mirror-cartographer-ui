@@ -1,0 +1,54 @@
+{
+  "packet_id": "cross-species-translation-001",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "public_safe_synthetic",
+  "source_domain": {
+    "domain_type": "human_clinical",
+    "species_or_population": "adult human longitudinal EHR benchmark population",
+    "site_or_dataset": "synthetic reference to EHRSHOT/INSPECT/MedAlign-style benchmark infrastructure",
+    "modality": "structured longitudinal EHR events and clinical notes",
+    "workflow_context": "clinical AI model evaluation",
+    "endpoint_type": "benchmark task performance and workflow safety"
+  },
+  "target_domain": {
+    "domain_type": "animal_health",
+    "species_or_population": "multi-species veterinary research benchmark context",
+    "site_or_dataset": "synthetic veterinary benchmark planning fixture",
+    "modality": "veterinary records, imaging, lab values, owner-reported longitudinal observations",
+    "workflow_context": "animal-health AI infrastructure design",
+    "endpoint_type": "research organization and benchmark readiness, not diagnosis or treatment"
+  },
+  "translation_boundary": {
+    "species_boundary": "Human EHR evidence cannot be treated as animal physiology evidence without species-specific bridge validation.",
+    "site_boundary": "Human hospital and veterinary practice data have different collection incentives, missingness patterns, coding systems, and socioeconomic filters.",
+    "modality_boundary": "Clinical notes, veterinary notes, imaging, labs, owner reports, and wearable signals must be evaluated separately before fusion.",
+    "workflow_boundary": "Human clinical agent workflows do not automatically transfer to veterinary triage, owner communication, or practice constraints.",
+    "endpoint_boundary": "Benchmark performance cannot be promoted to cure, diagnosis, prognosis, or individual animal advice.",
+    "consent_boundary": "Reusable personal or animal memory requires explicit consent/reuse scope; public source maps remain synthetic.",
+    "privacy_boundary": "Rare species, breed, disease, owner-location, and longitudinal feature combinations can create re-identification risk."
+  },
+  "bridge_evidence": [
+    "Use benchmark design patterns only: task definitions, missingness labels, workflow reconstruction, and validation splits.",
+    "Require species-specific dataset validation before any animal-health inference is promoted.",
+    "Require endpoint-level separation between research infrastructure claims and clinical/veterinary claims."
+  ],
+  "blocked_inferences": [
+    "Do not infer that a human EHR benchmark result applies to an animal patient.",
+    "Do not infer that veterinary AI market or infrastructure growth proves diagnostic accuracy.",
+    "Do not infer that mechanistic plausibility equals a cure claim.",
+    "Do not reuse private longitudinal memory as research evidence without consent and provenance."
+  ],
+  "missingness": [
+    "No released Cornell veterinary benchmark dataset was inspected in this packet.",
+    "No species-specific validation cohort is attached.",
+    "No live consent ledger or memory store integration is present.",
+    "No human-subject or animal-subject data is included."
+  ],
+  "evaluation_criterion": "A packet passes only if a curator can reconstruct what evidence is allowed to transfer, what is blocked, what bridge validation is missing, and what next test would reduce translation risk.",
+  "revision_reason": "Add explicit cross-domain translation control after repeated frontier scouts produced gates for privacy, consent, perturbation, context drift, and evidence portability.",
+  "implementation_status": "implemented_test",
+  "evidence_strength": "moderate",
+  "falsification_route": "Reject or revise this gate if adversarial fixtures can still promote human-clinical evidence into animal-health or cure claims without bridge evidence, or if curator review shows no reduction in unsupported transfer.",
+  "next_executable_action": "Run python tools/cross_species_translation_gate/test_validate_cross_species_translation_packet.py"
+}
