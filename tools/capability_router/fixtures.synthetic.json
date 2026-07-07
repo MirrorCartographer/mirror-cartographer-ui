@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0",
+  "fixture_set_id": "public_safe_capability_gap_router_v1",
+  "source_status": "synthetic",
+  "claim_status": "routing_fixture",
+  "privacy_status": "public",
+  "capability_registry": [
+    {
+      "profile_id": "open_measurement_profile",
+      "category": "measurement",
+      "supports_open_data": true,
+      "supports_open_code": false,
+      "supports_reproducibility": true
+    },
+    {
+      "profile_id": "synthetic_simulation_profile",
+      "category": "simulation",
+      "supports_open_data": true,
+      "supports_open_code": true,
+      "supports_reproducibility": true
+    },
+    {
+      "profile_id": "benchmark_profile",
+      "category": "benchmark",
+      "supports_open_data": true,
+      "supports_open_code": true,
+      "supports_reproducibility": true
+    },
+    {
+      "profile_id": "implementation_profile",
+      "category": "implementation",
+      "supports_open_data": false,
+      "supports_open_code": true,
+      "supports_reproducibility": true
+    }
+  ],
+  "records": [
+    {
+      "case_id": "valid_prediction_needs_simulation",
+      "expected_validation": "PASS",
+      "router_id": "router_simulation_gap_001",
+      "artifact_reference": {
+        "artifact_type": "prediction",
+        "artifact_id": "prediction_public_synthetic_001"
+      },
+      "required_capabilities": [
+        {
+          "capability_id": "cap_simulation_001",
+          "description": "Run a synthetic simulation before promotion.",
+          "category": "simulation",
+          "priority": "high",
+          "reason": "The artifact requires counterfactual state exploration before evaluation."
+        }
+      ],
+      "routing_constraints": {
+        "requires_open_data": true,
+        "requires_open_code": true,
+        "requires_reproducibility": true
+      },
+      "success_criteria": [
+        "A deterministic simulation output is produced from public synthetic inputs."
+      ],
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "routing_fixture",
+        "privacy_status": "public"
+      }
+    },
+    {
+      "case_id": "valid_prototype_needs_benchmark_and_implementation",
+      "expected_validation": "PASS",
+      "router_id": "router_multi_gap_001",
+      "artifact_reference": {
+        "artifact_type": "prototype",
+        "artifact_id": "prototype_public_synthetic_001"
+      },
+      "required_capabilities": [
+        {
+          "capability_id": "cap_benchmark_001",
+          "description": "Compare output against a synthetic benchmark corpus.",
+          "category": "benchmark",
+          "priority": "critical",
+          "reason": "Promotion requires a reproducible baseline comparison."
+        },
+        {
+          "capability_id": "cap_implementation_001",
+          "description": "Package the prototype as executable public-safe tooling.",
+          "category": "implementation",
+          "priority": "medium",
+          "reason": "The prototype must be runnable before downstream evaluation."
+        }
+      ],
+      "routing_constraints": {
+        "requires_open_data": false,
+        "requires_open_code": true,
+        "requires_reproducibility": true
+      },
+      "success_criteria": [
+        "Benchmark run produces a deterministic report.",
+        "Prototype can be executed from repository files only."
+      ],
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "routing_fixture",
+        "privacy_status": "public"
+      }
+    },
+    {
+      "case_id": "invalid_missing_capabilities",
+      "expected_validation": "FAIL",
+      "router_id": "router_missing_capabilities_001",
+      "artifact_reference": {
+        "artifact_type": "mechanism",
+        "artifact_id": "mechanism_public_synthetic_001"
+      },
+      "required_capabilities": [],
+      "routing_constraints": {
+        "requires_open_data": true,
+        "requires_open_code": false,
+        "requires_reproducibility": true
+      },
+      "success_criteria": ["A capability is identified."],
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "routing_fixture",
+        "privacy_status": "public"
+      }
+    },
+    {
+      "case_id": "invalid_duplicate_capability_ids",
+      "expected_validation": "FAIL",
+      "router_id": "router_duplicate_caps_001",
+      "artifact_reference": {
+        "artifact_type": "evaluation",
+        "artifact_id": "evaluation_public_synthetic_001"
+      },
+      "required_capabilities": [
+        {
+          "capability_id": "cap_repeat",
+          "description": "First capability.",
+          "category": "analysis",
+          "priority": "medium",
+          "reason": "Synthetic reason one."
+        },
+        {
+          "capability_id": "cap_repeat",
+          "description": "Second capability.",
+          "category": "replication",
+          "priority": "medium",
+          "reason": "Synthetic reason two."
+        }
+      ],
+      "routing_constraints": {
+        "requires_open_data": true,
+        "requires_open_code": false,
+        "requires_reproducibility": true
+      },
+      "success_criteria": ["Duplicate identifiers are rejected."],
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "routing_fixture",
+        "privacy_status": "public"
+      }
+    },
+    {
+      "case_id": "invalid_private_metadata",
+      "expected_validation": "FAIL",
+      "router_id": "router_private_001",
+      "artifact_reference": {
+        "artifact_type": "hypothesis",
+        "artifact_id": "hypothesis_public_synthetic_001"
+      },
+      "required_capabilities": [
+        {
+          "capability_id": "cap_measurement_001",
+          "description": "Define a measurement gap.",
+          "category": "measurement",
+          "priority": "low",
+          "reason": "Measurement must be specified before evaluation."
+        }
+      ],
+      "routing_constraints": {
+        "requires_open_data": true,
+        "requires_open_code": false,
+        "requires_reproducibility": true
+      },
+      "success_criteria": ["Private metadata is rejected."],
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "routing_fixture",
+        "privacy_status": "private"
+      }
+    }
+  ]
+}
