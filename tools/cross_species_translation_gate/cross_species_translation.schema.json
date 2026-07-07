@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.dev/schemas/cross_species_translation.schema.json",
+  "title": "Cross Species Translation Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "source_domain",
+    "target_domain",
+    "translation_boundary",
+    "bridge_evidence",
+    "blocked_inferences",
+    "missingness",
+    "evaluation_criterion",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 8},
+    "source_status": {"type": "string", "enum": ["primary_source", "research_institution", "preprint", "grant_or_prize", "dataset_or_benchmark", "open_source_tool", "synthetic_fixture", "mixed"]},
+    "claim_status": {"type": "string", "enum": ["hypothesis", "schema", "evaluation_criterion", "prototype_requirement", "source_map", "collaborator_target", "opportunity_target"]},
+    "privacy_status": {"type": "string", "enum": ["public_safe_synthetic", "deidentified_research", "private_sensitive_blocked", "requires_local_only_storage", "requires_user_consent"]},
+    "source_domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_type", "species_or_population", "site_or_dataset", "modality", "workflow_context", "endpoint_type"],
+      "properties": {
+        "domain_type": {"type": "string", "enum": ["human_clinical", "animal_health", "mechanistic_biology", "neuroscience", "longitudinal_memory", "synthetic_fixture", "software_benchmark"]},
+        "species_or_population": {"type": "string", "minLength": 1},
+        "site_or_dataset": {"type": "string", "minLength": 1},
+        "modality": {"type": "string", "minLength": 1},
+        "workflow_context": {"type": "string", "minLength": 1},
+        "endpoint_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "target_domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_type", "species_or_population", "site_or_dataset", "modality", "workflow_context", "endpoint_type"],
+      "properties": {
+        "domain_type": {"type": "string", "enum": ["human_clinical", "animal_health", "mechanistic_biology", "neuroscience", "longitudinal_memory", "synthetic_fixture", "software_benchmark"]},
+        "species_or_population": {"type": "string", "minLength": 1},
+        "site_or_dataset": {"type": "string", "minLength": 1},
+        "modality": {"type": "string", "minLength": 1},
+        "workflow_context": {"type": "string", "minLength": 1},
+        "endpoint_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "translation_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["species_boundary", "site_boundary", "modality_boundary", "workflow_boundary", "endpoint_boundary", "consent_boundary", "privacy_boundary"],
+      "properties": {
+        "species_boundary": {"type": "string", "minLength": 1},
+        "site_boundary": {"type": "string", "minLength": 1},
+        "modality_boundary": {"type": "string", "minLength": 1},
+        "workflow_boundary": {"type": "string", "minLength": 1},
+        "endpoint_boundary": {"type": "string", "minLength": 1},
+        "consent_boundary": {"type": "string", "minLength": 1},
+        "privacy_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "bridge_evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "blocked_inferences": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "missingness": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "evaluation_criterion": {"type": "string", "minLength": 1},
+    "revision_reason": {"type": "string", "minLength": 1},
+    "implementation_status": {"type": "string", "enum": ["planned", "implemented_schema", "implemented_test", "prototype_requirement", "needs_integration"]},
+    "evidence_strength": {"type": "string", "enum": ["weak", "moderate", "strong"]},
+    "falsification_route": {"type": "string", "minLength": 1},
+    "next_executable_action": {"type": "string", "minLength": 1}
+  }
+}
