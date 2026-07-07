@@ -1,0 +1,47 @@
+{
+  "packet_id": "mstg-invalid-001",
+  "created_utc": "2026-07-07T10:52:21Z",
+  "source_status": "synthetic_implementation",
+  "claim_status": "prototype_requirement",
+  "privacy_status": "sensitive",
+  "missingness": [
+    "Synthetic fixture only."
+  ],
+  "revision_reason": "Demonstrate that sensitive or saturated memory cannot be stored verbatim.",
+  "implementation_status": "fixture_tested",
+  "evidence_strength": "moderate",
+  "candidate_memory_write": {
+    "write_type": "new_fact",
+    "summary": "This intentionally invalid packet attempts to promote a sensitive long-horizon memory write verbatim despite high saturation pressure.",
+    "provenance": "Synthetic negative test fixture.",
+    "reuse_scope": "health_research_memory"
+  },
+  "existing_memory_region": {
+    "region_name": "longitudinal_health_research_memory",
+    "known_collisions": [
+      "prior similar symptom clusters",
+      "conflicting timeline fragments"
+    ],
+    "age_or_staleness": "mixed and unresolved",
+    "retrieval_boundary": "Should require redaction, summary, pointer storage, or local-only storage."
+  },
+  "saturation_assessment": {
+    "retrieval_ambiguity_risk": "high",
+    "contradiction_load_risk": "high",
+    "privacy_linkage_risk": "high",
+    "reasoning_overfit_risk": "medium",
+    "noise_resilience_check": "This packet should fail because it tries to promote saturated sensitive content verbatim.",
+    "saturation_score": 91,
+    "blocked_inferences": [
+      "Do not infer diagnosis.",
+      "Do not infer consent for broad reuse."
+    ]
+  },
+  "triage_decision": {
+    "decision": "promote",
+    "storage_mode": "verbatim",
+    "reason": "This reason is intentionally invalid because it ignores high saturation and sensitivity."
+  },
+  "falsification_route": "This fixture must fail validation; if it passes, the gate is not enforcing privacy and saturation constraints.",
+  "next_executable_action": "Run the regression test and expect validation failure for this fixture."
+}
