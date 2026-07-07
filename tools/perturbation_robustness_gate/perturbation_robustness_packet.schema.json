@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/perturbation_robustness_packet.schema.json",
+  "title": "Perturbation Robustness Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "schema_version",
+    "domain",
+    "hypothesis_or_task",
+    "expected_output_artifact",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "perturbation_class",
+    "perturbation_description",
+    "robustness_result",
+    "claim_survived_perturbation",
+    "missingness",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {
+      "type": "string",
+      "minLength": 8,
+      "pattern": "^[a-z0-9_\\-]+$"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "scientific_ai",
+        "medical_ai",
+        "mechanistic_biology",
+        "neuroscience",
+        "longitudinal_health_data",
+        "animal_health_research_infrastructure",
+        "hci",
+        "privacy_preserving_memory",
+        "hypothesis_generation_system"
+      ]
+    },
+    "hypothesis_or_task": {
+      "type": "string",
+      "minLength": 20
+    },
+    "expected_output_artifact": {
+      "type": "string",
+      "minLength": 10
+    },
+    "source_status": {
+      "type": "string",
+      "enum": [
+        "primary_source",
+        "clinical_or_research_institution",
+        "preprint_with_caveat",
+        "benchmark_or_dataset",
+        "open_source_tool",
+        "synthetic_fixture"
+      ]
+    },
+    "claim_status": {
+      "type": "string",
+      "enum": [
+        "research_organization",
+        "hypothesis",
+        "evaluation_criterion",
+        "prototype_requirement",
+        "not_medical_or_veterinary_advice"
+      ]
+    },
+    "privacy_status": {
+      "type": "string",
+      "enum": [
+        "public_synthetic_only",
+        "deidentified_research_allowed",
+        "private_sensitive_blocked",
+        "requires_local_only_execution",
+        "unknown_block_promotion"
+      ]
+    },
+    "perturbation_class": {
+      "type": "string",
+      "enum": [
+        "corrupted_input",
+        "decoy_file",
+        "prompt_bloat",
+        "platform_shift",
+        "modality_shift",
+        "missingness_shift",
+        "negative_control",
+        "dual_use_risk_route",
+        "insufficient_data_case"
+      ]
+    },
+    "perturbation_description": {
+      "type": "string",
+      "minLength": 20
+    },
+    "robustness_result": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "inconclusive",
+        "not_yet_tested_block_promotion"
+      ]
+    },
+    "claim_survived_perturbation": {
+      "type": "boolean"
+    },
+    "missingness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["known_missing", "untested_conditions", "missingness_affects_claim"],
+      "properties": {
+        "known_missing": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 3},
+          "minItems": 1
+        },
+        "untested_conditions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 3},
+          "minItems": 1
+        },
+        "missingness_affects_claim": {
+          "type": "boolean"
+        }
+      }
+    },
+    "revision_reason": {
+      "type": "string",
+      "minLength": 20
+    },
+    "implementation_status": {
+      "type": "string",
+      "enum": [
+        "schema_only",
+        "validator_added",
+        "fixtures_added",
+        "tests_added",
+        "committed"
+      ]
+    },
+    "evidence_strength": {
+      "type": "string",
+      "enum": [
+        "weak",
+        "moderate",
+        "strong",
+        "unknown"
+      ]
+    },
+    "falsification_route": {
+      "type": "string",
+      "minLength": 20
+    },
+    "next_executable_action": {
+      "type": "string",
+      "minLength": 10
+    }
+  }
+}
