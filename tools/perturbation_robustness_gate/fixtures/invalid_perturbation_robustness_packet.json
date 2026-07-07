@@ -1,0 +1,24 @@
+{
+  "packet_id": "bad001",
+  "schema_version": "1.0.0",
+  "domain": "medical_ai",
+  "hypothesis_or_task": "Claim survived.",
+  "expected_output_artifact": "answer",
+  "source_status": "synthetic_fixture",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "unknown_block_promotion",
+  "perturbation_class": "prompt_bloat",
+  "perturbation_description": "Prompt bloat was not actually tested but the packet tries to promote anyway.",
+  "robustness_result": "not_yet_tested_block_promotion",
+  "claim_survived_perturbation": true,
+  "missingness": {
+    "known_missing": ["actual perturbation result"],
+    "untested_conditions": ["all robustness conditions"],
+    "missingness_affects_claim": true
+  },
+  "revision_reason": "Demonstrate that the gate blocks unsupported promotion when robustness is untested.",
+  "implementation_status": "fixtures_added",
+  "evidence_strength": "weak",
+  "falsification_route": "This invalid packet should fail validation because untested robustness cannot promote a claim.",
+  "next_executable_action": "Run the regression test."
+}
