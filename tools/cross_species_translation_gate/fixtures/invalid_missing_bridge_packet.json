@@ -1,0 +1,43 @@
+{
+  "packet_id": "cross-species-translation-invalid-001",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "public_safe_synthetic",
+  "source_domain": {
+    "domain_type": "human_clinical",
+    "species_or_population": "adult human longitudinal EHR benchmark population",
+    "site_or_dataset": "synthetic EHR benchmark reference",
+    "modality": "structured longitudinal EHR events",
+    "workflow_context": "clinical AI model evaluation",
+    "endpoint_type": "benchmark task performance"
+  },
+  "target_domain": {
+    "domain_type": "animal_health",
+    "species_or_population": "veterinary patient population",
+    "site_or_dataset": "synthetic veterinary planning fixture",
+    "modality": "veterinary records and owner observations",
+    "workflow_context": "animal-health AI infrastructure design",
+    "endpoint_type": "research organization"
+  },
+  "translation_boundary": {
+    "species_boundary": "Human evidence is not species-general.",
+    "site_boundary": "Human and veterinary sites differ.",
+    "modality_boundary": "Human EHR fields and veterinary records differ.",
+    "workflow_boundary": "Clinical workflow does not transfer automatically.",
+    "endpoint_boundary": "Benchmark performance is not diagnosis.",
+    "consent_boundary": "Consent scope is not transferable.",
+    "privacy_boundary": "Longitudinal rare features may identify subjects."
+  },
+  "blocked_inferences": [
+    "Do not infer veterinary validity from human benchmark success."
+  ],
+  "missingness": [
+    "No species-specific validation cohort."
+  ],
+  "evaluation_criterion": "Must expose transfer limits.",
+  "revision_reason": "Negative fixture intentionally omits bridge_evidence.",
+  "implementation_status": "implemented_test",
+  "evidence_strength": "moderate",
+  "falsification_route": "This packet should fail validation because bridge_evidence is missing.",
+  "next_executable_action": "Run the validator and expect failure."
+}
