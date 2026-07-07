@@ -1,0 +1,182 @@
+{
+  "schema_version": "1.0",
+  "fixture_set_id": "public_safe_mechanism_graph_fixtures_v1",
+  "source_status": "synthetic",
+  "claim_status": "mechanistic_model_fixture",
+  "privacy_status": "public",
+  "fixtures": [
+    {
+      "fixture_id": "valid_enabling_chain",
+      "expected_valid": true,
+      "graph": {
+        "schema_version": "1.0",
+        "record_type": "interaction_mechanism_graph",
+        "graph_id": "graph_valid_enabling_chain",
+        "mechanisms": [
+          {
+            "mechanism_id": "input_signal_filter",
+            "role": "driver",
+            "description": "A public-safe abstract mechanism that filters incoming signals."
+          },
+          {
+            "mechanism_id": "state_transition_rule",
+            "role": "modifier",
+            "description": "A public-safe abstract mechanism that changes internal state after filtering."
+          }
+        ],
+        "interactions": [
+          {
+            "source": "input_signal_filter",
+            "target": "state_transition_rule",
+            "interaction_type": "enables",
+            "confidence": "moderate"
+          }
+        ],
+        "observable_outputs": [
+          "state_transition_frequency"
+        ],
+        "alternative_graphs": [],
+        "metadata": {
+          "source_status": "synthetic",
+          "claim_status": "mechanistic_model",
+          "privacy_status": "public"
+        }
+      }
+    },
+    {
+      "fixture_id": "valid_competing_mechanisms",
+      "expected_valid": true,
+      "graph": {
+        "schema_version": "1.0",
+        "record_type": "interaction_mechanism_graph",
+        "graph_id": "graph_valid_competing_mechanisms",
+        "mechanisms": [
+          {
+            "mechanism_id": "pathway_alpha",
+            "role": "driver",
+            "description": "A candidate abstract pathway."
+          },
+          {
+            "mechanism_id": "pathway_beta",
+            "role": "driver",
+            "description": "A second candidate abstract pathway."
+          },
+          {
+            "mechanism_id": "shared_output_constraint",
+            "role": "constraint",
+            "description": "A constraint shared by both pathways."
+          }
+        ],
+        "interactions": [
+          {
+            "source": "pathway_alpha",
+            "target": "pathway_beta",
+            "interaction_type": "competes_with",
+            "confidence": "low"
+          },
+          {
+            "source": "shared_output_constraint",
+            "target": "pathway_alpha",
+            "interaction_type": "attenuates",
+            "confidence": "moderate"
+          }
+        ],
+        "observable_outputs": [
+          "output_variance",
+          "response_latency"
+        ],
+        "alternative_graphs": [
+          "graph_valid_enabling_chain"
+        ],
+        "metadata": {
+          "source_status": "synthetic",
+          "claim_status": "mechanistic_model",
+          "privacy_status": "public"
+        }
+      }
+    },
+    {
+      "fixture_id": "invalid_missing_endpoint",
+      "expected_valid": false,
+      "graph": {
+        "schema_version": "1.0",
+        "record_type": "interaction_mechanism_graph",
+        "graph_id": "graph_invalid_missing_endpoint",
+        "mechanisms": [
+          {
+            "mechanism_id": "declared_node",
+            "role": "driver",
+            "description": "A declared node."
+          }
+        ],
+        "interactions": [
+          {
+            "source": "declared_node",
+            "target": "undeclared_node",
+            "interaction_type": "enables",
+            "confidence": "low"
+          }
+        ],
+        "observable_outputs": [
+          "abstract_output"
+        ],
+        "alternative_graphs": [],
+        "metadata": {
+          "source_status": "synthetic",
+          "claim_status": "mechanistic_model",
+          "privacy_status": "public"
+        }
+      }
+    },
+    {
+      "fixture_id": "invalid_no_observable_outputs",
+      "expected_valid": false,
+      "graph": {
+        "schema_version": "1.0",
+        "record_type": "interaction_mechanism_graph",
+        "graph_id": "graph_invalid_no_outputs",
+        "mechanisms": [
+          {
+            "mechanism_id": "node_without_output",
+            "role": "observer",
+            "description": "A node that does not declare measurable output."
+          }
+        ],
+        "interactions": [],
+        "observable_outputs": [],
+        "alternative_graphs": [],
+        "metadata": {
+          "source_status": "synthetic",
+          "claim_status": "mechanistic_model",
+          "privacy_status": "public"
+        }
+      }
+    },
+    {
+      "fixture_id": "invalid_private_marker",
+      "expected_valid": false,
+      "graph": {
+        "schema_version": "1.0",
+        "record_type": "interaction_mechanism_graph",
+        "graph_id": "graph_invalid_private_marker",
+        "mechanisms": [
+          {
+            "mechanism_id": "private_marker_node",
+            "role": "driver",
+            "description": "This fixture intentionally contains a private_marker token."
+          }
+        ],
+        "interactions": [],
+        "observable_outputs": [
+          "abstract_output"
+        ],
+        "alternative_graphs": [],
+        "metadata": {
+          "source_status": "synthetic",
+          "claim_status": "mechanistic_model",
+          "privacy_status": "public"
+        }
+      }
+    }
+  ]
+}
