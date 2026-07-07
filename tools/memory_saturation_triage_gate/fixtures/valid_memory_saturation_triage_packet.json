@@ -1,0 +1,49 @@
+{
+  "packet_id": "mstg-valid-001",
+  "created_utc": "2026-07-07T10:52:21Z",
+  "source_status": "synthetic_implementation",
+  "claim_status": "prototype_requirement",
+  "privacy_status": "synthetic_only",
+  "missingness": [
+    "No live patient, veterinary, or private longitudinal records are included.",
+    "Benchmark claims require independent replication before deployment claims."
+  ],
+  "revision_reason": "Add a gate for streaming memory saturation before reusable discovery-memory writes.",
+  "implementation_status": "fixture_tested",
+  "evidence_strength": "moderate",
+  "candidate_memory_write": {
+    "write_type": "summary",
+    "summary": "A research-memory write should be converted into a bounded summary when cumulative context would otherwise create retrieval ambiguity or privacy linkage risk.",
+    "provenance": "Derived from public frontier benchmark scan on medical memory, privacy-memory, healthcare-agent, and co-scientist evaluation papers.",
+    "reuse_scope": "scientific_discovery_memory"
+  },
+  "existing_memory_region": {
+    "region_name": "frontier_discovery_scout_gates",
+    "known_collisions": [
+      "privacy_loss_at_risk_gate",
+      "memory_operation_boundary_gate",
+      "consent_revision_lineage_gate"
+    ],
+    "age_or_staleness": "Existing gates handle privacy and consent but do not explicitly test cumulative saturation pressure.",
+    "retrieval_boundary": "Retrieve for memory promotion decisions only; do not treat as medical or veterinary advice."
+  },
+  "saturation_assessment": {
+    "retrieval_ambiguity_risk": "medium",
+    "contradiction_load_risk": "medium",
+    "privacy_linkage_risk": "medium",
+    "reasoning_overfit_risk": "low",
+    "noise_resilience_check": "Reject direct promotion if similar gates create unclear retrieval boundaries or duplicated labels.",
+    "saturation_score": 68,
+    "blocked_inferences": [
+      "Do not infer clinical readiness from benchmark existence.",
+      "Do not store sensitive longitudinal details verbatim when a pointer or placeholder is enough."
+    ]
+  },
+  "triage_decision": {
+    "decision": "summarize_then_promote",
+    "storage_mode": "summary",
+    "reason": "Moderate saturation and privacy-linkage risk requires a bounded summary rather than a verbatim reusable memory write."
+  },
+  "falsification_route": "Revise this gate if curator tests show no improvement in retrieval precision, contradiction detection, or privacy-linkage reduction compared with ungated writes.",
+  "next_executable_action": "Run the regression test for valid and invalid fixture behavior."
+}
