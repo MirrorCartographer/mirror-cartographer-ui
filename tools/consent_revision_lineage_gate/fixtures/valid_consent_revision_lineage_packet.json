@@ -1,0 +1,46 @@
+{
+  "packet_id": "crlg-valid-001",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "public_safe_synthetic",
+  "subject_boundary": {
+    "subject_type": "synthetic",
+    "species_or_population": "synthetic longitudinal health and animal-health memory fixture",
+    "site_or_dataset": "no real site; derived from public frontier source map only",
+    "modality": "text metadata and governance fields",
+    "transfer_limit": "may be reused only as a gate fixture, not as medical or veterinary evidence"
+  },
+  "consent_state": {
+    "allowed_operations": ["validate_schema", "test_gate", "document_source_map"],
+    "blocked_operations": ["clinical_advice", "veterinary_advice", "private_memory_write", "cross-user_reuse"],
+    "reuse_scope": "MC infrastructure testing and public-safe documentation",
+    "consent_evidence": "synthetic fixture contains no personal, animal-specific, or private health data",
+    "expiration_or_review_trigger": "review when connected to a live memory store or when private fields are introduced"
+  },
+  "revision_lineage": {
+    "version": "1.0.0",
+    "prior_version": "none",
+    "evidence_cutoff": "2026-07-07",
+    "revision_reason": "add governance layer for consent, revision, deletion, contextual transfer, and leakage accounting",
+    "changed_fields": ["new gate", "new schema", "new validator", "new fixtures"],
+    "unchanged_fields": ["public-safe synthetic implementation", "research organization only"]
+  },
+  "deletion_or_redaction_route": "Delete or redact the packet file while preserving the README source map and commit history as an audit trail.",
+  "contextual_integrity_boundary": {
+    "source_context": "public frontier research scan and synthetic schema design",
+    "destination_context": "Mirror Cartographer discovery-memory gate testing",
+    "allowed_transfer": "schema requirements and synthetic validation logic",
+    "blocked_transfer": "transfer of personal health details, veterinary case facts, or real longitudinal records"
+  },
+  "privacy_loss_route": "Repeated retrieval of rare feature combinations must be treated as a leakage route even when direct identifiers are absent.",
+  "missingness": [
+    "no live consent ledger integration",
+    "no UI deletion control yet",
+    "no adversarial retrieval benchmark yet",
+    "no species-specific veterinary validation yet"
+  ],
+  "implementation_status": "implemented_test",
+  "evidence_strength": "moderate",
+  "falsification_route": "Reject or revise if curator review shows the gate does not improve unsafe-memory detection or evidence reconstruction compared with prior gates.",
+  "next_executable_action": "Run python tools/consent_revision_lineage_gate/test_validate_consent_revision_lineage_packet.py"
+}
