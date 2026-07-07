@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0",
+  "fixture_set_id": "public_safe_falsifiable_prediction_v1",
+  "source_status": "synthetic",
+  "claim_status": "prediction_fixture",
+  "privacy_status": "public",
+  "mechanism_registry": [
+    "mechanism_graph_valid_enablement",
+    "mechanism_graph_valid_competition"
+  ],
+  "predictions": [
+    {
+      "prediction_id": "prediction_valid_metric_and_failure_rule",
+      "derived_from": {
+        "artifact_type": "mechanism",
+        "artifact_id": "mechanism_graph_valid_enablement"
+      },
+      "experimental_condition": "Apply synthetic condition A to fixture group while holding control group unchanged.",
+      "observable_metric": {
+        "name": "synthetic_response_delta",
+        "measurement_type": "continuous"
+      },
+      "predicted_outcome": "Fixture group shows a positive response delta above the declared threshold.",
+      "alternative_outcome": "Fixture group does not show a positive response delta above the declared threshold.",
+      "falsification_condition": "Reject prediction if the fixture group fails to exceed the control group by the declared threshold in at least two independent synthetic replicates.",
+      "minimum_required_data": {
+        "replicates": 2,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "public"
+      },
+      "expected_valid": true
+    },
+    {
+      "prediction_id": "prediction_valid_boolean_control",
+      "derived_from": {
+        "artifact_type": "interaction_mechanism_graph",
+        "artifact_id": "mechanism_graph_valid_competition"
+      },
+      "experimental_condition": "Run synthetic switch test with competing mechanism branch disabled.",
+      "observable_metric": {
+        "name": "branch_switch_detected",
+        "measurement_type": "boolean"
+      },
+      "predicted_outcome": "The branch switch is detected under the disabled-competitor condition.",
+      "alternative_outcome": "The branch switch is not detected under the disabled-competitor condition.",
+      "falsification_condition": "Reject prediction if branch_switch_detected remains false across the minimum required synthetic replicates.",
+      "minimum_required_data": {
+        "replicates": 1,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "public"
+      },
+      "expected_valid": true
+    },
+    {
+      "prediction_id": "prediction_invalid_missing_metric",
+      "derived_from": {
+        "artifact_type": "mechanism",
+        "artifact_id": "mechanism_graph_valid_enablement"
+      },
+      "experimental_condition": "Run synthetic test without a declared observable.",
+      "predicted_outcome": "Outcome improves.",
+      "alternative_outcome": "Outcome does not improve.",
+      "falsification_condition": "Reject if improvement is not observed.",
+      "minimum_required_data": {
+        "replicates": 1,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "public"
+      },
+      "expected_valid": false
+    },
+    {
+      "prediction_id": "prediction_invalid_unresolved_mechanism",
+      "derived_from": {
+        "artifact_type": "mechanism",
+        "artifact_id": "missing_mechanism_reference"
+      },
+      "experimental_condition": "Run synthetic test with unresolved derivation.",
+      "observable_metric": {
+        "name": "synthetic_count",
+        "measurement_type": "count"
+      },
+      "predicted_outcome": "Count increases.",
+      "alternative_outcome": "Count does not increase.",
+      "falsification_condition": "Reject if count does not increase relative to control.",
+      "minimum_required_data": {
+        "replicates": 1,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "public"
+      },
+      "expected_valid": false
+    },
+    {
+      "prediction_id": "prediction_invalid_identical_outcomes",
+      "derived_from": {
+        "artifact_type": "mechanism",
+        "artifact_id": "mechanism_graph_valid_enablement"
+      },
+      "experimental_condition": "Run synthetic indistinguishable-outcome test.",
+      "observable_metric": {
+        "name": "synthetic_category",
+        "measurement_type": "categorical"
+      },
+      "predicted_outcome": "Category remains unchanged.",
+      "alternative_outcome": "Category remains unchanged.",
+      "falsification_condition": "Reject if categories do not separate.",
+      "minimum_required_data": {
+        "replicates": 1,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "public"
+      },
+      "expected_valid": false
+    },
+    {
+      "prediction_id": "prediction_invalid_private_marker",
+      "derived_from": {
+        "artifact_type": "mechanism",
+        "artifact_id": "mechanism_graph_valid_enablement"
+      },
+      "experimental_condition": "Run public fixture test.",
+      "observable_metric": {
+        "name": "synthetic_boolean",
+        "measurement_type": "boolean"
+      },
+      "predicted_outcome": "Boolean is true.",
+      "alternative_outcome": "Boolean is false.",
+      "falsification_condition": "Reject if boolean is false.",
+      "minimum_required_data": {
+        "replicates": 1,
+        "controls_required": true
+      },
+      "metadata": {
+        "source_status": "synthetic",
+        "claim_status": "prediction_fixture",
+        "privacy_status": "private"
+      },
+      "expected_valid": false
+    }
+  ]
+}
