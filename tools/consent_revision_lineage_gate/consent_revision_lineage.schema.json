@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.dev/schemas/consent_revision_lineage.schema.json",
+  "title": "Consent Revision Lineage Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "subject_boundary",
+    "consent_state",
+    "revision_lineage",
+    "deletion_or_redaction_route",
+    "contextual_integrity_boundary",
+    "privacy_loss_route",
+    "missingness",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 8},
+    "source_status": {"type": "string", "enum": ["primary_source", "research_institution", "preprint", "grant_or_prize", "dataset_or_benchmark", "open_source_tool", "synthetic_fixture", "mixed"]},
+    "claim_status": {"type": "string", "enum": ["hypothesis", "schema", "evaluation_criterion", "prototype_requirement", "source_map", "collaborator_target", "opportunity_target"]},
+    "privacy_status": {"type": "string", "enum": ["public_safe_synthetic", "deidentified_research", "private_sensitive_blocked", "requires_local_only_storage", "requires_user_consent"]},
+    "subject_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject_type", "species_or_population", "site_or_dataset", "modality", "transfer_limit"],
+      "properties": {
+        "subject_type": {"type": "string", "enum": ["person", "animal", "cohort", "species", "dataset", "model", "assay", "site", "synthetic"]},
+        "species_or_population": {"type": "string", "minLength": 1},
+        "site_or_dataset": {"type": "string", "minLength": 1},
+        "modality": {"type": "string", "minLength": 1},
+        "transfer_limit": {"type": "string", "minLength": 1}
+      }
+    },
+    "consent_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_operations", "blocked_operations", "reuse_scope", "consent_evidence", "expiration_or_review_trigger"],
+      "properties": {
+        "allowed_operations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "blocked_operations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "reuse_scope": {"type": "string", "minLength": 1},
+        "consent_evidence": {"type": "string", "minLength": 1},
+        "expiration_or_review_trigger": {"type": "string", "minLength": 1}
+      }
+    },
+    "revision_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "prior_version", "evidence_cutoff", "revision_reason", "changed_fields", "unchanged_fields"],
+      "properties": {
+        "version": {"type": "string", "minLength": 1},
+        "prior_version": {"type": "string", "minLength": 1},
+        "evidence_cutoff": {"type": "string", "format": "date"},
+        "revision_reason": {"type": "string", "minLength": 1},
+        "changed_fields": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "unchanged_fields": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "deletion_or_redaction_route": {"type": "string", "minLength": 1},
+    "contextual_integrity_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_context", "destination_context", "allowed_transfer", "blocked_transfer"],
+      "properties": {
+        "source_context": {"type": "string", "minLength": 1},
+        "destination_context": {"type": "string", "minLength": 1},
+        "allowed_transfer": {"type": "string", "minLength": 1},
+        "blocked_transfer": {"type": "string", "minLength": 1}
+      }
+    },
+    "privacy_loss_route": {"type": "string", "minLength": 1},
+    "missingness": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "implementation_status": {"type": "string", "enum": ["planned", "implemented_schema", "implemented_test", "prototype_requirement", "needs_integration"]},
+    "evidence_strength": {"type": "string", "enum": ["weak", "moderate", "strong"]},
+    "falsification_route": {"type": "string", "minLength": 1},
+    "next_executable_action": {"type": "string", "minLength": 1}
+  }
+}
