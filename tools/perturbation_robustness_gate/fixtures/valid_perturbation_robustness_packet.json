@@ -1,0 +1,31 @@
+{
+  "packet_id": "perturbation_gate_valid_001",
+  "schema_version": "1.0.0",
+  "domain": "hypothesis_generation_system",
+  "hypothesis_or_task": "Evaluate whether a scientific-agent workflow can preserve a biomedical hypothesis decision when a decoy file is inserted into the analysis directory.",
+  "expected_output_artifact": "A validated hypothesis decision record with decoy handling notes and no promotion of decoy-derived evidence.",
+  "source_status": "synthetic_fixture",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "public_synthetic_only",
+  "perturbation_class": "decoy_file",
+  "perturbation_description": "A plausible but irrelevant file is added beside the real dataset to test whether the workflow overfits to distracting context.",
+  "robustness_result": "passed",
+  "claim_survived_perturbation": true,
+  "missingness": {
+    "known_missing": [
+      "No real biomedical corpus was used",
+      "No human or animal clinical data was used"
+    ],
+    "untested_conditions": [
+      "Corrupted input files",
+      "Prompt bloat",
+      "Platform shift across sequencing technologies"
+    ],
+    "missingness_affects_claim": true
+  },
+  "revision_reason": "Add a memory-promotion check for controlled perturbation behavior before treating workflow outputs as durable evidence.",
+  "implementation_status": "committed",
+  "evidence_strength": "moderate",
+  "falsification_route": "Retire or revise this gate if blinded curator review shows decoy testing does not reduce unsupported discovery-memory promotion.",
+  "next_executable_action": "Run the validator and add a CI step once repository workflow permissions are confirmed."
+}
