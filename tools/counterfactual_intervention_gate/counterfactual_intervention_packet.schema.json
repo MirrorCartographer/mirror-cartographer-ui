@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.dev/schemas/counterfactual_intervention_packet.schema.json",
+  "title": "Counterfactual Intervention Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "observed_association",
+    "counterfactual_intervention",
+    "expected_directional_change",
+    "temporal_propagation_path",
+    "immutable_or_nonactionable_variables",
+    "proxy_endpoint",
+    "durable_target_endpoint",
+    "missingness",
+    "confounding_risks",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 8},
+    "source_status": {"type": "string", "enum": ["public_primary", "public_preprint", "public_institutional", "synthetic_fixture", "mixed_public"]},
+    "claim_status": {"type": "string", "enum": ["hypothesis", "evaluation_criterion", "schema_requirement", "prototype_requirement", "collaborator_target", "opportunity_target"]},
+    "privacy_status": {"type": "string", "enum": ["public_safe", "synthetic_only", "contains_sensitive_data_blocked", "requires_local_only_processing"]},
+    "observed_association": {"type": "string", "minLength": 20},
+    "counterfactual_intervention": {"type": "string", "minLength": 20},
+    "expected_directional_change": {"type": "string", "minLength": 10},
+    "temporal_propagation_path": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 3}},
+    "immutable_or_nonactionable_variables": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+    "proxy_endpoint": {"type": "string", "minLength": 10},
+    "durable_target_endpoint": {"type": "string", "minLength": 10},
+    "missingness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["known_gaps", "unknown_gaps", "sampling_irregularity", "modality_gaps"],
+      "properties": {
+        "known_gaps": {"type": "array", "items": {"type": "string"}},
+        "unknown_gaps": {"type": "array", "items": {"type": "string"}},
+        "sampling_irregularity": {"type": "string", "minLength": 3},
+        "modality_gaps": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "confounding_risks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+    "revision_reason": {"type": "string", "minLength": 15},
+    "implementation_status": {"type": "string", "enum": ["proposed", "schema_only", "validator_tested", "integrated", "deprecated"]},
+    "evidence_strength": {"type": "string", "enum": ["low", "moderate", "high"]},
+    "falsification_route": {"type": "string", "minLength": 20},
+    "next_executable_action": {"type": "string", "minLength": 10}
+  }
+}
