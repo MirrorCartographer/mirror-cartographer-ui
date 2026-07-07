@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "record_type": "evidence_crosswalk",
+  "required_fields": [
+    "crosswalk_id",
+    "artifact_reference",
+    "evidence_items",
+    "claim_status",
+    "source_status",
+    "privacy_status",
+    "missingness",
+    "revision_reason",
+    "implementation_status",
+    "testability",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "allowed_artifact_types": [
+    "phenomenon",
+    "hypothesis",
+    "mechanism",
+    "prediction",
+    "evaluation",
+    "prototype"
+  ],
+  "allowed_evidence_types": [
+    "literature",
+    "benchmark",
+    "simulation",
+    "synthetic_fixture",
+    "external_dataset",
+    "negative_result",
+    "replication"
+  ],
+  "allowed_alignment": [
+    "supports",
+    "contradicts",
+    "constrains",
+    "insufficient",
+    "unrelated"
+  ],
+  "allowed_source_status": [
+    "synthetic",
+    "public_reference",
+    "derived_public_safe"
+  ],
+  "allowed_claim_status": [
+    "planning_fixture",
+    "evidence_mapping",
+    "test_fixture",
+    "non_claim"
+  ],
+  "allowed_privacy_status": [
+    "public"
+  ],
+  "scoring": {
+    "min_items": 1,
+    "require_contradiction_route": true,
+    "require_no_private_markers": true,
+    "require_each_item_has_limitation": true
+  }
+}
