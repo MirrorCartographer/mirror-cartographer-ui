@@ -1,0 +1,43 @@
+{
+  "packet_id": "bad",
+  "created_at": "2026-07-07T13:50:35Z",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "synthetic_only",
+  "missingness": [],
+  "revision_reason": "Too short.",
+  "implementation_status": "implemented",
+  "evidence_strength": "moderate",
+  "falsification_route": "Too short.",
+  "next_executable_action": "Run tests.",
+  "claim": {
+    "summary": "Claims are reusable.",
+    "domain": ["medical_ai"],
+    "intended_use": "Reuse.",
+    "not_medical_or_veterinary_advice": false
+  },
+  "workflow_trace": [
+    {
+      "step": 1,
+      "input": "sources",
+      "operation": "summarize",
+      "output": "claim",
+      "audit_note": "too little"
+    }
+  ],
+  "boundaries": {
+    "tool_boundary": "none",
+    "data_boundary": "none",
+    "model_boundary": "none",
+    "species_boundary": "none",
+    "temporal_boundary": "none",
+    "privacy_boundary": "none"
+  },
+  "human_checkpoint": {
+    "required": false,
+    "who": "AI",
+    "checkpoint_reason": "none"
+  },
+  "blocked_inferences": [],
+  "source_map": []
+}
