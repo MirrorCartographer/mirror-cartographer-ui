@@ -1,0 +1,39 @@
+{
+  "packet_id": "cf_intervention_gate_valid_001",
+  "source_status": "mixed_public",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "synthetic_only",
+  "observed_association": "A synthetic longitudinal packet reports that a proxy symptom score improves after a model-suggested change, but the durable outcome is unmeasured.",
+  "counterfactual_intervention": "Replace the association-only claim with a pre-registered perturbation: change one modifiable variable at a defined time point and test whether downstream endpoints move in the expected direction.",
+  "expected_directional_change": "Proxy score may improve first, but durable endpoint must improve later without worsening safety signals.",
+  "temporal_propagation_path": [
+    "intervention timestamp",
+    "short-term proxy response window",
+    "lagged durable endpoint window",
+    "safety and reversal check"
+  ],
+  "immutable_or_nonactionable_variables": [
+    "species",
+    "birth history",
+    "historical diagnosis label"
+  ],
+  "proxy_endpoint": "Short-window symptom or model score change.",
+  "durable_target_endpoint": "Sustained functional improvement measured after the defined lag window.",
+  "missingness": {
+    "known_gaps": ["no raw clinical record", "no direct assay readout"],
+    "unknown_gaps": ["unmeasured site effects", "unobserved adherence or behavior changes"],
+    "sampling_irregularity": "Synthetic fixture assumes irregular observations across time.",
+    "modality_gaps": ["wearable stream absent", "lab modality absent"]
+  },
+  "confounding_risks": [
+    "regression to the mean",
+    "seasonal context shift",
+    "observer expectancy",
+    "co-intervention"
+  ],
+  "revision_reason": "Adds explicit counterfactual sensitivity before association-only observations can be promoted into discovery memory.",
+  "implementation_status": "validator_tested",
+  "evidence_strength": "moderate",
+  "falsification_route": "Reject promotion if perturbing the claimed intervention variable does not change the endpoint direction or if immutable variables were treated as actionable.",
+  "next_executable_action": "Run the validator and then wire this gate into the discovery-memory promotion checklist."
+}
