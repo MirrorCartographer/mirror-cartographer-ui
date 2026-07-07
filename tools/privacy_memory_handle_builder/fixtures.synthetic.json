@@ -1,0 +1,73 @@
+[
+  {
+    "packet_id": "obs-001",
+    "source_status": "synthetic",
+    "claim_status": "observation_only",
+    "privacy_status": "public_safe",
+    "species_scope": "animal",
+    "domain": "mobility",
+    "phenomenon": "stiffness after travel",
+    "time_bucket": "week_2026_07_01",
+    "missingness": [],
+    "revision_reason": "synthetic ready fixture"
+  },
+  {
+    "packet_id": "obs-002",
+    "source_status": "synthetic",
+    "claim_status": "hypothesis_seed",
+    "privacy_status": "public_safe",
+    "species_scope": "human",
+    "domain": "autonomic_pattern",
+    "phenomenon": "upright symptom cluster after heat exposure",
+    "time_bucket": "month_2026_07",
+    "missingness": ["no clinician-reviewed vitals attached", "no differential diagnosis adjudication"],
+    "revision_reason": "synthetic hypothesis fixture"
+  },
+  {
+    "packet_id": "obs-003",
+    "source_status": "synthetic",
+    "claim_status": "observation_only",
+    "privacy_status": "private",
+    "species_scope": "animal",
+    "domain": "eye_health",
+    "phenomenon": "pressure flare noted in private raw note",
+    "time_bucket": "week_2026_07_01",
+    "missingness": [],
+    "revision_reason": "privacy block fixture"
+  },
+  {
+    "packet_id": "obs-004",
+    "source_status": "synthetic",
+    "claim_status": "medical_advice",
+    "privacy_status": "public_safe",
+    "species_scope": "animal",
+    "domain": "medication",
+    "phenomenon": "increase dose based on symptom improvement",
+    "time_bucket": "week_2026_07_01",
+    "missingness": [],
+    "revision_reason": "claim block fixture"
+  },
+  {
+    "packet_id": "obs-005",
+    "source_status": "synthetic",
+    "claim_status": "observation_only",
+    "privacy_status": "public_safe",
+    "species_scope": "animal",
+    "domain": "contact_trace",
+    "phenomenon": "emailed vet at care@example.com on 2026-07-07",
+    "time_bucket": "week_2026_07_01",
+    "missingness": [],
+    "revision_reason": "identifier residue fixture"
+  },
+  {
+    "packet_id": "obs-006",
+    "source_status": "synthetic",
+    "claim_status": "measurement_definition",
+    "privacy_status": "public_safe",
+    "species_scope": "animal",
+    "domain": "appetite",
+    "phenomenon": "meal completion percent",
+    "time_bucket": "rolling_week",
+    "revision_reason": "missingness field absent fixture"
+  }
+]
