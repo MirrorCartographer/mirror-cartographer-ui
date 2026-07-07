@@ -1,0 +1,68 @@
+[
+  {
+    "packet_id": "pkt_public_observation_001",
+    "source_status": "synthetic",
+    "claim_status": "observation",
+    "privacy_status": "public_safe",
+    "missingness": [],
+    "revision_reason": "synthetic fixture for safe retrieval reuse",
+    "retrieval_context": {
+      "requested_use": "hypothesis_generation",
+      "retrieved_at": "2026-07-07T00:00:00Z",
+      "source_date": "2026-07-01"
+    },
+    "content_summary": "Synthetic observation packet with explicit boundary labels."
+  },
+  {
+    "packet_id": "pkt_unknown_source_002",
+    "source_status": "unknown",
+    "claim_status": "literature_note",
+    "privacy_status": "public_safe",
+    "missingness": [],
+    "revision_reason": "tests review route for unknown source",
+    "retrieval_context": {
+      "requested_use": "medical_literature_organization",
+      "retrieved_at": "2026-07-07T00:00:00Z"
+    },
+    "content_summary": "Literature-like note without verifiable source status."
+  },
+  {
+    "packet_id": "pkt_private_identifier_003",
+    "source_status": "private_redacted",
+    "claim_status": "animal_care_note",
+    "privacy_status": "contains_identifier",
+    "missingness": ["species not independently verified"],
+    "revision_reason": "tests block route for private residue",
+    "retrieval_context": {
+      "requested_use": "collaborator_export",
+      "retrieved_at": "2026-07-07T00:00:00Z"
+    },
+    "content_summary": "Animal-care note that still contains identifying residue."
+  },
+  {
+    "packet_id": "pkt_cure_claim_004",
+    "source_status": "public",
+    "claim_status": "cure_claim",
+    "privacy_status": "public_safe",
+    "missingness": [],
+    "revision_reason": "tests block route for cure overclaim",
+    "retrieval_context": {
+      "requested_use": "claim_promotion",
+      "retrieved_at": "2026-07-07T00:00:00Z",
+      "source_date": "2026-06-20"
+    },
+    "content_summary": "Overclaim fixture that must not enter discovery memory as guidance."
+  },
+  {
+    "packet_id": "pkt_missingness_absent_005",
+    "source_status": "public",
+    "claim_status": "hypothesis",
+    "privacy_status": "public_safe",
+    "revision_reason": "tests review route for absent missingness",
+    "retrieval_context": {
+      "requested_use": "falsification",
+      "retrieved_at": "2026-07-07T00:00:00Z"
+    },
+    "content_summary": "Hypothesis fixture with no explicit missingness field."
+  }
+]
