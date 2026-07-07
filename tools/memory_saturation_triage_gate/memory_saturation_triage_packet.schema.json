@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/memory_saturation_triage_packet.schema.json",
+  "title": "Memory Saturation Triage Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "created_utc",
+    "source_status",
+    "claim_status",
+    "privacy_status",
+    "missingness",
+    "revision_reason",
+    "implementation_status",
+    "evidence_strength",
+    "candidate_memory_write",
+    "existing_memory_region",
+    "saturation_assessment",
+    "triage_decision",
+    "falsification_route",
+    "next_executable_action"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 8},
+    "created_utc": {"type": "string", "format": "date-time"},
+    "source_status": {
+      "type": "string",
+      "enum": ["public_source", "preprint", "benchmark", "clinical_research_institution", "dataset", "open_source_tool", "synthetic_implementation"]
+    },
+    "claim_status": {
+      "type": "string",
+      "enum": ["observation", "benchmark_result", "method_claim", "design_inference", "prototype_requirement", "unvalidated_hypothesis", "blocked_claim"]
+    },
+    "privacy_status": {
+      "type": "string",
+      "enum": ["public_safe", "synthetic_only", "redacted", "placeholderized", "local_only", "sensitive", "blocked"]
+    },
+    "missingness": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 3},
+      "minItems": 1
+    },
+    "revision_reason": {"type": "string", "minLength": 10},
+    "implementation_status": {
+      "type": "string",
+      "enum": ["proposed", "schema_only", "fixture_tested", "integrated", "deprecated"]
+    },
+    "evidence_strength": {
+      "type": "string",
+      "enum": ["weak", "moderate", "strong", "blocked"]
+    },
+    "candidate_memory_write": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["write_type", "summary", "provenance", "reuse_scope"],
+      "properties": {
+        "write_type": {"type": "string", "enum": ["new_fact", "updated_fact", "summary", "pointer", "hypothesis", "blocked_write"]},
+        "summary": {"type": "string", "minLength": 20},
+        "provenance": {"type": "string", "minLength": 10},
+        "reuse_scope": {"type": "string", "enum": ["single_session", "project_memory", "health_research_memory", "veterinary_research_memory", "scientific_discovery_memory", "do_not_reuse"]}
+      }
+    },
+    "existing_memory_region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region_name", "known_collisions", "age_or_staleness", "retrieval_boundary"],
+      "properties": {
+        "region_name": {"type": "string", "minLength": 3},
+        "known_collisions": {"type": "array", "items": {"type": "string"}},
+        "age_or_staleness": {"type": "string", "minLength": 3},
+        "retrieval_boundary": {"type": "string", "minLength": 10}
+      }
+    },
+    "saturation_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retrieval_ambiguity_risk",
+        "contradiction_load_risk",
+        "privacy_linkage_risk",
+        "reasoning_overfit_risk",
+        "noise_resilience_check",
+        "saturation_score",
+        "blocked_inferences"
+      ],
+      "properties": {
+        "retrieval_ambiguity_risk": {"type": "string", "enum": ["low", "medium", "high"]},
+        "contradiction_load_risk": {"type": "string", "enum": ["low", "medium", "high"]},
+        "privacy_linkage_risk": {"type": "string", "enum": ["low", "medium", "high"]},
+        "reasoning_overfit_risk": {"type": "string", "enum": ["low", "medium", "high"]},
+        "noise_resilience_check": {"type": "string", "minLength": 10},
+        "saturation_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "blocked_inferences": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }
+    },
+    "triage_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "storage_mode", "reason"],
+      "properties": {
+        "decision": {"type": "string", "enum": ["promote", "summarize_then_promote", "store_pointer_only", "redact_then_promote", "defer", "block"]},
+        "storage_mode": {"type": "string", "enum": ["verbatim", "summary", "typed_placeholder", "pointer", "local_only", "none"]},
+        "reason": {"type": "string", "minLength": 20}
+      }
+    },
+    "falsification_route": {"type": "string", "minLength": 20},
+    "next_executable_action": {"type": "string", "minLength": 10}
+  }
+}
