@@ -1,0 +1,25 @@
+{
+  "packet_id": "cf_bad",
+  "source_status": "mixed_public",
+  "claim_status": "hypothesis",
+  "privacy_status": "synthetic_only",
+  "observed_association": "A score improved.",
+  "counterfactual_intervention": "Do the helpful thing.",
+  "expected_directional_change": "Better.",
+  "temporal_propagation_path": ["now"],
+  "immutable_or_nonactionable_variables": [],
+  "proxy_endpoint": "score",
+  "durable_target_endpoint": "cure",
+  "missingness": {
+    "known_gaps": [],
+    "unknown_gaps": [],
+    "sampling_irregularity": "no",
+    "modality_gaps": []
+  },
+  "confounding_risks": [],
+  "revision_reason": "too vague",
+  "implementation_status": "validator_tested",
+  "evidence_strength": "high",
+  "falsification_route": "none",
+  "next_executable_action": "promote"
+}
