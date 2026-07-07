@@ -51,15 +51,15 @@
       "artifact_id": "prediction_contract_candidate",
       "rung": 4,
       "artifact_type": "falsifiable_prediction_contract",
-      "implementation_status": "schema_only",
+      "implementation_status": "prototype",
       "testability": "high",
       "has_schema": true,
-      "has_fixture": false,
-      "has_validator": false,
-      "has_tests": false,
+      "has_fixture": true,
+      "has_validator": true,
+      "has_tests": true,
       "has_acceptance_criteria": true,
       "has_falsification_route": true,
-      "missingness": ["fixture", "validator", "tests"]
+      "missingness": []
     },
     {
       "artifact_id": "benchmark_corpus_candidate",
