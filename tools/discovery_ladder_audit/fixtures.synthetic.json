@@ -121,15 +121,15 @@
       "artifact_id": "capability_router_candidate",
       "rung": 9,
       "artifact_type": "collaborator_opportunity_path",
-      "implementation_status": "schema_only",
-      "testability": "medium",
+      "implementation_status": "prototype",
+      "testability": "high",
       "has_schema": true,
-      "has_fixture": false,
-      "has_validator": false,
-      "has_tests": false,
+      "has_fixture": true,
+      "has_validator": true,
+      "has_tests": true,
       "has_acceptance_criteria": true,
       "has_falsification_route": true,
-      "missingness": ["capability_registry", "router", "tests"]
+      "missingness": ["ci_integration"]
     },
     {
       "artifact_id": "contradiction_pattern_registry_candidate",
