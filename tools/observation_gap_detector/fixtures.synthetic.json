@@ -1,0 +1,153 @@
+[
+  {
+    "name": "complete_public_safe_stream_passes",
+    "input": {
+      "stream_id": "synthetic-heart-rate-stream",
+      "domain": "synthetic_test",
+      "privacy_status": "public_safe",
+      "claim_status": "observation_only",
+      "measurement_definition_status": "defined",
+      "expected_interval_hours": 24,
+      "max_gap_multiplier": 2,
+      "observations": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "measure_id": "resting_rate_bucket",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        },
+        {
+          "timestamp": "2026-01-02T00:00:00Z",
+          "measure_id": "resting_rate_bucket",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        },
+        {
+          "timestamp": "2026-01-03T00:00:00Z",
+          "measure_id": "resting_rate_bucket",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        }
+      ]
+    },
+    "expected_route": "pass"
+  },
+  {
+    "name": "private_stream_blocks",
+    "input": {
+      "stream_id": "private-residue-stream",
+      "domain": "human_observation",
+      "privacy_status": "private",
+      "claim_status": "observation_only",
+      "measurement_definition_status": "defined",
+      "expected_interval_hours": 24,
+      "max_gap_multiplier": 2,
+      "observations": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "measure_id": "synthetic_measure",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        },
+        {
+          "timestamp": "2026-01-02T00:00:00Z",
+          "measure_id": "synthetic_measure",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        }
+      ]
+    },
+    "expected_route": "block"
+  },
+  {
+    "name": "large_gap_routes_to_review",
+    "input": {
+      "stream_id": "synthetic-gap-stream",
+      "domain": "synthetic_test",
+      "privacy_status": "public_safe",
+      "claim_status": "observation_only",
+      "measurement_definition_status": "defined",
+      "expected_interval_hours": 24,
+      "max_gap_multiplier": 2,
+      "observations": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "measure_id": "appetite_bucket",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        },
+        {
+          "timestamp": "2026-01-05T00:00:00Z",
+          "measure_id": "appetite_bucket",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        }
+      ]
+    },
+    "expected_route": "review"
+  },
+  {
+    "name": "missing_measure_definition_blocks",
+    "input": {
+      "stream_id": "undefined-measure-stream",
+      "domain": "animal_observation",
+      "privacy_status": "public_safe",
+      "claim_status": "observation_only",
+      "measurement_definition_status": "missing",
+      "expected_interval_hours": 24,
+      "max_gap_multiplier": 2,
+      "observations": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "measure_id": "general_better_worse",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        },
+        {
+          "timestamp": "2026-01-02T00:00:00Z",
+          "measure_id": "general_better_worse",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        }
+      ]
+    },
+    "expected_route": "block"
+  },
+  {
+    "name": "missing_missingness_array_routes_to_review",
+    "input": {
+      "stream_id": "missing-missingness-stream",
+      "domain": "synthetic_test",
+      "privacy_status": "public_safe",
+      "claim_status": "observation_only",
+      "measurement_definition_status": "defined",
+      "expected_interval_hours": 24,
+      "max_gap_multiplier": 2,
+      "observations": [
+        {
+          "timestamp": "2026-01-01T00:00:00Z",
+          "measure_id": "synthetic_measure",
+          "value_present": true,
+          "source_status": "synthetic"
+        },
+        {
+          "timestamp": "2026-01-02T00:00:00Z",
+          "measure_id": "synthetic_measure",
+          "value_present": true,
+          "source_status": "synthetic",
+          "missingness": []
+        }
+      ]
+    },
+    "expected_route": "review"
+  }
+]
