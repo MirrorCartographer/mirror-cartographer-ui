@@ -1,0 +1,101 @@
+{
+  "packet_id": "wrg-2026-07-07-001",
+  "created_at": "2026-07-07T13:50:35Z",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "synthetic_only",
+  "missingness": [
+    "No real patient, animal, or private longitudinal record is included.",
+    "Reviewer reconstruction performance has not yet been measured against ordinary notes."
+  ],
+  "revision_reason": "Add an explicit reconstruction layer so future users and agents can audit how a scientific claim moved from source evidence to reusable memory.",
+  "implementation_status": "implemented",
+  "evidence_strength": "moderate",
+  "falsification_route": "Reject or revise this gate if valid packets do not improve independent reviewer reconstruction, privacy boundary detection, or blocked-inference detection compared with unstructured research notes.",
+  "next_executable_action": "Run the validator and add three historical frontier-scout claims as reconstruction packets.",
+  "claim": {
+    "summary": "Scientific and biomedical memory claims should preserve a reconstructable workflow trace before they can be reused.",
+    "domain": [
+      "scientific_ai",
+      "medical_ai",
+      "longitudinal_health",
+      "animal_health",
+      "privacy_memory",
+      "hypothesis_generation"
+    ],
+    "intended_use": "Discovery-memory promotion gate for Mirror Cartographer research artifacts.",
+    "not_medical_or_veterinary_advice": true
+  },
+  "workflow_trace": [
+    {
+      "step": 1,
+      "input": "Frontier sources on co-scientists, biological agents, EHR agents, veterinary benchmarks, and agent memory privacy.",
+      "operation": "Extract common evaluation pressure across domains.",
+      "output": "Workflow-level auditability is a recurring requirement.",
+      "audit_note": "This step is source synthesis, not a biomedical efficacy claim."
+    },
+    {
+      "step": 2,
+      "input": "Prior MC gates emphasizing context, perturbation, privacy, species transfer, and evidence provenance.",
+      "operation": "Find the remaining failure mode across previous gates.",
+      "output": "Prior gates can still leave route reconstruction incomplete.",
+      "audit_note": "This motivates a gate that checks traceability across all earlier dimensions."
+    },
+    {
+      "step": 3,
+      "input": "Synthetic JSON packet containing claim, source map, workflow trace, boundaries, missingness, and falsification route.",
+      "operation": "Validate packet completeness with a standard-library Python CLI.",
+      "output": "A valid packet can be checked before memory promotion.",
+      "audit_note": "Passing validation does not prove scientific truth; it proves reconstructability fields are present."
+    }
+  ],
+  "boundaries": {
+    "tool_boundary": "The gate validates metadata structure and does not execute biomedical analysis tools.",
+    "data_boundary": "Uses public source metadata and synthetic fixtures only.",
+    "model_boundary": "Does not assert that any one model can autonomously discover cures.",
+    "species_boundary": "Human, animal, and cross-species claims must remain separated unless bridge evidence is declared.",
+    "temporal_boundary": "Source interpretation is limited to the July 2026 scan window and must be revised as benchmarks evolve.",
+    "privacy_boundary": "No personal health or veterinary record may be promoted without explicit consent, reuse scope, and deletion route."
+  },
+  "human_checkpoint": {
+    "required": true,
+    "who": "research curator or domain reviewer",
+    "checkpoint_reason": "A human reviewer must inspect whether the workflow route supports the intended reuse and whether blocked inferences are sufficient."
+  },
+  "blocked_inferences": [
+    "Benchmark success does not imply clinical efficacy.",
+    "Synthetic longitudinal coherence does not imply real patient validity.",
+    "Veterinary benchmark infrastructure does not imply cross-species transfer.",
+    "Persistent memory utility does not imply consent for secondary use."
+  ],
+  "source_map": [
+    {
+      "title": "Accelerating scientific discovery with Co-Scientist",
+      "url": "https://www.nature.com/articles/s41586-026-10644-y",
+      "status": "peer_reviewed",
+      "claim_supported": "Tool-using scientific AI systems are being framed around grounded hypothesis generation and scientist feedback.",
+      "caveat": "Does not validate this local schema directly."
+    },
+    {
+      "title": "ESL-Bench: An Event-Driven Synthetic Longitudinal Health Agent Benchmark",
+      "url": "https://arxiv.org/html/2604.02834v1",
+      "status": "preprint",
+      "claim_supported": "Longitudinal agent benchmarks can make temporal trajectory structure explicit and verifiable.",
+      "caveat": "Synthetic benchmark; not evidence of real-world clinical performance."
+    },
+    {
+      "title": "MedAgentBench",
+      "url": "https://stanfordmlgroup.github.io/projects/medagentbench/",
+      "status": "benchmark",
+      "claim_supported": "Medical-record agents require environment interaction and action-level evaluation beyond static QA.",
+      "caveat": "Benchmark scope is medical records, not direct treatment advice."
+    },
+    {
+      "title": "From Data to Animal Health: Building Benchmarks for AI-Driven Veterinary Innovation",
+      "url": "https://www.vet.cornell.edu/research/awards/data-animal-health-building-benchmarks-ai-driven-veterinary-innovation",
+      "status": "institutional",
+      "claim_supported": "Veterinary AI needs benchmark and data-infrastructure development.",
+      "caveat": "Institutional project description, not a completed benchmark result."
+    }
+  ]
+}
