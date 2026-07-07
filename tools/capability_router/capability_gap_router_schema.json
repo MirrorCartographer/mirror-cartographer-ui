@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "record_type": "capability_gap_router_schema",
+  "description": "Public-safe schema for routing discovery artifacts to required external capabilities without naming private people, locations, or personal contexts.",
+  "required_fields": [
+    "router_id",
+    "artifact_reference",
+    "required_capabilities",
+    "routing_constraints",
+    "success_criteria",
+    "metadata"
+  ],
+  "allowed_artifact_types": [
+    "phenomenon",
+    "hypothesis",
+    "mechanism",
+    "prediction",
+    "dataset",
+    "evaluation",
+    "prototype"
+  ],
+  "allowed_capability_categories": [
+    "measurement",
+    "simulation",
+    "analysis",
+    "replication",
+    "benchmark",
+    "implementation"
+  ],
+  "allowed_priorities": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ],
+  "allowed_privacy_status": [
+    "public"
+  ],
+  "acceptance_criteria": [
+    "Every router record must name at least one required capability.",
+    "Every capability must include a unique capability_id, category, priority, and reason.",
+    "Every success criterion must be public-safe and independently checkable.",
+    "The router must reject non-public metadata.",
+    "Routing output must be deterministic for identical inputs."
+  ],
+  "falsification_route": "The schema or router is invalid if records with missing capabilities, duplicate capability identifiers, undefined categories, absent success criteria, or private metadata pass validation.",
+  "metadata": {
+    "source_status": "synthetic",
+    "claim_status": "infrastructure_schema",
+    "privacy_status": "public",
+    "implementation_status": "schema"
+  }
+}
