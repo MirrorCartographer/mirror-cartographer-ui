@@ -37,15 +37,15 @@
       "artifact_id": "mechanism_graph_candidate",
       "rung": 3,
       "artifact_type": "mechanistic_model_graph",
-      "implementation_status": "schema_only",
-      "testability": "medium",
+      "implementation_status": "prototype",
+      "testability": "high",
       "has_schema": true,
-      "has_fixture": false,
-      "has_validator": false,
-      "has_tests": false,
+      "has_fixture": true,
+      "has_validator": true,
+      "has_tests": true,
       "has_acceptance_criteria": true,
       "has_falsification_route": true,
-      "missingness": ["fixture", "validator", "tests"]
+      "missingness": []
     },
     {
       "artifact_id": "prediction_contract_candidate",
