@@ -1,0 +1,33 @@
+{
+  "packet_id": "crlg-invalid-001",
+  "source_status": "mixed",
+  "claim_status": "evaluation_criterion",
+  "privacy_status": "public_safe_synthetic",
+  "subject_boundary": {
+    "subject_type": "synthetic",
+    "species_or_population": "synthetic fixture",
+    "site_or_dataset": "none",
+    "modality": "text metadata",
+    "transfer_limit": "testing only"
+  },
+  "consent_state": {
+    "allowed_operations": ["validate_schema"],
+    "blocked_operations": ["private_memory_write"],
+    "reuse_scope": "testing",
+    "consent_evidence": "synthetic",
+    "expiration_or_review_trigger": "before live integration"
+  },
+  "deletion_or_redaction_route": "Delete the fixture file.",
+  "contextual_integrity_boundary": {
+    "source_context": "synthetic test",
+    "destination_context": "gate validator",
+    "allowed_transfer": "negative testing",
+    "blocked_transfer": "real data reuse"
+  },
+  "privacy_loss_route": "Not assessed in this invalid packet.",
+  "missingness": ["revision lineage intentionally missing"],
+  "implementation_status": "implemented_test",
+  "evidence_strength": "weak",
+  "falsification_route": "This packet should fail validation.",
+  "next_executable_action": "Run the regression test and confirm this fixture fails."
+}
