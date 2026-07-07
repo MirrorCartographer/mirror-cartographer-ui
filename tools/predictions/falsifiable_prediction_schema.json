@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "record_type": "falsifiable_prediction_contract",
+  "required_fields": [
+    "prediction_id",
+    "derived_from",
+    "experimental_condition",
+    "observable_metric",
+    "predicted_outcome",
+    "alternative_outcome",
+    "falsification_condition",
+    "minimum_required_data",
+    "metadata"
+  ],
+  "allowed_artifact_sources": ["mechanism", "interaction_mechanism_graph"],
+  "allowed_measurement_types": ["categorical", "continuous", "count", "boolean"],
+  "metadata_requirements": {
+    "source_status": ["synthetic", "public_literature", "public_benchmark"],
+    "claim_status": ["prediction_fixture", "infrastructure_test", "planning_artifact"],
+    "privacy_status": ["public"]
+  },
+  "validation_rules": [
+    "prediction_id must be unique within a fixture set",
+    "derived_from must reference an existing validated mechanism identifier",
+    "observable_metric.name must be non-empty",
+    "observable_metric.measurement_type must use an allowed value",
+    "predicted_outcome and alternative_outcome must be non-empty and different",
+    "falsification_condition must specify a failure criterion before evaluation",
+    "minimum_required_data.replicates must be an integer greater than or equal to 1",
+    "minimum_required_data.controls_required must be boolean",
+    "metadata.privacy_status must be public",
+    "private markers and raw transcript markers are rejected"
+  ],
+  "acceptance_criteria": [
+    "valid fixtures pass deterministically",
+    "missing observable metrics fail",
+    "missing falsification conditions fail",
+    "unresolved mechanism references fail",
+    "duplicate prediction identifiers fail",
+    "private metadata fails",
+    "identical predicted and alternative outcomes fail"
+  ],
+  "falsification_route": "The validator is invalid if it accepts predictions that cannot fail, predictions without measurable observables, predictions with unresolved mechanism references, or non-public prediction records."
+}
