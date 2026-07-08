@@ -20,6 +20,13 @@ const ANSWER = [5, 3, 2, 0, 2, 3, 1, -1, 0, 2, 5, 3, 2, 0, -2, 0];
 const BASS_WALK = [0, 0, 2, 4, 5, 5, 4, 2, 7, 7, 6, 5, 3, 2, 1, 0];
 const FORM = ['seed', 'seed', 'lift', 'answer', 'storm', 'answer', 'lift', 'home'];
 const VARIANTS = [0, 0, 1, 0, -1, 0, 2, 0];
+const SECTION_ARCS = {
+  seed: [0.72, 0.78, 0.86, 0.82],
+  lift: [0.9, 0.98, 1.08, 1.14],
+  answer: [0.82, 0.76, 0.86, 0.72],
+  storm: [1.05, 1.18, 0.96, 1.24],
+  home: [0.76, 0.68, 0.6, 0.5],
+};
 const BREATH_MASKS = {
   cloud: [0, 0, 0, 1, 0, 0, 1, 0],
   rain: [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
@@ -103,6 +110,12 @@ function phraseVariant(phrase, inPhrase, section) {
   if (section === 'storm') return inPhrase % 4 === 3 ? 3 : VARIANTS[(phrase + inPhrase) % VARIANTS.length];
   if (section === 'answer') return -VARIANTS[(phrase * 2 + inPhrase) % VARIANTS.length];
   return VARIANTS[(phrase + Math.floor(inPhrase / 2)) % VARIANTS.length];
+}
+
+function sectionEnergy(section, inPhrase, pulse) {
+  const arc = SECTION_ARCS[section] || SECTION_ARCS.seed;
+  const slot = Math.min(arc.length - 1, Math.floor(inPhrase / 4));
+  return clamp((arc[slot] ?? 0.8) + clamp(pulse, 0, 1) * 0.08, 0.48, 1.28);
 }
 
 function shouldRest(section, inPhrase, accent) {
@@ -332,6 +345,7 @@ export function createSkyMusic() {
     const chorus = section === 'lift' || section === 'storm';
     const cadence = section === 'home';
     const groove = grooveFor(currentState, localStep);
+    const energy = sectionEnergy(section, inPhrase, currentPulse);
     const resting = shouldRest(section, inPhrase, groove.accent) || weatherBreath(currentState, localStep, section, inPhrase);
     const slotSeconds = beat * 0.5 * groove.duration;
     const strong = groove.accent >= 0.82;
@@ -346,14 +360,14 @@ export function createSkyMusic() {
     const sectionChanged = inPhrase === 0 && section !== previousSection;
 
     delay.delayTime.setTargetAtTime(wet ? beat * 0.75 : beat * 0.5, when, 0.05);
-    feedback.gain.setTargetAtTime(wet || chorus ? 0.28 : 0.14, when, 0.08);
-    filter.frequency.setTargetAtTime(brightness || chorus ? 4300 : 2300, when, 0.12);
+    feedback.gain.setTargetAtTime((wet || chorus ? 0.28 : 0.14) * clamp(energy, 0.72, 1.16), when, 0.08);
+    filter.frequency.setTargetAtTime((brightness || chorus ? 4300 : 2300) * clamp(energy, 0.82, 1.12), when, 0.12);
 
     if (sectionChanged) {
       const bridge = scaleNote(root, section === 'home' ? 0 : motifDegree - 2, 2);
       playOsc(ctx, delay, when + beat * 0.08, midiToHz(bridge), beat * 0.44, {
         type: 'triangle',
-        gain: 0.007,
+        gain: 0.007 * energy,
         filter: 4000,
       });
       previousSection = section;
@@ -363,14 +377,14 @@ export function createSkyMusic() {
       const note = homeCadence ? scaleNote(root, Math.max(0, 5 - (inPhrase - 12) * 2), 1) : scaleNote(root, motifDegree, 1 + (step % 8 === 6 || lift ? 1 : 0));
       playOsc(ctx, delay, when, midiToHz(note), slotSeconds * (lift ? 1.55 : 1.3), {
         type: brightness || lift ? 'triangle' : 'sine',
-        gain: (0.012 + currentPulse * 0.008 + (lift ? 0.004 : 0)) * groove.accent,
+        gain: (0.012 + currentPulse * 0.008 + (lift ? 0.004 : 0)) * groove.accent * energy,
         filter: brightness || lift ? 3600 : 2100,
       });
     } else if (!resting && ghost && !homeCadence && step % 4 === 0) {
       const grace = scaleNote(root, motifDegree - 2, 1);
       playOsc(ctx, delay, when + slotSeconds * 0.18, midiToHz(grace), slotSeconds * 0.54, {
         type: 'sine',
-        gain: 0.0048 * groove.accent,
+        gain: 0.0048 * groove.accent * energy,
         filter: 1700,
       });
     }
@@ -379,7 +393,7 @@ export function createSkyMusic() {
       const counter = scaleNote(root, ANSWER[(15 - inPhrase + ANSWER.length) % ANSWER.length] - 3 + memoryTurn(phraseMemory, 15 - inPhrase, section), 1);
       playOsc(ctx, delay, when + slotSeconds * 0.36, midiToHz(counter), slotSeconds * 1.05, {
         type: 'sine',
-        gain: (0.007 + currentPulse * 0.0025) * groove.accent,
+        gain: (0.007 + currentPulse * 0.0025) * groove.accent * energy,
         filter: 1800,
       });
     }
@@ -388,7 +402,7 @@ export function createSkyMusic() {
       const cp = counterpointDegree(currentState, motifDegree, phrase, inPhrase, phraseMemory, section);
       playOsc(ctx, delay, when + slotSeconds * 0.42, midiToHz(scaleNote(root, cp, lift ? 2 : 1)), slotSeconds * 0.82, {
         type: brightness ? 'triangle' : 'sine',
-        gain: (0.0048 + currentPulse * 0.0016) * groove.accent,
+        gain: (0.0048 + currentPulse * 0.0016) * groove.accent * energy,
         attack: 0.028,
         filter: brightness ? 3200 : 1900,
       });
@@ -399,7 +413,7 @@ export function createSkyMusic() {
       const bass = chordRoot - 24 + (lift ? 12 : 0) + (homeCadence ? 0 : walk);
       playOsc(ctx, master, when, midiToHz(bass), beat * (homeCadence ? 1.8 : 1.22), {
         type: 'sine',
-        gain: 0.026 + (lift ? 0.003 : 0),
+        gain: (0.026 + (lift ? 0.003 : 0)) * energy,
         attack: 0.025,
         filter: lift ? 700 : 540,
       });
@@ -413,7 +427,7 @@ export function createSkyMusic() {
         const entrance = voice * 0.012 + (sectionChanged ? beat * 0.04 * voice : 0);
         playOsc(ctx, delay, when + entrance, midiToHz(note), release, {
           type: 'triangle',
-          gain: 0.0052 + (lift ? 0.0015 : 0),
+          gain: (0.0052 + (lift ? 0.0015 : 0)) * energy,
           attack: 0.09 + voice * 0.018,
           filter: 1450 + voice * 390 + (lift ? 600 : 0),
         });
@@ -424,16 +438,16 @@ export function createSkyMusic() {
       const sparkle = scaleNote(root, motifDegree + 7, 2);
       playOsc(ctx, delay, when + slotSeconds * 0.24, midiToHz(sparkle), slotSeconds * 0.62, {
         type: 'triangle',
-        gain: 0.006,
+        gain: 0.006 * energy,
         filter: 5000,
       });
     }
 
     if (currentState === 'rain' && medium && step % 3 === 0) {
-      playNoise(ctx, noise, delay, when, slotSeconds * 0.62, { frequency: 1750 + (step % 5) * 240, gain: 0.0048, q: 7 });
+      playNoise(ctx, noise, delay, when, slotSeconds * 0.62, { frequency: 1750 + (step % 5) * 240, gain: 0.0048 * energy, q: 7 });
     }
     if ((currentState === 'lightning' || section === 'storm') && strong && step % 7 === 0) {
-      playOsc(ctx, delay, when, midiToHz(root + 31), slotSeconds * 0.42, { type: 'sawtooth', gain: 0.0065, filter: 4600, slide: 0.72 });
+      playOsc(ctx, delay, when, midiToHz(root + 31), slotSeconds * 0.42, { type: 'sawtooth', gain: 0.0065 * energy, filter: 4600, slide: 0.72 });
     }
 
     step += 1;
