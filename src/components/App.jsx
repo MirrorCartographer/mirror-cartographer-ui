@@ -156,6 +156,55 @@ function drawGlyph(ctx, env) {
   ctx.restore();
 }
 
+function drawVisualScore(ctx, env) {
+  const { width: w, height: h, time: t, active, state, pulse, rhythm, budget } = env;
+  if (!active.length) return;
+  const score = active.slice(-(budget.mobile ? 6 : 9));
+  const baseY = h * 0.78;
+  const span = Math.min(w * 0.72, 420);
+  const startX = (w - span) * 0.5;
+  const stepX = span / Math.max(1, score.length - 1);
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = colorFor(state, 0.12 + pulse * 0.18);
+  ctx.lineWidth = 1;
+  for (let line = -1; line <= 1; line += 1) {
+    ctx.beginPath();
+    ctx.moveTo(startX - 8, baseY + line * 12);
+    ctx.lineTo(startX + span + 8, baseY + line * 12);
+    ctx.stroke();
+  }
+  score.forEach((mark, index) => {
+    const age = Math.min(1, (Date.now() - mark.time) / 7200);
+    const life = 1 - age;
+    const phrase = Math.sin(mark.x * 5 + mark.y * 7 + mark.spin);
+    const x = startX + index * stepX;
+    const y = baseY - phrase * 30 - rhythm * 1.2;
+    const size = 3.5 + life * 6 + pulse * 5;
+    ctx.globalAlpha = 0.16 + life * 0.45;
+    ctx.strokeStyle = colorFor(mark.kind, 0.36 + life * 0.36);
+    ctx.fillStyle = colorFor(mark.kind, 0.05 + life * 0.1);
+    ctx.shadowColor = colorFor(mark.kind, 0.9);
+    ctx.shadowBlur = 8 + life * 14;
+    ctx.beginPath();
+    ctx.ellipse(x, y, size * 1.45, size, Math.sin(t * 0.012 + index) * 0.35, 0, TAU);
+    ctx.fill();
+    ctx.stroke();
+    if (index > 0) {
+      const prev = score[index - 1];
+      const prevPhrase = Math.sin(prev.x * 5 + prev.y * 7 + prev.spin);
+      ctx.globalAlpha = 0.1 + life * 0.24;
+      ctx.beginPath();
+      ctx.moveTo(x - stepX, baseY - prevPhrase * 30 - rhythm * 1.2);
+      ctx.quadraticCurveTo(x - stepX * 0.5, baseY - (prevPhrase + phrase) * 15 - Math.sin(t * 0.02) * 8, x, y);
+      ctx.stroke();
+    }
+  });
+  ctx.restore();
+}
+
 function useWordlessSky(state, pulse, marks, rhythm) {
   const ref = useRef(null);
 
@@ -283,6 +332,7 @@ function useWordlessSky(state, pulse, marks, rhythm) {
         ctx.restore();
       }
 
+      drawVisualScore(ctx, env);
       drawHeart(ctx, env, spec);
       drawGlyph(ctx, env);
       raf = requestAnimationFrame(loop);
