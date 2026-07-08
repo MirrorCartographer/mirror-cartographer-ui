@@ -255,6 +255,69 @@ function drawInductionArcs(ctx, active, env) {
   ctx.restore();
 }
 
+function drawPressureWakeRibbons(ctx, active, env) {
+  const { width, height, time, pulse, rhythm, state, budget } = env;
+  const ribbonCount = Math.min(active.length - 1, budget.mobile ? 1 : 3);
+  if (ribbonCount < 1 || pulse < 0.18) return;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let i = 0; i < ribbonCount; i += 1) {
+    const head = active[active.length - 1 - i];
+    const tail = active[active.length - 2 - i];
+    if (!head || !tail) continue;
+
+    const life = Math.max(0, 1 - Math.max(ageOf(head, 6200), ageOf(tail, 6200)));
+    if (life < 0.06) continue;
+
+    const hx = head.x * width;
+    const hy = head.y * height;
+    const tx = tail.x * width;
+    const ty = tail.y * height;
+    const dx = hx - tx;
+    const dy = hy - ty;
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const nx = -dy / length;
+    const ny = dx / length;
+    const kind = head.kind || tail.kind || state;
+    const mood = wellMood(kind);
+    const stripCount = budget.mobile ? 2 : 4;
+    const nodeCount = budget.mobile ? 7 : 11;
+    const pressure = clamp((pulse * 0.7 + rhythm * 0.055) * life, 0.05, budget.mobile ? 0.28 : 0.46);
+    const span = Math.min(width, height) * (0.018 + mood.braid * 0.012) * life;
+
+    ctx.strokeStyle = colorFor(kind, pressure);
+    ctx.shadowColor = colorFor(kind, 0.72);
+    ctx.shadowBlur = budget.mobile ? 5 : 13;
+
+    for (let strip = 0; strip < stripCount; strip += 1) {
+      const lane = strip - (stripCount - 1) / 2;
+      const fold = Math.sin(time * 0.031 + strip * 1.9 + i * 0.6) * span * 0.38;
+      ctx.globalAlpha = pressure * (0.5 - Math.abs(lane) * 0.08);
+      ctx.lineWidth = clamp(0.42 + pulse * 0.75 - Math.abs(lane) * 0.09, 0.34, budget.mobile ? 1.05 : 1.55);
+      ctx.beginPath();
+
+      for (let node = 0; node < nodeCount; node += 1) {
+        const q = node / Math.max(1, nodeCount - 1);
+        const taper = Math.sin(q * Math.PI);
+        const lag = (1 - q) * length * 0.07 * mood.pull;
+        const curl = Math.sin(time * 0.04 + q * 8.5 + lane * 1.2 + rhythm * 0.18) * taper * span;
+        const press = Math.sin(q * TAU + time * 0.026 + head.spin) * taper * (3 + pulse * 9) * life;
+        const x = tx + dx * q - (dx / length) * lag + nx * (lane * span + curl + fold);
+        const y = ty + dy * q - (dy / length) * lag + ny * (lane * span + curl + fold + press);
+        if (node === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
 export function drawGestureWells(ctx, wells, marks, env) {
   const { width, height, time, pulse, rhythm, state, budget } = env;
   const active = marks.slice(-(budget.gestureWellMarks || 7));
@@ -333,4 +396,5 @@ export function drawGestureWells(ctx, wells, marks, env) {
   ctx.restore();
   drawVerletTensionWeb(ctx, active, env);
   drawInductionArcs(ctx, active, env);
+  drawPressureWakeRibbons(ctx, active, env);
 }
