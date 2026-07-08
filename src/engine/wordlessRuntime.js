@@ -1,6 +1,15 @@
-import { AUDIO_POLICY, CONTINUITY_POLICY, INPUT_POLICY, PERFORMANCE_BUDGET, responsiveBudget, skyState } from './skyState';
+import {
+  AUDIO_POLICY,
+  CONTINUITY_POLICY,
+  INPUT_POLICY,
+  PERFORMANCE_BUDGET,
+  evolveWeatherGesture,
+  normalizePoint,
+  responsiveBudget,
+  skyState,
+} from './skyState';
 
-export const WORDLESS_RUNTIME_VERSION = 2;
+export const WORDLESS_RUNTIME_VERSION = 3;
 
 export const EVENT_ROUTES = Object.freeze({
   pointer: 'gesture:intent',
@@ -23,17 +32,21 @@ export const LAYER_REGISTRY = deepFreeze([
   { id: 'ambientGlow', phase: 'field', cost: 0.35, input: 'state', fallback: 'dimGlow' },
   { id: 'reactionVeil', phase: 'atmosphere', cost: 1.15, input: 'gesture-memory', fallback: 'skip' },
   { id: 'pressureWake', phase: 'touchMemory', cost: 1.2, input: 'gesture-memory', budgetKey: 'pressureWakePaths', fallback: 'skip' },
+  { id: 'gestureWells', phase: 'touchMemory', cost: 1.18, input: 'gesture-memory', budgetKey: 'gestureWellParticles', fallback: 'fewerOrbits' },
   { id: 'trailMemory', phase: 'touchMemory', cost: 0.95, input: 'gesture-memory', budgetKey: 'trailMemorySparks', fallback: 'skip' },
   { id: 'windRibbons', phase: 'atmosphere', cost: 0.72, input: 'state-rhythm', budgetKey: 'ribbons', fallback: 'thinRibbon' },
   { id: 'stars', phase: 'atmosphere', cost: 0.38, input: 'state', budgetKey: 'stars', fallback: 'fewerPoints' },
   { id: 'clouds', phase: 'atmosphere', cost: 0.62, input: 'state', budgetKey: 'clouds', fallback: 'fewerClouds' },
+  { id: 'nacreVeil', phase: 'atmosphere', cost: 0.86, input: 'state-gesture', budgetKey: 'nacreBands', fallback: 'thinVeil' },
   { id: 'pollen', phase: 'atmosphere', cost: 0.45, input: 'state-rhythm', budgetKey: 'pollen', fallback: 'skip' },
   { id: 'sprites', phase: 'organisms', cost: 0.7, input: 'state-rhythm', budgetKey: 'sprites', fallback: 'fewerSprites' },
   { id: 'creatureEcology', phase: 'organisms', cost: 1.05, input: 'gesture-memory', budgetKey: 'creatures', fallback: 'reducedFlock' },
+  { id: 'cloudBeasts', phase: 'organisms', cost: 1.08, input: 'gesture-memory', budgetKey: 'cloudBeasts', fallback: 'reducedHerd' },
   { id: 'stormBranches', phase: 'organisms', cost: 1.22, input: 'gesture-memory', budgetKey: 'stormBranches', fallback: 'shortBranches' },
   { id: 'elasticTethers', phase: 'signal', cost: 0.5, input: 'latest-gesture', fallback: 'skip' },
   { id: 'skyFilaments', phase: 'signal', cost: 0.82, input: 'gesture-memory', fallback: 'shortFilaments' },
   { id: 'gestureMarks', phase: 'signal', cost: 0.32, input: 'latest-gesture', budgetKey: 'renderedMarks', fallback: 'fewerMarks' },
+  { id: 'rain', phase: 'signal', cost: 0.78, input: 'state-pulse', budgetKey: 'rainDrops', fallback: 'lighterRain' },
   { id: 'lightning', phase: 'signal', cost: 0.58, input: 'state-pulse', fallback: 'flashOnly' },
   { id: 'centralPulse', phase: 'signal', cost: 0.28, input: 'state-pulse', fallback: 'smallPulse' },
 ]);
@@ -105,8 +118,42 @@ export function budgetedLayer(items = [], budget, key, fallback = 0) {
   return items.slice(0, Math.max(0, count));
 }
 
-export function publicContinuitySnapshot({ state = 'cloud', pulse = 0, rhythm = 0, marks = [], budget = {} } = {}) {
+export function routePointerGesture({ event, now = Date.now(), lastTouch = 0, rhythm = 0, pulse = 0, state = 'cloud', marks = [] } = {}) {
+  const point = event ? normalizePoint(event) : INPUT_POLICY.defaultPoint;
+  const gesture = evolveWeatherGesture({ now, lastTouch, rhythm, pulse, state, point });
+  const prev = visibleMarks(marks, 1)[0] || null;
+  const mark = Object.freeze({ ...point, prev, time: now, spin: seededSpin(now, point), kind: gesture.kind });
+  return Object.freeze({
+    route: EVENT_ROUTES.pointer,
+    point,
+    gesture,
+    mark,
+    transition: transitionPacket({ from: state, to: gesture.kind, point, pulse: Math.min(1, pulse + gesture.pulseBoost), rhythm: gesture.rhythm }),
+  });
+}
+
+export function createTransitionLedger(limit = 18) {
+  const packets = [];
+  return Object.freeze({
+    push(packet) {
+      if (!packet || packet.route !== EVENT_ROUTES.pointer) return Object.freeze([...packets]);
+      packets.push(redactTransitionPacket(packet));
+      while (packets.length > limit) packets.shift();
+      return Object.freeze([...packets]);
+    },
+    snapshot() {
+      return Object.freeze([...packets]);
+    },
+    clear() {
+      packets.length = 0;
+      return Object.freeze([]);
+    },
+  });
+}
+
+export function publicContinuitySnapshot({ state = 'cloud', pulse = 0, rhythm = 0, marks = [], budget = {}, transitions = [] } = {}) {
   const latest = visibleMarks(marks, 1)[0];
+  const lastTransition = Array.isArray(transitions) ? transitions.at(-1) : null;
   return Object.freeze({
     policy: CONTINUITY_POLICY.localMemory,
     publicSafe: CONTINUITY_POLICY.publicSafeStateOnly,
@@ -114,6 +161,7 @@ export function publicContinuitySnapshot({ state = 'cloud', pulse = 0, rhythm = 
     pulseBand: band(clamp01(pulse), [0.33, 0.66]),
     rhythmBand: band(rhythm / Math.max(1, PERFORMANCE_BUDGET.maxRhythm), [0.33, 0.66]),
     gestureKind: latest?.kind || state,
+    transitionIntent: lastTransition?.intent || 'none',
     viewport: budget.mobile ? 'small' : budget.short ? 'low' : 'open',
   });
 }
@@ -137,6 +185,22 @@ export function reversibleExperimentToken({ name = 'unnamed', enabled = false, w
     weight: clamp(Number(weight), 0, 1),
     expires,
     publicSafe: true,
+    storesGestureData: false,
+  });
+}
+
+export function auditRuntimeSurface(context = createRuntimeContext()) {
+  const registry = createSceneRegistry();
+  const selectedIds = new Set((context.layers || []).map((layer) => layer.id));
+  const hiddenLayers = registry.entries.filter((layer) => !selectedIds.has(layer.id)).map((layer) => layer.id);
+  const heavyFallbacks = (context.layers || []).filter((layer) => !layer.drawable).map((layer) => layer.fallback).filter(Boolean);
+  return Object.freeze({
+    version: WORDLESS_RUNTIME_VERSION,
+    layerCount: registry.entries.length,
+    drawableCount: (context.layers || []).filter((layer) => layer.drawable).length,
+    hiddenLayers: Object.freeze(hiddenLayers),
+    fallbacks: Object.freeze(heavyFallbacks),
+    publicSafe: context.memory?.publicSafe === true && context.audio?.autoplay === false,
     storesGestureData: false,
   });
 }
@@ -190,6 +254,22 @@ function inferIntent(point, pulse, rhythm) {
   if (point.x < 0.24) return 'gather';
   if (point.x > 0.76) return 'open';
   return 'turn';
+}
+
+function seededSpin(now, point) {
+  const seed = Math.sin(now * 0.001 + point.x * 12.9898 + point.y * 78.233) * 43758.5453;
+  return (seed - Math.floor(seed)) * Math.PI * 2;
+}
+
+function redactTransitionPacket(packet) {
+  return Object.freeze({
+    from: packet.from,
+    to: packet.to,
+    route: packet.route,
+    intent: packet.intent,
+    energy: packet.energy,
+    cadence: packet.cadence,
+  });
 }
 
 function normalizeSoftPoint(point) {
