@@ -1,5 +1,6 @@
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
+const clamp = (value, min, max) => Math.min(max, Math.max(min, Number.isFinite(value) ? value : min));
 const lerp = (a, b, t) => a + (b - a) * t;
 const wave = (time, speed, phase = 0) => Math.sin(time * speed + phase);
 
@@ -13,12 +14,24 @@ function colorFor(kind, alpha = 1) {
   return `rgba(255,226,191,${alpha})`;
 }
 
+function makeRope(ropeIndex, nodeCount = 9) {
+  return {
+    rest: 0.05 + ropeIndex * 0.006,
+    nodes: Array.from({ length: nodeCount }, (_, nodeIndex) => {
+      const x = 0.18 + ropeIndex * 0.13 + nodeIndex * 0.036;
+      const y = 0.28 + ropeIndex * 0.045 + wave(nodeIndex, 0.9, ropeIndex) * 0.03;
+      return { x, y, oldX: x, oldY: y };
+    })
+  };
+}
+
 export function createCreatureWeather() {
   return {
     swarm: Array.from({ length: 30 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.4 + Math.random() * 1.4, r: 0.8 + Math.random() * 2.2 })),
     flock: Array.from({ length: 20 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.5 + Math.random(), k: 0.7 + Math.random() * 1.3 })),
     clouds: Array.from({ length: 5 }, (_, i) => ({ i, x: Math.random(), y: 0.1 + Math.random() * 0.3, p: Math.random() * TAU, k: 0.8 + Math.random() })),
-    sprites: Array.from({ length: 7 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, k: 0.7 + Math.random() * 1.2 }))
+    sprites: Array.from({ length: 7 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, k: 0.7 + Math.random() * 1.2 })),
+    ropes: Array.from({ length: 5 }, (_, i) => makeRope(i))
   };
 }
 
@@ -43,6 +56,12 @@ function emotionalCue(time, state, pulse, rhythm) {
   };
 }
 
+function targetFor(active, state, time, ropeIndex = 0) {
+  const mark = active[active.length - 1 - (ropeIndex % Math.max(1, active.length))];
+  if (mark) return { x: mark.x, y: mark.y, kind: mark.kind || state, awake: true };
+  return { x: 0.5 + wave(time, 0.006, ropeIndex * 1.7) * 0.22, y: 0.5 + wave(time, 0.004, ropeIndex) * 0.16, kind: state, awake: false };
+}
+
 function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
   const { width: w, height: h, time: t, budget, state, pulse } = env;
   ecology.clouds.slice(0, budget.mobile ? 2 : 5).forEach((c) => {
@@ -56,9 +75,9 @@ function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
     ctx.shadowBlur = budget.mobile ? 9 : 18;
     ctx.beginPath();
     for (let lobe = 0; lobe < 7; lobe += 1) {
-      const a = (lobe / 7) * TAU + t * 0.002 * m.beat + wave(t, 0.01, c.p + lobe) * 0.04;
-      const lx = x + Math.cos(a) * size * (0.32 + (lobe % 3) * 0.14);
-      const ly = y + Math.sin(a * 1.7) * size * 0.22;
+      const angle = (lobe / 7) * TAU + t * 0.002 * m.beat + wave(t, 0.01, c.p + lobe) * 0.04;
+      const lx = x + Math.cos(angle) * size * (0.32 + (lobe % 3) * 0.14);
+      const ly = y + Math.sin(angle * 1.7) * size * 0.22;
       ctx.moveTo(lx + size * 0.3, ly);
       ctx.arc(lx, ly, size * (0.28 + (lobe % 4) * 0.05), 0, TAU);
     }
@@ -73,6 +92,79 @@ function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
       ctx.stroke();
     }
   });
+}
+
+function drawTethers(ctx, ecology, env) {
+  const { width: w, height: h, time: t, active, budget, state, pulse, rhythm } = env;
+  const ropes = ecology.ropes || [];
+  const count = Math.min(ropes.length, budget.mobile ? 3 : ropes.length);
+  const fall = (state === 'rain' ? 0.00042 : state === 'wind' ? -0.00008 : 0.00016) * (1 + pulse * 0.8);
+  const drift = (state === 'wind' || state === 'murmur' ? 0.00072 : 0.00022) * wave(t, 0.018, rhythm * 0.2);
+  for (let r = 0; r < count; r += 1) {
+    const rope = ropes[r];
+    const nodes = rope.nodes;
+    const anchor = targetFor(active, state, t, r);
+    nodes[0].x += (anchor.x - nodes[0].x) * (anchor.awake ? 0.42 : 0.055);
+    nodes[0].y += (anchor.y - nodes[0].y) * (anchor.awake ? 0.42 : 0.055);
+    nodes[0].oldX = nodes[0].x;
+    nodes[0].oldY = nodes[0].y;
+    for (let i = 1; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      const vx = (node.x - node.oldX) * 0.985;
+      const vy = (node.y - node.oldY) * 0.985;
+      node.oldX = node.x;
+      node.oldY = node.y;
+      node.x = clamp(node.x + vx + drift * (i / nodes.length) + wave(t, 0.013, i + r) * 0.00016, -0.08, 1.08);
+      node.y = clamp(node.y + vy + fall + wave(t, 0.011, i * 1.7) * 0.00012, -0.08, 1.08);
+    }
+    for (let pass = 0; pass < (budget.mobile ? 2 : 3); pass += 1) {
+      for (let i = 1; i < nodes.length; i += 1) {
+        const a = nodes[i - 1];
+        const b = nodes[i];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distance = Math.max(0.0001, Math.hypot(dx, dy));
+        const diff = (distance - rope.rest) / distance;
+        const stiffness = 0.52 + pulse * 0.12;
+        if (i > 1) {
+          a.x += dx * diff * stiffness * 0.5;
+          a.y += dy * diff * stiffness * 0.5;
+        }
+        b.x -= dx * diff * stiffness * 0.5;
+        b.y -= dy * diff * stiffness * 0.5;
+      }
+    }
+    const life = anchor.awake ? 1 : 0.58;
+    ctx.strokeStyle = colorFor(anchor.kind, 0.14 + pulse * 0.22 + rhythm * 0.012);
+    ctx.shadowColor = colorFor(anchor.kind, 0.78);
+    ctx.shadowBlur = budget.mobile ? 7 : 18;
+    ctx.lineWidth = Math.max(0.65, Math.min(w, h) * (budget.mobile ? 0.0016 : 0.0022) * (1 + pulse * 0.45));
+    ctx.globalAlpha = life * (0.48 + pulse * 0.32);
+    ctx.beginPath();
+    nodes.forEach((node, i) => {
+      const x = node.x * w;
+      const y = node.y * h;
+      if (i === 0) ctx.moveTo(x, y);
+      else {
+        const prev = nodes[i - 1];
+        const cx = (prev.x + node.x) * 0.5 * w + wave(t, 0.018, i + r) * (2 + rhythm * 0.25);
+        const cy = (prev.y + node.y) * 0.5 * h + wave(t, 0.016, i) * (2 + pulse * 4);
+        ctx.quadraticCurveTo(cx, cy, x, y);
+      }
+    });
+    ctx.stroke();
+    if (!budget.mobile) {
+      ctx.fillStyle = colorFor(anchor.kind, 0.35 + pulse * 0.2);
+      nodes.forEach((node, i) => {
+        if (i % 2 === 0) return;
+        const beat = Math.max(0, wave(t, 0.05, i * 1.2 + r));
+        ctx.globalAlpha = life * (0.06 + beat * 0.18);
+        ctx.beginPath();
+        ctx.arc(node.x * w, node.y * h, 1.2 + beat * 2.4 + pulse * 1.8, 0, TAU);
+        ctx.fill();
+      });
+    }
+  }
 }
 
 function drawFlock(ctx, ecology, env, m, cue, target) {
@@ -148,10 +240,10 @@ function drawStormSprites(ctx, ecology, env, m, cue, target) {
     ctx.globalAlpha = 0.42 + cue.startle * 0.42;
     ctx.beginPath();
     for (let n = 0; n < 5; n += 1) {
-      const a = (n / 5) * TAU;
+      const angle = (n / 5) * TAU;
       const r = scale * (n % 2 ? 0.52 : 1.15);
-      if (n === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-      else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      if (n === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+      else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
     }
     ctx.closePath();
     ctx.stroke();
@@ -187,10 +279,10 @@ export function drawCreatureWeather(ctx, ecology, env) {
   const m = mood(state, pulse, rhythm);
   const target = active.at(-1) || { x: 0.5 + Math.sin(t * 0.006) * 0.22, y: 0.54 + Math.cos(t * 0.004) * 0.16, kind: state };
   const cue = emotionalCue(t, state, pulse, rhythm);
-
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
   drawCloudBeasts(ctx, ecology, env, m, cue, target);
+  drawTethers(ctx, ecology, env);
   drawFlock(ctx, ecology, env, m, cue, target);
   drawStormSprites(ctx, ecology, env, m, cue, target);
   drawFireflies(ctx, ecology, env, m, cue, target);
