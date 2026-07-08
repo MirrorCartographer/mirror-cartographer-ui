@@ -32,7 +32,7 @@ const GROOVES = {
 };
 const LOOKAHEAD_MS = 180;
 const SCHEDULE_AHEAD_SECONDS = 0.85;
-const MAX_EVENTS_PER_TICK = 18;
+const MAX_EVENTS_PER_TICK = 12;
 const TAP_ACCENT_COOLDOWN = 0.18;
 const PHRASE_MEMORY_LIMIT = 8;
 
@@ -229,6 +229,25 @@ export function createSkyMusic() {
     return true;
   }
 
+  function playTapVoice(degree = 0, answer = false) {
+    if (!ctx || !master) return;
+    const root = stateRoot(currentState);
+    const now = ctx.currentTime + 0.012;
+    const note = scaleNote(root, degree, answer ? 1 : 2);
+    playOsc(ctx, master, now, midiToHz(note), answer ? 0.32 : 0.42, {
+      type: answer ? 'sine' : 'triangle',
+      gain: answer ? 0.015 : 0.022,
+      attack: 0.01,
+      filter: answer ? 2200 : 3400,
+    });
+    playOsc(ctx, delay, now + 0.075, midiToHz(scaleNote(root, answer ? degree - 2 : degree + 3, 2)), 0.28, {
+      type: 'sine',
+      gain: 0.006,
+      attack: 0.018,
+      filter: 3100,
+    });
+  }
+
   function scheduleOne(when) {
     if (!ctx || !started) return;
     const beat = currentBeatSeconds(currentState, currentRhythm);
@@ -360,12 +379,11 @@ export function createSkyMusic() {
     if (ctx.state === 'suspended') await ctx.resume();
     started = true;
     master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.setTargetAtTime(0.29, ctx.currentTime, 0.35);
-    if (!timer) {
-      nextNoteTime = ctx.currentTime + 0.035;
-      scheduler();
-      timer = window.setInterval(scheduler, LOOKAHEAD_MS);
-    }
+    master.gain.setTargetAtTime(0.31, ctx.currentTime, 0.18);
+    nextNoteTime = ctx.currentTime + 0.055;
+    playTapVoice(0, false);
+    scheduler();
+    if (!timer) timer = window.setInterval(scheduler, LOOKAHEAD_MS);
     return true;
   }
 
@@ -376,14 +394,12 @@ export function createSkyMusic() {
     if (!ctx || !started) return;
     if (ctx.currentTime - lastTapAccent < TAP_ACCENT_COOLDOWN) return;
     lastTapAccent = ctx.currentTime;
-    const root = stateRoot(currentState);
     const phrase = Math.floor((step % 128) / 16);
     const section = FORM[phrase % FORM.length];
     const motif = section === 'answer' || section === 'home' ? ANSWER : MOTIF;
     const degree = motif[(step + Math.round(currentRhythm)) % motif.length] + (section === 'lift' ? 5 : 0) + phraseVariant(phrase, step % 16, section);
     rememberPhrase(degree);
-    const note = scaleNote(root, degree, 2);
-    playOsc(ctx, delay, ctx.currentTime + 0.01, midiToHz(note), 0.38, { type: 'triangle', gain: 0.012, filter: section === 'lift' ? 4200 : 2900 });
+    playTapVoice(degree, true);
   }
 
   function stop() {
