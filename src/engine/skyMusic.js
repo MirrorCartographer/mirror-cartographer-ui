@@ -40,6 +40,16 @@ const MODULATION_MAPS = {
   wind: [0, -1, 2, -2, 1, -1, 2, 0],
   murmur: [0, -1, 1, -2, 0, 2, -1, 0],
 };
+const COUNTERPOINT_TURNS = {
+  cloud: [-3, 2],
+  rain: [-5, -2],
+  lightning: [4, -3],
+  clear: [3, 5],
+  aurora: [5, 2],
+  dawn: [2, 4],
+  wind: [-2, 3],
+  murmur: [-4, 1],
+};
 const GROOVES = {
   cloud: { span: 8, accent: [1, 0, 0.72, 0, 0.88, 0, 0.56, 0], duration: [1, 1, 1, 1, 1, 1, 1, 1] },
   rain: { span: 12, accent: [1, 0, 0.62, 0, 0.78, 0.36, 0.9, 0, 0.56, 0, 0.72, 0.34], duration: [0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1] },
@@ -112,6 +122,13 @@ function modulationFor(state, phrase, section) {
   if (section === 'home') return 0;
   const map = MODULATION_MAPS[state] || MODULATION_MAPS.cloud;
   return clamp(map[phrase % map.length] ?? 0, -4, 5);
+}
+
+function counterpointDegree(state, motifDegree, phrase, inPhrase, memory, section) {
+  const turn = COUNTERPOINT_TURNS[state] || COUNTERPOINT_TURNS.cloud;
+  const echo = memory.length ? Math.sign(memory[(phrase + inPhrase) % memory.length]?.degree || 0) : 0;
+  const inversion = section === 'answer' || section === 'home' ? -1 : 1;
+  return motifDegree + turn[(phrase + inPhrase) % turn.length] * inversion + echo;
 }
 
 function closestRegister(note, target) {
@@ -346,6 +363,16 @@ export function createSkyMusic() {
         type: 'sine',
         gain: (0.007 + currentPulse * 0.0025) * groove.accent,
         filter: 1800,
+      });
+    }
+
+    if (!resting && medium && !homeCadence && (inPhrase === 5 || inPhrase === 11)) {
+      const cp = counterpointDegree(currentState, motifDegree, phrase, inPhrase, phraseMemory, section);
+      playOsc(ctx, delay, when + slotSeconds * 0.42, midiToHz(scaleNote(root, cp, lift ? 2 : 1)), slotSeconds * 0.82, {
+        type: brightness ? 'triangle' : 'sine',
+        gain: (0.0048 + currentPulse * 0.0016) * groove.accent,
+        attack: 0.028,
+        filter: brightness ? 3200 : 1900,
       });
     }
 
