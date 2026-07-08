@@ -13,5 +13,12 @@ export const MUSIC_COMPOSITION_SPEC = {
     wind: 3,
     murmur: 6,
   },
-  nextImplementationTarget: 'route current skyMusic chord scheduling through nearest-voice chord motion and weather-specific meter accents',
+  qualityGate: {
+    scheduler: 'cap catch-up scheduling after mobile tab sleep so the engine never floods Web Audio with late events',
+    density: 'make seed/home sections sparse, lift sections brighter, and storm sections narrower instead of stacking all layers',
+    mix: 'lower rain noise, sparkle, and storm accent gain before the compressor so the limiter polishes rather than rescues overload',
+    repetition: 'reserve upper sparkle for phrase endings only; avoid triggering it every small loop',
+    mobile: 'preserve tap-to-start, no autoplay, no visible explanatory text, and no sampled assets',
+  },
+  nextImplementationTarget: 'apply sectionProfile() in skyMusic.js: per-section chord voice count, gain scaling, rain cadence thinning, sparkle gating, and MAX_EVENTS_PER_TICK scheduler catch-up protection',
 };
