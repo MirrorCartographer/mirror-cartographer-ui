@@ -9,6 +9,7 @@ import {
 } from '../engine/skyState';
 import { drawSkyFilaments, filamentBudget } from '../engine/filaments';
 import { drawCreatureEcology, seedCreatures } from '../engine/creatureEcology';
+import { createTuringVeil, drawTuringVeil } from '../engine/turingVeil';
 
 const TAU = Math.PI * 2;
 
@@ -33,6 +34,7 @@ function useSky(state, pulse, marks, rhythm) {
     const ribbons = seeds(9, (i) => ({ i, p: Math.random() * TAU, y: 0.12 + Math.random() * 0.72, a: 18 + Math.random() * 76, w: 2 + Math.random() * 8 }));
     const pollen = seeds(70, (i) => ({ i, x: Math.random(), y: Math.random(), s: 0.2 + Math.random() * 1.5, p: Math.random() * TAU }));
     const creatures = seedCreatures(PERFORMANCE_BUDGET.renderedCreatures);
+    const turingVeil = createTuringVeil();
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -239,6 +241,7 @@ function useSky(state, pulse, marks, rhythm) {
       glow(w * 0.18, h * 0.18, w * 0.42, 'rgba(125,211,252,1)', state === 'clear' ? 0.24 : 0.09);
       glow(w * 0.82, h * 0.14, w * 0.38, 'rgba(240,171,252,1)', state === 'lightning' || state === 'aurora' || state === 'murmur' ? 0.2 : 0.08);
 
+      drawTuringVeil(ctx, turingVeil, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawRibbons(w, h, t, spec);
 
       stars.slice(0, budget.stars).forEach((s) => {
