@@ -19,6 +19,10 @@ function clamp01(value) {
   return Math.min(1, Math.max(0, value));
 }
 
+function markFreshness(mark, now, duration) {
+  return mark ? Math.max(0, 1 - (now - mark.time) / duration) : 0;
+}
+
 function causticPalette(state, spec) {
   if (state === 'rain') return ['145,216,255', '247,251,255'];
   if (state === 'lightning') return ['239,251,255', '125,211,252'];
@@ -29,10 +33,11 @@ function causticPalette(state, spec) {
 }
 
 function drawCrepuscularApertures(ctx, marks, palette, options) {
-  const { width: w, height: h, time: t, pulse, rhythm, state, spec, budget } = options;
+  const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
   const latest = marks.at(-1);
-  const fresh = latest ? Math.max(0, 1 - (Date.now() - latest.time) / 5200) : 0;
-  const awake = fresh > 0.02 || state === 'dawn' || state === 'clear' || state === 'cloud' || pulse > 0.72;
+  const fresh = markFreshness(latest, now, 5200);
+  const idleTinyScreen = budget.ultraTiny && !latest && pulse < 0.76;
+  const awake = !idleTinyScreen && (fresh > 0.02 || state === 'dawn' || state === 'clear' || state === 'cloud' || pulse > 0.72);
   if (!awake) return;
 
   const sourceX = latest ? latest.x * w : w * (0.5 + Math.sin(t * 0.003) * 0.18);
@@ -98,16 +103,18 @@ function drawCrepuscularApertures(ctx, marks, palette, options) {
 }
 
 export function drawSkyCaustics(ctx, cells, marks, options) {
-  const { width: w, height: h, time: t, pulse, rhythm, state, spec, budget } = options;
+  const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
+  if (w <= 1 || h <= 1 || budget.densityScale <= 0.05) return;
+
   const latest = marks.at(-1);
-  const fresh = latest ? Math.max(0, 1 - (Date.now() - latest.time) / 4200) : 0;
+  const fresh = markFreshness(latest, now, 4200);
   const active = fresh > 0.02 || state === 'rain' || state === 'clear' || state === 'dawn' || state === 'murmur' || pulse > 0.62;
   if (!active) return;
 
   const palette = causticPalette(state, spec);
   const touchX = latest ? latest.x : 0.5 + Math.sin(t * 0.004) * 0.14;
   const touchY = latest ? latest.y : 0.46 + Math.cos(t * 0.003) * 0.12;
-  const rays = Math.max(8, budget.causticRays || 18);
+  const rays = Math.max(6, budget.causticRays || 18);
   const drawCells = cells.slice(0, budget.causticCells || cells.length);
   const weatherFocus = state === 'clear' ? 1.2 : state === 'rain' ? 1.45 : state === 'murmur' ? 1.35 : 1;
 
