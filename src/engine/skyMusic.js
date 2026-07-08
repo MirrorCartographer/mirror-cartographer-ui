@@ -20,6 +20,16 @@ const ANSWER = [5, 3, 2, 0, 2, 3, 1, -1, 0, 2, 5, 3, 2, 0, -2, 0];
 const BASS_WALK = [0, 0, 2, 4, 5, 5, 4, 2, 7, 7, 6, 5, 3, 2, 1, 0];
 const FORM = ['seed', 'seed', 'lift', 'answer', 'storm', 'answer', 'lift', 'home'];
 const VARIANTS = [0, 0, 1, 0, -1, 0, 2, 0];
+const BREATH_MASKS = {
+  cloud: [0, 0, 0, 1, 0, 0, 1, 0],
+  rain: [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+  lightning: [0, 0, 1, 0, 1, 0, 0, 1, 0, 1],
+  clear: [0, 0, 0, 0, 1, 0, 0, 0],
+  aurora: [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1],
+  dawn: [0, 0, 1, 0, 0, 1, 0, 0],
+  wind: [0, 1, 0, 0, 1, 0],
+  murmur: [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1],
+};
 const GROOVES = {
   cloud: { span: 8, accent: [1, 0, 0.72, 0, 0.88, 0, 0.56, 0], duration: [1, 1, 1, 1, 1, 1, 1, 1] },
   rain: { span: 12, accent: [1, 0, 0.62, 0, 0.78, 0.36, 0.9, 0, 0.56, 0, 0.72, 0.34], duration: [0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1] },
@@ -79,6 +89,13 @@ function shouldRest(section, inPhrase, accent) {
   if (section === 'home' && inPhrase === 15) return true;
   if (section === 'seed' && (inPhrase === 7 || inPhrase === 15)) return true;
   return accent === 0;
+}
+
+function weatherBreath(state, localStep, section, inPhrase) {
+  if (section === 'home' || section === 'storm') return false;
+  if (inPhrase === 0 || inPhrase === 12) return false;
+  const mask = BREATH_MASKS[state] || BREATH_MASKS.cloud;
+  return mask[localStep % mask.length] === 1;
 }
 
 function closestRegister(note, target) {
@@ -263,7 +280,7 @@ export function createSkyMusic() {
     const cadence = section === 'home';
     const inPhrase = localStep % 16;
     const groove = grooveFor(currentState, localStep);
-    const resting = shouldRest(section, inPhrase, groove.accent);
+    const resting = shouldRest(section, inPhrase, groove.accent) || weatherBreath(currentState, localStep, section, inPhrase);
     const slotSeconds = beat * 0.5 * groove.duration;
     const strong = groove.accent >= 0.82;
     const medium = groove.accent >= 0.52;
