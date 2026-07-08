@@ -38,6 +38,14 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   mobileStars: 130,
   desktopClouds: 42,
   mobileClouds: 28,
+  renderedRainDrops: 235,
+  mobileRainDrops: 145,
+  renderedSprites: 24,
+  mobileSprites: 14,
+  renderedPollen: 70,
+  mobilePollen: 36,
+  renderedRibbons: 9,
+  mobileRibbons: 6,
   tickMs: 120,
   pulseFloor: 0.18,
   pulseDecay: 0.984,
@@ -127,6 +135,10 @@ export function responsiveBudget(width = 1000, height = 800) {
     stars: mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars,
     clouds: mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds,
     creatures: mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures,
+    rainDrops: mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops,
+    sprites: mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites,
+    pollen: mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen,
+    ribbons: mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons,
   };
 }
 
