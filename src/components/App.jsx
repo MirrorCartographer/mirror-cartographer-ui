@@ -11,6 +11,7 @@ import { drawSkyFilaments, filamentBudget } from '../engine/filaments';
 import { drawCreatureEcology, seedCreatures } from '../engine/creatureEcology';
 import { createTuringVeil, drawTuringVeil } from '../engine/turingVeil';
 import { drawPressureWake } from '../engine/pressureWake';
+import { createTrailMemory, drawTrailMemory } from '../engine/trailMemory';
 
 const TAU = Math.PI * 2;
 
@@ -30,12 +31,13 @@ function useSky(state, pulse, marks, rhythm) {
     let raf = 0;
     const stars = seeds(PERFORMANCE_BUDGET.desktopStars, (i) => ({ i, x: Math.random(), y: Math.random(), r: 0.4 + Math.random() * 1.8, s: 0.1 + Math.random() * 1.8 }));
     const clouds = seeds(PERFORMANCE_BUDGET.desktopClouds, (i) => ({ i, x: Math.random(), y: 0.04 + Math.random() * 0.5, r: 36 + Math.random() * 112, a: 0.04 + Math.random() * 0.12 }));
-    const rain = seeds(235, (i) => ({ i, x: Math.random(), y: Math.random(), l: 14 + Math.random() * 58, s: 4 + Math.random() * 11 }));
-    const sprites = seeds(24, (i) => ({ i, x: Math.random(), y: Math.random(), a: Math.random() * TAU, s: 0.002 + Math.random() * 0.008, r: 12 + Math.random() * 46 }));
-    const ribbons = seeds(9, (i) => ({ i, p: Math.random() * TAU, y: 0.12 + Math.random() * 0.72, a: 18 + Math.random() * 76, w: 2 + Math.random() * 8 }));
-    const pollen = seeds(70, (i) => ({ i, x: Math.random(), y: Math.random(), s: 0.2 + Math.random() * 1.5, p: Math.random() * TAU }));
+    const rain = seeds(PERFORMANCE_BUDGET.renderedRainDrops, (i) => ({ i, x: Math.random(), y: Math.random(), l: 14 + Math.random() * 58, s: 4 + Math.random() * 11 }));
+    const sprites = seeds(PERFORMANCE_BUDGET.renderedSprites, (i) => ({ i, x: Math.random(), y: Math.random(), a: Math.random() * TAU, s: 0.002 + Math.random() * 0.008, r: 12 + Math.random() * 46 }));
+    const ribbons = seeds(PERFORMANCE_BUDGET.renderedRibbons, (i) => ({ i, p: Math.random() * TAU, y: 0.12 + Math.random() * 0.72, a: 18 + Math.random() * 76, w: 2 + Math.random() * 8 }));
+    const pollen = seeds(PERFORMANCE_BUDGET.renderedPollen, (i) => ({ i, x: Math.random(), y: Math.random(), s: 0.2 + Math.random() * 1.5, p: Math.random() * TAU }));
     const creatures = seedCreatures(PERFORMANCE_BUDGET.renderedCreatures);
     const turingVeil = createTuringVeil();
+    const trailMemory = createTrailMemory();
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -69,11 +71,11 @@ function useSky(state, pulse, marks, rhythm) {
       ctx.restore();
     };
 
-    const drawRibbons = (w, h, t, spec) => {
+    const drawRibbons = (w, h, t, spec, budget) => {
       if (state !== 'wind' && state !== 'aurora' && state !== 'dawn' && state !== 'murmur' && pulse < 0.7) return;
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
-      ribbons.forEach((r) => {
+      ribbons.slice(0, budget.ribbons).forEach((r) => {
         const pull = marks.slice(-6).reduce((sum, m) => sum + Math.sin(m.x * 8 + m.y * 5 + r.i), 0);
         const g = ctx.createLinearGradient(0, 0, w, 0);
         g.addColorStop(0, 'rgba(125,211,252,0)');
@@ -244,7 +246,8 @@ function useSky(state, pulse, marks, rhythm) {
 
       drawTuringVeil(ctx, turingVeil, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawPressureWake(ctx, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
-      drawRibbons(w, h, t, spec);
+      drawTrailMemory(ctx, trailMemory, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
+      drawRibbons(w, h, t, spec, budget);
 
       stars.slice(0, budget.stars).forEach((s) => {
         ctx.globalAlpha = 0.12 + Math.sin(t * 0.02 * s.s + s.i) * 0.13 + (state === 'clear' ? 0.2 : state === 'murmur' ? 0.1 : 0) - (state === 'dawn' ? 0.08 : 0);
@@ -264,7 +267,7 @@ function useSky(state, pulse, marks, rhythm) {
       if (state === 'wind' || state === 'dawn' || state === 'murmur' || pulse > 0.66) {
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
-        pollen.forEach((d) => {
+        pollen.slice(0, budget.pollen).forEach((d) => {
           const x = ((d.x * w + t * d.s * (state === 'wind' || state === 'murmur' ? 3.4 : 1.2)) % (w + 80)) - 40;
           const y = d.y * h + Math.sin(t * 0.018 + d.p) * 22;
           ctx.globalAlpha = 0.12 + pulse * 0.22;
@@ -276,7 +279,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.restore();
       }
 
-      sprites.forEach((s) => {
+      sprites.slice(0, budget.sprites).forEach((s) => {
         const x = s.x * w + Math.sin(t * s.s + s.i) * w * (0.05 + spec.motion * 0.12);
         const y = s.y * h * 0.78 + Math.cos(t * s.s * 1.5 + s.i) * h * 0.05;
         ctx.save();
@@ -315,7 +318,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.strokeStyle = '#9cdcff';
         ctx.lineWidth = 1.1;
         ctx.globalAlpha = 0.35 + pulse * 0.33;
-        rain.forEach((d) => {
+        rain.slice(0, budget.rainDrops).forEach((d) => {
           const y = ((d.y * h + t * d.s * (1 + rhythm * 0.035)) % (h + 90)) - 70;
           const x = d.x * w + Math.sin(t * 0.01 + d.i) * 18;
           ctx.beginPath();
