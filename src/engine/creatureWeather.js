@@ -25,13 +25,26 @@ function makeRope(ropeIndex, nodeCount = 9) {
   };
 }
 
+function makeEddy(i) {
+  return {
+    i,
+    x: 0.12 + ((i * 37) % 83) / 100,
+    y: 0.16 + ((i * 53) % 67) / 100,
+    phase: Math.sin((i + 1) * 12.9898) * 43758.5453,
+    spin: i % 2 ? -1 : 1,
+    reach: 0.17 + ((i * 19) % 40) / 180,
+    strength: 0.35 + ((i * 29) % 60) / 100
+  };
+}
+
 export function createCreatureWeather() {
   return {
     swarm: Array.from({ length: 30 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.4 + Math.random() * 1.4, r: 0.8 + Math.random() * 2.2 })),
     flock: Array.from({ length: 20 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.5 + Math.random(), k: 0.7 + Math.random() * 1.3 })),
     clouds: Array.from({ length: 5 }, (_, i) => ({ i, x: Math.random(), y: 0.1 + Math.random() * 0.3, p: Math.random() * TAU, k: 0.8 + Math.random() })),
     sprites: Array.from({ length: 7 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, k: 0.7 + Math.random() * 1.2 })),
-    ropes: Array.from({ length: 5 }, (_, i) => makeRope(i))
+    ropes: Array.from({ length: 5 }, (_, i) => makeRope(i)),
+    eddies: Array.from({ length: 6 }, (_, i) => makeEddy(i))
   };
 }
 
@@ -62,11 +75,68 @@ function targetFor(active, state, time, ropeIndex = 0) {
   return { x: 0.5 + wave(time, 0.006, ropeIndex * 1.7) * 0.22, y: 0.5 + wave(time, 0.004, ropeIndex) * 0.16, kind: state, awake: false };
 }
 
+function flowAt(ecology, x, y, env, m, cue) {
+  const { time: t, active, state, pulse, rhythm, budget } = env;
+  const count = Math.min(ecology.eddies?.length || 0, budget.mobile ? 4 : 6);
+  let vx = state === 'wind' ? 0.012 + pulse * 0.006 : state === 'rain' ? -0.002 : 0;
+  let vy = state === 'rain' ? 0.012 + pulse * 0.006 : state === 'dawn' ? -0.004 : 0;
+  for (let i = 0; i < count; i += 1) {
+    const e = ecology.eddies[i];
+    const cx = clamp01(e.x + wave(t, 0.003 + i * 0.0004, e.phase) * 0.08 + (active.at(-1)?.x - 0.5 || 0) * 0.035);
+    const cy = clamp01(e.y + wave(t, 0.0024 + i * 0.0003, e.phase * 0.7) * 0.07 + (active.at(-1)?.y - 0.5 || 0) * 0.028);
+    const dx = x - cx;
+    const dy = y - cy;
+    const d2 = dx * dx + dy * dy + 0.0008;
+    const reach = e.reach * (state === 'murmur' ? 1.28 : state === 'clear' ? 0.78 : 1);
+    const pull = Math.max(0, 1 - d2 / (reach * reach)) * e.strength;
+    const spin = e.spin * (state === 'lightning' ? 1.7 : state === 'wind' ? 1.25 : 0.92);
+    vx += (-dy * spin + dx * 0.22 * m.curiosity) * pull * 0.05;
+    vy += (dx * spin + dy * 0.18 * cue.bloom) * pull * 0.05;
+  }
+  vx += wave(t, 0.011, x * 8 + rhythm) * 0.006 * m.alarm;
+  vy += wave(t, 0.009, y * 9 + pulse * 3) * 0.005 * m.speed;
+  return { x: clamp(vx, -0.055, 0.055), y: clamp(vy, -0.055, 0.055) };
+}
+
+function drawWeatherCurrents(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse, rhythm } = env;
+  const count = Math.min(ecology.eddies?.length || 0, budget.mobile ? 3 : 6);
+  if (!count || (pulse < 0.26 && state !== 'wind' && state !== 'murmur' && state !== 'aurora')) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = colorFor(target.kind || state, budget.mobile ? 0.09 + pulse * 0.045 : 0.12 + pulse * 0.075);
+  ctx.shadowColor = colorFor(target.kind || state, 0.54);
+  ctx.shadowBlur = budget.mobile ? 4 : 11;
+  ctx.lineWidth = budget.mobile ? 0.52 + pulse * 0.35 : 0.65 + pulse * 0.62;
+  for (let i = 0; i < count; i += 1) {
+    const e = ecology.eddies[i];
+    const cx = clamp01(e.x + wave(t, 0.003 + i * 0.0004, e.phase) * 0.08 + (target.x - 0.5) * 0.04);
+    const cy = clamp01(e.y + wave(t, 0.0024 + i * 0.0003, e.phase * 0.7) * 0.07 + (target.y - 0.5) * 0.03);
+    const radius = Math.min(w, h) * e.reach * (0.54 + cue.inhale * 0.18 + pulse * 0.12);
+    ctx.globalAlpha = (budget.mobile ? 0.22 : 0.34) * cue.hush;
+    ctx.beginPath();
+    for (let n = 0; n <= 38; n += 1) {
+      const q = n / 38;
+      const a = e.phase + q * TAU * (0.72 + e.strength * 0.5) + t * 0.009 * e.spin * m.speed;
+      const curl = radius * q * (0.45 + Math.sin(q * TAU + t * 0.017 + rhythm) * 0.07);
+      const x = cx * w + Math.cos(a) * curl;
+      const y = cy * h + Math.sin(a) * curl * (0.62 + pulse * 0.16);
+      if (n === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
   const { width: w, height: h, time: t, budget, state, pulse } = env;
   ecology.clouds.slice(0, budget.mobile ? 2 : 5).forEach((c) => {
-    const x = ((c.x + t * 0.00028 * m.speed + wave(t, 0.004, c.p) * 0.035 + target.x * 0.012 * m.curiosity + 1) % 1) * w;
-    const y = clamp01(c.y + wave(t, 0.006, c.p) * 0.035 + target.y * 0.012) * h;
+    const drift = flowAt(ecology, c.x, c.y, env, m, cue);
+    const x = ((c.x + drift.x * 0.16 + t * 0.00028 * m.speed + wave(t, 0.004, c.p) * 0.035 + target.x * 0.012 * m.curiosity + 1) % 1) * w;
+    const y = clamp01(c.y + drift.y * 0.12 + wave(t, 0.006, c.p) * 0.035 + target.y * 0.012) * h;
     const size = Math.min(w, h) * 0.058 * c.k * (1 + pulse * 0.14 + cue.inhale * 0.08);
     const kind = state === 'cloud' ? target.kind || state : state;
     ctx.globalAlpha = 0.1 + pulse * 0.11 + cue.bloom * 0.05;
@@ -94,7 +164,7 @@ function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
   });
 }
 
-function drawTethers(ctx, ecology, env) {
+function drawTethers(ctx, ecology, env, m, cue) {
   const { width: w, height: h, time: t, active, budget, state, pulse, rhythm } = env;
   const ropes = ecology.ropes || [];
   const count = Math.min(ropes.length, budget.mobile ? 3 : ropes.length);
@@ -104,18 +174,20 @@ function drawTethers(ctx, ecology, env) {
     const rope = ropes[r];
     const nodes = rope.nodes;
     const anchor = targetFor(active, state, t, r);
-    nodes[0].x += (anchor.x - nodes[0].x) * (anchor.awake ? 0.42 : 0.055);
-    nodes[0].y += (anchor.y - nodes[0].y) * (anchor.awake ? 0.42 : 0.055);
+    const current = flowAt(ecology, nodes[0].x, nodes[0].y, env, m, cue);
+    nodes[0].x += (anchor.x - nodes[0].x) * (anchor.awake ? 0.42 : 0.055) + current.x * 0.04;
+    nodes[0].y += (anchor.y - nodes[0].y) * (anchor.awake ? 0.42 : 0.055) + current.y * 0.04;
     nodes[0].oldX = nodes[0].x;
     nodes[0].oldY = nodes[0].y;
     for (let i = 1; i < nodes.length; i += 1) {
       const node = nodes[i];
+      const flow = flowAt(ecology, node.x, node.y, env, m, cue);
       const vx = (node.x - node.oldX) * 0.985;
       const vy = (node.y - node.oldY) * 0.985;
       node.oldX = node.x;
       node.oldY = node.y;
-      node.x = clamp(node.x + vx + drift * (i / nodes.length) + wave(t, 0.013, i + r) * 0.00016, -0.08, 1.08);
-      node.y = clamp(node.y + vy + fall + wave(t, 0.011, i * 1.7) * 0.00012, -0.08, 1.08);
+      node.x = clamp(node.x + vx + drift * (i / nodes.length) + flow.x * 0.018 + wave(t, 0.013, i + r) * 0.00016, -0.08, 1.08);
+      node.y = clamp(node.y + vy + fall + flow.y * 0.018 + wave(t, 0.011, i * 1.7) * 0.00012, -0.08, 1.08);
     }
     for (let pass = 0; pass < (budget.mobile ? 2 : 3); pass += 1) {
       for (let i = 1; i < nodes.length; i += 1) {
@@ -175,10 +247,11 @@ function drawFlock(ctx, ecology, env, m, cue, target) {
     const phase = b.p + t * 0.0063 * b.s * m.speed;
     const orbit = (0.07 + q * 0.16 * m.gather) * (1 + cue.startle * 0.22);
     const leap = state === 'lightning' ? wave(t, 0.049, b.i) * 0.045 : 0;
-    const xNorm = clamp01(target.x + Math.cos(phase) * orbit + wave(t, 0.017, b.i) * 0.03 * m.alarm + leap);
-    const yNorm = clamp01(target.y + Math.sin(phase * 0.86) * orbit * 0.58 + Math.cos(phase * 1.3) * 0.04 - cue.startle * 0.025);
+    const draft = flowAt(ecology, target.x + Math.cos(phase) * orbit, target.y + Math.sin(phase) * orbit * 0.58, env, m, cue);
+    const xNorm = clamp01(target.x + Math.cos(phase) * orbit + draft.x * 0.85 + wave(t, 0.017, b.i) * 0.03 * m.alarm + leap);
+    const yNorm = clamp01(target.y + Math.sin(phase * 0.86) * orbit * 0.58 + draft.y * 0.85 + Math.cos(phase * 1.3) * 0.04 - cue.startle * 0.025);
     const body = Math.min(w, h) * 0.006 * b.k;
-    const face = Math.atan2(target.y - yNorm, target.x - xNorm);
+    const face = Math.atan2(target.y + draft.y - yNorm, target.x + draft.x - xNorm);
     const wing = Math.sin(t * 0.14 * m.beat + b.i) * (5 + rhythm * 0.45 + cue.startle * 9) * b.k;
     ctx.save();
     ctx.translate(xNorm * w, yNorm * h);
@@ -207,8 +280,11 @@ function drawFireflies(ctx, ecology, env, m, cue, target) {
     const q = i / Math.max(1, count - 1);
     const blink = Math.max(0, Math.sin(t * 0.052 * m.beat + f.p + q * 4));
     const radius = (0.07 + q * 0.2) * (1 + pulse * 0.25 + cue.inhale * 0.1);
-    const x = clamp01(lerp(f.x, target.x, 0.42) + Math.cos(t * 0.011 * f.s + f.p) * radius + cue.startle * wave(t, 0.043, i) * 0.035) * w;
-    const y = clamp01(lerp(f.y, target.y, 0.38) + Math.sin(t * 0.014 * f.s + f.p * 1.4) * radius * 0.62) * h;
+    const baseX = lerp(f.x, target.x, 0.42) + Math.cos(t * 0.011 * f.s + f.p) * radius;
+    const baseY = lerp(f.y, target.y, 0.38) + Math.sin(t * 0.014 * f.s + f.p * 1.4) * radius * 0.62;
+    const draft = flowAt(ecology, baseX, baseY, env, m, cue);
+    const x = clamp01(baseX + draft.x * 0.72 + cue.startle * wave(t, 0.043, i) * 0.035) * w;
+    const y = clamp01(baseY + draft.y * 0.72) * h;
     ctx.globalAlpha = 0.07 + blink * (0.2 + pulse * 0.18) + cue.bloom * 0.04;
     ctx.fillStyle = colorFor(target.kind || state, 0.72);
     ctx.shadowColor = colorFor(target.kind || state, 1);
@@ -227,12 +303,15 @@ function drawStormSprites(ctx, ecology, env, m, cue, target) {
   ecology.sprites.slice(0, count).forEach((s, i) => {
     const phase = s.p + t * (0.018 + i * 0.001) * m.speed;
     const jump = cue.startle * (0.08 + s.k * 0.025);
-    const x = clamp01(lerp(s.x, target.x, 0.3) + Math.cos(phase * 1.2) * (0.18 + jump)) * w;
-    const y = clamp01(lerp(s.y, target.y, 0.26) + Math.sin(phase) * (0.1 + jump * 0.6)) * h;
+    const baseX = lerp(s.x, target.x, 0.3) + Math.cos(phase * 1.2) * (0.18 + jump);
+    const baseY = lerp(s.y, target.y, 0.26) + Math.sin(phase) * (0.1 + jump * 0.6);
+    const draft = flowAt(ecology, baseX, baseY, env, m, cue);
+    const x = clamp01(baseX + draft.x * 0.48) * w;
+    const y = clamp01(baseY + draft.y * 0.48) * h;
     const scale = Math.min(w, h) * 0.018 * s.k * (1 + cue.startle * 0.8);
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate(phase + cue.startle * 0.7);
+    ctx.rotate(phase + cue.startle * 0.7 + Math.atan2(draft.y, draft.x) * 0.35);
     ctx.strokeStyle = colorFor(state === 'lightning' ? 'lightning' : target.kind || state, 0.18 + pulse * 0.18 + cue.startle * 0.22);
     ctx.shadowColor = colorFor(state === 'lightning' ? 'lightning' : target.kind || state, 0.9);
     ctx.shadowBlur = budget.mobile ? 8 : 20;
@@ -281,8 +360,9 @@ export function drawCreatureWeather(ctx, ecology, env) {
   const cue = emotionalCue(t, state, pulse, rhythm);
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
+  drawWeatherCurrents(ctx, ecology, env, m, cue, target);
   drawCloudBeasts(ctx, ecology, env, m, cue, target);
-  drawTethers(ctx, ecology, env);
+  drawTethers(ctx, ecology, env, m, cue);
   drawFlock(ctx, ecology, env, m, cue, target);
   drawStormSprites(ctx, ecology, env, m, cue, target);
   drawFireflies(ctx, ecology, env, m, cue, target);
