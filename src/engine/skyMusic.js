@@ -34,6 +34,7 @@ const LOOKAHEAD_MS = 180;
 const SCHEDULE_AHEAD_SECONDS = 0.85;
 const MAX_EVENTS_PER_TICK = 18;
 const TAP_ACCENT_COOLDOWN = 0.18;
+const PHRASE_MEMORY_LIMIT = 8;
 
 function midiToHz(note) {
   return 440 * 2 ** ((note - 69) / 12);
@@ -102,6 +103,16 @@ function voiceChord(root, chord, previous, lift) {
     const target = targets[voice] ?? targets.at(-1) ?? root + 60;
     return closestRegister(base, target);
   });
+}
+
+function memoryTurn(memory, inPhrase, section) {
+  if (!memory.length || section === 'home') return 0;
+  const remembered = memory[inPhrase % memory.length];
+  if (!remembered) return 0;
+  const pull = Math.sign(remembered.degree) * Math.min(2, Math.round(Math.abs(remembered.degree) / 4));
+  if (section === 'answer') return -pull;
+  if (section === 'storm') return pull * 2;
+  return pull;
 }
 
 function makeNoiseBuffer(ctx, seconds = 1.2) {
@@ -176,11 +187,19 @@ export function createSkyMusic() {
   let nextNoteTime = 0;
   let previousVoicing = null;
   let previousSection = FORM[0];
+  let phraseMemory = [];
   let lastTapAccent = 0;
   let currentState = 'cloud';
   let currentPulse = 0.5;
   let currentRhythm = 0;
   let started = false;
+
+  function rememberPhrase(degree) {
+    phraseMemory = [
+      { degree: clamp(degree, -8, 12), state: currentState },
+      ...phraseMemory,
+    ].slice(0, PHRASE_MEMORY_LIMIT);
+  }
 
   function ensure() {
     if (ctx) return true;
@@ -235,7 +254,7 @@ export function createSkyMusic() {
     const homeCadence = section === 'home' && inPhrase >= 12;
     const contour = lift ? 4 : answering ? 1 : 0;
     const sourceMotif = answering ? ANSWER : MOTIF;
-    const motifDegree = sourceMotif[inPhrase] + contour + (phrase % 2 === 0 ? 0 : 2) + phraseVariant(phrase, inPhrase, section);
+    const motifDegree = sourceMotif[inPhrase] + contour + (phrase % 2 === 0 ? 0 : 2) + phraseVariant(phrase, inPhrase, section) + memoryTurn(phraseMemory, inPhrase, section);
     const sectionChanged = inPhrase === 0 && section !== previousSection;
 
     delay.delayTime.setTargetAtTime(wet ? beat * 0.75 : beat * 0.5, when, 0.05);
@@ -269,7 +288,7 @@ export function createSkyMusic() {
     }
 
     if (!resting && answering && medium && step % 4 === 2) {
-      const counter = scaleNote(root, ANSWER[(15 - inPhrase + ANSWER.length) % ANSWER.length] - 3, 1);
+      const counter = scaleNote(root, ANSWER[(15 - inPhrase + ANSWER.length) % ANSWER.length] - 3 + memoryTurn(phraseMemory, 15 - inPhrase, section), 1);
       playOsc(ctx, delay, when + slotSeconds * 0.36, midiToHz(counter), slotSeconds * 1.05, {
         type: 'sine',
         gain: (0.007 + currentPulse * 0.0025) * groove.accent,
@@ -362,6 +381,7 @@ export function createSkyMusic() {
     const section = FORM[phrase % FORM.length];
     const motif = section === 'answer' || section === 'home' ? ANSWER : MOTIF;
     const degree = motif[(step + Math.round(currentRhythm)) % motif.length] + (section === 'lift' ? 5 : 0) + phraseVariant(phrase, step % 16, section);
+    rememberPhrase(degree);
     const note = scaleNote(root, degree, 2);
     playOsc(ctx, delay, ctx.currentTime + 0.01, midiToHz(note), 0.38, { type: 'triangle', gain: 0.012, filter: section === 'lift' ? 4200 : 2900 });
   }
