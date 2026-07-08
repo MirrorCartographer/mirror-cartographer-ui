@@ -9,7 +9,7 @@ import {
   skyState,
 } from './skyState';
 
-export const WORDLESS_RUNTIME_VERSION = 4;
+export const WORDLESS_RUNTIME_VERSION = 5;
 
 export const EVENT_ROUTES = Object.freeze({
   pointer: 'gesture:intent',
@@ -25,6 +25,12 @@ export const LAYER_PHASES = Object.freeze({
   organisms: 2,
   touchMemory: 3,
   signal: 4,
+});
+
+export const RUNTIME_FLAGS = deepFreeze({
+  localContinuity: reversibleExperimentToken({ name: 'local-continuity', enabled: false, weight: 0, expires: 'manual' }),
+  audioAfterGesture: reversibleExperimentToken({ name: 'audio-after-gesture', enabled: false, weight: 0, expires: 'manual' }),
+  layerEnvelope: reversibleExperimentToken({ name: 'layer-envelope', enabled: true, weight: 1, expires: 'manual' }),
 });
 
 export const LAYER_REGISTRY = deepFreeze([
@@ -60,7 +66,7 @@ export const NULL_AUDIO_HOOK = Object.freeze({
   autoplay: AUDIO_POLICY.allowAutoplay,
 });
 
-export function createRuntimeContext({ width = 1000, height = 800, state = 'cloud', pulse = PERFORMANCE_BUDGET.pulseFloor, rhythm = 0, marks = [], route = EVENT_ROUTES.tick, time = 0 } = {}) {
+export function createRuntimeContext({ width = 1000, height = 800, state = 'cloud', pulse = PERFORMANCE_BUDGET.pulseFloor, rhythm = 0, marks = [], transitions = [], route = EVENT_ROUTES.tick, time = 0 } = {}) {
   const budget = responsiveBudget(width, height);
   return Object.freeze({
     version: WORDLESS_RUNTIME_VERSION,
@@ -73,10 +79,96 @@ export function createRuntimeContext({ width = 1000, height = 800, state = 'clou
     pulse: clamp01(pulse),
     rhythm: clamp(rhythm, 0, PERFORMANCE_BUDGET.maxRhythm),
     marks: visibleMarks(marks),
+    transitions: redactTransitions(transitions),
     budget,
     layers: selectSceneLayers(budget, LAYER_REGISTRY),
+    envelope: createPerformanceEnvelope({ budget, layers: LAYER_REGISTRY }),
     audio: NULL_AUDIO_HOOK,
-    memory: publicContinuitySnapshot({ state, pulse, rhythm, marks, budget }),
+    memory: publicContinuitySnapshot({ state, pulse, rhythm, marks, budget, transitions }),
+  });
+}
+
+export function createRuntimeStore(initial = {}) {
+  let context = createRuntimeContext(initial);
+  const listeners = new Set();
+  return Object.freeze({
+    read() {
+      return context;
+    },
+    subscribe(listener) {
+      if (typeof listener !== 'function') return () => {};
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    transition(packet = {}) {
+      const previous = context;
+      context = reduceRuntimeContext(context, packet);
+      if (context !== previous) listeners.forEach((listener) => listener(context, previous, packet));
+      return context;
+    },
+  });
+}
+
+export function reduceRuntimeContext(context = createRuntimeContext(), packet = {}) {
+  if (!packet || !packet.route) return context;
+  if (packet.route === EVENT_ROUTES.resize) {
+    return createRuntimeContext({ ...context, width: packet.width, height: packet.height, route: packet.route, time: packet.time ?? context.time });
+  }
+  if (packet.route === EVENT_ROUTES.tick) {
+    return createRuntimeContext({
+      ...context,
+      route: packet.route,
+      time: packet.time ?? context.time + 1,
+      pulse: Math.max(PERFORMANCE_BUDGET.pulseFloor, context.pulse * PERFORMANCE_BUDGET.pulseDecay),
+      rhythm: Math.max(0, context.rhythm - PERFORMANCE_BUDGET.rhythmDecay),
+    });
+  }
+  if (packet.route === EVENT_ROUTES.pointer) {
+    const transition = packet.transition || transitionPacket({ from: context.state, to: packet.gesture?.kind || context.state, point: packet.point, pulse: context.pulse, rhythm: context.rhythm });
+    return createRuntimeContext({
+      ...context,
+      route: packet.route,
+      time: packet.mark?.time ?? packet.time ?? context.time,
+      state: packet.gesture?.kind || transition.to || context.state,
+      pulse: Math.min(1, context.pulse + (packet.gesture?.pulseBoost ?? 0.24)),
+      rhythm: packet.gesture?.rhythm ?? context.rhythm,
+      marks: [...context.marks.slice(-PERFORMANCE_BUDGET.maxMarks), packet.mark].filter(Boolean),
+      transitions: [...(context.transitions || []), transition],
+    });
+  }
+  return createRuntimeContext({ ...context, route: packet.route, time: packet.time ?? context.time });
+}
+
+export function createInputRouter({ getContext = () => createRuntimeContext(), now = () => Date.now() } = {}) {
+  let lastTouch = 0;
+  return Object.freeze({
+    pointer(event) {
+      const context = getContext();
+      const packet = routePointerGesture({ event, now: now(), lastTouch, rhythm: context.rhythm, pulse: context.pulse, state: context.state, marks: context.marks });
+      lastTouch = packet.mark.time;
+      return packet;
+    },
+    resize(width, height) {
+      return routeViewportResize({ width, height, time: now() });
+    },
+    tick(time = now()) {
+      return Object.freeze({ route: EVENT_ROUTES.tick, time });
+    },
+    visibility(hidden = false) {
+      return Object.freeze({ route: EVENT_ROUTES.visibility, hidden: Boolean(hidden), time: now() });
+    },
+  });
+}
+
+export function routeViewportResize({ width = 1000, height = 800, time = Date.now() } = {}) {
+  const budget = responsiveBudget(width, height);
+  return Object.freeze({
+    route: EVENT_ROUTES.resize,
+    width: Math.max(1, Number(width) || 1),
+    height: Math.max(1, Number(height) || 1),
+    time,
+    budget,
+    envelope: createPerformanceEnvelope({ budget }),
   });
 }
 
@@ -106,6 +198,38 @@ export function selectSceneLayers(budget = {}, layers = LAYER_REGISTRY) {
       fallback: available ? null : layer.fallback,
     });
   }));
+}
+
+export function createPerformanceEnvelope({ budget = {}, layers = LAYER_REGISTRY } = {}) {
+  const selected = selectSceneLayers(budget, layers);
+  const activeCost = selected.reduce((sum, layer) => {
+    if (!layer.drawable) return sum;
+    const spec = layers.find((item) => item.id === layer.id);
+    return sum + (spec?.cost || 0);
+  }, 0);
+  const scale = budget.motionScale ?? 1;
+  const ceiling = budget.mobile ? 10.2 : 15.8;
+  return Object.freeze({
+    densityScale: budget.densityScale ?? 1,
+    motionScale: scale,
+    activeCost: Number(activeCost.toFixed(3)),
+    ceiling,
+    withinBudget: activeCost <= ceiling,
+    drawableCount: selected.filter((layer) => layer.drawable).length,
+    fallbackCount: selected.filter((layer) => !layer.drawable).length,
+  });
+}
+
+export function composePrimitive({ id = 'primitive', phase = 'atmosphere', cost = 0.5, input = 'state', budgetKey = null, fallback = 'skip', draw = null } = {}) {
+  return Object.freeze({
+    id,
+    phase,
+    cost: clamp(Number(cost), 0, 3),
+    input,
+    budgetKey,
+    fallback,
+    draw: typeof draw === 'function' ? draw : null,
+  });
 }
 
 export function visibleMarks(marks = [], limit = PERFORMANCE_BUDGET.renderedMarks) {
@@ -138,7 +262,7 @@ export function createTransitionLedger(limit = 18) {
   return Object.freeze({
     push(packet) {
       if (!packet || packet.route !== EVENT_ROUTES.pointer) return Object.freeze([...packets]);
-      packets.push(redactTransitionPacket(packet));
+      packets.push(redactTransitionPacket(packet.transition || packet));
       while (packets.length > limit) packets.shift();
       return Object.freeze([...packets]);
     },
@@ -203,6 +327,7 @@ export function auditRuntimeSurface(context = createRuntimeContext()) {
     fallbacks: Object.freeze(heavyFallbacks),
     publicSafe: context.memory?.publicSafe === true && context.audio?.autoplay === false,
     storesGestureData: false,
+    envelope: context.envelope || createPerformanceEnvelope({ budget: context.budget }),
   });
 }
 
@@ -211,6 +336,20 @@ export function shouldSkipHeavyLayer(context, layerCost = 1) {
   const mobilePenalty = budget.mobile ? 1.8 : 1;
   const shortPenalty = budget.short ? 1.25 : 1;
   return layerCost * mobilePenalty * shortPenalty > 2.4;
+}
+
+export function makeAudioUnlockBridge({ context = null, gain = AUDIO_POLICY.defaultGain } = {}) {
+  let unlocked = false;
+  return Object.freeze({
+    read() {
+      return Object.freeze({ unlocked, gain: unlocked ? gain : AUDIO_POLICY.defaultGain, autoplay: AUDIO_POLICY.allowAutoplay, context: context ? 'provided' : 'none' });
+    },
+    unlock(eventRoute = EVENT_ROUTES.pointer) {
+      if (eventRoute !== EVENT_ROUTES.pointer && eventRoute !== EVENT_ROUTES.audioUnlock) return this.read();
+      unlocked = true;
+      return this.read();
+    },
+  });
 }
 
 export function makeLocalMemoryBridge(storage = null) {
@@ -262,7 +401,12 @@ function seededSpin(now, point) {
   return (seed - Math.floor(seed)) * Math.PI * 2;
 }
 
-function redactTransitionPacket(packet) {
+function redactTransitions(transitions = []) {
+  if (!Array.isArray(transitions)) return [];
+  return Object.freeze(transitions.slice(-18).map((packet) => redactTransitionPacket(packet)));
+}
+
+function redactTransitionPacket(packet = {}) {
   return Object.freeze({
     from: packet.from,
     to: packet.to,
