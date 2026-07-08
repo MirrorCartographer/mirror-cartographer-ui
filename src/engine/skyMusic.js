@@ -16,6 +16,9 @@ const CHORDS = [
   [3, 7, 10, 14],
 ];
 const MOTIF = [0, 2, 3, 5, 3, 2, 6, 5, 3, 1, 2, 0, 5, 6, 3, 2];
+const ANSWER = [5, 3, 2, 0, 2, 3, 1, -1, 0, 2, 5, 3, 2, 0, -2, 0];
+const BASS_WALK = [0, 0, 2, 4, 5, 5, 4, 2, 7, 7, 6, 5, 3, 2, 1, 0];
+const FORM = ['seed', 'seed', 'lift', 'answer', 'storm', 'answer', 'lift', 'home'];
 
 function midiToHz(note) {
   return 440 * 2 ** ((note - 69) / 12);
@@ -126,52 +129,89 @@ export function createSkyMusic() {
     const beat = 60 / bpm;
     const now = ctx.currentTime;
     const root = stateRoot(currentState);
-    const localStep = step % 64;
+    const localStep = step % 128;
+    const phrase = Math.floor(localStep / 16);
+    const section = FORM[phrase % FORM.length];
     const chord = CHORDS[Math.floor(localStep / 16) % CHORDS.length];
     const chordRoot = root + chord[0];
     const brightness = currentState === 'aurora' || currentState === 'dawn' || currentState === 'murmur';
     const wet = currentState === 'rain' || currentState === 'murmur' || currentState === 'aurora';
+    const chorus = section === 'lift' || section === 'storm';
+    const cadence = section === 'home';
     delay.delayTime.setTargetAtTime(wet ? beat * 0.75 : beat * 0.5, now, 0.05);
-    feedback.gain.setTargetAtTime(wet ? 0.34 : 0.2, now, 0.08);
-    filter.frequency.setTargetAtTime(brightness ? 5200 : 2600, now, 0.12);
+    feedback.gain.setTargetAtTime(wet || chorus ? 0.34 : 0.2, now, 0.08);
+    filter.frequency.setTargetAtTime(brightness || chorus ? 5200 : 2600, now, 0.12);
 
     for (let i = 0; i < 5; i += 1) {
       const when = now + i * beat * 0.5;
       const idx = step + i;
-      const phrase = Math.floor(idx / 16);
-      const motifDegree = MOTIF[idx % MOTIF.length] + (phrase % 2 === 0 ? 0 : 2);
+      const localIdx = idx % 128;
+      const phraseIdx = Math.floor(localIdx / 16);
+      const sectionName = FORM[phraseIdx % FORM.length];
+      const inPhrase = localIdx % 16;
+      const lift = sectionName === 'lift' || sectionName === 'storm';
+      const answering = sectionName === 'answer' || sectionName === 'home';
+      const homeCadence = sectionName === 'home' && inPhrase >= 12;
+      const contour = lift ? 4 : answering ? 1 : 0;
+      const sourceMotif = answering ? ANSWER : MOTIF;
+      const motifDegree = sourceMotif[inPhrase] + contour + (phraseIdx % 2 === 0 ? 0 : 2);
+
       if (idx % 2 === 0) {
-        const note = scaleNote(root, motifDegree, 1 + (idx % 8 === 6 ? 1 : 0));
-        playOsc(ctx, delay, when, midiToHz(note), beat * 0.92, {
-          type: brightness ? 'triangle' : 'sine',
-          gain: 0.028 + currentPulse * 0.018,
-          filter: brightness ? 4200 : 2400,
+        const note = homeCadence ? scaleNote(root, Math.max(0, 5 - (inPhrase - 12) * 2), 1) : scaleNote(root, motifDegree, 1 + (idx % 8 === 6 || lift ? 1 : 0));
+        playOsc(ctx, delay, when, midiToHz(note), beat * (lift ? 1.12 : 0.92), {
+          type: brightness || lift ? 'triangle' : 'sine',
+          gain: 0.026 + currentPulse * 0.016 + (lift ? 0.01 : 0),
+          filter: brightness || lift ? 4200 : 2400,
         });
       }
-      if (idx % 4 === 0) {
-        const bass = chordRoot - 24 + (idx % 16 === 12 ? 7 : 0);
-        playOsc(ctx, master, when, midiToHz(bass), beat * 1.6, {
+
+      if (answering && idx % 4 === 2) {
+        const counter = scaleNote(root, ANSWER[(15 - inPhrase + ANSWER.length) % ANSWER.length] - 3, 1);
+        playOsc(ctx, delay, when + beat * 0.18, midiToHz(counter), beat * 0.86, {
           type: 'sine',
-          gain: 0.045,
-          attack: 0.025,
-          filter: 620,
+          gain: 0.014 + currentPulse * 0.006,
+          filter: 2100,
         });
       }
+
+      if (idx % 4 === 0) {
+        const walk = BASS_WALK[inPhrase] || 0;
+        const bass = chordRoot - 24 + (lift ? 12 : 0) + (homeCadence ? 0 : walk);
+        playOsc(ctx, master, when, midiToHz(bass), beat * (homeCadence ? 2.4 : 1.6), {
+          type: 'sine',
+          gain: 0.041 + (lift ? 0.008 : 0),
+          attack: 0.025,
+          filter: lift ? 760 : 620,
+        });
+      }
+
       if (idx % 8 === 0) {
         chord.forEach((offset, voice) => {
-          playOsc(ctx, delay, when + voice * 0.015, midiToHz(root + offset + 12), beat * 2.8, {
+          const inversion = lift && voice > 1 ? 12 : 0;
+          const release = cadence ? beat * 4.8 : beat * (lift ? 3.6 : 2.8);
+          playOsc(ctx, delay, when + voice * 0.015, midiToHz(root + offset + 12 + inversion), release, {
             type: 'triangle',
-            gain: 0.012,
+            gain: 0.01 + (lift ? 0.005 : 0),
             attack: 0.08 + voice * 0.018,
-            filter: 1700 + voice * 520,
+            filter: 1700 + voice * 520 + (lift ? 900 : 0),
           });
         });
       }
+
+      if (lift && idx % 8 === 6) {
+        const sparkle = scaleNote(root, motifDegree + 7, 2);
+        playOsc(ctx, delay, when + beat * 0.12, midiToHz(sparkle), beat * 0.42, {
+          type: 'triangle',
+          gain: 0.012,
+          filter: 5600,
+        });
+      }
+
       if (currentState === 'rain' && idx % 3 === 0) {
         playNoise(ctx, noise, delay, when, beat * 0.22, { frequency: 1800 + (idx % 5) * 260, gain: 0.012, q: 7 });
       }
-      if (currentState === 'lightning' && idx % 7 === 0) {
-        playOsc(ctx, delay, when, midiToHz(root + 31), beat * 0.18, { type: 'sawtooth', gain: 0.018, filter: 5200, slide: 0.72 });
+      if ((currentState === 'lightning' || sectionName === 'storm') && idx % 7 === 0) {
+        playOsc(ctx, delay, when, midiToHz(root + 31), beat * 0.18, { type: 'sawtooth', gain: 0.014, filter: 5200, slide: 0.72 });
       }
     }
     step += 5;
@@ -199,8 +239,11 @@ export function createSkyMusic() {
     currentRhythm = Number.isFinite(snapshot.rhythm) ? snapshot.rhythm : currentRhythm;
     if (!ctx || !started) return;
     const root = stateRoot(currentState);
-    const note = scaleNote(root, MOTIF[(step + Math.round(currentRhythm)) % MOTIF.length], 2);
-    playOsc(ctx, delay, ctx.currentTime + 0.01, midiToHz(note), 0.6, { type: 'triangle', gain: 0.026, filter: 3600 });
+    const phrase = Math.floor((step % 128) / 16);
+    const section = FORM[phrase % FORM.length];
+    const motif = section === 'answer' || section === 'home' ? ANSWER : MOTIF;
+    const note = scaleNote(root, motif[(step + Math.round(currentRhythm)) % motif.length] + (section === 'lift' ? 5 : 0), 2);
+    playOsc(ctx, delay, ctx.currentTime + 0.01, midiToHz(note), 0.6, { type: 'triangle', gain: 0.026, filter: section === 'lift' ? 5200 : 3600 });
   }
 
   function stop() {
