@@ -12,6 +12,7 @@ import { drawCreatureEcology, seedCreatures } from '../engine/creatureEcology';
 import { createTuringVeil, drawTuringVeil } from '../engine/turingVeil';
 import { drawPressureWake } from '../engine/pressureWake';
 import { createTrailMemory, drawTrailMemory } from '../engine/trailMemory';
+import { createStormBranches, drawStormBranches } from '../engine/stormBranches';
 
 const TAU = Math.PI * 2;
 
@@ -38,6 +39,7 @@ function useSky(state, pulse, marks, rhythm) {
     const creatures = seedCreatures(PERFORMANCE_BUDGET.renderedCreatures);
     const turingVeil = createTuringVeil();
     const trailMemory = createTrailMemory();
+    const stormBranches = createStormBranches(PERFORMANCE_BUDGET.stormBranches);
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -300,6 +302,7 @@ function useSky(state, pulse, marks, rhythm) {
       });
 
       drawCreatureEcology(ctx, creatures, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
+      drawStormBranches(ctx, stormBranches, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawTethers(w, h, t);
       drawSkyFilaments(ctx, marks, {
         width: w,
