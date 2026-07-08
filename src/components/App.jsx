@@ -1,18 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {
+  PERFORMANCE_BUDGET,
+  SKY_STATES,
+  evolveWeatherGesture,
+  normalizePoint,
+  skyState,
+} from '../engine/skyState';
 
-const STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'dawn', 'wind'];
 const TAU = Math.PI * 2;
-
-function nextState(current, x, y, pulse, rhythm) {
-  if (rhythm > 7 && pulse > 0.74) return 'wind';
-  if (rhythm > 5 && pulse > 0.76) return 'dawn';
-  if (pulse > 0.82 && rhythm > 3) return 'lightning';
-  if (y > 0.7) return 'rain';
-  if (x < 0.25) return 'cloud';
-  if (x > 0.75) return 'aurora';
-  if (y < 0.22) return 'clear';
-  return STATES[(STATES.indexOf(current) + 1) % STATES.length];
-}
 
 function seeds(n, map) {
   return Array.from({ length: n }, (_, i) => map(i));
@@ -65,7 +60,7 @@ function useSky(state, pulse, marks, rhythm) {
       ctx.restore();
     };
 
-    const drawRibbons = (w, h, t) => {
+    const drawRibbons = (w, h, t, spec) => {
       if (state !== 'wind' && state !== 'aurora' && state !== 'dawn' && pulse < 0.7) return;
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
@@ -77,7 +72,7 @@ function useSky(state, pulse, marks, rhythm) {
         g.addColorStop(0.68, state === 'dawn' ? `rgba(255,154,118,${0.06 + pulse * 0.12})` : `rgba(240,171,252,${0.05 + pulse * 0.1})`);
         g.addColorStop(1, 'rgba(253,230,138,0)');
         ctx.strokeStyle = g;
-        ctx.lineWidth = r.w + (state === 'wind' ? rhythm * 0.7 : 0);
+        ctx.lineWidth = r.w + rhythm * spec.motion * 0.75;
         ctx.globalAlpha = state === 'wind' ? 0.82 : 0.45;
         ctx.beginPath();
         for (let x = -80; x <= w + 80; x += 16) {
@@ -90,13 +85,14 @@ function useSky(state, pulse, marks, rhythm) {
     };
 
     const drawMarks = (w, h, t) => {
-      marks.slice(-24).forEach((m, i) => {
+      marks.slice(-PERFORMANCE_BUDGET.renderedMarks).forEach((m, i) => {
         const age = Math.min(1, (Date.now() - m.time) / 7600);
+        const spec = skyState(m.kind);
         ctx.save();
         ctx.translate(m.x * w, m.y * h);
         ctx.rotate(m.spin + t * 0.006 + i * 0.08);
         ctx.globalAlpha = (1 - age) * 0.82;
-        ctx.strokeStyle = m.kind === 'wind' ? '#fff0c7' : m.kind === 'dawn' ? '#ffd1dc' : m.kind === 'aurora' ? '#a7f3d0' : m.kind === 'rain' ? '#91d8ff' : m.kind === 'lightning' ? '#effbff' : '#ffe2bf';
+        ctx.strokeStyle = spec.mark;
         ctx.lineWidth = 2.2;
         ctx.shadowColor = ctx.strokeStyle;
         ctx.shadowBlur = 26;
@@ -123,7 +119,7 @@ function useSky(state, pulse, marks, rhythm) {
     };
 
     const drawTethers = (w, h, t) => {
-      const active = marks.slice(-5);
+      const active = marks.slice(-PERFORMANCE_BUDGET.renderedTethers);
       if (!active.length) return;
       const anchorX = w * 0.5;
       const anchorY = h * 0.62;
@@ -142,7 +138,7 @@ function useSky(state, pulse, marks, rhythm) {
         const ny = dx / dist;
         const tug = Math.sin(t * 0.045 + i * 1.7 + rhythm * 0.35) * (18 + rhythm * 3.4 + pulse * 42);
         const slack = (m.kind === 'wind' ? 0.3 : m.kind === 'rain' ? -0.18 : 0.08) * dist;
-        const color = m.kind === 'aurora' ? '167,243,208' : m.kind === 'rain' ? '145,216,255' : m.kind === 'lightning' ? '239,251,255' : m.kind === 'dawn' ? '255,209,220' : '255,226,191';
+        const color = skyState(m.kind).tether;
         const gradient = ctx.createLinearGradient(sx, sy, anchorX, anchorY);
         gradient.addColorStop(0, `rgba(${color},0)`);
         gradient.addColorStop(0.22, `rgba(${color},${fade})`);
@@ -176,7 +172,7 @@ function useSky(state, pulse, marks, rhythm) {
       ctx.globalAlpha = on ? 1 : 0.15;
       ctx.fillStyle = `rgba(225,242,255,${on ? 0.24 : 0.035})`;
       ctx.fillRect(0, 0, w, h);
-      ctx.strokeStyle = '#effbff';
+      ctx.strokeStyle = skyState('lightning').mark;
       ctx.lineWidth = 5;
       ctx.shadowColor = '#c7f7ff';
       ctx.shadowBlur = 34;
@@ -195,12 +191,12 @@ function useSky(state, pulse, marks, rhythm) {
       ctx.restore();
     };
 
-    const drawHeart = (cx, cy, t, w) => {
+    const drawHeart = (cx, cy, t, spec) => {
       ctx.save();
       ctx.translate(cx, cy);
       const breath = 1 + Math.sin(t * 0.034) * 0.06 + pulse * 0.2 + (state === 'wind' ? Math.sin(t * 0.08) * 0.04 : 0);
       ctx.scale(breath, breath);
-      ctx.strokeStyle = state === 'aurora' ? '#c7ffd7' : state === 'dawn' ? '#ffd1dc' : state === 'wind' ? '#fff0c7' : '#ffe2bf';
+      ctx.strokeStyle = spec.mark === '#91d8ff' ? '#ffe2bf' : spec.mark;
       ctx.lineWidth = 3;
       ctx.shadowColor = state === 'lightning' ? '#effbff' : state === 'dawn' ? '#ff7aa2' : '#ffbe74';
       ctx.shadowBlur = 38 + pulse * 76;
@@ -222,17 +218,18 @@ function useSky(state, pulse, marks, rhythm) {
       const w = r.width;
       const h = r.height;
       const t = frame;
+      const spec = skyState(state);
       const sky = ctx.createLinearGradient(0, 0, 0, h);
-      sky.addColorStop(0, state === 'aurora' ? '#071827' : state === 'dawn' ? '#241738' : state === 'wind' ? '#10111f' : '#060718');
-      sky.addColorStop(0.48, state === 'rain' ? '#152030' : state === 'dawn' ? '#5c2845' : state === 'wind' ? '#25203a' : '#10162b');
-      sky.addColorStop(1, state === 'clear' ? '#3b2434' : state === 'dawn' ? '#ff9a76' : state === 'wind' ? '#4b342f' : '#07070d');
+      sky.addColorStop(0, spec.sky[0]);
+      sky.addColorStop(0.48, spec.sky[1]);
+      sky.addColorStop(1, spec.sky[2]);
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, w, h);
       if (state === 'dawn') glow(w * 0.5, h * 1.03, w * 0.62, 'rgba(255,154,118,1)', 0.42);
       if (state === 'wind') glow(w * 0.5, h * 0.85, w * 0.52, 'rgba(255,226,191,1)', 0.22);
       glow(w * 0.18, h * 0.18, w * 0.42, 'rgba(125,211,252,1)', state === 'clear' ? 0.24 : 0.09);
       glow(w * 0.82, h * 0.14, w * 0.38, 'rgba(240,171,252,1)', state === 'lightning' || state === 'aurora' ? 0.2 : 0.08);
-      drawRibbons(w, h, t);
+      drawRibbons(w, h, t, spec);
       stars.forEach((s) => {
         ctx.globalAlpha = 0.12 + Math.sin(t * 0.02 * s.s + s.i) * 0.13 + (state === 'clear' ? 0.2 : 0) - (state === 'dawn' ? 0.08 : 0);
         ctx.fillStyle = '#fff8ef';
@@ -241,7 +238,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.fill();
       });
       ctx.globalAlpha = 1;
-      clouds.forEach((c) => drawCloud(c.x * w + Math.sin(t * 0.006 + c.i) * (28 + rhythm * (state === 'wind' ? 9 : 3)), c.y * h, c.r, state === 'clear' ? 0.08 : c.a * (state === 'cloud' ? 5 : 2.2), pulse > 0.62 || state === 'dawn' || state === 'wind'));
+      clouds.forEach((c) => drawCloud(c.x * w + Math.sin(t * 0.006 + c.i) * (28 + rhythm * (state === 'wind' ? 9 : 3)), c.y * h, c.r, state === 'clear' ? 0.08 : c.a * (state === 'cloud' ? 5 : 2.2), pulse > 0.62 || spec.warmth > 0.7));
       if (state === 'wind' || state === 'dawn' || pulse > 0.66) {
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
@@ -257,13 +254,13 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.restore();
       }
       sprites.forEach((s) => {
-        const x = s.x * w + Math.sin(t * s.s + s.i) * w * (state === 'wind' ? 0.16 : 0.07);
+        const x = s.x * w + Math.sin(t * s.s + s.i) * w * (0.05 + spec.motion * 0.12);
         const y = s.y * h * 0.78 + Math.cos(t * s.s * 1.5 + s.i) * h * 0.05;
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(s.a + Math.sin(t * s.s) * 0.85);
         ctx.globalAlpha = 0.16 + pulse * 0.38;
-        ctx.strokeStyle = state === 'wind' ? '#fff0c7' : state === 'rain' ? '#9cdcff' : state === 'aurora' ? '#a7f3d0' : '#fff8ef';
+        ctx.strokeStyle = state === 'rain' ? '#9cdcff' : spec.mark === '#91d8ff' ? '#fff8ef' : spec.mark;
         ctx.shadowColor = ctx.strokeStyle;
         ctx.shadowBlur = 18 + pulse * 26;
         ctx.beginPath();
@@ -293,7 +290,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.restore();
       }
       drawLightning(w, h, t);
-      drawHeart(w / 2, h * 0.62, t, w);
+      drawHeart(w / 2, h * 0.62, t, spec);
       raf = requestAnimationFrame(loop);
     };
     resize();
@@ -314,31 +311,25 @@ export default function App() {
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      setPulse((v) => Math.max(0.18, v * 0.984));
-      setRhythm((v) => Math.max(0, v - 0.12));
-    }, 120);
+      setPulse((v) => Math.max(PERFORMANCE_BUDGET.pulseFloor, v * PERFORMANCE_BUDGET.pulseDecay));
+      setRhythm((v) => Math.max(0, v - PERFORMANCE_BUDGET.rhythmDecay));
+    }, PERFORMANCE_BUDGET.tickMs);
     return () => window.clearInterval(id);
   }, []);
 
   const touch = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = 'clientX' in event ? event.clientX : rect.left + rect.width / 2;
-    const y = 'clientY' in event ? event.clientY : rect.top + rect.height / 2;
-    const nx = (x - rect.left) / rect.width;
-    const ny = (y - rect.top) / rect.height;
+    const point = normalizePoint(event);
     const now = Date.now();
-    const close = now - lastTouch.current < 620;
     const prev = marks.at(-1) || null;
+    const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
     lastTouch.current = now;
-    const nr = close ? rhythm + 1 : Math.max(1, rhythm * 0.4);
-    const kind = nextState(state, nx, ny, pulse, nr);
-    setRhythm(Math.min(10, nr));
-    setState(kind);
-    setPulse((v) => Math.min(1, v + (close ? 0.34 : 0.24)));
-    setMarks((items) => [...items.slice(-28), { x: nx, y: ny, prev, time: now, spin: Math.random() * TAU, kind }]);
+    setRhythm(gesture.rhythm);
+    setState(gesture.kind);
+    setPulse((v) => Math.min(1, v + gesture.pulseBoost));
+    setMarks((items) => [...items.slice(-PERFORMANCE_BUDGET.maxMarks), { ...point, prev, time: now, spin: Math.random() * TAU, kind: gesture.kind }]);
   };
 
-  return <main className="wordless" aria-label="Wordless internal sky interface"><style>{css}</style><button className="sky" onClick={touch} aria-label="Change sky state"><canvas ref={canvasRef} /></button><div className="orbit" aria-hidden="true">{STATES.map((name) => <i key={name} className={name === state ? 'on' : ''} />)}</div><div className={`glyph glyph-${state}`} aria-hidden="true"><span /><span /><span /></div></main>;
+  return <main className="wordless" aria-label="Wordless internal sky interface"><style>{css}</style><button className="sky" onClick={touch} aria-label="Change sky state"><canvas ref={canvasRef} /></button><div className="orbit" aria-hidden="true">{SKY_STATES.map((name) => <i key={name} className={name === state ? 'on' : ''} />)}</div><div className={`glyph glyph-${skyState(state).glyph}`} aria-hidden="true"><span /><span /><span /></div></main>;
 }
 
 const css = `*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;background:#050510}body{overflow:hidden}.wordless{min-height:100vh;color:transparent}.sky{position:fixed;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;background:#050510;cursor:crosshair}.sky canvas{display:block;width:100%;height:100%;touch-action:manipulation}.orbit{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:11px;padding:12px 15px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(5,5,16,.34);backdrop-filter:blur(20px);box-shadow:0 20px 80px rgba(0,0,0,.35)}.orbit i{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.25);box-shadow:0 0 0 1px rgba(255,255,255,.12);transition:.22s}.orbit i.on{background:#ffe2bf;box-shadow:0 0 22px #ffbe74,0 0 0 1px rgba(255,255,255,.56);transform:scale(1.46)}.glyph{position:fixed;right:28px;top:28px;width:76px;height:76px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.055);backdrop-filter:blur(18px);box-shadow:0 18px 80px rgba(0,0,0,.28);pointer-events:none}.glyph span{position:absolute;left:50%;top:50%;width:42px;height:2px;transform-origin:left center;border-radius:999px;background:#fff8ef;box-shadow:0 0 18px currentColor}.glyph span:nth-child(1){transform:rotate(0deg) translateX(-16px)}.glyph span:nth-child(2){transform:rotate(120deg) translateX(-16px)}.glyph span:nth-child(3){transform:rotate(240deg) translateX(-16px)}.glyph-cloud{color:#f7fbff}.glyph-rain{color:#91d8ff}.glyph-rain span{height:22px;width:2px}.glyph-lightning{color:#effbff;animation:strike .8s steps(2,end) infinite}.glyph-clear{color:#ffe2bf}.glyph-clear span:nth-child(2){transform:rotate(90deg) translateX(-17px)}.glyph-clear span:nth-child(3){width:52px;height:52px;border:2px solid #ffe2bf;background:transparent;border-radius:50%;transform:translate(-50%,-50%)}.glyph-aurora{color:#a7f3d0}.glyph-aurora span:nth-child(3){width:46px;height:22px;border:2px solid #a7f3d0;background:transparent;border-radius:999px;transform:translate(-50%,-50%) rotate(-18deg)}.glyph-dawn{color:#ffd1dc;animation:rise 2.2s ease-in-out infinite}.glyph-dawn span:nth-child(3){width:48px;height:48px;border:2px solid #ffd1dc;background:transparent;border-radius:50%;transform:translate(-50%,-50%)}.glyph-wind{color:#fff0c7;animation:rise 1.6s ease-in-out infinite}.glyph-wind span:nth-child(1){width:50px;transform:rotate(8deg) translateX(-22px)}.glyph-wind span:nth-child(2){width:38px;transform:rotate(-8deg) translateX(-14px) translateY(10px)}.glyph-wind span:nth-child(3){width:28px;transform:rotate(18deg) translateX(-4px) translateY(-12px)}@keyframes strike{0%,60%,100%{filter:brightness(1)}61%,72%{filter:brightness(2.8)}}@keyframes rise{50%{filter:brightness(1.9);transform:translateY(-3px)}}@media(max-width:700px){.glyph{right:16px;top:16px;width:58px;height:58px}.orbit{bottom:18px;gap:9px;padding:10px 12px}.orbit i{width:9px;height:9px}}`;
