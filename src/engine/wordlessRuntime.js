@@ -9,7 +9,7 @@ import {
   skyState,
 } from './skyState';
 
-export const WORDLESS_RUNTIME_VERSION = 5;
+export const WORDLESS_RUNTIME_VERSION = 6;
 
 export const EVENT_ROUTES = Object.freeze({
   pointer: 'gesture:intent',
@@ -31,6 +31,7 @@ export const RUNTIME_FLAGS = deepFreeze({
   localContinuity: reversibleExperimentToken({ name: 'local-continuity', enabled: false, weight: 0, expires: 'manual' }),
   audioAfterGesture: reversibleExperimentToken({ name: 'audio-after-gesture', enabled: false, weight: 0, expires: 'manual' }),
   layerEnvelope: reversibleExperimentToken({ name: 'layer-envelope', enabled: true, weight: 1, expires: 'manual' }),
+  structuralSurface: reversibleExperimentToken({ name: 'structural-surface', enabled: true, weight: 1, expires: 'manual' }),
 });
 
 export const LAYER_REGISTRY = deepFreeze([
@@ -66,8 +67,11 @@ export const NULL_AUDIO_HOOK = Object.freeze({
   autoplay: AUDIO_POLICY.allowAutoplay,
 });
 
-export function createRuntimeContext({ width = 1000, height = 800, state = 'cloud', pulse = PERFORMANCE_BUDGET.pulseFloor, rhythm = 0, marks = [], transitions = [], route = EVENT_ROUTES.tick, time = 0 } = {}) {
+export function createRuntimeContext({ width = 1000, height = 800, state = 'cloud', pulse = PERFORMANCE_BUDGET.pulseFloor, rhythm = 0, marks = [], transitions = [], route = EVENT_ROUTES.tick, time = 0, experiments = RUNTIME_FLAGS } = {}) {
   const budget = responsiveBudget(width, height);
+  const registry = createSceneRegistry(LAYER_REGISTRY);
+  const layers = selectSceneLayers(budget, LAYER_REGISTRY, registry);
+  const envelope = createPerformanceEnvelope({ budget, layers: LAYER_REGISTRY, selected: layers });
   return Object.freeze({
     version: WORDLESS_RUNTIME_VERSION,
     route,
@@ -81,8 +85,10 @@ export function createRuntimeContext({ width = 1000, height = 800, state = 'clou
     marks: visibleMarks(marks),
     transitions: redactTransitions(transitions),
     budget,
-    layers: selectSceneLayers(budget, LAYER_REGISTRY),
-    envelope: createPerformanceEnvelope({ budget, layers: LAYER_REGISTRY }),
+    layers,
+    envelope,
+    manifest: createRuntimeManifest({ registry, budget, envelope, experiments }),
+    signals: createRuntimeSignals({ state, pulse, rhythm, route, budget, envelope }),
     audio: NULL_AUDIO_HOOK,
     memory: publicContinuitySnapshot({ state, pulse, rhythm, marks, budget, transitions }),
   });
@@ -121,6 +127,15 @@ export function reduceRuntimeContext(context = createRuntimeContext(), packet = 
       time: packet.time ?? context.time + 1,
       pulse: Math.max(PERFORMANCE_BUDGET.pulseFloor, context.pulse * PERFORMANCE_BUDGET.pulseDecay),
       rhythm: Math.max(0, context.rhythm - PERFORMANCE_BUDGET.rhythmDecay),
+    });
+  }
+  if (packet.route === EVENT_ROUTES.visibility) {
+    return createRuntimeContext({
+      ...context,
+      route: packet.route,
+      time: packet.time ?? context.time,
+      pulse: packet.hidden ? PERFORMANCE_BUDGET.pulseFloor : context.pulse,
+      rhythm: packet.hidden ? 0 : context.rhythm,
     });
   }
   if (packet.route === EVENT_ROUTES.pointer) {
@@ -182,11 +197,15 @@ export function createSceneRegistry(layers = LAYER_REGISTRY) {
     entries,
     order: Object.freeze([...entries].sort(compareLayers).map((layer) => layer.id)),
     byId: Object.freeze(Object.fromEntries(entries.map((layer) => [layer.id, layer]))),
+    phases: Object.freeze(Object.keys(LAYER_PHASES).map((phase) => Object.freeze({
+      id: phase,
+      order: LAYER_PHASES[phase],
+      layers: Object.freeze(entries.filter((layer) => layer.phase === phase).map((layer) => layer.id)),
+    }))),
   });
 }
 
-export function selectSceneLayers(budget = {}, layers = LAYER_REGISTRY) {
-  const registry = createSceneRegistry(layers);
+export function selectSceneLayers(budget = {}, layers = LAYER_REGISTRY, registry = createSceneRegistry(layers)) {
   return Object.freeze(registry.order.map((id) => {
     const layer = registry.byId[id];
     const available = layerIsAvailable(layer, budget);
@@ -200,8 +219,7 @@ export function selectSceneLayers(budget = {}, layers = LAYER_REGISTRY) {
   }));
 }
 
-export function createPerformanceEnvelope({ budget = {}, layers = LAYER_REGISTRY } = {}) {
-  const selected = selectSceneLayers(budget, layers);
+export function createPerformanceEnvelope({ budget = {}, layers = LAYER_REGISTRY, selected = selectSceneLayers(budget, layers) } = {}) {
   const activeCost = selected.reduce((sum, layer) => {
     if (!layer.drawable) return sum;
     const spec = layers.find((item) => item.id === layer.id);
@@ -217,6 +235,61 @@ export function createPerformanceEnvelope({ budget = {}, layers = LAYER_REGISTRY
     withinBudget: activeCost <= ceiling,
     drawableCount: selected.filter((layer) => layer.drawable).length,
     fallbackCount: selected.filter((layer) => !layer.drawable).length,
+  });
+}
+
+export function createRuntimeManifest({ registry = createSceneRegistry(), budget = {}, envelope = createPerformanceEnvelope({ budget }), experiments = RUNTIME_FLAGS } = {}) {
+  const budgetKeys = registry.entries.filter((layer) => layer.budgetKey).map((layer) => [layer.id, layer.budgetKey]);
+  return deepFreeze({
+    version: WORDLESS_RUNTIME_VERSION,
+    publicSafe: true,
+    visibleWords: false,
+    routes: Object.values(EVENT_ROUTES),
+    phases: registry.phases,
+    layerOrder: registry.order,
+    budgetKeys: Object.fromEntries(budgetKeys),
+    inputs: inputSurface(registry.entries),
+    experiments: Object.fromEntries(Object.entries(experiments || {}).map(([key, token]) => [key, safeExperimentSnapshot(token)])),
+    envelope: {
+      mobile: Boolean(budget.mobile),
+      short: Boolean(budget.short),
+      densityScale: envelope.densityScale,
+      motionScale: envelope.motionScale,
+      withinBudget: envelope.withinBudget,
+    },
+  });
+}
+
+export function createRuntimeSignals({ state = 'cloud', pulse = 0, rhythm = 0, route = EVENT_ROUTES.tick, budget = {}, envelope = {} } = {}) {
+  return Object.freeze({
+    state,
+    route,
+    energy: band(clamp01(pulse), [0.34, 0.72]),
+    cadence: band(rhythm / Math.max(1, PERFORMANCE_BUDGET.maxRhythm), [0.34, 0.72]),
+    scale: budget.mobile ? 'small' : budget.short ? 'shallow' : 'open',
+    pressure: envelope.withinBudget === false ? 'shed' : envelope.fallbackCount > 0 ? 'trim' : 'clear',
+    publicSafe: true,
+  });
+}
+
+export function createPrimitiveGraph(layers = LAYER_REGISTRY) {
+  const registry = createSceneRegistry(layers);
+  const edges = [];
+  registry.entries.forEach((layer) => {
+    if (layer.input && layer.input !== 'none') edges.push(Object.freeze({ from: layer.input, to: layer.id }));
+    if (layer.budgetKey) edges.push(Object.freeze({ from: layer.budgetKey, to: layer.id }));
+  });
+  return Object.freeze({
+    nodes: Object.freeze(registry.entries.map((layer) => Object.freeze({ id: layer.id, phase: layer.phase, cost: layer.cost }))),
+    edges: Object.freeze(edges),
+  });
+}
+
+export function applyRuntimeExperiment(context = createRuntimeContext(), token = reversibleExperimentToken()) {
+  if (!token?.publicSafe || token.storesGestureData) return context;
+  return createRuntimeContext({
+    ...context,
+    experiments: { ...RUNTIME_FLAGS, [token.name]: token },
   });
 }
 
@@ -328,6 +401,8 @@ export function auditRuntimeSurface(context = createRuntimeContext()) {
     publicSafe: context.memory?.publicSafe === true && context.audio?.autoplay === false,
     storesGestureData: false,
     envelope: context.envelope || createPerformanceEnvelope({ budget: context.budget }),
+    manifest: context.manifest || createRuntimeManifest({ registry, budget: context.budget }),
+    primitiveGraph: createPrimitiveGraph(),
   });
 }
 
@@ -385,6 +460,26 @@ function layerIsAvailable(layer, budget) {
   if (layer.budgetKey && Number.isFinite(budget?.[layer.budgetKey]) && budget[layer.budgetKey] <= 0) return false;
   const context = { budget };
   return !shouldSkipHeavyLayer(context, layer.cost);
+}
+
+function inputSurface(entries = []) {
+  const groups = new Map();
+  entries.forEach((layer) => {
+    const key = layer.input || 'none';
+    const list = groups.get(key) || [];
+    list.push(layer.id);
+    groups.set(key, list);
+  });
+  return Object.freeze(Object.fromEntries([...groups.entries()].map(([key, ids]) => [key, Object.freeze(ids)])));
+}
+
+function safeExperimentSnapshot(token = {}) {
+  return Object.freeze({
+    enabled: Boolean(token.enabled),
+    weight: clamp(Number(token.weight), 0, 1),
+    publicSafe: token.publicSafe === true,
+    storesGestureData: token.storesGestureData === true,
+  });
 }
 
 function inferIntent(point, pulse, rhythm) {
