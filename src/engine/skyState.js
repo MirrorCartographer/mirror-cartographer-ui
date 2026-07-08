@@ -2,6 +2,7 @@ export const SKY_STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'daw
 
 export const VIEWPORT_BREAKPOINTS = Object.freeze({
   mobileMax: 700,
+  narrowMobile: 380,
   smallHeight: 620,
   tinyHeight: 540,
 });
@@ -157,43 +158,49 @@ export function skyState(name) {
 
 export function responsiveBudget(width = 1000, height = 800) {
   const mobile = width < VIEWPORT_BREAKPOINTS.mobileMax;
+  const narrow = width < VIEWPORT_BREAKPOINTS.narrowMobile;
   const short = height < VIEWPORT_BREAKPOINTS.smallHeight;
   const tiny = mobile && short;
   const ultraTiny = mobile && height < VIEWPORT_BREAKPOINTS.tinyHeight;
-  const motionScale = ultraTiny ? 0.76 : short ? 0.84 : 1;
-  const densityScale = ultraTiny ? 0.68 : tiny ? 0.78 : short ? 0.88 : 1;
+  const area = Math.max(1, width * height);
+  const targetArea = mobile ? 390 * 760 : 1200 * 900;
+  const areaScale = clamp(area / targetArea, mobile ? 0.62 : 0.72, 1);
+  const narrowScale = narrow ? 0.88 : 1;
+  const motionScale = ultraTiny ? 0.76 : short ? 0.84 : narrow ? 0.9 : 1;
+  const densityScale = (ultraTiny ? 0.68 : tiny ? 0.78 : short ? 0.88 : 1) * areaScale * narrowScale;
   const count = (value, floor = 1) => Math.max(floor, Math.round(value * densityScale));
 
   return {
     mobile,
+    narrow,
     short,
     tiny,
     ultraTiny,
     motionScale,
     densityScale,
-    stars: count(mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars, 60),
-    clouds: count(mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds, 12),
-    creatures: count(mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures, 7),
-    cloudBeasts: ultraTiny ? 3 : tiny ? PERFORMANCE_BUDGET.tinyCloudBeasts : mobile ? PERFORMANCE_BUDGET.mobileCloudBeasts : PERFORMANCE_BUDGET.renderedCloudBeasts,
-    fireflies: ultraTiny ? PERFORMANCE_BUDGET.tinyFireflies : count(mobile ? PERFORMANCE_BUDGET.mobileFireflies : PERFORMANCE_BUDGET.renderedFireflies, 10),
-    rainDrops: count(mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops, 70),
-    sprites: count(mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites, 8),
-    pollen: count(mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen, 18),
-    ribbons: count(mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons, 4),
-    pressureWakeMarks: ultraTiny ? 5 : tiny ? 7 : PERFORMANCE_BUDGET.pressureWakeMarks,
-    pressureWakePaths: count(mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths, 8),
-    pressureWakeSteps: ultraTiny ? 3 : tiny ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
-    trailMemoryMarks: ultraTiny ? 6 : tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
-    trailMemorySparks: count(mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks, 16),
-    stormBranchMarks: ultraTiny ? 4 : tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
-    stormBranches: count(mobile ? PERFORMANCE_BUDGET.mobileStormBranches : PERFORMANCE_BUDGET.stormBranches, 5),
-    stormBranchSegments: ultraTiny ? 4 : tiny ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
-    gestureWellMarks: ultraTiny ? 3 : tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
-    gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 10),
-    nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 5),
-    nacreMist: ultraTiny ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
-    causticCells: count(mobile ? PERFORMANCE_BUDGET.mobileCausticCells : PERFORMANCE_BUDGET.causticCells, 6),
-    causticRays: ultraTiny ? 10 : tiny ? 12 : mobile ? PERFORMANCE_BUDGET.mobileCausticRays : PERFORMANCE_BUDGET.causticRays,
+    stars: count(mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars, 54),
+    clouds: count(mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds, 10),
+    creatures: count(mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures, 6),
+    cloudBeasts: ultraTiny ? 3 : tiny || narrow ? PERFORMANCE_BUDGET.tinyCloudBeasts : mobile ? PERFORMANCE_BUDGET.mobileCloudBeasts : PERFORMANCE_BUDGET.renderedCloudBeasts,
+    fireflies: ultraTiny || narrow ? PERFORMANCE_BUDGET.tinyFireflies : count(mobile ? PERFORMANCE_BUDGET.mobileFireflies : PERFORMANCE_BUDGET.renderedFireflies, 10),
+    rainDrops: count(mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops, 62),
+    sprites: count(mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites, 7),
+    pollen: count(mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen, 16),
+    ribbons: count(mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons, 3),
+    pressureWakeMarks: ultraTiny || narrow ? 5 : tiny ? 7 : PERFORMANCE_BUDGET.pressureWakeMarks,
+    pressureWakePaths: count(mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths, 7),
+    pressureWakeSteps: ultraTiny ? 3 : tiny || narrow ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
+    trailMemoryMarks: ultraTiny || narrow ? 6 : tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
+    trailMemorySparks: count(mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks, 14),
+    stormBranchMarks: ultraTiny || narrow ? 4 : tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
+    stormBranches: count(mobile ? PERFORMANCE_BUDGET.mobileStormBranches : PERFORMANCE_BUDGET.stormBranches, 4),
+    stormBranchSegments: ultraTiny ? 4 : tiny || narrow ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
+    gestureWellMarks: ultraTiny || narrow ? 3 : tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
+    gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 8),
+    nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 4),
+    nacreMist: ultraTiny || narrow ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
+    causticCells: count(mobile ? PERFORMANCE_BUDGET.mobileCausticCells : PERFORMANCE_BUDGET.causticCells, 5),
+    causticRays: ultraTiny || narrow ? 10 : tiny ? 12 : mobile ? PERFORMANCE_BUDGET.mobileCausticRays : PERFORMANCE_BUDGET.causticRays,
   };
 }
 
@@ -215,7 +222,7 @@ export function nextSkyState(current, point, pulse, rhythm) {
 export function normalizePoint(event, fallback = INPUT_POLICY.defaultPoint) {
   const rect = event.currentTarget.getBoundingClientRect();
   const clientX = 'clientX' in event ? event.clientX : rect.left + rect.width * fallback.x;
-  const clientY = 'clientY' in event ? event.clientY : rect.top + rect.height * fallback.y;
+  const clientY = 'clientY in event ? event.clientY : rect.top + rect.height * fallback.y;
   return {
     x: clamp01((clientX - rect.left) / Math.max(1, rect.width)),
     y: clamp01((clientY - rect.top) / Math.max(1, rect.height)),
@@ -232,6 +239,11 @@ export function evolveWeatherGesture({ now, lastTouch, rhythm, pulse, state, poi
     rhythm: Math.min(PERFORMANCE_BUDGET.maxRhythm, nextRhythm),
     pulseBoost: close ? 0.34 : 0.24,
   };
+}
+
+function clamp(value, min, max) {
+  if (!Number.isFinite(value)) return min;
+  return Math.min(max, Math.max(min, value));
 }
 
 function clamp01(value) {
