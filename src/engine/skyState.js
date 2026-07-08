@@ -33,6 +33,11 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   renderedFilaments: 6,
   filamentSegments: 14,
   mobileFilamentSegments: 9,
+  pressureWakeMarks: 10,
+  pressureWakePaths: 22,
+  mobilePressureWakePaths: 12,
+  pressureWakeSteps: 8,
+  mobilePressureWakeSteps: 5,
   maxPixelRatio: 2,
   desktopStars: 210,
   mobileStars: 130,
@@ -139,6 +144,9 @@ export function responsiveBudget(width = 1000, height = 800) {
     sprites: mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites,
     pollen: mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen,
     ribbons: mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons,
+    pressureWakeMarks: PERFORMANCE_BUDGET.pressureWakeMarks,
+    pressureWakePaths: mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths,
+    pressureWakeSteps: mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
   };
 }
 
