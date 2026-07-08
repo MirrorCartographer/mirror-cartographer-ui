@@ -4,6 +4,8 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   maxMarks: 28,
   renderedMarks: 24,
   renderedTethers: 5,
+  renderedCreatures: 18,
+  mobileCreatures: 11,
   tickMs: 120,
   pulseFloor: 0.18,
   pulseDecay: 0.984,
