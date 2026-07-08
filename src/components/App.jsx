@@ -9,6 +9,7 @@ import {
 } from '../engine/skyState';
 import { createCreatureWeather, drawCreatureWeather } from '../engine/creatureWeather';
 import { createGestureComets, drawGestureComets } from '../engine/gestureComets';
+import { createSkyMusic } from '../engine/skyMusic';
 
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
@@ -305,7 +306,13 @@ export default function App() {
   const [marks, setMarks] = useState([]);
   const [rhythm, setRhythm] = useState(0);
   const lastTouch = useRef(0);
+  const musicRef = useRef(null);
   const canvasRef = useWordlessSky(state, pulse, marks, rhythm);
+
+  useEffect(() => {
+    musicRef.current = createSkyMusic();
+    return () => musicRef.current?.stop?.();
+  }, []);
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -328,6 +335,8 @@ export default function App() {
     setRhythm(gesture.rhythm);
     setState(gesture.kind);
     setPulse((value) => Math.min(1, value + gesture.pulseBoost));
+    musicRef.current?.start?.({ state: gesture.kind, pulse, rhythm: gesture.rhythm });
+    musicRef.current?.pulse?.({ state: gesture.kind, pulse, rhythm: gesture.rhythm });
   };
 
   return (
