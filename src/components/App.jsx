@@ -9,6 +9,7 @@ import {
 } from '../engine/skyState';
 import { drawSkyFilaments, filamentBudget } from '../engine/filaments';
 import { drawCreatureEcology, seedCreatures } from '../engine/creatureEcology';
+import { drawCloudBeasts, seedCloudBeasts } from '../engine/cloudBeasts';
 import { createTuringVeil, drawTuringVeil } from '../engine/turingVeil';
 import { drawPressureWake } from '../engine/pressureWake';
 import { createTrailMemory, drawTrailMemory } from '../engine/trailMemory';
@@ -36,6 +37,7 @@ function useSky(state, pulse, marks, rhythm) {
     const sprites = seeds(PERFORMANCE_BUDGET.renderedSprites, (i) => ({ i, x: Math.random(), y: Math.random(), a: Math.random() * TAU, s: 0.002 + Math.random() * 0.008, r: 12 + Math.random() * 46 }));
     const ribbons = seeds(PERFORMANCE_BUDGET.renderedRibbons, (i) => ({ i, p: Math.random() * TAU, y: 0.12 + Math.random() * 0.72, a: 18 + Math.random() * 76, w: 2 + Math.random() * 8 }));
     const pollen = seeds(PERFORMANCE_BUDGET.renderedPollen, (i) => ({ i, x: Math.random(), y: Math.random(), s: 0.2 + Math.random() * 1.5, p: Math.random() * TAU }));
+    const cloudBeasts = seedCloudBeasts(8);
     const creatures = seedCreatures(PERFORMANCE_BUDGET.renderedCreatures);
     const turingVeil = createTuringVeil();
     const trailMemory = createTrailMemory();
@@ -265,6 +267,8 @@ function useSky(state, pulse, marks, rhythm) {
         const alpha = state === 'clear' ? 0.08 : c.a * (state === 'cloud' ? 5 : state === 'murmur' ? 3.3 : 2.2);
         drawCloud(c.x * w + drift, c.y * h, c.r, alpha, pulse > 0.62 || spec.warmth > 0.7);
       });
+
+      drawCloudBeasts(ctx, cloudBeasts, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
 
       if (state === 'wind' || state === 'dawn' || state === 'murmur' || pulse > 0.66) {
         ctx.save();
