@@ -1,4 +1,4 @@
-export const SKY_STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'dawn', 'wind'];
+export const SKY_STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'dawn', 'wind', 'murmur'];
 
 export const PERFORMANCE_BUDGET = Object.freeze({
   maxMarks: 28,
@@ -70,6 +70,14 @@ export const SKY_STATE_DEFINITIONS = Object.freeze({
     warmth: 0.72,
     motion: 0.94,
   },
+  murmur: {
+    sky: ['#03040d', '#10172a', '#241738'],
+    mark: '#c4b5fd',
+    tether: '196,181,253',
+    glyph: 'aurora',
+    warmth: 0.38,
+    motion: 1.12,
+  },
 });
 
 export function skyState(name) {
@@ -79,9 +87,11 @@ export function skyState(name) {
 export function nextSkyState(current, point, pulse, rhythm) {
   const x = clamp01(point.x);
   const y = clamp01(point.y);
+  if (rhythm > 8 && pulse > 0.78) return 'murmur';
   if (rhythm > 7 && pulse > 0.74) return 'wind';
   if (rhythm > 5 && pulse > 0.76) return 'dawn';
   if (pulse > 0.82 && rhythm > 3) return 'lightning';
+  if (y > 0.7 && x > 0.68) return 'murmur';
   if (y > 0.7) return 'rain';
   if (x < 0.25) return 'cloud';
   if (x > 0.75) return 'aurora';
