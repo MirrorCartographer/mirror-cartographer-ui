@@ -173,6 +173,7 @@ export function responsiveBudget(width = 1000, height = 800) {
   const motionScale = ultraTiny ? 0.76 : short ? 0.84 : narrow ? 0.9 : 1;
   const densityScale = (ultraTiny ? 0.68 : tiny ? 0.78 : short ? 0.88 : 1) * areaScale * narrowScale;
   const count = (value, floor = 1) => Math.max(floor, Math.round(value * densityScale));
+  const causticRayFloor = ultraTiny || narrow ? 6 : tiny ? 8 : mobile ? 10 : 16;
 
   return {
     mobile,
@@ -206,7 +207,7 @@ export function responsiveBudget(width = 1000, height = 800) {
     nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 4),
     nacreMist: ultraTiny || narrow ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
     causticCells: count(mobile ? PERFORMANCE_BUDGET.mobileCausticCells : PERFORMANCE_BUDGET.causticCells, 5),
-    causticRays: ultraTiny || narrow ? 10 : tiny ? 12 : mobile ? PERFORMANCE_BUDGET.mobileCausticRays : PERFORMANCE_BUDGET.causticRays,
+    causticRays: count(mobile ? PERFORMANCE_BUDGET.mobileCausticRays : PERFORMANCE_BUDGET.causticRays, causticRayFloor),
   };
 }
 
