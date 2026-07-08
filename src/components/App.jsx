@@ -27,6 +27,15 @@ function useSky(state, pulse, marks, rhythm) {
     const sprites = seeds(24, (i) => ({ i, x: Math.random(), y: Math.random(), a: Math.random() * TAU, s: 0.002 + Math.random() * 0.008, r: 12 + Math.random() * 46 }));
     const ribbons = seeds(9, (i) => ({ i, p: Math.random() * TAU, y: 0.12 + Math.random() * 0.72, a: 18 + Math.random() * 76, w: 2 + Math.random() * 8 }));
     const pollen = seeds(70, (i) => ({ i, x: Math.random(), y: Math.random(), s: 0.2 + Math.random() * 1.5, p: Math.random() * TAU }));
+    const creatures = seeds(PERFORMANCE_BUDGET.renderedCreatures, (i) => ({
+      i,
+      x: Math.random(),
+      y: 0.18 + Math.random() * 0.58,
+      vx: (Math.random() - 0.5) * 0.002,
+      vy: (Math.random() - 0.5) * 0.002,
+      phase: Math.random() * TAU,
+      scale: 0.7 + Math.random() * 1.4,
+    }));
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -80,6 +89,71 @@ function useSky(state, pulse, marks, rhythm) {
           if (x === -80) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
         ctx.stroke();
+      });
+      ctx.restore();
+    };
+
+    const drawCreatures = (w, h, t, spec) => {
+      const limit = w < 700 ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures;
+      const active = creatures.slice(0, limit);
+      const latest = marks.at(-1);
+      const weatherPull = state === 'wind' ? 0.00034 : state === 'rain' ? -0.00012 : state === 'lightning' ? 0.00062 : 0.00018;
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      active.forEach((c, i) => {
+        let ax = (0.5 - c.x) * 0.00004;
+        let ay = (0.42 + spec.warmth * 0.18 - c.y) * 0.000035;
+        active.forEach((o, j) => {
+          if (i === j) return;
+          const dx = o.x - c.x;
+          const dy = o.y - c.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 0.0019) { ax -= dx * 0.0009; ay -= dy * 0.0009; }
+          else if (d2 < 0.028) { ax += dx * 0.000018; ay += dy * 0.000018; }
+        });
+        if (latest) {
+          const dx = latest.x - c.x;
+          const dy = latest.y - c.y;
+          const d = Math.max(0.02, Math.hypot(dx, dy));
+          const touched = Math.max(0, 1 - (Date.now() - latest.time) / 2400);
+          const mood = latest.kind === 'lightning' || latest.kind === 'wind' ? -1 : 1;
+          ax += (dx / d) * touched * mood * 0.00055;
+          ay += (dy / d) * touched * mood * 0.00055;
+        }
+        ax += Math.sin(t * 0.011 + c.phase) * weatherPull;
+        ay += Math.cos(t * 0.009 + c.phase * 1.7) * weatherPull * 0.62;
+        c.vx = Math.max(-0.006, Math.min(0.006, (c.vx + ax) * 0.982));
+        c.vy = Math.max(-0.005, Math.min(0.005, (c.vy + ay) * 0.982));
+        c.x += c.vx;
+        c.y += c.vy;
+        if (c.x < -0.05) c.x = 1.05;
+        if (c.x > 1.05) c.x = -0.05;
+        c.y = Math.max(0.08, Math.min(0.86, c.y));
+        const x = c.x * w;
+        const y = c.y * h;
+        const speed = Math.hypot(c.vx, c.vy);
+        const angle = Math.atan2(c.vy, c.vx || 0.0001);
+        const wing = Math.sin(t * (0.18 + speed * 80) + c.phase) * (6 + rhythm * 0.4);
+        const color = state === 'rain' ? '#9cdcff' : state === 'aurora' ? '#a7f3d0' : state === 'dawn' ? '#ffd1dc' : '#fff0c7';
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.globalAlpha = 0.18 + pulse * 0.28 + Math.min(0.22, speed * 24);
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 12 + pulse * 24;
+        ctx.lineWidth = 1.1;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 2.2 * c.scale, 5.6 * c.scale, 0, 0, TAU);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(-1, 0);
+        ctx.quadraticCurveTo(-10 * c.scale, -wing, -18 * c.scale, -2 * c.scale);
+        ctx.moveTo(1, 0);
+        ctx.quadraticCurveTo(10 * c.scale, wing, 18 * c.scale, 2 * c.scale);
+        ctx.stroke();
+        ctx.restore();
       });
       ctx.restore();
     };
@@ -272,6 +346,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.stroke();
         ctx.restore();
       });
+      drawCreatures(w, h, t, spec);
       drawTethers(w, h, t);
       drawMarks(w, h, t);
       if (state === 'rain') {
