@@ -57,6 +57,10 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   gestureWellMarks: 6,
   gestureWellParticles: 34,
   mobileGestureWellParticles: 18,
+  gestureWellThreads: 5,
+  mobileGestureWellThreads: 3,
+  gestureWellThreadNodes: 12,
+  mobileGestureWellThreadNodes: 7,
   nacreBands: 12,
   mobileNacreBands: 7,
   nacreMist: 5,
@@ -197,6 +201,8 @@ export function responsiveBudget(width = 1000, height = 800) {
     stormBranchSegments: ultraTiny ? 4 : tiny || narrow ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
     gestureWellMarks: ultraTiny || narrow ? 3 : tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
     gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 8),
+    gestureWellThreads: ultraTiny || narrow ? 2 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileGestureWellThreads : PERFORMANCE_BUDGET.gestureWellThreads,
+    gestureWellThreadNodes: ultraTiny ? 5 : tiny || narrow ? 6 : mobile ? PERFORMANCE_BUDGET.mobileGestureWellThreadNodes : PERFORMANCE_BUDGET.gestureWellThreadNodes,
     nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 4),
     nacreMist: ultraTiny || narrow ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
     causticCells: count(mobile ? PERFORMANCE_BUDGET.mobileCausticCells : PERFORMANCE_BUDGET.causticCells, 5),
@@ -241,12 +247,11 @@ export function evolveWeatherGesture({ now, lastTouch, rhythm, pulse, state, poi
   };
 }
 
+function clamp01(value) {
+  return clamp(value, 0, 1);
+}
+
 function clamp(value, min, max) {
   if (!Number.isFinite(value)) return min;
   return Math.min(max, Math.max(min, value));
-}
-
-function clamp01(value) {
-  if (!Number.isFinite(value)) return 0.5;
-  return Math.min(1, Math.max(0, value));
 }
