@@ -6,6 +6,11 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   renderedTethers: 5,
   renderedCreatures: 18,
   mobileCreatures: 11,
+  maxPixelRatio: 2,
+  desktopStars: 210,
+  mobileStars: 130,
+  desktopClouds: 42,
+  mobileClouds: 28,
   tickMs: 120,
   pulseFloor: 0.18,
   pulseDecay: 0.984,
@@ -82,6 +87,16 @@ export const SKY_STATE_DEFINITIONS = Object.freeze({
 
 export function skyState(name) {
   return SKY_STATE_DEFINITIONS[name] || SKY_STATE_DEFINITIONS.cloud;
+}
+
+export function responsiveBudget(width = 1000) {
+  const mobile = width < 700;
+  return {
+    mobile,
+    stars: mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars,
+    clouds: mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds,
+    creatures: mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures,
+  };
 }
 
 export function nextSkyState(current, point, pulse, rhythm) {
