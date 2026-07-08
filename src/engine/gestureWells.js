@@ -20,13 +20,13 @@ function colorFor(kind, alpha) {
 }
 
 function wellMood(kind) {
-  if (kind === 'rain') return { pull: 0.62, spin: -1.2, wobble: 0.7, ring: 0.9, braid: 0.72 };
-  if (kind === 'wind') return { pull: 0.42, spin: 1.8, wobble: 1.25, ring: 1.18, braid: 1.35 };
-  if (kind === 'murmur') return { pull: 0.72, spin: 1.45, wobble: 1.05, ring: 1.35, braid: 1.2 };
-  if (kind === 'aurora') return { pull: 0.48, spin: 1.15, wobble: 1.4, ring: 1.28, braid: 1.45 };
-  if (kind === 'dawn') return { pull: 0.36, spin: 0.72, wobble: 0.8, ring: 0.78, braid: 0.9 };
-  if (kind === 'lightning') return { pull: 0.84, spin: -2.1, wobble: 1.7, ring: 0.66, braid: 1.7 };
-  return { pull: 0.4, spin: 0.9, wobble: 0.72, ring: 1, braid: 1 };
+  if (kind === 'rain') return { pull: 0.62, spin: -1.2, wobble: 0.7, ring: 0.9, braid: 0.72, web: 0.78 };
+  if (kind === 'wind') return { pull: 0.42, spin: 1.8, wobble: 1.25, ring: 1.18, braid: 1.35, web: 1.28 };
+  if (kind === 'murmur') return { pull: 0.72, spin: 1.45, wobble: 1.05, ring: 1.35, braid: 1.2, web: 1.38 };
+  if (kind === 'aurora') return { pull: 0.48, spin: 1.15, wobble: 1.4, ring: 1.28, braid: 1.45, web: 1.22 };
+  if (kind === 'dawn') return { pull: 0.36, spin: 0.72, wobble: 0.8, ring: 0.78, braid: 0.9, web: 0.72 };
+  if (kind === 'lightning') return { pull: 0.84, spin: -2.1, wobble: 1.7, ring: 0.66, braid: 1.7, web: 1.55 };
+  return { pull: 0.4, spin: 0.9, wobble: 0.72, ring: 1, braid: 1, web: 1 };
 }
 
 export function createGestureWells(count = 34) {
@@ -97,6 +97,83 @@ function drawSpringThreads(ctx, wells, mark, env, baseRadius, mood, life, color)
         ctx.arc(p.x, p.y, 0.7 + pulse * 0.9, 0, TAU);
         ctx.stroke();
       }
+    }
+  }
+
+  ctx.restore();
+}
+
+function verletNode(ax, ay, bx, by, q, normal, sag, shiver, stiffness) {
+  const tether = Math.sin(q * Math.PI);
+  return {
+    x: ax + (bx - ax) * q + normal.x * tether * sag + normal.y * shiver * stiffness,
+    y: ay + (by - ay) * q + normal.y * tether * sag - normal.x * shiver * stiffness,
+  };
+}
+
+function drawVerletTensionWeb(ctx, active, env) {
+  const { width, height, time, pulse, rhythm, state, budget } = env;
+  const nodeCount = Math.max(4, Math.min(budget.gestureWellThreadNodes || 7, budget.mobile ? 7 : 12));
+  const webCount = Math.max(0, Math.min(active.length - 1, budget.mobile ? 2 : 4));
+  if (webCount < 1 || pulse < 0.28) return;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let i = 0; i < webCount; i += 1) {
+    const a = active[active.length - 1 - i];
+    const b = active[active.length - 2 - i];
+    if (!a || !b) continue;
+
+    const life = Math.max(0, 1 - Math.max(ageOf(a, 8400), ageOf(b, 8400)));
+    if (life <= 0.03) continue;
+
+    const ax = a.x * width;
+    const ay = a.y * height;
+    const bx = b.x * width;
+    const by = b.y * height;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const normal = { x: -dy / length, y: dx / length };
+    const mood = wellMood(a.kind || state);
+    const kind = a.kind || b.kind || state;
+    const alpha = clamp((0.035 + pulse * 0.075 + rhythm * 0.012) * life, 0.025, budget.mobile ? 0.18 : 0.28);
+    const sag = Math.min(width, height) * (0.018 + mood.web * 0.018) * life;
+    const stiffness = (kind === 'lightning' ? 2.1 : kind === 'rain' ? 0.82 : 1.18) * mood.web;
+
+    ctx.strokeStyle = colorFor(kind, alpha);
+    ctx.shadowColor = colorFor(kind, 0.72);
+    ctx.shadowBlur = budget.mobile ? 5 : 14;
+    ctx.lineWidth = clamp(0.46 + pulse * 0.8 - i * 0.08, 0.34, budget.mobile ? 1 : 1.45);
+    ctx.globalAlpha = 1;
+    ctx.beginPath();
+
+    for (let node = 0; node < nodeCount; node += 1) {
+      const q = node / Math.max(1, nodeCount - 1);
+      const wave = Math.sin(time * 0.06 + q * 8 + i * 1.7 + rhythm * 0.22);
+      const snap = kind === 'lightning' ? Math.max(0, Math.sin(time * 0.18 + i * 3 + q * 5)) * 9 * life : 0;
+      const shiver = wave * (3 + rhythm * 0.55 + snap) * life;
+      const p = verletNode(ax, ay, bx, by, q, normal, sag, shiver, stiffness);
+      if (node === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+
+    ctx.stroke();
+
+    if (!budget.mobile && i === 0) {
+      ctx.globalAlpha = alpha * 0.48;
+      ctx.beginPath();
+      const beadCount = 3;
+      for (let bead = 1; bead <= beadCount; bead += 1) {
+        const q = bead / (beadCount + 1);
+        const shiver = Math.sin(time * 0.075 + q * 10 + rhythm) * (5 + rhythm * 0.5) * life;
+        const p = verletNode(ax, ay, bx, by, q, normal, sag, shiver, stiffness);
+        ctx.moveTo(p.x + 1.2, p.y);
+        ctx.arc(p.x, p.y, 1.2 + pulse * 1.2, 0, TAU);
+      }
+      ctx.stroke();
     }
   }
 
@@ -179,4 +256,5 @@ export function drawGestureWells(ctx, wells, marks, env) {
   });
 
   ctx.restore();
+  drawVerletTensionWeb(ctx, active, env);
 }
