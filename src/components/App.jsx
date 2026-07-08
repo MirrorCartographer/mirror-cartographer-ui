@@ -15,6 +15,7 @@ import { drawPressureWake } from '../engine/pressureWake';
 import { createTrailMemory, drawTrailMemory } from '../engine/trailMemory';
 import { createStormBranches, drawStormBranches } from '../engine/stormBranches';
 import { createNacreVeil, drawNacreVeil } from '../engine/nacreVeil';
+import { createGestureWells, drawGestureWells } from '../engine/gestureWells';
 
 const TAU = Math.PI * 2;
 
@@ -44,6 +45,7 @@ function useSky(state, pulse, marks, rhythm) {
     const trailMemory = createTrailMemory();
     const stormBranches = createStormBranches(PERFORMANCE_BUDGET.stormBranches);
     const nacreVeil = createNacreVeil(PERFORMANCE_BUDGET.nacreBands);
+    const gestureWells = createGestureWells(PERFORMANCE_BUDGET.gestureWellParticles);
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -252,6 +254,7 @@ function useSky(state, pulse, marks, rhythm) {
 
       drawTuringVeil(ctx, turingVeil, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawPressureWake(ctx, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
+      drawGestureWells(ctx, gestureWells, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawTrailMemory(ctx, trailMemory, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawRibbons(w, h, t, spec, budget);
 
