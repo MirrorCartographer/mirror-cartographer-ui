@@ -14,6 +14,7 @@ import { createTuringVeil, drawTuringVeil } from '../engine/turingVeil';
 import { drawPressureWake } from '../engine/pressureWake';
 import { createTrailMemory, drawTrailMemory } from '../engine/trailMemory';
 import { createStormBranches, drawStormBranches } from '../engine/stormBranches';
+import { createNacreVeil, drawNacreVeil } from '../engine/nacreVeil';
 
 const TAU = Math.PI * 2;
 
@@ -42,6 +43,7 @@ function useSky(state, pulse, marks, rhythm) {
     const turingVeil = createTuringVeil();
     const trailMemory = createTrailMemory();
     const stormBranches = createStormBranches(PERFORMANCE_BUDGET.stormBranches);
+    const nacreVeil = createNacreVeil(PERFORMANCE_BUDGET.nacreBands);
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -268,6 +270,7 @@ function useSky(state, pulse, marks, rhythm) {
         drawCloud(c.x * w + drift, c.y * h, c.r, alpha, pulse > 0.62 || spec.warmth > 0.7);
       });
 
+      drawNacreVeil(ctx, nacreVeil, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
       drawCloudBeasts(ctx, cloudBeasts, marks, { width: w, height: h, time: t, pulse, rhythm, state, spec, budget });
 
       if (state === 'wind' || state === 'dawn' || state === 'murmur' || pulse > 0.66) {
