@@ -11,6 +11,7 @@ export function createSkyCaustics(count) {
     squeeze: 0.42 + Math.random() * 0.72,
     drift: 0.00018 + Math.random() * 0.00062,
     brightness: 0.45 + Math.random() * 0.55,
+    gate: 0.25 + Math.random() * 0.75,
   }));
 }
 
@@ -25,6 +26,75 @@ function causticPalette(state, spec) {
   if (state === 'aurora') return ['167,243,208', '196,181,253'];
   if (state === 'murmur') return ['196,181,253', '167,243,208'];
   return spec.warmth > 0.6 ? ['255,226,191', '247,251,255'] : ['247,251,255', '125,211,252'];
+}
+
+function drawCrepuscularApertures(ctx, marks, palette, options) {
+  const { width: w, height: h, time: t, pulse, rhythm, state, spec, budget } = options;
+  const latest = marks.at(-1);
+  const fresh = latest ? Math.max(0, 1 - (Date.now() - latest.time) / 5200) : 0;
+  const awake = fresh > 0.02 || state === 'dawn' || state === 'clear' || state === 'cloud' || pulse > 0.72;
+  if (!awake) return;
+
+  const sourceX = latest ? latest.x * w : w * (0.5 + Math.sin(t * 0.003) * 0.18);
+  const sourceY = latest ? latest.y * h : h * (state === 'dawn' ? 0.78 : 0.34 + Math.cos(t * 0.004) * 0.08);
+  const vanishX = w * (0.5 + Math.sin(t * 0.002 + rhythm * 0.1) * (state === 'wind' ? 0.32 : 0.18));
+  const vanishY = h * (state === 'dawn' ? 1.08 : state === 'clear' ? -0.08 : 0.92);
+  const base = Math.atan2(sourceY - vanishY, sourceX - vanishX);
+  const fan = state === 'murmur' ? 1.55 : state === 'lightning' ? 1.25 : 1.05;
+  const rayCount = Math.max(6, Math.min(budget.causticRays || 18, budget.mobile ? 14 : 24));
+  const color = state === 'lightning' ? '239,251,255' : palette[0];
+  const warmth = state === 'dawn' || spec.warmth > 0.6 ? palette[1] : color;
+  const opening = Math.sin(Math.min(1, fresh + pulse * 0.35) * Math.PI);
+  const drift = Math.sin(t * 0.018) * 0.08 + rhythm * 0.012;
+  const reach = Math.hypot(w, h) * (0.72 + pulse * 0.34 + opening * 0.24);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+
+  for (let i = 0; i < rayCount; i += 1) {
+    const q = rayCount <= 1 ? 0.5 : i / (rayCount - 1);
+    const centered = q - 0.5;
+    const flutter = Math.sin(t * 0.026 + i * 1.7 + rhythm * 0.22) * 0.045;
+    const aperture = Math.pow(Math.abs(Math.sin(q * Math.PI)), 0.7);
+    const angle = base + centered * fan + drift + flutter;
+    const inner = 26 + aperture * 34 + fresh * 24;
+    const outer = reach * (0.56 + aperture * 0.46);
+    const x1 = sourceX + Math.cos(angle) * inner;
+    const y1 = sourceY + Math.sin(angle) * inner;
+    const x2 = sourceX + Math.cos(angle) * outer;
+    const y2 = sourceY + Math.sin(angle) * outer;
+    const cpx = (x1 + x2) * 0.5 + Math.sin(t * 0.011 + i) * 34 * budget.motionScale;
+    const cpy = (y1 + y2) * 0.5 + Math.cos(t * 0.013 + i) * 22 * budget.motionScale;
+    const alpha = clamp01((0.018 + pulse * 0.024 + opening * 0.12) * aperture * budget.densityScale);
+    if (alpha < 0.006) continue;
+
+    const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+    gradient.addColorStop(0, `rgba(${warmth},0)`);
+    gradient.addColorStop(0.18, `rgba(${warmth},${alpha * 0.85})`);
+    gradient.addColorStop(0.58, `rgba(${color},${alpha * 0.42})`);
+    gradient.addColorStop(1, `rgba(${color},0)`);
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = (budget.mobile ? 5 : 9) + aperture * (budget.mobile ? 8 : 15) + pulse * 6;
+    ctx.shadowColor = `rgba(${warmth},1)`;
+    ctx.shadowBlur = budget.mobile ? 4 : 18 + pulse * 18;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.quadraticCurveTo(cpx, cpy, x2, y2);
+    ctx.stroke();
+  }
+
+  if (!budget.mobile && opening > 0.08) {
+    ctx.globalAlpha = 0.08 + opening * 0.12;
+    ctx.fillStyle = `rgba(${warmth},1)`;
+    ctx.shadowColor = `rgba(${warmth},1)`;
+    ctx.shadowBlur = 28;
+    ctx.beginPath();
+    ctx.ellipse(sourceX, sourceY, 26 + opening * 38, 8 + opening * 14, base + Math.PI / 2, 0, TAU);
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
 
 export function drawSkyCaustics(ctx, cells, marks, options) {
@@ -44,9 +114,12 @@ export function drawSkyCaustics(ctx, cells, marks, options) {
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
 
+  drawCrepuscularApertures(ctx, marks, palette, options);
+
   drawCells.forEach((cell, i) => {
     const pull = fresh * (state === 'rain' ? 0.0011 : 0.00072);
     const orbit = Math.sin(t * 0.006 + cell.phase + rhythm * 0.12);
+    const gateBreath = 0.8 + Math.sin(t * 0.017 + cell.gate * TAU) * 0.2;
     cell.x += cell.drift * (state === 'wind' || state === 'murmur' ? 2.2 : 1) + (touchX - cell.x) * pull;
     cell.y += Math.sin(t * 0.004 + cell.phase) * 0.00032 + (touchY - cell.y) * pull * 0.62;
     cell.phase += cell.spin * (0.4 + spec.motion);
@@ -57,7 +130,7 @@ export function drawSkyCaustics(ctx, cells, marks, options) {
 
     const x = cell.x * w;
     const y = cell.y * h;
-    const size = cell.radius * Math.min(w, h) * (1 + pulse * 0.36 + fresh * 0.55);
+    const size = cell.radius * Math.min(w, h) * (1 + pulse * 0.36 + fresh * 0.55) * gateBreath;
     const color = palette[i % palette.length];
     const alpha = clamp01((0.035 + pulse * 0.035 + fresh * 0.17) * cell.brightness * budget.densityScale);
 
