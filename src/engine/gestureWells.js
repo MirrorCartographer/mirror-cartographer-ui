@@ -180,6 +180,81 @@ function drawVerletTensionWeb(ctx, active, env) {
   ctx.restore();
 }
 
+function drawInductionArcs(ctx, active, env) {
+  const { width, height, time, pulse, rhythm, state, budget } = env;
+  const charged = state === 'lightning' || state === 'murmur' || rhythm > 3.2 || pulse > 0.72;
+  const pairCount = Math.min(active.length - 1, budget.mobile ? 1 : 3);
+  if (!charged || pairCount < 1) return;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let pair = 0; pair < pairCount; pair += 1) {
+    const a = active[active.length - 1 - pair];
+    const b = active[active.length - 2 - pair];
+    if (!a || !b) continue;
+
+    const life = Math.max(0, 1 - Math.max(ageOf(a, 4200), ageOf(b, 4200)));
+    if (life < 0.08) continue;
+
+    const ax = a.x * width;
+    const ay = a.y * height;
+    const bx = b.x * width;
+    const by = b.y * height;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const nx = -dy / length;
+    const ny = dx / length;
+    const kind = state === 'lightning' ? 'lightning' : a.kind || state;
+    const branchCount = budget.mobile ? 1 : pair === 0 ? 3 : 2;
+    const nodeCount = budget.mobile ? 5 : 8;
+    const charge = clamp((pulse * 0.55 + rhythm * 0.075) * life, 0.06, budget.mobile ? 0.34 : 0.58);
+
+    ctx.strokeStyle = colorFor(kind, charge);
+    ctx.shadowColor = colorFor(kind, 0.9);
+    ctx.shadowBlur = budget.mobile ? 8 : 22;
+
+    for (let branch = 0; branch < branchCount; branch += 1) {
+      const flicker = Math.max(0, Math.sin(time * 0.19 + branch * 2.7 + pair * 1.1));
+      if (flicker < (state === 'lightning' ? 0.18 : 0.42)) continue;
+
+      ctx.globalAlpha = charge * (0.38 + flicker * 0.62);
+      ctx.lineWidth = clamp(0.38 + flicker * 1.3 - pair * 0.15, 0.32, budget.mobile ? 1.2 : 2.1);
+      ctx.beginPath();
+
+      for (let node = 0; node < nodeCount; node += 1) {
+        const q = node / Math.max(1, nodeCount - 1);
+        const tooth = Math.sin((q * 17 + branch * 5.3) * Math.PI) > 0 ? 1 : -1;
+        const taper = Math.sin(q * Math.PI);
+        const jitter = tooth * taper * (4 + rhythm * 1.4 + branch * 2.2) * (0.45 + flicker) * life;
+        const crawl = Math.sin(time * 0.083 + q * 9 + branch + pair) * taper * (5 + pulse * 12) * life;
+        const x = ax + dx * q + nx * (jitter + crawl);
+        const y = ay + dy * q + ny * (jitter + crawl);
+        if (node === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+
+      if (!budget.mobile && branch === 0 && flicker > 0.62) {
+        const q = 0.34 + Math.sin(time * 0.041 + pair) * 0.12;
+        const fork = Math.sin(q * Math.PI) * (12 + rhythm * 2) * life;
+        const fx = ax + dx * q + nx * fork;
+        const fy = ay + dy * q + ny * fork;
+        ctx.globalAlpha *= 0.55;
+        ctx.beginPath();
+        ctx.moveTo(fx, fy);
+        ctx.lineTo(fx + nx * (18 + pulse * 24), fy + ny * (18 + pulse * 24));
+        ctx.stroke();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
 export function drawGestureWells(ctx, wells, marks, env) {
   const { width, height, time, pulse, rhythm, state, budget } = env;
   const active = marks.slice(-(budget.gestureWellMarks || 7));
@@ -257,4 +332,5 @@ export function drawGestureWells(ctx, wells, marks, env) {
 
   ctx.restore();
   drawVerletTensionWeb(ctx, active, env);
+  drawInductionArcs(ctx, active, env);
 }
