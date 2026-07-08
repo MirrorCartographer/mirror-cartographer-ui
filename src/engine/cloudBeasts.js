@@ -38,6 +38,8 @@ export function drawCloudBeasts(ctx, beasts, marks, options) {
   const herdCenterX = 0.5 + Math.sin(t * 0.003) * 0.08;
   const herdCenterY = 0.26 + Math.cos(t * 0.004) * 0.045 + spec.warmth * 0.08;
   const weatherDrift = state === 'wind' || state === 'murmur' ? 0.00032 : state === 'rain' ? -0.00008 : 0.00008;
+  const peerLimit = budget.mobile ? Math.min(active.length, 5) : active.length;
+  const lobeCount = budget.ultraTiny ? 3 : budget.tiny ? 4 : 5;
 
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
@@ -48,7 +50,7 @@ export function drawCloudBeasts(ctx, beasts, marks, options) {
     let ax = (herdCenterX - b.x) * 0.000018 + Math.sin(t * 0.007 + b.phase) * weatherDrift;
     let ay = (herdCenterY - b.y) * 0.000016 + Math.cos(t * 0.006 + b.phase) * weatherDrift * 0.55;
 
-    active.forEach((other, j) => {
+    active.slice(0, peerLimit).forEach((other, j) => {
       if (i === j) return;
       const dx = other.x - b.x;
       const dy = other.y - b.y;
@@ -100,9 +102,9 @@ export function drawCloudBeasts(ctx, beasts, marks, options) {
     ctx.fillStyle = `rgba(${tint},0.62)`;
     ctx.strokeStyle = `rgba(${tint},0.88)`;
     ctx.shadowColor = `rgba(${tint},1)`;
-    ctx.shadowBlur = 18 + pulse * 22 + b.bloom * 18;
+    ctx.shadowBlur = budget.ultraTiny ? 8 + pulse * 10 : budget.tiny ? 12 + pulse * 14 : 18 + pulse * 22 + b.bloom * 18;
 
-    for (let lobe = 0; lobe < 5; lobe += 1) {
+    for (let lobe = 0; lobe < lobeCount; lobe += 1) {
       const a = lobe * 1.22 + b.phase * 0.3;
       const lx = Math.cos(a) * size * 0.32;
       const ly = Math.sin(a * 1.4) * size * 0.15;
