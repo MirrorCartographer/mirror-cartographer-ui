@@ -182,6 +182,75 @@ function drawShearCurlComb(ctx, marks, palette, options) {
   ctx.restore();
 }
 
+function drawNoctilucentVeil(ctx, marks, palette, options) {
+  const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
+  const latest = marks.at(-1);
+  const fresh = markFreshness(latest, now, 6400);
+  const twilightState = state === 'clear' || state === 'dawn' || state === 'murmur' || state === 'aurora';
+  if (budget.ultraTiny && fresh < 0.08) return;
+  if (!twilightState && fresh < 0.04 && pulse < 0.76) return;
+
+  const veilRows = Math.max(2, Math.min(budget.mobile ? 4 : 7, Math.round((budget.causticCells || 8) * 0.45)));
+  const segments = budget.mobile ? 16 : 28;
+  const skyLift = h * (latest ? 0.18 + latest.y * 0.28 : 0.22 + Math.sin(t * 0.003) * 0.05);
+  const touchPull = latest ? (latest.x - 0.5) * w * 0.26 * fresh : Math.sin(t * 0.002) * w * 0.04;
+  const blue = state === 'dawn' ? '191,219,255' : '125,211,252';
+  const silver = spec.warmth > 0.65 ? palette[1] : '247,251,255';
+  const glow = clamp01((0.035 + fresh * 0.18 + pulse * 0.035) * budget.densityScale);
+  const liftBeat = Math.sin(clamp01(fresh + pulse * 0.18) * Math.PI);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let row = 0; row < veilRows; row += 1) {
+    const qRow = veilRows <= 1 ? 0.5 : row / (veilRows - 1);
+    const baseY = skyLift + qRow * h * 0.11 + Math.sin(t * 0.006 + row) * 9 * budget.motionScale;
+    const billow = (11 + qRow * 18 + rhythm * 2.4 + pulse * 18) * budget.motionScale;
+    const alpha = glow * (0.56 + qRow * 0.3) * (twilightState ? 1 : 0.72);
+    const gradient = ctx.createLinearGradient(0, baseY, w, baseY + billow);
+    gradient.addColorStop(0, `rgba(${blue},0)`);
+    gradient.addColorStop(0.32, `rgba(${blue},${alpha})`);
+    gradient.addColorStop(0.66, `rgba(${silver},${alpha * 0.68})`);
+    gradient.addColorStop(1, `rgba(${blue},0)`);
+
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = (budget.mobile ? 1.1 : 1.45) + liftBeat * (budget.mobile ? 0.7 : 1.3);
+    ctx.shadowColor = `rgba(${blue},1)`;
+    ctx.shadowBlur = budget.mobile ? 2 : 10 + liftBeat * 12;
+    ctx.globalAlpha = clamp01(0.54 + fresh * 0.5 - qRow * 0.06);
+    ctx.beginPath();
+
+    for (let i = 0; i <= segments; i += 1) {
+      const q = i / segments;
+      const x = q * w;
+      const waveA = Math.sin(q * TAU * (1.6 + qRow * 0.5) + t * 0.011 + row * 1.7);
+      const waveB = Math.sin(q * TAU * 5.2 - t * 0.017 + row + rhythm * 0.12) * 0.38;
+      const ripple = (waveA + waveB) * billow;
+      const y = baseY + ripple + Math.sin(q * Math.PI) * liftBeat * -22 + touchPull * Math.sin(q * Math.PI) * 0.05;
+      if (i === 0) ctx.moveTo(x + touchPull * 0.18, y); else ctx.lineTo(x + touchPull * Math.sin(q * Math.PI), y);
+    }
+
+    ctx.stroke();
+
+    if (!budget.mobile && alpha > 0.035) {
+      ctx.fillStyle = `rgba(${silver},${alpha * 0.75})`;
+      const flecks = 3;
+      for (let f = 0; f < flecks; f += 1) {
+        const fq = ((f + 1) / (flecks + 1) + Math.sin(t * 0.002 + row + f) * 0.035) % 1;
+        const x = fq * w + touchPull * Math.sin(fq * Math.PI);
+        const y = baseY + Math.sin(fq * TAU * 4 + t * 0.012 + row) * billow;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 1.1 + liftBeat * 1.6, 0.55 + qRow * 0.7, Math.sin(t * 0.01 + f), 0, TAU);
+        ctx.fill();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
 export function drawSkyCaustics(ctx, cells, marks, options) {
   const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
   if (w <= 1 || h <= 1 || budget.densityScale <= 0.05) return;
@@ -203,6 +272,7 @@ export function drawSkyCaustics(ctx, cells, marks, options) {
 
   drawCrepuscularApertures(ctx, marks, palette, options);
   drawShearCurlComb(ctx, marks, palette, options);
+  drawNoctilucentVeil(ctx, marks, palette, options);
 
   drawCells.forEach((cell, i) => {
     const pull = fresh * (state === 'rain' ? 0.0011 : 0.00072);
