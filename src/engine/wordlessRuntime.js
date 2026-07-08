@@ -9,7 +9,7 @@ import {
   skyState,
 } from './skyState';
 
-export const WORDLESS_RUNTIME_VERSION = 3;
+export const WORDLESS_RUNTIME_VERSION = 4;
 
 export const EVENT_ROUTES = Object.freeze({
   pointer: 'gesture:intent',
@@ -38,6 +38,7 @@ export const LAYER_REGISTRY = deepFreeze([
   { id: 'stars', phase: 'atmosphere', cost: 0.38, input: 'state', budgetKey: 'stars', fallback: 'fewerPoints' },
   { id: 'clouds', phase: 'atmosphere', cost: 0.62, input: 'state', budgetKey: 'clouds', fallback: 'fewerClouds' },
   { id: 'nacreVeil', phase: 'atmosphere', cost: 0.86, input: 'state-gesture', budgetKey: 'nacreBands', fallback: 'thinVeil' },
+  { id: 'skyCaustics', phase: 'atmosphere', cost: 0.84, input: 'state-gesture', budgetKey: 'causticCells', fallback: 'softCaustics' },
   { id: 'pollen', phase: 'atmosphere', cost: 0.45, input: 'state-rhythm', budgetKey: 'pollen', fallback: 'skip' },
   { id: 'sprites', phase: 'organisms', cost: 0.7, input: 'state-rhythm', budgetKey: 'sprites', fallback: 'fewerSprites' },
   { id: 'creatureEcology', phase: 'organisms', cost: 1.05, input: 'gesture-memory', budgetKey: 'creatures', fallback: 'reducedFlock' },
