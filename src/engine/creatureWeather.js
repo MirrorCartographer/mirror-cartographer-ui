@@ -1,6 +1,7 @@
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 const lerp = (a, b, t) => a + (b - a) * t;
+const wave = (time, speed, phase = 0) => Math.sin(time * speed + phase);
 
 function colorFor(kind, alpha = 1) {
   if (kind === 'rain') return `rgba(145,216,255,${alpha})`;
@@ -14,9 +15,10 @@ function colorFor(kind, alpha = 1) {
 
 export function createCreatureWeather() {
   return {
-    swarm: Array.from({ length: 28 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.4 + Math.random() * 1.4, r: 0.8 + Math.random() * 2.2 })),
-    flock: Array.from({ length: 18 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.5 + Math.random(), k: 0.7 + Math.random() * 1.3 })),
-    clouds: Array.from({ length: 4 }, (_, i) => ({ i, x: Math.random(), y: 0.1 + Math.random() * 0.3, p: Math.random() * TAU, k: 0.8 + Math.random() }))
+    swarm: Array.from({ length: 30 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.4 + Math.random() * 1.4, r: 0.8 + Math.random() * 2.2 })),
+    flock: Array.from({ length: 20 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, s: 0.5 + Math.random(), k: 0.7 + Math.random() * 1.3 })),
+    clouds: Array.from({ length: 5 }, (_, i) => ({ i, x: Math.random(), y: 0.1 + Math.random() * 0.3, p: Math.random() * TAU, k: 0.8 + Math.random() })),
+    sprites: Array.from({ length: 7 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, k: 0.7 + Math.random() * 1.2 }))
   };
 }
 
@@ -25,52 +27,75 @@ function mood(state, pulse, rhythm) {
     speed: (state === 'wind' || state === 'lightning' || state === 'murmur' ? 1.35 : 0.85) + pulse * 0.45 + rhythm * 0.035,
     gather: state === 'clear' ? 1.25 : state === 'wind' ? 0.68 : state === 'murmur' ? 1.15 : 0.9,
     alarm: state === 'lightning' ? 1.45 : state === 'rain' ? 0.9 : 0.55,
-    beat: state === 'lightning' ? 1.9 : state === 'wind' ? 1.45 : state === 'rain' ? 0.82 : 1
+    beat: state === 'lightning' ? 1.9 : state === 'wind' ? 1.45 : state === 'rain' ? 0.82 : 1,
+    curiosity: state === 'murmur' || state === 'aurora' ? 1.25 : 0.85
   };
 }
 
-export function drawCreatureWeather(ctx, ecology, env) {
-  const { width: w, height: h, time: t, active, budget, state, pulse, rhythm } = env;
-  const m = mood(state, pulse, rhythm);
-  const target = active.at(-1) || { x: 0.5 + Math.sin(t * 0.006) * 0.22, y: 0.54 + Math.cos(t * 0.004) * 0.16, kind: state };
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ecology.clouds.slice(0, budget.mobile ? 2 : 4).forEach((c) => {
-    const x = ((c.x + t * 0.00032 * m.speed + Math.sin(t * 0.004 + c.p) * 0.035 + 1) % 1) * w;
-    const y = clamp01(c.y + Math.cos(t * 0.006 + c.p) * 0.035) * h;
-    const size = Math.min(w, h) * 0.06 * c.k * (1 + pulse * 0.16);
-    ctx.globalAlpha = 0.12 + pulse * 0.11;
-    ctx.fillStyle = colorFor(state, 0.2);
-    ctx.shadowColor = colorFor(state, 0.8);
-    ctx.shadowBlur = budget.mobile ? 10 : 18;
+function emotionalCue(time, state, pulse, rhythm) {
+  const inhale = (wave(time, 0.028, rhythm * 0.19) + 1) / 2;
+  const quick = Math.max(0, wave(time, state === 'lightning' ? 0.17 : 0.064, pulse * 4));
+  return {
+    inhale,
+    startle: state === 'lightning' ? quick : quick * Math.max(0, pulse - 0.55),
+    hush: state === 'rain' ? 0.65 + inhale * 0.35 : 1,
+    bloom: state === 'dawn' || state === 'aurora' ? 0.6 + inhale * 0.5 : 0.35 + pulse * 0.35
+  };
+}
+
+function drawCloudBeasts(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse } = env;
+  ecology.clouds.slice(0, budget.mobile ? 2 : 5).forEach((c) => {
+    const x = ((c.x + t * 0.00028 * m.speed + wave(t, 0.004, c.p) * 0.035 + target.x * 0.012 * m.curiosity + 1) % 1) * w;
+    const y = clamp01(c.y + wave(t, 0.006, c.p) * 0.035 + target.y * 0.012) * h;
+    const size = Math.min(w, h) * 0.058 * c.k * (1 + pulse * 0.14 + cue.inhale * 0.08);
+    const kind = state === 'cloud' ? target.kind || state : state;
+    ctx.globalAlpha = 0.1 + pulse * 0.11 + cue.bloom * 0.05;
+    ctx.fillStyle = colorFor(kind, 0.2);
+    ctx.shadowColor = colorFor(kind, 0.8);
+    ctx.shadowBlur = budget.mobile ? 9 : 18;
     ctx.beginPath();
     for (let lobe = 0; lobe < 7; lobe += 1) {
-      const a = (lobe / 7) * TAU + t * 0.002 * m.beat;
-      const lx = x + Math.cos(a) * size * (0.35 + (lobe % 3) * 0.14);
+      const a = (lobe / 7) * TAU + t * 0.002 * m.beat + wave(t, 0.01, c.p + lobe) * 0.04;
+      const lx = x + Math.cos(a) * size * (0.32 + (lobe % 3) * 0.14);
       const ly = y + Math.sin(a * 1.7) * size * 0.22;
       ctx.moveTo(lx + size * 0.3, ly);
-      ctx.arc(lx, ly, size * (0.3 + (lobe % 4) * 0.05), 0, TAU);
+      ctx.arc(lx, ly, size * (0.28 + (lobe % 4) * 0.05), 0, TAU);
     }
     ctx.fill();
+    if (!budget.mobile && (state === 'murmur' || pulse > 0.68)) {
+      ctx.globalAlpha = 0.12 + cue.startle * 0.16;
+      ctx.strokeStyle = colorFor(kind, 0.34);
+      ctx.lineWidth = 0.7 + pulse * 0.6;
+      ctx.beginPath();
+      ctx.moveTo(x - size * 0.34, y + size * 0.05);
+      ctx.quadraticCurveTo(x, y + size * (0.16 + cue.inhale * 0.12), x + size * 0.34, y + size * 0.03);
+      ctx.stroke();
+    }
   });
-  const flockCount = Math.min(ecology.flock.length, budget.mobile ? 10 : 18);
-  ecology.flock.slice(0, flockCount).forEach((b, i) => {
-    const q = i / Math.max(1, flockCount - 1);
-    const phase = b.p + t * 0.0065 * b.s * m.speed;
-    const orbit = 0.08 + q * 0.16 * m.gather;
-    const xNorm = clamp01(target.x + Math.cos(phase) * orbit + Math.sin(t * 0.017 + b.i) * 0.03 * m.alarm);
-    const yNorm = clamp01(target.y + Math.sin(phase * 0.86) * orbit * 0.58 + Math.cos(phase * 1.3) * 0.04);
+}
+
+function drawFlock(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse, rhythm } = env;
+  const count = Math.min(ecology.flock.length, budget.mobile ? 10 : 20);
+  ecology.flock.slice(0, count).forEach((b, i) => {
+    const q = i / Math.max(1, count - 1);
+    const phase = b.p + t * 0.0063 * b.s * m.speed;
+    const orbit = (0.07 + q * 0.16 * m.gather) * (1 + cue.startle * 0.22);
+    const leap = state === 'lightning' ? wave(t, 0.049, b.i) * 0.045 : 0;
+    const xNorm = clamp01(target.x + Math.cos(phase) * orbit + wave(t, 0.017, b.i) * 0.03 * m.alarm + leap);
+    const yNorm = clamp01(target.y + Math.sin(phase * 0.86) * orbit * 0.58 + Math.cos(phase * 1.3) * 0.04 - cue.startle * 0.025);
     const body = Math.min(w, h) * 0.006 * b.k;
     const face = Math.atan2(target.y - yNorm, target.x - xNorm);
-    const wing = Math.sin(t * 0.14 * m.beat + b.i) * (5 + rhythm * 0.45) * b.k;
+    const wing = Math.sin(t * 0.14 * m.beat + b.i) * (5 + rhythm * 0.45 + cue.startle * 9) * b.k;
     ctx.save();
     ctx.translate(xNorm * w, yNorm * h);
-    ctx.rotate(face + Math.PI);
+    ctx.rotate(face + Math.PI + wave(t, 0.02, b.p) * 0.12);
     ctx.strokeStyle = colorFor(target.kind || state, 0.2 + pulse * 0.22);
-    ctx.fillStyle = colorFor(target.kind || state, 0.18 + pulse * 0.16);
+    ctx.fillStyle = colorFor(target.kind || state, 0.16 + pulse * 0.16);
     ctx.shadowColor = colorFor(target.kind || state, 0.9);
     ctx.shadowBlur = budget.mobile ? 5 : 12;
-    ctx.globalAlpha = 0.45 + pulse * 0.28;
+    ctx.globalAlpha = (0.42 + pulse * 0.28) * cue.hush;
     ctx.lineWidth = Math.max(0.8, body * 0.42);
     ctx.beginPath();
     ctx.moveTo(-body * 2.2, wing);
@@ -81,32 +106,94 @@ export function drawCreatureWeather(ctx, ecology, env) {
     ctx.fill();
     ctx.restore();
   });
-  ecology.swarm.slice(0, budget.mobile ? 16 : 28).forEach((f, i) => {
-    const q = i / 28;
-    const beat = Math.max(0, Math.sin(t * 0.052 * m.beat + f.p + q * 4));
-    const radius = (0.08 + q * 0.2) * (1 + pulse * 0.25);
-    const x = clamp01(lerp(f.x, target.x, 0.42) + Math.cos(t * 0.011 * f.s + f.p) * radius) * w;
+}
+
+function drawFireflies(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse } = env;
+  const count = Math.min(ecology.swarm.length, budget.mobile ? 16 : 30);
+  ecology.swarm.slice(0, count).forEach((f, i) => {
+    const q = i / Math.max(1, count - 1);
+    const blink = Math.max(0, Math.sin(t * 0.052 * m.beat + f.p + q * 4));
+    const radius = (0.07 + q * 0.2) * (1 + pulse * 0.25 + cue.inhale * 0.1);
+    const x = clamp01(lerp(f.x, target.x, 0.42) + Math.cos(t * 0.011 * f.s + f.p) * radius + cue.startle * wave(t, 0.043, i) * 0.035) * w;
     const y = clamp01(lerp(f.y, target.y, 0.38) + Math.sin(t * 0.014 * f.s + f.p * 1.4) * radius * 0.62) * h;
-    ctx.globalAlpha = 0.08 + beat * (0.22 + pulse * 0.18);
+    ctx.globalAlpha = 0.07 + blink * (0.2 + pulse * 0.18) + cue.bloom * 0.04;
     ctx.fillStyle = colorFor(target.kind || state, 0.72);
     ctx.shadowColor = colorFor(target.kind || state, 1);
-    ctx.shadowBlur = 8 + beat * 18;
+    ctx.shadowBlur = 7 + blink * 17;
     ctx.beginPath();
-    ctx.arc(x, y, f.r + beat * (1.4 + pulse * 2), 0, TAU);
+    ctx.arc(x, y, f.r + blink * (1.4 + pulse * 2), 0, TAU);
     ctx.fill();
   });
-  if (state === 'rain' || state === 'murmur' || pulse > 0.5) {
-    ctx.strokeStyle = colorFor(state === 'rain' ? 'rain' : 'murmur', 0.18 + pulse * 0.12);
-    ctx.lineWidth = 0.7 + pulse * 0.6;
-    active.slice(-(budget.mobile ? 5 : 8)).forEach((mark, i) => {
-      const age = Math.min(1, (Date.now() - mark.time) / 5200);
-      const life = 1 - age;
-      const base = Math.min(w, h) * (0.025 + age * 0.22);
-      ctx.globalAlpha = life * 0.34;
+}
+
+function drawStormSprites(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse, rhythm } = env;
+  const charged = state === 'lightning' || state === 'murmur' || rhythm > 4 || pulse > 0.72;
+  if (!charged) return;
+  const count = Math.min(ecology.sprites.length, budget.mobile ? 3 : 7);
+  ecology.sprites.slice(0, count).forEach((s, i) => {
+    const phase = s.p + t * (0.018 + i * 0.001) * m.speed;
+    const jump = cue.startle * (0.08 + s.k * 0.025);
+    const x = clamp01(lerp(s.x, target.x, 0.3) + Math.cos(phase * 1.2) * (0.18 + jump)) * w;
+    const y = clamp01(lerp(s.y, target.y, 0.26) + Math.sin(phase) * (0.1 + jump * 0.6)) * h;
+    const scale = Math.min(w, h) * 0.018 * s.k * (1 + cue.startle * 0.8);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(phase + cue.startle * 0.7);
+    ctx.strokeStyle = colorFor(state === 'lightning' ? 'lightning' : target.kind || state, 0.18 + pulse * 0.18 + cue.startle * 0.22);
+    ctx.shadowColor = colorFor(state === 'lightning' ? 'lightning' : target.kind || state, 0.9);
+    ctx.shadowBlur = budget.mobile ? 8 : 20;
+    ctx.lineWidth = 0.7 + cue.startle * 1.3;
+    ctx.globalAlpha = 0.42 + cue.startle * 0.42;
+    ctx.beginPath();
+    for (let n = 0; n < 5; n += 1) {
+      const a = (n / 5) * TAU;
+      const r = scale * (n % 2 ? 0.52 : 1.15);
+      if (n === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+      else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+  });
+}
+
+function drawWaterEchoes(ctx, env) {
+  const { width: w, height: h, time: t, active, budget, state, pulse } = env;
+  if (state !== 'rain' && state !== 'murmur' && pulse <= 0.5) return;
+  ctx.strokeStyle = colorFor(state === 'rain' ? 'rain' : 'murmur', 0.18 + pulse * 0.12);
+  ctx.lineWidth = 0.7 + pulse * 0.6;
+  active.slice(-(budget.mobile ? 5 : 8)).forEach((mark, i) => {
+    const age = Math.min(1, (Date.now() - mark.time) / 5200);
+    const life = 1 - age;
+    if (life <= 0.02) return;
+    const base = Math.min(w, h) * (0.025 + age * 0.22);
+    ctx.globalAlpha = life * 0.34;
+    ctx.beginPath();
+    ctx.ellipse(mark.x * w, h * (0.72 + Math.sin(t * 0.006 + i) * 0.03), base * 1.6, base * 0.22, 0, 0, TAU);
+    ctx.stroke();
+    if (!budget.mobile && i < 3) {
+      ctx.globalAlpha = life * 0.09;
       ctx.beginPath();
-      ctx.ellipse(mark.x * w, h * (0.72 + Math.sin(t * 0.006 + i) * 0.03), base * 1.6, base * 0.22, 0, 0, TAU);
+      ctx.ellipse(mark.x * w, mark.y * h, base * 0.7, base * 0.2, Math.sin(t * 0.01 + i), 0, TAU);
       ctx.stroke();
-    });
-  }
+    }
+  });
+}
+
+export function drawCreatureWeather(ctx, ecology, env) {
+  const { time: t, active, state, pulse, rhythm } = env;
+  const m = mood(state, pulse, rhythm);
+  const target = active.at(-1) || { x: 0.5 + Math.sin(t * 0.006) * 0.22, y: 0.54 + Math.cos(t * 0.004) * 0.16, kind: state };
+  const cue = emotionalCue(t, state, pulse, rhythm);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  drawCloudBeasts(ctx, ecology, env, m, cue, target);
+  drawFlock(ctx, ecology, env, m, cue, target);
+  drawStormSprites(ctx, ecology, env, m, cue, target);
+  drawFireflies(ctx, ecology, env, m, cue, target);
+  drawWaterEchoes(ctx, env);
   ctx.restore();
 }
