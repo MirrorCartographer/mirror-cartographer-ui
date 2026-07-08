@@ -45,6 +45,30 @@ function currentBeatSeconds(state, rhythm) {
   return 60 / clamp(bpm, 62, 104);
 }
 
+function closestRegister(note, target) {
+  let best = note;
+  let distance = Math.abs(note - target);
+  for (let shift = -24; shift <= 24; shift += 12) {
+    const candidate = note + shift;
+    const candidateDistance = Math.abs(candidate - target);
+    if (candidateDistance < distance) {
+      best = candidate;
+      distance = candidateDistance;
+    }
+  }
+  return best;
+}
+
+function voiceChord(root, chord, previous, lift) {
+  const targets = previous?.length ? previous : [root + 48, root + 52, root + 55, root + 60];
+  return chord.map((offset, voice) => {
+    const colorLift = lift && voice > 1 ? 12 : 0;
+    const base = root + offset + 12 + colorLift;
+    const target = targets[voice] ?? targets.at(-1) ?? root + 60;
+    return closestRegister(base, target);
+  });
+}
+
 function makeNoiseBuffer(ctx, seconds = 1.2) {
   const buffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * seconds)), ctx.sampleRate);
   const data = buffer.getChannelData(0);
@@ -115,6 +139,8 @@ export function createSkyMusic() {
   let timer = 0;
   let step = 0;
   let nextNoteTime = 0;
+  let previousVoicing = null;
+  let previousSection = FORM[0];
   let currentState = 'cloud';
   let currentPulse = 0.5;
   let currentRhythm = 0;
@@ -168,10 +194,21 @@ export function createSkyMusic() {
     const contour = lift ? 4 : answering ? 1 : 0;
     const sourceMotif = answering ? ANSWER : MOTIF;
     const motifDegree = sourceMotif[inPhrase] + contour + (phrase % 2 === 0 ? 0 : 2);
+    const sectionChanged = inPhrase === 0 && section !== previousSection;
 
     delay.delayTime.setTargetAtTime(wet ? beat * 0.75 : beat * 0.5, when, 0.05);
     feedback.gain.setTargetAtTime(wet || chorus ? 0.3 : 0.16, when, 0.08);
     filter.frequency.setTargetAtTime(brightness || chorus ? 4600 : 2400, when, 0.12);
+
+    if (sectionChanged) {
+      const bridge = scaleNote(root, section === 'home' ? 0 : motifDegree - 2, 2);
+      playOsc(ctx, delay, when + beat * 0.08, midiToHz(bridge), beat * 0.44, {
+        type: 'triangle',
+        gain: 0.008,
+        filter: 4200,
+      });
+      previousSection = section;
+    }
 
     if (step % 2 === 0) {
       const note = homeCadence ? scaleNote(root, Math.max(0, 5 - (inPhrase - 12) * 2), 1) : scaleNote(root, motifDegree, 1 + (step % 8 === 6 || lift ? 1 : 0));
@@ -203,12 +240,14 @@ export function createSkyMusic() {
     }
 
     if (step % 8 === 0) {
-      chord.forEach((offset, voice) => {
-        const inversion = lift && voice > 1 ? 12 : 0;
+      const voicing = voiceChord(root, chord, previousVoicing, lift);
+      previousVoicing = voicing;
+      voicing.forEach((note, voice) => {
         const release = cadence ? beat * 3.4 : beat * (lift ? 2.7 : 2.05);
-        playOsc(ctx, delay, when + voice * 0.015, midiToHz(root + offset + 12 + inversion), release, {
+        const entrance = voice * 0.012 + (sectionChanged ? beat * 0.04 * voice : 0);
+        playOsc(ctx, delay, when + entrance, midiToHz(note), release, {
           type: 'triangle',
-          gain: 0.007 + (lift ? 0.003 : 0),
+          gain: 0.0065 + (lift ? 0.0025 : 0),
           attack: 0.08 + voice * 0.018,
           filter: 1500 + voice * 420 + (lift ? 700 : 0),
         });
