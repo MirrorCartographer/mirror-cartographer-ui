@@ -41,6 +41,11 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   trailMemoryMarks: 12,
   trailMemorySparks: 44,
   mobileTrailMemorySparks: 24,
+  stormBranchMarks: 7,
+  stormBranches: 12,
+  mobileStormBranches: 7,
+  stormBranchSegments: 9,
+  mobileStormBranchSegments: 6,
   maxPixelRatio: 2,
   desktopStars: 210,
   mobileStars: 130,
@@ -158,6 +163,9 @@ export function responsiveBudget(width = 1000, height = 800) {
     pressureWakeSteps: tiny ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
     trailMemoryMarks: tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
     trailMemorySparks: count(mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks, 16),
+    stormBranchMarks: tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
+    stormBranches: count(mobile ? PERFORMANCE_BUDGET.mobileStormBranches : PERFORMANCE_BUDGET.stormBranches, 5),
+    stormBranchSegments: tiny ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
   };
 }
 
