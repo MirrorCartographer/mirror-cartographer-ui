@@ -222,7 +222,7 @@ export function nextSkyState(current, point, pulse, rhythm) {
 export function normalizePoint(event, fallback = INPUT_POLICY.defaultPoint) {
   const rect = event.currentTarget.getBoundingClientRect();
   const clientX = 'clientX' in event ? event.clientX : rect.left + rect.width * fallback.x;
-  const clientY = 'clientY in event ? event.clientY : rect.top + rect.height * fallback.y;
+  const clientY = 'clientY' in event ? event.clientY : rect.top + rect.height * fallback.y;
   return {
     x: clamp01((clientX - rect.left) / Math.max(1, rect.width)),
     y: clamp01((clientY - rect.top) / Math.max(1, rect.height)),
