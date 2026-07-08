@@ -44,7 +44,8 @@ export function createCreatureWeather() {
     clouds: Array.from({ length: 5 }, (_, i) => ({ i, x: Math.random(), y: 0.1 + Math.random() * 0.3, p: Math.random() * TAU, k: 0.8 + Math.random() })),
     sprites: Array.from({ length: 7 }, (_, i) => ({ i, x: Math.random(), y: Math.random(), p: Math.random() * TAU, k: 0.7 + Math.random() * 1.2 })),
     ropes: Array.from({ length: 5 }, (_, i) => makeRope(i)),
-    eddies: Array.from({ length: 6 }, (_, i) => makeEddy(i))
+    eddies: Array.from({ length: 6 }, (_, i) => makeEddy(i)),
+    opening: Array.from({ length: 9 }, (_, i) => ({ i, p: Math.sin((i + 4) * 7.31) * 9000, r: 0.12 + ((i * 17) % 46) / 100 }))
   };
 }
 
@@ -61,8 +62,10 @@ function mood(state, pulse, rhythm) {
 function emotionalCue(time, state, pulse, rhythm) {
   const inhale = (wave(time, 0.028, rhythm * 0.19) + 1) / 2;
   const quick = Math.max(0, wave(time, state === 'lightning' ? 0.17 : 0.064, pulse * 4));
+  const reveal = clamp01(time / 5200);
   return {
     inhale,
+    reveal,
     startle: state === 'lightning' ? quick : quick * Math.max(0, pulse - 0.55),
     hush: state === 'rain' ? 0.65 + inhale * 0.35 : 1,
     bloom: state === 'dawn' || state === 'aurora' ? 0.6 + inhale * 0.5 : 0.35 + pulse * 0.35
@@ -70,20 +73,22 @@ function emotionalCue(time, state, pulse, rhythm) {
 }
 
 function targetFor(active, state, time, ropeIndex = 0) {
-  const mark = active[active.length - 1 - (ropeIndex % Math.max(1, active.length))];
-  if (mark) return { x: mark.x, y: mark.y, kind: mark.kind || state, awake: true };
+  const safeActive = Array.isArray(active) ? active : [];
+  const mark = safeActive[safeActive.length - 1 - (ropeIndex % Math.max(1, safeActive.length))];
+  if (mark && Number.isFinite(mark.x) && Number.isFinite(mark.y)) return { x: mark.x, y: mark.y, kind: mark.kind || state, awake: true };
   return { x: 0.5 + wave(time, 0.006, ropeIndex * 1.7) * 0.22, y: 0.5 + wave(time, 0.004, ropeIndex) * 0.16, kind: state, awake: false };
 }
 
 function flowAt(ecology, x, y, env, m, cue) {
-  const { time: t, active, state, pulse, rhythm, budget } = env;
+  const { time: t, active = [], state, pulse, rhythm, budget } = env;
   const count = Math.min(ecology.eddies?.length || 0, budget.mobile ? 4 : 6);
+  const last = Array.isArray(active) ? active.at(-1) : null;
   let vx = state === 'wind' ? 0.012 + pulse * 0.006 : state === 'rain' ? -0.002 : 0;
   let vy = state === 'rain' ? 0.012 + pulse * 0.006 : state === 'dawn' ? -0.004 : 0;
   for (let i = 0; i < count; i += 1) {
     const e = ecology.eddies[i];
-    const cx = clamp01(e.x + wave(t, 0.003 + i * 0.0004, e.phase) * 0.08 + (active.at(-1)?.x - 0.5 || 0) * 0.035);
-    const cy = clamp01(e.y + wave(t, 0.0024 + i * 0.0003, e.phase * 0.7) * 0.07 + (active.at(-1)?.y - 0.5 || 0) * 0.028);
+    const cx = clamp01(e.x + wave(t, 0.003 + i * 0.0004, e.phase) * 0.08 + ((last?.x ?? 0.5) - 0.5) * 0.035);
+    const cy = clamp01(e.y + wave(t, 0.0024 + i * 0.0003, e.phase * 0.7) * 0.07 + ((last?.y ?? 0.5) - 0.5) * 0.028);
     const dx = x - cx;
     const dy = y - cy;
     const d2 = dx * dx + dy * dy + 0.0008;
@@ -96,6 +101,41 @@ function flowAt(ecology, x, y, env, m, cue) {
   vx += wave(t, 0.011, x * 8 + rhythm) * 0.006 * m.alarm;
   vy += wave(t, 0.009, y * 9 + pulse * 3) * 0.005 * m.speed;
   return { x: clamp(vx, -0.055, 0.055), y: clamp(vy, -0.055, 0.055) };
+}
+
+function drawOpeningAperture(ctx, ecology, env, m, cue, target) {
+  const { width: w, height: h, time: t, budget, state, pulse } = env;
+  const seeds = ecology.opening || [];
+  const count = Math.min(seeds.length, budget.mobile ? 5 : 9);
+  if (!count || cue.reveal >= 0.995) return;
+  const fade = 1 - cue.reveal;
+  const scale = Math.min(w, h);
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.strokeStyle = colorFor(target.kind || state, 0.08 + fade * 0.14 + pulse * 0.04);
+  ctx.shadowColor = colorFor(target.kind || state, 0.72);
+  ctx.shadowBlur = budget.mobile ? 6 : 16;
+  ctx.lineWidth = budget.mobile ? 0.55 : 0.8;
+  for (let i = 0; i < count; i += 1) {
+    const seed = seeds[i];
+    const q = i / Math.max(1, count - 1);
+    const orbit = scale * seed.r * (0.5 + cue.reveal * 0.58 + cue.inhale * 0.05);
+    const a = seed.p + t * 0.005 * m.beat + q * TAU;
+    const x = w * lerp(0.5, target.x, cue.reveal * 0.18) + Math.cos(a) * orbit;
+    const y = h * lerp(0.5, target.y, cue.reveal * 0.14) + Math.sin(a * 0.78) * orbit * 0.56;
+    ctx.globalAlpha = fade * (0.2 + q * 0.18);
+    ctx.beginPath();
+    ctx.arc(x, y, scale * (0.006 + q * 0.003 + pulse * 0.002), 0, TAU);
+    ctx.stroke();
+    if (!budget.mobile && i % 2 === 0) {
+      ctx.globalAlpha = fade * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, h * 0.5);
+      ctx.quadraticCurveTo((x + w * 0.5) * 0.5, (y + h * 0.5) * 0.5 + wave(t, 0.012, i) * 10, x, y);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
 }
 
 function drawWeatherCurrents(ctx, ecology, env, m, cue, target) {
@@ -173,6 +213,7 @@ function drawTethers(ctx, ecology, env, m, cue) {
   for (let r = 0; r < count; r += 1) {
     const rope = ropes[r];
     const nodes = rope.nodes;
+    if (!nodes?.length) continue;
     const anchor = targetFor(active, state, t, r);
     const current = flowAt(ecology, nodes[0].x, nodes[0].y, env, m, cue);
     nodes[0].x += (anchor.x - nodes[0].x) * (anchor.awake ? 0.42 : 0.055) + current.x * 0.04;
@@ -331,12 +372,14 @@ function drawStormSprites(ctx, ecology, env, m, cue, target) {
 }
 
 function drawWaterEchoes(ctx, env) {
-  const { width: w, height: h, time: t, active, budget, state, pulse } = env;
+  const { width: w, height: h, time: t, active = [], budget, state, pulse } = env;
   if (state !== 'rain' && state !== 'murmur' && pulse <= 0.5) return;
+  const now = env.now || Date.now();
   ctx.strokeStyle = colorFor(state === 'rain' ? 'rain' : 'murmur', 0.18 + pulse * 0.12);
   ctx.lineWidth = 0.7 + pulse * 0.6;
   active.slice(-(budget.mobile ? 5 : 8)).forEach((mark, i) => {
-    const age = Math.min(1, (Date.now() - mark.time) / 5200);
+    if (!Number.isFinite(mark?.x) || !Number.isFinite(mark?.y) || !Number.isFinite(mark?.time)) return;
+    const age = Math.min(1, (now - mark.time) / 5200);
     const life = 1 - age;
     if (life <= 0.02) return;
     const base = Math.min(w, h) * (0.025 + age * 0.22);
@@ -354,12 +397,13 @@ function drawWaterEchoes(ctx, env) {
 }
 
 export function drawCreatureWeather(ctx, ecology, env) {
-  const { time: t, active, state, pulse, rhythm } = env;
+  const { time: t, active = [], state, pulse, rhythm } = env;
   const m = mood(state, pulse, rhythm);
   const target = active.at(-1) || { x: 0.5 + Math.sin(t * 0.006) * 0.22, y: 0.54 + Math.cos(t * 0.004) * 0.16, kind: state };
   const cue = emotionalCue(t, state, pulse, rhythm);
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
+  drawOpeningAperture(ctx, ecology, env, m, cue, target);
   drawWeatherCurrents(ctx, ecology, env, m, cue, target);
   drawCloudBeasts(ctx, ecology, env, m, cue, target);
   drawTethers(ctx, ecology, env, m, cue);
