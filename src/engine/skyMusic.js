@@ -30,6 +30,16 @@ const BREATH_MASKS = {
   wind: [0, 1, 0, 0, 1, 0],
   murmur: [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1],
 };
+const MODULATION_MAPS = {
+  cloud: [0, 0, 0, 2, 0, -1, 1, 0],
+  rain: [0, -2, 0, -1, -3, -1, 0, -2],
+  lightning: [0, 3, -1, 4, 2, -2, 3, 0],
+  clear: [0, 1, 2, 1, 0, 2, 1, 0],
+  aurora: [0, 2, 4, 5, 3, 5, 2, 0],
+  dawn: [0, 1, 3, 4, 2, 3, 1, 0],
+  wind: [0, -1, 2, -2, 1, -1, 2, 0],
+  murmur: [0, -1, 1, -2, 0, 2, -1, 0],
+};
 const GROOVES = {
   cloud: { span: 8, accent: [1, 0, 0.72, 0, 0.88, 0, 0.56, 0], duration: [1, 1, 1, 1, 1, 1, 1, 1] },
   rain: { span: 12, accent: [1, 0, 0.62, 0, 0.78, 0.36, 0.9, 0, 0.56, 0, 0.72, 0.34], duration: [0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1] },
@@ -96,6 +106,12 @@ function weatherBreath(state, localStep, section, inPhrase) {
   if (inPhrase === 0 || inPhrase === 12) return false;
   const mask = BREATH_MASKS[state] || BREATH_MASKS.cloud;
   return mask[localStep % mask.length] === 1;
+}
+
+function modulationFor(state, phrase, section) {
+  if (section === 'home') return 0;
+  const map = MODULATION_MAPS[state] || MODULATION_MAPS.cloud;
+  return clamp(map[phrase % map.length] ?? 0, -4, 5);
 }
 
 function closestRegister(note, target) {
@@ -268,17 +284,18 @@ export function createSkyMusic() {
   function scheduleOne(when) {
     if (!ctx || !started) return;
     const beat = currentBeatSeconds(currentState, currentRhythm);
-    const root = stateRoot(currentState);
+    const baseRoot = stateRoot(currentState);
     const localStep = step % 128;
     const phrase = Math.floor(localStep / 16);
     const section = FORM[phrase % FORM.length];
+    const inPhrase = localStep % 16;
+    const root = baseRoot + modulationFor(currentState, phrase, section);
     const chord = CHORDS[Math.floor(localStep / 16) % CHORDS.length];
     const chordRoot = root + chord[0];
     const brightness = currentState === 'aurora' || currentState === 'dawn' || currentState === 'murmur';
     const wet = currentState === 'rain' || currentState === 'murmur' || currentState === 'aurora';
     const chorus = section === 'lift' || section === 'storm';
     const cadence = section === 'home';
-    const inPhrase = localStep % 16;
     const groove = grooveFor(currentState, localStep);
     const resting = shouldRest(section, inPhrase, groove.accent) || weatherBreath(currentState, localStep, section, inPhrase);
     const slotSeconds = beat * 0.5 * groove.duration;
