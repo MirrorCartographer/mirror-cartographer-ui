@@ -38,6 +38,9 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   mobilePressureWakePaths: 12,
   pressureWakeSteps: 8,
   mobilePressureWakeSteps: 5,
+  trailMemoryMarks: 12,
+  trailMemorySparks: 44,
+  mobileTrailMemorySparks: 24,
   maxPixelRatio: 2,
   desktopStars: 210,
   mobileStars: 130,
@@ -147,6 +150,8 @@ export function responsiveBudget(width = 1000, height = 800) {
     pressureWakeMarks: PERFORMANCE_BUDGET.pressureWakeMarks,
     pressureWakePaths: mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths,
     pressureWakeSteps: mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
+    trailMemoryMarks: PERFORMANCE_BUDGET.trailMemoryMarks,
+    trailMemorySparks: mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks,
   };
 }
 
