@@ -46,6 +46,9 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   mobileStormBranches: 7,
   stormBranchSegments: 9,
   mobileStormBranchSegments: 6,
+  gestureWellMarks: 6,
+  gestureWellParticles: 34,
+  mobileGestureWellParticles: 18,
   nacreBands: 12,
   mobileNacreBands: 7,
   nacreMist: 5,
@@ -170,6 +173,8 @@ export function responsiveBudget(width = 1000, height = 800) {
     stormBranchMarks: tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
     stormBranches: count(mobile ? PERFORMANCE_BUDGET.mobileStormBranches : PERFORMANCE_BUDGET.stormBranches, 5),
     stormBranchSegments: tiny ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
+    gestureWellMarks: tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
+    gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 12),
     nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 5),
     nacreMist: tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
   };
