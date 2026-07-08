@@ -30,7 +30,8 @@ function beastTint(state, spec) {
 
 export function drawCloudBeasts(ctx, beasts, marks, options) {
   const { width: w, height: h, time: t, pulse, rhythm, state, spec, budget } = options;
-  const active = beasts.slice(0, budget.cloudBeasts);
+  const limit = budget.cloudBeasts || (budget.mobile ? 5 : beasts.length);
+  const active = beasts.slice(0, limit);
   const latest = marks.at(-1);
   const fresh = latest ? Math.max(0, 1 - (Date.now() - latest.time) / 3200) : 0;
   const tint = beastTint(state, spec);
