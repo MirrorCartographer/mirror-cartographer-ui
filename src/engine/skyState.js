@@ -1,5 +1,29 @@
 export const SKY_STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'dawn', 'wind', 'murmur'];
 
+export const VIEWPORT_BREAKPOINTS = Object.freeze({
+  mobileMax: 700,
+  smallHeight: 620,
+});
+
+export const INPUT_POLICY = Object.freeze({
+  quickGestureMs: 620,
+  defaultPoint: Object.freeze({ x: 0.5, y: 0.5 }),
+  safePointerAction: 'manipulation',
+});
+
+export const AUDIO_POLICY = Object.freeze({
+  allowAutoplay: false,
+  unlockEvent: 'first-user-gesture',
+  defaultGain: 0,
+});
+
+export const CONTINUITY_POLICY = Object.freeze({
+  localMemory: 'off-by-default',
+  publicSafeStateOnly: true,
+  persistRawGestures: false,
+  persistCoordinates: false,
+});
+
 export const PERFORMANCE_BUDGET = Object.freeze({
   maxMarks: 28,
   renderedMarks: 24,
@@ -92,10 +116,14 @@ export function skyState(name) {
   return SKY_STATE_DEFINITIONS[name] || SKY_STATE_DEFINITIONS.cloud;
 }
 
-export function responsiveBudget(width = 1000) {
-  const mobile = width < 700;
+export function responsiveBudget(width = 1000, height = 800) {
+  const mobile = width < VIEWPORT_BREAKPOINTS.mobileMax;
+  const short = height < VIEWPORT_BREAKPOINTS.smallHeight;
+  const motionScale = short ? 0.84 : 1;
   return {
     mobile,
+    short,
+    motionScale,
     stars: mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars,
     clouds: mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds,
     creatures: mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures,
@@ -117,7 +145,7 @@ export function nextSkyState(current, point, pulse, rhythm) {
   return SKY_STATES[(SKY_STATES.indexOf(current) + 1) % SKY_STATES.length];
 }
 
-export function normalizePoint(event, fallback = { x: 0.5, y: 0.5 }) {
+export function normalizePoint(event, fallback = INPUT_POLICY.defaultPoint) {
   const rect = event.currentTarget.getBoundingClientRect();
   const clientX = 'clientX' in event ? event.clientX : rect.left + rect.width * fallback.x;
   const clientY = 'clientY' in event ? event.clientY : rect.top + rect.height * fallback.y;
@@ -128,7 +156,7 @@ export function normalizePoint(event, fallback = { x: 0.5, y: 0.5 }) {
 }
 
 export function evolveWeatherGesture({ now, lastTouch, rhythm, pulse, state, point }) {
-  const close = now - lastTouch < 620;
+  const close = now - lastTouch < INPUT_POLICY.quickGestureMs;
   const nextRhythm = close ? rhythm + 1 : Math.max(1, rhythm * 0.4);
   const kind = nextSkyState(state, point, pulse, nextRhythm);
   return {
