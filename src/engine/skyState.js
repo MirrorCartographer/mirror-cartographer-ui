@@ -57,6 +57,10 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   mobileNacreBands: 7,
   nacreMist: 5,
   mobileNacreMist: 3,
+  causticCells: 18,
+  mobileCausticCells: 10,
+  causticRays: 30,
+  mobileCausticRays: 16,
   maxPixelRatio: 2,
   desktopStars: 210,
   mobileStars: 130,
@@ -184,6 +188,8 @@ export function responsiveBudget(width = 1000, height = 800) {
     gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 10),
     nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 5),
     nacreMist: ultraTiny ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
+    causticCells: count(mobile ? PERFORMANCE_BUDGET.mobileCausticCells : PERFORMANCE_BUDGET.causticCells, 6),
+    causticRays: ultraTiny ? 10 : tiny ? 12 : mobile ? PERFORMANCE_BUDGET.mobileCausticRays : PERFORMANCE_BUDGET.causticRays,
   };
 }
 
