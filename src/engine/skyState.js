@@ -3,6 +3,7 @@ export const SKY_STATES = ['cloud', 'rain', 'lightning', 'clear', 'aurora', 'daw
 export const VIEWPORT_BREAKPOINTS = Object.freeze({
   mobileMax: 700,
   smallHeight: 620,
+  tinyHeight: 540,
 });
 
 export const INPUT_POLICY = Object.freeze({
@@ -30,6 +31,9 @@ export const PERFORMANCE_BUDGET = Object.freeze({
   renderedTethers: 5,
   renderedCreatures: 18,
   mobileCreatures: 11,
+  renderedCloudBeasts: 8,
+  mobileCloudBeasts: 5,
+  tinyCloudBeasts: 4,
   renderedFilaments: 6,
   filamentSegments: 14,
   mobileFilamentSegments: 9,
@@ -148,35 +152,38 @@ export function responsiveBudget(width = 1000, height = 800) {
   const mobile = width < VIEWPORT_BREAKPOINTS.mobileMax;
   const short = height < VIEWPORT_BREAKPOINTS.smallHeight;
   const tiny = mobile && short;
-  const motionScale = short ? 0.84 : 1;
-  const densityScale = tiny ? 0.78 : short ? 0.88 : 1;
+  const ultraTiny = mobile && height < VIEWPORT_BREAKPOINTS.tinyHeight;
+  const motionScale = ultraTiny ? 0.76 : short ? 0.84 : 1;
+  const densityScale = ultraTiny ? 0.68 : tiny ? 0.78 : short ? 0.88 : 1;
   const count = (value, floor = 1) => Math.max(floor, Math.round(value * densityScale));
 
   return {
     mobile,
     short,
     tiny,
+    ultraTiny,
     motionScale,
     densityScale,
     stars: count(mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars, 60),
     clouds: count(mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds, 12),
     creatures: count(mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures, 7),
+    cloudBeasts: ultraTiny ? 3 : tiny ? PERFORMANCE_BUDGET.tinyCloudBeasts : mobile ? PERFORMANCE_BUDGET.mobileCloudBeasts : PERFORMANCE_BUDGET.renderedCloudBeasts,
     rainDrops: count(mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops, 70),
     sprites: count(mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites, 8),
     pollen: count(mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen, 18),
     ribbons: count(mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons, 4),
-    pressureWakeMarks: tiny ? 7 : PERFORMANCE_BUDGET.pressureWakeMarks,
+    pressureWakeMarks: ultraTiny ? 5 : tiny ? 7 : PERFORMANCE_BUDGET.pressureWakeMarks,
     pressureWakePaths: count(mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths, 8),
-    pressureWakeSteps: tiny ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
-    trailMemoryMarks: tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
+    pressureWakeSteps: ultraTiny ? 3 : tiny ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
+    trailMemoryMarks: ultraTiny ? 6 : tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
     trailMemorySparks: count(mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks, 16),
-    stormBranchMarks: tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
+    stormBranchMarks: ultraTiny ? 4 : tiny ? 5 : PERFORMANCE_BUDGET.stormBranchMarks,
     stormBranches: count(mobile ? PERFORMANCE_BUDGET.mobileStormBranches : PERFORMANCE_BUDGET.stormBranches, 5),
-    stormBranchSegments: tiny ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
-    gestureWellMarks: tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
-    gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 12),
+    stormBranchSegments: ultraTiny ? 4 : tiny ? 5 : mobile ? PERFORMANCE_BUDGET.mobileStormBranchSegments : PERFORMANCE_BUDGET.stormBranchSegments,
+    gestureWellMarks: ultraTiny ? 3 : tiny ? 4 : PERFORMANCE_BUDGET.gestureWellMarks,
+    gestureWellParticles: count(mobile ? PERFORMANCE_BUDGET.mobileGestureWellParticles : PERFORMANCE_BUDGET.gestureWellParticles, 10),
     nacreBands: count(mobile ? PERFORMANCE_BUDGET.mobileNacreBands : PERFORMANCE_BUDGET.nacreBands, 5),
-    nacreMist: tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
+    nacreMist: ultraTiny ? 1 : tiny ? 2 : mobile ? PERFORMANCE_BUDGET.mobileNacreMist : PERFORMANCE_BUDGET.nacreMist,
   };
 }
 
