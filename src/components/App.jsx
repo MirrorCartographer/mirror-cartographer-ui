@@ -122,6 +122,53 @@ function useSky(state, pulse, marks, rhythm) {
       });
     };
 
+    const drawTethers = (w, h, t) => {
+      const active = marks.slice(-5);
+      if (!active.length) return;
+      const anchorX = w * 0.5;
+      const anchorY = h * 0.62;
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      active.forEach((m, i) => {
+        const age = Math.min(1, (Date.now() - m.time) / 9800);
+        const fade = (1 - age) * (0.2 + pulse * 0.42);
+        if (fade <= 0.01) return;
+        const sx = m.x * w;
+        const sy = m.y * h;
+        const dx = anchorX - sx;
+        const dy = anchorY - sy;
+        const dist = Math.max(1, Math.hypot(dx, dy));
+        const nx = -dy / dist;
+        const ny = dx / dist;
+        const tug = Math.sin(t * 0.045 + i * 1.7 + rhythm * 0.35) * (18 + rhythm * 3.4 + pulse * 42);
+        const slack = (m.kind === 'wind' ? 0.3 : m.kind === 'rain' ? -0.18 : 0.08) * dist;
+        const color = m.kind === 'aurora' ? '167,243,208' : m.kind === 'rain' ? '145,216,255' : m.kind === 'lightning' ? '239,251,255' : m.kind === 'dawn' ? '255,209,220' : '255,226,191';
+        const gradient = ctx.createLinearGradient(sx, sy, anchorX, anchorY);
+        gradient.addColorStop(0, `rgba(${color},0)`);
+        gradient.addColorStop(0.22, `rgba(${color},${fade})`);
+        gradient.addColorStop(0.7, `rgba(${color},${fade * 0.45})`);
+        gradient.addColorStop(1, `rgba(${color},0)`);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.1 + pulse * 2.2 + i * 0.22;
+        ctx.shadowColor = `rgba(${color},1)`;
+        ctx.shadowBlur = 14 + pulse * 26;
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        for (let p = 1; p <= 9; p += 1) {
+          const q = p / 10;
+          const spring = Math.sin(q * Math.PI) * (tug + slack * 0.08);
+          const wave = Math.sin(t * 0.026 + q * 9 + i) * Math.sin(q * Math.PI) * (6 + rhythm);
+          const x = sx + dx * q + nx * (spring + wave);
+          const y = sy + dy * q + ny * (spring + wave) + Math.sin(q * Math.PI) * slack * 0.05;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(anchorX, anchorY);
+        ctx.stroke();
+      });
+      ctx.restore();
+    };
+
     const drawLightning = (w, h, t) => {
       if (state !== 'lightning') return;
       const on = Math.sin(t * 0.09) > 0.72 || pulse > 0.74;
@@ -228,6 +275,7 @@ function useSky(state, pulse, marks, rhythm) {
         ctx.stroke();
         ctx.restore();
       });
+      drawTethers(w, h, t);
       drawMarks(w, h, t);
       if (state === 'rain') {
         ctx.save();
