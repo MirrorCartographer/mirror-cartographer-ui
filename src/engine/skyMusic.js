@@ -240,6 +240,7 @@ export function createSkyMusic() {
   let phraseMemory = [];
   let lastTapAccent = 0;
   let currentState = 'cloud';
+  let pendingState = 'cloud';
   let currentPulse = 0.5;
   let currentRhythm = 0;
   let started = false;
@@ -249,6 +250,22 @@ export function createSkyMusic() {
       { degree: clamp(degree, -8, 12), state: currentState },
       ...phraseMemory,
     ].slice(0, PHRASE_MEMORY_LIMIT);
+  }
+
+  function syncSnapshot(snapshot = {}, immediate = false) {
+    if (snapshot.state) {
+      pendingState = snapshot.state;
+      if (immediate || !started) currentState = pendingState;
+    }
+    currentPulse = Number.isFinite(snapshot.pulse) ? snapshot.pulse : currentPulse;
+    currentRhythm = Number.isFinite(snapshot.rhythm) ? snapshot.rhythm : currentRhythm;
+  }
+
+  function adoptPendingState(inPhrase) {
+    if (inPhrase !== 0 || pendingState === currentState) return false;
+    currentState = pendingState;
+    previousVoicing = null;
+    return true;
   }
 
   function ensure() {
@@ -300,12 +317,13 @@ export function createSkyMusic() {
 
   function scheduleOne(when) {
     if (!ctx || !started) return;
-    const beat = currentBeatSeconds(currentState, currentRhythm);
-    const baseRoot = stateRoot(currentState);
     const localStep = step % 128;
     const phrase = Math.floor(localStep / 16);
     const section = FORM[phrase % FORM.length];
     const inPhrase = localStep % 16;
+    adoptPendingState(inPhrase);
+    const beat = currentBeatSeconds(currentState, currentRhythm);
+    const baseRoot = stateRoot(currentState);
     const root = baseRoot + modulationFor(currentState, phrase, section);
     const chord = CHORDS[Math.floor(localStep / 16) % CHORDS.length];
     const chordRoot = root + chord[0];
@@ -434,9 +452,7 @@ export function createSkyMusic() {
 
   async function start(snapshot = {}) {
     if (!ensure()) return false;
-    currentState = snapshot.state || currentState;
-    currentPulse = Number.isFinite(snapshot.pulse) ? snapshot.pulse : currentPulse;
-    currentRhythm = Number.isFinite(snapshot.rhythm) ? snapshot.rhythm : currentRhythm;
+    syncSnapshot(snapshot, true);
     if (ctx.state === 'suspended') await ctx.resume();
     started = true;
     master.gain.cancelScheduledValues(ctx.currentTime);
@@ -449,9 +465,7 @@ export function createSkyMusic() {
   }
 
   function pulse(snapshot = {}) {
-    currentState = snapshot.state || currentState;
-    currentPulse = Number.isFinite(snapshot.pulse) ? snapshot.pulse : currentPulse;
-    currentRhythm = Number.isFinite(snapshot.rhythm) ? snapshot.rhythm : currentRhythm;
+    syncSnapshot(snapshot);
     if (!ctx || !started) return;
     if (ctx.currentTime - lastTapAccent < TAP_ACCENT_COOLDOWN) return;
     lastTapAccent = ctx.currentTime;
