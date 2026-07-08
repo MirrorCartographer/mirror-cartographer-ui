@@ -7,6 +7,7 @@ import {
   responsiveBudget,
   skyState,
 } from '../engine/skyState';
+import { drawSkyFilaments, filamentBudget } from '../engine/filaments';
 
 const TAU = Math.PI * 2;
 
@@ -276,7 +277,7 @@ function useSky(state, pulse, marks, rhythm) {
       ctx.translate(cx, cy);
       const breath = 1 + Math.sin(t * 0.034) * 0.06 + pulse * 0.2 + (state === 'wind' || state === 'murmur' ? Math.sin(t * 0.08) * 0.04 : 0);
       ctx.scale(breath, breath);
-      ctx.strokeStyle = spec.mark === '#91d8ff' ? '#ffe2bf' : spec.mark;
+      ctx.strokeStyle = spec.spec === '#91d8ff' ? '#ffe2bf' : spec.mark;
       ctx.lineWidth = 3;
       ctx.shadowColor = state === 'lightning' ? '#effbff' : state === 'dawn' ? '#ff7aa2' : state === 'murmur' ? '#c4b5fd' : '#ffbe74';
       ctx.shadowBlur = 38 + pulse * 76;
@@ -356,6 +357,16 @@ function useSky(state, pulse, marks, rhythm) {
       });
       drawCreatures(w, h, t, spec, budget);
       drawTethers(w, h, t);
+      drawSkyFilaments(ctx, marks, {
+        width: w,
+        height: h,
+        time: t,
+        pulse,
+        rhythm,
+        state,
+        skyState,
+        budget: filamentBudget(w, PERFORMANCE_BUDGET),
+      });
       drawMarks(w, h, t);
       if (state === 'rain') {
         ctx.save();
