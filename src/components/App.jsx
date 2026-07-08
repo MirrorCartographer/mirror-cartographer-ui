@@ -1,11 +1,346 @@
-import React,{useEffect,useRef,useState}from'react';
-import{PERFORMANCE_BUDGET,SKY_STATES,evolveWeatherGesture,normalizePoint,responsiveBudget,skyState}from'../engine/skyState';
-import{createCreatureWeather,drawCreatureWeather}from'../engine/creatureWeather';
-const TAU=Math.PI*2;
-const clamp01=v=>Math.min(1,Math.max(0,Number.isFinite(v)?v:0));
-const seed=(n,f)=>Array.from({length:n},(_,i)=>f(i));
-function colorFor(k,a=1){if(k==='rain')return`rgba(145,216,255,${a})`;if(k==='murmur')return`rgba(196,181,253,${a})`;if(k==='aurora')return`rgba(167,243,208,${a})`;if(k==='dawn')return`rgba(255,209,220,${a})`;if(k==='wind')return`rgba(255,240,199,${a})`;if(k==='lightning')return`rgba(239,251,255,${a})`;return`rgba(255,226,191,${a})`}
-function safeMarks(items){const now=Date.now();return items.filter(m=>m&&Number.isFinite(m.x)&&Number.isFinite(m.y)).map(m=>({x:clamp01(m.x),y:clamp01(m.y),px:clamp01(m.prev?.x??m.x),py:clamp01(m.prev?.y??m.y),kind:SKY_STATES.includes(m.kind)?m.kind:'cloud',spin:Number.isFinite(m.spin)?m.spin:0,time:Number.isFinite(m.time)?m.time:now}))}
-function useWordlessSky(state,pulse,marks,rhythm){const ref=useRef(null);useEffect(()=>{const canvas=ref.current;if(!canvas)return undefined;const ctx=canvas.getContext('2d',{alpha:false});let raf=0,frame=0;const stars=seed(180,i=>({i,x:Math.random(),y:Math.random(),r:.35+Math.random()*1.8,s:.3+Math.random()*1.7}));const motes=seed(68,i=>({i,x:Math.random(),y:Math.random(),r:.5+Math.random()*2.2,p:Math.random()*TAU,s:.4+Math.random()*1.9}));const veins=seed(18,i=>({i,y:.08+Math.random()*.76,p:Math.random()*TAU,a:18+Math.random()*72}));const rain=seed(150,i=>({i,x:Math.random(),y:Math.random(),l:16+Math.random()*54,s:5+Math.random()*13}));const ecology=createCreatureWeather();const resize=()=>{const r=canvas.getBoundingClientRect(),d=Math.min(PERFORMANCE_BUDGET.maxPixelRatio,window.devicePixelRatio||1);canvas.width=Math.max(1,Math.floor(r.width*d));canvas.height=Math.max(1,Math.floor(r.height*d));ctx.setTransform(d,0,0,d,0,0)};const glow=(x,y,r,k,a)=>{const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,colorFor(k,a));g.addColorStop(1,colorFor(k,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill()};const drawHeart=(w,h,t,spec)=>{const sc=Math.min(w,h)*(.105+pulse*.025+Math.sin(t*.035)*.006);ctx.save();ctx.translate(w*.5,h*.58);ctx.globalCompositeOperation='screen';ctx.strokeStyle=colorFor(state,.74);ctx.fillStyle=colorFor(state,.075);ctx.shadowColor=colorFor(state,1);ctx.shadowBlur=36+pulse*22;ctx.lineWidth=Math.max(1.2,sc*.035);ctx.beginPath();for(let i=0;i<=140;i+=1){const a=i/140*TAU,warp=1+Math.sin(a*3+t*.018)*.04*spec.motion,x=Math.sin(a)**3*sc*1.2*warp,y=-(.78*Math.cos(a)-.3*Math.cos(2*a)-.12*Math.cos(3*a)-.06*Math.cos(4*a))*sc*warp;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.fill();ctx.stroke();ctx.restore()};const drawMemory=(w,h,t,active)=>{active.forEach((m,index)=>{const age=Math.min(1,(Date.now()-m.time)/8200),life=1-age;if(life<=.02)return;const cx=m.x*w,cy=m.y*h,base=Math.min(w,h)*(.04+index*.004+pulse*.02);ctx.save();ctx.globalCompositeOperation='screen';ctx.strokeStyle=colorFor(m.kind,.2+life*.42);ctx.fillStyle=colorFor(m.kind,.035+life*.06);ctx.shadowColor=colorFor(m.kind,.9);ctx.shadowBlur=22*life;ctx.lineWidth=.8+pulse*1.4;for(let ring=0;ring<3;ring+=1){const radius=base+age*Math.min(w,h)*(.18+ring*.09);ctx.globalAlpha=life*(.46-ring*.1);ctx.beginPath();for(let p=0;p<=80;p+=1){const a=p/80*TAU,r=radius+Math.sin(a*5+t*.035+m.spin)*(4+rhythm*.55)*life,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r*(.62+pulse*.24);if(p===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.stroke()}ctx.globalAlpha=life*.34;ctx.beginPath();ctx.moveTo(m.px*w,m.py*h);ctx.quadraticCurveTo((m.px*w+cx)/2+Math.sin(t*.03+index)*24*life,(m.py*h+cy)/2-Math.cos(t*.026+index)*18*life,cx,cy);ctx.stroke();ctx.restore()})};const drawGlyph=(w,h,t,active)=>{const cx=w-Math.min(72,w*.16),cy=Math.min(72,h*.16),r=Math.min(w,h)*.04;ctx.save();ctx.globalCompositeOperation='screen';ctx.translate(cx,cy);ctx.rotate(t*.01+rhythm*.015);ctx.strokeStyle=colorFor(state,.58);ctx.shadowColor=colorFor(state,1);ctx.shadowBlur=24;ctx.lineWidth=1.4;const spokes=state==='rain'?5:state==='lightning'?3:state==='wind'?4:6;for(let i=0;i<spokes;i+=1){const a=i/spokes*TAU+Math.sin(t*.025+i)*.08;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.35,Math.sin(a)*r*.35);ctx.lineTo(Math.cos(a)*r*(1.15+pulse*.5),Math.sin(a)*r*(1.15+pulse*.5));ctx.stroke()}if(active.length){ctx.globalAlpha=.34;ctx.beginPath();ctx.arc(0,0,r*(1.5+pulse*.8),0,TAU);ctx.stroke()}ctx.restore()};const loop=()=>{frame+=1;const rect=canvas.getBoundingClientRect(),w=rect.width,h=rect.height,budget=responsiveBudget(w,h),t=frame,spec=skyState(state),active=safeMarks(marks).slice(-(budget.mobile?12:20));const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,spec.sky[0]);sky.addColorStop(.5,spec.sky[1]);sky.addColorStop(1,spec.sky[2]);ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);glow(w*.22,h*.18,w*.48,state==='rain'?'rain':'clear',state==='clear'?.28:.11);glow(w*.82,h*.16,w*.42,state==='murmur'?'murmur':state==='aurora'?'aurora':'dawn',.1+pulse*.1);if(state==='dawn')glow(w*.5,h*1.03,w*.7,'dawn',.42);ctx.save();ctx.globalCompositeOperation='screen';stars.slice(0,Math.min(stars.length,budget.stars||stars.length)).forEach(s=>{ctx.globalAlpha=Math.max(0,.12+Math.sin(t*.022*s.s+s.i)*.13+(state==='clear'?.22:0));ctx.fillStyle='#fff8ef';ctx.beginPath();ctx.arc(s.x*w,s.y*h*.76,s.r,0,TAU);ctx.fill()});veins.slice(0,budget.mobile?7:veins.length).forEach(v=>{const pull=active.reduce((sum,m)=>sum+Math.sin(m.x*8+m.y*5+v.i)*.18,0),g=ctx.createLinearGradient(0,0,w,0);g.addColorStop(0,colorFor(state,0));g.addColorStop(.5,colorFor(state,.09+pulse*.12));g.addColorStop(1,colorFor(state,0));ctx.strokeStyle=g;ctx.globalAlpha=state==='wind'||state==='murmur'||state==='aurora'?.76:.32;ctx.lineWidth=1+pulse*3;ctx.beginPath();for(let x=-60;x<=w+60;x+=18){const y=h*v.y+Math.sin(x*.01+t*.018+v.p+pull)*(v.a+pulse*46);if(x===-60)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});motes.slice(0,Math.min(motes.length,budget.pollen||motes.length)).forEach(m=>{const drift=state==='wind'||state==='murmur'?2.9:1.05,x=((m.x*w+t*m.s*drift)%(w+90))-45,y=m.y*h+Math.sin(t*.018+m.p)*20;ctx.globalAlpha=.07+pulse*.2;ctx.fillStyle=colorFor(state,.62);ctx.beginPath();ctx.arc(x,y,m.r,0,TAU);ctx.fill()});ctx.restore();drawCreatureWeather(ctx,ecology,{width:w,height:h,time:t,active,budget,state,pulse,rhythm});drawMemory(w,h,t,active);if(state==='rain'){ctx.save();ctx.globalCompositeOperation='screen';ctx.strokeStyle=colorFor('rain',.5+pulse*.22);ctx.lineWidth=1;rain.slice(0,Math.min(rain.length,budget.rainDrops||rain.length)).forEach(d=>{const y=((d.y*h+t*d.s*(1+rhythm*.03))%(h+90))-70,x=d.x*w+Math.sin(t*.011+d.i)*18;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-8,y+d.l);ctx.stroke()});ctx.restore()}if(state==='lightning'&&(Math.sin(t*.12)>.72||pulse>.82)){ctx.save();ctx.globalCompositeOperation='screen';ctx.fillStyle=colorFor('lightning',.14+pulse*.08);ctx.fillRect(0,0,w,h);ctx.strokeStyle=colorFor('lightning',.82);ctx.shadowColor=colorFor('lightning',1);ctx.shadowBlur=32;ctx.lineWidth=3.5;ctx.beginPath();let x=w*(.25+Math.sin(t*.021)*.16),y=0;ctx.moveTo(x,y);for(let i=0;i<9;i+=1){x+=Math.sin(t*.07+i*2.4)*42;y+=h*.07+Math.abs(Math.sin(t*.033+i))*28;ctx.lineTo(x,y)}ctx.stroke();ctx.restore()}drawHeart(w,h,t,spec);drawGlyph(w,h,t,active);raf=requestAnimationFrame(loop)};resize();loop();window.addEventListener('resize',resize);return()=>{cancelAnimationFrame(raf);window.removeEventListener('resize',resize)}},[state,pulse,marks,rhythm]);return ref}
-export default function App(){const[state,setState]=useState('cloud'),[pulse,setPulse]=useState(.5),[marks,setMarks]=useState([]),[rhythm,setRhythm]=useState(0),lastTouch=useRef(0),canvasRef=useWordlessSky(state,pulse,marks,rhythm);useEffect(()=>{const id=window.setInterval(()=>{setPulse(v=>Math.max(PERFORMANCE_BUDGET.pulseFloor,v*PERFORMANCE_BUDGET.pulseDecay));setRhythm(v=>Math.max(0,v-PERFORMANCE_BUDGET.rhythmDecay))},PERFORMANCE_BUDGET.tickMs);return()=>window.clearInterval(id)},[]);const touch=event=>{const point=normalizePoint(event),now=Date.now();setMarks(items=>{const cleaned=safeMarks(items),prev=cleaned.at(-1)||null;return[...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks),{...point,prev,time:now,spin:Math.random()*TAU,kind:state}]});const gesture=evolveWeatherGesture({now,lastTouch:lastTouch.current,rhythm,pulse,state,point});lastTouch.current=now;setRhythm(gesture.rhythm);setState(gesture.kind);setPulse(v=>Math.min(1,v+gesture.pulseBoost))};return <main className="wordless" aria-label="wordless sky instrument"><style>{css}</style><button className="sky" onPointerDown={touch} aria-label="touch the sky"><canvas ref={canvasRef}/></button><div className="orbit" aria-hidden="true">{SKY_STATES.map(name=><i key={name} className={name===state?'on':''}/>)}</div></main>}
-const css=`*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;background:#050510}body{overflow:hidden;overscroll-behavior:none;touch-action:none}.wordless{min-height:100vh;color:transparent;background:#050510;-webkit-user-select:none;user-select:none}.sky{position:fixed;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;background:#050510;cursor:crosshair;touch-action:none;-webkit-tap-highlight-color:transparent}.sky canvas{display:block;width:100%;height:100%}.orbit{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:10px;padding:11px 14px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(5,5,16,.34);backdrop-filter:blur(18px);box-shadow:0 18px 70px rgba(0,0,0,.34);pointer-events:none}.orbit i{width:9px;height:9px;border-radius:999px;background:rgba(255,255,255,.24);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(255,255,255,.08);transition:transform .24s ease,background .24s ease,box-shadow .24s ease}.orbit i.on{background:#ffe2bf;box-shadow:0 0 24px #ffbe74,0 0 0 1px rgba(255,255,255,.58);transform:scale(1.52)}@media(max-width:700px){.orbit{bottom:max(14px,env(safe-area-inset-bottom));gap:8px;padding:10px 12px}.orbit i{width:8px;height:8px}}@media(prefers-reduced-motion:reduce){.orbit i{transition:none}}`;
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  PERFORMANCE_BUDGET,
+  SKY_STATES,
+  evolveWeatherGesture,
+  normalizePoint,
+  responsiveBudget,
+  skyState,
+} from '../engine/skyState';
+import { createCreatureWeather, drawCreatureWeather } from '../engine/creatureWeather';
+import { createGestureComets, drawGestureComets } from '../engine/gestureComets';
+
+const TAU = Math.PI * 2;
+const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
+const seed = (count, factory) => Array.from({ length: count }, (_, i) => factory(i));
+
+function colorFor(kind, alpha = 1) {
+  if (kind === 'rain') return `rgba(145,216,255,${alpha})`;
+  if (kind === 'murmur') return `rgba(196,181,253,${alpha})`;
+  if (kind === 'aurora') return `rgba(167,243,208,${alpha})`;
+  if (kind === 'dawn') return `rgba(255,209,220,${alpha})`;
+  if (kind === 'wind') return `rgba(255,240,199,${alpha})`;
+  if (kind === 'lightning') return `rgba(239,251,255,${alpha})`;
+  return `rgba(255,226,191,${alpha})`;
+}
+
+function safeMarks(items) {
+  const now = Date.now();
+  return (Array.isArray(items) ? items : [])
+    .filter((mark) => mark && Number.isFinite(mark.x) && Number.isFinite(mark.y))
+    .map((mark) => ({
+      x: clamp01(mark.x),
+      y: clamp01(mark.y),
+      px: clamp01(mark.prev?.x ?? mark.x),
+      py: clamp01(mark.prev?.y ?? mark.y),
+      kind: SKY_STATES.includes(mark.kind) ? mark.kind : 'cloud',
+      spin: Number.isFinite(mark.spin) ? mark.spin : 0,
+      time: Number.isFinite(mark.time) ? mark.time : now,
+    }));
+}
+
+function drawGlow(ctx, x, y, radius, kind, alpha) {
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, radius);
+  glow.addColorStop(0, colorFor(kind, alpha));
+  glow.addColorStop(1, colorFor(kind, 0));
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, TAU);
+  ctx.fill();
+}
+
+function drawHeart(ctx, env, spec) {
+  const { width: w, height: h, time: t, pulse, state } = env;
+  const scale = Math.min(w, h) * (0.105 + pulse * 0.025 + Math.sin(t * 0.035) * 0.006);
+  ctx.save();
+  ctx.translate(w * 0.5, h * 0.58);
+  ctx.globalCompositeOperation = 'screen';
+  ctx.strokeStyle = colorFor(state, 0.74);
+  ctx.fillStyle = colorFor(state, 0.075);
+  ctx.shadowColor = colorFor(state, 1);
+  ctx.shadowBlur = 36 + pulse * 22;
+  ctx.lineWidth = Math.max(1.2, scale * 0.035);
+  ctx.beginPath();
+  for (let i = 0; i <= 140; i += 1) {
+    const angle = (i / 140) * TAU;
+    const warp = 1 + Math.sin(angle * 3 + t * 0.018) * 0.04 * spec.motion;
+    const x = Math.sin(angle) ** 3 * scale * 1.2 * warp;
+    const y = -(
+      0.78 * Math.cos(angle) -
+      0.3 * Math.cos(2 * angle) -
+      0.12 * Math.cos(3 * angle) -
+      0.06 * Math.cos(4 * angle)
+    ) * scale * warp;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawMemory(ctx, env) {
+  const { width: w, height: h, time: t, active, pulse, rhythm } = env;
+  active.forEach((mark, index) => {
+    const age = Math.min(1, (Date.now() - mark.time) / 8200);
+    const life = 1 - age;
+    if (life <= 0.02) return;
+    const cx = mark.x * w;
+    const cy = mark.y * h;
+    const base = Math.min(w, h) * (0.04 + index * 0.004 + pulse * 0.02);
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.strokeStyle = colorFor(mark.kind, 0.2 + life * 0.42);
+    ctx.fillStyle = colorFor(mark.kind, 0.035 + life * 0.06);
+    ctx.shadowColor = colorFor(mark.kind, 0.9);
+    ctx.shadowBlur = 22 * life;
+    ctx.lineWidth = 0.8 + pulse * 1.4;
+    for (let ring = 0; ring < 3; ring += 1) {
+      const radius = base + age * Math.min(w, h) * (0.18 + ring * 0.09);
+      ctx.globalAlpha = life * (0.46 - ring * 0.1);
+      ctx.beginPath();
+      for (let p = 0; p <= 80; p += 1) {
+        const angle = (p / 80) * TAU;
+        const r = radius + Math.sin(angle * 5 + t * 0.035 + mark.spin) * (4 + rhythm * 0.55) * life;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r * (0.62 + pulse * 0.24);
+        if (p === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+    ctx.globalAlpha = life * 0.34;
+    ctx.beginPath();
+    ctx.moveTo(mark.px * w, mark.py * h);
+    ctx.quadraticCurveTo(
+      ((mark.px + mark.x) * 0.5) * w + Math.sin(t * 0.03 + index) * 24 * life,
+      ((mark.py + mark.y) * 0.5) * h - Math.cos(t * 0.026 + index) * 18 * life,
+      cx,
+      cy,
+    );
+    ctx.stroke();
+    ctx.restore();
+  });
+}
+
+function drawGlyph(ctx, env) {
+  const { width: w, height: h, time: t, active, state, pulse, rhythm } = env;
+  const cx = w - Math.min(72, w * 0.16);
+  const cy = Math.min(72, h * 0.16);
+  const radius = Math.min(w, h) * 0.04;
+  const spokes = state === 'rain' ? 5 : state === 'lightning' ? 3 : state === 'wind' ? 4 : 6;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.translate(cx, cy);
+  ctx.rotate(t * 0.01 + rhythm * 0.015);
+  ctx.strokeStyle = colorFor(state, 0.58);
+  ctx.shadowColor = colorFor(state, 1);
+  ctx.shadowBlur = 24;
+  ctx.lineWidth = 1.4;
+  for (let i = 0; i < spokes; i += 1) {
+    const angle = (i / spokes) * TAU + Math.sin(t * 0.025 + i) * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(angle) * radius * 0.35, Math.sin(angle) * radius * 0.35);
+    ctx.lineTo(Math.cos(angle) * radius * (1.15 + pulse * 0.5), Math.sin(angle) * radius * (1.15 + pulse * 0.5));
+    ctx.stroke();
+  }
+  if (active.length) {
+    ctx.globalAlpha = 0.34;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * (1.5 + pulse * 0.8), 0, TAU);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function useWordlessSky(state, pulse, marks, rhythm) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return undefined;
+    const ctx = canvas.getContext('2d', { alpha: false });
+    let raf = 0;
+    let frame = 0;
+    const stars = seed(180, (i) => ({ i, x: Math.random(), y: Math.random(), r: 0.35 + Math.random() * 1.8, s: 0.3 + Math.random() * 1.7 }));
+    const motes = seed(68, (i) => ({ i, x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 2.2, p: Math.random() * TAU, s: 0.4 + Math.random() * 1.9 }));
+    const veins = seed(18, (i) => ({ i, y: 0.08 + Math.random() * 0.76, p: Math.random() * TAU, a: 18 + Math.random() * 72 }));
+    const rain = seed(150, (i) => ({ i, x: Math.random(), y: Math.random(), l: 16 + Math.random() * 54, s: 5 + Math.random() * 13 }));
+    const ecology = createCreatureWeather();
+    const comets = createGestureComets();
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(PERFORMANCE_BUDGET.maxPixelRatio, window.devicePixelRatio || 1);
+      canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+      canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const loop = () => {
+      frame += 1;
+      const rect = canvas.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      const budget = responsiveBudget(width, height);
+      const spec = skyState(state);
+      const active = safeMarks(marks).slice(-(budget.mobile ? 12 : 20));
+      const env = { width, height, time: frame, active, budget, state, pulse, rhythm, now: Date.now() };
+
+      const sky = ctx.createLinearGradient(0, 0, 0, height);
+      sky.addColorStop(0, spec.sky[0]);
+      sky.addColorStop(0.5, spec.sky[1]);
+      sky.addColorStop(1, spec.sky[2]);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, width, height);
+
+      drawGlow(ctx, width * 0.22, height * 0.18, width * 0.48, state === 'rain' ? 'rain' : 'clear', state === 'clear' ? 0.28 : 0.11);
+      drawGlow(ctx, width * 0.82, height * 0.16, width * 0.42, state === 'murmur' ? 'murmur' : state === 'aurora' ? 'aurora' : 'dawn', 0.1 + pulse * 0.1);
+      if (state === 'dawn') drawGlow(ctx, width * 0.5, height * 1.03, width * 0.7, 'dawn', 0.42);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      stars.slice(0, Math.min(stars.length, budget.stars || stars.length)).forEach((star) => {
+        ctx.globalAlpha = Math.max(0, 0.12 + Math.sin(frame * 0.022 * star.s + star.i) * 0.13 + (state === 'clear' ? 0.22 : 0));
+        ctx.fillStyle = '#fff8ef';
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height * 0.76, star.r, 0, TAU);
+        ctx.fill();
+      });
+      veins.slice(0, budget.mobile ? 7 : veins.length).forEach((vein) => {
+        const pull = active.reduce((sum, mark) => sum + Math.sin(mark.x * 8 + mark.y * 5 + vein.i) * 0.18, 0);
+        const gradient = ctx.createLinearGradient(0, 0, width, 0);
+        gradient.addColorStop(0, colorFor(state, 0));
+        gradient.addColorStop(0.5, colorFor(state, 0.09 + pulse * 0.12));
+        gradient.addColorStop(1, colorFor(state, 0));
+        ctx.strokeStyle = gradient;
+        ctx.globalAlpha = state === 'wind' || state === 'murmur' || state === 'aurora' ? 0.76 : 0.32;
+        ctx.lineWidth = 1 + pulse * 3;
+        ctx.beginPath();
+        for (let x = -60; x <= width + 60; x += 18) {
+          const y = height * vein.y + Math.sin(x * 0.01 + frame * 0.018 + vein.p + pull) * (vein.a + pulse * 46);
+          if (x === -60) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      });
+      motes.slice(0, Math.min(motes.length, budget.pollen || motes.length)).forEach((mote) => {
+        const drift = state === 'wind' || state === 'murmur' ? 2.9 : 1.05;
+        const x = ((mote.x * width + frame * mote.s * drift) % (width + 90)) - 45;
+        const y = mote.y * height + Math.sin(frame * 0.018 + mote.p) * 20;
+        ctx.globalAlpha = 0.07 + pulse * 0.2;
+        ctx.fillStyle = colorFor(state, 0.62);
+        ctx.beginPath();
+        ctx.arc(x, y, mote.r, 0, TAU);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      drawCreatureWeather(ctx, ecology, env);
+      drawGestureComets(ctx, comets, env);
+      drawMemory(ctx, env);
+
+      if (state === 'rain') {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.strokeStyle = colorFor('rain', 0.5 + pulse * 0.22);
+        ctx.lineWidth = 1;
+        rain.slice(0, Math.min(rain.length, budget.rainDrops || rain.length)).forEach((drop) => {
+          const y = ((drop.y * height + frame * drop.s * (1 + rhythm * 0.03)) % (height + 90)) - 70;
+          const x = drop.x * width + Math.sin(frame * 0.011 + drop.i) * 18;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x - 8, y + drop.l);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+
+      if (state === 'lightning' && (Math.sin(frame * 0.12) > 0.72 || pulse > 0.82)) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.fillStyle = colorFor('lightning', 0.14 + pulse * 0.08);
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = colorFor('lightning', 0.82);
+        ctx.shadowColor = colorFor('lightning', 1);
+        ctx.shadowBlur = 32;
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        let x = width * (0.25 + Math.sin(frame * 0.021) * 0.16);
+        let y = 0;
+        ctx.moveTo(x, y);
+        for (let i = 0; i < 9; i += 1) {
+          x += Math.sin(frame * 0.07 + i * 2.4) * 42;
+          y += height * 0.07 + Math.abs(Math.sin(frame * 0.033 + i)) * 28;
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      drawHeart(ctx, env, spec);
+      drawGlyph(ctx, env);
+      raf = requestAnimationFrame(loop);
+    };
+
+    resize();
+    loop();
+    window.addEventListener('resize', resize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, [state, pulse, marks, rhythm]);
+
+  return ref;
+}
+
+export default function App() {
+  const [state, setState] = useState('cloud');
+  const [pulse, setPulse] = useState(0.5);
+  const [marks, setMarks] = useState([]);
+  const [rhythm, setRhythm] = useState(0);
+  const lastTouch = useRef(0);
+  const canvasRef = useWordlessSky(state, pulse, marks, rhythm);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setPulse((value) => Math.max(PERFORMANCE_BUDGET.pulseFloor, value * PERFORMANCE_BUDGET.pulseDecay));
+      setRhythm((value) => Math.max(0, value - PERFORMANCE_BUDGET.rhythmDecay));
+    }, PERFORMANCE_BUDGET.tickMs);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const touch = (event) => {
+    const point = normalizePoint(event);
+    const now = Date.now();
+    setMarks((items) => {
+      const cleaned = safeMarks(items);
+      const prev = cleaned.at(-1) || null;
+      return [...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks), { ...point, prev, time: now, spin: Math.random() * TAU, kind: state }];
+    });
+    const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
+    lastTouch.current = now;
+    setRhythm(gesture.rhythm);
+    setState(gesture.kind);
+    setPulse((value) => Math.min(1, value + gesture.pulseBoost));
+  };
+
+  return (
+    <main className="wordless" aria-label="wordless sky instrument">
+      <style>{css}</style>
+      <button className="sky" onPointerDown={touch} aria-label="touch the sky">
+        <canvas ref={canvasRef} />
+      </button>
+      <div className="orbit" aria-hidden="true">
+        {SKY_STATES.map((name) => <i key={name} className={name === state ? 'on' : ''} />)}
+      </div>
+    </main>
+  );
+}
+
+const css = `*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;background:#050510}body{overflow:hidden;overscroll-behavior:none;touch-action:none}.wordless{min-height:100vh;color:transparent;background:#050510;-webkit-user-select:none;user-select:none}.sky{position:fixed;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;background:#050510;cursor:crosshair;touch-action:none;-webkit-tap-highlight-color:transparent}.sky canvas{display:block;width:100%;height:100%}.orbit{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:10px;padding:11px 14px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(5,5,16,.34);backdrop-filter:blur(18px);box-shadow:0 18px 70px rgba(0,0,0,.34);pointer-events:none}.orbit i{width:9px;height:9px;border-radius:999px;background:rgba(255,255,255,.24);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(255,255,255,.08);transition:transform .24s ease,background .24s ease,box-shadow .24s ease}.orbit i.on{background:#ffe2bf;box-shadow:0 0 24px #ffbe74,0 0 0 1px rgba(255,255,255,.58);transform:scale(1.52)}@media(max-width:700px){.orbit{bottom:max(14px,env(safe-area-inset-bottom));gap:8px;padding:10px 12px}.orbit i{width:8px;height:8px}}@media(prefers-reduced-motion:reduce){.orbit i{transition:none}}`;
