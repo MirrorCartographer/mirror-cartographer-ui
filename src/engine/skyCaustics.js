@@ -102,6 +102,86 @@ function drawCrepuscularApertures(ctx, marks, palette, options) {
   ctx.restore();
 }
 
+function drawShearCurlComb(ctx, marks, palette, options) {
+  const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
+  const latest = marks.at(-1);
+  const previous = latest?.prev;
+  const fresh = markFreshness(latest, now, 4600);
+  const wakeFresh = markFreshness(previous, now, 5200);
+  const idleMotion = state === 'wind' || state === 'murmur' || state === 'aurora' || pulse > 0.78;
+  if (budget.ultraTiny && !latest) return;
+  if (fresh < 0.02 && !idleMotion) return;
+
+  const startX = previous ? previous.x * w : w * (0.18 + Math.sin(t * 0.003) * 0.08);
+  const startY = previous ? previous.y * h : h * (0.32 + Math.cos(t * 0.004) * 0.11);
+  const endX = latest ? latest.x * w : w * (0.82 + Math.sin(t * 0.002 + 2) * 0.08);
+  const endY = latest ? latest.y * h : h * (0.36 + Math.sin(t * 0.003) * 0.12);
+  const dx = endX - startX;
+  const dy = endY - startY;
+  const distance = Math.max(1, Math.hypot(dx, dy));
+  const ux = dx / distance;
+  const uy = dy / distance;
+  const nx = -uy;
+  const ny = ux;
+  const color = state === 'lightning' ? '239,251,255' : palette[(state === 'dawn' || spec.warmth > 0.7) ? 1 : 0];
+  const curls = Math.max(3, Math.min(budget.mobile ? 5 : 9, Math.round((budget.causticCells || 10) * 0.52)));
+  const segments = budget.mobile ? 18 : 26;
+  const amplitude = Math.min(Math.min(w, h) * 0.15, 24 + rhythm * 7 + pulse * 52) * budget.motionScale;
+  const gestureForce = clamp01((fresh + wakeFresh * 0.4 + pulse * 0.35) * (latest ? 1.05 : 0.62));
+  const shear = (state === 'wind' ? 1.25 : state === 'murmur' ? 1.45 : state === 'rain' ? 0.82 : 1) * (0.75 + spec.motion * 0.45);
+  const alphaBase = (0.03 + gestureForce * 0.22) * budget.densityScale;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let i = 0; i < curls; i += 1) {
+    const row = curls <= 1 ? 0.5 : i / (curls - 1);
+    const offset = (row - 0.5) * Math.min(h * 0.22, 120 + rhythm * 8);
+    const curlPhase = t * 0.028 + i * 0.72 + rhythm * 0.19;
+    const perform = Math.sin(clamp01(fresh + pulse * 0.22) * Math.PI);
+    const gradient = ctx.createLinearGradient(startX, startY + offset, endX, endY - offset);
+    gradient.addColorStop(0, `rgba(${color},0)`);
+    gradient.addColorStop(0.26, `rgba(${color},${alphaBase * (0.45 + row)})`);
+    gradient.addColorStop(0.68, `rgba(${palette[(i + 1) % palette.length]},${alphaBase * 0.7})`);
+    gradient.addColorStop(1, `rgba(${color},0)`);
+
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = (budget.mobile ? 1.2 : 1.8) + perform * (budget.mobile ? 1.5 : 2.6);
+    ctx.shadowColor = `rgba(${color},1)`;
+    ctx.shadowBlur = budget.mobile ? 2 : 12 + perform * 12;
+    ctx.globalAlpha = clamp01(0.34 + gestureForce * 0.74 - row * 0.08);
+    ctx.beginPath();
+
+    for (let p = 0; p <= segments; p += 1) {
+      const q = p / segments;
+      const curlWindow = Math.pow(Math.sin(q * Math.PI), 0.72);
+      const roll = Math.sin(q * TAU * (1.35 + shear * 0.24) + curlPhase) * curlWindow;
+      const breaker = Math.cos(q * TAU * 2 + curlPhase * 0.7) * curlWindow * (0.26 + perform * 0.74);
+      const x = startX + dx * q + nx * (offset + roll * amplitude * 0.22);
+      const y = startY + dy * q + ny * (offset + roll * amplitude) - Math.abs(breaker) * amplitude * 0.42;
+      if (p === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+
+    if (!budget.mobile && gestureForce > 0.22) {
+      const beadCount = 3;
+      ctx.fillStyle = `rgba(${color},${alphaBase * 1.2})`;
+      for (let b = 0; b < beadCount; b += 1) {
+        const q = (b + 1) / (beadCount + 1);
+        const roll = Math.sin(q * TAU * (1.35 + shear * 0.24) + curlPhase) * Math.sin(q * Math.PI);
+        ctx.beginPath();
+        ctx.arc(startX + dx * q + nx * (offset + roll * amplitude * 0.22), startY + dy * q + ny * (offset + roll * amplitude), 1.8 + perform * 2.2, 0, TAU);
+        ctx.fill();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
 export function drawSkyCaustics(ctx, cells, marks, options) {
   const { width: w, height: h, time: t, now = Date.now(), pulse, rhythm, state, spec, budget } = options;
   if (w <= 1 || h <= 1 || budget.densityScale <= 0.05) return;
@@ -122,6 +202,7 @@ export function drawSkyCaustics(ctx, cells, marks, options) {
   ctx.globalCompositeOperation = 'screen';
 
   drawCrepuscularApertures(ctx, marks, palette, options);
+  drawShearCurlComb(ctx, marks, palette, options);
 
   drawCells.forEach((cell, i) => {
     const pull = fresh * (state === 'rain' ? 0.0011 : 0.00072);
