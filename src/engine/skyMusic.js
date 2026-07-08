@@ -19,8 +19,19 @@ const MOTIF = [0, 2, 3, 5, 3, 2, 6, 5, 3, 1, 2, 0, 5, 6, 3, 2];
 const ANSWER = [5, 3, 2, 0, 2, 3, 1, -1, 0, 2, 5, 3, 2, 0, -2, 0];
 const BASS_WALK = [0, 0, 2, 4, 5, 5, 4, 2, 7, 7, 6, 5, 3, 2, 1, 0];
 const FORM = ['seed', 'seed', 'lift', 'answer', 'storm', 'answer', 'lift', 'home'];
+const GROOVES = {
+  cloud: { span: 8, accent: [1, 0, 0.72, 0, 0.88, 0, 0.56, 0], duration: [1, 1, 1, 1, 1, 1, 1, 1] },
+  rain: { span: 12, accent: [1, 0, 0.62, 0, 0.78, 0.36, 0.9, 0, 0.56, 0, 0.72, 0.34], duration: [0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1, 0.74, 0.76, 0.5, 1] },
+  lightning: { span: 10, accent: [1, 0, 0, 0.92, 0, 0.55, 0, 1, 0.48, 0], duration: [0.72, 0.58, 0.7, 1.0, 0.5, 0.72, 0.58, 1.1, 0.5, 0.6] },
+  clear: { span: 8, accent: [1, 0, 0.58, 0, 0.82, 0, 0.64, 0], duration: [1, 1, 1, 1, 1, 1, 1, 1] },
+  aurora: { span: 14, accent: [1, 0, 0.52, 0, 0.76, 0, 0.42, 0.9, 0, 0.48, 0, 0.72, 0, 0.36], duration: [0.66, 0.84, 0.5, 1, 0.66, 0.84, 0.5, 1, 0.66, 0.84, 0.5, 1, 0.66, 0.84] },
+  dawn: { span: 8, accent: [1, 0, 0.68, 0.34, 0.9, 0, 0.62, 0], duration: [1, 1, 0.74, 1.26, 1, 1, 0.74, 1.26] },
+  wind: { span: 6, accent: [1, 0, 0.7, 0.52, 0, 0.84], duration: [0.84, 0.84, 1.32, 0.84, 0.84, 1.32] },
+  murmur: { span: 12, accent: [1, 0.42, 0, 0.78, 0, 0.52, 0.9, 0.36, 0, 0.72, 0, 0.48], duration: [0.66, 0.84, 0.5, 1, 0.66, 0.84, 0.5, 1, 0.66, 0.84, 0.5, 1] },
+};
 const LOOKAHEAD_MS = 180;
 const SCHEDULE_AHEAD_SECONDS = 0.85;
+const MAX_EVENTS_PER_TICK = 18;
 
 function midiToHz(note) {
   return 440 * 2 ** ((note - 69) / 12);
@@ -43,6 +54,15 @@ function clamp(value, min, max) {
 function currentBeatSeconds(state, rhythm) {
   const bpm = 74 + Math.min(16, rhythm * 2.4) + (state === 'wind' ? 8 : state === 'lightning' ? 12 : 0);
   return 60 / clamp(bpm, 62, 104);
+}
+
+function grooveFor(state, index) {
+  const groove = GROOVES[state] || GROOVES.cloud;
+  const slot = index % groove.span;
+  return {
+    accent: groove.accent[slot] ?? 0,
+    duration: clamp(groove.duration[slot] ?? 1, 0.45, 1.35),
+  };
 }
 
 function closestRegister(note, target) {
@@ -188,6 +208,11 @@ export function createSkyMusic() {
     const chorus = section === 'lift' || section === 'storm';
     const cadence = section === 'home';
     const inPhrase = localStep % 16;
+    const groove = grooveFor(currentState, localStep);
+    const slotSeconds = beat * 0.5 * groove.duration;
+    const strong = groove.accent >= 0.82;
+    const medium = groove.accent >= 0.52;
+    const ghost = groove.accent > 0 && groove.accent < 0.52;
     const lift = section === 'lift' || section === 'storm';
     const answering = section === 'answer' || section === 'home';
     const homeCadence = section === 'home' && inPhrase >= 12;
@@ -210,36 +235,43 @@ export function createSkyMusic() {
       previousSection = section;
     }
 
-    if (step % 2 === 0) {
+    if (medium && step % 2 === 0) {
       const note = homeCadence ? scaleNote(root, Math.max(0, 5 - (inPhrase - 12) * 2), 1) : scaleNote(root, motifDegree, 1 + (step % 8 === 6 || lift ? 1 : 0));
-      playOsc(ctx, delay, when, midiToHz(note), beat * (lift ? 0.95 : 0.82), {
+      playOsc(ctx, delay, when, midiToHz(note), slotSeconds * (lift ? 1.7 : 1.45), {
         type: brightness || lift ? 'triangle' : 'sine',
-        gain: 0.02 + currentPulse * 0.012 + (lift ? 0.006 : 0),
+        gain: (0.014 + currentPulse * 0.009 + (lift ? 0.005 : 0)) * groove.accent,
         filter: brightness || lift ? 3800 : 2200,
+      });
+    } else if (ghost && !homeCadence && step % 4 === 0) {
+      const grace = scaleNote(root, motifDegree - 2, 1);
+      playOsc(ctx, delay, when + slotSeconds * 0.18, midiToHz(grace), slotSeconds * 0.62, {
+        type: 'sine',
+        gain: 0.006 * groove.accent,
+        filter: 1800,
       });
     }
 
-    if (answering && step % 4 === 2) {
+    if (answering && medium && step % 4 === 2) {
       const counter = scaleNote(root, ANSWER[(15 - inPhrase + ANSWER.length) % ANSWER.length] - 3, 1);
-      playOsc(ctx, delay, when + beat * 0.18, midiToHz(counter), beat * 0.72, {
+      playOsc(ctx, delay, when + slotSeconds * 0.36, midiToHz(counter), slotSeconds * 1.2, {
         type: 'sine',
-        gain: 0.011 + currentPulse * 0.004,
+        gain: (0.009 + currentPulse * 0.003) * groove.accent,
         filter: 1900,
       });
     }
 
-    if (step % 4 === 0) {
+    if (strong && step % 4 === 0) {
       const walk = BASS_WALK[inPhrase] || 0;
       const bass = chordRoot - 24 + (lift ? 12 : 0) + (homeCadence ? 0 : walk);
       playOsc(ctx, master, when, midiToHz(bass), beat * (homeCadence ? 1.8 : 1.22), {
         type: 'sine',
-        gain: 0.032 + (lift ? 0.005 : 0),
+        gain: 0.029 + (lift ? 0.004 : 0),
         attack: 0.025,
         filter: lift ? 720 : 560,
       });
     }
 
-    if (step % 8 === 0) {
+    if (strong && step % 8 === 0) {
       const voicing = voiceChord(root, chord, previousVoicing, lift);
       previousVoicing = voicing;
       voicing.forEach((note, voice) => {
@@ -247,36 +279,41 @@ export function createSkyMusic() {
         const entrance = voice * 0.012 + (sectionChanged ? beat * 0.04 * voice : 0);
         playOsc(ctx, delay, when + entrance, midiToHz(note), release, {
           type: 'triangle',
-          gain: 0.0065 + (lift ? 0.0025 : 0),
+          gain: 0.006 + (lift ? 0.002 : 0),
           attack: 0.08 + voice * 0.018,
           filter: 1500 + voice * 420 + (lift ? 700 : 0),
         });
       });
     }
 
-    if (lift && step % 8 === 6) {
+    if (lift && strong && step % 8 === 6) {
       const sparkle = scaleNote(root, motifDegree + 7, 2);
-      playOsc(ctx, delay, when + beat * 0.12, midiToHz(sparkle), beat * 0.34, {
+      playOsc(ctx, delay, when + slotSeconds * 0.24, midiToHz(sparkle), slotSeconds * 0.72, {
         type: 'triangle',
-        gain: 0.009,
+        gain: 0.0075,
         filter: 5200,
       });
     }
 
-    if (currentState === 'rain' && step % 3 === 0) {
-      playNoise(ctx, noise, delay, when, beat * 0.18, { frequency: 1800 + (step % 5) * 260, gain: 0.008, q: 7 });
+    if (currentState === 'rain' && medium && step % 3 === 0) {
+      playNoise(ctx, noise, delay, when, slotSeconds * 0.7, { frequency: 1800 + (step % 5) * 260, gain: 0.006, q: 7 });
     }
-    if ((currentState === 'lightning' || section === 'storm') && step % 7 === 0) {
-      playOsc(ctx, delay, when, midiToHz(root + 31), beat * 0.14, { type: 'sawtooth', gain: 0.009, filter: 4800, slide: 0.72 });
+    if ((currentState === 'lightning' || section === 'storm') && strong && step % 7 === 0) {
+      playOsc(ctx, delay, when, midiToHz(root + 31), slotSeconds * 0.48, { type: 'sawtooth', gain: 0.008, filter: 4800, slide: 0.72 });
     }
 
     step += 1;
-    nextNoteTime += beat * 0.5;
+    nextNoteTime += slotSeconds;
   }
 
   function scheduler() {
     if (!ctx || !started) return;
-    while (nextNoteTime < ctx.currentTime + SCHEDULE_AHEAD_SECONDS) scheduleOne(nextNoteTime);
+    if (nextNoteTime < ctx.currentTime - 0.1) nextNoteTime = ctx.currentTime + 0.025;
+    let events = 0;
+    while (nextNoteTime < ctx.currentTime + SCHEDULE_AHEAD_SECONDS && events < MAX_EVENTS_PER_TICK) {
+      scheduleOne(nextNoteTime);
+      events += 1;
+    }
   }
 
   async function start(snapshot = {}) {
