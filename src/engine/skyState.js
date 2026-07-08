@@ -135,23 +135,29 @@ export function skyState(name) {
 export function responsiveBudget(width = 1000, height = 800) {
   const mobile = width < VIEWPORT_BREAKPOINTS.mobileMax;
   const short = height < VIEWPORT_BREAKPOINTS.smallHeight;
+  const tiny = mobile && short;
   const motionScale = short ? 0.84 : 1;
+  const densityScale = tiny ? 0.78 : short ? 0.88 : 1;
+  const count = (value, floor = 1) => Math.max(floor, Math.round(value * densityScale));
+
   return {
     mobile,
     short,
+    tiny,
     motionScale,
-    stars: mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars,
-    clouds: mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds,
-    creatures: mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures,
-    rainDrops: mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops,
-    sprites: mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites,
-    pollen: mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen,
-    ribbons: mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons,
-    pressureWakeMarks: PERFORMANCE_BUDGET.pressureWakeMarks,
-    pressureWakePaths: mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths,
-    pressureWakeSteps: mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
-    trailMemoryMarks: PERFORMANCE_BUDGET.trailMemoryMarks,
-    trailMemorySparks: mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks,
+    densityScale,
+    stars: count(mobile ? PERFORMANCE_BUDGET.mobileStars : PERFORMANCE_BUDGET.desktopStars, 60),
+    clouds: count(mobile ? PERFORMANCE_BUDGET.mobileClouds : PERFORMANCE_BUDGET.desktopClouds, 12),
+    creatures: count(mobile ? PERFORMANCE_BUDGET.mobileCreatures : PERFORMANCE_BUDGET.renderedCreatures, 7),
+    rainDrops: count(mobile ? PERFORMANCE_BUDGET.mobileRainDrops : PERFORMANCE_BUDGET.renderedRainDrops, 70),
+    sprites: count(mobile ? PERFORMANCE_BUDGET.mobileSprites : PERFORMANCE_BUDGET.renderedSprites, 8),
+    pollen: count(mobile ? PERFORMANCE_BUDGET.mobilePollen : PERFORMANCE_BUDGET.renderedPollen, 18),
+    ribbons: count(mobile ? PERFORMANCE_BUDGET.mobileRibbons : PERFORMANCE_BUDGET.renderedRibbons, 4),
+    pressureWakeMarks: tiny ? 7 : PERFORMANCE_BUDGET.pressureWakeMarks,
+    pressureWakePaths: count(mobile ? PERFORMANCE_BUDGET.mobilePressureWakePaths : PERFORMANCE_BUDGET.pressureWakePaths, 8),
+    pressureWakeSteps: tiny ? 4 : mobile ? PERFORMANCE_BUDGET.mobilePressureWakeSteps : PERFORMANCE_BUDGET.pressureWakeSteps,
+    trailMemoryMarks: tiny ? 8 : PERFORMANCE_BUDGET.trailMemoryMarks,
+    trailMemorySparks: count(mobile ? PERFORMANCE_BUDGET.mobileTrailMemorySparks : PERFORMANCE_BUDGET.trailMemorySparks, 16),
   };
 }
 
