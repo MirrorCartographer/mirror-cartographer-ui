@@ -11,6 +11,9 @@ export function seedCreatures(count) {
     scale: 0.7 + Math.random() * 1.4,
     nerve: Math.random(),
     memory: 0,
+    role: i % 5,
+    orbit: Math.random() * TAU,
+    hush: 0,
   }));
 }
 
@@ -35,19 +38,49 @@ function weatherForce(state) {
   return 0.00018;
 }
 
+function performanceBeat(t, rhythm, pulse, state) {
+  const slow = Math.sin(t * 0.021);
+  const quick = Math.sin(t * 0.073 + rhythm * 0.45);
+  const weatherAccent = state === 'lightning' ? Math.max(0, quick) : state === 'rain' ? -Math.abs(slow) : slow;
+  const inhale = Math.max(0, Math.sin(t * 0.018 - 0.8));
+  return {
+    fold: inhale * (0.35 + pulse * 0.55),
+    accent: weatherAccent * (0.5 + pulse * 0.5),
+    hush: Math.max(0, Math.sin(t * 0.014 + Math.PI)) * (state === 'clear' || state === 'dawn' ? 0.75 : 0.35),
+  };
+}
+
+function drawThread(ctx, x, y, angle, length, bend, alpha, color) {
+  ctx.save();
+  ctx.globalAlpha *= alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 0.65;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(Math.cos(angle + 1.4) * bend, Math.sin(angle + 1.4) * bend, Math.cos(angle) * length, Math.sin(angle) * length);
+  ctx.stroke();
+  ctx.restore();
+}
+
 export function drawCreatureEcology(ctx, creatures, marks, options) {
   const { width: w, height: h, time: t, pulse, rhythm, state, spec, budget } = options;
   const active = creatures.slice(0, budget.creatures);
   const latest = marks.at(-1);
   const pull = weatherForce(state);
   const touched = latest ? Math.max(0, 1 - (Date.now() - latest.time) / 2400) : 0;
+  const beat = performanceBeat(t, rhythm, pulse, state);
+  const centerX = 0.5 + Math.sin(t * 0.006) * 0.06;
+  const centerY = 0.38 + spec.warmth * 0.16 + Math.cos(t * 0.004) * 0.035;
 
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
 
   active.forEach((c, i) => {
-    let ax = (0.5 - c.x) * 0.00004;
-    let ay = (0.42 + spec.warmth * 0.18 - c.y) * 0.000035;
+    const orbitRadius = 0.08 + (c.role * 0.018) + rhythm * 0.002;
+    const orbitX = centerX + Math.cos(c.orbit + t * 0.004 + c.phase) * orbitRadius;
+    const orbitY = centerY + Math.sin(c.orbit * 1.7 + t * 0.003) * orbitRadius * 0.55;
+    let ax = (orbitX - c.x) * (0.000036 + beat.fold * 0.000025);
+    let ay = (orbitY - c.y) * (0.000032 + beat.fold * 0.000022);
 
     active.forEach((o, j) => {
       if (i === j) return;
@@ -67,18 +100,23 @@ export function drawCreatureEcology(ctx, creatures, marks, options) {
       const dx = latest.x - c.x;
       const dy = latest.y - c.y;
       const d = Math.max(0.02, Math.hypot(dx, dy));
-      const mood = latest.kind === 'lightning' || latest.kind === 'wind' ? -1 : 1;
+      const storm = latest.kind === 'lightning' || latest.kind === 'wind';
+      const mood = storm ? -1 : 1;
       const curious = state === 'murmur' ? Math.sin(t * 0.025 + c.phase) : 0;
-      ax += (dx / d) * touched * mood * (0.00048 + curious * 0.0001);
-      ay += (dy / d) * touched * mood * (0.00048 - curious * 0.00008);
-      c.memory = Math.max(c.memory, touched);
+      const chosen = (latest.kind === 'murmur' || state === 'murmur') && c.role === 0;
+      ax += (dx / d) * touched * mood * (0.00048 + curious * 0.0001 + (chosen ? 0.00018 : 0));
+      ay += (dy / d) * touched * mood * (0.00048 - curious * 0.00008 + (chosen ? 0.00012 : 0));
+      c.memory = Math.max(c.memory, touched * (storm ? 0.74 : 1));
+      c.hush = Math.max(c.hush, touched * (storm ? 0.2 : 0.65));
     }
 
     c.memory *= 0.982;
+    c.hush *= 0.988;
+    c.orbit += 0.0008 + spec.motion * 0.00025 + c.memory * 0.0004;
     ax += Math.sin(t * 0.011 + c.phase) * pull;
     ay += Math.cos(t * 0.009 + c.phase * 1.7) * pull * 0.62;
-    c.vx = clamp((c.vx + ax) * 0.982, -0.006, 0.006);
-    c.vy = clamp((c.vy + ay) * 0.982, -0.005, 0.005);
+    c.vx = clamp((c.vx + ax) * (0.976 - c.hush * 0.05), -0.006, 0.006);
+    c.vy = clamp((c.vy + ay) * (0.976 - c.hush * 0.05), -0.005, 0.005);
     c.x += c.vx;
     c.y += c.vy;
 
@@ -89,37 +127,42 @@ export function drawCreatureEcology(ctx, creatures, marks, options) {
     const x = c.x * w;
     const y = c.y * h;
     const speed = Math.hypot(c.vx, c.vy);
-    const angle = Math.atan2(c.vy, c.vx || 0.0001);
+    const angle = Math.atan2(c.vy, c.vx || 0.0001) + beat.accent * 0.18 + c.hush * Math.sin(t * 0.02 + c.phase) * 0.35;
     const performedBeat = Math.sin(t * (0.18 + speed * 80) + c.phase + c.memory * 2.6);
-    const wing = performedBeat * (6 + rhythm * 0.4 + c.memory * 8);
+    const wing = performedBeat * (6 + rhythm * 0.4 + c.memory * 8) * (1 - c.hush * 0.38) + beat.fold * 5;
+    const bow = c.hush * (4 + c.scale * 3) + beat.fold * (c.role === 0 ? 3.8 : 1.4);
     const blink = Math.max(0, Math.sin(t * 0.045 + c.phase * 3 + c.nerve * 9));
     const color = creatureColor(state, spec);
 
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(angle);
-    ctx.globalAlpha = 0.16 + pulse * 0.25 + Math.min(0.24, speed * 24) + c.memory * 0.12;
+    ctx.globalAlpha = 0.14 + pulse * 0.24 + Math.min(0.24, speed * 24) + c.memory * 0.12 - c.hush * 0.04;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
     ctx.shadowColor = color;
-    ctx.shadowBlur = 12 + pulse * 24 + c.memory * 18;
+    ctx.shadowBlur = 12 + pulse * 24 + c.memory * 18 + beat.fold * 8;
     ctx.lineWidth = 1.1;
 
     ctx.beginPath();
-    ctx.ellipse(0, 0, 2.2 * c.scale, 5.6 * c.scale, 0, 0, TAU);
+    ctx.ellipse(0, bow, 2.2 * c.scale, 5.6 * c.scale * (1 + beat.fold * 0.08), 0, 0, TAU);
     ctx.fill();
 
     ctx.beginPath();
-    ctx.moveTo(-1, 0);
-    ctx.quadraticCurveTo(-10 * c.scale, -wing, -18 * c.scale, -2 * c.scale);
-    ctx.moveTo(1, 0);
-    ctx.quadraticCurveTo(10 * c.scale, wing, 18 * c.scale, 2 * c.scale);
+    ctx.moveTo(-1, bow);
+    ctx.quadraticCurveTo(-10 * c.scale, -wing + bow, -18 * c.scale, -2 * c.scale + bow * 0.4);
+    ctx.moveTo(1, bow);
+    ctx.quadraticCurveTo(10 * c.scale, wing + bow, 18 * c.scale, 2 * c.scale + bow * 0.4);
     ctx.stroke();
 
-    if (state === 'murmur' || c.memory > 0.24) {
+    if (!budget.mobile && (c.memory > 0.12 || state === 'murmur' || beat.fold > 0.7) && i % 2 === 0) {
+      drawThread(ctx, x, y, Math.PI + beat.accent * 0.5, 12 + c.memory * 24, wing * 0.45, 0.18 + c.memory * 0.24, color);
+    }
+
+    if (state === 'murmur' || c.memory > 0.24 || c.hush > 0.32) {
       ctx.globalAlpha *= state === 'murmur' && i % 3 === 0 ? 0.48 : 0.28;
       ctx.beginPath();
-      ctx.arc(0, 0, 10 * c.scale + blink * 7 + c.memory * 10, 0, TAU);
+      ctx.arc(0, bow * 0.5, 10 * c.scale + blink * 7 + c.memory * 10 + beat.fold * 4, 0, TAU);
       ctx.stroke();
     }
 
