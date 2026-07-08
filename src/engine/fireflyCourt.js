@@ -53,6 +53,18 @@ function courtBeat(t, rhythm, pulse, state) {
   };
 }
 
+function neighborBudget(budget, count) {
+  const stride = budget.mobile && count > 9 ? 2 : count > 32 ? 2 : 1;
+  return {
+    stride,
+    maxNear: budget.mobile ? 5 : 9,
+  };
+}
+
+function shouldSampleNeighbor(index, otherIndex, stride) {
+  return stride === 1 || ((index + otherIndex) % stride === 0);
+}
+
 function drawWingGlyph(ctx, radius, beat, bow, color) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 0.7;
@@ -76,6 +88,7 @@ export function drawFireflyCourt(ctx, court, marks, options) {
   const cx = 0.5 + Math.sin(t * 0.004 + rhythm * 0.05) * 0.08;
   const cy = 0.44 + Math.cos(t * 0.003) * 0.05 + spec.warmth * 0.08;
   const quorumPulse = Math.max(0, Math.sin(t * 0.026 + rhythm * 0.28)) ** 6;
+  const flockBudget = neighborBudget(budget, active.length);
 
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
@@ -94,8 +107,9 @@ export function drawFireflyCourt(ctx, court, marks, options) {
     let avgVy = 0;
     let repelX = 0;
     let repelY = 0;
-    active.forEach((other) => {
-      if (other === f) return;
+    for (let otherIndex = 0; otherIndex < active.length; otherIndex += 1) {
+      const other = active[otherIndex];
+      if (other === f || !shouldSampleNeighbor(index, otherIndex, flockBudget.stride)) continue;
       const dx = other.x - f.x;
       const dy = other.y - f.y;
       const d2 = dx * dx + dy * dy;
@@ -108,15 +122,16 @@ export function drawFireflyCourt(ctx, court, marks, options) {
           repelX -= dx * push;
           repelY -= dy * push;
         }
+        if (near >= flockBudget.maxNear) break;
       }
-    });
+    }
 
     if (near) {
       ax += ((avgVx / near) - f.vx) * bias.alignment;
       ay += ((avgVy / near) - f.vy) * bias.alignment;
       ax += repelX * bias.separation * 0.000001;
       ay += repelY * bias.separation * 0.000001;
-      f.quorum = Math.max(f.quorum, Math.min(1, near / 8) * (0.22 + quorumPulse * 0.72));
+      f.quorum = Math.max(f.quorum, Math.min(1, near / flockBudget.maxNear) * (0.22 + quorumPulse * 0.72));
     }
 
     if (latest) {
