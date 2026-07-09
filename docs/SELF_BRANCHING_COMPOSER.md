@@ -2,15 +2,15 @@
 
 ## Current branch decision
 
-The strongest move is now a narrow audio-visual coupling primitive, not another host patch. Vercel has already reported success for the restored wordless app commit, while the Actions lookup available here still does not prove push-triggered Pages runs. The repo contract is therefore stable enough for one small internal capability change, but not enough for visible feature expansion.
+Followed the previous coupling path rather than branching into a new host or new instrument. The repo already exposed composition density and phrase phase; the missing high-leverage move was to let the wordless visual score breathe from those same values. This is still a conservative internal composition change, not a visible explainer or a larger feature surface.
 
 ## Hosting assessment
 
-Vercel remains the primary atmospheric surface when build quota is available because it reports deploy status directly on commits. It should not be the only confidence route while rate limits or pending builds can blur product failures with host failures. GitHub Pages remains the best secondary gallery/fallback surface because the repo already has a Pages workflow, `build:pages`, `test:pages-preview`, and `test:pages-remote`. Cloudflare Pages is still the next fallback only if GitHub Pages cannot reliably expose the built shell. Netlify is viable but lower priority. A separate stable repo is still premature; if visible explainers keep leaking into `main`, split by stable branch or gallery route first.
+Vercel remains the primary atmospheric surface when build quota is available because it reports deploy status directly on commits. It should not be the only confidence route while rate limits can blur product failures with host failures. GitHub Pages remains the best secondary/fallback surface because the repo already has a Pages workflow, `build:pages`, `test:pages-preview`, and `test:pages-remote`. Cloudflare Pages is still the next fallback only if GitHub Pages cannot reliably expose the built shell. Netlify is viable but lower priority. A separate stable repo is still premature; if visible explainers keep leaking into `main`, split by stable branch or gallery route first.
 
 ## Live/testing check
 
-Vercel reported success for restored app commit `7f5b2c66f5461e8eaf533e8c0f04438fabd61edd`. The available commit workflow-run lookup returned no runs for that commit, but that lookup is known to miss push-triggered Pages runs, so the absence of workflow runs is not proof of Pages failure. After this cycle's code commit `fe008dd286150f092dabf337700877a1fda1ce47`, Vercel was still pending at check time. The actionable verification route remains: `npm run test:phone-contract`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`.
+The current pre-cycle main commit `46cde18728a487ecd3e73c7e14d9ee449efc9a85` reported Vercel failure with the build-rate-limit upgrade URL, which is a host quota signal rather than a product regression signal. GitHub workflow-run lookup returned no runs for that commit, and that lookup still does not prove whether push-triggered Pages deployment is disabled or merely invisible to this connector. Public URL fetch from this environment could not safely open either the Vercel URL or the GitHub Pages URL, so the reliable verification route remains repo-side gates: `npm run test:phone-contract`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`.
 
 ## Preserved constraints
 
@@ -18,16 +18,16 @@ Vercel reported success for restored app commit `7f5b2c66f5461e8eaf533e8c0f04438
 - tap-to-start only
 - wordless visual surface
 - phone-first layout and performance
-- efficient scheduling before extra composition weight
+- low CPU before new visual density
 - host failures must not be misread as product failures
 
 ## Change made in this cycle
 
-Exposed shared composition shape from `src/engine/compositionFrame.js`: section, in-phrase index, phrase phase, and weather/section density now travel in the same frame object as beat, phase, phrase, pulse, rhythm, and state. This is deliberately internal and wordless. It gives the canvas a stable way to read the same phrase-density structure the audio engine already schedules from, without adding visible text or starting audio outside the tap path.
+Committed `aa5b12f12a7d523c69424dc619270588b0785351`: `drawVisualScore` now reads `clockSnapshot.density` and `clockSnapshot.phrasePhase`. The score staff, note opacity, note lift, spacing, and shadow breathe with the same phrase-density frame that the audio engine receives after tap. No visible explanatory words were added, no autoplay path was changed, and no new instruments were introduced.
 
 ## Next suggested action
 
-Run the contract gate after commit `fe008dd286150f092dabf337700877a1fda1ce47`. If `npm run test:phone-contract` fails, fix the exact failing assertion. If it passes, wire `clockSnapshot.density` and `clockSnapshot.phrasePhase` into `drawVisualScore` so score opacity, note lift, and spacing visibly breathe with the same phrase density the audio engine hears. Keep the surface wordless and do not add new instruments yet.
+Run `npm run test:phone-contract` after commit `aa5b12f12a7d523c69424dc619270588b0785351`. If it fails, fix the exact assertion. If it passes, add a tiny contract or unit check that protects the phrase-density coupling by searching the built bundle/source for `phrasePhase` and `density` usage in the visual score path. Only after that should the next cycle adjust composition behavior again.
 
 ## Later branch
 
