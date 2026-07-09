@@ -20,6 +20,11 @@ const audioConstructorIndex = music.indexOf('ctx = new Audio()');
 const exportedFactoryIndex = music.indexOf('export function createSkyMusic()');
 const touchIndex = app.indexOf('const touch =');
 const intervalIndex = app.indexOf('window.setInterval');
+const visualScoreIndex = app.indexOf('function drawVisualScore');
+const visualScoreEndIndex = app.indexOf('function useWordlessSky', visualScoreIndex);
+const visualScore = visualScoreIndex >= 0 && visualScoreEndIndex > visualScoreIndex
+  ? app.slice(visualScoreIndex, visualScoreEndIndex)
+  : '';
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > touchIndex);
@@ -37,6 +42,8 @@ assert('vite build uses relative asset base for portable static previews', vite.
 assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
 assert('composition clock exposes phrase and phase', clock.includes('phrase') && clock.includes('phase') && clock.includes('tapCount'));
 assert('visual score reads composition clock snapshot', app.includes('clockSnapshot') && app.includes('clock: clockSnapshot') && app.includes('clock?.phase'));
+assert('visual score reads phrase phase and density', visualScore.includes('clock?.phrasePhase') && visualScore.includes('clock?.density'));
+assert('visual score applies phrase-density to geometry', visualScore.includes('phrasePhase * TAU') && visualScore.includes('baseY') && visualScore.includes('span') && visualScore.includes('densitySpread'));
 assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
 assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
 assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
