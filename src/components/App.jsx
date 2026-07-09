@@ -10,6 +10,7 @@ import {
 import { createSkyMusic } from '../engine/skyMusic';
 import { createCompositionClock } from '../engine/compositionClock';
 import { createCompositionFrame, createTapCompositionFrame } from '../engine/compositionFrame';
+import { createPhraseMemory } from '../engine/phraseMemory';
 import storySeed from '../data/reexperience.seed.json';
 
 const TAU = Math.PI * 2;
@@ -46,6 +47,24 @@ function storyMark(beat, index, count, now) {
 function storyMarks(now, budget) {
   const beats = STORY_BEATS.slice(-(budget?.mobile ? 5 : 7));
   return beats.map((beat, index) => storyMark(beat, index, beats.length, now));
+}
+
+function phraseContourMark(contour, state, now) {
+  if (!contour || contour.length < 2) return null;
+  const rise = clamp01(contour.rise);
+  const turn = clamp01(contour.turn);
+  const density = clamp01(contour.density);
+  const x = clamp01(0.5 + (turn - 0.5) * 0.28);
+  const y = clamp01(0.36 + (0.5 - rise) * 0.2 - density * 0.04);
+  return {
+    x,
+    y,
+    px: clamp01(x - 0.09 - density * 0.04),
+    py: clamp01(y + (rise - 0.5) * 0.16),
+    kind: SKY_STATES.includes(state) ? state : 'cloud',
+    spin: rise * 3.1 + turn * 5.7 + density * 8.3,
+    time: now - 1700,
+  };
 }
 
 function colorFor(kind, alpha = 1) {
@@ -223,7 +242,7 @@ function drawVisualScore(ctx, env) {
   ctx.restore();
 }
 
-function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
+function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContour) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -253,7 +272,8 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
       const budget = responsiveBudget(width, height);
       const spec = skyState(state);
       const story = safeMarks(storyMarks(Date.now(), budget));
-      const active = [...story, ...safeMarks(marks)].slice(-(budget.mobile ? 12 : 20));
+      const contour = phraseContourMark(phraseContour, state, Date.now());
+      const active = [...story, ...safeMarks(contour ? [contour] : []), ...safeMarks(marks)].slice(-(budget.mobile ? 12 : 20));
       const env = { width, height, time: frame, active, story, budget, state, pulse, rhythm, clock: clockSnapshot, now: Date.now() };
 
       const sky = ctx.createLinearGradient(0, 0, 0, height);
@@ -360,7 +380,7 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
-  }, [state, pulse, marks, rhythm, clockSnapshot]);
+  }, [state, pulse, marks, rhythm, clockSnapshot, phraseContour]);
 
   return ref;
 }
@@ -371,13 +391,16 @@ export default function App() {
   const [marks, setMarks] = useState([]);
   const [rhythm, setRhythm] = useState(0);
   const [clockSnapshot, setClockSnapshot] = useState(null);
+  const [phraseContour, setPhraseContour] = useState(null);
   const lastTouch = useRef(0);
   const musicRef = useRef(null);
   const clockRef = useRef(null);
-  const canvasRef = useWordlessSky(state, pulse, marks, rhythm, clockSnapshot);
+  const phraseMemoryRef = useRef(null);
+  const canvasRef = useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContour);
 
   useEffect(() => {
     clockRef.current = createCompositionClock();
+    phraseMemoryRef.current = createPhraseMemory();
     musicRef.current = createSkyMusic();
     return () => musicRef.current?.stop?.();
   }, []);
@@ -415,6 +438,8 @@ export default function App() {
       rhythm: gesture.rhythm,
       state: gesture.kind,
     };
+    phraseMemoryRef.current?.remember?.(composition);
+    setPhraseContour(phraseMemoryRef.current?.contour?.() ?? null);
     lastTouch.current = now;
     setRhythm(gesture.rhythm);
     setState(gesture.kind);
