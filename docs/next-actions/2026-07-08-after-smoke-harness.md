@@ -32,26 +32,25 @@ The package scripts now include three gate paths:
 
 The GitHub Actions smoke workflow is present and uses `npm install`, not `npm ci`, so the earlier missing-lockfile blocker is no longer the known primary blocker.
 
-## Gate run 07 update
+## Gate run 08 update
 
-The visible status for the previous gate commit showed Vercel success, but no readable Smoke Test status was available through the current connector path. Treat this as an observability gap, not as a pass.
+The latest readable commit status for the workflow-observability patch still exposed Vercel success but did not expose a readable Smoke Test result through the current connector path. Treat this as an unresolved CI observability gap, not as a pass.
 
 Implemented smallest reliability improvement:
 
-- `.github/workflows/smoke.yml` now includes `workflow_dispatch` so the smoke gate can be manually triggered from GitHub Actions.
-- The smoke job now has `timeout-minutes: 10` so a hung Playwright/browser install cannot silently consume unbounded CI time.
+- `.github/workflows/smoke.yml` now uploads `test-results/` and `playwright-report/` as `playwright-failure-artifacts` when the phone-first gate fails.
 
 ## Self-directed automation verdict
 
-Decision: revise the previous next action.
+Decision: block novelty and follow a revised reliability action.
 
-The system should not add Composition Clock yet. The next gate is now: confirm the manually triggerable Smoke Test exists and inspect the run generated after the workflow observability patch.
+The system should not add Composition Clock yet. A missing or unreadable Smoke Test result means the reliability gate is not complete. The correct next step is to inspect the GitHub Actions Smoke Test run after commit `275613d` and, if it fails, use the uploaded Playwright artifacts to fix only the failing gate step.
 
 Priority order now:
 
-1. Inspect the latest GitHub Actions Smoke Test run after commit `a2944e1`.
-2. If Actions passes, create a stable rollback branch or documented rollback tag.
-3. If Actions fails, fix only the failing gate step.
+1. Inspect the latest GitHub Actions Smoke Test run after commit `275613d`.
+2. If Actions fails, inspect `playwright-failure-artifacts` and fix only the failing gate step.
+3. If Actions passes, create a stable rollback branch or documented rollback tag.
 4. Only after a passing gate and rollback path, add the Composition Clock primitive so visuals, touch, audio, and weather share one event stream.
 
 ## Hosting verdict
