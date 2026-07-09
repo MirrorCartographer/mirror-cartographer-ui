@@ -23,6 +23,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Preflight public preview URL
+        env:
+          SITE_URL: ${{ inputs.site_url }}
+        run: npm run test:preview-url
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
