@@ -13,6 +13,13 @@ const run = (label, command, args) => {
   }
 };
 
+const checkSyntax = (path) => run(`syntax: ${path}`, 'node', ['--check', path]);
+
+checkSyntax('scripts/phone-contract-check.mjs');
+checkSyntax('src/engine/compositionClock.js');
+checkSyntax('src/engine/compositionFrame.js');
+checkSyntax('src/engine/phraseMemory.js');
+checkSyntax('src/engine/skyMusic.js');
 run('phone contract', 'node', ['scripts/phone-contract-check.mjs']);
 run('production build', 'npm', ['run', 'build']);
 
