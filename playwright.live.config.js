@@ -1,10 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
-const baseURL = process.env.SITE_URL;
-
-if (!baseURL) {
-  throw new Error('Set SITE_URL to the deployed Vercel, Cloudflare Pages, Netlify, or GitHub Pages URL before running live smoke tests.');
-}
+const DEFAULT_SITE_URL = 'https://mirror-cartographer-ui.vercel.app';
+const baseURL = process.env.SITE_URL || DEFAULT_SITE_URL;
 
 export default defineConfig({
   testDir: './tests',
