@@ -129,3 +129,28 @@ Next action:
 3. If it passes, create a stable rollback branch or tag from the passing commit.
 4. Then run `Live URL Smoke` against the current public deployment URL.
 5. Only after local smoke plus live smoke pass should the next run add or revise Composition Clock behavior.
+
+## Self-auditing gate update 10 — 2026-07-09
+
+Latest inspected repo commits before this cycle showed `Record no-autoplay gate cycle` as the newest documented handoff. The latest note required inspection of CI/status for commit `730d53e52599777091a504d1381464fa6567bb78`. The available combined-status check for that commit reports Vercel failure with a build-rate-limit target URL, so Vercel is again not the active proof lane.
+
+Decision: do not add creative behavior. The strongest small patch is to make the static contract verify the same no-autoplay invariant that the browser smoke test verifies: `AudioContext` must not be constructed during app mount, and audio construction must stay behind the `ensure()`/`start()` path reached from tap interaction.
+
+Implemented `scripts/phone-contract-check.mjs` lazy audio assertions at commit `06006fd62b30436982275699459625cfcc0b1de4`.
+
+Hosting/testing assessment:
+
+- Vercel remains useful when quota is available, but the inspected commit currently reports build-rate-limit failure, so it should not be treated as the current reliable preview path.
+- Cloudflare Pages remains the strongest next live preview path for this static Vite app using build command `npm run build` and output directory `dist`.
+- Netlify remains a valid fallback static host if Cloudflare setup stalls.
+- GitHub Pages remains lower priority until Vite base-path handling is explicitly configured.
+- The current repository remains acceptable for this reliability patch. Use a branch or tag only after the gate passes, before larger creative/audio/visual experiments.
+- No live public URL was available from the inspected repo state, so screenshot/browser proof still requires a Cloudflare/Netlify/Vercel deployment URL or a downloaded artifact served locally.
+
+Next action:
+
+1. Inspect CI/status for commit `06006fd62b30436982275699459625cfcc0b1de4`.
+2. If the phone contract fails, patch the exact lazy-audio assertion or runtime structure that failed.
+3. If it passes, create a stable rollback branch or tag from the passing commit.
+4. Then connect Cloudflare Pages or run `Live URL Smoke` against an available public deployment URL.
+5. Only after static gate plus browser smoke pass should the next cycle add composition/audio-visual novelty.
