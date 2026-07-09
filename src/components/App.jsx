@@ -10,6 +10,7 @@ import {
 import { createCreatureWeather, drawCreatureWeather } from '../engine/creatureWeather';
 import { createGestureComets, drawGestureComets } from '../engine/gestureComets';
 import { createSkyMusic } from '../engine/skyMusic';
+import { createCompositionClock } from '../engine/compositionClock';
 
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
@@ -357,9 +358,11 @@ export default function App() {
   const [rhythm, setRhythm] = useState(0);
   const lastTouch = useRef(0);
   const musicRef = useRef(null);
+  const clockRef = useRef(null);
   const canvasRef = useWordlessSky(state, pulse, marks, rhythm);
 
   useEffect(() => {
+    clockRef.current = createCompositionClock();
     musicRef.current = createSkyMusic();
     return () => musicRef.current?.stop?.();
   }, []);
@@ -381,12 +384,28 @@ export default function App() {
       return [...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks), { ...point, prev, time: now, spin: Math.random() * TAU, kind: state }];
     });
     const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
+    const nextPulse = Math.min(1, pulse + gesture.pulseBoost);
+    const clock = clockRef.current?.tap?.({ now, state: gesture.kind, pulse: nextPulse, rhythm: gesture.rhythm }) ?? {
+      beat: 0,
+      phase: 0,
+      phrase: 0,
+      energy: nextPulse,
+      state: gesture.kind,
+    };
+    const composition = {
+      state: clock.state,
+      pulse: clock.energy,
+      rhythm: gesture.rhythm,
+      beat: clock.beat,
+      phase: clock.phase,
+      phrase: clock.phrase,
+    };
     lastTouch.current = now;
     setRhythm(gesture.rhythm);
     setState(gesture.kind);
-    setPulse((value) => Math.min(1, value + gesture.pulseBoost));
-    musicRef.current?.start?.({ state: gesture.kind, pulse, rhythm: gesture.rhythm });
-    musicRef.current?.pulse?.({ state: gesture.kind, pulse, rhythm: gesture.rhythm });
+    setPulse(nextPulse);
+    musicRef.current?.start?.(composition);
+    musicRef.current?.pulse?.(composition);
   };
 
   return (
