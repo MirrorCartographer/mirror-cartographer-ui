@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+const expectWordlessBody = async (page) => {
+  const visibleText = await page.locator('body').innerText();
+  expect(visibleText.trim()).toBe('');
+};
+
 test.describe('Mirror Cartographer phone-first smoke', () => {
   test('renders wordless sky and survives first tap', async ({ page }) => {
     const errors = [];
@@ -15,11 +20,13 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     const canvas = page.locator('canvas');
     await expect(sky).toBeVisible();
     await expect(canvas).toBeVisible();
+    await expectWordlessBody(page);
 
     await sky.tap({ position: { x: 195, y: 422 } });
     await page.waitForTimeout(700);
 
     await expect(canvas).toBeVisible();
+    await expectWordlessBody(page);
     expect(errors).toEqual([]);
   });
 
@@ -27,7 +34,6 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const visibleText = await page.locator('body').innerText();
-    expect(visibleText.trim()).toBe('');
+    await expectWordlessBody(page);
   });
 });
