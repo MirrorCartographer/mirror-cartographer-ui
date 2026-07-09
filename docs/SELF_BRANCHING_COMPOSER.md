@@ -2,15 +2,15 @@
 
 ## Current branch decision
 
-Testing/deployment confidence remains important, but the latest app surface regressed against the core product contract: it rendered explanatory network copy and replaced the weather/music instrument with a visible model demo. This cycle therefore branched from hosting verification back to contract recovery.
+Revise the previous action rather than branching into composition. The restored wordless weather/music surface is the right product direction, but the latest documentation-only commit is blocked at Vercel by build-rate limits. Reliability now means treating the already-successful restored app commit as the last trusted public app state, using GitHub Pages as the active fallback verification route, and avoiding new visual/audio work until the gates can distinguish product regressions from host quota failures.
 
 ## Hosting assessment
 
-Vercel remains the primary host because it still reports deploy status directly on commits and is the intended public atmospheric surface. GitHub Pages remains the best secondary surface for stable fallback/gallery preview, especially when Vercel has build-rate or preview reliability issues. Cloudflare Pages remains the next fallback candidate if GitHub Pages cannot be made reliable. Netlify remains viable but lower priority because it does not add enough unique confidence before Pages verification. A separate stable repository or branch is still premature unless main keeps accumulating experimental regressions that violate the phone-first contract.
+Vercel remains the best primary host for the intended public atmospheric surface when builds are available, because its commit statuses give immediate deployment truth. It is not sufficient as the only gate while the project is hitting build-rate limits. GitHub Pages is now the strongest secondary surface because the repo already has a Pages workflow, a Pages build command, a static phone gate, and a post-deploy remote gate. Cloudflare Pages should be the next fallback only if GitHub Pages cannot reliably deploy or expose the built app. Netlify remains viable but lower priority because it adds another host before the existing Pages path is proven. A separate stable repo is still premature; a stable branch or gallery route is the better first split if experiments keep reaching `main`.
 
 ## Live/testing check
 
-The latest pre-cycle commit `4b2ee8392bd703b2e54088429097142546eee435` had a successful Vercel status, but commit status alone was not enough: repository inspection showed visible explanatory text, no `musicRef.current?.start?.` interaction path, and no wordless weather instrument surface. Public GitHub Pages URL fetch was not available through the current web tool path, and the available workflow-run lookup is not sufficient proof for push-triggered Pages runs. The actionable test remains the repo harness: `npm run test:phone-contract`, then `npm run test:pages-remote` once Pages is reachable.
+Vercel reported success for restored app commit `7f5b2c66f5461e8eaf533e8c0f04438fabd61edd`, which means the wordless recovery surface had a valid deploy status. The next commit `704ac562e749d98b55f40eb468766e8920ac08a5` failed Vercel with a build-rate-limit upgrade URL, so that failure is host quota, not proof that the app failed. The Pages workflow exists and includes `npm run test:pages-preview` before artifact upload plus a deployed-url verification step using `SITE_URL` from the Pages deployment output. The local/CI harness remains: `npm run test:phone-contract`, `npm run test:pages-preview`, and then the live `npm run test:pages-remote`/workflow remote gate.
 
 ## Preserved constraints
 
@@ -19,15 +19,16 @@ The latest pre-cycle commit `4b2ee8392bd703b2e54088429097142546eee435` had a suc
 - wordless visual surface
 - phone-first layout and performance
 - efficient scheduling before extra composition weight
+- host failures must not be misread as product failures
 
 ## Change made in this cycle
 
-Restored `src/components/App.jsx` to a wordless phone-first weather/music surface: canvas button, no visible explanatory copy, hidden story-seed weather marks, touch-driven weather state, tap-to-start `createSkyMusic`, low-count stars/motes/veins/rain, phrase-clock visual score, and the heart/weather field. This intentionally removed the visible neural-network panel rather than trying to preserve it, because visible instructional copy violates the current site contract.
+No composition code was changed. The smallest safe improvement was this gate record: it prevents the next run from misclassifying the latest Vercel failure as a broken app and makes GitHub Pages verification the active reliability branch while Vercel is rate-limited.
 
 ## Next suggested action
 
-Check Vercel status for commit `7f5b2c66f5461e8eaf533e8c0f04438fabd61edd`. If it succeeds, run `npm run test:phone-contract` from a checkout or CI-capable environment and then `npm run test:pages-remote`. If the phone contract fails, fix the exact contract failure before adding composition. If both pass, return to audio-visual coupling: make the visual score expose the same phrase phase, pulse, and weather density that the audio engine is hearing, without adding visible explanatory text.
+Verify the GitHub Pages path rather than adding features. Inspect the latest Pages workflow outcome or run the equivalent commands from a checkout/CI-capable environment: `npm run test:phone-contract`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. If Pages returns 404 or no app shell, fix repository Pages settings or workflow deployment before touching composition. If the phone contract fails, fix the exact contract failure. If all gates pass, return to the audio-visual coupling branch: expose phrase phase, pulse, and weather density in the canvas score without visible explanatory text.
 
 ## Later branch
 
-If regressions like the visible neural-network demo recur, create a separate experimental branch or separate gallery route for visible explainers. Keep `main` as the stable wordless phone-first weather/music instrument.
+If visible explainers or model demos are still useful, route them away from the stable phone-first instrument. Use a separate experimental branch or gallery route before using a separate stable repo.
