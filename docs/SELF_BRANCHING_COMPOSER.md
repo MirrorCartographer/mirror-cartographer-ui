@@ -2,7 +2,7 @@
 
 ## Current branch decision
 
-Revised the previous action into a contract-first gate. The recent work continued into phrase-density visual scoring, which is acceptable only if the phone contract protects it. Do not branch into a new host, new instrument, new visible explainer, or denser visuals until the reliability contract catches the coupling explicitly.
+Followed the previous testing path rather than branching into a new host, route, instrument, or visible explainer. The site already made the phrase-density frame influence the wordless score; the strongest move was to protect that coupling in the phone contract so future composition cycles cannot accidentally decouple audio timing from visual breathing.
 
 ## Hosting assessment
 
@@ -10,7 +10,7 @@ Vercel remains useful as the primary atmospheric deploy surface when quota is av
 
 ## Live/testing check
 
-Latest inspected main commit was `4c267023df7b43ad0a536a5d80ba59b92ad3c509` (`Record phrase-density visual score cycle`). GitHub workflow-run lookup returned no runs for that commit, so this connector still cannot prove that a push-triggered Pages run exists. The reliable verification path remains repo-side gates: `npm run test:phone-contract`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`.
+The reliable verification path remains repo-side gates: `npm run test:phone-contract`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. This connector can inspect source files and some GitHub workflow metadata, but public browser/screenshot proof is still not a reliable available route here. GitHub workflow-run lookup has also been unreliable for push-triggered Pages runs, so absence of a returned run should not be treated as deployment failure.
 
 ## Preserved constraints
 
@@ -22,19 +22,14 @@ Latest inspected main commit was `4c267023df7b43ad0a536a5d80ba59b92ad3c509` (`Re
 - host failures must not be misread as product failures
 - visual composition changes must be contract-protected before more novelty
 
-## Change attempted in this cycle
+## Change made in this cycle
 
-Attempted the smallest implementation patch: add `scripts/phone-contract-check.mjs` assertions proving that `drawVisualScore` reads `clock?.phrasePhase` and `clock?.density`, and that `compositionFrame` exposes `density: shape.density` plus `phrasePhase: shape.phrasePhase`. The GitHub write was blocked by the safety layer before commit, so the fallback was to record this exact gate here instead of adding novelty.
+Committed `d15e92d99e14e4488a65fdb453e66ddbbb35a489`: `scripts/phone-contract-check.mjs` now isolates the `drawVisualScore` source slice and asserts that it reads `clock?.phrasePhase` and `clock?.density`, then applies those values to score geometry through phrase-phase timing, base position, span, and density spread. This protects the last visual coupling change without adding visible words, autoplay, new instruments, or extra runtime work.
 
 ## Next suggested action
 
-Make a smaller code patch to `scripts/phone-contract-check.mjs`: define a `visualScore` source slice from `function drawVisualScore` through `function useWordlessSky`, then add two assertions only:
-
-1. `visualScore` contains `clock?.phrasePhase` and `clock?.density`.
-2. `src/engine/compositionFrame.js` contains `density: shape.density` and `phrasePhase: shape.phrasePhase`.
-
-After that, run `npm run test:phone-contract`. If it passes, run `npm run test:pages-preview`; then run `npm run test:pages-remote`. Do not alter visuals, audio, copy, hosting, or architecture until those gates pass.
+Run `npm run test:phone-contract` after commit `d15e92d99e14e4488a65fdb453e66ddbbb35a489`. If it fails, fix the exact assertion. If it passes, run `npm run test:pages-preview`; if that passes, return to composition behavior with one small phrase-memory move: let the existing contour memory influence either score note recurrence or audio motif return, but not both in the same cycle.
 
 ## Later branch
 
-After phone contract and Pages remote both pass, add a Pages or Vercel screenshot/browser proof route. If visible explainers or model demos remain useful, route them away from the stable phone-first instrument with a separate experimental branch or gallery route before creating a separate stable repo.
+After phone contract, Pages preview, and Pages remote all pass, add a Pages or Vercel screenshot/browser proof route. If visible explainers or model demos remain useful, route them away from the stable phone-first instrument with a separate experimental branch or gallery route before creating a separate stable repo.
