@@ -18,6 +18,7 @@
     "test:reexperience": "node scripts/reexperience-validate.mjs",
     "test:local-gate": "npm run test:phone-contract && npm run test:reexperience && npm run build && npm run test:smoke",
     "test:remote-gate": "node scripts/remote-gate.mjs",
+    "test:pages-remote": "SITE_URL=https://mirrorcartographer.github.io/mirror-cartographer-ui/ npm run test:remote-gate",
     "test:gate": "npm run test:local-gate && npm run test:remote-gate",
     "test:pages-preview": "npm run test:phone-static && npm run build:pages",
     "icloud:watch": "node tools/icloud-watch.mjs",
