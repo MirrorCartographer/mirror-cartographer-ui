@@ -21,6 +21,8 @@ assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: tr
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
 assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
 assert('composition clock exposes phrase and phase', clock.includes('phrase') && clock.includes('phase') && clock.includes('tapCount'));
+assert('visual score reads composition clock snapshot', app.includes('clockSnapshot') && app.includes('clock: clockSnapshot') && app.includes('clock?.phase'));
+assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
