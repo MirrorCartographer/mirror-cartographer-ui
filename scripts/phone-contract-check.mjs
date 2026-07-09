@@ -8,6 +8,7 @@ const app = read('src/components/App.jsx');
 const pkg = JSON.parse(read('package.json'));
 const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
+const clock = read('src/engine/compositionClock.js');
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > app.indexOf('const touch ='));
@@ -18,6 +19,8 @@ assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes
 assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
+assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
+assert('composition clock exposes phrase and phase', clock.includes('phrase') && clock.includes('phase') && clock.includes('tapCount'));
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
