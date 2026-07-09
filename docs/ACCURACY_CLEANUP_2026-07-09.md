@@ -182,3 +182,31 @@ Next action:
 2. Run `Live URL Smoke` against that URL.
 3. If live smoke passes, allow the next smallest Composition Clock integration.
 4. If live smoke fails or no public URL can be tested, patch only the live-test/deploy-observability gap before adding novelty.
+
+## Self-auditing gate update 12 — 2026-07-09
+
+Latest inspected commit before this cycle: `6338915c550ef7d04003ba11ed59bf1812bb0f95` (`Record stable branch gate cycle`). The combined status for that commit reports Vercel `failure` with target URL `https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit`, so Vercel is again not the reliable active proof lane.
+
+Decision: continue deploy/test observability work instead of adding creative behavior. The live smoke workflow could only fail inside Playwright, which hides a simpler host problem: the URL may be missing, blocked, returning the wrong content type, or serving a non-Vite shell. Added a public-preview preflight check before the browser test.
+
+Implemented:
+
+- `scripts/preview-url-check.mjs` at commit `bead12a48ac2b486e98a271cba7309bc79376df9`.
+- `test:preview-url` package script at commit `cd8074283ef0ed903d20fdbdf2e69d0c4b43c574`.
+- Live URL Smoke preflight step at commit `f987ff3da24674f53e4396e9834f18947c06ceb7`.
+
+Hosting/testing assessment:
+
+- Vercel remains valuable when quota is available, but the latest inspected commit is build-rate-limited and should not be treated as current proof.
+- Cloudflare Pages is the strongest next preview lane because it can serve the same Vite `dist` output independently of Vercel quota.
+- Netlify remains a valid fallback static preview path.
+- GitHub Pages remains lower priority unless Vite base-path handling is configured.
+- The current repo is safe for this small workflow/test patch. Keep using the stable branch as rollback isolation before larger creative/audio-visual changes.
+- No public live URL was available through the inspected tools. The attempted public search for the known Vercel hostname did not return a usable result, so live proof still requires a public deployment URL supplied to `Live URL Smoke`.
+
+Next action:
+
+1. Run `SITE_URL=<public-preview-url> npm run test:preview-url` or the `Live URL Smoke` workflow against a Vercel, Cloudflare Pages, or Netlify URL.
+2. If preflight fails, fix hosting/reachability first; do not inspect visual behavior yet.
+3. If preflight passes but Playwright live smoke fails, patch the browser/runtime mismatch.
+4. If both pass, then add the next smallest composition/audio-visual coupling change on a branch, not directly on the stable rollback point.
