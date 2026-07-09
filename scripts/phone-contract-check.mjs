@@ -16,9 +16,11 @@ const startIndex = music.indexOf('async function start');
 const ensureIndex = music.indexOf('function ensure');
 const audioConstructorIndex = music.indexOf('ctx = new Audio()');
 const exportedFactoryIndex = music.indexOf('export function createSkyMusic()');
+const touchIndex = app.indexOf('const touch =');
+const intervalIndex = app.indexOf('window.setInterval');
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
-assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > app.indexOf('const touch ='));
+assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > touchIndex);
 assert('wordless visual surface still uses canvas button', app.includes('<button className="sky"') && app.includes('<canvas ref={canvasRef} />'));
 assert('no visible instruction copy in app body', !/>([^<]*[A-Za-z]{3,}[^<]*)</.test(app.replace(/aria-label="[^"]*"/g, '')));
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
@@ -35,9 +37,12 @@ assert('visual score reads composition clock snapshot', app.includes('clockSnaps
 assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
 assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
 assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
+assert('composition frame projector is imported by app', app.includes('createCompositionFrame') && app.includes('createTapCompositionFrame'));
+assert('continuous clock frame stays inside low-frequency tick', intervalIndex >= 0 && app.indexOf('createCompositionFrame', intervalIndex) > intervalIndex);
+assert('tap clock frame stays inside interaction path', touchIndex >= 0 && app.indexOf('createTapCompositionFrame', touchIndex) > touchIndex);
 assert('audio engine is exported as lazy factory', exportedFactoryIndex >= 0 && ensureIndex > exportedFactoryIndex && startIndex > ensureIndex);
 assert('audio context constructor stays behind ensure/start path', audioConstructorIndex > ensureIndex && audioConstructorIndex < startIndex);
-assert('app constructs music object without starting audio', app.includes('musicRef.current = createSkyMusic();') && app.indexOf('musicRef.current = createSkyMusic();') < app.indexOf('const touch ='));
+assert('app constructs music object without starting audio', app.includes('musicRef.current = createSkyMusic();') && app.indexOf('musicRef.current = createSkyMusic();') < touchIndex);
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
