@@ -2,15 +2,22 @@
 
 ## Current branch decision
 
-Followed the previous handoff through the stability path, then branched only one step into composition behavior after source inspection. The app already had a phrase-memory primitive in `src/engine/phraseMemory.js`, but the phone-first canvas was not consuming it. The strongest move was to make prior tap/composition contour return as a hidden score mark, rather than adding a new host, explainer route, visible copy, or heavier visual system.
+Follow the stability path. The previous requested contract patch has already landed: recent commits show phrase-density visual coupling protection, phrase-memory score checking, and Pages preview wiring. Do not repeat that work or branch into a new visual layer yet. The correct move is to treat the current handoff as a deployment/reliability gate before any novelty.
 
 ## Hosting assessment
 
-Vercel remains the primary atmospheric deploy target when quota is available; previous Vercel failures still look like build-rate-limit signals rather than app regressions. GitHub Pages remains the best fallback because this repo has a Pages base build plus `test:pages-preview` and `test:pages-remote`. Cloudflare Pages is still the next fallback if GitHub Pages cannot expose a stable built shell. Netlify remains lower priority. A separate stable repo is premature; if visible explainers or model demos leak into `main` again, split first by protected branch or separate experimental route.
+Vercel remains suitable as the atmospheric primary host when build quota is available, but recent Vercel failures should still be classified as quota/build-rate-limit risk unless a reachable app shell proves otherwise. GitHub Pages is currently the strongest fallback because the repo has a dedicated Pages workflow that builds with the Pages base path, uploads the Pages artifact, deploys it, and then runs a live remote gate against the deployed URL. Cloudflare Pages remains the next serious fallback if GitHub Pages cannot expose a stable built shell. Netlify remains lower priority because it would add another hosting surface without improving the existing gate. A separate stable repo is still premature; prefer protected branches or a separate experimental route first.
 
 ## Live/testing check
 
-Workflow lookup for the latest package-script commit returned no runs, matching prior connector limitations for push-triggered Pages/Actions visibility. Do not treat absent workflow results as proof of deploy failure. Reliable local/CI gate order is now: `npm run test:phone-contract`, `npm run test:phrase-memory-score`, `npm run test:pages-preview`, then `npm run test:pages-remote` against `https://mirrorcartographer.github.io/mirror-cartographer-ui/` when Pages is known enabled.
+The workflow itself now encodes the hosting/testing gate: `test:pages-preview` runs before artifact upload, then `test:remote-gate` runs after deployment using the deployed Pages URL. The remote gate probes candidate URLs for a real Vite/React shell, rejects Vercel limit/dashboard pages, verifies bundled canvas/audio/React signals, and then runs the Playwright live smoke test against the selected URL. Public URL fetch from this run was inconclusive because the web fetch tool could not open arbitrary URLs that were not discovered from search results; do not treat that as live-site failure.
+
+Reliable gate order remains:
+
+1. `npm run test:local-gate`
+2. `npm run test:pages-preview`
+3. GitHub Pages workflow deploy
+4. `npm run test:remote-gate` using the deployed Pages URL
 
 ## Preserved constraints
 
@@ -21,19 +28,16 @@ Workflow lookup for the latest package-script commit returned no runs, matching 
 - low CPU before new visual density
 - host failures must not be misread as product failures
 - visual composition changes must be contract-protected before more novelty
+- every run must include a hosting/testing gate
 
 ## Change made in this cycle
 
-Committed `30f30479d2c08d48d181751ac8722ca394a13cfd`: `src/components/App.jsx` now creates phrase memory without starting audio, remembers tap composition frames, converts the remembered contour into one hidden canvas mark, and feeds that mark into the existing active score/memory field. This makes return-memory visible as recurrence in the wordless score without adding text, autoplay, or extra high-density particles.
-
-Committed `9bee0833fe100ef8f989563a2203754975878a8d`: added `scripts/phrase-memory-score-check.mjs` as a focused static guard because the full phone-contract patch was blocked by the write filter.
-
-Committed `2ea5417d0df50266d8b53025a8dcc580ca105b21`: wired `test:phrase-memory-score` into `test:local-gate` and `test:pages-preview`.
+Recorded the current deployment gate assessment and prevented duplicate work. No app behavior was changed because the smallest safe improvement was documentation/decision pruning: recent commits already implemented the previous phrase-density and phrase-memory reliability path, and the Pages workflow already contains a post-deploy live verification gate.
 
 ## Next suggested action
 
-Run `npm run test:local-gate`. If it fails, fix the exact failing check or build error before adding novelty. If it passes, run `npm run test:pages-preview`; if that passes, use one small audio-visual coupling move: let phrase contour subtly influence either audio motif return or score-note spacing, but not both in the same cycle.
+Run or inspect the latest GitHub Pages workflow result for `Pages Preview`. If build, deploy, and `verify-live-pages` pass, make exactly one tiny sensory improvement: let phrase contour subtly influence score-note spacing only. Do not couple it to audio in the same cycle. If any gate fails, fix the exact failed script or workflow step first. If the live Pages URL is unreachable but the build passes, branch to Cloudflare Pages only after recording the failing HTTP/status evidence.
 
 ## Later branch
 
-After phone contract, Pages preview, and Pages remote all pass, add a Pages or Vercel screenshot/browser proof route. If visible explainers or model demos remain useful, route them away from the stable phone-first instrument with a separate experimental branch or gallery route before creating a separate stable repo.
+After phone contract, Pages preview, and Pages remote all pass consistently, add a screenshot/browser proof route or artifact capture. Keep visible explainers and model demos away from the stable phone-first instrument by using a separate experimental route or branch before considering a separate stable repo.
