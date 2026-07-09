@@ -9,6 +9,7 @@ const pkg = JSON.parse(read('package.json'));
 const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
 const clock = read('src/engine/compositionClock.js');
+const frame = read('src/engine/compositionFrame.js');
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > app.indexOf('const touch ='));
@@ -24,6 +25,8 @@ assert('composition clock exists without browser globals', clock.includes('creat
 assert('composition clock exposes phrase and phase', clock.includes('phrase') && clock.includes('phase') && clock.includes('tapCount'));
 assert('visual score reads composition clock snapshot', app.includes('clockSnapshot') && app.includes('clock: clockSnapshot') && app.includes('clock?.phase'));
 assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
+assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
+assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
