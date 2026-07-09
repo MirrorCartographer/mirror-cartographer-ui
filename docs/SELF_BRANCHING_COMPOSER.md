@@ -2,13 +2,13 @@
 
 ## Current branch decision
 
-Testing/deployment confidence remains the strongest move. The public fallback route cannot be considered real until GitHub Actions visibly builds and deploys the Pages artifact, so this cycle prioritized the missing workflow path over new atmosphere or music changes.
+Testing/deployment confidence remains the strongest move. The public fallback route cannot be considered real until there is a direct remote gate against the GitHub Pages URL, so this cycle prioritized making that check explicit and repeatable over adding new atmosphere, instruments, or phrase behavior.
 
 ## Hosting assessment
 
 Vercel should remain the primary atmospheric host when builds are available. It is still the best public-facing surface for the living phone-first weather/music piece.
 
-GitHub Pages is the best current secondary surface: not a replacement for the atmosphere, but the stable gallery/fallback route. The repo is private, so this route may still require manual repository settings: Actions must be enabled and Pages source must be GitHub Actions. If Pages cannot be enabled or is unreliable, Cloudflare Pages becomes the next fallback candidate because it can deploy a static Vite build with low friction. Netlify is still viable, but it does not add enough confidence to justify a third host before GitHub Pages is verified. A separate stable repo is premature unless the current private repo keeps blocking public previews.
+GitHub Pages is the best current secondary surface: not a replacement for the atmosphere, but the stable gallery/fallback route. The repo is private, so this route may still require manual repository settings: Actions must be enabled and Pages source must be GitHub Actions. Cloudflare Pages remains the next fallback candidate if GitHub Pages cannot be made reliable. Netlify is viable but does not add enough confidence to justify a third host before GitHub Pages is verified. A separate stable repo is premature unless the current private repo keeps blocking public previews.
 
 ## Preserved constraints
 
@@ -20,13 +20,13 @@ GitHub Pages is the best current secondary surface: not a replacement for the at
 
 ## Change made in this cycle
 
-A missing `.github/workflows/pages.yml` workflow was added. It builds on pushes to `main` and manual dispatch, runs the phone/static gate, builds the Vite app with the Pages base path, configures Pages, uploads `dist`, and deploys through `actions/deploy-pages` with minimal required permissions.
+The previous next action asked for Pages workflow inspection and then a remote gate against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. The repository connector could confirm the workflow file and package scripts, and it could confirm that Vercel reported success for the Pages-workflow commit, but the available workflow-run lookup only returns PR-triggered runs. An empty workflow-run result was therefore not treated as proof that the push workflow failed.
 
-The previous note said the workflow had been hardened, but file inspection found no Pages workflow at the expected path. Creating the workflow was therefore higher leverage than modifying app composition.
+A dedicated `test:pages-remote` script was added so the next run has one unambiguous command for the GitHub Pages surface. It pins `SITE_URL` to the Pages URL and reuses the existing remote gate, which already checks the app shell, bundled script assets, canvas/audio/React signals, live wiring, and live Playwright smoke path.
 
 ## Next suggested action
 
-Inspect the workflow run for commit `f02bf26739167a5743bf71903cf70d7800b4955d`. If it completed, run the remote gate against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. If no run appears, manually verify repository settings: Actions must allow workflows, and Pages source must be GitHub Actions. If the workflow ran but failed, inspect the failed job logs before changing app code.
+Run `npm run test:pages-remote` from a working checkout or CI environment. If it passes, mark GitHub Pages as a verified gallery/fallback surface and return to audio-visual coupling. If it fails with HTTP 404 or missing app shell, verify repository settings: Actions must be enabled and Pages source must be GitHub Actions. If it fails inside the live smoke path, inspect the Playwright failure before changing composition code.
 
 ## Later branch
 
