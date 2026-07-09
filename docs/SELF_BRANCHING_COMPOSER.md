@@ -2,7 +2,7 @@
 
 ## Current branch decision
 
-Revise toward stability first, but do not freeze novelty forever. The latest repo handoff now supersedes the earlier phrase-contour note: phrase-density visual coupling protection, phrase-memory score checking, Pages preview wiring, and the composer-cycle alias have already landed. The safest next improvement is a tiny CPU/battery reliability patch: pause or heavily throttle the canvas animation loop while `document.hidden`, then protect that behavior with a static gate assertion before adding any sensory novelty.
+Stay on the stability path. The latest handoff correctly superseded the earlier phrase-contour novelty note: before adding sensory density, the phone-first site needed a CPU/battery reliability patch. This cycle implemented hidden-tab rendering throttling and protected it with the phone contract. Do not add visual novelty until the combined local and Pages gates pass.
 
 ## Hosting assessment
 
@@ -10,7 +10,7 @@ Vercel remains suitable as the atmospheric primary host when build quota is avai
 
 ## Live/testing check
 
-The workflow itself now encodes the hosting/testing gate: `test:pages-preview` runs before artifact upload, then `test:remote-gate` runs after deployment using the deployed Pages URL. The remote gate probes candidate URLs for a real Vite/React shell, rejects Vercel limit/dashboard pages, verifies bundled canvas/audio/React signals, and then runs the Playwright live smoke test against the selected URL. Public URL fetch from this runtime is weaker than the repo harness, so do not treat a connector/browser limitation as live-site failure without HTTP/status evidence from the harness.
+The available tool path could read repository files and patch GitHub, but could not execute npm locally or conclusively fetch the live Pages/Vercel shell from this run. Treat this as a code-gate repair cycle, not a proven live deployment cycle. The workflow still encodes the hosting/testing gate: `test:pages-preview` runs before artifact upload, then `test:remote-gate` runs after deployment using the deployed Pages URL.
 
 Reliable gate order is now:
 
@@ -32,11 +32,13 @@ Reliable gate order is now:
 
 ## Change made in this cycle
 
-Recorded the hidden-tab stability gate decision in this handoff file. This is intentionally smaller than directly editing the canvas loop because the repo already contains a separate next-action note requiring both implementation and a static assertion; the next run should land both together so the behavior is testable.
+Committed `1a2ba04e2d9ca3842ce2a1b94a30f937e3f69a50`: in `useWordlessSky`, the animation loop now skips canvas drawing while `document.hidden`, then resumes sizing cleanly on `visibilitychange`. This protects phone CPU/battery when the app is backgrounded without touching audio start/pulse behavior.
+
+Committed `11b9747c54bd8d5086183e882af3a04f9c707db7`: updated `scripts/phone-contract-check.mjs` to protect the hidden-tab behavior, keep the phrase-contour canvas signature current, and assert the visibility listener cleanup.
 
 ## Next suggested action
 
-Make exactly one reliability patch: in `useWordlessSky`, skip or slow the animation frame loop while `document.hidden`, resume cleanly on `visibilitychange`, and avoid touching audio start/pulse behavior. In the same commit, update `scripts/phone-contract-check.mjs` so it asserts the visibility behavior and also updates the existing `useWordlessSky(...)` signature check to include `phraseContour`. Then run `npm run test:composer-cycle`. If it passes and the Pages workflow deploys, run or inspect `npm run test:remote-gate` against the deployed Pages URL. If all gates pass, the next tiny novelty can be phrase contour influencing score-note spacing only, still with no audio coupling.
+Run `npm run test:composer-cycle`. If it fails, fix the exact failing check or build error before adding novelty. If it passes, inspect the latest GitHub Pages workflow result for `Pages Preview`. If build, deploy, and live verification pass, make exactly one tiny sensory improvement: let phrase contour subtly influence score-note spacing only. Do not couple it to audio in the same cycle. If the live Pages URL is unreachable but the build passes, branch to Cloudflare Pages only after recording the failing HTTP/status evidence.
 
 ## Later branch
 
