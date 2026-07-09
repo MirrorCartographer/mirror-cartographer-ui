@@ -1,12 +1,14 @@
 name: Smoke Test
 
 on:
+  workflow_dispatch:
   push:
   pull_request:
 
 jobs:
   phone-first-smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
