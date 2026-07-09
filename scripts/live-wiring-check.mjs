@@ -15,7 +15,26 @@ const readText = (filePath) => {
 };
 
 const packageJson = JSON.parse(readText('package.json'));
-const liveScript = packageJson.scripts?.['test:live'];
+const scripts = packageJson.scripts || {};
+const liveWiringScript = scripts['test:live-wiring'];
+const remoteGateScript = scripts['test:remote-gate'];
+const liveScript = scripts['test:live'];
+
+if (!liveWiringScript) {
+  fail('package.json must expose scripts.test:live-wiring');
+}
+
+if (!liveWiringScript.includes('scripts/live-wiring-check.mjs')) {
+  fail('scripts.test:live-wiring must run scripts/live-wiring-check.mjs');
+}
+
+if (!remoteGateScript) {
+  fail('package.json must expose scripts.test:remote-gate');
+}
+
+if (!remoteGateScript.includes('npm run test:live-wiring')) {
+  fail('scripts.test:remote-gate must run npm run test:live-wiring before live checks');
+}
 
 if (!liveScript) {
   fail('package.json must expose scripts.test:live');
@@ -73,4 +92,4 @@ if (!liveSpec.includes('expectWordlessBody')) {
   fail(`${liveSpecPath} must preserve pre/post interaction wordless body assertions`);
 }
 
-console.log(`Live smoke wiring is coherent: ${liveScript} -> ${liveConfigPath} -> ${liveSpecPath}`);
+console.log(`Live smoke wiring is coherent: ${liveWiringScript} -> test:remote-gate -> ${liveScript} -> ${liveConfigPath} -> ${liveSpecPath}`);
