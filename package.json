@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:phone-contract": "node scripts/phone-contract-check.mjs",
+    "test:phone-static": "node scripts/run-phone-gates.mjs",
     "test:smoke": "playwright test tests/smoke.spec.js --reporter=line",
     "test:live-wiring": "node scripts/live-wiring-check.mjs",
     "test:live": "playwright test --config=playwright.live.config.js --reporter=line",
