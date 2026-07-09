@@ -8,6 +8,7 @@ const app = read('src/components/App.jsx');
 const pkg = JSON.parse(read('package.json'));
 const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
+const vite = read('vite.config.js');
 const clock = read('src/engine/compositionClock.js');
 const frame = read('src/engine/compositionFrame.js');
 const phraseMemory = read('src/engine/phraseMemory.js');
@@ -32,6 +33,7 @@ assert('smoke test probes no autoplay before first tap', smoke.includes('__mirro
 assert('smoke test expects audio only after user gesture', smoke.includes('await sky.tap') && smoke.includes('expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
+assert('vite build uses relative asset base for portable static previews', vite.includes("base: './'"));
 assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
 assert('composition clock exposes phrase and phase', clock.includes('phrase') && clock.includes('phase') && clock.includes('tapCount'));
 assert('visual score reads composition clock snapshot', app.includes('clockSnapshot') && app.includes('clock: clockSnapshot') && app.includes('clock?.phase'));
