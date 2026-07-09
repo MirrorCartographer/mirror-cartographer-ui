@@ -1,91 +1,39 @@
-# Re-experience engine v0
+# Reexperience Engine V0
 
-Purpose: turn prior Mirror Cartographer chats, notes, screenshots, docs, and generated artifacts into a chronological felt-story system.
+## Purpose
 
-This is not a normal archive. The site should not ask the visitor to read a database. It should let Charity re-enter the history as a living sequence: first signals, wrong turns, motifs, corrections, animals, body, weather, music, proof, anger, jokes, failures, and recoveries.
+The Reexperience Engine is the layer that lets Mirror Cartographer become more than a pretty weather/music toy. It should let a visitor feel a compressed version of the system's origin story without requiring visible explanation, essays, labels, onboarding, or private chat exposure.
 
-## Current verified source seeds
+The goal is not to show biography. The goal is to let the surface behave as if it remembers pressure, interruption, return, repair, animal presence, weather, sound, and symbolic recursion.
 
-From available Library search, not from assumption:
+## Constraints
 
-- Continuity export names the live prototype as `https://mirror-cartographer-ui.vercel.app` and names the repos `MirrorCartographer/mirror-cartographer-ui` and `MirrorCartographer/MirrorCartographer`.
-- Continuity export preserves the accessibility rule: do not put essential content in code boxes.
-- Prior chat log preserves the core non-boring/world-worth-inhabiting signal.
-- Prior chat log preserves the phrase: not a platform, not an app, but a recursive symbolic field protocol.
-- Prior chat log preserves the re-enchantment direction: thread a living symbolic layer through existing systems.
-- Prior chat log preserves an earlier loop process: pick one signal, run collapse, name what survives, build a gesture around it, anchor it in the real world, repeat.
+- Phone first.
+- No visible explanatory words.
+- No autoplay violation.
+- No crackle.
+- No heavy CPU loop.
+- No second canvas/rendering system unless a gate proves it is necessary.
+- Keep the interaction clear: tap/press/drag changes the sky/music.
+- Preserve maintainability: story data should be separated from rendering code.
+- Preserve privacy: source beats must be abstracted and non-identifying unless intentionally public.
 
-## What must be built
+## First data shape
 
-### 1. Ingest
+A reexperience seed should be plain JSON, importable at build time.
 
-Inputs may include:
+Required top-level fields:
 
-- ChatGPT export JSON
-- copied chat text
-- RTF logs
-- DOCX/PDF preservation packets
-- screenshots/photos
-- GitHub docs and commit notes
-- user notes from phone/computer
+- `version`
+- `createdAt`
+- `privacy`
+- `beats`
 
-The first version can accept plain text files and manually curated JSON. Later versions can parse full ChatGPT export JSON.
-
-### 2. Segment
-
-Every source should become small story beats:
-
-- timestamp when known
-- speaker/source
-- exact excerpt or summary
-- signal tags
-- feeling tags
-- proof status
-- privacy status
-- motifs
-- build consequence
-
-### 3. First-time reading pass
-
-The engine should simulate a first reading pass by asking, for each beat:
-
-- What did I just learn?
-- What surprised me?
-- What changed the project direction?
-- What motif appeared or returned?
-- What should future-me not forget?
-- What should the site make Charity feel here?
-
-This is not private chain-of-thought. It is an explicit note-taking artifact.
-
-### 4. Felt-story transform
-
-The website should not display a wall of text. Text can exist in the archive, but the phone-first experience should translate beats into:
-
-- weather state
-- motion density
-- sound palette
-- heart/field behavior
-- return motifs
-- pauses
-- intensities
-- hidden doors
-
-The key interaction is not tap. Tap only unlocks browser audio. The real interaction is: user feels, site answers with atmosphere.
-
-### 5. Privacy boundary
-
-Raw chats stay private unless reviewed. Public preview should use redacted/capsule beats.
-
-## Minimal data shape
-
-Each beat should be representable as:
+Each beat should contain:
 
 - `id`
-- `order`
-- `source`
-- `time`
-- `excerpt`
+- `sourceType`
+- `timeBand`
 - `capsule`
 - `signals`
 - `motifs`
@@ -106,9 +54,11 @@ A return visitor should feel that the site is slowly remembering how it became i
 
 The first seed JSON and validation script now exist. The app now imports `src/data/reexperience.seed.json` and turns recent story beats into subtle hidden weather marks, thread-lines, heart gravity, and glyph structure. This preserves the wordless surface: no visible explanatory text was added, audio still starts only from user tap, and the change reuses the existing canvas loop rather than adding a second renderer.
 
+The local and live Playwright smoke gates now also instrument `requestAnimationFrame`. They assert that the wordless sky renders multiple animation frames before tap and continues rendering multiple frames after tap. This closes the prior harness gap: the tests no longer prove only that a canvas exists; they also prove that the animation loop remains alive on a phone-sized viewport.
+
 ## Hosting/testing assessment
 
-Current best default host: Vercel, because the continuity anchor already names the live prototype there and the repo is a Vite/React static site with no backend requirement. Switching hosts now would add operational noise without solving the immediate product problem.
+Current best default host: Vercel, because the continuity anchor already names the live prototype there and the repo is a Vite/React static site with no backend requirement. Switching hosts now would add operational noise unless Vercel rate limiting or account interstitials repeatedly break the remote gate.
 
 Safer branching path: for visual rewrites or risky audio changes, use a preview branch before `main`. For small data/render coupling changes like this cycle, `main` is acceptable if the local gate passes.
 
@@ -118,8 +68,8 @@ Fallback hosts:
 - Netlify: good alternate for manual static deploys and simple previews.
 - GitHub Pages: lowest-moving-parts fallback, but less ideal for phone-first preview iteration and branch preview ergonomics.
 
-Known testing gap: this run could inspect repo content and write changes, but the public URL fetch/screenshot path was inconclusive from available tools. The repo needs a lightweight deterministic test that proves the app imports the story seed and can render one frame without relying on the hosted site.
+Known testing gap: CI status for the latest frame-survival patch still needs inspection. The current automation can read and write repo files, but did not get a workflow-run record for the newest spec commit.
 
 ## Suggested next action
 
-Add a small Playwright or Node-based harness that visits the local Vite preview, asserts the canvas exists, taps once to satisfy audio unlock policy, and checks that the app stays alive for several animation frames on a phone-sized viewport. After that passes, tune the story-beat influence so each beat affects composition/audio more distinctly without adding words.
+Inspect GitHub Actions for the frame-survival commits. If the full `test:gate` is green, create a stable release marker and then tune story-beat influence so each beat affects composition/audio more distinctly without adding words. If the gate is red, fix only the failing test step; do not add novelty.
