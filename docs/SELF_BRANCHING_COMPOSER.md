@@ -2,7 +2,7 @@
 
 ## Current branch decision
 
-Follow the stability path. The previous requested contract patch has already landed: recent commits show phrase-density visual coupling protection, phrase-memory score checking, and Pages preview wiring. Do not repeat that work or branch into a new visual layer yet. The correct move is to treat the current handoff as a deployment/reliability gate before any novelty.
+Follow the stability path. The previous requested contract patch has already landed: recent commits show phrase-density visual coupling protection, phrase-memory score checking, and Pages preview wiring. Do not repeat that work or branch into a new visual layer yet. The correct move is to treat the current handoff as a deployment/reliability gate before any novelty. This cycle added one package-level gate alias so the next run has a single command for the local-plus-Pages-preview path.
 
 ## Hosting assessment
 
@@ -12,12 +12,11 @@ Vercel remains suitable as the atmospheric primary host when build quota is avai
 
 The workflow itself now encodes the hosting/testing gate: `test:pages-preview` runs before artifact upload, then `test:remote-gate` runs after deployment using the deployed Pages URL. The remote gate probes candidate URLs for a real Vite/React shell, rejects Vercel limit/dashboard pages, verifies bundled canvas/audio/React signals, and then runs the Playwright live smoke test against the selected URL. Public URL fetch from this run was inconclusive because the web fetch tool could not open arbitrary URLs that were not discovered from search results; do not treat that as live-site failure.
 
-Reliable gate order remains:
+Reliable gate order is now:
 
-1. `npm run test:local-gate`
-2. `npm run test:pages-preview`
-3. GitHub Pages workflow deploy
-4. `npm run test:remote-gate` using the deployed Pages URL
+1. `npm run test:composer-cycle`
+2. GitHub Pages workflow deploy
+3. `npm run test:remote-gate` using the deployed Pages URL
 
 ## Preserved constraints
 
@@ -32,11 +31,11 @@ Reliable gate order remains:
 
 ## Change made in this cycle
 
-Recorded the current deployment gate assessment and prevented duplicate work. No app behavior was changed because the smallest safe improvement was documentation/decision pruning: recent commits already implemented the previous phrase-density and phrase-memory reliability path, and the Pages workflow already contains a post-deploy live verification gate.
+Committed `e53e155dc2d430b267fd609348efdb291618f3aa`: added `test:composer-cycle` to `package.json`, chaining `test:local-gate` and `test:pages-preview`. This keeps the next capability cycle from skipping the local contract/build/smoke path before the Pages base-path build.
 
 ## Next suggested action
 
-Run or inspect the latest GitHub Pages workflow result for `Pages Preview`. If build, deploy, and `verify-live-pages` pass, make exactly one tiny sensory improvement: let phrase contour subtly influence score-note spacing only. Do not couple it to audio in the same cycle. If any gate fails, fix the exact failed script or workflow step first. If the live Pages URL is unreachable but the build passes, branch to Cloudflare Pages only after recording the failing HTTP/status evidence.
+Run `npm run test:composer-cycle`. If it fails, fix the exact failing check or build error before adding novelty. If it passes, inspect the latest GitHub Pages workflow result for `Pages Preview`. If build, deploy, and live verification pass, make exactly one tiny sensory improvement: let phrase contour subtly influence score-note spacing only. Do not couple it to audio in the same cycle. If the live Pages URL is unreachable but the build passes, branch to Cloudflare Pages only after recording the failing HTTP/status evidence.
 
 ## Later branch
 
