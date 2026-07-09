@@ -22,11 +22,5 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run phone contract check
-        run: npm run test:phone-contract
-
-      - name: Build
-        run: npm run build
-
-      - name: Run phone-first smoke test
-        run: npm run test:smoke
+      - name: Run phone-first gate
+        run: npm run test:gate
