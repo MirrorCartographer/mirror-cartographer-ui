@@ -265,6 +265,10 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContou
     };
 
     const loop = () => {
+      if (document.hidden) {
+        raf = requestAnimationFrame(loop);
+        return;
+      }
       frame += 1;
       const rect = canvas.getBoundingClientRect();
       const width = rect.width;
@@ -373,11 +377,17 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContou
       raf = requestAnimationFrame(loop);
     };
 
+    const resume = () => {
+      if (!document.hidden) resize();
+    };
+
     resize();
     loop();
+    document.addEventListener('visibilitychange', resume);
     window.addEventListener('resize', resize);
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange', resume);
       window.removeEventListener('resize', resize);
     };
   }, [state, pulse, marks, rhythm, clockSnapshot, phraseContour]);
