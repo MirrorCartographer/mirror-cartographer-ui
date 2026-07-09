@@ -17,6 +17,7 @@ assert('no visible instruction copy in app body', !/>([^<]*[A-Za-z]{3,}[^<]*)</.
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
 assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
+assert('smoke test asserts wordless body before and after first tap', smoke.indexOf('await expectWordlessBody(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectWordlessBody(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
 assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
