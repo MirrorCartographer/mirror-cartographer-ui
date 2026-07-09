@@ -102,6 +102,24 @@ The current site is visually pleasant but does not yet answer why someone stays.
 
 A return visitor should feel that the site is slowly remembering how it became itself.
 
+## Build-cycle status
+
+The first seed JSON and validation script now exist. The app now imports `src/data/reexperience.seed.json` and turns recent story beats into subtle hidden weather marks, thread-lines, heart gravity, and glyph structure. This preserves the wordless surface: no visible explanatory text was added, audio still starts only from user tap, and the change reuses the existing canvas loop rather than adding a second renderer.
+
+## Hosting/testing assessment
+
+Current best default host: Vercel, because the continuity anchor already names the live prototype there and the repo is a Vite/React static site with no backend requirement. Switching hosts now would add operational noise without solving the immediate product problem.
+
+Safer branching path: for visual rewrites or risky audio changes, use a preview branch before `main`. For small data/render coupling changes like this cycle, `main` is acceptable if the local gate passes.
+
+Fallback hosts:
+
+- Cloudflare Pages: strongest alternate static host if Vercel preview reliability becomes poor.
+- Netlify: good alternate for manual static deploys and simple previews.
+- GitHub Pages: lowest-moving-parts fallback, but less ideal for phone-first preview iteration and branch preview ergonomics.
+
+Known testing gap: this run could inspect repo content and write changes, but the public URL fetch/screenshot path was inconclusive from available tools. The repo needs a lightweight deterministic test that proves the app imports the story seed and can render one frame without relying on the hosted site.
+
 ## Suggested next action
 
-Create a seed JSON file with the first verified story beats from available Library search, then add a script that validates story-beat shape without requiring the full private chat export yet.
+Add a small Playwright or Node-based harness that visits the local Vite preview, asserts the canvas exists, taps once to satisfy audio unlock policy, and checks that the app stays alive for several animation frames on a phone-sized viewport. After that passes, tune the story-beat influence so each beat affects composition/audio more distinctly without adding words.
