@@ -10,6 +10,12 @@ const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
 const clock = read('src/engine/compositionClock.js');
 const frame = read('src/engine/compositionFrame.js');
+const music = read('src/engine/skyMusic.js');
+
+const startIndex = music.indexOf('async function start');
+const ensureIndex = music.indexOf('function ensure');
+const audioConstructorIndex = music.indexOf('ctx = new Audio()');
+const exportedFactoryIndex = music.indexOf('export function createSkyMusic()');
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > app.indexOf('const touch ='));
@@ -19,6 +25,8 @@ assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tes
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
 assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
 assert('smoke test asserts wordless body before and after first tap', smoke.indexOf('await expectWordlessBody(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectWordlessBody(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
+assert('smoke test probes no autoplay before first tap', smoke.includes('__mirrorAudioContextsCreated') && smoke.includes('expect(await audioContextsCreated(page)).toBe(0)'));
+assert('smoke test expects audio only after user gesture', smoke.includes('await sky.tap') && smoke.includes('expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
 assert('composition clock exists without browser globals', clock.includes('createCompositionClock') && !clock.includes('window.') && !clock.includes('document.'));
@@ -27,6 +35,9 @@ assert('visual score reads composition clock snapshot', app.includes('clockSnaps
 assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
 assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
 assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
+assert('audio engine is exported as lazy factory', exportedFactoryIndex >= 0 && ensureIndex > exportedFactoryIndex && startIndex > ensureIndex);
+assert('audio context constructor stays behind ensure/start path', audioConstructorIndex > ensureIndex && audioConstructorIndex < startIndex);
+assert('app constructs music object without starting audio', app.includes('musicRef.current = createSkyMusic();') && app.indexOf('musicRef.current = createSkyMusic();') < app.indexOf('const touch ='));
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
