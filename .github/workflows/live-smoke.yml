@@ -1,0 +1,43 @@
+name: Live URL Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'Public deployed URL to test, for example a Vercel, Cloudflare Pages, Netlify, or GitHub Pages preview URL.'
+        required: true
+        type: string
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run live phone-first smoke contract
+        env:
+          SITE_URL: ${{ inputs.site_url }}
+        run: npm run test:live
+
+      - name: Upload Playwright report and traces when present
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror-cartographer-live-smoke-output
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 7
