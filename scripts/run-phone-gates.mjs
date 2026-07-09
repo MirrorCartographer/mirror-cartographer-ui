@@ -14,7 +14,8 @@ const run = (label, command, args) => {
 };
 
 run('phone contract', 'node', ['scripts/phone-contract-check.mjs']);
+run('production build', 'npm', ['run', 'build']);
 
-console.log('\nPhone contract gate passed.');
+console.log('\nPhone static gates passed.');
 console.log('Browser smoke gate remains: npm run test:smoke');
 console.log('Keep no autoplay, tap-to-start, wordless surface, and phone-first stability before adding composition layers.');
