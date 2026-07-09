@@ -26,3 +26,13 @@ jobs:
 
       - name: Run phone-first gate
         run: npm run test:gate
+
+      - name: Upload Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
