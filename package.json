@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test:phone-contract": "node scripts/phone-contract-check.mjs",
     "test:smoke": "playwright test tests/smoke.spec.js --reporter=line",
     "icloud:watch": "node tools/icloud-watch.mjs",
     "icloud:watch:chromium": "node tools/icloud-watch.mjs https://share.icloud.com/photos/0c0cpN5VJ9yVCZYSS9XDjaFNw chromium",
