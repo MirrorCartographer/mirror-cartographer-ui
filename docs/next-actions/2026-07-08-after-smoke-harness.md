@@ -32,15 +32,24 @@ The package scripts now include three gate paths:
 
 The GitHub Actions smoke workflow is present and uses `npm install`, not `npm ci`, so the earlier missing-lockfile blocker is no longer the known primary blocker.
 
+## Gate run 07 update
+
+The visible status for the previous gate commit showed Vercel success, but no readable Smoke Test status was available through the current connector path. Treat this as an observability gap, not as a pass.
+
+Implemented smallest reliability improvement:
+
+- `.github/workflows/smoke.yml` now includes `workflow_dispatch` so the smoke gate can be manually triggered from GitHub Actions.
+- The smoke job now has `timeout-minutes: 10` so a hung Playwright/browser install cannot silently consume unbounded CI time.
+
 ## Self-directed automation verdict
 
-The system should still block novelty until at least one real runner verifies the combined gate.
+Decision: revise the previous next action.
 
-Decision: follow the reliability path, not the Composition Clock path yet.
+The system should not add Composition Clock yet. The next gate is now: confirm the manually triggerable Smoke Test exists and inspect the run generated after the workflow observability patch.
 
 Priority order now:
 
-1. Inspect the latest GitHub Actions Smoke Test run for the commit that added `test:gate`.
+1. Inspect the latest GitHub Actions Smoke Test run after commit `a2944e1`.
 2. If Actions passes, create a stable rollback branch or documented rollback tag.
 3. If Actions fails, fix only the failing gate step.
 4. Only after a passing gate and rollback path, add the Composition Clock primitive so visuals, touch, audio, and weather share one event stream.
