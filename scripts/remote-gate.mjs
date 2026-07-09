@@ -1,9 +1,12 @@
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 
-const DEFAULT_SITE_URL = 'https://mirror-cartographer-ui.vercel.app';
+const DEFAULT_SITE_URLS = [
+  'https://mirror-cartographer-ui.vercel.app',
+  'https://mirrorcartographer.github.io/mirror-cartographer-ui/',
+];
 
-const candidates = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URL)
+const candidates = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URLS.join(','))
   .split(',')
   .map((value) => value.trim())
   .filter(Boolean);
