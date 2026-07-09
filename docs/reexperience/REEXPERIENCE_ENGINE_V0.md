@@ -54,7 +54,7 @@ A return visitor should feel that the site is slowly remembering how it became i
 
 The first seed JSON and validation script now exist. The app now imports `src/data/reexperience.seed.json` and turns recent story beats into subtle hidden weather marks, thread-lines, heart gravity, and glyph structure. This preserves the wordless surface: no visible explanatory text was added, audio still starts only from user tap, and the change reuses the existing canvas loop rather than adding a second renderer.
 
-The local and live Playwright smoke gates now also instrument `requestAnimationFrame`. They assert that the wordless sky renders multiple animation frames before tap and continues rendering multiple frames after tap. This closes the prior harness gap: the tests no longer prove only that a canvas exists; they also prove that the animation loop remains alive on a phone-sized viewport.
+The local and live Playwright smoke gates now instrument `requestAnimationFrame`. They assert that the wordless sky renders multiple animation frames before tap and continues rendering multiple frames after tap. The harness now also samples the canvas center pixel before and after tap, so it can catch a blank-canvas regression rather than only proving that a canvas element exists.
 
 ## Hosting/testing assessment
 
@@ -68,8 +68,8 @@ Fallback hosts:
 - Netlify: good alternate for manual static deploys and simple previews.
 - GitHub Pages: lowest-moving-parts fallback, but less ideal for phone-first preview iteration and branch preview ergonomics.
 
-Known testing gap: CI status for the latest frame-survival patch still needs inspection. The current automation can read and write repo files, but did not get a workflow-run record for the newest spec commit.
+Known testing gap: this automation can read and write repo files, but cannot execute the full browser gate inside the connector runtime. The next route should use GitHub Actions or a local environment with Playwright browsers installed.
 
 ## Suggested next action
 
-Inspect GitHub Actions for the frame-survival commits. If the full `test:gate` is green, create a stable release marker and then tune story-beat influence so each beat affects composition/audio more distinctly without adding words. If the gate is red, fix only the failing test step; do not add novelty.
+Inspect GitHub Actions for the frame-survival and pixel-smoke commits. If the full `test:gate` is green, create a stable release marker and then tune story-beat influence so each beat affects composition/audio more distinctly without adding words. If the gate is red, fix only the failing test step; do not add novelty.
