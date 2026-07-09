@@ -39,3 +39,19 @@ Use the actual deployed Vercel or Cloudflare Pages URL in place of the example U
 Do not add new creative behavior yet. First run or inspect CI for the latest cleanup commit. Then create or verify the Cloudflare Pages deployment for `MirrorCartographer/mirror-cartographer-ui`, get its `*.pages.dev` URL, and run:
 
 `SITE_URL=<deployed-url> npm run test:live`
+
+## Self-rewriting forge update — 2026-07-09
+
+Implemented `.github/workflows/build-artifact.yml` at commit `a73d8a07364627613b04ba4b49979195ca5daea5`.
+
+Reason: Vercel still reports build-rate-limit failure on the latest checked cleanup commit, so the project needs a host-independent preview proof path while Cloudflare Pages is not yet connected.
+
+Next action:
+
+1. Inspect the GitHub Actions run for commit `a73d8a07364627613b04ba4b49979195ca5daea5`.
+2. If the new artifact workflow passes, inspect or download the `mirror-cartographer-dist` artifact.
+3. Then connect Cloudflare Pages using build command `npm run build` and output directory `dist`.
+4. After a deployed URL exists, run `SITE_URL=<deployed-url> npm run test:live`.
+5. If the workflow fails, inspect logs and patch only the smallest failing build or test issue before adding creative behavior.
+
+Preserve the existing surface contract: no autoplay, tap-to-start audio, low CPU, phone-first stability, no visible explanatory words, and no claim of deployed success until a real URL passes the live test.
