@@ -12,10 +12,44 @@ import { createGestureComets, drawGestureComets } from '../engine/gestureComets'
 import { createSkyMusic } from '../engine/skyMusic';
 import { createCompositionClock } from '../engine/compositionClock';
 import { createCompositionFrame, createTapCompositionFrame } from '../engine/compositionFrame';
+import storySeed from '../data/reexperience.seed.json';
 
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 const seed = (count, factory) => Array.from({ length: count }, (_, i) => factory(i));
+const STORY_BEATS = Array.isArray(storySeed?.beats) ? storySeed.beats : [];
+
+function hashText(text) {
+  return String(text || '').split('').reduce((sum, char, index) => sum + char.charCodeAt(0) * (index + 11), 0);
+}
+
+function beatKind(beat) {
+  return SKY_STATES.includes(beat?.feltWeather) ? beat.feltWeather : 'cloud';
+}
+
+function storyMark(beat, index, count, now) {
+  const hash = hashText(`${beat?.id}-${beat?.capsule}-${beat?.siteGesture}`);
+  const lane = count <= 1 ? 0.5 : index / (count - 1);
+  const drift = Math.sin(hash * 0.017) * 0.055;
+  const x = clamp01(0.14 + lane * 0.72 + drift);
+  const y = clamp01(0.24 + Math.sin(hash * 0.031 + index) * 0.18 + (index % 2) * 0.08);
+  const previousLane = count <= 1 ? 0.5 : Math.max(0, index - 1) / (count - 1);
+  return {
+    x,
+    y,
+    px: clamp01(0.14 + previousLane * 0.72),
+    py: clamp01(y + Math.sin(hash * 0.013) * 0.08),
+    kind: beatKind(beat),
+    spin: hash * 0.001,
+    time: now - 1400 - (count - index) * 610,
+  };
+}
+
+function storyMarks(now, budget) {
+  const limit = budget?.mobile ? 5 : 7;
+  const beats = STORY_BEATS.slice(-limit);
+  return beats.map((beat, index) => storyMark(beat, index, beats.length, now));
+}
 
 function colorFor(kind, alpha = 1) {
   if (kind === 'rain') return `rgba(145,216,255,${alpha})`;
@@ -34,8 +68,8 @@ function safeMarks(items) {
     .map((mark) => ({
       x: clamp01(mark.x),
       y: clamp01(mark.y),
-      px: clamp01(mark.prev?.x ?? mark.x),
-      py: clamp01(mark.prev?.y ?? mark.y),
+      px: clamp01(mark.px ?? mark.prev?.x ?? mark.x),
+      py: clamp01(mark.py ?? mark.prev?.y ?? mark.y),
       kind: SKY_STATES.includes(mark.kind) ? mark.kind : 'cloud',
       spin: Number.isFinite(mark.spin) ? mark.spin : 0,
       time: Number.isFinite(mark.time) ? mark.time : now,
@@ -53,15 +87,16 @@ function drawGlow(ctx, x, y, radius, kind, alpha) {
 }
 
 function drawHeart(ctx, env, spec) {
-  const { width: w, height: h, time: t, pulse, state } = env;
-  const scale = Math.min(w, h) * (0.105 + pulse * 0.025 + Math.sin(t * 0.035) * 0.006);
+  const { width: w, height: h, time: t, pulse, state, story = [] } = env;
+  const gravity = Math.min(1, story.length / 7) * 0.018;
+  const scale = Math.min(w, h) * (0.105 + pulse * 0.025 + gravity + Math.sin(t * 0.035) * 0.006);
   ctx.save();
   ctx.translate(w * 0.5, h * 0.58);
   ctx.globalCompositeOperation = 'screen';
   ctx.strokeStyle = colorFor(state, 0.74);
-  ctx.fillStyle = colorFor(state, 0.075);
+  ctx.fillStyle = colorFor(state, 0.075 + gravity);
   ctx.shadowColor = colorFor(state, 1);
-  ctx.shadowBlur = 36 + pulse * 22;
+  ctx.shadowBlur = 36 + pulse * 22 + story.length * 1.2;
   ctx.lineWidth = Math.max(1.2, scale * 0.035);
   ctx.beginPath();
   for (let i = 0; i <= 140; i += 1) {
@@ -119,7 +154,7 @@ function drawMemory(ctx, env) {
     ctx.moveTo(mark.px * w, mark.py * h);
     ctx.quadraticCurveTo(
       ((mark.px + mark.x) * 0.5) * w + Math.sin(t * 0.03 + index) * 24 * life,
-      ((mark.py + mark.y) * 0.5) * h - Math.cos(t * 0.026 + index) * 18 * life,
+      ((mark.py + mark.y) * 0.5) * h - Math.cos(t * 0.026 + index) * 18,
       cx,
       cy,
     );
@@ -128,12 +163,43 @@ function drawMemory(ctx, env) {
   });
 }
 
+function drawStoryThread(ctx, env) {
+  const { width: w, height: h, time: t, story, pulse, rhythm } = env;
+  if (!story.length) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 0.9 + pulse * 0.8;
+  ctx.shadowBlur = 12 + rhythm * 0.08;
+  story.forEach((mark, index) => {
+    const x = mark.x * w;
+    const y = mark.y * h;
+    const wobble = Math.sin(t * 0.018 + mark.spin + index) * 8;
+    ctx.globalAlpha = 0.08 + pulse * 0.08;
+    ctx.strokeStyle = colorFor(mark.kind, 0.26);
+    ctx.shadowColor = colorFor(mark.kind, 0.82);
+    ctx.beginPath();
+    ctx.arc(x, y, Math.min(w, h) * (0.008 + index * 0.001), 0, TAU);
+    ctx.stroke();
+    if (index > 0) {
+      const prev = story[index - 1];
+      ctx.globalAlpha = 0.045 + pulse * 0.06;
+      ctx.beginPath();
+      ctx.moveTo(prev.x * w, prev.y * h);
+      ctx.quadraticCurveTo((prev.x + mark.x) * 0.5 * w, (prev.y + mark.y) * 0.5 * h + wobble, x, y);
+      ctx.stroke();
+    }
+  });
+  ctx.restore();
+}
+
 function drawGlyph(ctx, env) {
-  const { width: w, height: h, time: t, active, state, pulse, rhythm } = env;
+  const { width: w, height: h, time: t, active, state, pulse, rhythm, story = [] } = env;
   const cx = w - Math.min(72, w * 0.16);
   const cy = Math.min(72, h * 0.16);
   const radius = Math.min(w, h) * 0.04;
-  const spokes = state === 'rain' ? 5 : state === 'lightning' ? 3 : state === 'wind' ? 4 : 6;
+  const spokes = Math.max(3, Math.min(8, story.length || (state === 'rain' ? 5 : state === 'lightning' ? 3 : state === 'wind' ? 4 : 6)));
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
   ctx.translate(cx, cy);
@@ -149,7 +215,7 @@ function drawGlyph(ctx, env) {
     ctx.lineTo(Math.cos(angle) * radius * (1.15 + pulse * 0.5), Math.sin(angle) * radius * (1.15 + pulse * 0.5));
     ctx.stroke();
   }
-  if (active.length) {
+  if (active.length || story.length) {
     ctx.globalAlpha = 0.34;
     ctx.beginPath();
     ctx.arc(0, 0, radius * (1.5 + pulse * 0.8), 0, TAU);
@@ -242,8 +308,9 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
       const height = rect.height;
       const budget = responsiveBudget(width, height);
       const spec = skyState(state);
-      const active = safeMarks(marks).slice(-(budget.mobile ? 12 : 20));
-      const env = { width, height, time: frame, active, budget, state, pulse, rhythm, clock: clockSnapshot, now: Date.now() };
+      const story = safeMarks(storyMarks(Date.now(), budget));
+      const active = [...story, ...safeMarks(marks)].slice(-(budget.mobile ? 12 : 20));
+      const env = { width, height, time: frame, active, story, budget, state, pulse, rhythm, clock: clockSnapshot, now: Date.now() };
 
       const sky = ctx.createLinearGradient(0, 0, 0, height);
       sky.addColorStop(0, spec.sky[0]);
@@ -296,6 +363,7 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
       });
       ctx.restore();
 
+      drawStoryThread(ctx, env);
       drawCreatureWeather(ctx, ecology, env);
       drawGestureComets(ctx, comets, env);
       drawMemory(ctx, env);
