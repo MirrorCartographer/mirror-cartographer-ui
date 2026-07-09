@@ -154,3 +154,31 @@ Next action:
 3. If it passes, create a stable rollback branch or tag from the passing commit.
 4. Then connect Cloudflare Pages or run `Live URL Smoke` against an available public deployment URL.
 5. Only after static gate plus browser smoke pass should the next cycle add composition/audio-visual novelty.
+
+## Self-auditing gate update 11 — 2026-07-09
+
+Latest inspected commits showed `Record lazy audio gate cycle` as the newest documented handoff, with the previous next action requiring CI/status inspection for `06006fd62b30436982275699459625cfcc0b1de4`.
+
+Observed status:
+
+- `06006fd62b30436982275699459625cfcc0b1de4` now has Vercel `success` status.
+- The latest handoff commit `1fbc704c091d14b619349d1f1f1750fc05b15d9a` also has Vercel `success` status.
+- The available workflow-run lookup returned no GitHub Actions runs, so Actions proof is still not available from the connector.
+
+Decision: follow the previous next action enough to create a rollback point, but block creative novelty until live/browser proof is available. Created stable branch `stable/phone-gate-2026-07-09` at `1fbc704c091d14b619349d1f1f1750fc05b15d9a`.
+
+Hosting/testing assessment:
+
+- Vercel is suitable again as the active deployment lane because both the lazy-audio patch and latest handoff commit report successful Vercel status.
+- Cloudflare Pages remains valuable as an independent second preview lane, but no repo-side patch can connect it without external account setup.
+- Netlify remains a valid fallback static host if Vercel quota failures return and Cloudflare setup stalls.
+- GitHub Pages remains lower priority until Vite base-path handling is configured.
+- A separate stable repository is not needed now; the stable branch gives rollback isolation with less operational overhead.
+- Live proof is still incomplete because the connector exposed Vercel dashboard target URLs, not a public deployment URL that can be passed into `Live URL Smoke`.
+
+Next action:
+
+1. Find or expose the public Vercel deployment URL for `1fbc704c091d14b619349d1f1f1750fc05b15d9a`, or create/verify a Cloudflare Pages URL.
+2. Run `Live URL Smoke` against that URL.
+3. If live smoke passes, allow the next smallest Composition Clock integration.
+4. If live smoke fails or no public URL can be tested, patch only the live-test/deploy-observability gap before adding novelty.
