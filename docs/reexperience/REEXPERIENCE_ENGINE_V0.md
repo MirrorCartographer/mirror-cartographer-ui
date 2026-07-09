@@ -10,7 +10,7 @@ The goal is not to show biography. The goal is to let the surface behave as if i
 
 - Phone first.
 - No visible explanatory words.
-- No autoplay violation.
+- No automatic sound on page load.
 - No crackle.
 - No heavy CPU loop.
 - No second canvas/rendering system unless a gate proves it is necessary.
@@ -52,24 +52,30 @@ A return visitor should feel that the site is slowly remembering how it became i
 
 ## Build-cycle status
 
-The first seed JSON and validation script now exist. The app now imports `src/data/reexperience.seed.json` and turns recent story beats into subtle hidden weather marks, thread-lines, heart gravity, and glyph structure. This preserves the wordless surface: no visible explanatory text was added, audio still starts only from user tap, and the change reuses the existing canvas loop rather than adding a second renderer.
+The first seed JSON and validation script now exist. The app now imports `src/data/reexperience.seed.json` and turns recent story beats into subtle hidden weather marks, thread-lines, heart gravity, and glyph structure. This preserves the wordless surface: no visible explanatory text was added, sound still starts only from user gesture, and the change reuses the existing canvas loop rather than adding a second renderer.
 
-The local and live Playwright smoke gates now instrument `requestAnimationFrame`. They assert that the wordless sky renders multiple animation frames before tap and continues rendering multiple frames after tap. The harness now also samples the canvas center pixel before and after tap, so it can catch a blank-canvas regression rather than only proving that a canvas element exists.
+The local and live Playwright smoke gates instrument `requestAnimationFrame`. They assert that the wordless sky renders multiple animation frames before tap and continues rendering multiple frames after tap. The local smoke harness also samples the canvas center pixel before and after tap, so it can catch a blank-canvas regression rather than only proving that a canvas element exists.
+
+A GitHub Pages preview workflow now exists. It installs the app, runs `scripts/run-phone-gates.mjs`, builds with the `/mirror-cartographer-ui/` base path, and deploys the static `dist` artifact to Pages when Actions/Pages are enabled.
 
 ## Hosting/testing assessment
 
-Current best default host: Vercel, because the continuity anchor already names the live prototype there and the repo is a Vite/React static site with no backend requirement. Switching hosts now would add operational noise unless Vercel rate limiting or account interstitials repeatedly break the remote gate.
+Current best default host: Vercel. GitHub reports the newest commit with a successful Vercel status, and the continuity anchor already names the live prototype there. The repo is still a Vite/React static site with no backend requirement, so Vercel remains the least disruptive default path.
 
-Safer branching path: for visual rewrites or risky audio changes, use a preview branch before `main`. For small data/render coupling changes like this cycle, `main` is acceptable if the local gate passes.
+Different repository: not recommended. Moving the phone-first weather/music surface to a different repo would fragment continuity and make the existing Vercel integration less useful. A branch is better than a repository split for risky visual or sound changes.
+
+Safer branching path: for visual rewrites, audio engine changes, or new input/import systems, use a preview branch before `main`. For small gate/doc/data changes, `main` is acceptable when static checks are preserved.
 
 Fallback hosts:
 
 - Cloudflare Pages: strongest alternate static host if Vercel preview reliability becomes poor.
 - Netlify: good alternate for manual static deploys and simple previews.
-- GitHub Pages: lowest-moving-parts fallback, but less ideal for phone-first preview iteration and branch preview ergonomics.
+- GitHub Pages: useful low-moving-parts fallback now that a workflow exists, but it depends on Actions/Pages being enabled and does not replace Vercel until its deploy is observed working.
 
-Known testing gap: this automation can read and write repo files, but cannot execute the full browser gate inside the connector runtime. The next route should use GitHub Actions or a local environment with Playwright browsers installed.
+Observed testing state: the connector could read the latest commits and GitHub reported Vercel success for `7ae882b333a8a9c258a753f26e31d097c40c24cc`. No GitHub Actions workflow run was visible for that commit through the available workflow-run connector. Public URL fetch was attempted but the web tool could not directly open the Vercel URL from this run, so live visual inspection remains unresolved.
+
+Attempted high-leverage patch: add the same canvas-pixel assertion to the live-hosting Playwright spec and add reexperience validation to `scripts/run-phone-gates.mjs`. Both writes were blocked by the GitHub connector safety layer in this run, so this doc update records the next smallest safe action instead of pretending the gate changed.
 
 ## Suggested next action
 
-Inspect GitHub Actions for the frame-survival and pixel-smoke commits. If the full `test:gate` is green, create a stable release marker and then tune story-beat influence so each beat affects composition/audio more distinctly without adding words. If the gate is red, fix only the failing test step; do not add novelty.
+First, retry the two small code patches separately in a normal interactive run or local environment: add `expectCanvasHasPixels` to `tests/live-hosting.spec.js`, and add `scripts/reexperience-validate.mjs` to `scripts/run-phone-gates.mjs`. Then inspect whether GitHub Actions/Pages runs after the next push. If Vercel remains green and Pages becomes visible, keep Vercel as primary and Pages as fallback. If Actions or Pages fail, fix only the workflow/gate path before adding any new visual behavior.
