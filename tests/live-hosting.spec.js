@@ -1,10 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const liveSiteUrl = process.env.SITE_URL;
-
 test.describe('Mirror Cartographer live hosting smoke', () => {
-  test.skip(!liveSiteUrl, 'Set SITE_URL to test a deployed Vercel, Cloudflare, Netlify, or Pages preview.');
-
   test('deployed preview preserves the phone-first wordless contract', async ({ page }) => {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
