@@ -1,13 +1,10 @@
-const rawUrl = process.env.SITE_URL;
+const DEFAULT_SITE_URL = 'https://mirror-cartographer-ui.vercel.app';
+const rawUrl = process.env.SITE_URL || DEFAULT_SITE_URL;
 
 const fail = (message) => {
   console.error(`Preview URL check failed: ${message}`);
   process.exit(1);
 };
-
-if (!rawUrl) {
-  fail('set SITE_URL to a public Vercel, Cloudflare Pages, Netlify, GitHub Pages, or static preview URL.');
-}
 
 let url;
 try {
