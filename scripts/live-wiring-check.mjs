@@ -32,8 +32,30 @@ if (!remoteGateScript) {
   fail('package.json must expose scripts.test:remote-gate');
 }
 
-if (!remoteGateScript.includes('npm run test:live-wiring')) {
-  fail('scripts.test:remote-gate must run npm run test:live-wiring before live checks');
+if (!remoteGateScript.includes('scripts/remote-gate.mjs')) {
+  fail('scripts.test:remote-gate must run scripts/remote-gate.mjs');
+}
+
+const remoteGatePath = 'scripts/remote-gate.mjs';
+const remoteGate = readText(remoteGatePath);
+
+const requiredRemoteGateFragments = [
+  'scripts/live-wiring-check.mjs',
+  'scripts/preview-url-check.unit.mjs',
+  'scripts/preview-url-check.mjs',
+  'npm',
+  'test:live',
+  'SITE_URL',
+];
+
+for (const fragment of requiredRemoteGateFragments) {
+  if (!remoteGate.includes(fragment)) {
+    fail(`${remoteGatePath} must include ${fragment}`);
+  }
+}
+
+if (!remoteGate.includes('selectedUrl')) {
+  fail(`${remoteGatePath} must select a reachable preview URL before live smoke`);
 }
 
 if (!liveScript) {
@@ -92,4 +114,4 @@ if (!liveSpec.includes('expectWordlessBody')) {
   fail(`${liveSpecPath} must preserve pre/post interaction wordless body assertions`);
 }
 
-console.log(`Live smoke wiring is coherent: ${liveWiringScript} -> test:remote-gate -> ${liveScript} -> ${liveConfigPath} -> ${liveSpecPath}`);
+console.log(`Live smoke wiring is coherent: ${liveWiringScript} -> ${remoteGatePath} -> selected SITE_URL -> ${liveScript} -> ${liveConfigPath} -> ${liveSpecPath}`);
