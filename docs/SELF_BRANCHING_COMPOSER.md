@@ -2,13 +2,13 @@
 
 ## Current branch decision
 
-Testing/deployment confidence remained the strongest move. The newest hosting signal showed Vercel failing with a build-rate-limit target, while no GitHub Actions workflow run was visible for the checked commit. That makes preview reliability the active constraint, not visual novelty.
+Testing/deployment confidence remains the strongest move. The app already has candidate fallback logic for Vercel and GitHub Pages, but the public fallback route still needs proof that GitHub Pages is actually configured and deploying from Actions.
 
 ## Hosting assessment
 
-Vercel should remain the primary host when builds are available, because it is already the known public atmosphere and the app is a Vite/React surface. However, Vercel is not sufficient as the only preview route while build-rate-limit failures occur.
+Vercel should remain the primary atmospheric host when builds are available. It is still the best public-facing surface for the living phone-first weather/music piece.
 
-GitHub Pages is now the best safety fallback because the repo already has a Pages workflow and static build path. Cloudflare Pages remains the strongest later fallback if GitHub Pages cannot be enabled or if Pages deploys are too slow/unreliable. Netlify is viable but adds another deployment surface without solving the immediate GitHub-native verification gap. A separate repository or branch is not necessary yet; the safer path is a deterministic fallback gate on `main` before introducing branch drift.
+GitHub Pages is the best current secondary surface: not a replacement for the atmosphere, but the stable gallery/fallback route. The repo is private, so this route may still require manual repository settings: Actions must be enabled and Pages source must be GitHub Actions. If Pages cannot be enabled or is unreliable, Cloudflare Pages becomes the next fallback candidate because it can deploy a static Vite build with low friction. Netlify is still viable, but it does not add enough confidence to justify a third host before GitHub Pages is verified. A separate stable repo is premature unless the current private repo keeps blocking public previews.
 
 ## Preserved constraints
 
@@ -20,11 +20,11 @@ GitHub Pages is now the best safety fallback because the repo already has a Page
 
 ## Change made in this cycle
 
-The remote preview gate now treats both Vercel and GitHub Pages as default candidates. The public URL probe no longer accepts any generic Vite shell: it fetches script bundles and requires signals for the phone sky app, including canvas drawing, React/runtime shell, and the tap/audio interaction boundary.
+The GitHub Pages workflow was hardened with `actions/configure-pages@v5` before the static build/upload step, and the deploy job now declares its own minimal Pages/OIDC permissions. This makes the workflow more explicit and reduces the chance that a Pages deployment fails because repository Pages metadata or job permissions were implicit.
 
 ## Next suggested action
 
-Verify whether the GitHub Pages workflow actually runs after the latest commit. If it still does not run, inspect repository Pages settings manually: Settings -> Pages -> Source should use GitHub Actions. If Actions are disabled, enable Actions for the repository. Once a Pages deployment exists, run the remote gate against `https://mirrorcartographer.github.io/mirror-cartographer-ui/` and only then return to new composition work.
+Inspect the workflow run for commit `97119f184098fc125b850167b68ee2037b02692a`. If it completed, run the remote gate against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. If it did not run, the next action is manual repository configuration: Settings -> Actions should allow workflows, and Settings -> Pages -> Source should be GitHub Actions. If the workflow ran but failed, inspect the failed job logs before changing app code.
 
 ## Later branch
 
