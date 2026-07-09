@@ -30,8 +30,8 @@ jobs:
       - name: Install
         run: npm install --package-lock=false --no-audit --no-fund
 
-      - name: Phone gates
-        run: node scripts/run-phone-gates.mjs
+      - name: Phone static gate
+        run: npm run test:phone-static
 
       - name: Build for GitHub Pages
         run: npm run build -- --base=/mirror-cartographer-ui/
