@@ -10,6 +10,7 @@ const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
 const clock = read('src/engine/compositionClock.js');
 const frame = read('src/engine/compositionFrame.js');
+const phraseMemory = read('src/engine/phraseMemory.js');
 const music = read('src/engine/skyMusic.js');
 
 const startIndex = music.indexOf('async function start');
@@ -40,6 +41,9 @@ assert('composition frame projector preserves wordless composition shape', frame
 assert('composition frame projector is imported by app', app.includes('createCompositionFrame') && app.includes('createTapCompositionFrame'));
 assert('continuous clock frame stays inside low-frequency tick', intervalIndex >= 0 && app.indexOf('createCompositionFrame', intervalIndex) > intervalIndex);
 assert('tap clock frame stays inside interaction path', touchIndex >= 0 && app.indexOf('createTapCompositionFrame', touchIndex) > touchIndex);
+assert('phrase memory primitive exists without browser globals', phraseMemory.includes('createPhraseMemory') && !phraseMemory.includes('window.') && !phraseMemory.includes('document.'));
+assert('phrase memory stores numeric contour data', phraseMemory.includes('beat:') && phraseMemory.includes('phase:') && phraseMemory.includes('phrase:') && phraseMemory.includes('energy:') && phraseMemory.includes('rhythm:'));
+assert('phrase memory exposes read-only contour snapshot', phraseMemory.includes('snapshot()') && phraseMemory.includes('contour()') && phraseMemory.includes('frames.map((frame) => ({ ...frame }))'));
 assert('audio engine is exported as lazy factory', exportedFactoryIndex >= 0 && ensureIndex > exportedFactoryIndex && startIndex > ensureIndex);
 assert('audio context constructor stays behind ensure/start path', audioConstructorIndex > ensureIndex && audioConstructorIndex < startIndex);
 assert('app constructs music object without starting audio', app.includes('musicRef.current = createSkyMusic();') && app.indexOf('musicRef.current = createSkyMusic();') < touchIndex);
