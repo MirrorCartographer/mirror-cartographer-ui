@@ -2,8 +2,10 @@ import { spawnSync } from 'node:child_process';
 import http from 'node:http';
 import process from 'node:process';
 
+const appBundle = 'React createRoot wordless sky onPointerDown AudioContext document.createElement("canvas").getContext("2d")';
 const rootShell = '<!doctype html><html><body><div id="root"></div><script type="module" src="./assets/app.js"></script></body></html>';
 const blockedShell = '<!doctype html><html><body>upgradeToPro build-rate-limit mirror-cartographers-projects</body></html>';
+const thinShell = '<!doctype html><html><body><div id="root"></div><script type="module" src="./assets/thin.js"></script></body></html>';
 
 const startServer = (handler) => new Promise((resolve, reject) => {
   const server = http.createServer(handler);
@@ -38,10 +40,26 @@ try {
   servers.push(blocked.server);
 
   const valid = await startServer((req, res) => {
+    if (req.url?.includes('/assets/app.js')) {
+      res.writeHead(200, { 'content-type': 'application/javascript' });
+      res.end(appBundle);
+      return;
+    }
     res.writeHead(200, { 'content-type': 'text/html' });
     res.end(rootShell);
   });
   servers.push(valid.server);
+
+  const thin = await startServer((req, res) => {
+    if (req.url?.includes('/assets/thin.js')) {
+      res.writeHead(200, { 'content-type': 'application/javascript' });
+      res.end('React createRoot but no canvas or audio boundary');
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end(thinShell);
+  });
+  servers.push(thin.server);
 
   const fallback = runPreviewCheck(`${blocked.url},${valid.url}`);
   assert(fallback.status === 0, `expected fallback candidate to pass, got ${fallback.status}: ${fallback.stderr}`);
@@ -50,6 +68,10 @@ try {
   const blockedOnly = runPreviewCheck(blocked.url);
   assert(blockedOnly.status !== 0, 'expected blocked preview shell to fail');
   assert(/Vercel limit\/dashboard page|no reachable preview candidate/i.test(blockedOnly.stderr), `expected blocked-page failure, got: ${blockedOnly.stderr}`);
+
+  const thinOnly = runPreviewCheck(thin.url);
+  assert(thinOnly.status !== 0, 'expected shell without canvas/audio bundle signals to fail');
+  assert(/no probed bundle looked like the phone sky app|missing expected canvas\/audio\/React signals/i.test(thinOnly.stderr), `expected bundle-signal failure, got: ${thinOnly.stderr}`);
 
   const invalid = runPreviewCheck('notaurl');
   assert(invalid.status !== 0, 'expected invalid URL candidate to fail');
