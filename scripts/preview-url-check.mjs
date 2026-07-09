@@ -1,5 +1,9 @@
-const DEFAULT_SITE_URL = 'https://mirror-cartographer-ui.vercel.app';
-const rawUrls = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URL)
+const DEFAULT_SITE_URLS = [
+  'https://mirror-cartographer-ui.vercel.app',
+  'https://mirrorcartographer.github.io/mirror-cartographer-ui/',
+];
+
+const rawUrls = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URLS.join(','))
   .split(',')
   .map((value) => value.trim())
   .filter(Boolean);
@@ -24,11 +28,61 @@ const assertValidUrl = (rawUrl) => {
   return url;
 };
 
+const extractScriptUrls = (html, baseUrl) => {
+  const scripts = [];
+  const scriptPattern = /<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+  let match;
+  while ((match = scriptPattern.exec(html))) {
+    scripts.push(new URL(match[1], baseUrl));
+  }
+  return scripts;
+};
+
+const checkBundleSignals = async (scriptUrls, pageUrl) => {
+  if (!scriptUrls.length) {
+    throw new Error(`${pageUrl.href} did not expose script assets to probe.`);
+  }
+
+  const errors = [];
+  for (const scriptUrl of scriptUrls.slice(0, 4)) {
+    try {
+      const response = await fetch(scriptUrl, {
+        redirect: 'follow',
+        headers: {
+          'user-agent': 'mirror-cartographer-preview-check/1.1',
+          accept: 'application/javascript,text/javascript,*/*',
+        },
+      });
+
+      if (!response.ok) {
+        errors.push(`${scriptUrl.href} returned HTTP ${response.status}`);
+        continue;
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      const text = await response.text();
+      const hasCanvas = /createElement\(["']canvas["']\)|<canvas|\.getContext\(["']2d["']\)|getContext\(["']2d["']/.test(text);
+      const hasTapAudioBoundary = /AudioContext|webkitAudioContext|onPointerDown|pointerdown|tap-to-start|touch the sky/i.test(text);
+      const hasReactRuntime = /React|jsx|createRoot|wordless|sky/i.test(text);
+
+      if (hasCanvas && hasTapAudioBoundary && hasReactRuntime) {
+        return scriptUrl.href;
+      }
+
+      errors.push(`${scriptUrl.href} missing expected canvas/audio/React signals; content-type=${contentType || 'unknown'}`);
+    } catch (error) {
+      errors.push(`${scriptUrl.href}: ${error.message}`);
+    }
+  }
+
+  throw new Error(`${pageUrl.href} served HTML but no probed bundle looked like the phone sky app. ${errors.join(' | ')}`);
+};
+
 const checkPreview = async (url) => {
   const response = await fetch(url, {
     redirect: 'follow',
     headers: {
-      'user-agent': 'mirror-cartographer-preview-check/1.0',
+      'user-agent': 'mirror-cartographer-preview-check/1.1',
       accept: 'text/html,application/xhtml+xml',
     },
   });
@@ -60,7 +114,8 @@ const checkPreview = async (url) => {
     throw new Error(`${url.href} does not expose bundled app assets.`);
   }
 
-  return url.href;
+  const bundleUrl = await checkBundleSignals(extractScriptUrls(html, finalUrl), finalUrl);
+  return `${url.href} via ${bundleUrl}`;
 };
 
 if (!rawUrls.length) {
