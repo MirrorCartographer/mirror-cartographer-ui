@@ -52,6 +52,17 @@ const expectAnimationFramesAtLeast = async (page, minimum) => {
   }).toBeGreaterThanOrEqual(minimum);
 };
 
+const expectCanvasHasPixels = async (canvas) => {
+  const sample = await canvas.evaluate((node) => {
+    const ctx = node.getContext('2d');
+    if (!ctx || node.width < 1 || node.height < 1) return null;
+    const { data } = ctx.getImageData(Math.floor(node.width / 2), Math.floor(node.height / 2), 1, 1);
+    return Array.from(data);
+  });
+  expect(sample).not.toBeNull();
+  expect(sample.some((channel) => channel > 0)).toBe(true);
+};
+
 test.describe('Mirror Cartographer phone-first smoke', () => {
   test('renders wordless sky and survives first tap', async ({ page }) => {
     await installAudioContextProbe(page);
@@ -71,6 +82,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expect(canvas).toBeVisible();
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, 8);
+    await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBe(0);
 
     const framesBeforeTap = await animationFrames(page);
@@ -80,6 +92,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expect(canvas).toBeVisible();
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, framesBeforeTap + 8);
+    await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1);
     expect(errors).toEqual([]);
   });
