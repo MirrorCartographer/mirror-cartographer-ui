@@ -29,12 +29,21 @@ if (!response.ok) {
   fail(`${url.href} returned HTTP ${response.status}`);
 }
 
+const finalUrl = response.url ? new URL(response.url) : url;
+if (finalUrl.hostname === 'vercel.com' || finalUrl.pathname.includes('upgradeToPro')) {
+  fail(`${url.href} resolved to a Vercel account or build-limit page: ${finalUrl.href}`);
+}
+
 const contentType = response.headers.get('content-type') || '';
 if (!contentType.includes('text/html')) {
   fail(`${url.href} returned non-HTML content type: ${contentType || 'unknown'}`);
 }
 
 const html = await response.text();
+if (/upgradeToPro|build-rate-limit|mirror-cartographers-projects/i.test(html)) {
+  fail(`${url.href} returned a Vercel limit/dashboard page instead of the app shell.`);
+}
+
 if (!html.includes('id="root"')) {
   fail(`${url.href} does not look like the expected Vite React shell.`);
 }
