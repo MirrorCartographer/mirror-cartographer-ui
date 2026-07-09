@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:pages": "vite build --base=/mirror-cartographer-ui/",
     "preview": "vite preview",
     "test:phone-contract": "node scripts/phone-contract-check.mjs",
     "test:phone-static": "node scripts/run-phone-gates.mjs",
@@ -18,6 +19,7 @@
     "test:local-gate": "npm run test:phone-contract && npm run test:reexperience && npm run build && npm run test:smoke",
     "test:remote-gate": "node scripts/remote-gate.mjs",
     "test:gate": "npm run test:local-gate && npm run test:remote-gate",
+    "test:pages-preview": "npm run test:phone-static && npm run build:pages",
     "icloud:watch": "node tools/icloud-watch.mjs",
     "icloud:watch:chromium": "node tools/icloud-watch.mjs https://share.icloud.com/photos/0c0cpN5VJ9yVCZYSS9XDjaFNw chromium",
     "icloud:watch:webkit": "node tools/icloud-watch.mjs https://share.icloud.com/photos/0c0cpN5VJ9yVCZYSS9XDjaFNw webkit",
