@@ -44,7 +44,8 @@ assert('composition clock exposes phrase and phase', clock.includes('phrase') &&
 assert('visual score reads composition clock snapshot', app.includes('clockSnapshot') && app.includes('clock: clockSnapshot') && app.includes('clock?.phase'));
 assert('visual score reads phrase phase and density', visualScore.includes('clock?.phrasePhase') && visualScore.includes('clock?.density'));
 assert('visual score applies phrase-density to geometry', visualScore.includes('phrasePhase * TAU') && visualScore.includes('baseY') && visualScore.includes('span') && visualScore.includes('densitySpread'));
-assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot)'));
+assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot'));
+assert('phrase contour reaches canvas without visible copy', app.includes('const [phraseContour, setPhraseContour]') && app.includes('setPhraseContour(') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContour)'));
 assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
 assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
 assert('composition frame projector is imported by app', app.includes('createCompositionFrame') && app.includes('createTapCompositionFrame'));
