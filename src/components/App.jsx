@@ -1,284 +1,200 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  PERFORMANCE_BUDGET,
-  SKY_STATES,
-  evolveWeatherGesture,
-  normalizePoint,
-  responsiveBudget,
-  skyState,
-} from '../engine/skyState';
-import { createCreatureWeather, drawCreatureWeather } from '../engine/creatureWeather';
-import { createGestureComets, drawGestureComets } from '../engine/gestureComets';
-import { createSkyMusic } from '../engine/skyMusic';
-import { createCompositionClock } from '../engine/compositionClock';
-import { createCompositionFrame, createTapCompositionFrame } from '../engine/compositionFrame';
-import storySeed from '../data/reexperience.seed.json';
 
 const TAU = Math.PI * 2;
-const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
-const seed = (count, factory) => Array.from({ length: count }, (_, i) => factory(i));
-const STORY_BEATS = Array.isArray(storySeed?.beats) ? storySeed.beats : [];
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const rand = (min, max) => min + Math.random() * (max - min);
 
-function hashText(text) {
-  return String(text || '').split('').reduce((sum, char, index) => sum + char.charCodeAt(0) * (index + 11), 0);
-}
+const LAYERS = [
+  { name: 'SENSORY FIELD', count: 9, x: 0.11, hue: '255,226,191' },
+  { name: 'SYMBOL MAP', count: 12, x: 0.30, hue: '196,181,253' },
+  { name: 'CONTEXT GATES', count: 7, x: 0.50, hue: '145,216,255' },
+  { name: 'INFERENCE CORE', count: 11, x: 0.70, hue: '167,243,208' },
+  { name: 'OUTPUT STATE', count: 6, x: 0.89, hue: '255,209,220' },
+];
 
-function beatKind(beat) {
-  return SKY_STATES.includes(beat?.feltWeather) ? beat.feltWeather : 'cloud';
-}
+const CAPTIONS = [
+  'touch injects signal',
+  'attention chooses a path',
+  'context gates open / close',
+  'memory leaves luminous residue',
+  'output changes the field',
+];
 
-function storyMark(beat, index, count, now) {
-  const hash = hashText(`${beat?.id}-${beat?.capsule}-${beat?.siteGesture}`);
-  const lane = count <= 1 ? 0.5 : index / (count - 1);
-  const drift = Math.sin(hash * 0.017) * 0.055;
-  const x = clamp01(0.14 + lane * 0.72 + drift);
-  const y = clamp01(0.24 + Math.sin(hash * 0.031 + index) * 0.18 + (index % 2) * 0.08);
-  const previousLane = count <= 1 ? 0.5 : Math.max(0, index - 1) / (count - 1);
-  return {
-    x,
-    y,
-    px: clamp01(0.14 + previousLane * 0.72),
-    py: clamp01(y + Math.sin(hash * 0.013) * 0.08),
-    kind: beatKind(beat),
-    spin: hash * 0.001,
-    time: now - 1400 - (count - index) * 610,
-  };
-}
+function makeNetwork() {
+  const nodes = [];
+  const links = [];
 
-function storyMarks(now, budget) {
-  const limit = budget?.mobile ? 5 : 7;
-  const beats = STORY_BEATS.slice(-limit);
-  return beats.map((beat, index) => storyMark(beat, index, beats.length, now));
-}
+  LAYERS.forEach((layer, layerIndex) => {
+    const span = 0.74;
+    const start = 0.13;
+    for (let i = 0; i < layer.count; i += 1) {
+      const y = start + (span * (i + 0.5)) / layer.count;
+      nodes.push({
+        id: `${layerIndex}:${i}`,
+        layer: layerIndex,
+        index: i,
+        x: layer.x + rand(-0.018, 0.018),
+        y: y + rand(-0.018, 0.018),
+        radius: rand(3.5, 8.5),
+        charge: rand(0.08, 0.78),
+        phase: rand(0, TAU),
+        hue: layer.hue,
+        name: layer.name,
+      });
+    }
+  });
 
-function colorFor(kind, alpha = 1) {
-  if (kind === 'rain') return `rgba(145,216,255,${alpha})`;
-  if (kind === 'murmur') return `rgba(196,181,253,${alpha})`;
-  if (kind === 'aurora') return `rgba(167,243,208,${alpha})`;
-  if (kind === 'dawn') return `rgba(255,209,220,${alpha})`;
-  if (kind === 'wind') return `rgba(255,240,199,${alpha})`;
-  if (kind === 'lightning') return `rgba(239,251,255,${alpha})`;
-  return `rgba(255,226,191,${alpha})`;
-}
-
-function safeMarks(items) {
-  const now = Date.now();
-  return (Array.isArray(items) ? items : [])
-    .filter((mark) => mark && Number.isFinite(mark.x) && Number.isFinite(mark.y))
-    .map((mark) => ({
-      x: clamp01(mark.x),
-      y: clamp01(mark.y),
-      px: clamp01(mark.px ?? mark.prev?.x ?? mark.x),
-      py: clamp01(mark.py ?? mark.prev?.y ?? mark.y),
-      kind: SKY_STATES.includes(mark.kind) ? mark.kind : 'cloud',
-      spin: Number.isFinite(mark.spin) ? mark.spin : 0,
-      time: Number.isFinite(mark.time) ? mark.time : now,
-    }));
-}
-
-function drawGlow(ctx, x, y, radius, kind, alpha) {
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, radius);
-  glow.addColorStop(0, colorFor(kind, alpha));
-  glow.addColorStop(1, colorFor(kind, 0));
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, TAU);
-  ctx.fill();
-}
-
-function drawHeart(ctx, env, spec) {
-  const { width: w, height: h, time: t, pulse, state, story = [] } = env;
-  const gravity = Math.min(1, story.length / 7) * 0.018;
-  const scale = Math.min(w, h) * (0.105 + pulse * 0.025 + gravity + Math.sin(t * 0.035) * 0.006);
-  ctx.save();
-  ctx.translate(w * 0.5, h * 0.58);
-  ctx.globalCompositeOperation = 'screen';
-  ctx.strokeStyle = colorFor(state, 0.74);
-  ctx.fillStyle = colorFor(state, 0.075 + gravity);
-  ctx.shadowColor = colorFor(state, 1);
-  ctx.shadowBlur = 36 + pulse * 22 + story.length * 1.2;
-  ctx.lineWidth = Math.max(1.2, scale * 0.035);
-  ctx.beginPath();
-  for (let i = 0; i <= 140; i += 1) {
-    const angle = (i / 140) * TAU;
-    const warp = 1 + Math.sin(angle * 3 + t * 0.018) * 0.04 * spec.motion;
-    const x = Math.sin(angle) ** 3 * scale * 1.2 * warp;
-    const y = -(
-      0.78 * Math.cos(angle) -
-      0.3 * Math.cos(2 * angle) -
-      0.12 * Math.cos(3 * angle) -
-      0.06 * Math.cos(4 * angle)
-    ) * scale * warp;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  for (let layer = 0; layer < LAYERS.length - 1; layer += 1) {
+    const from = nodes.filter((node) => node.layer === layer);
+    const to = nodes.filter((node) => node.layer === layer + 1);
+    from.forEach((source) => {
+      const targets = [...to].sort((a, b) => Math.abs(a.y - source.y) - Math.abs(b.y - source.y)).slice(0, 4);
+      targets.forEach((target, targetIndex) => {
+        links.push({
+          source,
+          target,
+          weight: rand(0.16, 0.92) * (1 - targetIndex * 0.12),
+          phase: rand(0, TAU),
+        });
+      });
+    });
   }
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
+
+  return { nodes, links };
+}
+
+function drawText(ctx, text, x, y, size, alpha = 1, align = 'left') {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = 'rgba(255,248,239,0.92)';
+  ctx.font = `${size}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+  ctx.textAlign = align;
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
   ctx.restore();
 }
 
-function drawMemory(ctx, env) {
-  const { width: w, height: h, time: t, active, pulse, rhythm } = env;
-  active.forEach((mark, index) => {
-    const age = Math.min(1, (Date.now() - mark.time) / 8200);
-    const life = 1 - age;
-    if (life <= 0.02) return;
-    const cx = mark.x * w;
-    const cy = mark.y * h;
-    const base = Math.min(w, h) * (0.04 + index * 0.004 + pulse * 0.02);
+function drawNetwork(ctx, network, signals, pointer, frame, width, height, intensity) {
+  const t = frame * 0.016;
+  const bg = ctx.createLinearGradient(0, 0, width, height);
+  bg.addColorStop(0, '#03030a');
+  bg.addColorStop(0.42, '#090a1d');
+  bg.addColorStop(1, '#05020b');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  const halo = ctx.createRadialGradient(width * 0.5, height * 0.5, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.58);
+  halo.addColorStop(0, `rgba(145,216,255,${0.09 + intensity * 0.08})`);
+  halo.addColorStop(0.48, 'rgba(196,181,253,0.08)');
+  halo.addColorStop(1, 'rgba(255,226,191,0)');
+  ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  network.links.forEach((link) => {
+    const sx = link.source.x * width;
+    const sy = link.source.y * height;
+    const tx = link.target.x * width;
+    const ty = link.target.y * height;
+    const activity = clamp((link.source.charge + link.target.charge) * 0.5 + Math.sin(t * 2 + link.phase) * 0.2, 0, 1);
+    const alpha = 0.035 + activity * link.weight * 0.32;
+    ctx.strokeStyle = `rgba(255,248,239,${alpha})`;
+    ctx.lineWidth = 0.55 + activity * 1.8;
+    ctx.beginPath();
+    const mx = (sx + tx) * 0.5;
+    const bend = Math.sin(t + link.phase) * 18;
+    ctx.moveTo(sx, sy);
+    ctx.quadraticCurveTo(mx, (sy + ty) * 0.5 + bend, tx, ty);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  signals.forEach((signal) => {
+    const link = network.links[signal.linkIndex % network.links.length];
+    if (!link) return;
+    const p = signal.progress;
+    const sx = link.source.x * width;
+    const sy = link.source.y * height;
+    const tx = link.target.x * width;
+    const ty = link.target.y * height;
+    const cx = (sx + tx) * 0.5;
+    const cy = (sy + ty) * 0.5 + Math.sin(t + link.phase) * 18;
+    const x = (1 - p) * (1 - p) * sx + 2 * (1 - p) * p * cx + p * p * tx;
+    const y = (1 - p) * (1 - p) * sy + 2 * (1 - p) * p * cy + p * p * ty;
+    const radius = 2.5 + signal.force * 9;
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, radius * 4);
+    glow.addColorStop(0, `rgba(${signal.hue},0.95)`);
+    glow.addColorStop(1, `rgba(${signal.hue},0)`);
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(x, y, radius * 4, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = `rgba(255,255,255,${0.62 + signal.force * 0.28})`;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, TAU);
+    ctx.fill();
+  });
+  ctx.restore();
+
+  network.nodes.forEach((node) => {
+    const x = node.x * width;
+    const y = node.y * height;
+    const pulse = clamp(node.charge + Math.sin(t * 3 + node.phase) * 0.18, 0, 1);
+    const r = node.radius + pulse * 11;
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    ctx.strokeStyle = colorFor(mark.kind, 0.2 + life * 0.42);
-    ctx.fillStyle = colorFor(mark.kind, 0.035 + life * 0.06);
-    ctx.shadowColor = colorFor(mark.kind, 0.9);
-    ctx.shadowBlur = 22 * life;
-    ctx.lineWidth = 0.8 + pulse * 1.4;
-    for (let ring = 0; ring < 3; ring += 1) {
-      const radius = base + age * Math.min(w, h) * (0.18 + ring * 0.09);
-      ctx.globalAlpha = life * (0.46 - ring * 0.1);
-      ctx.beginPath();
-      for (let p = 0; p <= 80; p += 1) {
-        const angle = (p / 80) * TAU;
-        const r = radius + Math.sin(angle * 5 + t * 0.035 + mark.spin) * (4 + rhythm * 0.55) * life;
-        const x = cx + Math.cos(angle) * r;
-        const y = cy + Math.sin(angle) * r * (0.62 + pulse * 0.24);
-        if (p === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.closePath();
-      ctx.stroke();
-    }
-    ctx.globalAlpha = life * 0.34;
+    ctx.shadowColor = `rgba(${node.hue},1)`;
+    ctx.shadowBlur = 12 + pulse * 34;
+    ctx.fillStyle = `rgba(${node.hue},${0.08 + pulse * 0.32})`;
+    ctx.strokeStyle = `rgba(${node.hue},${0.36 + pulse * 0.48})`;
+    ctx.lineWidth = 0.7 + pulse * 1.7;
     ctx.beginPath();
-    ctx.moveTo(mark.px * w, mark.py * h);
-    ctx.quadraticCurveTo(
-      ((mark.px + mark.x) * 0.5) * w + Math.sin(t * 0.03 + index) * 24 * life,
-      ((mark.py + mark.y) * 0.5) * h - Math.cos(t * 0.026 + index) * 18,
-      cx,
-      cy,
-    );
-    ctx.stroke();
-    ctx.restore();
-  });
-}
-
-function drawStoryThread(ctx, env) {
-  const { width: w, height: h, time: t, story, pulse, rhythm } = env;
-  if (!story.length) return;
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 0.9 + pulse * 0.8;
-  ctx.shadowBlur = 12 + rhythm * 0.08;
-  story.forEach((mark, index) => {
-    const x = mark.x * w;
-    const y = mark.y * h;
-    const wobble = Math.sin(t * 0.018 + mark.spin + index) * 8;
-    ctx.globalAlpha = 0.08 + pulse * 0.08;
-    ctx.strokeStyle = colorFor(mark.kind, 0.26);
-    ctx.shadowColor = colorFor(mark.kind, 0.82);
-    ctx.beginPath();
-    ctx.arc(x, y, Math.min(w, h) * (0.008 + index * 0.001), 0, TAU);
-    ctx.stroke();
-    if (index > 0) {
-      const prev = story[index - 1];
-      ctx.globalAlpha = 0.045 + pulse * 0.06;
-      ctx.beginPath();
-      ctx.moveTo(prev.x * w, prev.y * h);
-      ctx.quadraticCurveTo((prev.x + mark.x) * 0.5 * w, (prev.y + mark.y) * 0.5 * h + wobble, x, y);
-      ctx.stroke();
-    }
-  });
-  ctx.restore();
-}
-
-function drawGlyph(ctx, env) {
-  const { width: w, height: h, time: t, active, state, pulse, rhythm, story = [] } = env;
-  const cx = w - Math.min(72, w * 0.16);
-  const cy = Math.min(72, h * 0.16);
-  const radius = Math.min(w, h) * 0.04;
-  const spokes = Math.max(3, Math.min(8, story.length || (state === 'rain' ? 5 : state === 'lightning' ? 3 : state === 'wind' ? 4 : 6)));
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ctx.translate(cx, cy);
-  ctx.rotate(t * 0.01 + rhythm * 0.015);
-  ctx.strokeStyle = colorFor(state, 0.58);
-  ctx.shadowColor = colorFor(state, 1);
-  ctx.shadowBlur = 24;
-  ctx.lineWidth = 1.4;
-  for (let i = 0; i < spokes; i += 1) {
-    const angle = (i / spokes) * TAU + Math.sin(t * 0.025 + i) * 0.08;
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(angle) * radius * 0.35, Math.sin(angle) * radius * 0.35);
-    ctx.lineTo(Math.cos(angle) * radius * (1.15 + pulse * 0.5), Math.sin(angle) * radius * (1.15 + pulse * 0.5));
-    ctx.stroke();
-  }
-  if (active.length || story.length) {
-    ctx.globalAlpha = 0.34;
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * (1.5 + pulse * 0.8), 0, TAU);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function drawVisualScore(ctx, env) {
-  const { width: w, height: h, time: t, active, state, pulse, rhythm, budget, clock } = env;
-  if (!active.length) return;
-  const score = active.slice(-(budget.mobile ? 6 : 9));
-  const phase = Number.isFinite(clock?.phase) ? clock.phase : 0;
-  const beat = Number.isFinite(clock?.beat) ? clock.beat : 0;
-  const phraseDrift = Number.isFinite(clock?.phrase) ? Math.sin(clock.phrase * 0.65) : 0;
-  const baseY = h * (0.78 + phraseDrift * 0.012);
-  const span = Math.min(w * 0.72, 420);
-  const startX = (w - span) * 0.5;
-  const stepX = span / Math.max(1, score.length - 1);
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.strokeStyle = colorFor(state, 0.12 + pulse * 0.18);
-  ctx.lineWidth = 1;
-  for (let line = -1; line <= 1; line += 1) {
-    ctx.beginPath();
-    ctx.moveTo(startX - 8, baseY + line * 12);
-    ctx.lineTo(startX + span + 8, baseY + line * 12);
-    ctx.stroke();
-  }
-  score.forEach((mark, index) => {
-    const age = Math.min(1, (Date.now() - mark.time) / 7200);
-    const life = 1 - age;
-    const phrase = Math.sin(mark.x * 5 + mark.y * 7 + mark.spin + beat * 0.03);
-    const clockLift = Math.sin((phase + index / Math.max(1, score.length)) * TAU) * (2.5 + rhythm * 0.08);
-    const x = startX + index * stepX;
-    const y = baseY - phrase * 30 - rhythm * 1.2 - clockLift;
-    const size = 3.5 + life * 6 + pulse * 5 + Math.max(0, clockLift) * 0.12;
-    ctx.globalAlpha = 0.16 + life * 0.45;
-    ctx.strokeStyle = colorFor(mark.kind, 0.36 + life * 0.36);
-    ctx.fillStyle = colorFor(mark.kind, 0.05 + life * 0.1);
-    ctx.shadowColor = colorFor(mark.kind, 0.9);
-    ctx.shadowBlur = 8 + life * 14;
-    ctx.beginPath();
-    ctx.ellipse(x, y, size * 1.45, size, Math.sin(t * 0.012 + index + phase) * 0.35, 0, TAU);
+    ctx.arc(x, y, r, 0, TAU);
     ctx.fill();
     ctx.stroke();
-    if (index > 0) {
-      const prev = score[index - 1];
-      const prevPhrase = Math.sin(prev.x * 5 + prev.y * 7 + prev.spin + beat * 0.03);
-      ctx.globalAlpha = 0.1 + life * 0.24;
-      ctx.beginPath();
-      ctx.moveTo(x - stepX, baseY - prevPhrase * 30 - rhythm * 1.2);
-      ctx.quadraticCurveTo(x - stepX * 0.5, baseY - (prevPhrase + phrase) * 15 - Math.sin(t * 0.02 + phase) * 8, x, y);
-      ctx.stroke();
-    }
+    ctx.fillStyle = `rgba(255,255,255,${0.34 + pulse * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(x, y, 1.7 + pulse * 2.5, 0, TAU);
+    ctx.fill();
+    ctx.restore();
   });
-  ctx.restore();
+
+  if (pointer) {
+    const age = Math.min(1, (performance.now() - pointer.time) / 1200);
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.strokeStyle = `rgba(255,226,191,${1 - age})`;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.arc(pointer.x * width, pointer.y * height, 24 + age * 120, 0, TAU);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  LAYERS.forEach((layer) => {
+    drawText(ctx, layer.name, layer.x * width, height * 0.075, Math.max(9, Math.min(12, width / 92)), 0.55, 'center');
+  });
+
+  drawText(ctx, 'NEURAL FIELD / MIRROR CARTOGRAPHER', width * 0.055, height * 0.055, Math.max(14, Math.min(24, width / 44)), 0.95);
+  drawText(ctx, 'not a literal brain scan — a working interface map of input → symbol → context → inference → output', width * 0.055, height * 0.095, Math.max(9, Math.min(13, width / 88)), 0.55);
+
+  const caption = CAPTIONS[Math.floor(frame / 150) % CAPTIONS.length];
+  drawText(ctx, caption, width * 0.5, height * 0.925, Math.max(11, Math.min(16, width / 70)), 0.78, 'center');
 }
 
-function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
+function useNeuralCanvas(network, signals, pointer, intensity) {
   const ref = useRef(null);
+  const stateRef = useRef({ signals, pointer, intensity });
+
+  useEffect(() => {
+    stateRef.current = { signals, pointer, intensity };
+  }, [signals, pointer, intensity]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -286,16 +202,10 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
     const ctx = canvas.getContext('2d', { alpha: false });
     let raf = 0;
     let frame = 0;
-    const stars = seed(180, (i) => ({ i, x: Math.random(), y: Math.random(), r: 0.35 + Math.random() * 1.8, s: 0.3 + Math.random() * 1.7 }));
-    const motes = seed(68, (i) => ({ i, x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 2.2, p: Math.random() * TAU, s: 0.4 + Math.random() * 1.9 }));
-    const veins = seed(18, (i) => ({ i, y: 0.08 + Math.random() * 0.76, p: Math.random() * TAU, a: 18 + Math.random() * 72 }));
-    const rain = seed(150, (i) => ({ i, x: Math.random(), y: Math.random(), l: 16 + Math.random() * 54, s: 5 + Math.random() * 13 }));
-    const ecology = createCreatureWeather();
-    const comets = createGestureComets();
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      const ratio = Math.min(PERFORMANCE_BUDGET.maxPixelRatio, window.devicePixelRatio || 1);
+      const ratio = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = Math.max(1, Math.floor(rect.width * ratio));
       canvas.height = Math.max(1, Math.floor(rect.height * ratio));
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -304,111 +214,8 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
     const loop = () => {
       frame += 1;
       const rect = canvas.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-      const budget = responsiveBudget(width, height);
-      const spec = skyState(state);
-      const story = safeMarks(storyMarks(Date.now(), budget));
-      const active = [...story, ...safeMarks(marks)].slice(-(budget.mobile ? 12 : 20));
-      const env = { width, height, time: frame, active, story, budget, state, pulse, rhythm, clock: clockSnapshot, now: Date.now() };
-
-      const sky = ctx.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, spec.sky[0]);
-      sky.addColorStop(0.5, spec.sky[1]);
-      sky.addColorStop(1, spec.sky[2]);
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = sky;
-      ctx.fillRect(0, 0, width, height);
-
-      drawGlow(ctx, width * 0.22, height * 0.18, width * 0.48, state === 'rain' ? 'rain' : 'clear', state === 'clear' ? 0.28 : 0.11);
-      drawGlow(ctx, width * 0.82, height * 0.16, width * 0.42, state === 'murmur' ? 'murmur' : state === 'aurora' ? 'aurora' : 'dawn', 0.1 + pulse * 0.1);
-      if (state === 'dawn') drawGlow(ctx, width * 0.5, height * 1.03, width * 0.7, 'dawn', 0.42);
-
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      stars.slice(0, Math.min(stars.length, budget.stars || stars.length)).forEach((star) => {
-        ctx.globalAlpha = Math.max(0, 0.12 + Math.sin(frame * 0.022 * star.s + star.i) * 0.13 + (state === 'clear' ? 0.22 : 0));
-        ctx.fillStyle = '#fff8ef';
-        ctx.beginPath();
-        ctx.arc(star.x * width, star.y * height * 0.76, star.r, 0, TAU);
-        ctx.fill();
-      });
-      veins.slice(0, budget.mobile ? 7 : veins.length).forEach((vein) => {
-        const pull = active.reduce((sum, mark) => sum + Math.sin(mark.x * 8 + mark.y * 5 + vein.i) * 0.18, 0);
-        const gradient = ctx.createLinearGradient(0, 0, width, 0);
-        gradient.addColorStop(0, colorFor(state, 0));
-        gradient.addColorStop(0.5, colorFor(state, 0.09 + pulse * 0.12));
-        gradient.addColorStop(1, colorFor(state, 0));
-        ctx.strokeStyle = gradient;
-        ctx.globalAlpha = state === 'wind' || state === 'murmur' || state === 'aurora' ? 0.76 : 0.32;
-        ctx.lineWidth = 1 + pulse * 3;
-        ctx.beginPath();
-        for (let x = -60; x <= width + 60; x += 18) {
-          const y = height * vein.y + Math.sin(x * 0.01 + frame * 0.018 + vein.p + pull) * (vein.a + pulse * 46);
-          if (x === -60) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-      });
-      motes.slice(0, Math.min(motes.length, budget.pollen || motes.length)).forEach((mote) => {
-        const drift = state === 'wind' || state === 'murmur' ? 2.9 : 1.05;
-        const x = ((mote.x * width + frame * mote.s * drift) % (width + 90)) - 45;
-        const y = mote.y * height + Math.sin(frame * 0.018 + mote.p) * 20;
-        ctx.globalAlpha = 0.07 + pulse * 0.2;
-        ctx.fillStyle = colorFor(state, 0.62);
-        ctx.beginPath();
-        ctx.arc(x, y, mote.r, 0, TAU);
-        ctx.fill();
-      });
-      ctx.restore();
-
-      drawStoryThread(ctx, env);
-      drawCreatureWeather(ctx, ecology, env);
-      drawGestureComets(ctx, comets, env);
-      drawMemory(ctx, env);
-
-      if (state === 'rain') {
-        ctx.save();
-        ctx.globalCompositeOperation = 'screen';
-        ctx.strokeStyle = colorFor('rain', 0.5 + pulse * 0.22);
-        ctx.lineWidth = 1;
-        rain.slice(0, Math.min(rain.length, budget.rainDrops || rain.length)).forEach((drop) => {
-          const y = ((drop.y * height + frame * drop.s * (1 + rhythm * 0.03)) % (height + 90)) - 70;
-          const x = drop.x * width + Math.sin(frame * 0.011 + drop.i) * 18;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          ctx.lineTo(x - 8, y + drop.l);
-          ctx.stroke();
-        });
-        ctx.restore();
-      }
-
-      if (state === 'lightning' && (Math.sin(frame * 0.12) > 0.72 || pulse > 0.82)) {
-        ctx.save();
-        ctx.globalCompositeOperation = 'screen';
-        ctx.fillStyle = colorFor('lightning', 0.14 + pulse * 0.08);
-        ctx.fillRect(0, 0, width, height);
-        ctx.strokeStyle = colorFor('lightning', 0.82);
-        ctx.shadowColor = colorFor('lightning', 1);
-        ctx.shadowBlur = 32;
-        ctx.lineWidth = 3.5;
-        ctx.beginPath();
-        let x = width * (0.25 + Math.sin(frame * 0.021) * 0.16);
-        let y = 0;
-        ctx.moveTo(x, y);
-        for (let i = 0; i < 9; i += 1) {
-          x += Math.sin(frame * 0.07 + i * 2.4) * 42;
-          y += height * 0.07 + Math.abs(Math.sin(frame * 0.033 + i)) * 28;
-          ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      drawVisualScore(ctx, env);
-      drawHeart(ctx, env, spec);
-      drawGlyph(ctx, env);
+      const current = stateRef.current;
+      drawNetwork(ctx, network, current.signals, current.pointer, frame, rect.width, rect.height, current.intensity);
       raf = requestAnimationFrame(loop);
     };
 
@@ -419,81 +226,94 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot) {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
-  }, [state, pulse, marks, rhythm, clockSnapshot]);
+  }, [network]);
 
   return ref;
 }
 
 export default function App() {
-  const [state, setState] = useState('cloud');
-  const [pulse, setPulse] = useState(0.5);
-  const [marks, setMarks] = useState([]);
-  const [rhythm, setRhythm] = useState(0);
-  const [clockSnapshot, setClockSnapshot] = useState(null);
-  const lastTouch = useRef(0);
-  const musicRef = useRef(null);
-  const clockRef = useRef(null);
-  const canvasRef = useWordlessSky(state, pulse, marks, rhythm, clockSnapshot);
-
-  useEffect(() => {
-    clockRef.current = createCompositionClock();
-    musicRef.current = createSkyMusic();
-    return () => musicRef.current?.stop?.();
-  }, []);
+  const [network] = useState(() => makeNetwork());
+  const [signals, setSignals] = useState(() => network.links.slice(0, 34).map((_, index) => ({
+    linkIndex: index,
+    progress: Math.random(),
+    speed: rand(0.006, 0.022),
+    force: rand(0.22, 0.9),
+    hue: LAYERS[index % LAYERS.length].hue,
+  })));
+  const [pointer, setPointer] = useState(null);
+  const [intensity, setIntensity] = useState(0.45);
+  const canvasRef = useNeuralCanvas(network, signals, pointer, intensity);
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      const now = Date.now();
-      setPulse((value) => Math.max(PERFORMANCE_BUDGET.pulseFloor, value * PERFORMANCE_BUDGET.pulseDecay));
-      setRhythm((value) => Math.max(0, value - PERFORMANCE_BUDGET.rhythmDecay));
-      setClockSnapshot((current) => createCompositionFrame(clockRef.current, { now, state, pulse, rhythm }) ?? current);
-    }, PERFORMANCE_BUDGET.tickMs);
+      network.nodes.forEach((node) => {
+        node.charge = clamp(node.charge * 0.965 + rand(0, 0.035), 0.03, 1);
+      });
+      setSignals((items) => items.map((signal) => {
+        let progress = signal.progress + signal.speed * (0.55 + intensity);
+        let linkIndex = signal.linkIndex;
+        let force = signal.force * 0.985;
+        if (progress >= 1) {
+          progress = 0;
+          linkIndex = Math.floor(Math.random() * network.links.length);
+          const link = network.links[linkIndex];
+          link.target.charge = clamp(link.target.charge + 0.26 + force * 0.18, 0, 1);
+          force = rand(0.2, 1);
+        }
+        return { ...signal, progress, linkIndex, force };
+      }));
+      setIntensity((value) => clamp(value * 0.985 + 0.01, 0.28, 1));
+    }, 32);
     return () => window.clearInterval(id);
-  }, [state, pulse, rhythm]);
+  }, [network, intensity]);
 
-  const touch = (event) => {
-    const point = normalizePoint(event);
-    const now = Date.now();
-    setMarks((items) => {
-      const cleaned = safeMarks(items);
-      const prev = cleaned.at(-1) || null;
-      return [...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks), { ...point, prev, time: now, spin: Math.random() * TAU, kind: state }];
+  const inject = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+    const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+    const nearest = [...network.nodes]
+      .sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y))
+      .slice(0, 8);
+    nearest.forEach((node, index) => {
+      node.charge = clamp(node.charge + 0.8 - index * 0.075, 0, 1);
     });
-    const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
-    const nextPulse = Math.min(1, pulse + gesture.pulseBoost);
-    const composition = createTapCompositionFrame(clockRef.current, {
-      now,
-      state: gesture.kind,
-      pulse: nextPulse,
-      rhythm: gesture.rhythm,
-    }) ?? {
-      beat: 0,
-      phase: 0,
-      phrase: 0,
-      pulse: nextPulse,
-      rhythm: gesture.rhythm,
-      state: gesture.kind,
-    };
-    lastTouch.current = now;
-    setRhythm(gesture.rhythm);
-    setState(gesture.kind);
-    setPulse(nextPulse);
-    setClockSnapshot(composition);
-    musicRef.current?.start?.(composition);
-    musicRef.current?.pulse?.(composition);
+    setPointer({ x, y, time: performance.now() });
+    setIntensity(1);
+    setSignals((items) => [
+      ...items.slice(-42),
+      ...nearest.map((node, index) => {
+        const matching = network.links.findIndex((link) => link.source.id === node.id || link.target.id === node.id);
+        return {
+          linkIndex: matching >= 0 ? matching : Math.floor(Math.random() * network.links.length),
+          progress: 0,
+          speed: rand(0.018, 0.04),
+          force: 1 - index * 0.06,
+          hue: node.hue,
+        };
+      }),
+    ]);
   };
 
   return (
-    <main className="wordless" aria-label="wordless sky instrument">
+    <main className="neural-page" aria-label="interactive neural network visualization">
       <style>{css}</style>
-      <button className="sky" onPointerDown={touch} aria-label="touch the sky">
+      <button className="neural-canvas" onPointerDown={inject} onPointerMove={(event) => event.buttons === 1 && inject(event)} aria-label="inject signal into the neural field">
         <canvas ref={canvasRef} />
       </button>
-      <div className="orbit" aria-hidden="true">
-        {SKY_STATES.map((name) => <i key={name} className={name === state ? 'on' : ''} />)}
-      </div>
+      <section className="panel" aria-label="system legend">
+        <p className="kicker">LIVE MODEL VIEW</p>
+        <h1>Watch the network think.</h1>
+        <p>Input becomes symbolic pressure, gates choose context, inference fires, and the output state feeds back into the field.</p>
+        <div className="metrics" aria-hidden="true">
+          <span><b>{network.nodes.length}</b> nodes</span>
+          <span><b>{network.links.length}</b> links</span>
+          <span><b>{signals.length}</b> pulses</span>
+        </div>
+      </section>
     </main>
   );
 }
 
-const css = `*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;background:#050510}body{overflow:hidden;overscroll-behavior:none;touch-action:none}.wordless{min-height:100vh;color:transparent;background:#050510;-webkit-user-select:none;user-select:none}.sky{position:fixed;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;background:#050510;cursor:crosshair;touch-action:none;-webkit-tap-highlight-color:transparent}.sky canvas{display:block;width:100%;height:100%}.orbit{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:10px;padding:11px 14px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(5,5,16,.34);backdrop-filter:blur(18px);box-shadow:0 18px 70px rgba(0,0,0,.34);pointer-events:none}.orbit i{width:9px;height:9px;border-radius:999px;background:rgba(255,255,255,.24);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(255,255,255,.08);transition:transform .24s ease,background .24s ease,box-shadow .24s ease}.orbit i.on{background:#ffe2bf;box-shadow:0 0 24px #ffbe74,0 0 0 1px rgba(255,255,255,.58);transform:scale(1.52)}@media(max-width:700px){.orbit{bottom:max(14px,env(safe-area-inset-bottom));gap:8px;padding:10px 12px}.orbit i{width:8px;height:8px}}@media(prefers-reduced-motion:reduce){.orbit i{transition:none}}`;
+const css = `
+*{box-sizing:border-box}html,body,#root{min-height:100%;margin:0;background:#03030a}body{overflow:hidden;overscroll-behavior:none}.neural-page{min-height:100vh;background:#03030a;color:#fff8ef;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.neural-canvas{position:fixed;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;background:#03030a;cursor:crosshair;touch-action:none;-webkit-tap-highlight-color:transparent}.neural-canvas canvas{display:block;width:100%;height:100%}.panel{position:fixed;left:clamp(16px,4vw,54px);bottom:clamp(18px,5vw,58px);width:min(420px,calc(100vw - 32px));padding:18px 20px 20px;border:1px solid rgba(255,248,239,.14);border-radius:28px;background:linear-gradient(145deg,rgba(8,8,24,.58),rgba(8,4,16,.36));backdrop-filter:blur(22px);box-shadow:0 24px 90px rgba(0,0,0,.42);pointer-events:none}.kicker{margin:0 0 8px;font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.22em;color:rgba(255,226,191,.72)}h1{margin:0 0 8px;font-size:clamp(28px,5vw,54px);line-height:.92;letter-spacing:-.055em;font-weight:760}p{margin:0;color:rgba(255,248,239,.68);font-size:clamp(13px,2vw,16px);line-height:1.45}.metrics{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.metrics span{display:inline-flex;gap:6px;align-items:baseline;border:1px solid rgba(255,255,255,.11);border-radius:999px;padding:7px 10px;background:rgba(255,255,255,.045);font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:rgba(255,248,239,.7)}.metrics b{font-size:13px;color:#fff8ef}@media (max-width:720px){.panel{padding:14px 15px 16px;border-radius:22px}.metrics{display:none}}@media (prefers-reduced-motion:reduce){.panel{backdrop-filter:none}}
+`;
