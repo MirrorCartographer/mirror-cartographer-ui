@@ -8,7 +8,7 @@ if (!baseURL) {
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: /live\.spec\.js/,
+  testMatch: /live-hosting\.spec\.js/,
   timeout: 30000,
   expect: { timeout: 5000 },
   use: {
