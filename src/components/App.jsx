@@ -11,6 +11,7 @@ import { createCreatureWeather, drawCreatureWeather } from '../engine/creatureWe
 import { createGestureComets, drawGestureComets } from '../engine/gestureComets';
 import { createSkyMusic } from '../engine/skyMusic';
 import { createCompositionClock } from '../engine/compositionClock';
+import { createCompositionFrame, createTapCompositionFrame } from '../engine/compositionFrame';
 
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
@@ -374,11 +375,13 @@ export default function App() {
 
   useEffect(() => {
     const id = window.setInterval(() => {
+      const now = Date.now();
       setPulse((value) => Math.max(PERFORMANCE_BUDGET.pulseFloor, value * PERFORMANCE_BUDGET.pulseDecay));
       setRhythm((value) => Math.max(0, value - PERFORMANCE_BUDGET.rhythmDecay));
+      setClockSnapshot((current) => createCompositionFrame(clockRef.current, { now, state, pulse, rhythm }) ?? current);
     }, PERFORMANCE_BUDGET.tickMs);
     return () => window.clearInterval(id);
-  }, []);
+  }, [state, pulse, rhythm]);
 
   const touch = (event) => {
     const point = normalizePoint(event);
@@ -390,20 +393,18 @@ export default function App() {
     });
     const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
     const nextPulse = Math.min(1, pulse + gesture.pulseBoost);
-    const clock = clockRef.current?.tap?.({ now, state: gesture.kind, pulse: nextPulse, rhythm: gesture.rhythm }) ?? {
+    const composition = createTapCompositionFrame(clockRef.current, {
+      now,
+      state: gesture.kind,
+      pulse: nextPulse,
+      rhythm: gesture.rhythm,
+    }) ?? {
       beat: 0,
       phase: 0,
       phrase: 0,
-      energy: nextPulse,
-      state: gesture.kind,
-    };
-    const composition = {
-      state: clock.state,
-      pulse: clock.energy,
+      pulse: nextPulse,
       rhythm: gesture.rhythm,
-      beat: clock.beat,
-      phase: clock.phase,
-      phrase: clock.phrase,
+      state: gesture.kind,
     };
     lastTouch.current = now;
     setRhythm(gesture.rhythm);
