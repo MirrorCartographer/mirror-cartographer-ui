@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const liveSiteUrl = process.env.LIVE_SITE_URL;
+const liveSiteUrl = process.env.SITE_URL;
 
 test.describe('Mirror Cartographer live hosting smoke', () => {
-  test.skip(!liveSiteUrl, 'Set LIVE_SITE_URL to test a deployed Vercel, Cloudflare, Netlify, or Pages preview.');
+  test.skip(!liveSiteUrl, 'Set SITE_URL to test a deployed Vercel, Cloudflare, Netlify, or Pages preview.');
 
   test('deployed preview preserves the phone-first wordless contract', async ({ page }) => {
     const errors = [];
@@ -12,8 +12,7 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
       if (message.type() === 'error') errors.push(message.text());
     });
 
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(liveSiteUrl, { waitUntil: 'networkidle' });
+    await page.goto('/', { waitUntil: 'networkidle' });
 
     const sky = page.locator('button.sky');
     const canvas = page.locator('canvas');
