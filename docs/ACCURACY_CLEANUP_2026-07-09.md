@@ -104,3 +104,28 @@ Next action:
 3. Then connect Cloudflare Pages with build command `npm run build` and output directory `dist`.
 4. Run `Live URL Smoke` against the resulting `*.pages.dev` URL.
 5. If a gate fails, patch the smallest failing reliability issue before adding phrase memory, audio-visual coupling, or emergent composition behavior.
+
+## Self-auditing gate update 09 — 2026-07-09
+
+Latest inspected commits before this cycle showed the project had already moved through artifact workflow hardening and clock verification notes. The most recent note still required inspection of the artifact workflow from `03dd46b91b28425f086084bc332374932bfc1bc1`; commit status for that commit now reports Vercel success, but the available workflow-run lookup returned no runs, so Actions proof is still not verified.
+
+Decision: revise the blocker. Vercel is no longer assumed blocked for the inspected commit, but the system still should not add novelty until the local/browser gate proves the phone-first contract. The safest patch is to encode the no-autoplay rule directly into the smoke test.
+
+Implemented `tests/smoke.spec.js` no-autoplay probe at commit `730d53e52599777091a504d1381464fa6567bb78`. The smoke test now instruments `AudioContext`/`webkitAudioContext`, asserts that zero audio contexts exist before the first tap, then asserts that a context is created only after the user gesture. This protects mobile playback policy, avoids silent autoplay regressions, and keeps the creative surface wordless.
+
+Hosting/testing assessment:
+
+- Vercel remains suitable again if its deploy for the latest commit stays green and exposes a reachable deployment URL.
+- Cloudflare Pages remains the best independent preview lane because the app is a Vite static build with output directory `dist`.
+- Netlify remains a valid fallback for the same static artifact.
+- GitHub Pages remains lower priority unless Vite base path is explicitly configured.
+- A separate stable repo is not needed yet; use a branch or tag once the no-autoplay smoke gate passes.
+- Live proof still requires either a public Vercel deployment URL, a Cloudflare/Netlify preview URL, or a downloaded static artifact served through a browser test.
+
+Next action:
+
+1. Inspect CI/status for commit `730d53e52599777091a504d1381464fa6567bb78`.
+2. If the no-autoplay smoke gate fails, patch only the exact failing test/runtime issue.
+3. If it passes, create a stable rollback branch or tag from the passing commit.
+4. Then run `Live URL Smoke` against the current public deployment URL.
+5. Only after local smoke plus live smoke pass should the next run add or revise Composition Clock behavior.
