@@ -2,13 +2,15 @@
 
 ## Current branch decision
 
-Testing/deployment confidence remains the strongest move. The public fallback route cannot be considered real until there is a direct remote gate against the GitHub Pages URL, so this cycle prioritized making that check explicit and repeatable over adding new atmosphere, instruments, or phrase behavior.
+Testing/deployment confidence remains important, but the latest app surface regressed against the core product contract: it rendered explanatory network copy and replaced the weather/music instrument with a visible model demo. This cycle therefore branched from hosting verification back to contract recovery.
 
 ## Hosting assessment
 
-Vercel should remain the primary atmospheric host when builds are available. It is still the best public-facing surface for the living phone-first weather/music piece.
+Vercel remains the primary host because it still reports deploy status directly on commits and is the intended public atmospheric surface. GitHub Pages remains the best secondary surface for stable fallback/gallery preview, especially when Vercel has build-rate or preview reliability issues. Cloudflare Pages remains the next fallback candidate if GitHub Pages cannot be made reliable. Netlify remains viable but lower priority because it does not add enough unique confidence before Pages verification. A separate stable repository or branch is still premature unless main keeps accumulating experimental regressions that violate the phone-first contract.
 
-GitHub Pages is the best current secondary surface: not a replacement for the atmosphere, but the stable gallery/fallback route. The repo is private, so this route may still require manual repository settings: Actions must be enabled and Pages source must be GitHub Actions. Cloudflare Pages remains the next fallback candidate if GitHub Pages cannot be made reliable. Netlify is viable but does not add enough confidence to justify a third host before GitHub Pages is verified. A separate stable repo is premature unless the current private repo keeps blocking public previews.
+## Live/testing check
+
+The latest pre-cycle commit `4b2ee8392bd703b2e54088429097142546eee435` had a successful Vercel status, but commit status alone was not enough: repository inspection showed visible explanatory text, no `musicRef.current?.start?.` interaction path, and no wordless weather instrument surface. Public GitHub Pages URL fetch was not available through the current web tool path, and the available workflow-run lookup is not sufficient proof for push-triggered Pages runs. The actionable test remains the repo harness: `npm run test:phone-contract`, then `npm run test:pages-remote` once Pages is reachable.
 
 ## Preserved constraints
 
@@ -20,14 +22,12 @@ GitHub Pages is the best current secondary surface: not a replacement for the at
 
 ## Change made in this cycle
 
-The previous next action asked for Pages workflow inspection and then a remote gate against `https://mirrorcartographer.github.io/mirror-cartographer-ui/`. The repository connector could confirm the workflow file and package scripts, and it could confirm that Vercel reported success for the Pages-workflow commit, but the available workflow-run lookup only returns PR-triggered runs. An empty workflow-run result was therefore not treated as proof that the push workflow failed.
-
-A dedicated `test:pages-remote` script was added so the next run has one unambiguous command for the GitHub Pages surface. It pins `SITE_URL` to the Pages URL and reuses the existing remote gate, which already checks the app shell, bundled script assets, canvas/audio/React signals, live wiring, and live Playwright smoke path.
+Restored `src/components/App.jsx` to a wordless phone-first weather/music surface: canvas button, no visible explanatory copy, hidden story-seed weather marks, touch-driven weather state, tap-to-start `createSkyMusic`, low-count stars/motes/veins/rain, phrase-clock visual score, and the heart/weather field. This intentionally removed the visible neural-network panel rather than trying to preserve it, because visible instructional copy violates the current site contract.
 
 ## Next suggested action
 
-Run `npm run test:pages-remote` from a working checkout or CI environment. If it passes, mark GitHub Pages as a verified gallery/fallback surface and return to audio-visual coupling. If it fails with HTTP 404 or missing app shell, verify repository settings: Actions must be enabled and Pages source must be GitHub Actions. If it fails inside the live smoke path, inspect the Playwright failure before changing composition code.
+Check Vercel status for commit `7f5b2c66f5461e8eaf533e8c0f04438fabd61edd`. If it succeeds, run `npm run test:phone-contract` from a checkout or CI-capable environment and then `npm run test:pages-remote`. If the phone contract fails, fix the exact contract failure before adding composition. If both pass, return to audio-visual coupling: make the visual score expose the same phrase phase, pulse, and weather density that the audio engine is hearing, without adding visible explanatory text.
 
 ## Later branch
 
-Once public route confidence is stable, return to audio-visual coupling: make the visual score expose the same phrase phase, pulse, and weather density that the audio engine is hearing, without adding visible explanatory text.
+If regressions like the visible neural-network demo recur, create a separate experimental branch or separate gallery route for visible explainers. Keep `main` as the stable wordless phone-first weather/music instrument.
