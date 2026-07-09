@@ -17,5 +17,7 @@ run('phone contract', 'node', ['scripts/phone-contract-check.mjs']);
 run('production build', 'npm', ['run', 'build']);
 
 console.log('\nPhone static gates passed.');
+console.log('Equivalent full local gate: npm run test:gate');
 console.log('Browser smoke gate remains: npm run test:smoke');
+console.log('Live browser gate remains, when reachable: npm run test:live');
 console.log('Keep no autoplay, tap-to-start, wordless surface, and phone-first stability before adding composition layers.');
