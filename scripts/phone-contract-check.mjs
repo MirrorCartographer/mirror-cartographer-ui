@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+
+const checks = [];
+const read = (path) => fs.readFileSync(path, 'utf8');
+const assert = (name, ok, detail = '') => checks.push({ name, ok, detail });
+
+const app = read('src/components/App.jsx');
+const pkg = JSON.parse(read('package.json'));
+const smoke = read('tests/smoke.spec.js');
+const pw = read('playwright.config.js');
+
+assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
+assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > app.indexOf('const touch ='));
+assert('wordless visual surface still uses canvas button', app.includes('<button className="sky"') && app.includes('<canvas ref={canvasRef} />'));
+assert('no visible instruction copy in app body', !/>([^<]*[A-Za-z]{3,}[^<]*)</.test(app.replace(/aria-label="[^"]*"/g, '')));
+assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
+assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
+assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
+assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
+assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
+
+const failed = checks.filter((check) => !check.ok);
+for (const check of checks) {
+  console.log(`${check.ok ? 'PASS' : 'FAIL'} ${check.name}${check.detail ? ` — ${check.detail}` : ''}`);
+}
+
+if (failed.length) {
+  console.error(`\nPhone contract failed: ${failed.length}/${checks.length}`);
+  process.exit(1);
+}
+
+console.log(`\nPhone contract passed: ${checks.length}/${checks.length}`);
