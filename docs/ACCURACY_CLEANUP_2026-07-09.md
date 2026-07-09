@@ -79,3 +79,28 @@ Next action:
 3. Manually run the GitHub Actions workflow `Live URL Smoke` with that URL as `site_url`.
 4. If it passes, the project has runtime proof for the phone-first wordless contract on a public preview.
 5. If it fails, inspect the uploaded `mirror-cartographer-live-smoke-output` artifact and patch the smallest runtime issue before adding more composition behavior.
+
+## Self-rewriting forge update 04 — 2026-07-09
+
+Latest inspected commit before this cycle: `c508418e346d216814b815ec17b9757642082a41` (`Record clock verification cycle`). The latest available combined status still reports Vercel failure with the build-rate-limit target URL. The available workflow-run lookup returned no runs for that commit.
+
+Decision: continue reliability hardening instead of adding creative behavior. The previous artifact workflow used `npm run test:gate`, which includes Playwright smoke. Unlike `.github/workflows/smoke.yml` and `.github/workflows/live-smoke.yml`, the artifact workflow did not install Playwright Chromium before running the browser gate. That could make the host-independent artifact proof fail before it ever proves the site.
+
+Implemented `.github/workflows/build-artifact.yml` browser install at commit `03dd46b91b28425f086084bc332374932bfc1bc1`.
+
+Hosting/testing assessment:
+
+- Vercel is still not the best active preview lane while quota reports build-rate-limit.
+- Cloudflare Pages remains the strongest next live preview path for the current Vite static app.
+- Netlify remains a reasonable fallback if Cloudflare setup stalls.
+- GitHub Pages remains lower priority unless Vite base-path handling is explicitly configured.
+- A different repository is not needed for this reliability patch. Use a branch before larger audio/visual/composition experiments.
+- No public live URL was available through the inspected repo state, so live screenshot/runtime proof still requires a deployed URL.
+
+Next action:
+
+1. Inspect the GitHub Actions run for commit `03dd46b91b28425f086084bc332374932bfc1bc1`.
+2. If `Static Preview Artifact` passes, inspect/download the `mirror-cartographer-dist` artifact as the host-independent preview proof.
+3. Then connect Cloudflare Pages with build command `npm run build` and output directory `dist`.
+4. Run `Live URL Smoke` against the resulting `*.pages.dev` URL.
+5. If a gate fails, patch the smallest failing reliability issue before adding phrase memory, audio-visual coupling, or emergent composition behavior.
