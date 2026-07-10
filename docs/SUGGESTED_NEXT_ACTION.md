@@ -4,10 +4,11 @@
 
 Inspect the next `pages-preview.yml` workflow result before wiring `src/engine/fieldEncounter.js` into `src/components/App.jsx`.
 
-The repo now has an explicit deployment gate contract:
+The repo now has explicit contracts for both the deployment path and the newest visual membrane:
 
 - `scripts/deployment-gate-contract-check.mjs`
 - `npm run test:deployment-gate`
+- `scripts/phone-contract-check.mjs` checks that `possibility-field.css` is loaded, nonverbal, reduced-motion safe, mobile-softened, and unable to intercept taps
 - `npm run test:pages-preview` runs `test:deployment-gate` before the static/field/build checks
 
 This protects the canonical Pages path: build, deploy, then live-verify the deployed URL. It also prevents silent return of the older deploy-only Pages workflow.
@@ -18,7 +19,9 @@ The site already has an explicit internal composer API:
 
 `composition frame + phrase memory + inferred expectation + interaction signals -> possible futures -> selected field encounter`
 
-But deployment confidence is the active constraint. Vercel can still serve a shell, but status checks are currently polluted by build-rate-limit failures. GitHub Pages is the stronger fallback now that the verified workflow is canonical and contract-protected.
+But deployment confidence is still the active constraint. Vercel can still serve a shell, but status checks are currently polluted by build-rate-limit failures. GitHub Pages is the stronger fallback now that the verified workflow is canonical and contract-protected.
+
+A visual-only `possibility-field.css` layer has been added and contract-protected. Do not add another decorative layer next. The next capability patch should connect the existing `fieldEncounter` selector to internal visual pressure, but only after the verified Pages gate has evidence.
 
 ## Preserve
 
@@ -27,6 +30,8 @@ But deployment confidence is the active constraint. Vercel can still serve a she
 - no visible explanatory copy
 - phone-first canvas stability
 - low CPU scheduling
+- reduced-motion safety
+- no tap interception by atmospheric layers
 - no audio changes while the deploy gate is ambiguous
 - weather remains a bias, not the whole decision
 - expectation remains inferred and uncertain, not a claim about the person
