@@ -4,6 +4,7 @@ const checks = [];
 const read = (path) => fs.readFileSync(path, 'utf8');
 const assert = (name, ok, detail = '') => checks.push({ name, ok, detail });
 
+const main = read('src/main.jsx');
 const app = read('src/components/App.jsx');
 const pkg = JSON.parse(read('package.json'));
 const smoke = read('tests/smoke.spec.js');
@@ -13,6 +14,7 @@ const clock = read('src/engine/compositionClock.js');
 const frame = read('src/engine/compositionFrame.js');
 const phraseMemory = read('src/engine/phraseMemory.js');
 const music = read('src/engine/skyMusic.js');
+const possibilityField = read('src/assets/possibility-field.css');
 
 const startIndex = music.indexOf('async function start');
 const ensureIndex = music.indexOf('function ensure');
@@ -61,6 +63,12 @@ assert('phrase memory exposes read-only contour snapshot', phraseMemory.includes
 assert('audio engine is exported as lazy factory', exportedFactoryIndex >= 0 && ensureIndex > exportedFactoryIndex && startIndex > ensureIndex);
 assert('audio context constructor stays behind ensure/start path', audioConstructorIndex > ensureIndex && audioConstructorIndex < startIndex);
 assert('app constructs music object without starting audio', app.includes('musicRef.current = createSkyMusic();') && app.indexOf('musicRef.current = createSkyMusic();') < touchIndex);
+assert('possibility field stylesheet is loaded by app entrypoint', main.includes("import './assets/possibility-field.css';"));
+assert('possibility field cannot intercept taps', possibilityField.includes('#root::before') && possibilityField.includes('#root::after') && possibilityField.includes('pointer-events: none'));
+assert('possibility field stays below touch targets', possibilityField.includes('z-index: 2') && possibilityField.includes('canvas,') && possibilityField.includes('button,') && possibilityField.includes('z-index: 3'));
+assert('possibility field has mobile reduced intensity', possibilityField.includes('@media (max-width: 680px)') && possibilityField.includes('animation-duration: 34s') && possibilityField.includes('animation-duration: 20s'));
+assert('possibility field honors reduced motion', possibilityField.includes('@media (prefers-reduced-motion: reduce)') && possibilityField.includes('animation: none') && possibilityField.includes('will-change: auto'));
+assert('possibility field remains nonverbal CSS only', !/content:\s*["'][A-Za-z]{2,}/.test(possibilityField));
 
 const failed = checks.filter((check) => !check.ok);
 for (const check of checks) {
