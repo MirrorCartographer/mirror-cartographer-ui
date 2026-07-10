@@ -2,7 +2,7 @@
 
 ## Current branch decision
 
-Reliability still leads, but novelty is not permanently blocked. The Pages deployment path is now unambiguous: the deploy-only `.github/workflows/pages.yml` workflow was removed, leaving `pages-preview.yml` as the canonical GitHub Pages path because it builds, deploys, and verifies the live URL.
+Reliability still leads, but novelty is not permanently blocked. The Pages deployment path is now unambiguous and contract-protected: the deploy-only `.github/workflows/pages.yml` workflow was removed, `pages-preview.yml` remains canonical, and `scripts/deployment-gate-contract-check.mjs` now guards that shape.
 
 Do not wire the new field encounter API into the app until the verified Pages workflow result is inspected. If that gate is green, allow exactly one tiny internal pressure patch with no visible text and no audio changes in the same cycle.
 
@@ -15,10 +15,11 @@ Vercel remains suitable as the atmospheric primary host when build quota is avai
 Available checks this cycle:
 
 - Repository inspection confirmed `pages-preview.yml` includes post-deploy live verification.
-- The older deploy-only Pages workflow was present and redundant, then removed.
+- The older deploy-only Pages workflow is absent.
 - GitHub status for the recent handoff commit still showed Vercel failing with a build-rate-limit URL.
 - No GitHub Actions workflow runs were returned for the checked handoff commit by the available commit-run tool.
-- Public live fetch was not enough to prove the full phone interaction path; the canonical proof remains the live remote gate.
+- Public live fetch alone is not enough to prove the full phone interaction path; the canonical proof remains the live remote gate.
+- `test:pages-preview` now starts with `test:deployment-gate` so the workflow shape is checked before build/upload.
 
 Reliable gate order is now:
 
@@ -45,6 +46,8 @@ Reliable gate order is now:
 - `11b9747c54bd8d5086183e882af3a04f9c707db7`: phone contract protection for hidden-tab behavior.
 - `daf5eb6fa833c74cf5e1df132f4381b4c5081e51`: `scripts/preview-url-check.mjs` now tries GitHub Pages before Vercel by default, reducing false confidence loss from Vercel quota/build-limit pages.
 - `1ef814418ad1077560866accb142bc9606330bc2`: removed `.github/workflows/pages.yml`, the older Pages deploy workflow that did not run live verification.
+- `e42207f205e3cfc885c2f6f06fe0935ab8726900`: added the deployment gate contract check.
+- `83634584386f5f54ae4663ec87d51b3c86454f10`: wired the deployment gate contract into `test:pages-preview`.
 
 ## Next suggested action
 
