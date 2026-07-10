@@ -29,6 +29,11 @@ const visualScore = visualScoreIndex >= 0 && visualScoreEndIndex > visualScoreIn
   : '';
 const skyHookIndex = app.indexOf('function useWordlessSky');
 const skyHook = skyHookIndex >= 0 ? app.slice(skyHookIndex) : '';
+const hiddenIndex = skyHook.indexOf('if (document.hidden)');
+const frameIndex = skyHook.indexOf('frame += 1');
+const hiddenBranch = hiddenIndex >= 0 && frameIndex > hiddenIndex
+  ? skyHook.slice(hiddenIndex, frameIndex)
+  : '';
 
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > touchIndex);
@@ -50,8 +55,8 @@ assert('visual score reads phrase phase and density', visualScore.includes('cloc
 assert('visual score applies phrase-density to geometry', visualScore.includes('phrasePhase * TAU') && visualScore.includes('baseY') && visualScore.includes('span') && visualScore.includes('densitySpread'));
 assert('clock snapshot reaches canvas after tap', app.includes('setClockSnapshot(composition)') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot'));
 assert('phrase contour reaches canvas without visible copy', app.includes('const [phraseContour, setPhraseContour]') && app.includes('setPhraseContour(') && app.includes('useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContour)'));
-assert('hidden tab skips canvas rendering work', skyHook.includes('document.hidden') && skyHook.includes('requestAnimationFrame(loop)') && skyHook.indexOf('document.hidden') < skyHook.indexOf('frame += 1'));
-assert('visibility listener resumes canvas sizing cleanly', skyHook.includes("document.addEventListener('visibilitychange'") && skyHook.includes("document.removeEventListener('visibilitychange'"));
+assert('hidden tab stops scheduling canvas frames', hiddenBranch.includes('raf = 0') && !hiddenBranch.includes('requestAnimationFrame(loop)'));
+assert('visibility listener owns one clean animation restart', skyHook.includes("document.addEventListener('visibilitychange'") && skyHook.includes("document.removeEventListener('visibilitychange'") && skyHook.includes('cancelAnimationFrame(raf)') && skyHook.includes('if (!raf)') && skyHook.includes('raf = requestAnimationFrame(loop)'));
 assert('composition frame projector exists without browser globals', frame.includes('createCompositionFrame') && !frame.includes('window.') && !frame.includes('document.'));
 assert('composition frame projector preserves wordless composition shape', frame.includes('beat: projected.beat') && frame.includes('phase: projected.phase') && frame.includes('phrase: projected.phrase'));
 assert('composition frame projector is imported by app', app.includes('createCompositionFrame') && app.includes('createTapCompositionFrame'));
