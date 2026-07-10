@@ -2,65 +2,62 @@
 
 ## Current best next move
 
-Inspect the next `pages-preview.yml` workflow result before wiring `src/engine/fieldEncounter.js` into `src/components/App.jsx`.
+Repair `useWordlessSky` so a hidden document stops scheduling canvas frames and visibility restoration starts exactly one animation loop.
 
-The repo now has explicit contracts for both the deployment path and the newest visual membrane:
-
-- `scripts/deployment-gate-contract-check.mjs`
-- `npm run test:deployment-gate`
-- `scripts/phone-contract-check.mjs` checks that `possibility-field.css` is loaded, nonverbal, reduced-motion safe, mobile-softened, and unable to intercept taps
-- `npm run test:pages-preview` runs `test:deployment-gate` before the static/field/build checks
-
-This protects the canonical Pages path: build, deploy, then live-verify the deployed URL. It also prevents silent return of the older deploy-only Pages workflow.
+The phone contract now distinguishes between merely skipping drawing and actually pausing animation scheduling. The current implementation still calls `requestAnimationFrame(loop)` while `document.hidden`, so the new contract should fail until the runtime is repaired.
 
 ## Why this is next
 
-The site already has an explicit internal composer API:
+This is a concrete phone reliability defect:
 
-`composition frame + phrase memory + inferred expectation + interaction signals -> possible futures -> selected field encounter`
+- hidden tabs still wake the animation callback
+- repeated visibility transitions need explicit single-loop ownership
+- the fix can remain isolated to canvas scheduling
+- no audio behavior, visible words, interaction semantics, or visual design must change
 
-But deployment confidence is still the active constraint. Vercel can still serve a shell, but status checks are currently polluted by build-rate-limit failures. GitHub Pages is the stronger fallback now that the verified workflow is canonical and contract-protected.
+Do not wire `fieldEncounter` or add another decorative layer during this repair.
 
-A visual-only `possibility-field.css` layer has been added and contract-protected. Do not add another decorative layer next. The next capability patch should connect the existing `fieldEncounter` selector to internal visual pressure, but only after the verified Pages gate has evidence.
+## Required runtime shape
+
+Inside `useWordlessSky`:
+
+- the loop must clear its active RAF marker when entered
+- when `document.hidden`, return without scheduling another frame
+- the visibility handler must cancel and clear an active frame when hidden
+- when visible, resize and request a frame only when no frame is already active
+- cleanup must cancel the active frame and remove both listeners
 
 ## Preserve
 
 - no autoplay
 - tap-to-start only
 - no visible explanatory copy
-- phone-first canvas stability
-- low CPU scheduling
+- no audio changes
+- no duplicate animation loops
 - reduced-motion safety
-- no tap interception by atmospheric layers
-- no audio changes while the deploy gate is ambiguous
-- weather remains a bias, not the whole decision
-- expectation remains inferred and uncertain, not a claim about the person
+- existing canvas output while visible
+- GitHub Pages as canonical static fallback
+- Vercel as secondary while build-rate limits persist
 
 ## Test route
 
-Run or inspect:
+Run:
 
-- `npm run test:deployment-gate`
-- `npm run test:field-encounter`
 - `npm run test:phone-contract`
-- `npm run test:composer-cycle`
-- `pages-preview.yml` deploy + `test:remote-gate`
+- `npm run build`
+- `npm run test:smoke`
+- `npm run test:pages-preview`
 
-Host confidence notes:
+Then inspect the Pages deployment and live remote gate.
 
-- Current repo is Vite.
-- `scripts/preview-url-check.mjs` tries GitHub Pages before Vercel by default.
-- Vercel is convenient for preview branches only when not rate-limited.
-- GitHub Pages is the stable static fallback if `pages-preview.yml` passes.
-- Cloudflare Pages becomes the stronger host if the site gains edge/state endpoints, interaction capsules, or GitHub-write functions.
-- Netlify is viable but does not currently solve a more specific problem than Cloudflare or GitHub Pages.
+## Hosting/testing gate
 
-## Implementation target after gate clarity
+- GitHub Pages remains the current canonical static deployment path because `pages-preview.yml` builds, deploys, and live-verifies.
+- Vercel remains suitable for branch previews when quota is available, but rate-limit status must not be treated as an app regression.
+- Cloudflare Pages is the next hosting branch only when edge/state behavior is introduced or Pages reliability repeatedly fails.
+- Netlify does not currently solve a distinct problem.
+- A separate stable repo remains unnecessary while the canonical workflow and rollback branch exist.
 
-On each intentional tap, compute a field encounter from:
+## Next action after repair
 
-- the tap composition frame
-- phrase memory contour
-- rough interaction features such as tap velocity, dwell time, or repetition
-
-Then use the encounter internally to alter visual pressure only. Do not render the encounter as text. Do not couple it to audio in the same first wiring cycle.
+After the hidden-tab contract, local smoke, and Pages gate are green, allow one small capability patch. The preferred patch is to wire `fieldEncounter` into visual pressure only, with no visible text and no audio coupling.
