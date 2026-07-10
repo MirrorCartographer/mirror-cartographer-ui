@@ -2,21 +2,27 @@
 
 ## Current branch decision
 
-Stay on the stability path. The latest handoff correctly superseded the earlier phrase-contour novelty note: before adding sensory density, the phone-first site needed a CPU/battery reliability patch. This cycle implemented hidden-tab rendering throttling and protected it with the phone contract. Do not add visual novelty until the combined local and Pages gates pass.
+Reliability still leads, but novelty is not permanently blocked. The right rule is: allow one tiny novelty patch only after the active phone/static/live gates are coherent. This cycle did not wire the new field encounter API into the app because the preview and hosting probes still had a mismatch: the remote gate preferred GitHub Pages first, while the standalone preview URL check preferred Vercel first despite current Vercel build-rate-limit noise.
 
 ## Hosting assessment
 
-Vercel remains suitable as the atmospheric primary host when build quota is available, but recent Vercel failures should still be classified as quota/build-rate-limit or dashboard-shell risk unless a reachable app shell proves otherwise. GitHub Pages is currently the strongest fallback because the repo has a dedicated Pages workflow that builds with the Pages base path, uploads the Pages artifact, deploys it, and then runs a live remote gate against the deployed URL. Cloudflare Pages remains the next serious fallback if GitHub Pages cannot expose a stable built shell. Netlify remains lower priority because it would add another hosting surface without improving the existing gate. A separate stable repo is still premature; prefer protected branches, preview branches, or a separate experimental route first.
+Vercel remains suitable as the atmospheric primary host when build quota is available, but current status checks still classify Vercel as unreliable for gating because the latest visible status is a build-rate-limit failure, not a verified app-code failure. GitHub Pages is the strongest current fallback because `pages-preview.yml` builds, deploys, and then runs the live remote gate against the deployed Pages URL. Cloudflare Pages remains the next serious fallback if the project needs edge/state endpoints or if GitHub Pages cannot serve a stable built shell. Netlify remains lower priority because it would add another host without solving a more specific current problem. A separate stable repo is still premature; prefer workflow cleanup and preview branches first.
 
 ## Live/testing check
 
-The available tool path could read repository files and patch GitHub, but could not execute npm locally or conclusively fetch the live Pages/Vercel shell from this run. Treat this as a code-gate repair cycle, not a proven live deployment cycle. The workflow still encodes the hosting/testing gate: `test:pages-preview` runs before artifact upload, then `test:remote-gate` runs after deployment using the deployed Pages URL.
+Available checks this cycle:
+
+- Public fetch reached the Vercel root as a live HTML shell, but GitHub status still reports Vercel build-rate-limit failure.
+- Public search/fetch did not conclusively prove the GitHub Pages shell from this environment.
+- Repository inspection showed two Pages workflows: `pages-preview.yml` includes post-deploy live verification; `pages.yml` deploys without the live remote gate.
+- The standalone preview checker now defaults to GitHub Pages before Vercel, matching `remote-gate.mjs`.
 
 Reliable gate order is now:
 
 1. `npm run test:composer-cycle`
-2. GitHub Pages workflow deploy
+2. `pages-preview.yml` build and deploy
 3. `npm run test:remote-gate` using the deployed Pages URL
+4. Vercel status only as secondary evidence while quota failures persist
 
 ## Preserved constraints
 
@@ -30,15 +36,17 @@ Reliable gate order is now:
 - visual composition changes must be contract-protected before more novelty
 - every run must include a hosting/testing gate
 
-## Change made in this cycle
+## Recent changes
 
-Committed `1a2ba04e2d9ca3842ce2a1b94a30f937e3f69a50`: in `useWordlessSky`, the animation loop now skips canvas drawing while `document.hidden`, then resumes sizing cleanly on `visibilitychange`. This protects phone CPU/battery when the app is backgrounded without touching audio start/pulse behavior.
-
-Committed `11b9747c54bd8d5086183e882af3a04f9c707db7`: updated `scripts/phone-contract-check.mjs` to protect the hidden-tab behavior, keep the phrase-contour canvas signature current, and assert the visibility listener cleanup.
+- `1a2ba04e2d9ca3842ce2a1b94a30f937e3f69a50`: hidden-tab rendering throttling in `useWordlessSky`.
+- `11b9747c54bd8d5086183e882af3a04f9c707db7`: phone contract protection for hidden-tab behavior.
+- `daf5eb6fa833c74cf5e1df132f4381b4c5081e51`: `scripts/preview-url-check.mjs` now tries GitHub Pages before Vercel by default, reducing false confidence loss from Vercel quota/build-limit pages.
 
 ## Next suggested action
 
-Run `npm run test:composer-cycle`. If it fails, fix the exact failing check or build error before adding novelty. If it passes, inspect the latest GitHub Pages workflow result for `Pages Preview`. If build, deploy, and live verification pass, make exactly one tiny sensory improvement: let phrase contour subtly influence score-note spacing only. Do not couple it to audio in the same cycle. If the live Pages URL is unreachable but the build passes, branch to Cloudflare Pages only after recording the failing HTTP/status evidence.
+Inspect the Pages workflows and remove or disable the older deploy-only Pages workflow if it is redundant with `pages-preview.yml`. The stable deployment path should be the one that builds, deploys, and verifies the live URL. Do not wire `fieldEncounter.js` into `App.jsx` until the Pages workflow situation is unambiguous.
+
+If workflow cleanup is unsafe or blocked, run/inspect `npm run test:composer-cycle` and the latest `pages-preview.yml` result. If those pass, allow exactly one tiny novelty patch: wire `fieldEncounter.js` into the tap path as internal pressure only, with no visible text and no audio changes in the same cycle.
 
 ## Later branch
 
