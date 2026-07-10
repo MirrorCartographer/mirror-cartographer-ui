@@ -7,6 +7,7 @@ import './assets/failsafe.css';
 import './assets/autobiography.css';
 import './assets/source-feeling.css';
 import './assets/mobile-enter.css';
+import './assets/possibility-field.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
