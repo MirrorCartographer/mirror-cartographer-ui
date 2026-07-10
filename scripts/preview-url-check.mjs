@@ -1,6 +1,6 @@
 const DEFAULT_SITE_URLS = [
-  'https://mirror-cartographer-ui.vercel.app',
   'https://mirrorcartographer.github.io/mirror-cartographer-ui/',
+  'https://mirror-cartographer-ui.vercel.app',
 ];
 
 const rawUrls = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URLS.join(','))
