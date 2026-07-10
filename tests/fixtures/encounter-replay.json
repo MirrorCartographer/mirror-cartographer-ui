@@ -1,0 +1,16 @@
+{
+  "name": "hesitate-wander-return",
+  "origin": 1000000,
+  "events": [
+    { "at": 1001800, "x": 0.48, "y": 0.62 },
+    { "at": 1006100, "x": 0.22, "y": 0.31 },
+    { "at": 1006900, "x": 0.26, "y": 0.34 },
+    { "at": 1012400, "x": 0.73, "y": 0.46 }
+  ],
+  "expect": {
+    "count": 4,
+    "returnCount": 3,
+    "explorationAbove": 0.5,
+    "dwellMs": 12400
+  }
+}
