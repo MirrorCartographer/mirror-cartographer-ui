@@ -4,11 +4,13 @@
 
 Inspect the next `pages-preview.yml` workflow result before wiring `src/engine/fieldEncounter.js` into `src/components/App.jsx`.
 
-The repo no longer has two competing GitHub Pages workflows. The deploy-only `.github/workflows/pages.yml` workflow was removed. `pages-preview.yml` is now the canonical static fallback path because it:
+The repo now has an explicit deployment gate contract:
 
-- runs the Pages preview gate,
-- deploys to GitHub Pages,
-- runs `npm run test:remote-gate` against the deployed URL.
+- `scripts/deployment-gate-contract-check.mjs`
+- `npm run test:deployment-gate`
+- `npm run test:pages-preview` runs `test:deployment-gate` before the static/field/build checks
+
+This protects the canonical Pages path: build, deploy, then live-verify the deployed URL. It also prevents silent return of the older deploy-only Pages workflow.
 
 ## Why this is next
 
@@ -16,7 +18,7 @@ The site already has an explicit internal composer API:
 
 `composition frame + phrase memory + inferred expectation + interaction signals -> possible futures -> selected field encounter`
 
-But deployment confidence is the active constraint. Vercel can still serve a shell, but status checks are currently polluted by build-rate-limit failures. GitHub Pages is the stronger fallback now that the verified workflow is the only Pages deployment path.
+But deployment confidence is the active constraint. Vercel can still serve a shell, but status checks are currently polluted by build-rate-limit failures. GitHub Pages is the stronger fallback now that the verified workflow is canonical and contract-protected.
 
 ## Preserve
 
@@ -33,6 +35,7 @@ But deployment confidence is the active constraint. Vercel can still serve a she
 
 Run or inspect:
 
+- `npm run test:deployment-gate`
 - `npm run test:field-encounter`
 - `npm run test:phone-contract`
 - `npm run test:composer-cycle`
