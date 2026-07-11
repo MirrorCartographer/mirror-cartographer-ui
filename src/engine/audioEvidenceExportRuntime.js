@@ -36,6 +36,16 @@ export function buildAudioRuntimeEvidencePacket(target = globalThis) {
   };
 }
 
+export function buildAudioEvidenceFilename(packet) {
+  const attempt = String(packet?.evidence?.attemptId || 'attempt')
+    .replace(/[^a-z0-9._-]+/gi, '-')
+    .replace(/^-+|-+$/g, '') || 'attempt';
+  const stamp = String(packet?.capturedAt || new Date().toISOString())
+    .replace(/[:.]/g, '-')
+    .replace(/[^a-z0-9TZ_-]+/gi, '');
+  return `mirror-cartographer-audio-proof-${attempt}-${stamp}.json`;
+}
+
 async function copyPacket(packet) {
   const text = JSON.stringify(packet, null, 2);
   if (navigator.clipboard?.writeText) {
@@ -54,6 +64,36 @@ async function copyPacket(packet) {
   textarea.remove();
   if (!copied) throw new Error('clipboard unavailable');
   return 'copied';
+}
+
+function downloadPacket(packet) {
+  const blob = new Blob([JSON.stringify(packet, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = buildAudioEvidenceFilename(packet);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  return 'downloaded';
+}
+
+function ensureStatusRegion() {
+  let status = document.querySelector('[data-audio-evidence-status]');
+  if (status) return status;
+  status = document.createElement('div');
+  status.dataset.audioEvidenceStatus = 'idle';
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  status.style.position = 'fixed';
+  status.style.width = '1px';
+  status.style.height = '1px';
+  status.style.overflow = 'hidden';
+  status.style.clipPath = 'inset(50%)';
+  document.body.appendChild(status);
+  return status;
 }
 
 function ensureExportButton() {
@@ -86,16 +126,30 @@ function ensureExportButton() {
   button.addEventListener('click', async () => {
     const packet = buildAudioRuntimeEvidencePacket(window);
     if (!packet) return;
+    const status = ensureStatusRegion();
     button.disabled = true;
     try {
       await copyPacket(packet);
       window.__MC_AUDIO_EXPORT_PACKET__ = packet;
       button.dataset.audioEvidenceExport = 'copied';
       button.textContent = 'Proof copied';
+      status.dataset.audioEvidenceStatus = 'copied';
+      status.textContent = 'Sound proof copied to clipboard.';
     } catch (error) {
-      button.dataset.audioEvidenceExport = 'failed';
-      button.textContent = 'Copy failed';
-      button.title = error instanceof Error ? error.message : String(error);
+      try {
+        downloadPacket(packet);
+        window.__MC_AUDIO_EXPORT_PACKET__ = packet;
+        button.dataset.audioEvidenceExport = 'downloaded';
+        button.textContent = 'Proof downloaded';
+        status.dataset.audioEvidenceStatus = 'downloaded';
+        status.textContent = 'Clipboard unavailable. Sound proof downloaded as JSON.';
+      } catch (downloadError) {
+        button.dataset.audioEvidenceExport = 'failed';
+        button.textContent = 'Export failed';
+        button.title = downloadError instanceof Error ? downloadError.message : String(downloadError);
+        status.dataset.audioEvidenceStatus = 'failed';
+        status.textContent = 'Sound proof export failed.';
+      }
     }
     window.setTimeout(() => {
       button.disabled = false;
@@ -105,6 +159,7 @@ function ensureExportButton() {
   });
 
   document.body.appendChild(button);
+  ensureStatusRegion();
   return button;
 }
 
