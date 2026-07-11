@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
+import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
@@ -14,6 +15,7 @@ import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
 installAudioObservabilityRuntime();
+installAudibilityOutcomeRuntime();
 installPossibilityFieldRuntime();
 installCometGardenRuntime();
 
@@ -22,5 +24,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
