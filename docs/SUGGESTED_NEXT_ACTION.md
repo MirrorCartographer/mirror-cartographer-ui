@@ -1,70 +1,64 @@
 # Suggested next action
 
-## Reliability change completed
+## Product slice completed
 
-`useWordlessSky` now owns exactly one requestAnimationFrame handle:
+The existing cumulative encounter observer and `fieldEncounter` future selector now alter the nonverbal possibility membrane through visual pressure only.
 
-- each callback clears the active RAF marker when entered
-- a hidden document returns without scheduling another frame
-- the visibility handler cancels and clears the active frame when hidden
-- visibility restoration resizes and requests a frame only when no frame is active
-- cleanup cancels the active frame and removes both listeners
+Implemented path:
 
-Commit: `ce187cdeb40ef0b52577dfd9df2e9a30b9c036a8`
+1. primary pointer gestures are observed cumulatively
+2. gesture velocity, repetition, exploration, dwell, location, and current weather become a field frame
+3. `selectFieldEncounter` chooses a possible future
+4. only bounded visual variables are emitted: pressure, warmth, tension, and focal position
+5. the CSS membrane changes density, drift, breath, saturation, and spatial focus without adding words or controlling audio
 
-The change preserves tap-to-start, audio behavior, visible output, reduced-motion handling, and interaction semantics.
+Commits in this slice:
 
-## Current best next move
+- `26b92d54`: add `possibilityFieldRuntime`
+- `236feaa6`: install the runtime from `src/main.jsx`
+- `c2a2e8ed`: connect visual variables to the membrane
+- `6404111b`: add the runtime contract
+- `41a29cf3`: include the contract in local and Pages gates
 
-Verify the deployed Vercel build and canonical static gate for commit `ce187cdeb40ef0b52577dfd9df2e9a30b9c036a8`, then add a runtime visibility-transition probe if deployment evidence cannot directly exercise repeated hide/show cycles.
+## Product hypothesis
 
-## Why this is next
-
-The source-level defect and contract mismatch are repaired, but reliability is not complete until the deployed artifact is shown to contain the fix and repeated visibility transitions are verified against duplicate-loop regression.
-
-Current status evidence:
-
-- GitHub accepted the source commit
-- the repository's phone contract is shaped to reject hidden-tab rescheduling and require single-loop restart ownership
-- Vercel status was pending immediately after the commit
-- no pull-request-triggered Actions run was attached to the commit at first inspection
+A symbolic layer becomes meaningful when prior interaction changes later system behavior. The membrane is no longer a decorative overlay: the visitor's pattern of contact changes the field's spatial center, tension, warmth, density, and tempo while preserving the wordless instrument.
 
 ## Preserve
 
 - no autoplay
-- tap-to-start only
+- tap-to-start audio remains owned by the sky instrument
 - no visible explanatory copy
-- no audio changes
-- no duplicate animation loops
-- reduced-motion safety
-- existing canvas output while visible
-- Vercel atmosphere remains phone-first
-- GitHub Pages remains the canonical static fallback while Vercel quota/status is ambiguous
-- the Cloudflare-backed public repository remains the artist-field / reusable-state surface, not a duplicate atmosphere
+- no audio coupling from `fieldEncounter`
+- the membrane remains pointer-transparent
+- bounded CSS variables only
+- reduced-motion protection
+- phone-first intensity limits
+- one Vercel living encounter and one distinct Cloudflare/public artist field
 
 ## Verification route
 
-Inspect or run:
+Run or inspect:
 
+- `npm run test:possibility-runtime`
 - `npm run test:phone-contract`
 - `npm run build`
 - `npm run test:smoke`
 - `npm run test:pages-preview`
-- deployed-source or browser probe across at least three hidden/visible transitions
+- deployment status for commit `41a29cf316c9491a0d32f7d2c194f02c4f8d13f6`
 
-The visibility probe should assert:
+The runtime contract proves that different encounter patterns produce different bounded fields, the existing selector and observer are actually used, the integration cannot call the music engine, gesture location reaches CSS, the field cannot intercept taps, and reduced-motion protection remains present.
 
-1. no RAF is pending after the hidden callback settles
-2. one RAF is pending after visibility restoration
-3. repeated visible events do not create additional loops
-4. cleanup leaves no RAF and no visibility listener
+## Current best next move
+
+Add a browser-level visual-state probe that performs two deliberately different gesture sequences and asserts that the root CSS variables diverge while visible text, audio-start ownership, and pointer behavior remain unchanged. Capture the resulting variable snapshots as deployment evidence.
 
 ## Hosting topology
 
-- `mirror-cartographer-ui` is the Vercel phone-first living encounter.
-- `MirrorCartographer` is the public artist field and Cloudflare-capable static/edge surface.
-- The two sites share encounter schemas and replay fixtures, but not interface or emotional role.
+- `mirror-cartographer-ui` remains the Vercel phone-first living encounter, with GitHub Pages as the canonical static fallback/gate.
+- `MirrorCartographer` remains the public artist field and Cloudflare-capable static/edge surface.
+- Shared schemas and replay fixtures may cross the two sites; their interfaces and emotional roles should not collapse into one another.
 
-## Next capability after the reliability gate
+## Technical debt
 
-Once deployed verification is green, wire the existing `fieldEncounter` selector into visual pressure only. Do not add visible explanatory text or audio coupling in that first integration.
+The runtime currently infers active weather from the orbit's active index because the canvas instrument does not publish an explicit state event. This is stable enough for the first visual-only slice, but the next integration-quality refactor should expose a small read-only encounter frame event from `App` rather than relying on DOM order.
