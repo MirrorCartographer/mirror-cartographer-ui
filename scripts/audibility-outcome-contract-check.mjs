@@ -48,8 +48,12 @@ assert.deepEqual(
 
 assert.equal(classifyAudibilityDiagnostic('not-heard', pulse, render), 'render-confirmed-not-heard');
 assert.equal(
-  classifyAudibilityDiagnostic('not-heard', pulse, { result: 'clock-only' }),
+  classifyAudibilityDiagnostic('not-heard', pulse, { result: 'clock-progress-only' }),
   'clock-advanced-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, { result: 'clock-only' }),
+  'not-heard-render-unconfirmed',
 );
 assert.equal(
   classifyAudibilityDiagnostic('not-heard', { played: false }, render),
