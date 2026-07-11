@@ -34,6 +34,11 @@ export function buildAudibilityEvidence(outcome, pulse, renderEvidence, recorded
   };
 }
 
+export function buildPulseFailureEvidence(pulse, renderEvidence, recordedAt = new Date().toISOString()) {
+  if (pulse?.played) throw new TypeError('Pulse failure evidence requires an unscheduled pulse');
+  return buildAudibilityEvidence('not-heard', pulse, renderEvidence, recordedAt);
+}
+
 function visuallyHidden(node) {
   Object.assign(node.style, {
     position: 'absolute',
@@ -138,7 +143,21 @@ export function installAudibilityOutcomeRuntime() {
       panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = false; });
       panel.querySelector('span').textContent = 'Did you hear it?';
       window.setTimeout(() => {
-        if (!window.__MC_AUDIO_PULSE__?.played) return;
+        if (!window.__MC_AUDIO_PULSE__?.played) {
+          const evidence = buildPulseFailureEvidence(
+            window.__MC_AUDIO_PULSE__,
+            window.__MC_AUDIO_EVIDENCE__,
+          );
+          window.__MC_AUDIBILITY_EVIDENCE__ = evidence;
+          panel.dataset.audibilityPanel = 'pulse-failed';
+          panel.dataset.audibilityOutcome = evidence.outcome;
+          panel.dataset.audibilityDiagnosis = evidence.diagnosis;
+          panel.querySelector('span').textContent = 'Sound test did not start';
+          panel.querySelector('output').value = `The browser did not schedule the sound pulse. Diagnostic classification: ${evidence.diagnosis}. Activate the sound test again to retry.`;
+          panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = true; });
+          panel.style.display = 'flex';
+          return;
+        }
         panel.dataset.audibilityPanel = 'awaiting-response';
         panel.style.display = 'flex';
         panel.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
