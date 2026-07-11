@@ -1,0 +1,63 @@
+name: Vercel Studio Verification
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-studio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERCEL: "1"
+      VERCEL_GIT_COMMIT_SHA: ${{ github.sha }}
+      VERCEL_URL: mirror-cartographer-ui.vercel.app
+    steps:
+      - name: Checkout immutable source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Verify audio observability contract
+        run: npm run test:audio-observability
+
+      - name: Verify audibility outcome contract
+        run: npm run test:audibility-outcome
+
+      - name: Verify deployment identity contracts
+        run: |
+          npm run test:deployment-identity
+          npm run test:vercel-build-identity
+
+      - name: Build production bundle with immutable identity
+        run: npm run build
+
+      - name: Assert built commit identity
+        shell: bash
+        run: |
+          grep -R --fixed-strings "${GITHUB_SHA}" dist >/dev/null
+          echo "Built bundle contains immutable source commit ${GITHUB_SHA}."
+
+      - name: Upload verification bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-studio-${{ github.sha }}
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
