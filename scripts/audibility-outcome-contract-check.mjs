@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   buildAudibilityEvidence,
+  buildPulseFailureEvidence,
   classifyAudibilityDiagnostic,
 } from '../src/engine/audibilityOutcomeRuntime.js';
 
@@ -64,6 +65,17 @@ assert.equal(notHeard.outcome, 'not-heard');
 assert.equal(notHeard.diagnosis, 'pulse-not-scheduled');
 assert.equal(notHeard.pulse.played, false);
 assert.equal(notHeard.render.result, 'unobserved');
+
+const failedPulse = buildPulseFailureEvidence(
+  { played: false, reason: 'context-suspended', state: 'suspended' },
+  { result: 'unobserved', state: 'suspended' },
+  '2026-07-11T21:00:03.000Z',
+);
+assert.equal(failedPulse.outcome, 'not-heard');
+assert.equal(failedPulse.diagnosis, 'pulse-not-scheduled');
+assert.equal(failedPulse.pulse.reason, 'context-suspended');
+assert.equal(failedPulse.pulse.state, 'suspended');
+assert.throws(() => buildPulseFailureEvidence(pulse, render), /requires an unscheduled pulse/);
 assert.throws(() => buildAudibilityEvidence('maybe', pulse, render), /Invalid audibility outcome/);
 assert.throws(() => classifyAudibilityDiagnostic('maybe', pulse, render), /Invalid audibility outcome/);
 
