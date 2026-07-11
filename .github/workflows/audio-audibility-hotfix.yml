@@ -1,0 +1,72 @@
+name: Apply iOS audio audibility repair
+
+on:
+  push:
+    paths:
+      - .github/workflows/audio-audibility-hotfix.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair-audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Raise first-gesture output above phone-speaker audibility floor
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/engine/skyMusic.js')
+          text = path.read_text()
+          replacements = {
+              "gain: answer ? 0.015 : 0.022,": "gain: answer ? 0.045 : 0.075,",
+              "gain: 0.006,\n      attack: 0.018,\n      filter: 3100,": "gain: 0.018,\n      attack: 0.018,\n      filter: 3100,",
+              "master.gain.setTargetAtTime(0.31, ctx.currentTime, 0.18);": "master.gain.setTargetAtTime(0.52, ctx.currentTime, 0.12);",
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'missing expected audio contract: {old}')
+              text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+      - name: Assert audibility and ownership contracts
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const source = fs.readFileSync('src/engine/skyMusic.js', 'utf8');
+          const required = [
+            'gain: answer ? 0.045 : 0.075,',
+            'gain: 0.018,\n      attack: 0.018,\n      filter: 3100,',
+            'master.gain.setTargetAtTime(0.52, ctx.currentTime, 0.12);',
+            'limiter.connect(ctx.destination);',
+            'async function start(snapshot = {})',
+            "if (ctx.state === 'suspended') await ctx.resume();",
+          ];
+          for (const contract of required) {
+            if (!source.includes(contract)) throw new Error(`missing contract: ${contract}`);
+          }
+          const effectiveTapPeak = 0.52 * 0.075;
+          if (effectiveTapPeak < 0.03 || effectiveTapPeak > 0.08) {
+            throw new Error(`unsafe first-tap peak ${effectiveTapPeak}`);
+          }
+          console.log(JSON.stringify({ effectiveTapPeak, status: 'audible-bounded' }));
+          NODE
+      - run: npm ci
+      - run: npm run test:local-gate
+      - name: Commit repair
+        run: |
+          if git diff --quiet; then
+            echo 'Audio repair already applied.'
+            exit 0
+          fi
+          git config user.name 'mirror-cartographer-reliability'
+          git config user.email 'actions@users.noreply.github.com'
+          git add src/engine/skyMusic.js
+          git commit -m 'Fix iOS phone-speaker audio audibility [skip ci]'
+          git push
