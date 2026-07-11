@@ -265,8 +265,9 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContou
     };
 
     const loop = () => {
+      raf = 0;
       if (document.hidden) {
-        raf = requestAnimationFrame(loop);
+        raf = 0;
         return;
       }
       frame += 1;
@@ -377,17 +378,24 @@ function useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContou
       raf = requestAnimationFrame(loop);
     };
 
-    const resume = () => {
-      if (!document.hidden) resize();
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        return;
+      }
+      resize();
+      if (!raf) raf = requestAnimationFrame(loop);
     };
 
     resize();
-    loop();
-    document.addEventListener('visibilitychange', resume);
+    raf = requestAnimationFrame(loop);
+    document.addEventListener('visibilitychange', handleVisibility);
     window.addEventListener('resize', resize);
     return () => {
-      cancelAnimationFrame(raf);
-      document.removeEventListener('visibilitychange', resume);
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', resize);
     };
   }, [state, pulse, marks, rhythm, clockSnapshot, phraseContour]);
