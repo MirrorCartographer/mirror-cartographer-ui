@@ -5,7 +5,7 @@ export function classifyAudibilityDiagnostic(outcome, pulse, renderEvidence) {
   if (!pulse?.played) return 'pulse-not-scheduled';
   if (outcome === 'heard') return 'audible-confirmed';
   if (renderEvidence?.result === 'render-confirmed') return 'render-confirmed-not-heard';
-  if (renderEvidence?.result === 'clock-only') return 'clock-advanced-not-heard';
+  if (renderEvidence?.result === 'clock-progress-only') return 'clock-advanced-not-heard';
   return 'not-heard-render-unconfirmed';
 }
 
