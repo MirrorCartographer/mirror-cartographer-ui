@@ -52,6 +52,27 @@ const expectAnimationFramesAtLeast = async (page, minimum) => {
   }).toBeGreaterThanOrEqual(minimum);
 };
 
+const expectResolvedDeploymentIdentity = async (page) => {
+  const identity = await page.evaluate(() => window.__MC_DEPLOYMENT_IDENTITY__ ?? null);
+  expect(identity, 'deployed runtime must expose immutable source identity').not.toBeNull();
+  expect(identity.schemaVersion).toBe('1.0.0');
+  expect(identity.verificationState).toBe('source-identified');
+  expect(identity.commitResolved).toBe(true);
+  expect(identity.commit).toMatch(/^[0-9a-f]{40}$/);
+
+  const marker = await page.locator('meta[name="mc-deployment-identity"]').getAttribute('content');
+  expect(marker).toBeTruthy();
+  expect(JSON.parse(marker)).toEqual(identity);
+
+  const expectedCommit = String(process.env.EXPECTED_DEPLOYMENT_COMMIT || '').trim().toLowerCase();
+  if (expectedCommit) {
+    expect(expectedCommit).toMatch(/^[0-9a-f]{40}$/);
+    expect(identity.commit).toBe(expectedCommit);
+  }
+
+  return identity;
+};
+
 test.describe('Mirror Cartographer live hosting smoke', () => {
   test('deployed preview preserves the phone-first wordless audio contract', async ({ page }) => {
     await installAudioContextProbe(page);
@@ -63,6 +84,11 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
     });
 
     await page.goto('/', { waitUntil: 'networkidle' });
+
+    const identity = await expectResolvedDeploymentIdentity(page);
+    if (new URL(page.url()).hostname.endsWith('.vercel.app')) {
+      expect(identity.provider).toBe('vercel');
+    }
 
     const sky = page.locator('button.sky');
     const canvas = page.locator('canvas');
