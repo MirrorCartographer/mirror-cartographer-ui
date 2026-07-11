@@ -6,6 +6,7 @@ import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
+import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
@@ -18,6 +19,7 @@ import './assets/comet-garden.css';
 installDeploymentIdentityRuntime();
 installAudioObservabilityRuntime();
 installAudibilityOutcomeRuntime();
+installAudioEvidenceExportRuntime();
 installPossibilityFieldRuntime();
 installCometGardenRuntime();
 
