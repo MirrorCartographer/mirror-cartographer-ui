@@ -39,6 +39,24 @@ export function buildPulseFailureEvidence(pulse, renderEvidence, recordedAt = ne
   return buildAudibilityEvidence('not-heard', pulse, renderEvidence, recordedAt);
 }
 
+export function resetAudibilityAttempt(target, startedAt = new Date().toISOString()) {
+  if (!target || (typeof target !== 'object' && typeof target !== 'function')) {
+    throw new TypeError('Audibility attempt target must be an object');
+  }
+  const pendingPulse = {
+    played: false,
+    reason: 'pending',
+    frequencyHz: null,
+    durationSeconds: null,
+    state: 'pending',
+    startedAt,
+  };
+  target.__MC_AUDIO_PULSE__ = pendingPulse;
+  target.__MC_AUDIO_EVIDENCE__ = null;
+  target.__MC_AUDIBILITY_EVIDENCE__ = null;
+  return pendingPulse;
+}
+
 function visuallyHidden(node) {
   Object.assign(node.style, {
     position: 'absolute',
@@ -136,6 +154,7 @@ export function installAudibilityOutcomeRuntime() {
     document.addEventListener('click', (event) => {
       const diagnostic = event.target?.closest?.('[data-audio-diagnostic]');
       if (!diagnostic) return;
+      resetAudibilityAttempt(window);
       panel.dataset.audibilityPanel = 'awaiting-pulse';
       delete panel.dataset.audibilityOutcome;
       delete panel.dataset.audibilityDiagnosis;
