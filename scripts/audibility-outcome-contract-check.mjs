@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
-import { buildAudibilityEvidence } from '../src/engine/audibilityOutcomeRuntime.js';
+import {
+  buildAudibilityEvidence,
+  classifyAudibilityDiagnostic,
+} from '../src/engine/audibilityOutcomeRuntime.js';
 
 const pulse = {
   played: true,
@@ -20,8 +23,9 @@ const render = {
 assert.deepEqual(
   buildAudibilityEvidence('heard', pulse, render, '2026-07-11T21:00:01.000Z'),
   {
-    schemaVersion: '1.0.0',
+    schemaVersion: '1.1.0',
     outcome: 'heard',
+    diagnosis: 'audible-confirmed',
     recordedAt: '2026-07-11T21:00:01.000Z',
     pulse: {
       played: true,
@@ -41,10 +45,26 @@ assert.deepEqual(
   },
 );
 
+assert.equal(classifyAudibilityDiagnostic('not-heard', pulse, render), 'render-confirmed-not-heard');
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, { result: 'clock-only' }),
+  'clock-advanced-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', { played: false }, render),
+  'pulse-not-scheduled',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, null),
+  'not-heard-render-unconfirmed',
+);
+
 const notHeard = buildAudibilityEvidence('not-heard', { played: false }, null, '2026-07-11T21:00:02.000Z');
 assert.equal(notHeard.outcome, 'not-heard');
+assert.equal(notHeard.diagnosis, 'pulse-not-scheduled');
 assert.equal(notHeard.pulse.played, false);
 assert.equal(notHeard.render.result, 'unobserved');
 assert.throws(() => buildAudibilityEvidence('maybe', pulse, render), /Invalid audibility outcome/);
+assert.throws(() => classifyAudibilityDiagnostic('maybe', pulse, render), /Invalid audibility outcome/);
 
 console.log('audibility outcome contract: ok');
