@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
 import ErrorBoundary from './components/ErrorBoundary';
+import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
 import './assets/source-feeling.css';
 import './assets/mobile-enter.css';
 import './assets/possibility-field.css';
+
+installPossibilityFieldRuntime();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
