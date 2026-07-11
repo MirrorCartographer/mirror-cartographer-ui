@@ -3,6 +3,7 @@ import {
   buildAudibilityEvidence,
   buildPulseFailureEvidence,
   classifyAudibilityDiagnostic,
+  resetAudibilityAttempt,
 } from '../src/engine/audibilityOutcomeRuntime.js';
 
 const pulse = {
@@ -82,5 +83,25 @@ assert.equal(failedPulse.pulse.state, 'suspended');
 assert.throws(() => buildPulseFailureEvidence(pulse, render), /requires an unscheduled pulse/);
 assert.throws(() => buildAudibilityEvidence('maybe', pulse, render), /Invalid audibility outcome/);
 assert.throws(() => classifyAudibilityDiagnostic('maybe', pulse, render), /Invalid audibility outcome/);
+
+const retryState = {
+  __MC_AUDIO_PULSE__: pulse,
+  __MC_AUDIO_EVIDENCE__: render,
+  __MC_AUDIBILITY_EVIDENCE__: buildAudibilityEvidence('heard', pulse, render),
+};
+const pending = resetAudibilityAttempt(retryState, '2026-07-11T21:00:04.000Z');
+assert.deepEqual(pending, {
+  played: false,
+  reason: 'pending',
+  frequencyHz: null,
+  durationSeconds: null,
+  state: 'pending',
+  startedAt: '2026-07-11T21:00:04.000Z',
+});
+assert.equal(retryState.__MC_AUDIO_PULSE__, pending);
+assert.equal(retryState.__MC_AUDIO_EVIDENCE__, null);
+assert.equal(retryState.__MC_AUDIBILITY_EVIDENCE__, null);
+assert.equal(classifyAudibilityDiagnostic('not-heard', retryState.__MC_AUDIO_PULSE__, retryState.__MC_AUDIO_EVIDENCE__), 'pulse-not-scheduled');
+assert.throws(() => resetAudibilityAttempt(null), /target must be an object/);
 
 console.log('audibility outcome contract: ok');
