@@ -9,14 +9,36 @@ export function classifyAudibilityDiagnostic(outcome, pulse, renderEvidence) {
   return 'not-heard-render-unconfirmed';
 }
 
+function normalizedAttemptId(value) {
+  return typeof value === 'string' && value.trim() ? value : null;
+}
+
+function createAttemptId(startedAt) {
+  const randomPart = globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2);
+  return `mc-audio-${startedAt}-${randomPart}`;
+}
+
 export function buildAudibilityEvidence(outcome, pulse, renderEvidence, recordedAt = new Date().toISOString()) {
   if (!VALID_OUTCOMES.has(outcome)) throw new TypeError(`Invalid audibility outcome: ${outcome}`);
+  const pulseAttemptId = normalizedAttemptId(pulse?.attemptId);
+  const renderAttemptId = normalizedAttemptId(renderEvidence?.attemptId);
+  const attemptId = pulseAttemptId ?? renderAttemptId;
+  const attemptMatched = Boolean(
+    attemptId
+      && pulseAttemptId === attemptId
+      && (!pulse?.played || renderAttemptId === attemptId),
+  );
   return {
-    schemaVersion: '1.1.0',
+    schemaVersion: '1.2.0',
+    attemptId,
+    attemptMatched,
     outcome,
-    diagnosis: classifyAudibilityDiagnostic(outcome, pulse, renderEvidence),
+    diagnosis: attemptMatched
+      ? classifyAudibilityDiagnostic(outcome, pulse, renderEvidence)
+      : 'attempt-evidence-mismatch',
     recordedAt,
     pulse: {
+      attemptId: pulseAttemptId,
       played: Boolean(pulse?.played),
       reason: pulse?.reason ?? null,
       frequencyHz: Number.isFinite(pulse?.frequencyHz) ? pulse.frequencyHz : null,
@@ -25,6 +47,7 @@ export function buildAudibilityEvidence(outcome, pulse, renderEvidence, recorded
       startedAt: pulse?.startedAt ?? null,
     },
     render: {
+      attemptId: renderAttemptId,
       result: renderEvidence?.result ?? 'unobserved',
       state: renderEvidence?.state ?? 'unknown',
       outputPosition: Number.isFinite(renderEvidence?.outputPosition) ? renderEvidence.outputPosition : null,
@@ -39,11 +62,13 @@ export function buildPulseFailureEvidence(pulse, renderEvidence, recordedAt = ne
   return buildAudibilityEvidence('not-heard', pulse, renderEvidence, recordedAt);
 }
 
-export function resetAudibilityAttempt(target, startedAt = new Date().toISOString()) {
+export function resetAudibilityAttempt(target, startedAt = new Date().toISOString(), attemptId = createAttemptId(startedAt)) {
   if (!target || (typeof target !== 'object' && typeof target !== 'function')) {
     throw new TypeError('Audibility attempt target must be an object');
   }
+  if (!normalizedAttemptId(attemptId)) throw new TypeError('Audibility attempt id must be a non-empty string');
   const pendingPulse = {
+    attemptId,
     played: false,
     reason: 'pending',
     frequencyHz: null,
@@ -51,10 +76,22 @@ export function resetAudibilityAttempt(target, startedAt = new Date().toISOStrin
     state: 'pending',
     startedAt,
   };
+  target.__MC_AUDIO_ATTEMPT_ID__ = attemptId;
   target.__MC_AUDIO_PULSE__ = pendingPulse;
   target.__MC_AUDIO_EVIDENCE__ = null;
   target.__MC_AUDIBILITY_EVIDENCE__ = null;
   return pendingPulse;
+}
+
+function correlateAttemptEvidence(target, attemptId) {
+  if (target.__MC_AUDIO_ATTEMPT_ID__ !== attemptId) return false;
+  if (target.__MC_AUDIO_PULSE__ && !target.__MC_AUDIO_PULSE__.attemptId) {
+    target.__MC_AUDIO_PULSE__.attemptId = attemptId;
+  }
+  if (target.__MC_AUDIO_EVIDENCE__ && !target.__MC_AUDIO_EVIDENCE__.attemptId) {
+    target.__MC_AUDIO_EVIDENCE__.attemptId = attemptId;
+  }
+  return true;
 }
 
 function visuallyHidden(node) {
@@ -121,6 +158,7 @@ function ensurePanel() {
       font: 'inherit',
     });
     button.addEventListener('click', () => {
+      correlateAttemptEvidence(window, window.__MC_AUDIO_ATTEMPT_ID__);
       const evidence = buildAudibilityEvidence(
         outcome,
         window.__MC_AUDIO_PULSE__,
@@ -130,10 +168,16 @@ function ensurePanel() {
       panel.dataset.audibilityPanel = 'recorded';
       panel.dataset.audibilityOutcome = outcome;
       panel.dataset.audibilityDiagnosis = evidence.diagnosis;
-      status.value = outcome === 'heard'
-        ? 'Audible sound confirmed and paired with browser evidence.'
-        : `Sound was not heard. Diagnostic classification: ${evidence.diagnosis}.`;
-      question.textContent = outcome === 'heard' ? 'Heard' : 'Not heard';
+      panel.dataset.audioAttemptId = evidence.attemptId ?? 'missing';
+      panel.dataset.audioAttemptMatched = String(evidence.attemptMatched);
+      status.value = evidence.attemptMatched
+        ? outcome === 'heard'
+          ? 'Audible sound confirmed and paired with browser evidence.'
+          : `Sound was not heard. Diagnostic classification: ${evidence.diagnosis}.`
+        : 'The sound response could not be paired with render evidence from the same test attempt. Retry the sound test.';
+      question.textContent = evidence.attemptMatched
+        ? outcome === 'heard' ? 'Heard' : 'Not heard'
+        : 'Retry required';
       panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = true; });
     });
     panel.appendChild(button);
@@ -154,7 +198,10 @@ export function installAudibilityOutcomeRuntime() {
     document.addEventListener('click', (event) => {
       const diagnostic = event.target?.closest?.('[data-audio-diagnostic]');
       if (!diagnostic) return;
-      resetAudibilityAttempt(window);
+      const pendingPulse = resetAudibilityAttempt(window);
+      const attemptId = pendingPulse.attemptId;
+      panel.dataset.audioAttemptId = attemptId;
+      panel.dataset.audioAttemptMatched = 'false';
       panel.dataset.audibilityPanel = 'awaiting-pulse';
       delete panel.dataset.audibilityOutcome;
       delete panel.dataset.audibilityDiagnosis;
@@ -162,6 +209,7 @@ export function installAudibilityOutcomeRuntime() {
       panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = false; });
       panel.querySelector('span').textContent = 'Did you hear it?';
       window.setTimeout(() => {
+        if (!correlateAttemptEvidence(window, attemptId)) return;
         if (!window.__MC_AUDIO_PULSE__?.played) {
           const evidence = buildPulseFailureEvidence(
             window.__MC_AUDIO_PULSE__,
@@ -171,6 +219,7 @@ export function installAudibilityOutcomeRuntime() {
           panel.dataset.audibilityPanel = 'pulse-failed';
           panel.dataset.audibilityOutcome = evidence.outcome;
           panel.dataset.audibilityDiagnosis = evidence.diagnosis;
+          panel.dataset.audioAttemptMatched = String(evidence.attemptMatched);
           panel.querySelector('span').textContent = 'Sound test did not start';
           panel.querySelector('output').value = `The browser did not schedule the sound pulse. Diagnostic classification: ${evidence.diagnosis}. Activate the sound test again to retry.`;
           panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = true; });
