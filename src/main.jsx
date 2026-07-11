@@ -4,6 +4,7 @@ import App from './components/App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
+import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
@@ -12,6 +13,7 @@ import './assets/mobile-enter.css';
 import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
+installAudioObservabilityRuntime();
 installPossibilityFieldRuntime();
 installCometGardenRuntime();
 
