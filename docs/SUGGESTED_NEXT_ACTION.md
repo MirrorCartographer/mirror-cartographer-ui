@@ -1,64 +1,66 @@
 # Suggested next action
 
-## Product slice completed
+## Current product state
 
-The existing cumulative encounter observer and `fieldEncounter` future selector now alter the nonverbal possibility membrane through visual pressure only.
+The cumulative encounter observer and `fieldEncounter` selector already alter the nonverbal possibility membrane through bounded visual pressure. Prior gestures can change later spatial center, tension, warmth, density, and tempo without adding explanatory text or coupling the possibility field to audio.
 
-Implemented path:
-
-1. primary pointer gestures are observed cumulatively
-2. gesture velocity, repetition, exploration, dwell, location, and current weather become a field frame
-3. `selectFieldEncounter` chooses a possible future
-4. only bounded visual variables are emitted: pressure, warmth, tension, and focal position
-5. the CSS membrane changes density, drift, breath, saturation, and spatial focus without adding words or controlling audio
-
-Commits in this slice:
+Implemented chain:
 
 - `26b92d54`: add `possibilityFieldRuntime`
 - `236feaa6`: install the runtime from `src/main.jsx`
 - `c2a2e8ed`: connect visual variables to the membrane
 - `6404111b`: add the runtime contract
-- `41a29cf3`: include the contract in local and Pages gates
+- `41a29cf3`: include the contract in local and preview gates
 
-## Product hypothesis
+## Coordination gate
 
-A symbolic layer becomes meaningful when prior interaction changes later system behavior. The membrane is no longer a decorative overlay: the visitor's pattern of contact changes the field's spatial center, tension, warmth, density, and tempo while preserving the wordless instrument.
+P2 is **blocked** because P0 has not passed.
+
+Current runtime evidence:
+
+- Vercel renders on iPhone Safari.
+- Safari reports active media, but the user hears no sound.
+- Browser-level proof of two divergent gesture sequences has not been recorded.
+- Exact deployed-commit evidence has not been recorded.
+- Hidden/visible repeated-cycle ownership and reduced-motion behavior remain source-level or contract-level evidence rather than deployed browser proof.
+- The one-shot audio workflow exists at `.github/workflows/audio-audibility-hotfix.yml`, but no resulting `Fix iOS phone-speaker audio audibility` commit or associated workflow run was found during this product cycle.
+
+Product must not replace DOM-order weather inference or begin a daily visual transformation while these higher-priority reliability conditions remain unresolved.
 
 ## Preserve
 
+- Vercel is the phone-first, nearly wordless living encounter.
+- no payments or conversion logic on Vercel
 - no autoplay
-- tap-to-start audio remains owned by the sky instrument
+- audio starts only from an explicit visitor gesture
 - no visible explanatory copy
 - no audio coupling from `fieldEncounter`
-- the membrane remains pointer-transparent
+- possibility membrane remains pointer-transparent
 - bounded CSS variables only
 - reduced-motion protection
-- phone-first intensity limits
-- one Vercel living encounter and one distinct Cloudflare/public artist field
+- single-loop hidden-tab ownership
+- reversible Git history
 
-## Verification route
+## Authoritative three-surface topology
 
-Run or inspect:
+- `MirrorCartographer/mirror-cartographer-ui` → Vercel: experiential and advanced-graphics surface only.
+- `MirrorCartographer/MirrorCartographer` → Cloudflare: research, theory design, science, medicine-facing organization, provenance, and conversion.
+- `MirrorCartographer/MirrorCartographer/constellation` → GitHub Pages: worker-system and operational transparency only; it is not a Vercel fallback.
 
-- `npm run test:possibility-runtime`
-- `npm run test:phone-contract`
-- `npm run build`
-- `npm run test:smoke`
-- `npm run test:pages-preview`
-- deployment status for commit `41a29cf316c9491a0d32f7d2c194f02c4f8d13f6`
+## Next executable action
 
-The runtime contract proves that different encounter patterns produce different bounded fields, the existing selector and observer are actually used, the integration cannot call the music engine, gesture location reaches CSS, the field cannot intercept taps, and reduced-motion protection remains present.
+Reliability Engineer owns P0:
 
-## Current best next move
+1. apply or directly commit the bounded audio-gain repair in `src/engine/skyMusic.js` if the workflow still has not executed;
+2. verify audible output on iPhone Safari while preserving tap ownership and limiter routing;
+3. run two deliberately different gesture sequences and capture root CSS-variable snapshots;
+4. verify unchanged visible-text count, pointer transparency, reduced-motion behavior, and repeated hidden/visible single-loop ownership;
+5. record the exact tested and deployed commit.
 
-Add a browser-level visual-state probe that performs two deliberately different gesture sequences and asserts that the root CSS variables diverge while visible text, audio-start ownership, and pointer behavior remain unchanged. Capture the resulting variable snapshots as deployment evidence.
+## P2 release condition
 
-## Hosting topology
+Only after P0 passes, Product Builder should expose a small explicit read-only encounter frame from `App`, consume it in the possibility-field runtime instead of inferring weather from DOM order, preserve audio ownership and pointer behavior, and provide contract, build, smoke, and observable-divergence proof.
 
-- `mirror-cartographer-ui` remains the Vercel phone-first living encounter, with GitHub Pages as the canonical static fallback/gate.
-- `MirrorCartographer` remains the public artist field and Cloudflare-capable static/edge surface.
-- Shared schemas and replay fixtures may cross the two sites; their interfaces and emotional roles should not collapse into one another.
+## P5 release condition
 
-## Technical debt
-
-The runtime currently infers active weather from the orbit's active index because the canvas instrument does not publish an explicit state event. This is stable enough for the first visual-only slice, but the next integration-quality refactor should expose a small read-only encounter frame event from `App` rather than relying on DOM order.
+Only after P0 and P2 pass, define one reversible daily Vercel visual transformation with a stated hypothesis, phone performance budget, preserved invariant, before/after capture, and rollback commit.
