@@ -1,5 +1,10 @@
 :root {
   --possibility-phase: 0;
+  --possibility-pressure: 0.34;
+  --possibility-warmth: 0.5;
+  --possibility-tension: 0.5;
+  --possibility-x: 50%;
+  --possibility-y: 56%;
 }
 
 /* A nonverbal atmospheric membrane above the sky and below interaction. */
@@ -17,26 +22,27 @@
 
 #root::before {
   background:
-    radial-gradient(circle at 18% 26%, rgba(255, 226, 191, 0.10), transparent 24%),
-    radial-gradient(circle at 76% 18%, rgba(167, 243, 208, 0.08), transparent 22%),
-    radial-gradient(circle at 62% 78%, rgba(196, 181, 253, 0.08), transparent 28%);
+    radial-gradient(circle at var(--possibility-x) var(--possibility-y), rgba(255, 226, 191, calc(0.05 + var(--possibility-warmth) * 0.08)), transparent 24%),
+    radial-gradient(circle at 76% 18%, rgba(167, 243, 208, calc(0.04 + var(--possibility-pressure) * 0.06)), transparent 22%),
+    radial-gradient(circle at 62% 78%, rgba(196, 181, 253, calc(0.04 + var(--possibility-tension) * 0.06)), transparent 28%);
   mix-blend-mode: screen;
-  opacity: 0.72;
-  animation: possibility-drift 28s ease-in-out infinite alternate;
+  opacity: calc(0.48 + var(--possibility-pressure) * 0.24);
+  filter: saturate(calc(0.9 + var(--possibility-warmth) * 0.35));
+  animation: possibility-drift calc(36s - var(--possibility-pressure) * 12s) ease-in-out infinite alternate;
 }
 
 #root::after {
   background:
     repeating-radial-gradient(
-      ellipse at 50% 56%,
-      rgba(255, 255, 255, 0.025) 0,
-      rgba(255, 255, 255, 0.025) 1px,
+      ellipse at var(--possibility-x) var(--possibility-y),
+      rgba(255, 255, 255, calc(0.012 + var(--possibility-tension) * 0.022)) 0,
+      rgba(255, 255, 255, calc(0.012 + var(--possibility-tension) * 0.022)) 1px,
       transparent 1px,
-      transparent 9px
+      transparent calc(11px - var(--possibility-pressure) * 3px)
     );
   mask-image: radial-gradient(circle at center, black 0%, rgba(0, 0, 0, 0.72) 34%, transparent 74%);
-  opacity: 0.34;
-  animation: possibility-breathe 16s ease-in-out infinite;
+  opacity: calc(0.16 + var(--possibility-tension) * 0.28);
+  animation: possibility-breathe calc(24s - var(--possibility-pressure) * 8s) ease-in-out infinite;
 }
 
 canvas,
@@ -52,27 +58,27 @@ select {
 
 @keyframes possibility-drift {
   0% {
-    transform: translate3d(-1.5%, -1%, 0) rotate(-1deg) scale(1);
-    opacity: 0.54;
+    transform: translate3d(-1.5%, -1%, 0) rotate(calc(-1deg - var(--possibility-tension) * 0.4deg)) scale(1);
+    opacity: calc(0.42 + var(--possibility-pressure) * 0.2);
   }
   55% {
-    transform: translate3d(1%, 0.5%, 0) rotate(0.6deg) scale(1.035);
-    opacity: 0.76;
+    transform: translate3d(1%, 0.5%, 0) rotate(calc(0.4deg + var(--possibility-tension) * 0.5deg)) scale(calc(1.015 + var(--possibility-pressure) * 0.025));
+    opacity: calc(0.54 + var(--possibility-pressure) * 0.24);
   }
   100% {
-    transform: translate3d(0.5%, 1.4%, 0) rotate(1deg) scale(1.015);
-    opacity: 0.62;
+    transform: translate3d(0.5%, 1.4%, 0) rotate(calc(0.7deg + var(--possibility-tension) * 0.4deg)) scale(calc(1.005 + var(--possibility-pressure) * 0.018));
+    opacity: calc(0.48 + var(--possibility-pressure) * 0.2);
   }
 }
 
 @keyframes possibility-breathe {
   0%, 100% {
-    transform: scale(0.985) rotate(-0.4deg);
-    opacity: 0.22;
+    transform: scale(calc(0.98 + var(--possibility-pressure) * 0.012)) rotate(calc(-0.5deg + var(--possibility-tension) * 0.2deg));
+    opacity: calc(0.12 + var(--possibility-tension) * 0.2);
   }
   50% {
-    transform: scale(1.025) rotate(0.4deg);
-    opacity: 0.4;
+    transform: scale(calc(1.008 + var(--possibility-pressure) * 0.022)) rotate(calc(0.2deg + var(--possibility-tension) * 0.35deg));
+    opacity: calc(0.2 + var(--possibility-tension) * 0.28);
   }
 }
 
@@ -83,13 +89,13 @@ select {
   }
 
   #root::before {
-    opacity: 0.58;
-    animation-duration: 34s;
+    opacity: calc(0.4 + var(--possibility-pressure) * 0.18);
+    animation-duration: calc(42s - var(--possibility-pressure) * 10s);
   }
 
   #root::after {
-    opacity: 0.26;
-    animation-duration: 20s;
+    opacity: calc(0.12 + var(--possibility-tension) * 0.2);
+    animation-duration: calc(28s - var(--possibility-pressure) * 6s);
   }
 }
 
