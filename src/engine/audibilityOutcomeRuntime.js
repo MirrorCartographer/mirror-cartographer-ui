@@ -1,10 +1,20 @@
 const VALID_OUTCOMES = new Set(['heard', 'not-heard']);
 
+export function classifyAudibilityDiagnostic(outcome, pulse, renderEvidence) {
+  if (!VALID_OUTCOMES.has(outcome)) throw new TypeError(`Invalid audibility outcome: ${outcome}`);
+  if (!pulse?.played) return 'pulse-not-scheduled';
+  if (outcome === 'heard') return 'audible-confirmed';
+  if (renderEvidence?.result === 'render-confirmed') return 'render-confirmed-not-heard';
+  if (renderEvidence?.result === 'clock-only') return 'clock-advanced-not-heard';
+  return 'not-heard-render-unconfirmed';
+}
+
 export function buildAudibilityEvidence(outcome, pulse, renderEvidence, recordedAt = new Date().toISOString()) {
   if (!VALID_OUTCOMES.has(outcome)) throw new TypeError(`Invalid audibility outcome: ${outcome}`);
   return {
-    schemaVersion: '1.0.0',
+    schemaVersion: '1.1.0',
     outcome,
+    diagnosis: classifyAudibilityDiagnostic(outcome, pulse, renderEvidence),
     recordedAt,
     pulse: {
       played: Boolean(pulse?.played),
@@ -96,9 +106,10 @@ function ensurePanel() {
       window.__MC_AUDIBILITY_EVIDENCE__ = evidence;
       panel.dataset.audibilityPanel = 'recorded';
       panel.dataset.audibilityOutcome = outcome;
+      panel.dataset.audibilityDiagnosis = evidence.diagnosis;
       status.value = outcome === 'heard'
         ? 'Audible sound confirmed and paired with browser evidence.'
-        : 'Sound was not heard; browser evidence was preserved for diagnosis.';
+        : `Sound was not heard. Diagnostic classification: ${evidence.diagnosis}.`;
       question.textContent = outcome === 'heard' ? 'Heard' : 'Not heard';
       panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = true; });
     });
@@ -121,7 +132,11 @@ export function installAudibilityOutcomeRuntime() {
       const diagnostic = event.target?.closest?.('[data-audio-diagnostic]');
       if (!diagnostic) return;
       panel.dataset.audibilityPanel = 'awaiting-pulse';
+      delete panel.dataset.audibilityOutcome;
+      delete panel.dataset.audibilityDiagnosis;
       panel.style.display = 'none';
+      panel.querySelectorAll('button').forEach((candidate) => { candidate.disabled = false; });
+      panel.querySelector('span').textContent = 'Did you hear it?';
       window.setTimeout(() => {
         if (!window.__MC_AUDIO_PULSE__?.played) return;
         panel.dataset.audibilityPanel = 'awaiting-response';
