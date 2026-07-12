@@ -5,6 +5,8 @@ import path from 'node:path';
 
 const FULL_SHA = /^[0-9a-f]{40}$/;
 const CONTROL_CHARACTER = /[\u0000-\u001f\u007f]/;
+const ALLOWED_FLAGS = new Set(['--base', '--head', '--output']);
+const REQUIRED_FLAGS = new Set(['--base', '--head']);
 
 export function buildChangedPathsManifest({ base, head, runGit = execFileSync } = {}) {
   if (!FULL_SHA.test(base || '') || !FULL_SHA.test(head || '')) {
@@ -41,9 +43,26 @@ export function buildChangedPathsManifest({ base, head, runGit = execFileSync } 
   };
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
+  if (!Array.isArray(argv) || argv.length === 0 || argv.length % 2 !== 0) {
+    throw new Error('arguments must be non-empty flag/value pairs');
+  }
+
   const args = new Map();
-  for (let index = 0; index < argv.length; index += 2) args.set(argv[index], argv[index + 1]);
+  for (let index = 0; index < argv.length; index += 2) {
+    const flag = argv[index];
+    const value = argv[index + 1];
+    if (!ALLOWED_FLAGS.has(flag)) throw new Error(`unknown argument: ${flag}`);
+    if (args.has(flag)) throw new Error(`duplicate argument: ${flag}`);
+    if (typeof value !== 'string' || value.length === 0 || value.startsWith('--')) {
+      throw new Error(`missing value for argument: ${flag}`);
+    }
+    args.set(flag, value);
+  }
+
+  for (const flag of REQUIRED_FLAGS) {
+    if (!args.has(flag)) throw new Error(`missing required argument: ${flag}`);
+  }
   return args;
 }
 
