@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1015" />
+  <title>The Observatory of Small Impossible Machines</title>
+  <style>
+    :root{color-scheme:dark;--ink:#ece7d9;--dim:#8d8a84;--panel:#171820;--line:#353847;--glow:#d7b46a}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0f1015;color:var(--ink);font-family:Georgia,serif}
+    body{overflow:hidden}.world{position:relative;height:100svh;width:100vw;background:radial-gradient(circle at 50% 42%,#252735 0,#171820 28%,#0f1015 72%)}
+    canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+    .title{position:absolute;left:clamp(18px,4vw,56px);top:clamp(18px,4vw,46px);max-width:620px;pointer-events:none}
+    h1{font-size:clamp(28px,5vw,68px);line-height:.95;margin:0;font-weight:500;letter-spacing:-.04em;text-wrap:balance}
+    .subtitle{margin-top:12px;color:var(--dim);font:italic 15px/1.5 Georgia,serif;max-width:480px}
+    .controls{position:absolute;right:18px;top:18px;display:flex;gap:8px;z-index:3}
+    button{border:1px solid var(--line);background:rgba(23,24,32,.76);color:var(--ink);padding:10px 12px;border-radius:999px;font:12px/1 system-ui,sans-serif;backdrop-filter:blur(10px);cursor:pointer}
+    button:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+    .caption{position:absolute;left:18px;bottom:18px;max-width:min(560px,calc(100vw - 36px));padding:12px 14px;border:1px solid var(--line);background:rgba(15,16,21,.68);backdrop-filter:blur(12px);font:13px/1.5 system-ui,sans-serif;color:var(--dim)}
+    .caption strong{color:var(--ink);font-weight:600}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media (prefers-reduced-motion:reduce){.subtitle:after{content:' Reduced-motion mode active.'}}
+  </style>
+</head>
+<body>
+  <main class="world" aria-labelledby="title">
+    <div class="title"><h1 id="title">The Observatory of Small Impossible Machines</h1><p class="subtitle">Three quiet mechanisms wait for gestures they were never designed to understand.</p></div>
+    <canvas id="stage" aria-label="Interactive field containing three abstract mechanical organisms"></canvas>
+    <div class="controls"><button id="sound" type="button" aria-pressed="false">sound off</button><button id="reset" type="button">reset night</button></div>
+    <div class="caption" id="caption" role="status" aria-live="polite"><strong>No instructions.</strong> Move, pause, drag, or tap. The machines reveal themselves through consequence.</div>
+    <p class="sr-only">Machine one follows the rhythm of your movement. Machine two grows geometry from stillness. Machine three remembers only your most recent gesture.</p>
+  </main>
+<script>
+(() => {
+  const canvas=document.querySelector('#stage'),ctx=canvas.getContext('2d'),soundBtn=document.querySelector('#sound'),resetBtn=document.querySelector('#reset'),caption=document.querySelector('#caption');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches; let dpr=1,w=0,h=0,last=performance.now(),pointer={x:0,y:0,px:0,py:0,down:false,speed:0,lastMove:performance.now()},audio=null,sound=false;
+  const state={pulse:0,still:0,memory:[],orbit:0};
+  function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);if(!pointer.x){pointer.x=w*.5;pointer.y=h*.6;pointer.px=pointer.x;pointer.py=pointer.y}}
+  addEventListener('resize',resize,{passive:true});resize();
+  function tone(freq,dur=.08,gain=.025){if(!sound||!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(gain,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+dur)}
+  async function toggleSound(){if(!audio)audio=new (AudioContext||webkitAudioContext)();await audio.resume();sound=!sound;soundBtn.textContent=sound?'sound on':'sound off';soundBtn.setAttribute('aria-pressed',String(sound));if(sound)tone(220,.3,.04)}
+  soundBtn.addEventListener('click',toggleSound);resetBtn.addEventListener('click',()=>{state.pulse=0;state.still=0;state.memory=[];caption.innerHTML='<strong>The night has been reset.</strong> Nothing remembers you yet.';tone(146,.35,.04)});
+  function move(e){const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left),y=(e.clientY-r.top),dx=x-pointer.x,dy=y-pointer.y;pointer.px=pointer.x;pointer.py=pointer.y;pointer.x=x;pointer.y=y;pointer.speed=Math.hypot(dx,dy);pointer.lastMove=performance.now();state.pulse=Math.min(1,state.pulse+pointer.speed/180);if(pointer.speed>18&&Math.random()>.82)tone(180+pointer.speed*2,.05,.018)}
+  canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerdown',e=>{pointer.down=true;canvas.setPointerCapture(e.pointerId);move(e);state.memory.push({x:pointer.x,y:pointer.y,t:performance.now()});state.memory=state.memory.slice(-1);caption.innerHTML='<strong>The last machine has replaced its memory.</strong> It knows only this gesture.';tone(330,.12,.03)});canvas.addEventListener('pointerup',()=>pointer.down=false);
+  function ring(x,y,r,a=1){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.strokeStyle=`rgba(236,231,217,${a})`;ctx.stroke()}
+  function machineRhythm(t){const x=w*.22,y=h*.63,b=32+state.pulse*20;ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(t*.0015)*.2);ctx.lineWidth=1.2;for(let i=0;i<7;i++){ctx.rotate(.42);ctx.strokeStyle=`rgba(215,180,106,${.16+i*.05})`;ctx.strokeRect(-b-i*3,-b+i*2,b*2+i*6,b*2-i*4)}ring(0,0,8+Math.sin(t*.01)*3,.7);ctx.restore();state.pulse*=.965}
+  function machineStillness(t,dt){const idle=(performance.now()-pointer.lastMove)/1000;state.still=Math.max(0,Math.min(1.4,state.still+(idle>.7?dt*.00035:-dt*.001)));const x=w*.5,y=h*.58;ctx.save();ctx.translate(x,y);ctx.lineWidth=1;const petals=6+Math.floor(state.still*8);for(let i=0;i<petals;i++){const a=i/petals*Math.PI*2+state.orbit;const r=18+i*4+state.still*35;ctx.beginPath();ctx.moveTo(Math.cos(a)*12,Math.sin(a)*12);ctx.quadraticCurveTo(Math.cos(a+.7)*r,Math.sin(a+.7)*r,Math.cos(a)*r,Math.sin(a)*r);ctx.strokeStyle=`rgba(141,138,132,${.16+i/petals*.45})`;ctx.stroke()}ring(0,0,6+state.still*4,.85);ctx.restore();state.orbit+=reduced?0:dt*.00004;if(state.still>1&&Math.random()>.992)tone(110+petals*8,.18,.018)}
+  function machineMemory(t){const x=w*.78,y=h*.64,m=state.memory[0];ctx.save();ctx.translate(x,y);ctx.lineWidth=1.1;for(let i=0;i<5;i++){const rr=18+i*10+(m?Math.sin(t*.002+i)*4:0);ctx.strokeStyle=`rgba(236,231,217,${.12+i*.09})`;ctx.beginPath();ctx.arc(0,0,rr,-1.2+i*.18,1.8+i*.22);ctx.stroke()}if(m){const ang=Math.atan2(m.y-y,m.x-x),dist=Math.min(70,Math.hypot(m.x-x,m.y-y)*.08);ctx.rotate(ang);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(dist,0);ctx.strokeStyle='rgba(215,180,106,.8)';ctx.stroke();ctx.translate(dist,0);ring(0,0,4,.9)}else{ctx.fillStyle='rgba(141,138,132,.55)';ctx.font='12px Georgia';ctx.fillText('empty',-15,4)}ctx.restore()}
+  function draw(t){const dt=Math.min(40,t-last);last=t;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.035)';for(let i=0;i<80;i++){const x=(i*97%w),y=(i*53%h);ctx.fillRect(x,y,1,1)}machineRhythm(t);machineStillness(t,dt);machineMemory(t);requestAnimationFrame(draw)}requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
