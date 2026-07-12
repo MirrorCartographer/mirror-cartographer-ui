@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T17:29:00Z",
+  "change": {
+    "type": "evidence_contract_hardening",
+    "summary": "The exact-commit evidence validator now requires workflow trigger provenance and immutable artifact identity fields.",
+    "commit_sha": "e5ccfa5ee47618bd9803ba2dac39f64f5b2014dd",
+    "paths": [
+      "scripts/vercel-exact-commit-runtime-evidence.test.mjs"
+    ]
+  },
+  "acceptance_added": [
+    "event_name must be push or workflow_dispatch",
+    "ref must be a full refs/heads/* or refs/tags/* value",
+    "ref_name must be present",
+    "ref_type must be branch or tag",
+    "run_attempt must be present",
+    "artifact_name must be present"
+  ],
+  "verification": {
+    "source_write": "verified_by_github_contents_api",
+    "workflow_execution": "not_observed_in_this_run",
+    "deployment": "not_attempted",
+    "physical_device": "not_performed"
+  },
+  "claim_boundary": "This record proves the source contract was committed. It does not prove GitHub Actions execution, Vercel deployment, browser audio routing, or physical audibility.",
+  "privacy": "No private chat, health, credential, payment, or personal material was stored.",
+  "rollback": {
+    "method": "revert_commit",
+    "commit_sha": "e5ccfa5ee47618bd9803ba2dac39f64f5b2014dd"
+  }
+}
