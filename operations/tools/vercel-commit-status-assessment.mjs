@@ -30,6 +30,7 @@ export function assessVercelCommitStatus(input = {}) {
     return {
       accepted: true,
       deployable: false,
+      deployment_identity_verified: false,
       decision: 'vercel_status_absent',
       reason: 'No Vercel commit status was observed; deployment state remains unproven.',
       repository,
@@ -46,6 +47,7 @@ export function assessVercelCommitStatus(input = {}) {
     return {
       accepted: true,
       deployable: false,
+      deployment_identity_verified: false,
       decision: 'provider_build_rate_limited',
       reason: 'The exact commit has a failing Vercel status whose target identifies the provider build-rate limit.',
       repository,
@@ -60,9 +62,10 @@ export function assessVercelCommitStatus(input = {}) {
   if (successful) {
     return {
       accepted: true,
-      deployable: true,
-      decision: 'vercel_status_success_observed',
-      reason: 'A successful Vercel commit status was observed; immutable deployment identity still requires separate verification.',
+      deployable: false,
+      deployment_identity_verified: false,
+      decision: 'vercel_status_success_identity_unverified',
+      reason: 'A successful Vercel commit status was observed, but deployment remains fail-closed until immutable deployment identity is independently verified.',
       repository,
       commit_sha: commitSha,
       observed_at: new Date(observedAt).toISOString(),
@@ -74,6 +77,7 @@ export function assessVercelCommitStatus(input = {}) {
   return {
     accepted: true,
     deployable: false,
+    deployment_identity_verified: false,
     decision: 'vercel_status_non_success',
     reason: 'A Vercel status was observed but it does not establish a successful deployment.',
     repository,
