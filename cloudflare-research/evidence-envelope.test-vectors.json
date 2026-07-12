@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "schema_path": "cloudflare-research/evidence-envelope.schema.json",
+  "vectors": [
+    {
+      "name": "valid_unverified_infrastructure_observation",
+      "expected_valid": true,
+      "instance": {
+        "schema_version": 1,
+        "claim_id": "CF-EVIDENCE-001",
+        "claim_status": "observed",
+        "claim_text": "The repository contains a fail-closed evidence-envelope schema.",
+        "domain": "provenance",
+        "source_records": [
+          {
+            "source_id": "github-commit-68229e6f",
+            "source_type": "repository",
+            "locator": "MirrorCartographer/mirror-cartographer-ui@68229e6f80f8d3e324d942658bd32b34b5ac5db0:cloudflare-research/evidence-envelope.schema.json",
+            "observed_at": "2026-07-12T04:20:00Z",
+            "supports": "supports"
+          }
+        ],
+        "evidence_strength": "direct_source",
+        "privacy_class": "public",
+        "medical_boundary": {
+          "diagnosis_claim": false,
+          "treatment_claim": false,
+          "human_review_required": false,
+          "boundary_note": "Infrastructure and provenance only."
+        },
+        "deployment_binding": {
+          "state": "unverified",
+          "provider": "cloudflare_pages",
+          "commit_sha": "68229e6f80f8d3e324d942658bd32b34b5ac5db0",
+          "deployment_url": null,
+          "verified_at": null,
+          "verification_method": null
+        },
+        "falsification_route": "Fetch the referenced commit and demonstrate that the schema path is absent or materially different.",
+        "created_at": "2026-07-12T04:20:00Z"
+      }
+    },
+    {
+      "name": "invalid_medical_diagnosis_claim",
+      "expected_valid": false,
+      "instance": {
+        "schema_version": 1,
+        "claim_id": "CF-EVIDENCE-002",
+        "claim_status": "proposed",
+        "claim_text": "A diagnosis is established.",
+        "domain": "medicine_facing_organization",
+        "source_records": [
+          {
+            "source_id": "example",
+            "source_type": "secondary",
+            "locator": "example",
+            "observed_at": "2026-07-12T04:20:00Z",
+            "supports": "supports"
+          }
+        ],
+        "evidence_strength": "single_source",
+        "privacy_class": "internal",
+        "medical_boundary": {
+          "diagnosis_claim": true,
+          "treatment_claim": false,
+          "human_review_required": true
+        },
+        "deployment_binding": {
+          "state": "not_applicable",
+          "provider": "none",
+          "commit_sha": null
+        },
+        "falsification_route": "Not applicable.",
+        "created_at": "2026-07-12T04:20:00Z"
+      }
+    },
+    {
+      "name": "invalid_verified_deployment_without_url_or_method",
+      "expected_valid": false,
+      "instance": {
+        "schema_version": 1,
+        "claim_id": "CF-EVIDENCE-003",
+        "claim_status": "observed",
+        "claim_text": "A deployment is verified.",
+        "domain": "deployment",
+        "source_records": [
+          {
+            "source_id": "example",
+            "source_type": "deployment",
+            "locator": "example",
+            "observed_at": "2026-07-12T04:20:00Z",
+            "supports": "supports"
+          }
+        ],
+        "evidence_strength": "direct_runtime",
+        "privacy_class": "public",
+        "medical_boundary": {
+          "diagnosis_claim": false,
+          "treatment_claim": false,
+          "human_review_required": false
+        },
+        "deployment_binding": {
+          "state": "verified",
+          "provider": "cloudflare_pages",
+          "commit_sha": "68229e6f80f8d3e324d942658bd32b34b5ac5db0"
+        },
+        "falsification_route": "Check deployment identity.",
+        "created_at": "2026-07-12T04:20:00Z"
+      }
+    }
+  ]
+}
