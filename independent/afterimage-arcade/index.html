@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Afterimage Arcade</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#101014;color:#f7f2e8;font-family:monospace}canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}.ui{position:fixed;inset:0;padding:20px;display:grid;grid-template-rows:auto 1fr auto;pointer-events:none}.top,.bottom{display:flex;justify-content:space-between;gap:16px}.title{font-size:clamp(20px,4vw,42px);font-weight:700;letter-spacing:.08em}.note,.status{background:rgba(16,16,20,.75);border:1px solid #777;padding:8px 10px;font-size:12px}.status{align-self:end;width:max-content}button{pointer-events:auto;border:0;padding:10px 12px;font:700 12px monospace;cursor:pointer}@media(max-width:650px){.bottom{font-size:10px}.note{max-width:55%}}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="Interactive abstract artwork. Move a pointer to bend luminous paths. Tap or press Space to create a pulse."></canvas>
+<div class="ui"><div class="top"><div><div class="title">AFTERIMAGE ARCADE</div><div class="note">A room made from motion.</div></div><button id="newRoom">NEW ROOM</button></div><div id="status" class="status" aria-live="polite">ROOM 01</div><div class="bottom"><span>Move slowly. The room remembers speed.</span><span>Pointer: bend · Tap/Space: pulse · R: reset</span></div></div>
+<script>
+(function(){
+var canvas=document.getElementById('stage');var ctx=canvas.getContext('2d');var status=document.getElementById('status');var w=0,h=0,dpr=1,time=0,room=0;var px=.5,py=.5,energy=0,pulses=[];var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);w=window.innerWidth;h=window.innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+function reset(){room++;pulses=[];energy=0;status.textContent='ROOM '+String(room).padStart(2,'0');ctx.fillStyle='#101014';ctx.fillRect(0,0,w,h)}
+function move(e){var r=canvas.getBoundingClientRect();var nx=(e.clientX-r.left)/r.width;var ny=(e.clientY-r.top)/r.height;energy=Math.min(1,energy+Math.hypot(nx-px,ny-py)*5);px=nx;py=ny}
+function pulse(){pulses.push({x:px*w,y:py*h,r:0,a:1});energy=1;status.textContent='ROOM '+String(room).padStart(2,'0')+' · PULSE '+pulses.length}
+canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerdown',function(e){move(e);pulse()});window.addEventListener('keydown',function(e){if(e.code==='Space'){e.preventDefault();pulse()}if(e.key.toLowerCase()==='r')reset()});window.addEventListener('resize',resize);document.getElementById('newRoom').addEventListener('click',reset);
+function draw(){time+=reduced?.002:.008;energy*=.982;ctx.fillStyle='rgba(16,16,20,.075)';ctx.fillRect(0,0,w,h);ctx.globalCompositeOperation='lighter';var bands=reduced?18:42;for(var i=0;i<bands;i++){var q=i/(bands-1);var phase=time*(.3+q*.8)+i*.41+room;var y=q*h+Math.sin(phase*1.7)*h*.035;var near=Math.exp(-Math.abs(py*h-y)/(h*.16));var bend=(px*w-w*.5)*near*(.12+energy*.38);ctx.beginPath();ctx.moveTo(-30,y);for(var s=0;s<=12;s++){var xx=s/12*w;var field=Math.sin(phase+s*.72)*h*(.008+.014*q)+bend*Math.sin(Math.PI*s/12);ctx.lineTo(xx,y+field)}ctx.strokeStyle='hsla('+((room*47+i*7+time*12)%360)+',85%,'+(58+q*22)+'%,'+(.08+near*.16)+')';ctx.lineWidth=.7+near*2.2;ctx.stroke()}for(var j=0;j<pulses.length;j++){var p=pulses[j];p.r+=reduced?.4:2.1;p.a*=.985;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.strokeStyle='rgba(247,242,232,'+(p.a*.45)+')';ctx.stroke()}pulses=pulses.filter(function(p){return p.a>.03&&p.r<Math.max(w,h)});ctx.globalCompositeOperation='source-over';requestAnimationFrame(draw)}
+resize();reset();draw();
+})();
+</script>
+</body>
+</html>
