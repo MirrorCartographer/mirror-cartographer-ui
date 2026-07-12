@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Observed and durably recorded the real Vercel outcome for an operations-only sentinel commit. The status failed at the account build-rate limit, so build suppression remains unproven and deployment acceptance stays fail-closed.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Deployment Verifier",
+    "Test Harness Engineer",
+    "Rollback Engineer"
+  ],
+  "evidence": "operations/evidence/V-001-operations-only-build-suppression-check-2026-07-12T0735-0400.json",
+  "commits": [
+    "aee398dbff8fba4dcad91d439d96de9f305c91c8",
+    "98d3fd9c0f30a623fcd225993a336dfe5fc0e949",
+    "6176cc8c0b9dfb9f2f499a0c0ff771953f78a6b9"
+  ],
+  "acceptance_remaining": [
+    "After Vercel build capacity resets or is increased, observe an operations-only sentinel commit reported as skipped/ignored rather than failed.",
+    "Observe an exact-commit GitHub Actions run for the audio-routing workflow and inspect the six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert commits 6176cc8c0b9dfb9f2f499a0c0ff771953f78a6b9 and this queue-record commit. No production runtime code changed in this slice.",
+  "next_action": "Do not create additional application deployments while the Vercel rate limit is active. When capacity returns, use one operations-only sentinel to test ignoreCommand, then dispatch and inspect the commit-bound audio-routing workflow."
+}
