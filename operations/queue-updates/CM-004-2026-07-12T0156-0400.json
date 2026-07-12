@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "CM-004",
+  "owner": "continuity_mining",
+  "priority_basis": "CM-003 explicitly names alias-ingestion validation as its next action, and no continuity-owned item exists in the canonical ACTIVE_QUEUE snapshot.",
+  "state": "completed_slice",
+  "objective": "Convert the project alias lexicon into a fail-closed ingestion validator that preserves source form and ambiguity.",
+  "completed": [
+    "Implemented exact canonical, abbreviation, formatting, slug, and mode-reference resolution.",
+    "Implemented confidence-gated handling for only the two lexicon-qualified misspellings.",
+    "Preserved original and normalized surface forms in every result.",
+    "Failed closed for ambiguous, empty, and invalid inputs.",
+    "Added six deterministic boundary tests and provenance evidence."
+  ],
+  "files": [
+    "tools/continuity/alias-ingestion-validator.mjs",
+    "tools/continuity/alias-ingestion-validator.test.mjs",
+    "operations/evidence/continuity-alias-ingestion-validator-2026-07-12T0156-0400.json"
+  ],
+  "commits": [
+    "e52735fcd5d94f62559eead2f0787b730fdfcdd0",
+    "0131935f5336237a917413ea4fb12cf330bd24aa",
+    "f61e7ef65548080feb2616e27d1fa2e1211a7277"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "committed_ci_execution": false
+  },
+  "shared_state_policy": {
+    "active_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "history_deleted": false,
+    "specialist_registry_changed": false
+  },
+  "next_action": "Add provenance-qualified first-known and last-seen dates to accepted aliases, then integrate the validator at the continuity record ingestion boundary."
+}
