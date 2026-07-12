@@ -19,11 +19,13 @@ const validPacket = {
   runtimeEvidence: { sessionId: 'bounded-session-1', audioContextSupported: true, userActivationObserved: true, resumeFulfilled: true, contextStateAfter: 'running', sourceStarted: true, destinationConnected: true, signalObserved: true, humanReportedAudible: true }
 };
 
-test('passes exact-commit immutable Vercel deployment plus session-bound human confirmation', () => {
+test('passes exact-commit immutable Vercel deployment plus fresh session-bound human confirmation', () => {
   const result = verifyPhysicalAudibilityEvidence(validPacket);
   assert.equal(result.status, 'pass');
-  assert.equal(result.schemaVersion, '1.3.0');
+  assert.equal(result.schemaVersion, '1.4.0');
   assert.equal(result.sessionBinding.sessionBound, true);
+  assert.equal(result.freshnessPolicy.maxDeploymentToTestMs, 900000);
+  assert.equal(result.freshnessPolicy.maxTestToHumanMs, 300000);
 });
 
 test('fails closed for machine signal without human confirmation', () => {
@@ -80,11 +82,28 @@ test('rejects a bounded test recorded before the deployment became ready', () =>
   assert.ok(result.failures.includes('test_precedes_deployment_ready'));
 });
 
+test('rejects a test performed too long after deployment readiness', () => {
+  const packet = structuredClone(validPacket);
+  packet.testedAt = '2026-07-12T05:16:00Z';
+  packet.humanCheck.observedAt = '2026-07-12T05:17:00Z';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('test_too_stale_after_deployment'));
+  assert.equal(result.supportsPhysicalAudibilityClaim, false);
+});
+
 test('rejects human confirmation recorded before the bounded test', () => {
   const packet = structuredClone(validPacket);
   packet.humanCheck.observedAt = '2026-07-12T04:59:00Z';
   const result = verifyPhysicalAudibilityEvidence(packet);
   assert.ok(result.failures.includes('human_observation_precedes_test'));
+});
+
+test('rejects human confirmation recorded too long after the bounded test', () => {
+  const packet = structuredClone(validPacket);
+  packet.humanCheck.observedAt = '2026-07-12T05:06:01Z';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('human_observation_too_stale'));
+  assert.equal(result.supportsPhysicalAudibilityClaim, false);
 });
 
 test('rejects unbounded device evidence', () => {
