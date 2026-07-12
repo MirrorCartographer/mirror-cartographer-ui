@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-provenance-gap-knowledge-graph-2026-07-12T1944-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-12T19:44:28-04:00",
+  "purpose": "Project unresolved continuity identifiers into a source-class-aware knowledge graph without reconstructing missing history.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json at blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json at blob a3e644812052905ef6072da9959a4c1aa6fa475b",
+    "operations/SPECIALIST_REGISTRY.json at blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json at blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "provenance gap ledger commit 058aba56790230dd71096ca7360734f6e20f164d",
+    "identifier namespace boundary commit 1fffe49367e9918a51b66ff0cd5392d82a29ab2b",
+    "recent repository commits through 6996be49816e16b40e84c410ade27d80b85b969b",
+    "File Library relevance-ranked searches for exact M-004, M-005, and M-006 continuity identifiers"
+  ],
+  "durable_memory": {
+    "title": "Search results are evidence objects, not identity assignments",
+    "rule": "A candidate may resolve a provenance gap only when its exact identifier, namespace, owner, semantic role, temporal precedence, and immutable locator agree. Relevance-ranked absence cannot establish nonexistence, and suffix matches remain collision evidence only.",
+    "graph_effect": "Every continuity identifier node carries source_class, verification_status, claim_status, coverage_class, privacy_class, and falsification_route. Promotion to authoritative_memory requires an immutable assigning source."
+  },
+  "source_class_vocabulary": {
+    "authoritative_memory": "Immutable source explicitly assigns the exact continuity identifier and satisfies namespace, owner, semantic-role, and temporal checks.",
+    "run_report_lead": "Narrative or automation output reports the identifier but is not repository persistence proof.",
+    "namespace_collision": "Observed source shares a numeric suffix or fuzzy similarity but belongs to a different namespace or semantic role.",
+    "negative_search_observation": "A bounded or relevance-ranked search did not locate the identifier; this records coverage only and cannot prove nonexistence."
+  },
+  "nodes": [
+    {
+      "id": "continuity:M-004",
+      "namespace": "continuity",
+      "owner": "continuity_mining",
+      "node_type": "provenance_gap",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage_class": ["default_branch_files", "bounded_commit_history", "indexed_code_search", "relevance_ranked_file_library"],
+      "privacy_class": "restricted_locator_only",
+      "rejected_candidates": ["V8-004", "V9-004"],
+      "falsification_route": "Produce an immutable source predating the gap ledger that explicitly assigns M-004 in the continuity namespace."
+    },
+    {
+      "id": "continuity:M-005",
+      "namespace": "continuity",
+      "owner": "continuity_mining",
+      "node_type": "provenance_gap",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage_class": ["default_branch_files", "bounded_commit_history", "indexed_code_search", "relevance_ranked_file_library"],
+      "privacy_class": "restricted_locator_only",
+      "rejected_candidates": ["V8-005", "V9-005"],
+      "falsification_route": "Produce an immutable source predating the gap ledger that explicitly assigns M-005 in the continuity namespace."
+    },
+    {
+      "id": "continuity:M-006",
+      "namespace": "continuity",
+      "owner": "continuity_mining",
+      "node_type": "provenance_gap",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage_class": ["default_branch_files", "bounded_commit_history", "indexed_code_search", "relevance_ranked_file_library"],
+      "privacy_class": "restricted_locator_only",
+      "rejected_candidates": ["V8-006", "V9-006"],
+      "falsification_route": "Produce an immutable source predating the gap ledger that explicitly assigns M-006 in the continuity namespace."
+    }
+  ],
+  "edges": [
+    {"from": "continuity:M-004", "to": "proof_machine:V8-004", "relation": "rejected_as_namespace_collision"},
+    {"from": "continuity:M-004", "to": "proof_machine:V9-004", "relation": "rejected_as_namespace_collision"},
+    {"from": "continuity:M-005", "to": "proof_machine:V8-005", "relation": "rejected_as_namespace_collision"},
+    {"from": "continuity:M-005", "to": "proof_machine:V9-005", "relation": "rejected_as_namespace_collision"},
+    {"from": "continuity:M-006", "to": "proof_machine:V8-006", "relation": "rejected_as_namespace_collision"},
+    {"from": "continuity:M-006", "to": "proof_machine:V9-006", "relation": "rejected_as_namespace_collision"}
+  ],
+  "claims": {
+    "observed": [
+      "The canonical queue keeps M-004, M-005, and M-006 unresolved.",
+      "Existing immutable continuity artifacts classify V8 and V9 suffix matches as namespace collisions.",
+      "The current File Library search again returned V8/V9 proof-machine records and no exact continuity-owned assigning object."
+    ],
+    "inferred": [
+      "The unresolved identifiers may derive from a non-persisted run report, an unobserved branch, another repository, or a private source not available to this run."
+    ],
+    "proposed": [
+      "Use this graph projection as the canonical machine-readable quarantine layer until exhaustive history traversal or an immutable assigning source resolves each node."
+    ],
+    "superseded": [
+      "Using numeric suffix agreement as identifier identity.",
+      "Treating relevance-ranked negative search as proof that an artifact never existed."
+    ],
+    "unresolved": [
+      "The originating immutable source for M-004, M-005, and M-006.",
+      "Exhaustive branch and commit-history coverage."
+    ]
+  },
+  "verification_status": "verified_projection",
+  "evidence_strength": "moderate",
+  "coverage_limit": "Repository connector search and File Library retrieval are not exhaustive branch-history proofs. This projection verifies classification and quarantine state, not nonexistence.",
+  "privacy_boundary": "Only opaque identifiers, source classes, repository metadata, and abstract semantic classifications are persisted. No private dialogue, personal events, health information, credentials, or identifying details are reproduced."
+}
