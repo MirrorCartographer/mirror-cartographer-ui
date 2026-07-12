@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T05:56:48Z",
+  "queue_item": "CM-004",
+  "owner": "continuity_mining",
+  "source_artifacts": [
+    "operations/continuity/language/mirror-cartographer-language-lexicon.json",
+    "operations/queue-updates/CM-003-2026-07-12T0424Z.json"
+  ],
+  "finding": "CM-003 defined canonical aliases and a fail-closed misspelling policy but left alias ingestion as prose. A machine-readable resolver was required to prevent surface-form fragmentation while preserving ambiguity.",
+  "implementation": {
+    "validator": "tools/continuity/alias-ingestion-validator.mjs",
+    "tests": "tools/continuity/alias-ingestion-validator.test.mjs",
+    "returns": [
+      "canonicalNode",
+      "canonicalTerm",
+      "originalSurfaceForm",
+      "normalizedSurfaceForm",
+      "aliasClass",
+      "confidence",
+      "unresolved"
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/continuity/alias-ingestion-validator.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "environment": "isolated Node.js reproduction before repository commit"
+  },
+  "claim_register": {
+    "observed": [
+      "CM-003 names an alias-ingestion validator as its next action.",
+      "The lexicon defines canonical, abbreviation, formatting, mode-reference, and two qualified misspelling cases.",
+      "Six deterministic tests passed before commit."
+    ],
+    "inferred": [
+      "Centralized alias resolution reduces knowledge-graph fragmentation caused by spelling and formatting variants."
+    ],
+    "proposed": [
+      "Import the resolver at continuity ingestion boundaries before creating project identity nodes.",
+      "Backfill first-known alias dates only from provenance-qualified records."
+    ],
+    "superseded": [
+      "Treat every project surface form as a distinct node.",
+      "Resolve arbitrary near-matches without a confidence boundary."
+    ],
+    "unresolved": [
+      "Complete historical alias inventory and first-known dates.",
+      "Whether MC mode represents one stable mode or multiple historical implementations.",
+      "Repository CI has not yet executed the committed test file."
+    ]
+  },
+  "privacy_boundary": {
+    "contains_raw_chat": false,
+    "contains_personal_or_medical_data": false,
+    "contains_project_level_abstraction_only": true
+  },
+  "commits": [
+    "e52735fcd5d94f62559eead2f0787b730fdfcdd0",
+    "0131935f5336237a917413ea4fb12cf330bd24aa"
+  ]
+}
