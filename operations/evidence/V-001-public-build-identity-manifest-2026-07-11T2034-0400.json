@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "slice": "Emit a stable public well-known deployment identity manifest from every Vite build.",
+  "source_commits": [
+    "af1d9d6b038ed2f415801ed8f8c0933ce7233098",
+    "0bb70eee3e4335934ca9994f577072567147d9d9"
+  ],
+  "files": [
+    "vite.config.js",
+    "scripts/vercel-build-identity-contract-check.mjs"
+  ],
+  "manifest_path": "/.well-known/mirror-cartographer-deployment.json",
+  "claims": {
+    "source_implemented": true,
+    "contract_extended": true,
+    "provider_deployed": false,
+    "public_manifest_fetched": false,
+    "served_commit_verified": false
+  },
+  "verification": {
+    "source_review": "The Vite plugin emits a deterministic JSON asset containing schema version, application, commit SHA, provider, deployment URL, and an explicit claim scope.",
+    "contract_cases": 7,
+    "github_workflow_runs_observed": 0,
+    "vercel_status": "failure",
+    "vercel_failure_class": "transient_build_rate_limit",
+    "local_execution": "unavailable because the runtime did not provide gh CLI access to clone the private repository"
+  },
+  "safety": {
+    "payments_added": false,
+    "files_deleted": false,
+    "history_rewritten": false,
+    "claim_boundary": "The manifest proves build-time identity only after it is publicly fetched; it does not independently prove runtime correctness."
+  },
+  "rollback": {
+    "method": "Revert commits in reverse order without force push.",
+    "commits": [
+      "0bb70eee3e4335934ca9994f577072567147d9d9",
+      "af1d9d6b038ed2f415801ed8f8c0933ce7233098"
+    ]
+  },
+  "next_action": "After the Vercel rate limit clears, fetch the well-known manifest from the public deployment and compare commit_sha with the deployed source commit.",
+  "recorded_at": "2026-07-12T00:34:22Z"
+}
