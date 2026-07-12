@@ -1,0 +1,71 @@
+{
+  "valid": [
+    {
+      "occurrence_id": "occ-mc-project-001",
+      "raw_value": "Mirror Cartographer",
+      "normalized_value": "mirror_cartographer",
+      "entity_type": "project_name",
+      "lifecycle_dimension": "canonical_entity",
+      "lifecycle_status": "active",
+      "claim_status": "observed",
+      "confidence": "high",
+      "source_reference": "operations/continuity/project-identity-invariant.json@b7bb31e7",
+      "source_visibility": "public_repository",
+      "observed_at_or_range": "2026-07-12",
+      "evidence_strength": "direct_source",
+      "review_state": "accepted"
+    },
+    {
+      "occurrence_id": "occ-mc-alias-001",
+      "raw_value": "MC",
+      "normalized_value": "mirror_cartographer",
+      "entity_type": "abbreviation",
+      "lifecycle_dimension": "contextual_alias",
+      "lifecycle_status": "active",
+      "claim_status": "observed",
+      "confidence": "high",
+      "source_reference": "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+      "source_visibility": "derived_artifact",
+      "observed_at_or_range": "2026-07-12",
+      "evidence_strength": "corroborated_summary",
+      "review_state": "accepted"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing lifecycle dimension",
+      "row": {
+        "occurrence_id": "occ-invalid-001",
+        "raw_value": "MC",
+        "normalized_value": "mirror_cartographer",
+        "entity_type": "abbreviation",
+        "lifecycle_status": "active",
+        "claim_status": "observed",
+        "confidence": "high",
+        "source_reference": "operations/continuity/example.json",
+        "source_visibility": "derived_artifact",
+        "observed_at_or_range": "2026-07-12",
+        "evidence_strength": "direct_source",
+        "review_state": "accepted"
+      }
+    },
+    {
+      "name": "private passage copied into source reference",
+      "row": {
+        "occurrence_id": "occ-invalid-002",
+        "raw_value": "MC",
+        "normalized_value": "mirror_cartographer",
+        "entity_type": "abbreviation",
+        "lifecycle_dimension": "contextual_alias",
+        "lifecycle_status": "active",
+        "claim_status": "observed",
+        "confidence": "medium",
+        "source_reference": "message: this is copied private prose",
+        "source_visibility": "private_chat_history",
+        "observed_at_or_range": "unknown",
+        "evidence_strength": "weak_context",
+        "review_state": "accepted"
+      }
+    }
+  ]
+}
