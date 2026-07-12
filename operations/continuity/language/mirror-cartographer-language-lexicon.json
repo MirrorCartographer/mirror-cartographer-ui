@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-12T04:24:00Z",
+  "canonical_identity": {
+    "term": "Mirror Cartographer",
+    "node_id": "project:mirror-cartographer",
+    "status": "observed"
+  },
+  "identity_resolution": {
+    "rule": "Nicknames, abbreviations, casing variants, concatenations, punctuation variants, and likely misspellings resolve to the canonical project node unless context provides evidence for a distinct entity.",
+    "preserve_original_surface_form": true,
+    "create_distinct_node_by_default": false,
+    "accepted_aliases": [
+      {"term": "MC", "class": "abbreviation", "status": "observed"},
+      {"term": "MirrorCartographer", "class": "concatenation", "status": "observed"},
+      {"term": "mirror-cartographer", "class": "slug", "status": "observed"},
+      {"term": "mirrorcartographer", "class": "lowercase_concatenation", "status": "observed"},
+      {"term": "MC mode", "class": "nickname_or_feature_reference", "status": "observed", "resolution_note": "Resolve to the project node plus a mode relation when context indicates a feature."}
+    ],
+    "misspelling_policy": {
+      "status": "proposed",
+      "rule": "Normalize only when edit distance, phonetic similarity, surrounding context, and project salience jointly support the canonical identity. Preserve the typed form and confidence. Ambiguous forms remain unresolved.",
+      "examples": [
+        {"term": "Miror Cartographer", "resolution": "project:mirror-cartographer", "confidence": "high"},
+        {"term": "Mirror Cartograper", "resolution": "project:mirror-cartographer", "confidence": "high"}
+      ]
+    }
+  },
+  "operational_language": {
+    "feel": {
+      "keep": true,
+      "class": "integrated_model_state_request",
+      "definition": "Report the broad pattern, coherence, tension, aesthetic fit, or global organization of the active model before reducing it to explicit derivation.",
+      "claim_boundary": "Does not assert human emotion or subjective sentience.",
+      "status": "proposed"
+    },
+    "think": {
+      "keep": true,
+      "class": "explicit_reasoning_request",
+      "definition": "Perform and communicate structured comparison, causal analysis, engineering reasoning, mathematical reasoning, or justification.",
+      "status": "proposed"
+    },
+    "relationship": {
+      "type": "complementary_not_synonymous",
+      "default_sequence": ["feel", "think"],
+      "sequence_meaning": "First identify the integrated model state; then test, explain, or challenge it with explicit reasoning.",
+      "status": "proposed"
+    }
+  },
+  "claim_register": {
+    "observed": [
+      "Mirror Cartographer is the canonical project identity in repository state.",
+      "MC and multiple formatting variants are used to reference the same project."
+    ],
+    "inferred": [
+      "Most spelling and formatting variants should resolve to one project node rather than fragment project memory."
+    ],
+    "proposed": [
+      "Use confidence-gated normalization for misspellings.",
+      "Retain feel and think as separate operational prompts with complementary semantics."
+    ],
+    "superseded": [
+      "Treat every surface-form variation as a separate concept.",
+      "Treat feel and think as interchangeable wording."
+    ],
+    "unresolved": [
+      "The complete historical inventory and first-known dates of all aliases.",
+      "Whether MC mode names one stable product mode or several historically distinct implementations."
+    ]
+  },
+  "privacy_boundary": {
+    "contains_raw_chat": false,
+    "contains_personal_or_medical_data": false,
+    "contains_project_level_abstraction_only": true
+  }
+}
