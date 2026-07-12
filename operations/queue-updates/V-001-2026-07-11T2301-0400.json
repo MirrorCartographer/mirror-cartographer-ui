@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "status": "active",
+  "priority": "highest-observed",
+  "completed_slice": "Add and wire a fail-closed verifier that independently checks the generated commit-bound audio-routing evidence packet before CI can treat it as accepted evidence.",
+  "commits": [
+    "540c50e90e021028c240fd012a0264eb808540b4",
+    "790bfa1f2d5d61730628ca0c06d6e674daac8e7c",
+    "2f6fda37262386207aa344d4371ff8485182cc85",
+    "59f368f27abde9850a553cddf76c95e65a62814f",
+    "4c86818c7201d5e95b31d58ff23e4a7f78494b0b"
+  ],
+  "runtime_evidence": {
+    "actions_run": "not yet observed",
+    "vercel": "failure: build-rate-limit",
+    "physical_device": "not tested"
+  },
+  "remaining_acceptance_conditions": [
+    "Observe an exact-commit GitHub Actions run for commit 59f368f27abde9850a553cddf76c95e65a62814f or a descendant containing the same verifier logic.",
+    "Inspect the uploaded evidence artifact and confirm the verifier step and all required outcomes succeeded.",
+    "Verify a successful immutable Vercel deployment for the exact tested commit.",
+    "Obtain bounded physical iPhone Safari audibility evidence without overstating device coverage."
+  ],
+  "rollback": "Revert commits in reverse order: 59f368f27abde9850a553cddf76c95e65a62814f, 2f6fda37262386207aa344d4371ff8485182cc85, 790bfa1f2d5d61730628ca0c06d6e674daac8e7c, 540c50e90e021028c240fd012a0264eb808540b4.",
+  "updated_at": "2026-07-11T23:01:00-04:00"
+}
