@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-035",
+  "owner": "frontier_research",
+  "priority": "highest_available_frontier_continuation",
+  "state": "implemented_locally_verified",
+  "objective": "Prevent incomplete GitHub Actions observations from being misclassified as proof that an exact-commit workflow did not run.",
+  "basis": "The canonical active queue contains no frontier_research-owned item. R-034 remained pending runtime verification, and the available commit workflow-run query returned an empty set through a pull-request-only observation path that cannot conclusively cover the expected push or workflow_dispatch events.",
+  "completed_slice": [
+    "Researched the current GitHub workflow-run query model and event/head-SHA filters from primary documentation.",
+    "Added a fail-closed classifier that separates matching run observation, incomplete observation scope, and complete-scope absence.",
+    "Required expected event coverage, exact head-SHA query binding, and complete pagination before classifying no matching run.",
+    "Added five deterministic tests covering success, in-progress state, event-scope gaps, pagination gaps, and complete-scope absence.",
+    "Recorded the R-034 empty observation as inconclusive rather than failed or successful."
+  ],
+  "files": [
+    "tools/frontier-research/workflow-observation-classifier.mjs",
+    "tools/frontier-research/workflow-observation-classifier.test.mjs",
+    "operations/evidence/frontier-workflow-observation-classifier-2026-07-12T1513-0400.json",
+    "operations/queue-updates/R-035-2026-07-12T1513-0400.json"
+  ],
+  "commits": [
+    "b3323b9dc714e6e00a799023ea95ebb31450b566",
+    "73a44c73be1768acc5ed5c80fcf1468e51d67d7e",
+    "606ed625ce7beb92af1487ea2d0079cf9336fa09"
+  ],
+  "verification": {
+    "local_node_tests": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "workflow_run_observed": false,
+    "r034_runtime_verified": false,
+    "deployment": "not_part_of_slice",
+    "physical_audibility": "not_tested"
+  },
+  "evidence_strength": "implementation locally tested; provider observation remains incomplete",
+  "registry_change": null,
+  "next_action": "Perform a complete repository workflow-run query bound to the R-034 workflow commit, covering push and workflow_dispatch and exhausting pagination; then inspect the exact run artifact and manifest before changing runtime verification state."
+}
