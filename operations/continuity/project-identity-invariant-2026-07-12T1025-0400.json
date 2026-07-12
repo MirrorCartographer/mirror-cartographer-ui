@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "artifact_type": "project_identity_invariant",
+  "recorded_at": "2026-07-12T10:25:06-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "scope": "Distinguish enduring project identity from repository, folder, deployment, and implementation-surface aliases.",
+  "sources": [
+    {
+      "path": "operations/CURRENT_STATE.json",
+      "status": "observed",
+      "sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "meaning": "Canonical state names the project Mirror Cartographer and the repository MirrorCartographer/mirror-cartographer-ui."
+    },
+    {
+      "path": "operations/ACTIVE_QUEUE.json",
+      "status": "observed",
+      "sha": "49ff3b21882ff48752f7f0cecb38a4f4ecf17dd5",
+      "meaning": "Current delivery work is scoped by queue item and owner, not by project rename."
+    },
+    {
+      "file_library_title": "Mirror_Cartographer_One_Page.pdf",
+      "status": "observed_private_source",
+      "meaning": "Project-facing summary consistently names Mirror Cartographer."
+    },
+    {
+      "file_library_title": "Mirror_Cartographer_Intro_Packet.docx",
+      "status": "observed_private_source",
+      "meaning": "Introductory project material consistently names Mirror Cartographer."
+    },
+    {
+      "file_library_title": "Mirror_Cartographer_Whitepaper_Section_1.docx",
+      "status": "observed_private_source",
+      "meaning": "Long-form conceptual material consistently names Mirror Cartographer."
+    },
+    {
+      "file_library_title": "chatgpt log.rtf",
+      "status": "observed_private_source",
+      "meaning": "Historical implementation guidance used mirror-cartographer-ui, mirror-cartographer-ui-v2, mirror-cartographer-next, and mirror-cartographer as technical locations or repository candidates."
+    }
+  ],
+  "claims": [
+    {
+      "id": "PII-001",
+      "status": "observed",
+      "claim": "The enduring project name is Mirror Cartographer."
+    },
+    {
+      "id": "PII-002",
+      "status": "observed",
+      "claim": "Historical implementation records contain multiple repository, folder, framework, and deployment labels."
+    },
+    {
+      "id": "PII-003",
+      "status": "inferred",
+      "claim": "Those labels describe implementation surfaces and migration attempts rather than separate project identities."
+    },
+    {
+      "id": "PII-004",
+      "status": "proposed",
+      "claim": "Future continuity artifacts should type names by role: project_name, repository_name, local_folder, deployment_name, package_name, branch, or historical_alias."
+    },
+    {
+      "id": "PII-005",
+      "status": "superseded",
+      "claim": "A repository or folder label change implies that the Mirror Cartographer project itself changed names."
+    },
+    {
+      "id": "PII-006",
+      "status": "unresolved",
+      "claim": "Which historical implementation aliases remain active, abandoned, or redirected cannot be established from naming evidence alone."
+    }
+  ],
+  "identity_invariant": {
+    "canonical_project_name": "Mirror Cartographer",
+    "rule": "Technical container names must not be promoted to project-name changes without an explicit project-level rename decision.",
+    "typed_aliases": [
+      {
+        "value": "MirrorCartographer/mirror-cartographer-ui",
+        "type": "repository_name",
+        "current_status": "observed_current"
+      },
+      {
+        "value": "mirror-cartographer-ui",
+        "type": "repository_or_local_folder",
+        "current_status": "historical_and_current_context_dependent"
+      },
+      {
+        "value": "mirror-cartographer-ui-v2",
+        "type": "local_folder_or_migration_surface",
+        "current_status": "historical_unresolved"
+      },
+      {
+        "value": "mirror-cartographer-next",
+        "type": "framework_or_repository_candidate",
+        "current_status": "historical_unresolved"
+      },
+      {
+        "value": "mirror-cartographer",
+        "type": "generic_project_root_or_package_label",
+        "current_status": "historical_unresolved"
+      },
+      {
+        "value": "MC",
+        "type": "abbreviation",
+        "current_status": "accepted_contextual_alias"
+      }
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "contradiction": "Historical logs sometimes called a technical folder or repository the working project name, while later project documents state that the project never changed names.",
+      "resolution": "Mirror Cartographer is the project identity. Other labels are typed implementation aliases unless an explicit rename decision exists."
+    }
+  ],
+  "knowledge_graph_edges": [
+    {
+      "from": "Mirror Cartographer",
+      "relation": "has_canonical_identity",
+      "to": "project"
+    },
+    {
+      "from": "MirrorCartographer/mirror-cartographer-ui",
+      "relation": "implements",
+      "to": "Mirror Cartographer"
+    },
+    {
+      "from": "mirror-cartographer-next",
+      "relation": "historical_implementation_alias_for",
+      "to": "Mirror Cartographer"
+    },
+    {
+      "from": "MC",
+      "relation": "abbreviates",
+      "to": "Mirror Cartographer"
+    },
+    {
+      "from": "technical_container_name",
+      "relation": "must_not_imply",
+      "to": "project_rename"
+    }
+  ],
+  "privacy_boundary": {
+    "included": "Project naming, repository and folder aliases, document titles, public repository metadata, and abstract continuity rules.",
+    "excluded": "Raw private chat text, personal identity details, health, relationships, finances, and symbolic content unrelated to naming continuity.",
+    "publication_risk": "low"
+  },
+  "next_action": "Create a deterministic alias registry and scan historical artifacts for untyped names, assigning each occurrence a role and confidence without modifying canonical project identity.",
+  "evidence_digest": "a67d7b280da103085235513c9e676959df847bb182926ab51ce0b5b0a0f0937f"
+}
