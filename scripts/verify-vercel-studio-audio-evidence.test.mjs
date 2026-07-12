@@ -15,10 +15,11 @@ const valid = {
     browser_install: 'success',
     source_contract: 'success',
     browser_regression: 'success',
+    evidence_verifier: 'success',
     production_build: 'success',
   },
   verification_passed: true,
-  evidence_scope: 'source contract, browser regression, and production build; not physical speaker emission or Vercel deployment',
+  evidence_scope: 'dependency install, browser install, source contract, browser regression, evidence verifier, and production build; not physical speaker emission or Vercel deployment',
 };
 
 const expected = {
@@ -37,6 +38,24 @@ test('rejects a self-asserted pass when browser regression failed', () => {
   assert.equal(result.ok, false);
   assert.match(result.errors.join('\n'), /browser_regression must equal success/);
   assert.match(result.errors.join('\n'), /verification_passed does not match required outcomes/);
+});
+
+test('rejects a packet when dependency installation failed', () => {
+  const evidence = structuredClone(valid);
+  evidence.outcomes.dependencies = 'failure';
+  evidence.verification_passed = false;
+  const result = verifyAudioRoutingEvidence(evidence, expected);
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join('\n'), /dependencies must equal success/);
+});
+
+test('rejects a packet when verifier tests did not run', () => {
+  const evidence = structuredClone(valid);
+  evidence.outcomes.evidence_verifier = 'not-run';
+  evidence.verification_passed = false;
+  const result = verifyAudioRoutingEvidence(evidence, expected);
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join('\n'), /evidence_verifier must equal success/);
 });
 
 test('rejects the wrong commit', () => {
