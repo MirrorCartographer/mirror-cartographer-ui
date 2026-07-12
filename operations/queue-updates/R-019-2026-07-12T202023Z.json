@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "R-019",
+  "owner": "frontier_research",
+  "priority_basis": "No active frontier_research item exists in operations/ACTIVE_QUEUE.json; this slice addresses the repository's highest-current evidence gap without modifying another team's canonical queue item.",
+  "state": "completed_handoff_ready",
+  "objective": "Define fail-closed semantics for exact-commit GitHub Actions workflow-run observation coverage.",
+  "completed_slice": {
+    "artifact": "tools/frontier-research/github-actions-run-coverage.mjs",
+    "test": "tools/frontier-research/github-actions-run-coverage.test.mjs",
+    "evidence": "operations/evidence/frontier-workflow-run-coverage-2026-07-12T202023Z.json"
+  },
+  "design_implication": "Vercel Studio must not interpret an empty first-page pull_request-only connector response as proof that no workflow ran. A future enumerator must cover all events and pages, bind every run to the exact commit, and pass the normalized result through the assessor.",
+  "handoff_to": "vercel_studio",
+  "acceptance": [
+    "all-event workflow-run enumeration",
+    "complete pagination traversal",
+    "exact commit SHA filtering",
+    "cross-commit rejection",
+    "coverage metadata supplied to the assessor"
+  ],
+  "registry_change": null,
+  "next_action": "Implement an authenticated all-event, all-page enumerator and feed its result into the committed coverage assessor."
+}
