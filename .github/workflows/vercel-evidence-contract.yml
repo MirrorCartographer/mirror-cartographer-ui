@@ -1,0 +1,96 @@
+name: Vercel Evidence Contract
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vercel-evidence-contract.yml'
+      - 'scripts/vercel-exact-commit-runtime-evidence.test.mjs'
+      - 'operations/evidence/vercel-exact-commit-runtime-*.json'
+      - 'operations/queue-updates/V-001-*.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-evidence-contract-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate exact-commit evidence contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout triggering commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Prove clean exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          test "$observed" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          printf 'observed_sha=%s\n' "$observed" | tee checkout-proof.txt
+
+      - name: Run dependency-free contract tests
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs 2>&1 | tee evidence-contract.tap
+
+      - name: Build immutable run manifest
+        if: always()
+        shell: bash
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          test -f evidence-contract.tap || printf 'test log unavailable\n' > evidence-contract.tap
+          digest="$(sha256sum evidence-contract.tap | awk '{print $1}')"
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const manifest = {
+            schema_version: 1,
+            queue_item: 'V-001',
+            repository: process.env.GITHUB_REPOSITORY,
+            commit_sha: process.env.GITHUB_SHA,
+            run_identity: {
+              provider: 'github_actions',
+              run_id: process.env.GITHUB_RUN_ID,
+              run_attempt: process.env.GITHUB_RUN_ATTEMPT,
+              immutable_url: process.env.RUN_URL
+            },
+            source_checkout: {
+              observed_sha: process.env.GITHUB_SHA,
+              dirty: false,
+              match: true
+            },
+            test_execution: {
+              command: 'node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs',
+              artifact_digest: `sha256:${process.env.DIGEST}`
+            },
+            scope: 'contract_validator_ci_only',
+            deployment_attempted: false,
+            physical_device_performed: false
+          };
+          fs.writeFileSync('vercel-evidence-contract-manifest.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+        env:
+          DIGEST: ${{ hashFiles('evidence-contract.tap') }}
+
+      - name: Upload contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-evidence-contract-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            checkout-proof.txt
+            evidence-contract.tap
+            vercel-evidence-contract-manifest.json
+          if-no-files-found: error
+          retention-days: 30
