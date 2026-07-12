@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "Add an independent fail-closed verifier for the generated commit-bound audio-routing evidence packet and wire it into CI before artifact acceptance.",
+  "specialists": [
+    "reliability engineer",
+    "audio engineer",
+    "test harness engineer",
+    "provenance engineer",
+    "deployment verifier"
+  ],
+  "commits": [
+    "540c50e90e021028c240fd012a0264eb808540b4",
+    "790bfa1f2d5d61730628ca0c06d6e674daac8e7c",
+    "2f6fda37262386207aa344d4371ff8485182cc85",
+    "59f368f27abde9850a553cddf76c95e65a62814f"
+  ],
+  "verification": {
+    "source_writes": "confirmed by GitHub contents API commits",
+    "ci_execution": "not yet observed",
+    "vercel_status": "failure: build-rate-limit",
+    "physical_device": "not tested"
+  },
+  "falsification_route": [
+    "A packet with a failed browser regression must be rejected even if verification_passed is manually set true.",
+    "A packet bound to a different commit must be rejected.",
+    "A packet that removes the physical-speaker limitation must be rejected.",
+    "A valid exact-commit packet with all required outcomes successful must pass."
+  ],
+  "limits": [
+    "No GitHub Actions run result or uploaded artifact was observable during this run.",
+    "The verifier checks evidence structure and binding, not physical speaker emission or listener perception.",
+    "Vercel did not deploy the commit because the project reports a build-rate-limit failure."
+  ],
+  "rollback": "Revert commits in reverse order: 59f368f27abde9850a553cddf76c95e65a62814f, 2f6fda37262386207aa344d4371ff8485182cc85, 790bfa1f2d5d61730628ca0c06d6e674daac8e7c, 540c50e90e021028c240fd012a0264eb808540b4.",
+  "recorded_at": "2026-07-11T23:01:00-04:00"
+}
