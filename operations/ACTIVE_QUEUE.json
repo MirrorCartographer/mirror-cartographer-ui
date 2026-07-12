@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T21:37:27Z",
+  "updated_at": "2026-07-12T21:41:00Z",
   "items": [
     {
       "id": "V-001",
@@ -15,15 +15,17 @@
         "Real provider rate-limit outcome recorded for an operations-only sentinel.",
         "Vercel build suppression narrowed to explicit operations-only paths; unknown, empty, mixed, application, asset, and configuration changes now require a build.",
         "Audio route capability classification tests are now bound to the exact-commit V-001 evidence workflow without claiming browser or physical-device audibility.",
-        "Successful Vercel commit status is now explicitly non-deployable until immutable deployment identity is independently verified."
+        "Successful Vercel commit status is now explicitly non-deployable until immutable deployment identity is independently verified.",
+        "Frontier Research's exhaustive all-event workflow enumerator contract is now integrated into Vercel's commit-bound evidence assessor through a fail-closed adapter."
       ],
       "acceptance_remaining": [
+        "Execute authenticated all-event pagination for an exact commit and retain the adapter output.",
         "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
         "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
         "Bind the tested application commit to an immutable successful Vercel deployment.",
         "Perform bounded physical iPhone Safari audibility verification."
       ],
-      "safe_next_action": "Observe the exact operations-only commits from this slice; classify provider status with the corrected fail-closed evaluator and do not create an application deployment while capacity or immutable deployment identity remains unverified."
+      "safe_next_action": "Use the new adapter in the next authenticated exact-commit evidence command; preserve provider build-rate-limit evidence and do not create an application deployment until capacity and immutable deployment identity are verified."
     },
     {
       "id": "M-RECONCILE-002",
@@ -54,7 +56,8 @@
       "completed_slices": [
         "Implemented repository-level all-event workflow-run enumeration with head_sha filtering and Link-header pagination.",
         "Added fail-closed handling for page limits, HTTP errors, invalid commit identifiers, and cross-commit records.",
-        "Verified the implementation with four deterministic Node tests."
+        "Verified the implementation with four deterministic Node tests.",
+        "Vercel Studio integrated the enumerator coverage contract into its commit-bound evidence assessment path."
       ],
       "acceptance_remaining": [
         "Execute authenticated enumeration against the private repository for an exact commit.",
@@ -62,7 +65,7 @@
         "Feed only complete coverage into the existing workflow-run coverage assessor.",
         "Record provider-ceiling ambiguity if a filtered search approaches 1000 results."
       ],
-      "safe_next_action": "Vercel Studio should integrate the enumerator into the next commit-bound evidence command without changing application deployment behavior."
+      "safe_next_action": "Execute the integrated path against an exact operations-only or audio-routing commit and retain both raw enumeration and assessed evidence."
     }
   ]
 }
