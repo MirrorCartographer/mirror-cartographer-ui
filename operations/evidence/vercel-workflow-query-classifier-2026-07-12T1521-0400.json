@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:21:00Z",
+  "purpose": "Preserve the distinction between an empty workflow-run query and evidence that a workflow failed or did not exist.",
+  "observed_provider_result": {
+    "commit_sha": "c037af64abea0801068648ed0011e32070ec0fd1",
+    "workflow_runs": [],
+    "classification": "hold_unobserved",
+    "query_scope": "GitHub connector commit workflow-run query; first page; pull-request-triggered runs only",
+    "claim_boundary": "An empty result does not establish absence of push-triggered, manually dispatched, delayed, or otherwise unreturned workflow runs."
+  },
+  "implementation": {
+    "file": "scripts/vercel-workflow-query-classifier.mjs",
+    "commit": "83708cc9aa9ec29cb8db41c5359de0b8fa96e324",
+    "test_file": "scripts/vercel-workflow-query-classifier.test.mjs",
+    "test_commit": "4d1ca5d47855082dfaf0d84d20844907c795f1f4"
+  },
+  "verification": {
+    "route": "dependency-free Node test suite executed before repository write",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "covered_boundaries": [
+      "empty result remains unobserved rather than failed",
+      "malformed result fails closed",
+      "nonmatching commit remains unobserved",
+      "newest matching run is selected",
+      "wrong workflow identity fails closed"
+    ]
+  },
+  "limits": [
+    "No provider workflow run was observed.",
+    "No Vercel deployment was attempted.",
+    "No browser or physical-device audio claim is made."
+  ]
+}
