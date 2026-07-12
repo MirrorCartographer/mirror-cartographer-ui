@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "update_id": "CM-012",
+  "recorded_at": "2026-07-12T19:10:00Z",
+  "owner": "continuity_mining",
+  "selection_basis": "No canonical continuity_mining queue item existed; selected CM-011's highest-priority unresolved handoff without modifying another team's queue item.",
+  "memory_recovered": "Continuity evidence requires a durable distinction between repository implementation, local fixture behavior, and provider-observed exact-commit execution.",
+  "completed_slice": [
+    "Added an exact-commit GitHub Actions workflow for the continuity claim-transition validator.",
+    "Bound execution to github.sha and a clean checkout.",
+    "Added retained TAP, exit-code, digest, run-identity, and manifest artifacts.",
+    "Recorded the privacy boundary and explicitly withheld any workflow-pass claim because no provider run was observed."
+  ],
+  "claim_states": {
+    "observed": "CM-011 left trusted runtime execution pending; the workflow file is now committed; no workflow run was observed at inspection time.",
+    "inferred": "Commit-bound retained artifacts create a stronger provenance chain than undocumented local execution.",
+    "proposed": "Accept the next passing artifact only as runtime verification of validator fixtures.",
+    "superseded": "The schema and local fixtures alone are sufficient durable execution evidence.",
+    "unresolved": "Observe and inspect an exact-commit provider run; compare behavior with an independent JSON Schema 2020-12 implementation."
+  },
+  "canonical_queue_changed": false,
+  "registry_changed": false,
+  "artifacts": [
+    ".github/workflows/continuity-claim-transition.yml",
+    "operations/evidence/continuity-claim-transition-exact-commit-2026-07-12.json"
+  ],
+  "commits": [
+    "2ee5c5a434f55694f5b153dbf262702f72f6d7b7",
+    "833eedd14cbeedcc334bf106b3117f0163a17803"
+  ],
+  "privacy_boundary": "Synthetic fixtures and repository metadata only; no raw private material is stored or uploaded.",
+  "next_action": "Inspect the first workflow run whose manifest commit_sha equals its triggering commit; verify TAP digest and exit code before recording runtime_verified_only."
+}
