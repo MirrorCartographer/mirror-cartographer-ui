@@ -1,6 +1,7 @@
 import { sampleAndEvaluateAudioClock } from './audio-clock-sampler.mjs';
 import { evaluateAudioClockEvidence } from './audio-clock-evidence.mjs';
 import { composeAudioEvidencePacket } from './audio-evidence-packet.mjs';
+import { evaluateAudioRouteCapability } from './audio-route-capability.mjs';
 
 function assertIdentity(value, name) {
   if (typeof value !== 'string' || !value.trim()) throw new TypeError(`${name} must be a non-empty string`);
@@ -14,6 +15,14 @@ function bindLayer(layer, identity, name) {
     }
   }
   return { ...layer, ...identity };
+}
+
+function resolveRouteEvidence(input, identity, dependencies) {
+  if (input.routeObservation !== undefined) {
+    const evaluated = (dependencies.evaluateAudioRoute ?? evaluateAudioRouteCapability)(input.routeObservation);
+    return bindLayer(evaluated, identity, 'route');
+  }
+  return bindLayer(input.route, identity, 'route');
 }
 
 export async function runAudioEvidenceSession(input, dependencies = {}) {
@@ -52,12 +61,13 @@ export async function runAudioEvidenceSession(input, dependencies = {}) {
     };
   }
 
+  const route = resolveRouteEvidence(input, identity, dependencies);
   const packet = (dependencies.composePacket ?? composeAudioEvidencePacket)({
     ...identity,
     activation: bindLayer(input.activation, identity, 'activation'),
     runtime: bindLayer(input.runtime, identity, 'runtime'),
     renderTimeline: bindLayer(input.renderTimeline, identity, 'renderTimeline'),
-    route: bindLayer(input.route, identity, 'route'),
+    route,
     deviceChange: bindLayer(input.deviceChange, identity, 'deviceChange'),
     physical: bindLayer(input.physical, identity, 'physical')
   });
@@ -69,7 +79,8 @@ export async function runAudioEvidenceSession(input, dependencies = {}) {
     reason: null,
     rawCapture,
     clockEvaluation,
+    routeEvaluation: route,
     packet,
-    claimBoundary: 'A composed browser evidence packet remains conditional on its physical outcome and does not infer audibility from clock consistency.'
+    claimBoundary: 'A composed browser evidence packet remains conditional on its physical outcome and does not infer audibility from clock consistency or route binding.'
   };
 }
