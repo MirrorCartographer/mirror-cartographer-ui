@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T11:31:23Z",
+  "slice": "bounded_audio_attestation_capture",
+  "implementation_commit": "60790c5bbf3d53154bf50f989bd26649a63a1936",
+  "test_commit": "2f690701eea4f0df64026055710d07a4aa3b7179",
+  "verification": {
+    "command": "node --test tools/vercel-ops/audio-attestation-capture.test.mjs",
+    "result": "7 passed, 0 failed",
+    "route": "local isolated execution against the committed source contract"
+  },
+  "properties_verified": [
+    "opaque session identifier generated from 144 bits of entropy",
+    "activation must precede runtime observation",
+    "runtime observation must precede human outcome",
+    "positive and contradicted outcomes both remain terminal and bounded",
+    "incomplete audio route fails closed",
+    "returned binding excludes unallowlisted capture state"
+  ],
+  "deployment_attempted": false,
+  "deployment_reason": "Current state prohibits application deployment attempts while provider capacity is unresolved.",
+  "remaining_limits": [
+    "No immutable Vercel deployment identity is available for a physical session.",
+    "No physical iPhone Safari observation was performed.",
+    "The capture adapter is not yet wired into the application UI."
+  ]
+}
