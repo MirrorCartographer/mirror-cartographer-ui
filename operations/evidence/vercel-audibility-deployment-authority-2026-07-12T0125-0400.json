@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T05:25:00Z",
+  "slice": "physical_audibility_deployment_authority",
+  "observed_gap": "The physical audibility gate accepted deployment.immutable=true and deployment.status=ready without independently validating an immutable Vercel deployment origin or the temporal ordering of deployment, test, and human observation evidence.",
+  "implementation": {
+    "verifier_schema": "1.1.0",
+    "requirements_added": [
+      "HTTPS immutable Vercel deployment hostname rather than the mutable production alias",
+      "origin-only URL with no credentials, port, path, query, or fragment",
+      "parseable deployment ready timestamp",
+      "parseable bounded test timestamp",
+      "parseable human observation timestamp for human_confirmed evidence",
+      "human observation must not precede the bounded test"
+    ],
+    "failure_codes": [
+      "invalid_immutable_vercel_url",
+      "invalid_deployment_ready_time",
+      "invalid_tested_time",
+      "invalid_human_observation_time",
+      "human_observation_precedes_test"
+    ]
+  },
+  "verification": {
+    "command": "node --test operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "runtime": "local Node.js against byte-identical source and dependency content before commit"
+  },
+  "commits": {
+    "verifier": "c9a18e0c459541b62adab3bd119e4ea6c7f02fa4",
+    "tests": "a7ae5137060f8e5df0e9d1989d547ad4d493a691"
+  },
+  "deployment_effect": "None. This slice changes operations-only verification code and deliberately avoids a Vercel deployment while provider capacity remains constrained.",
+  "rollback": "Revert commits a7ae5137060f8e5df0e9d1989d547ad4d493a691 and c9a18e0c459541b62adab3bd119e4ea6c7f02fa4 in reverse order.",
+  "limits": [
+    "No successful immutable Vercel deployment was available to exercise the policy against provider output.",
+    "No physical iPhone Safari observation was performed.",
+    "The hostname rule is deliberately conservative and may require revision if Vercel changes immutable deployment hostname formats."
+  ]
+}
