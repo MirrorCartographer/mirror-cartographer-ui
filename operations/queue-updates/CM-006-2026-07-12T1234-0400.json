@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-006",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T12:34:57-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "operations/ACTIVE_QUEUE.json contains no continuity_mining-owned item; canonical queue state was not overwritten.",
+  "completed_slice": "Defined an implementation-ready schema-version-2 contract for one-row-per-occurrence alias provenance with explicit lifecycle dimensions, evidence strength, uncertainty, privacy blocking, migration rules, and a falsification route.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+    "operations/continuity/alias-lifecycle-dimensions-2026-07-12T1149-0400.json",
+    "operations/queue-updates/CM-005-2026-07-12T1149-0400.json",
+    "recent repository commits"
+  ],
+  "memory_recovered": "Project labels must be represented as typed, occurrence-level evidence rather than a flattened rename sequence. Every future occurrence needs minimal raw label, normalized value, structural type, lifecycle dimension and status, claim state, confidence, provenance, time uncertainty, evidence strength, and review state.",
+  "contradictions_resolved": [
+    {
+      "contradiction": "A shared normalized value with different statuses can appear contradictory even when one row is a canonical entity and another is a contextual alias.",
+      "resolution": "Only rows sharing both normalized_value and lifecycle_dimension can form a lifecycle-status conflict."
+    },
+    {
+      "contradiction": "Occurrence-level provenance appears to require copying private conversational context.",
+      "resolution": "Store only the minimal label token and a non-content source locator; use privacy_blocked when even minimal safe provenance is impossible."
+    }
+  ],
+  "claim_states": {
+    "observed": "The existing typed alias registry summarizes aliases but does not encode a complete row per source occurrence.",
+    "inferred": "Occurrence-level provenance is required to reconstruct language evolution without treating related labels as project renames.",
+    "proposed": "Future continuity occurrence artifacts should conform to the schema-version-2 contract.",
+    "superseded": "One normalized label and undifferentiated lifecycle status are sufficient for contradiction detection.",
+    "unresolved": "Historical labels lacking decision-log evidence remain unresolved rather than promoted."
+  },
+  "files": [
+    "operations/continuity/alias-occurrence-schema-v2-2026-07-12T1234-0400.json",
+    "operations/queue-updates/CM-006-2026-07-12T1234-0400.json"
+  ],
+  "commits": [
+    "8eaec9c26b0bb6b71bbfdfbca9429dd69465b8ff"
+  ],
+  "verification": {
+    "result": "committed_source_refetched",
+    "route": "Fetched the artifact by exact commit and inspected all required fields, validation rules, migration rules, claim states, falsification route, and privacy boundary.",
+    "limitation": "This verifies committed source integrity, not executable validator behavior or trusted CI."
+  },
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist"
+  ],
+  "registry_change": null,
+  "privacy_boundary": "Only minimal project labels, abstract roles, statuses, source titles or paths, hashes, bounded dates, and deterministic rules were persisted. Raw private conversation and sensitive personal material were excluded.",
+  "next_action": "Implement schema-version-2 fixtures and deterministic validation in the continuity scanner, then execute the committed test suite in trusted CI."
+}
