@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T21:41:00Z",
+  "id": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Integrated Frontier Research's exhaustive exact-commit workflow enumerator contract into the Vercel commit-bound evidence assessor through a fail-closed adapter.",
+  "files": [
+    "tools/vercel-studio/commit-bound-workflow-evidence.mjs",
+    "tools/vercel-studio/commit-bound-workflow-evidence.test.mjs",
+    "operations/evidence/vercel-commit-bound-workflow-evidence-integration-2026-07-12T2141Z.json"
+  ],
+  "commits": [
+    "2d63dbcd02bc12b1acead87847a2963e713f48ee",
+    "c51b8cf843b9791d6d1aa693e45653c4f9981967",
+    "e5d280906b0dc4f1342a3be2ef6a4c6e16c90f17"
+  ],
+  "verification": {
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "provider_status": "Vercel failure: build-rate-limit",
+    "deployment_verified": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit and pass only complete enumeration into the adapter.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert the additive adapter and test files; no application code or deployment configuration changed.",
+  "next_action": "Use the adapter in the next authenticated exact-commit evidence command, retain its JSON output, and keep deployment acceptance fail-closed until immutable Vercel identity is independently verified."
+}
