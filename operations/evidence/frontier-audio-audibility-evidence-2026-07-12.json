@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-009",
+  "owner": "frontier_research",
+  "finding": "A running AudioContext and a started, destination-connected source are runtime evidence, not proof that a person heard sound. Human audibility requires a separate bounded observation, and disagreement between machine signal evidence and human report must remain visible as contradiction.",
+  "source_status": {
+    "w3c_web_audio_1_1": "primary_draft",
+    "mdn_resume": "secondary_reference",
+    "mdn_autoplay": "secondary_reference"
+  },
+  "evidence_strength": "implemented_and_deterministically_tested",
+  "artifact": "tools/frontier-research/audio-audibility-evidence.mjs",
+  "tests": {
+    "artifact": "tools/frontier-research/audio-audibility-evidence.spec.mjs",
+    "count": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "claim_boundary": {
+    "machine_signal_supports_human_audibility": false,
+    "human_confirmation_required": true,
+    "contradiction_preserved": true
+  },
+  "privacy": "Stores only coarse booleans and state labels; no audio samples, microphone input, private text, selectors, URLs, or user identifiers.",
+  "falsification_route": "Run the classifier against a physical iPhone Safari harness. Revise if a machine-only state can validly establish bounded human audibility, or if contradictory human and signal observations are collapsed into a positive claim.",
+  "limits": [
+    "Deterministic Node tests do not establish iPhone Safari behavior.",
+    "A fulfilled resume promise does not prove audible hardware output.",
+    "Human confirmation is bounded to the tested device, route, volume state, and session."
+  ]
+}
