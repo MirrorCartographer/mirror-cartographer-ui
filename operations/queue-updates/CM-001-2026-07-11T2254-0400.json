@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "queue_item": "CM-001",
+  "status": "in_progress_validator_implemented_runtime_unverified",
+  "completed_slice": "Converted the source-authority continuity rule into a deterministic, non-destructive validator with synthetic contract tests and integrated it into local and Pages preview gates.",
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Provenance Engineer",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Test Harness Engineer"
+  ],
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json (absent at stated path)",
+    "operations/ACTIVE_QUEUE.json (absent at stated path)",
+    "operations/SPECIALIST_REGISTRY.json (absent at stated path)",
+    "recent repository commits",
+    "mind/continuity/2026-07-11-source-authority-and-self-continuity.md via commit b802cdf9b86f3e3549431eb3489a39ff0309d2d0",
+    "operations/queue-updates/CM-001-2026-07-11T2248-0400.json via commit e095a8a52976bcdad6f0a7a16faa1e6bcd9d6ca1",
+    "package.json"
+  ],
+  "files": [
+    "scripts/continuity-record-validator.mjs",
+    "scripts/continuity-record-validator.test.mjs",
+    "package.json",
+    "operations/evidence/CM-001-continuity-validator-2026-07-11T2254-0400.json"
+  ],
+  "commits": [
+    "c5729df56b8b17116486578a9d7f38cc4db2103b",
+    "36d1ffd80c7a94db91cfdfe2fe07547989f2854e",
+    "bf9d83c008df96035f5e92ed8cabd70e32b7e60f",
+    "1db5a9db4f11244df189f69f106d0375c3b74089"
+  ],
+  "contradictions_resolved": [
+    "The prior rule described enforcement as proposed; the implemented subset is now observed in source while runtime success remains unresolved.",
+    "Copied records may preserve content but cannot be treated as originals without originQualification."
+  ],
+  "privacy_boundary": "Only schema logic, synthetic test records, and public-safe project abstractions were committed.",
+  "verification": "GitHub confirmed creation of the validator, test, package wiring, and evidence record. No process runner or exact-commit CI result was available, so test execution is not claimed.",
+  "next_action": "Execute npm run test:continuity-record on the exact commit, then add a report-only inventory command that classifies legacy continuity artifacts without modifying them.",
+  "updated_at": "2026-07-12T02:54:13Z"
+}
