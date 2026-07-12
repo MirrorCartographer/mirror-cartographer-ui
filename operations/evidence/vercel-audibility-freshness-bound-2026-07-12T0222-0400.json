@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T06:22:49Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "physical_audibility_freshness_bound",
+  "status": "source_verified",
+  "source_commits": {
+    "verifier": "f62c8a76599c6dbf1372287747b4cb5c4d2ce181",
+    "tests": "50dc46741fc38daf31401ef57f9ff1a9f4110a86"
+  },
+  "policy": {
+    "maximum_deployment_ready_to_test_ms": 900000,
+    "maximum_test_to_human_observation_ms": 300000,
+    "failure_modes": [
+      "test_too_stale_after_deployment",
+      "human_observation_too_stale"
+    ]
+  },
+  "verification": {
+    "method": "isolated Node test using byte-equivalent committed verifier logic and committed dependency behavior",
+    "cases": 3,
+    "passed": 3,
+    "failed": 0,
+    "covered": [
+      "fresh session-bound evidence passes",
+      "test more than fifteen minutes after deployment readiness fails closed",
+      "human observation more than five minutes after runtime test fails closed"
+    ]
+  },
+  "claim_boundary": {
+    "deployment_verified": false,
+    "physical_iphone_audibility_verified": false,
+    "source_behavior_verified": true
+  },
+  "privacy": {
+    "contains_credentials": false,
+    "contains_personal_data": false,
+    "contains_audio_recordings": false
+  },
+  "rollback": "Revert commits f62c8a76599c6dbf1372287747b4cb5c4d2ce181 and 50dc46741fc38daf31401ef57f9ff1a9f4110a86; no files or history need deletion."
+}
