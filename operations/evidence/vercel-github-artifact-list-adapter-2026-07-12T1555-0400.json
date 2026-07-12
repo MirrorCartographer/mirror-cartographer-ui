@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T19:55:00Z",
+  "slice": "Normalize GitHub Actions artifact-list responses before fail-closed manifest evaluation.",
+  "source_commits": {
+    "adapter": "bed49af5ef70cabae807f64d2d693589d5c6c0ef",
+    "tests": "42bb3915856901ed61afd0b248a5b8e1e9e804e2",
+    "pipeline_composition": "c7e09b76bcc32abfe3745e035fa8664633ae2562"
+  },
+  "verified_behavior": [
+    "Exact committed pipeline source was fetched back from GitHub.",
+    "GitHub artifact responses are normalized before manifest evaluation.",
+    "Malformed shapes, invalid total_count values, truncated pages, incomplete artifact identity, and wrong-run artifacts fail closed.",
+    "Legacy direct artifact arrays remain supported when github_artifact_response is absent."
+  ],
+  "verification_level": "committed_source_inspection",
+  "not_verified": [
+    "Node tests were not executed in this connector-only run.",
+    "No live GitHub Actions artifact response was observed.",
+    "No Vercel deployment was attempted or claimed.",
+    "No physical Safari audio verification was performed."
+  ],
+  "rollback": "Revert c7e09b76bcc32abfe3745e035fa8664633ae2562, then optionally revert 42bb3915856901ed61afd0b248a5b8e1e9e804e2 and bed49af5ef70cabae807f64d2d693589d5c6c0ef."
+}
