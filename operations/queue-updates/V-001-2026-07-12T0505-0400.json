@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T09:05:17Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and verified a fail-closed release sequencer that prevents application deployment attempts until provider capacity is observed available and then enforces sentinel, exact-commit audio, immutable deployment, and physical-device evidence in order.",
+  "evidence": "operations/evidence/vercel-release-sequencer-2026-07-12T0505-0400.json",
+  "commits": [
+    "5e95fba5e3b0d91fe81fa5b0b867826089e09b93",
+    "d075e9a2ee01fca6d31caed9afb2fc3024f6dad5",
+    "bf87c2e9ca5023d05a84f0eada81faf454036ee8"
+  ],
+  "acceptance_remaining": [
+    "Observe provider capacity available.",
+    "Observe an operations-only sentinel reported as skipped or ignored.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Evaluate current evidence through the sequencer; remain operations-only until provider capacity is observed available, then run exactly one operations-only sentinel.",
+  "rollback": "Revert the three slice commits; no application runtime or deployment configuration changed."
+}
