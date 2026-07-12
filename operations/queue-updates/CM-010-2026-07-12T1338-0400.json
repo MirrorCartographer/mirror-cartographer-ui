@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-010",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T13:38:48-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "operations/ACTIVE_QUEUE.json contains no continuity_mining-owned item, so canonical queue state was not overwritten.",
+  "completed_slice": "Added an implementation-ready JSON Schema for append-only continuity claim transitions, preserving immutable prior and next claim snapshots, provenance, privacy, conflict state, and explicit transition semantics.",
+  "memory_recovered": "Project memory changes are themselves durable facts. A later interpretation must be represented as a transition from an immutable earlier claim, not as an in-place rewrite that erases prior meaning, evidence, or uncertainty.",
+  "claim_states": {
+    "observed": "Continuity work already uses observed, inferred, proposed, superseded, and unresolved labels but lacked a shared transition contract.",
+    "inferred": "In-place updates create provenance loss and can falsely collapse contradiction into resolution.",
+    "proposed": "Adopt the transition schema for decision logs, language lexicons, and knowledge-graph claim changes.",
+    "superseded": "The implicit assumption that updating a current claim record is sufficient to preserve continuity.",
+    "unresolved": "Runtime schema validation and trusted CI evidence remain pending."
+  },
+  "contradictions_resolved": [
+    "Epistemic and lifecycle status are orthogonal and must be stored separately.",
+    "Contradiction retains both historical claims and forces conflict review rather than selecting a winner.",
+    "Private provenance can be retained through opaque source references and hashes without storing raw private content."
+  ],
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/queue-updates/CM-009-2026-07-12T1332-0400.json",
+    "recent repository commits",
+    "prior continuity scanner, adapter, validator, and pipeline artifacts"
+  ],
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist"
+  ],
+  "registry_change": null,
+  "files": [
+    "operations/contracts/continuity-claim-transition.schema.json",
+    "operations/evidence/continuity-claim-transition-contract-2026-07-12T1338-0400.json",
+    "operations/queue-updates/CM-010-2026-07-12T1338-0400.json"
+  ],
+  "commits": [
+    "e2d1df0370c1d36ceb9a17a8816b7fce2fa42ee2",
+    "c4ce9d8ae48bbd7023ca7fe7b9c28a3b2aa64934"
+  ],
+  "verification": {
+    "result": "committed_schema_source_reviewed_runtime_pending",
+    "limitation": "No runtime JSON Schema validator or CI execution result is claimed."
+  },
+  "privacy_boundary": "Only abstract continuity rules, repository paths, timestamps, and commit identifiers were stored. No raw conversation passage, personal data, medical data, or private file contents were copied.",
+  "next_action": "Add deterministic valid and invalid fixtures plus a dependency-free validator harness, then bind the contract to trusted exact-commit CI evidence without modifying the canonical queue unless a continuity-owned item is formally added."
+}
