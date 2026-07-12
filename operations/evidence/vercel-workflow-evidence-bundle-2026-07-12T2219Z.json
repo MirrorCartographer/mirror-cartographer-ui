@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T22:19:05Z",
+  "slice": "tamper-evident exact-commit workflow enumeration evidence bundle",
+  "finding": "The existing reconciliation gate could decide agreement but did not define a durable retention object binding both raw enumerations, source methods, retrieval times, and canonical digests. The new bundle contract preserves that chain and fails closed on divergence, provider-ceiling ambiguity, invalid commit identity, invalid timestamps, or unapproved source methods.",
+  "files": [
+    "tools/vercel-studio/workflow-evidence-bundle.mjs",
+    "tools/vercel-studio/workflow-evidence-bundle.test.mjs"
+  ],
+  "commits": {
+    "implementation": "48f383e4b7aa8b1d0e440069e9bedbf6bd7624bc",
+    "tests": "06912bd5de557adee731808a2a9e01c73610a54a"
+  },
+  "verification": {
+    "route": "isolated Node execution against the committed implementation contract and existing reconciler interface",
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "matching independently complete enumerations produce strong evidence",
+      "canonical hashing is stable across object key ordering",
+      "metadata divergence fails closed while preserving digests",
+      "provider-ceiling ambiguity fails closed",
+      "connector snapshots and other unapproved source methods are rejected"
+    ]
+  },
+  "evidence_strength": "implementation_ready_locally_verified",
+  "deployment_claim": false,
+  "privacy_boundary": "The manifest stores source method, retrieval time, page count, commit identity, canonical SHA-256 digests, and reconciliation result. It forbids secrets and does not require tokens, request headers, or private repository payloads inside the bundle.",
+  "rollback": [
+    "Revert commit 06912bd5de557adee731808a2a9e01c73610a54a",
+    "Revert commit 48f383e4b7aa8b1d0e440069e9bedbf6bd7624bc"
+  ],
+  "limits": [
+    "No authenticated exhaustive enumeration was executed in this slice.",
+    "No gh api --paginate output was captured.",
+    "No Vercel deployment was attempted because the provider-capacity constraint remains active.",
+    "Canonical digests prove retained-object identity only when the raw objects are also preserved."
+  ]
+}
