@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-033",
+  "owner": "frontier_research",
+  "priority": "highest_available_frontier_continuation",
+  "state": "implemented_pending_runtime_verification",
+  "objective": "Consume normalized route provenance inside the identity-bound audio evidence session before packet composition.",
+  "basis": "The canonical active queue contains no frontier_research-owned item. This bounded continuation implements the explicit next action from committed R-032 without modifying operations/ACTIVE_QUEUE.json.",
+  "completed_slice": [
+    "Rechecked the current W3C Audio Output Devices API and MDN implementation documentation.",
+    "Integrated evaluateAudioRouteCapability into audio-session-orchestrator.mjs through an optional raw routeObservation path.",
+    "Preserved the prior normalized route path for compatibility.",
+    "Added end-to-end adversarial tests for non-default binding, policy denial, post-bind device loss, and route-evaluator identity injection.",
+    "Recorded source strength, uncertainty, falsification conditions, and a no-audibility claim boundary."
+  ],
+  "files": [
+    "tools/frontier-research/audio-session-orchestrator.mjs",
+    "tools/frontier-research/audio-session-orchestrator.test.mjs",
+    "operations/evidence/frontier-audio-route-orchestration-2026-07-12T1320-0400.json",
+    "operations/queue-updates/R-033-2026-07-12T1320-0400.json"
+  ],
+  "commits": [
+    "10d0569bddfe91e571b3dd37f5fc8ec83c439fd8",
+    "4ea5ec8a5aaa8aa0ee06c0f9ef0162efe1e49150",
+    "0c7a6ac91ede92436e49ae6dcb6c5d94aaceff54"
+  ],
+  "acceptance": {
+    "source_inspection": "passed",
+    "test_cases_committed": 4,
+    "test_execution": "pending",
+    "deployment": "blocked_by_vercel_build_rate_limit",
+    "physical_audibility": "not_tested"
+  },
+  "registry_change": null,
+  "next_action": "Run the full audio-session-orchestrator test suite in an executable CI environment, inspect the exact-commit result, and only then mark R-033 source-and-runtime verified."
+}
