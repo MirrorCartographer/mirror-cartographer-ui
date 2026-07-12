@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_browser_regression_committed",
+  "completed_slice": "Added and gated a Playwright regression proving that a sinkchange-confirmed AudioContext remains selected-confirmed after a diagnostic refresh in the browser runtime.",
+  "specialists_used": [
+    "Audio Engineer",
+    "Mobile Safari Investigator",
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier"
+  ],
+  "evidence_paths": [
+    "operations/evidence/V-001-browser-sticky-routing-regression-2026-07-11T2145-0400.json"
+  ],
+  "source_commits": [
+    "63a2b3f373f229106f86a84600eb2a41d928bda7",
+    "e2379ce50fa232311a34328c9e3df729c5540f74",
+    "7cdb5f2abcf414ea2b9604964362ca1c52cde18f"
+  ],
+  "verification": "The browser test and gate wiring were inspected after commit. GitHub returned zero workflow runs for e2379ce50fa232311a34328c9e3df729c5540f74, so CI execution and Vercel delivery remain unverified.",
+  "remaining_condition": "Run test:audio-routing-browser in CI or a fresh checkout, obtain a successful immutable Vercel deployment identity for the exact descendant commit, and pair the browser evidence with a physical iPhone audible result or device-level meter.",
+  "rollback": "Revert this queue record and its evidence record, then revert e2379ce50fa232311a34328c9e3df729c5540f74 and 63a2b3f373f229106f86a84600eb2a41d928bda7 in reverse order.",
+  "next_action": "Add or dispatch a repository workflow that runs test:audio-routing-browser and emits commit-bound evidence without bypassing the existing Vercel deployment gate.",
+  "updated_at": "2026-07-12T01:45:00Z"
+}
