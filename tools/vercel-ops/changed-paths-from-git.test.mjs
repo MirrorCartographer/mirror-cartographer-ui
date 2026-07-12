@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildChangedPathsManifest } from './changed-paths-from-git.mjs';
+import { buildChangedPathsManifest, parseArgs } from './changed-paths-from-git.mjs';
 
 const BASE = '1111111111111111111111111111111111111111';
 const HEAD = '2222222222222222222222222222222222222222';
@@ -69,4 +69,25 @@ test('propagates git comparison failures', () => {
     head: HEAD,
     runGit() { throw new Error('unknown revision'); }
   }), /unknown revision/);
+});
+
+test('parses the exact supported CLI contract', () => {
+  assert.deepEqual(
+    [...parseArgs(['--base', BASE, '--head', HEAD, '--output', 'operations/result.json'])],
+    [['--base', BASE], ['--head', HEAD], ['--output', 'operations/result.json']]
+  );
+});
+
+test('rejects malformed, unknown, duplicate, or incomplete CLI arguments', () => {
+  for (const argv of [
+    [],
+    ['--base', BASE, '--head'],
+    ['--base', BASE],
+    ['--base', BASE, '--head', HEAD, '--unknown', 'value'],
+    ['--base', BASE, '--head', HEAD, '--base', BASE],
+    ['--base', '--head', HEAD],
+    ['--base', BASE, '--head', '--output']
+  ]) {
+    assert.throws(() => parseArgs(argv));
+  }
 });
