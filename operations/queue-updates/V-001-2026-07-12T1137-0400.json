@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "updated_at": "2026-07-12T11:37:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Changed-path evidence CLI now rejects unknown, duplicate, odd, incomplete, and missing required arguments before invoking Git or writing a manifest.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "specialist_registry_change": null,
+  "evidence_file": "operations/evidence/vercel-strict-cli-contract-2026-07-12T1137-0400.json",
+  "commits": [
+    "ad66ca7f1741d52f48b980dd1a4216fa61a7b4dc",
+    "075aab23ebd521ef1171450b7e422343bf0429c5",
+    "1b5b2bf073ee89acaa4114eb7c36cf3515ad46da"
+  ],
+  "verification": {
+    "local_byte_equivalent_tests": "passed",
+    "count": 3,
+    "failures": 0,
+    "deployment_attempted": false
+  },
+  "blocker": "Vercel build-rate capacity remains unverified as restored; application deployment acceptance remains fail-closed.",
+  "next_action": "When provider capacity returns, run the full committed Node test file, then use one operations-only sentinel to observe Vercel skip behavior before one exact-commit audio-routing deployment verification."
+}
