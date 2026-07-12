@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.org/schemas/cloudflare-research-evidence-envelope.schema.json",
+  "title": "Mirror Cartographer Cloudflare Research Evidence Envelope",
+  "description": "Fail-closed provenance contract for research-surface claims. It structures evidence without publishing diagnosis or treatment claims and does not imply deployment success.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "claim_id",
+    "claim_status",
+    "claim_text",
+    "domain",
+    "source_records",
+    "evidence_strength",
+    "privacy_class",
+    "medical_boundary",
+    "deployment_binding",
+    "falsification_route",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "claim_id": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9._-]{2,127}$"},
+    "claim_status": {
+      "enum": ["observed", "inferred", "proposed", "superseded", "unresolved"]
+    },
+    "claim_text": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "domain": {
+      "enum": ["theory", "scientific_reasoning", "medicine_facing_organization", "provenance", "privacy", "infrastructure", "deployment"]
+    },
+    "source_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "source_type", "locator", "observed_at", "supports"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "source_type": {"enum": ["primary", "secondary", "repository", "runtime", "deployment", "private_abstracted"]},
+          "locator": {"type": "string", "minLength": 1},
+          "observed_at": {"type": "string", "format": "date-time"},
+          "supports": {"enum": ["supports", "contradicts", "context_only"]},
+          "content_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "evidence_strength": {
+      "enum": ["direct_runtime", "direct_source", "reproduced", "corroborated", "single_source", "speculative"]
+    },
+    "privacy_class": {
+      "enum": ["public", "internal", "restricted_abstracted"]
+    },
+    "medical_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["diagnosis_claim", "treatment_claim", "human_review_required"],
+      "properties": {
+        "diagnosis_claim": {"const": false},
+        "treatment_claim": {"const": false},
+        "human_review_required": {"type": "boolean"},
+        "boundary_note": {"type": "string", "maxLength": 1000}
+      }
+    },
+    "deployment_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "provider", "commit_sha"],
+      "properties": {
+        "state": {"enum": ["not_applicable", "unverified", "verified"]},
+        "provider": {"enum": ["cloudflare_pages", "none"]},
+        "commit_sha": {"type": ["string", "null"], "pattern": "^[a-f0-9]{40}$"},
+        "deployment_url": {"type": ["string", "null"], "format": "uri"},
+        "verified_at": {"type": ["string", "null"], "format": "date-time"},
+        "verification_method": {"type": ["string", "null"], "maxLength": 1000}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"state": {"const": "verified"}}},
+          "then": {
+            "properties": {
+              "provider": {"const": "cloudflare_pages"},
+              "commit_sha": {"type": "string"},
+              "deployment_url": {"type": "string"},
+              "verified_at": {"type": "string"},
+              "verification_method": {"type": "string", "minLength": 1}
+            },
+            "required": ["deployment_url", "verified_at", "verification_method"]
+          }
+        }
+      ]
+    },
+    "falsification_route": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "supersedes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}
