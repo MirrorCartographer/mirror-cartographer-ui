@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-001",
+  "canonical_queue_state": "absent",
+  "working_state": "committed_unpromoted",
+  "completed_slice": "Added and tested a fail-closed Cloudflare Pages evidence-chain verifier.",
+  "files": [
+    "cloudflare-static/verify-pages-evidence.mjs",
+    "cloudflare-static/verify-pages-evidence.test.mjs",
+    "operations/evidence/cloudflare-pages-evidence-chain-2026-07-12T0959-0400.json"
+  ],
+  "commits": [
+    "bf5540f17d43e6cb0f0461dd657ac87ab272cbe1",
+    "ea0e3735487f0d44dbd75ba037c1beadb2edca0e",
+    "4c621f77ed7fd67497ab78223f429603b52b12e5"
+  ],
+  "acceptance_remaining": [
+    "Promote C-001 into operations/ACTIVE_QUEUE.json through the canonical authorization mechanism.",
+    "Configure Cloudflare account credentials in the protected environment.",
+    "Run project lookup, hostname resolution, deployment, DNS/HTTP checks, served identity validation, and commit binding.",
+    "Pass the emitted evidence object through verify-pages-evidence.mjs."
+  ],
+  "shared_state_policy": "Canonical queue was not overwritten because no Cloudflare-owned item is currently authorized there."
+}
