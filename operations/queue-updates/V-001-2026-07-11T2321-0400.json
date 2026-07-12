@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress",
+  "completed_slice": "Add and test a fail-open, path-aware Vercel ignoreCommand so operations-only evidence and queue commits do not consume deployment builds.",
+  "evidence": "operations/evidence/V-001-vercel-build-filter-2026-07-11T2321-0400.json",
+  "commits": [
+    "4e36e0c6191933bc5f45e7c90fafde9f6d6568f3",
+    "0ca99ba662993381c3b49660bea34e8ff37cea26",
+    "140d9565154a6141f488415a33c4498d119ac552",
+    "98d3fd9c0f30a623fcd225993a336dfe5fc0e949",
+    "3d2501684eb093871e6384585d591a419c1a36a8"
+  ],
+  "acceptance_remaining": [
+    "Observe that this operations-only queue-record commit is ignored by Vercel rather than consuming a build.",
+    "Observe an exact-commit GitHub Actions run and inspect the six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Inspect the Vercel status for this operations-only commit; if ignored as designed, dispatch or induce the commit-bound audio-routing workflow without adding another application deployment."
+}
