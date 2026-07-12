@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "record_id": "MC-IDENTITY-DESCRIPTION-2026-07-12",
+  "team": "continuity_mining",
+  "record_type": "decision_recovery",
+  "title": "Mirror Cartographer identity is stable while descriptive frames evolve",
+  "source_classes": [
+    {
+      "class": "repository_record",
+      "reference": "operations/CURRENT_STATE.json",
+      "observation": "The canonical project field is Mirror Cartographer."
+    },
+    {
+      "class": "derived_structured_memory",
+      "reference": "mind/continuity/2026-07-11-source-authority-and-self-continuity.md",
+      "observation": "Project continuity is defined as a provenance-linked project self rather than any single account, thread, deployment, or snapshot."
+    },
+    {
+      "class": "uploaded_project_artifact",
+      "reference": "Mirror_Cartographer_Core_Specification_v1.md",
+      "observation": "The project is named Mirror Cartographer and described there as a recursive symbolic cognition interface."
+    },
+    {
+      "class": "uploaded_project_artifact",
+      "reference": "Mirror_Cartographer_One_Page.pdf",
+      "observation": "The same project name is paired with a broader description centered on human-centered AI reflection, symbolic emotional mapping, and meaningful interaction."
+    },
+    {
+      "class": "authenticated_copy_or_export",
+      "reference": "chatgpt log.rtf excerpts",
+      "observation": "Earlier copied project material uses the same project name while describing forms, worksheets, symbolic mapping, prompt engines, and future interfaces. Exact original-message metadata is not restored by the copy."
+    }
+  ],
+  "claim_states": {
+    "observed": [
+      "Mirror Cartographer is the stable project identity across the inspected canonical repository state and multiple project artifacts.",
+      "The project's descriptions vary across artifacts, including symbolic emotional self-mapping tool, recursive symbolic cognition interface, human-centered AI reflection system, engine, atlas, and continuity architecture.",
+      "Repository continuity rules require copied or derived material to remain qualified by source class and privacy boundary."
+    ],
+    "inferred": [
+      "The variation is best modeled as evolution of scope, implementation, and explanatory frame rather than repeated project renaming.",
+      "Treating every descriptive shift as an identity change would create false contradictions and fragment the project graph."
+    ],
+    "proposed": [
+      "Future lexicon records should classify each term as identity, description, implementation, metaphor, or superseded label.",
+      "Interfaces should display the stable project identity separately from the currently active descriptive frame."
+    ],
+    "superseded": [
+      "The interpretation that changing descriptions necessarily mean the project changed names."
+    ],
+    "unresolved": [
+      "The complete dated sequence of all descriptive frames has not yet been reconstructed.",
+      "Some source material exists only as copied exports, so original timestamps and message boundaries remain partially unavailable.",
+      "No canonical machine-readable language lexicon currently links every descriptive frame to first-known use and later reinterpretation."
+    ]
+  },
+  "operational_decision": {
+    "identity": "Mirror Cartographer",
+    "rule": "Preserve project identity independently from descriptions, implementations, metaphors, deployments, repositories, and account containers.",
+    "contradiction_handling": "When descriptions conflict, retain both with dates and source classes; resolve whether the conflict is semantic, temporal, implementation-level, or factual before marking either superseded."
+  },
+  "privacy_boundary": "Public-safe abstraction only. No raw private transcript, health information, credentials, personal identifiers, or sensitive uploaded passages are reproduced.",
+  "recorded_at": "2026-07-12T04:18:42Z"
+}
