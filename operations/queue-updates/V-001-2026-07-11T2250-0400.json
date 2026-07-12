@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "status": "active",
+  "priority": "highest-observed",
+  "completed_slice": "Make commit-bound CI evidence outcome-aware so failed or skipped verification stages cannot be mistaken for a passing evidence packet.",
+  "commits": [
+    "d892aeffb78eeec581b03b92aaf98d4aa973423e",
+    "ecb50a134025699466018c230b014b619f41946e"
+  ],
+  "runtime_evidence": {
+    "actions_run": "not observed through available commit-run query",
+    "vercel": "failure: build-rate-limit"
+  },
+  "remaining_acceptance_conditions": [
+    "Observe a successful exact-commit GitHub Actions run and inspect its uploaded schema_version 2 evidence artifact.",
+    "Verify a successful immutable Vercel deployment for the exact tested commit.",
+    "Obtain bounded physical iPhone Safari audibility evidence without overstating device coverage."
+  ],
+  "rollback": "Revert commits in reverse order: ecb50a134025699466018c230b014b619f41946e, then d892aeffb78eeec581b03b92aaf98d4aa973423e.",
+  "updated_at": "2026-07-11T22:50:00-04:00"
+}
