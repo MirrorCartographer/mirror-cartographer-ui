@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T13:25:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The exact-commit Vercel evidence manifest now records GitHub event name, full ref, ref name, and ref type, distinguishing push-triggered from manually dispatched verification runs.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "commits": [
+    "97361b5437c27760930f9c1310fa4069412cf31b",
+    "1d4d36c970df99a1b35bcd17aa9d61268d53ab83"
+  ],
+  "evidence": "operations/evidence/vercel-trigger-provenance-contract-2026-07-12T1325-0400.json",
+  "verification": {
+    "source_behavior": "The committed workflow manifest builder includes trigger_provenance derived from immutable GitHub runtime environment variables.",
+    "provider_status": "Vercel combined status remains failure due to build-rate-limit.",
+    "runtime_status": "Not yet claimed; workflow execution evidence remains pending inspection."
+  },
+  "acceptance_remaining": [
+    "Inspect the exact-commit GitHub Actions artifact and confirm trigger_provenance values.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after provider capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert commit 97361b5437c27760930f9c1310fa4069412cf31b; evidence and queue records remain append-only provenance.",
+  "canonical_queue_overwritten": false,
+  "next_action": "Inspect the GitHub Actions run and artifact for commit 97361b5437c27760930f9c1310fa4069412cf31b without attempting a new Vercel application deployment."
+}
