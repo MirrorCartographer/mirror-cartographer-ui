@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-019",
+  "created_at": "2026-07-12T20:20:23Z",
+  "research_question": "When can an empty GitHub Actions workflow-run query support a claim that no workflow ran for an exact commit?",
+  "source_status": {
+    "primary": [
+      "GitHub REST Actions workflow-runs endpoint documentation",
+      "GitHub REST pagination documentation"
+    ],
+    "connector_constraint": "The available fetch_commit_workflow_runs connector filters to pull_request events and returns the first page only."
+  },
+  "finding": "An empty result proves absence only when the observation covers all trigger events, follows every pagination page, uses exact commit binding, and rejects cross-commit contamination. Otherwise absence remains unproven.",
+  "artifact": "tools/frontier-research/github-actions-run-coverage.mjs",
+  "verification": {
+    "runtime": "Node.js test runner",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "cases": [
+      "incomplete empty observation remains absence_unproven",
+      "exhaustive empty observation becomes no_runs_observed_exhaustively",
+      "matching exact-commit runs are retained",
+      "cross-commit contamination is rejected",
+      "malformed pages are rejected"
+    ]
+  },
+  "evidence_strength": "strong for deterministic assessment semantics; not yet evidence that a repository query was actually exhaustive",
+  "uncertainty": [
+    "The current connector cannot enumerate all events and all pages.",
+    "The assessor depends on trustworthy query-coverage metadata supplied by the enumerator."
+  ],
+  "falsification_route": "Provide a dataset marked exhaustive that omits a workflow run discoverable through a complete REST traversal, or demonstrate that GitHub returns workflow runs outside the enumerated pages/events for the same exact commit."
+}
