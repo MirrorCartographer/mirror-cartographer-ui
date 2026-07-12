@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "slice": "sticky_audio_routing_confirmation",
+  "finding": "A diagnostic refresh could overwrite a previously confirmed sinkchange with selected-unverified because publish(context, false) discarded prior evidence.",
+  "implementation": {
+    "runtime": "src/engine/audioRoutingEvidenceRuntime.js",
+    "test": "scripts/audio-routing-evidence-contract-check.mjs",
+    "behavior": "Confirmation is retained in a WeakSet keyed by the exact AudioContext instance; unrelated contexts remain unconfirmed."
+  },
+  "verification": {
+    "method": "isolated Node.js contract execution",
+    "result": "passed",
+    "assertions": 4,
+    "cases": [
+      "unobserved selected sink is unverified",
+      "sinkchange promotes the context to selected-confirmed",
+      "later diagnostic refresh cannot downgrade the same context",
+      "confirmation does not leak to another context instance"
+    ]
+  },
+  "runtime_limit": "This proves browser-state evidence monotonicity in the contract runtime. It does not prove physical speaker emission, listener perception, or that Vercel currently serves the new commits.",
+  "deployment_check": {
+    "url": "https://mirror-cartographer-ui.vercel.app/.well-known/mirror-cartographer-deployment.json",
+    "result": "unverified",
+    "reason": "The execution environment could not resolve the public hostname, so no deployment claim is made."
+  },
+  "source_commits": [
+    "a47b57a87590d58dbf17fe15542c364b5d2cfefc",
+    "7720ea747378a7f5f45dfa0f2a8ef112f9a78be0"
+  ],
+  "rollback": "Revert commits 7720ea747378a7f5f45dfa0f2a8ef112f9a78be0 and a47b57a87590d58dbf17fe15542c364b5d2cfefc in reverse order.",
+  "recorded_at": "2026-07-12T01:42:00Z"
+}
