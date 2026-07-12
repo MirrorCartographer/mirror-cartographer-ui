@@ -2,7 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REQUIRED_OUTCOMES = ['source_contract', 'browser_regression', 'production_build'];
+const REQUIRED_OUTCOMES = [
+  'dependencies',
+  'browser_install',
+  'source_contract',
+  'browser_regression',
+  'evidence_verifier',
+  'production_build',
+];
 
 export function verifyAudioRoutingEvidence(evidence, expected = {}) {
   const errors = [];
