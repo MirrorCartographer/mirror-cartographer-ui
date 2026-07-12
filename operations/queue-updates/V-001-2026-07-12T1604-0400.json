@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T20:04:52Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a tested, fail-closed exact-commit workflow-query receipt that preserves negative GitHub Actions observations without converting them into deployment or runtime claims.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-workflow-query-receipt.mjs",
+    "operations/tools/vercel-workflow-query-receipt.test.mjs",
+    "operations/evidence/vercel-workflow-query-receipt-2026-07-12T1604-0400.json"
+  ],
+  "commits": [
+    "7cc066e4965bc3a76bc597c27e4ff4b3ae814bb3",
+    "6e9362dbff6074c41eb415605ed8aa24be79e2f1",
+    "ca290b70e4c0ac6b960da94dffe03818e0eaad77"
+  ],
+  "verification": {
+    "level": "local_runtime_and_connector_observation",
+    "result": "Five Node tests passed. The GitHub exact-commit workflow query for 00c96b0409c4540f6c6e1bf510974296c08b2463 returned an empty workflow_runs collection, which the new receipt records as non-observable rather than successful.",
+    "tests_executed": true,
+    "tests_passed": 5,
+    "tests_failed": 0
+  },
+  "rollback": "Revert commits 7cc066e4965bc3a76bc597c27e4ff4b3ae814bb3, 6e9362dbff6074c41eb415605ed8aa24be79e2f1, and ca290b70e4c0ac6b960da94dffe03818e0eaad77. The slice is additive and operations-only.",
+  "remaining_blockers": [
+    "Provider capacity has not been proven restored.",
+    "No exact-commit audio-routing workflow run or artifact has been observed.",
+    "No immutable successful Vercel deployment has been bound to the tested application commit.",
+    "No bounded physical iPhone Safari audibility verification has been completed."
+  ],
+  "safe_next_action": "Query a commit known to dispatch the exact-commit evidence workflow, store its receipt, and only proceed to job and artifact verification when the receipt is observable; do not initiate an application deployment until provider capacity is independently proven available."
+}
