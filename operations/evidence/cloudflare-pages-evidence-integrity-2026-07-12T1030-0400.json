@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-001",
+  "status": "implementation_complete_runtime_unverified",
+  "finding": "The Pages evidence verifier previously accepted non-HTTPS deployment URLs and derived evidence digests from insertion-order-sensitive JSON serialization.",
+  "improvement": {
+    "transport_integrity": "Canonical and deployment URLs must use HTTPS and contain no embedded credentials.",
+    "hostname_integrity": "The bare pages.dev host is rejected; only project-scoped Pages hostnames or API-authorized custom domains are accepted.",
+    "digest_integrity": "Evidence objects are recursively key-sorted before SHA-256 hashing so semantically equivalent objects produce the same digest.",
+    "domain_normalization": "API-authorized custom domains are normalized to lowercase with one trailing dot removed before comparison."
+  },
+  "files": [
+    "cloudflare-static/verify-pages-evidence.mjs",
+    "cloudflare-static/verify-pages-evidence.test.mjs"
+  ],
+  "commits": [
+    "dacd39947fdcad7135e75b9b667fa9889a3769da",
+    "3d8c11366da1a382aea028e8f07be56886b9aaf7"
+  ],
+  "verification": {
+    "source_inspection": "passed",
+    "test_cases_added": 3,
+    "runtime_execution": "unavailable_in_connector_run",
+    "fail_closed": true
+  },
+  "claim_boundaries": {
+    "proved": [
+      "The committed verifier source contains HTTPS and credential gates.",
+      "The committed verifier source canonicalizes object keys before digest generation.",
+      "The committed test source covers HTTP rejection, credential rejection, and key-order digest stability."
+    ],
+    "not_proved": [
+      "Tests executed successfully in GitHub Actions.",
+      "Cloudflare deployment exists or is reachable.",
+      "The served research surface matches a commit.",
+      "Scientific or medical claims are true."
+    ]
+  },
+  "privacy_review": "passed_no_private_user_material",
+  "rollback": [
+    "3d8c11366da1a382aea028e8f07be56886b9aaf7",
+    "dacd39947fdcad7135e75b9b667fa9889a3769da"
+  ]
+}
