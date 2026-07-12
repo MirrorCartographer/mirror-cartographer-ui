@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:30:00Z",
+  "subject": "Composed workflow query and observation acceptance pipeline",
+  "implementation_commit": "5bf216130623e64dd8888732a5e506120026e239",
+  "test_commit": "43646e7f84451bfba031d1da82bbea6373d52bd2",
+  "verification": {
+    "route": "dependency-free Node test suite",
+    "command": "node --test scripts/vercel-workflow-observation-pipeline.test.mjs",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "covered_boundaries": [
+      "empty workflow query remains unobserved",
+      "missing required artifacts fail closed",
+      "provider success without immutable run identity fails closed",
+      "newest matching exact-commit run is selected",
+      "acceptance requires exact commit, completed success, immutable identity, and required artifacts"
+    ]
+  },
+  "claim_boundary": {
+    "proved": "The composed module deterministically carries a workflow query result into the existing exact-commit observation gate and preserves fail-closed decisions across both stages.",
+    "not_proved": [
+      "A provider workflow run exists for the current commit.",
+      "Any Vercel deployment succeeded.",
+      "Required artifacts exist in GitHub Actions.",
+      "Browser or physical-device audio is audible."
+    ]
+  },
+  "privacy_boundary": "Synthetic workflow metadata only; no credentials, private chat material, user health data, or provider secrets are stored."
+}
