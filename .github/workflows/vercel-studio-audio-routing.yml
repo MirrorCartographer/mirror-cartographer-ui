@@ -1,0 +1,87 @@
+name: Vercel Studio Audio Routing Evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/engine/audioRoutingEvidenceRuntime.js'
+      - 'tests/audio-routing-sticky.spec.js'
+      - 'scripts/audio-routing-evidence-contract-check.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/vercel-studio-audio-routing.yml'
+  pull_request:
+    paths:
+      - 'src/engine/audioRoutingEvidenceRuntime.js'
+      - 'tests/audio-routing-sticky.spec.js'
+      - 'scripts/audio-routing-evidence-contract-check.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/vercel-studio-audio-routing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-studio-audio-routing-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-audio-routing-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact commit
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run isolated audio-routing contract
+        run: npm run test:audio-routing
+
+      - name: Run browser sticky-routing regression
+        run: npm run test:audio-routing-browser
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Record commit-bound evidence
+        if: always()
+        run: |
+          mkdir -p test-results/evidence
+          cat > test-results/evidence/vercel-studio-audio-routing.json <<JSON
+          {
+            "schema_version": 1,
+            "queue_item": "V-001",
+            "repository": "${GITHUB_REPOSITORY}",
+            "commit_sha": "${GITHUB_SHA}",
+            "workflow": "${GITHUB_WORKFLOW}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "run_attempt": "${GITHUB_RUN_ATTEMPT}",
+            "ref": "${GITHUB_REF}",
+            "evidence_scope": "source contract, browser regression, and production build; not physical speaker emission or Vercel deployment",
+            "generated_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          JSON
+
+      - name: Upload evidence and Playwright output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-studio-audio-routing-${{ github.sha }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: warn
+          retention-days: 30
