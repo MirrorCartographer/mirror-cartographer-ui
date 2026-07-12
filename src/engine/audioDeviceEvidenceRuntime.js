@@ -25,9 +25,8 @@ export function buildAudioDeviceEvidence({
 } = {}) {
   const width = Number(innerWidth);
   const height = Number(innerHeight);
-  const orientation = Number.isFinite(width) && Number.isFinite(height)
-    ? width >= height ? 'landscape' : 'portrait'
-    : 'unknown';
+  const hasViewport = Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0;
+  const orientation = hasViewport ? width >= height ? 'landscape' : 'portrait' : 'unknown';
 
   return Object.freeze({
     schemaVersion: '1.0.0',
@@ -61,7 +60,7 @@ export function buildAudioDeviceEvidence({
 }
 
 export function installAudioDeviceEvidenceRuntime(target = globalThis) {
-  if (!target?.window || !target?.navigator) return null;
+  if (!target?.window || !target?.navigator || !target?.document) return null;
   const evidence = buildAudioDeviceEvidence({
     innerWidth: target.window.innerWidth,
     innerHeight: target.window.innerHeight,
@@ -71,7 +70,7 @@ export function installAudioDeviceEvidenceRuntime(target = globalThis) {
     matchMediaImpl: target.window.matchMedia?.bind(target.window),
   });
   target.window.__MC_AUDIO_DEVICE_EVIDENCE__ = evidence;
-  document.documentElement.dataset.audioDeviceViewport = evidence.viewport.widthBucket;
-  document.documentElement.dataset.audioDeviceTouch = String(evidence.input.touchCapable);
+  target.document.documentElement.dataset.audioDeviceViewport = evidence.viewport.widthBucket;
+  target.document.documentElement.dataset.audioDeviceTouch = String(evidence.input.touchCapable);
   return evidence;
 }
