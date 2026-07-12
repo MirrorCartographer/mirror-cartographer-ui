@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T18:58:43Z",
+  "canonical_queue_modified": false,
+  "slice": {
+    "state": "completed",
+    "summary": "Separated exact-commit evidence validation from the node:test harness and bound the workflow to the side-effect-free validator module.",
+    "implementation_commits": [
+      "60df5549e8bbd42ebc56803ddc0c0bf2259995e6",
+      "b0683e6f1222a17e1e05d760eadce6a0c5d0e293",
+      "3a5de91bbfe6d29e008ba65a6098938d47028cab"
+    ],
+    "evidence_commit": "bd44526e9512a95658e8126a2305f6557541ecaf"
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "verification": {
+    "strongest_feasible_route": "Dependency-free local Node smoke test plus GitHub commit inspection.",
+    "local_result": "pass",
+    "trusted_ci_result": "unobserved",
+    "vercel_provider_status": "failure_build_rate_limit",
+    "deployment_result": "not_attempted",
+    "physical_iphone_safari_result": "not_performed"
+  },
+  "rollback": {
+    "route": "Revert commits 3a5de91bbfe6d29e008ba65a6098938d47028cab, b0683e6f1222a17e1e05d760eadce6a0c5d0e293, and 60df5549e8bbd42ebc56803ddc0c0bf2259995e6 in reverse order.",
+    "scope": [
+      ".github/workflows/vercel-evidence-contract.yml",
+      "scripts/vercel-exact-commit-runtime-evidence.test.mjs",
+      "scripts/vercel-exact-commit-runtime-evidence.mjs"
+    ]
+  },
+  "acceptance_remaining": [
+    "Observe the exact-commit GitHub Actions run and inspect the uploaded evidence manifest.",
+    "Observe an operations-only Vercel sentinel skipped or ignored after capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Inspect the workflow run for 3a5de91bbfe6d29e008ba65a6098938d47028cab; accept runtime verification only if the artifact manifest binds to that exact commit and the contract tests pass."
+}
