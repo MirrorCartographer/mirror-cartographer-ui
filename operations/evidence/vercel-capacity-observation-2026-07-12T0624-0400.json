@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T10:24:35Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "time-bounded provider capacity observation gate",
+  "problem": "The release sequencer accepted provider_capacity=available without binding that claim to a recent provider-derived observation, allowing stale evidence to authorize a later deployment attempt.",
+  "implementation": {
+    "module": "tools/vercel-ops/vercel-capacity-observation.mjs",
+    "test": "tools/vercel-ops/vercel-capacity-observation.test.mjs",
+    "default_max_age_ms": 900000,
+    "allowed_sources": [
+      "vercel_deployment_attempt",
+      "vercel_api",
+      "vercel_dashboard"
+    ],
+    "retained_fields": [
+      "observed_at",
+      "expires_at",
+      "source",
+      "outcome-derived provider_capacity",
+      "optional commit_sha",
+      "reason"
+    ],
+    "excluded_fields": [
+      "tokens",
+      "provider payloads",
+      "private URLs",
+      "headers",
+      "account identifiers"
+    ]
+  },
+  "verification": {
+    "command": "node --test vercel-capacity-observation.test.mjs",
+    "result": "pass",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "cases": [
+      "fresh available observation accepted",
+      "stale available observation rejected",
+      "rate-limited evidence rejected",
+      "unsupported source rejected",
+      "future observation rejected",
+      "extra sensitive payload fields excluded"
+    ]
+  },
+  "runtime_effect": "none; operations-only artifact, no application deployment attempted",
+  "deployment_status": "not attempted because provider capacity remains unobserved available",
+  "rollback": "Revert commits 455d6391c6892dfef1495a2115a504a5fda2c5a4 and 3a8b825fe326c637322d52d369422b4f33ae49aa.",
+  "limits": [
+    "No fresh Vercel capacity observation was available in this run.",
+    "The existing release sequencer is not yet wired to consume this validator output.",
+    "Physical iPhone Safari audio verification remains pending."
+  ]
+}
