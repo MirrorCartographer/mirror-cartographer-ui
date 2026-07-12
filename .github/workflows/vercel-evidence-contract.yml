@@ -81,6 +81,12 @@ jobs:
             queue_item: 'V-001',
             repository: process.env.GITHUB_REPOSITORY,
             commit_sha: process.env.GITHUB_SHA,
+            trigger_provenance: {
+              event_name: process.env.GITHUB_EVENT_NAME,
+              ref: process.env.GITHUB_REF,
+              ref_name: process.env.GITHUB_REF_NAME,
+              ref_type: process.env.GITHUB_REF_TYPE
+            },
             run_identity: {
               provider: 'github_actions',
               run_id: process.env.GITHUB_RUN_ID,
