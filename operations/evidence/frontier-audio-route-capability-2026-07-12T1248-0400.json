@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-032",
+  "team": "frontier_research",
+  "recorded_at": "2026-07-12T12:48:00-04:00",
+  "finding": "Browser render-clock progress and packet identity do not establish output-route provenance. Route evidence must distinguish API absence, policy or permission denial, transient-activation failure, missing devices, switch failure, default routing, observed non-default binding, and post-bind device loss.",
+  "primary_sources": [
+    {
+      "title": "Audio Output Devices API",
+      "publisher": "W3C",
+      "status": "Candidate Recommendation Draft",
+      "published": "2025-10-09",
+      "url": "https://www.w3.org/TR/audio-output/",
+      "relevance": [
+        "setSinkId is secure-context only",
+        "speaker-selection policy denial yields NotAllowedError",
+        "transient activation may be required",
+        "NotFoundError and AbortError describe distinct route failures",
+        "sinkId identifies the selected browser output route",
+        "device loss does not imply automatic route recovery"
+      ]
+    },
+    {
+      "title": "HTMLMediaElement.setSinkId()",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/setSinkId",
+      "status": "implementation documentation",
+      "relevance": "Cross-check of browser-facing method constraints and exceptions."
+    },
+    {
+      "title": "Permissions-Policy: speaker-selection",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy/speaker-selection",
+      "status": "implementation documentation",
+      "relevance": "Cross-check of the policy-controlled feature boundary."
+    }
+  ],
+  "artifact": {
+    "module": "tools/frontier-research/audio-route-capability.mjs",
+    "test": "tools/frontier-research/audio-route-capability.test.mjs",
+    "classifications": [
+      "bound_non_default",
+      "default_only",
+      "unsupported",
+      "unobservable",
+      "rejected"
+    ],
+    "claim_boundary": "A matching observed sinkId is browser route-binding evidence only; it does not prove physical audibility."
+  },
+  "verification": {
+    "command": "node --test audio-route-capability.test.mjs",
+    "environment": "isolated Node runtime",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "evidence_strength": "deterministic source-level test"
+  },
+  "falsification": [
+    "A policy-denied route is classified as bound.",
+    "A disappeared sink remains classified as bound.",
+    "A resolved setSinkId call without matching sinkId observation is treated as proof of binding.",
+    "Any route classification is represented as proof of physical audibility."
+  ],
+  "limits": [
+    "No deployed browser execution was performed.",
+    "No physical speaker or headphone output was measured.",
+    "Browser support remains implementation-dependent.",
+    "The W3C document is a draft and may change."
+  ]
+}
