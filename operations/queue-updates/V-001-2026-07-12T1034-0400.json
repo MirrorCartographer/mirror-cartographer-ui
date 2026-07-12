@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added canonical sentinel and exact-commit npm deployment entrypoints that both pass through the fail-closed deployment admission wrapper, plus a contract test integrated into the local gate.",
+  "evidence": "operations/evidence/vercel-guarded-package-entrypoints-2026-07-12T1034-0400.json",
+  "canonical_files_overwritten": false,
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Generate operations/changed-paths.json from an immutable base/head comparison, run the contract test in a trusted runner, and only then use the sentinel entrypoint while capacity remains blocked."
+}
