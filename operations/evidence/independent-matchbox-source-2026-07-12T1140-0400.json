@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "artifact": "independent-web/weather-inside-a-matchbox/index.html",
+  "artifact_blob_sha": "1fec29fdd2e408378dc56004decce498c5163337",
+  "commit": "269cd95287eb16ffc175ca7c2c6945a2ecf31f48",
+  "evidence_kind": "repository_source_observation",
+  "observed": {
+    "single_file_static_artwork": true,
+    "keyboard_activation": true,
+    "pointer_and_drag_interaction": true,
+    "aria_live_forecast": true,
+    "explicit_opt_in_audio": true,
+    "prefers_reduced_motion": true,
+    "mobile_safe_area_support": true,
+    "external_runtime_dependencies": false,
+    "payment_logic": false,
+    "diagnosis_or_treatment_claims": false,
+    "mirror_cartographer_application_dependency": false
+  },
+  "verification_route": "Fetched the committed GitHub file by exact repository path after creation and inspected the returned blob SHA and source contract.",
+  "not_proven": [
+    "Rendered browser behavior",
+    "Public hosting availability",
+    "Physical mobile device behavior",
+    "Audio audibility on a specific device"
+  ]
+}
