@@ -24,14 +24,28 @@ export function classifyAudioRouting({ context, permissionsPolicy, sinkChangeObs
   return { status: 'selected-confirmed', browserConfirmed: true, physicalOutputProven: false, sinkId };
 }
 
-function publish(context, sinkChangeObserved = false) {
-  const result = classifyAudioRouting({ context, sinkChangeObserved });
-  window.__MC_AUDIO_ROUTING__ = {
-    ...result,
-    sampledAt: new Date().toISOString(),
+function normalizedAttemptId(value) {
+  return typeof value === 'string' && value.trim() ? value : null;
+}
+
+export function buildAudioRoutingEvidence({ context, sinkChangeObserved = false, attemptId = null, sampledAt = new Date().toISOString() } = {}) {
+  return {
+    ...classifyAudioRouting({ context, sinkChangeObserved }),
+    attemptId: normalizedAttemptId(attemptId),
+    sampledAt,
     evidenceLimit: 'Browser routing state does not prove speaker emission or listener perception.',
   };
+}
+
+function publish(context, sinkChangeObserved = false) {
+  const result = buildAudioRoutingEvidence({
+    context,
+    sinkChangeObserved,
+    attemptId: window.__MC_AUDIO_ATTEMPT_ID__,
+  });
+  window.__MC_AUDIO_ROUTING__ = result;
   document.documentElement.dataset.audioRouting = result.status;
+  document.documentElement.dataset.audioRoutingAttempt = result.attemptId || 'unbound';
   return result;
 }
 
@@ -61,14 +75,24 @@ export function installAudioRoutingEvidenceRuntime() {
 
   window.addEventListener('mc:audio-context', (event) => observeContext(event.detail?.context));
 
+  document.addEventListener('click', (event) => {
+    if (!event.target?.closest?.('[data-audio-diagnostic]')) return;
+    queueMicrotask(() => {
+      const context = window.__MC_AUDIO_PULSE_CONTEXT__;
+      if (context) publish(context, false);
+    });
+  }, { capture: true });
+
   window.addEventListener('DOMContentLoaded', () => {
     window.__MC_AUDIO_ROUTING__ = window.__MC_AUDIO_ROUTING__ || {
       status: CurrentAudioContext ? 'awaiting-context' : 'unsupported',
       browserConfirmed: false,
       physicalOutputProven: false,
+      attemptId: normalizedAttemptId(window.__MC_AUDIO_ATTEMPT_ID__),
       sampledAt: new Date().toISOString(),
       evidenceLimit: 'Browser routing state does not prove speaker emission or listener perception.',
     };
     document.documentElement.dataset.audioRouting = window.__MC_AUDIO_ROUTING__.status;
+    document.documentElement.dataset.audioRoutingAttempt = window.__MC_AUDIO_ROUTING__.attemptId || 'unbound';
   }, { once: true });
 }
