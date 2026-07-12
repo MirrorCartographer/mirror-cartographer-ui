@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/contracts/continuity-claim-transition.schema.json",
+  "title": "Continuity Claim Transition",
+  "description": "Append-only transition record for continuity claims. A transition may reinterpret or supersede a prior claim, but must not erase its historical state or provenance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "transition_id",
+    "subject_id",
+    "recorded_at",
+    "from_claim",
+    "to_claim",
+    "transition_kind",
+    "reason",
+    "provenance",
+    "privacy"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "transition_id": { "type": "string", "minLength": 1 },
+    "subject_id": { "type": "string", "minLength": 1 },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "from_claim": { "$ref": "#/$defs/claimSnapshot" },
+    "to_claim": { "$ref": "#/$defs/claimSnapshot" },
+    "transition_kind": {
+      "enum": [
+        "confirm",
+        "refine",
+        "contradict",
+        "supersede",
+        "retract",
+        "reopen"
+      ]
+    },
+    "reason": { "type": "string", "minLength": 1 },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_refs", "evidence_strength", "review_state"],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "evidence_strength": {
+          "enum": ["none", "weak", "moderate", "strong", "direct"]
+        },
+        "review_state": {
+          "enum": ["unreviewed", "reviewed", "conflict", "accepted", "rejected"]
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "contains_raw_private_content"],
+      "properties": {
+        "visibility": { "enum": ["public", "internal", "private"] },
+        "contains_raw_private_content": { "const": false },
+        "content_hash": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "visibility": { "const": "private" } },
+            "required": ["visibility"]
+          },
+          "then": { "required": ["content_hash"] }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "claimSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "statement_summary",
+        "epistemic_state",
+        "lifecycle_state"
+      ],
+      "properties": {
+        "claim_id": { "type": "string", "minLength": 1 },
+        "statement_summary": { "type": "string", "minLength": 1 },
+        "epistemic_state": {
+          "enum": ["observed", "inferred", "proposed", "superseded", "unresolved"]
+        },
+        "lifecycle_state": {
+          "enum": ["active", "inactive", "historical", "conflicted", "withdrawn"]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "transition_kind": { "const": "contradict" } },
+        "required": ["transition_kind"]
+      },
+      "then": {
+        "properties": {
+          "to_claim": {
+            "properties": { "lifecycle_state": { "const": "conflicted" } }
+          },
+          "provenance": {
+            "properties": { "review_state": { "const": "conflict" } }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "transition_kind": { "enum": ["supersede", "retract"] } },
+        "required": ["transition_kind"]
+      },
+      "then": {
+        "properties": {
+          "from_claim": {
+            "properties": { "epistemic_state": { "const": "superseded" } }
+          }
+        }
+      }
+    }
+  ]
+}
