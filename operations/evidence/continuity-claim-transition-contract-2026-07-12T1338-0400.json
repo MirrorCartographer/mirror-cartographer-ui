@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T13:38:48-04:00",
+  "team": "continuity_mining",
+  "artifact": "operations/contracts/continuity-claim-transition.schema.json",
+  "finding": "Continuity claims require append-only transition records. Reinterpretation, contradiction, supersession, retraction, and reopening must preserve the prior claim snapshot and provenance rather than replacing historical state.",
+  "design_implication": "Knowledge-graph and lexicon maintenance should store claim transitions as edges between immutable claim snapshots. Epistemic state and lifecycle state remain separate dimensions, and contradiction must force both a conflicted lifecycle and conflict review state.",
+  "claim_states": {
+    "observed": "Existing continuity artifacts distinguish observed, inferred, proposed, superseded, and unresolved claims, but no shared transition contract previously constrained movement between those states.",
+    "inferred": "Without an append-only transition record, later synthesis can accidentally erase the historical meaning, provenance, or uncertainty of an earlier claim.",
+    "proposed": "Use the new schema for future decision-log, language-lexicon, and knowledge-graph claim changes.",
+    "superseded": "The implicit model that a claim can be safely updated in place when new evidence arrives.",
+    "unresolved": "The schema has not yet been bound to a runtime validator or trusted CI execution path."
+  },
+  "contradictions_resolved": [
+    "Epistemic state and lifecycle state are not interchangeable: a claim may be observed yet historically inactive, or unresolved yet active for review.",
+    "Contradiction is not supersession: contradictory claims remain visible and conflict-marked until reviewed.",
+    "Privacy-preserving provenance does not require raw private content; private transitions require a content hash while forbidding raw private content in the record."
+  ],
+  "verification": {
+    "result": "schema_committed_source_reviewed",
+    "commit": "e2d1df0370c1d36ceb9a17a8816b7fce2fa42ee2",
+    "runtime_validation": false,
+    "limitations": [
+      "JSON Schema format assertions depend on the eventual validator configuration.",
+      "The contract constrains structure but does not authenticate source references or prove evidence truth."
+    ]
+  },
+  "privacy_boundary": "No raw chat passages, personal identity details, health information, or private file contents were copied. The artifact contains only abstract continuity rules, repository references, and synthetic contract semantics."
+}
