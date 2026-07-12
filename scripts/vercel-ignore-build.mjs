@@ -3,24 +3,24 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-const BUILD_RELEVANT_PREFIXES = [
-  'src/',
-  'public/',
+const BUILD_RELEVANT_EXACT_PATHS = new Set([
   'index.html',
   'package.json',
   'package-lock.json',
-  'vite.config.',
   'vercel.json',
+]);
+
+const BUILD_RELEVANT_PREFIXES = [
+  'src/',
+  'public/',
+  'vite.config.',
   'scripts/vercel-',
 ];
 
 export function requiresVercelBuild(paths) {
   return paths.some((path) =>
-    BUILD_RELEVANT_PREFIXES.some((prefix) =>
-      prefix.endsWith('/') || prefix.endsWith('.')
-        ? path.startsWith(prefix)
-        : path === prefix,
-    ),
+    BUILD_RELEVANT_EXACT_PATHS.has(path)
+      || BUILD_RELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix)),
   );
 }
 
