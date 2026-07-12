@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T06:08:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Integrated the existing audibility session-binding gate into the authoritative physical audibility verifier so runtime evidence and human confirmation cannot be combined across different device-test sessions.",
+  "evidence": "operations/evidence/vercel-integrated-session-binding-2026-07-12T0208-0400.json",
+  "commits": [
+    "86e74775a4f1047b3d25a163437e1e24d077f913",
+    "9066bfcf82764b9a5ac625e53be4b98020077d50",
+    "3f827591e928fe51b82052e0dfca0ab741d9fa2c"
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification using one shared device/runtime/human session identifier."
+  ],
+  "safe_next_action": "Continue operations-only evidence hardening while rate-limited; when capacity returns, run one operations-only sentinel before one exact-commit application verification."
+}
