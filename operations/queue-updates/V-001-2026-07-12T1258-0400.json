@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T12:58:00-04:00",
+  "slice": "Bind the dependency-free audio-route capability evaluator tests into the exact-commit V-001 evidence workflow.",
+  "status": "implemented_verification_pending",
+  "commit_sha": "77ec8bd669adf4862556b430abe28eab861738ea",
+  "changes": [
+    "The V-001 workflow now triggers when the route evaluator or its tests change.",
+    "The exact-commit test command now executes both the evidence validator and audio-route capability boundary tests.",
+    "The immutable manifest identifies both suites and explicitly distinguishes classification testing from browser observation and physical audibility."
+  ],
+  "acceptance_effect": {
+    "advanced": [
+      "Exact-commit audio-routing logic is now included in the immutable CI evidence bundle."
+    ],
+    "remaining": [
+      "Observe the workflow run and inspect its uploaded artifact.",
+      "Observe browser-generated six-outcome audio evidence.",
+      "Bind a tested application commit to an immutable successful Vercel deployment after provider capacity returns.",
+      "Perform bounded physical iPhone Safari audibility verification."
+    ]
+  },
+  "constraints_observed": [
+    "No Vercel deployment attempted.",
+    "No payment or conversion logic added.",
+    "No canonical shared-state file overwritten.",
+    "No GitHub file or history deleted."
+  ],
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert commit 77ec8bd669adf4862556b430abe28eab861738ea."
+  ]
+}
