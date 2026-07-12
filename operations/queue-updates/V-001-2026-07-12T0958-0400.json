@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T13:58:50Z",
+  "state_before": "in_progress_blocked",
+  "state_after": "in_progress_blocked",
+  "completed_slice": "Added and tested a deterministic six-outcome acceptance bundle that binds browser evidence and bounded physical iPhone Safari evidence to one commit and deployment identity while preserving contradictions.",
+  "artifacts": [
+    {
+      "path": "tools/vercel-ops/audio-acceptance-bundle.mjs",
+      "commit": "0bcc5dd6872b09886e77a693c28249e49cef90e8"
+    },
+    {
+      "path": "tools/vercel-ops/audio-acceptance-bundle.test.mjs",
+      "commit": "a4695431dd44c529348c740807cb89491ed1e9c7"
+    },
+    {
+      "path": "operations/evidence/vercel-audio-acceptance-bundle-2026-07-12T0958-0400.json",
+      "commit": "8bff9702bdea98a988903fe288cb4264a6f1ad0f"
+    }
+  ],
+  "verification": {
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "physical_device_trial_observed": false
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and feed its browser evidence into the six-outcome bundle.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Run three bounded physical iPhone Safari trials and feed their validated result into the bundle."
+  ],
+  "safe_next_action": "After capacity returns, run one operations-only sentinel; if suppression is observed, deploy exactly one application commit, collect browser and three-trial physical evidence, then evaluate the combined six-outcome bundle.",
+  "specialist_registry_change": null,
+  "shared_state_overwritten": false,
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 8bff9702bdea98a988903fe288cb4264a6f1ad0f.",
+    "Revert a4695431dd44c529348c740807cb89491ed1e9c7.",
+    "Revert 0bcc5dd6872b09886e77a693c28249e49cef90e8."
+  ]
+}
