@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T13:50:57Z",
+  "state_before": "in_progress_blocked",
+  "state_after": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed validator for three bounded physical iPhone Safari audibility trials bound to one commit and deployment identity.",
+  "artifacts": [
+    {
+      "path": "tools/vercel-ops/physical-audio-verification.mjs",
+      "commit": "dd46d96bc8a7c9e81bbb7629ca09c0acfdd7f3b3"
+    },
+    {
+      "path": "tools/vercel-ops/physical-audio-verification.test.mjs",
+      "commit": "1fd19204c49dc48fb4ebb86719abbcbdca2fdb5d"
+    },
+    {
+      "path": "operations/evidence/vercel-physical-audio-verification-2026-07-12T0950-0400.json",
+      "commit": "6ce9b48752ba0f3e12c770e900625c7fdfc6f9a8"
+    }
+  ],
+  "verification": {
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "physical_device_trial_observed": false
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Run the new bounded validator against three physical iPhone Safari trials."
+  ],
+  "safe_next_action": "After capacity returns, run one operations-only sentinel; if suppression is observed, deploy exactly one application commit and collect three bounded physical iPhone Safari trials against that immutable deployment.",
+  "specialist_registry_change": null,
+  "shared_state_overwritten": false,
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 6ce9b48752ba0f3e12c770e900625c7fdfc6f9a8.",
+    "Revert 1fd19204c49dc48fb4ebb86719abbcbdca2fdb5d.",
+    "Revert dd46d96bc8a7c9e81bbb7629ca09c0acfdd7f3b3."
+  ]
+}
