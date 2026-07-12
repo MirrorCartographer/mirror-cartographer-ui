@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T12:48:00Z",
+  "slice": "Combined browser human attestation with commit-bound Web Audio render-timeline evidence in one fail-closed adapter.",
+  "source_artifacts": [
+    "tools/vercel-ops/browser-audio-observation.mjs",
+    "tools/frontier-research/audio-output-timeline.mjs",
+    "tools/vercel-ops/audio-attestation-capture.mjs"
+  ],
+  "created_artifacts": [
+    {
+      "path": "tools/vercel-ops/browser-audio-evidence.mjs",
+      "commit": "4a664d99f386b7594090847e772275cc2ae563a8"
+    },
+    {
+      "path": "tools/vercel-ops/browser-audio-evidence.test.mjs",
+      "commit": "8d4b3089f05b49ba1085e4d9b6065477e0a0933c"
+    }
+  ],
+  "verification": {
+    "command": "node --test tools/vercel-ops/browser-audio-evidence.test.mjs",
+    "result": "5 passed, 0 failed",
+    "environment": "isolated Node runtime using byte-identical copies of repository dependencies and committed new files",
+    "covered_boundaries": [
+      "human-confirmed attestation plus advancing render timeline",
+      "Safari-shaped AudioContext without outputLatency",
+      "non-advancing render timeline fails closed",
+      "contradicted human outcome remains explicit beside valid render evidence",
+      "sampling before runtime capture is rejected"
+    ]
+  },
+  "epistemic_boundary": {
+    "render_timeline_observed": "Browser rendering progression was structurally validated by tests.",
+    "human_audibility": "No physical-device observation occurred in this run.",
+    "deployment": "No Vercel deployment was attempted because provider build capacity remains blocked."
+  },
+  "canonical_files_overwritten": false,
+  "rollback": "Revert commits 8d4b3089f05b49ba1085e4d9b6065477e0a0933c and 4a664d99f386b7594090847e772275cc2ae563a8; no application runtime or deployment configuration was changed."
+}
