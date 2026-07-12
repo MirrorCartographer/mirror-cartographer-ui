@@ -4,6 +4,7 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const FULL_SHA = /^[0-9a-f]{40}$/;
+const CONTROL_CHARACTER = /[\u0000-\u001f\u007f]/;
 
 export function buildChangedPathsManifest({ base, head, runGit = execFileSync } = {}) {
   if (!FULL_SHA.test(base || '') || !FULL_SHA.test(head || '')) {
@@ -11,19 +12,23 @@ export function buildChangedPathsManifest({ base, head, runGit = execFileSync } 
   }
   if (base === head) throw new Error('base and head must differ');
 
-  const raw = runGit('git', ['diff', '--name-only', '--diff-filter=ACMRTUXB', `${base}..${head}`], {
+  const raw = runGit('git', ['diff', '--name-only', '-z', '--diff-filter=ACMRTUXB', `${base}..${head}`], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
   const changedPaths = [...new Set(String(raw)
-    .split(/\r?\n/)
-    .map((value) => value.trim())
+    .split('\0')
     .filter(Boolean))]
     .sort((left, right) => left.localeCompare(right));
 
   if (changedPaths.length === 0) throw new Error('immutable comparison produced no changed paths');
-  if (changedPaths.some((value) => value.startsWith('/') || value.includes('..') || value.includes('\\'))) {
+  if (changedPaths.some((value) =>
+    value.startsWith('/') ||
+    value.includes('..') ||
+    value.includes('\\') ||
+    CONTROL_CHARACTER.test(value)
+  )) {
     throw new Error('git diff returned an unsafe repository path');
   }
 
@@ -31,7 +36,8 @@ export function buildChangedPathsManifest({ base, head, runGit = execFileSync } 
     schema_version: 1,
     comparison: { base, head, range: `${base}..${head}` },
     changed_paths: changedPaths,
-    path_count: changedPaths.length
+    path_count: changedPaths.length,
+    path_encoding: 'nul-delimited'
   };
 }
 
