@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T22:07:00Z",
+  "updated_at": "2026-07-12T22:19:05Z",
   "items": [
     {
       "id": "V-001",
@@ -18,16 +18,17 @@
         "Successful Vercel commit status is now explicitly non-deployable until immutable deployment identity is independently verified.",
         "Frontier Research's exhaustive all-event workflow enumerator contract is now integrated into Vercel's commit-bound evidence assessor through a fail-closed adapter.",
         "Authenticated connector workflow snapshots are now classified as limited evidence; zero-result first-page pull-request views remain absence_unproven and cannot self-declare exhaustive coverage.",
-        "Independent exhaustive workflow enumerations must now reconcile before the Vercel commit-bound assessor can promote evidence; provider-ceiling ambiguity fails closed."
+        "Independent exhaustive workflow enumerations must now reconcile before the Vercel commit-bound assessor can promote evidence; provider-ceiling ambiguity fails closed.",
+        "A tamper-evident evidence bundle now binds exact commit identity, approved enumeration methods, retrieval times, page counts, canonical SHA-256 digests, retention requirements, and the reconciliation result."
       ],
       "acceptance_remaining": [
-        "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and an independent gh api --paginate traversal, retain both raw outputs, and retain the reconciliation result.",
+        "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and an independent gh api --paginate traversal, retain both raw outputs, and retain the reconciliation bundle.",
         "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
         "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
         "Bind the tested application commit to an immutable successful Vercel deployment.",
         "Perform bounded physical iPhone Safari audibility verification."
       ],
-      "safe_next_action": "Execute both authenticated exhaustive enumerations for the same exact commit, run them through the reconciled Vercel evidence gate, and retain the raw and assessed artifacts; do not create an application deployment until capacity and immutable deployment identity are verified."
+      "safe_next_action": "Execute both authenticated exhaustive enumerations for the same exact commit, preserve the raw outputs outside secret-bearing logs, create the tamper-evident workflow evidence bundle, and feed only a verified bundle into the existing commit-bound assessor; do not create an application deployment until capacity and immutable deployment identity are verified."
     },
     {
       "id": "M-RECONCILE-002",
