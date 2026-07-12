@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-001",
+  "owner": "independent_creative_web",
+  "priority": "highest_available_for_team",
+  "state": "completed_slice",
+  "objective": "Advance the independent static artwork without turning it into a Mirror Cartographer surface, dashboard, research portal, or funnel.",
+  "completed_slice": "Added deterministic UTC-daily climate families, seeded particles and forecasts, visible keyboard focus, atomic live-region announcements, and suspended AudioContext recovery; added and executed a structural independence/accessibility contract test.",
+  "files": [
+    "independent-web/weather-inside-a-matchbox/index.html",
+    "independent-web/weather-inside-a-matchbox/test-contract.mjs",
+    "operations/evidence/independent-matchbox-daily-climate-2026-07-12T1233-0400.json"
+  ],
+  "commits": [
+    "194b957a78a1b25fdc1b260283461ba5245ce3ac",
+    "a68153ce88393efac96193c7ff35e923c4e72b2b",
+    "62767c54e6bf86be18b5110f0c87af15a657c95b"
+  ],
+  "verification": {
+    "command": "node independent-web/weather-inside-a-matchbox/test-contract.mjs",
+    "exit_code": 0,
+    "deployment_verified": false
+  },
+  "specialist_registry_change": null,
+  "next_action": "Add a browser-level screenshot and interaction harness for desktop and mobile viewport states, then publish only when the current provider-capacity constraint permits a bounded deployment verification."
+}
