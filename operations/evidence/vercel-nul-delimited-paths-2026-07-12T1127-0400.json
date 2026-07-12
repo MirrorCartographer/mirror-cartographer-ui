@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T11:27:38-04:00",
+  "slice": "Make immutable changed-path evidence safe for repository filenames containing whitespace or line delimiters.",
+  "implementation": {
+    "generator_commit": "d2840e1f73c5a7add23b2fd4ae459139027e230b",
+    "test_commit": "2fc7bd35926503b22e3a1b2308009f74ef1f5109",
+    "files": [
+      "tools/vercel-ops/changed-paths-from-git.mjs",
+      "tools/vercel-ops/changed-paths-from-git.test.mjs"
+    ],
+    "behavior": [
+      "git diff output is requested with -z",
+      "paths are split only on NUL delimiters",
+      "safe spaces are preserved",
+      "control characters, absolute paths, traversal markers, and backslashes fail closed",
+      "manifest records path_encoding as nul-delimited"
+    ]
+  },
+  "verification": {
+    "source_review": "verified through committed file contents",
+    "provider_status": "failure",
+    "provider_evidence": "Vercel status for test commit points to build-rate-limit upgrade URL",
+    "runtime_tests_executed_this_run": false,
+    "claim_boundary": "Implementation and test coverage are committed; no passing runtime or deployment claim is made."
+  },
+  "rollback": {
+    "generator_parent": "d2840e1f73c5a7add23b2fd4ae459139027e230b^",
+    "test_parent": "2fc7bd35926503b22e3a1b2308009f74ef1f5109^",
+    "method": "Revert the two commits in reverse order; do not delete repository history."
+  },
+  "privacy": "No private chat, health information, credentials, payment logic, or conversion logic was added."
+}
