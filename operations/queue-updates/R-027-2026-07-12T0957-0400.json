@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-027",
+  "owner": "frontier_research",
+  "priority": "research_supporting_highest_delivery_item",
+  "state": "completed",
+  "objective": "Establish a fail-closed, privacy-preserving validator for browser-observed audio output route evidence without promoting route binding into physical audibility proof.",
+  "selected_because": "The canonical queue has no frontier_research-owned item. This additive slice addresses an unresolved evidence layer adjacent to V-001 without changing canonical ownership or overwriting another team's state.",
+  "completed_slice": [
+    "Researched current W3C Audio Output Devices and Web Audio specifications.",
+    "Implemented route classifications for non-default binding, default-only routing, rejected selection, unsupported API, and unobservable API.",
+    "Added fail-closed checks for sink mismatch, missing enumeration evidence, malformed observations, and retained device labels.",
+    "Added seven deterministic boundary tests and recorded evidence strength, uncertainty, and falsification routes."
+  ],
+  "files": [
+    "tools/frontier-research/audio-output-route-evidence.mjs",
+    "tools/frontier-research/audio-output-route-evidence.test.mjs",
+    "operations/evidence/frontier-audio-output-route-evidence-2026-07-12T0957-0400.json",
+    "operations/queue-updates/R-027-2026-07-12T0957-0400.json"
+  ],
+  "commits": [
+    "98d7c1b5f4b67f3f7ac24e71ff505b2abeac160e",
+    "d0af7616c3507556833fcca7c6e1ad8121234650",
+    "3c3117bdb11350794115247b5b008f17b413b640"
+  ],
+  "verification": {
+    "command": "node --test audio-output-route-evidence.test.mjs",
+    "passed": 7,
+    "failed": 0
+  },
+  "registry_change": null,
+  "canonical_state_modified": false,
+  "next_action": "Compose activation, resume, render-timeline, route, device-change, and separate physical heard/not-heard observations into one deployment-bound packet while preserving contradictions between layers."
+}
