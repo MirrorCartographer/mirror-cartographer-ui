@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T21:41:00Z",
+  "queue_item": "V-001",
+  "slice": "Integrate exhaustive GitHub Actions enumeration into commit-bound Vercel evidence assessment",
+  "source_commits": {
+    "enumerator": "aabf0953ee02f77804934940e06100440afc77a2",
+    "coverage_assessor": "f5c62c608a1284f0048788e904858f3dfbb0840c"
+  },
+  "implementation_commits": {
+    "adapter": "2d63dbcd02bc12b1acead87847a2963e713f48ee",
+    "tests": "c51b8cf843b9791d6d1aa693e45653c4f9981967"
+  },
+  "verification": {
+    "command": "node --test tools/vercel-studio/commit-bound-workflow-evidence.test.mjs",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "covered": [
+      "complete exhaustive exact-commit enumeration accepted",
+      "exhaustive zero-run result preserved",
+      "page-limit and HTTP failures rejected",
+      "commit mismatch rejected",
+      "weakened coverage contract rejected"
+    ]
+  },
+  "provider_observation": {
+    "commit_sha": "c51b8cf843b9791d6d1aa693e45653c4f9981967",
+    "vercel_status": "failure",
+    "target_classification": "build_rate_limit",
+    "deployment_claim": false
+  },
+  "evidence_strength": "implementation_locally_verified_provider_blocker_observed",
+  "limits": [
+    "No authenticated all-event live enumeration was executed in this run.",
+    "No immutable Vercel deployment identity was established.",
+    "No browser or physical-device audibility claim is made."
+  ],
+  "rollback": "Revert the two additive tools/vercel-studio files; no application code or deployment configuration changed."
+}
