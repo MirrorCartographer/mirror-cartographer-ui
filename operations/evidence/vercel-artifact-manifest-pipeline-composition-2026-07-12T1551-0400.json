@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T15:51:32-04:00",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "Compose the workflow artifact manifest gate into the exact-commit observation pipeline.",
+  "implementation_commits": {
+    "pipeline": "5bb7a3fea3d5d70eb1ded1a59b3b37db7f0ad851",
+    "tests": "c8673d6d374ceded4d1245a62792a82caa8098b2"
+  },
+  "behavior": {
+    "gate_order": ["query", "artifact_manifest", "observation", "accepted"],
+    "fail_closed_conditions": [
+      "artifact identity incomplete",
+      "artifact belongs to another workflow run",
+      "artifact expired",
+      "artifact name duplicated",
+      "required artifact missing"
+    ],
+    "accepted_artifact_projection": "Only names from a verified manifest are forwarded to the observation gate."
+  },
+  "verification": {
+    "method": "Fetched the committed dependency closure and executed the Node test suite in an isolated local runtime.",
+    "command": "node --test vercel-workflow-observation-pipeline.test.mjs",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "covered_outcomes": [
+      "unobserved query",
+      "missing required artifact",
+      "cross-run artifact",
+      "expired artifact",
+      "duplicate artifact name",
+      "incomplete immutable run identity",
+      "newest matching run selection",
+      "successful exact-run manifest acceptance"
+    ]
+  },
+  "deployment_claim": "No Vercel deployment or browser audibility is claimed by this operations-only slice.",
+  "rollback": "Revert the pipeline import and artifact_manifest stage; the standalone manifest gate and previous observation gate remain intact.",
+  "constraints_preserved": [
+    "No payment or conversion logic added to Vercel.",
+    "No GitHub files or history deleted.",
+    "No peer execution claimed without evidence."
+  ]
+}
