@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "evidence_id": "continuity-claim-state-lexicon-2026-07-12T1514-0400",
+  "owner": "continuity_mining",
+  "artifact": "operations/continuity/CLAIM_STATE_LEXICON.json",
+  "artifact_commit": "9d191854a8dcc4c686093be40730966f27cfc86a",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/queue-updates/CM-012-2026-07-12T1510-0400.json",
+    "recent continuity commits through 4267b9e4fddba5f33d32bee366b8f53197366eb6",
+    "combined commit status for 4267b9e4fddba5f33d32bee366b8f53197366eb6"
+  ],
+  "observed": [
+    "The canonical active queue contains only V-001, owned by vercel_studio.",
+    "The continuity specialist registry is empty.",
+    "CM-012 uses observed, inferred, proposed, superseded, and unresolved claim labels.",
+    "The latest inspected continuity commit has a Vercel failure status caused by the provider build-rate limit; no continuity workflow execution evidence was observed through that status route."
+  ],
+  "inferred": [
+    "Without a centralized lexicon, teams can apply the same claim labels with different evidence thresholds.",
+    "A machine-readable state lexicon reduces silent promotion of inference into observation and preserves contradiction semantics across teams."
+  ],
+  "proposed": [
+    "Future continuity validators should import or cross-check this lexicon rather than duplicating state semantics.",
+    "A later slice may add dependency-free linting for transition records against this artifact."
+  ],
+  "superseded": [
+    "The implicit assumption that state labels are self-explanatory across all team outputs."
+  ],
+  "unresolved": [
+    "The exact-commit continuity workflow still lacks observed provider-run artifacts.",
+    "Independent JSON Schema 2020-12 comparison remains pending.",
+    "The new lexicon is not yet enforced by the existing claim-transition validator."
+  ],
+  "verification": {
+    "route": "GitHub contents API write followed by direct file fetch and JSON inspection",
+    "result": "pending_post_write_fetch",
+    "claims_withheld": [
+      "No workflow execution is claimed.",
+      "No deployment is claimed.",
+      "No private memory content is claimed true or false."
+    ]
+  },
+  "privacy_boundary": "Repository metadata, state semantics, and bounded provenance only; no raw private chat, health, identity, relationship, or location content included.",
+  "canonical_queue_changed": false,
+  "registry_changed": false
+}
