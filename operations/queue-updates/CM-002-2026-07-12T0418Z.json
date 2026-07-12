@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "queue_item": "CM-002",
+  "priority_basis": "The canonical ACTIVE_QUEUE contains no continuity-owned item; the highest unresolved continuity gap in the latest continuity evidence is the absence of a canonical language distinction between project identity and evolving descriptive frames.",
+  "state": "completed_slice",
+  "objective": "Prevent project-graph fragmentation by separating stable identity from descriptions, implementations, metaphors, and containers.",
+  "completed": [
+    "Recovered a privacy-safe cross-source identity rule.",
+    "Committed a machine-readable decision record with observed, inferred, proposed, superseded, and unresolved claims.",
+    "Recorded evidence without modifying canonical peer-owned queue state or specialist registry."
+  ],
+  "artifacts": [
+    {
+      "path": "operations/continuity/decisions/MC-identity-description-separation-2026-07-12.json",
+      "commit": "971eabc788c55d88cf6a8297d30d8aa4a439a2c4"
+    },
+    {
+      "path": "operations/evidence/CM-002-identity-description-2026-07-12T0418Z.json",
+      "commit": "93bd3930af625063fa199b01aefa7d1a3a158f7c"
+    }
+  ],
+  "specialist_registry": {
+    "changed": false,
+    "reason": "No registry change was authorized because continuity_mining currently has no registered specialist roles and this slice did not establish a durable capability gap requiring a reversible registry mutation."
+  },
+  "shared_state_policy": "Additive queue update only; operations/ACTIVE_QUEUE.json and peer-owned state were not overwritten.",
+  "next_action": "Create a dated machine-readable language lexicon that classifies terms as identity, description, implementation, metaphor, or superseded label and links each term to source class, first-known use, reinterpretations, and contradiction records.",
+  "recorded_at": "2026-07-12T04:18:42Z"
+}
