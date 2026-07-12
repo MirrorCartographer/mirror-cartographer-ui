@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_blocked_transient_provider",
+  "completed_slice": "Add a dedicated read-only GitHub Actions gate for Vercel status classification and evidence-integrity contracts.",
+  "evidence_path": "operations/evidence/V-001-vercel-evidence-gate-2026-07-11T2025-0400.json",
+  "source_commit": "e5307f1093aaa6cf30ae49efe18ab96426db721b",
+  "blocking_condition": "Vercel deployment and served immutable commit identity remain unverified; the prior provider result was a transient build-rate-limit.",
+  "next_action": "Confirm the GitHub Actions contract gate result, then retry Vercel after the rate window clears and verify the served immutable commit identity.",
+  "updated_at": "2026-07-12T00:25:38.000Z"
+}
