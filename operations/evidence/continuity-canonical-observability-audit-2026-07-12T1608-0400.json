@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "recorded_at": "2026-07-12T16:08:37-04:00",
+  "audit_type": "canonical_observability_and_reported_history_reconciliation",
+  "sources": [
+    {
+      "path": "operations/CURRENT_STATE.json",
+      "blob_sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "observation": "Canonical state identifies V-001 as the active delivery item and does not identify a continuity-owned item."
+    },
+    {
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob_sha": "738efd0b1221d0a3a215a2337998e5b3d2e16ab8",
+      "observation": "Canonical queue contains only V-001, owned by vercel_studio."
+    },
+    {
+      "path": "operations/SPECIALIST_REGISTRY.json",
+      "blob_sha": "0249aea064eda2cc5c7bc86713201e1cd26354ff",
+      "observation": "continuity_mining has no registered specialists."
+    },
+    {
+      "path": "operations/TRIGGER_REQUESTS.json",
+      "blob_sha": "35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+      "observation": "No pending peer trigger requests are recorded."
+    },
+    {
+      "query": "repository code search: M-006 continuity queue update discovery manifest",
+      "observation": "No matching file was returned."
+    },
+    {
+      "query": "repository commit search: M-006",
+      "observation": "No matching commit was returned."
+    }
+  ],
+  "claims": {
+    "observed": [
+      "No continuity_mining-owned queue item is observable in the canonical ACTIVE_QUEUE snapshot.",
+      "The continuity specialist registry is empty.",
+      "The previously reported M-006 queue record and commits were not observable through the connected repository at audit time."
+    ],
+    "inferred": [
+      "Prior continuity completion summaries may refer to another branch, an unmerged state, a failed write, or unsupported claims; the available evidence does not distinguish among these possibilities."
+    ],
+    "proposed": [
+      "Treat continuity work as fail-closed until an owned queue item and immutable provenance are observable in the repository.",
+      "Use this audit as the seed for a reconciliation queue item rather than recreating allegedly completed artifacts from summary text alone."
+    ],
+    "superseded": [
+      "Treating prior assistant completion summaries as equivalent to repository evidence."
+    ],
+    "unresolved": [
+      "Whether the reported M-004 through M-006 artifacts exist on another branch or repository.",
+      "Whether continuity specialists were intentionally omitted or registry updates failed.",
+      "Which continuity item should be authoritative after reconciliation."
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "blob identifiers",
+      "abstract operational discrepancies",
+      "public commit-search outcomes"
+    ],
+    "excluded": [
+      "raw private chat content",
+      "health or animal-health information",
+      "credentials",
+      "personal identifying details",
+      "unreviewed file-library material"
+    ]
+  },
+  "completion_state": "durable_audit_recorded",
+  "limitations": [
+    "Repository code search is not an exhaustive branch inventory.",
+    "Absence from the default branch does not prove global nonexistence.",
+    "No claim is made that prior continuity runs completed."
+  ]
+}
