@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "R-030",
+  "owner": "frontier_research",
+  "priority": "research_support",
+  "state": "completed_slice",
+  "objective": "Add a browser-safe acquisition adapter for AudioContext output-clock evidence and prevent unavailable or contradicted observations from entering composed audio evidence.",
+  "queue_selection": {
+    "canonical_owned_item_found": false,
+    "basis": "operations/ACTIVE_QUEUE.json contains only V-001 owned by vercel_studio; this slice follows the recorded R-029 next action without mutating canonical queue state."
+  },
+  "comparison_against_prior_work": {
+    "prior_artifact": "tools/frontier-research/audio-clock-evidence.mjs",
+    "non_duplication": "R-029 evaluates clock integrity after capture. R-030 acquires browser observations, preserves unsupported APIs as unavailable, and gates forwarding into that evaluator."
+  },
+  "completed": [
+    "Added single-sample capture for getOutputTimestamp with boundary validation.",
+    "Added deterministic multi-sample session acquisition with injectable timing dependencies.",
+    "Preserved absent or invalid baseLatency and outputLatency as null rather than zero.",
+    "Prevented evaluator invocation when getOutputTimestamp is unavailable.",
+    "Forwarded evidence only when the evaluator returns classification consistent.",
+    "Added seven isolated boundary tests and a primary-source evidence packet."
+  ],
+  "files": [
+    "tools/frontier-research/audio-clock-sampler.mjs",
+    "tools/frontier-research/audio-clock-sampler.test.mjs",
+    "operations/evidence/frontier-audio-clock-sampler-2026-07-12T1037-0400.json",
+    "operations/queue-updates/R-030-2026-07-12T1037-0400.json"
+  ],
+  "commits": [
+    "d691a80614478589c3352fb17ce96b68a0936408",
+    "f97ed737335d5b2b093dd6e62b5f7749c878dbff",
+    "0b992da99c8efe1a1a45aefa1d03b3c9abfc9973"
+  ],
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-clock-sampler.test.mjs",
+    "passed": 7,
+    "failed": 0
+  },
+  "limits": [
+    "No immutable deployment session was sampled.",
+    "No physical iPhone Safari evidence was collected.",
+    "Browser implementation support remains an empirical question despite specification alignment."
+  ],
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 0b992da99c8efe1a1a45aefa1d03b3c9abfc9973.",
+    "Revert f97ed737335d5b2b093dd6e62b5f7749c878dbff.",
+    "Revert d691a80614478589c3352fb17ce96b68a0936408."
+  ],
+  "next_action": "Integrate the sampler into the exact-commit audio-routing harness so one immutable browser session emits raw capture, clock evaluation, route evidence, and the composed packet under a shared session identifier.",
+  "canonical_queue_mutated": false,
+  "specialist_registry_change": null
+}
