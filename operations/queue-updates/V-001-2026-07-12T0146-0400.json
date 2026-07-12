@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T05:46:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Closed a chronology hole in the physical audibility acceptance gate by rejecting any bounded test whose testedAt timestamp precedes the immutable deployment readyAt timestamp.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/vercel/verify-physical-audibility-evidence.mjs",
+    "operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "operations/evidence/vercel-audibility-chronology-gate-2026-07-12T0146-0400.json"
+  ],
+  "commits": [
+    "42aa5320c086e663798ecd92419dbdde0f58da45",
+    "8c7cc95017a0ff6ecd01f87f9c8aa60b1c506a7d",
+    "83911f4a0dabda8a70abbe509a8ab10ca55e069a"
+  ],
+  "verification": {
+    "isolated_tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "provider_status": "Vercel failure: build-rate-limit",
+    "deployment_claimed": false
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification after deployment readiness."
+  ],
+  "rollback": "Revert 8c7cc95017a0ff6ecd01f87f9c8aa60b1c506a7d, then 42aa5320c086e663798ecd92419dbdde0f58da45; keep append-only evidence records.",
+  "safe_next_action": "Do not attempt another application deployment while the provider remains rate-limited. After capacity returns, first prove operations-only suppression, then run one exact-commit deployment and require deployment.readyAt <= testedAt <= humanCheck.observedAt."
+}
