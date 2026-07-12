@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Changed immutable changed-path generation from newline-delimited parsing to NUL-delimited parsing, preserved safe spaces, rejected control-character filenames, and committed adversarial tests without attempting another rate-limited application deployment.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "tools/vercel-ops/changed-paths-from-git.mjs",
+    "tools/vercel-ops/changed-paths-from-git.test.mjs"
+  ],
+  "commits": [
+    "d2840e1f73c5a7add23b2fd4ae459139027e230b",
+    "2fc7bd35926503b22e3a1b2308009f74ef1f5109",
+    "63de5abbe657968701a549a7702cb9e1ea0ce931"
+  ],
+  "evidence": "operations/evidence/vercel-nul-delimited-paths-2026-07-12T1127-0400.json",
+  "canonical_files_overwritten": false,
+  "provider_outcome": "Vercel status for the test commit remains failed at the provider build-rate limit; no deployment claim is made.",
+  "acceptance_remaining": [
+    "Execute the committed Node tests in a trusted runner.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the focused changed-path tests in a trusted runner, then wait for provider capacity before one operations-only sentinel verification."
+}
