@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T18:58:43Z",
+  "finding": "The exact-commit workflow imported validateEvidence from a node:test file, causing manifest validation to register the test suite as an import side effect.",
+  "design_implication": "Evidence schema validation must live in a side-effect-free module; the test harness and workflow should both import that module.",
+  "implementation": {
+    "validator_module_commit": "60df5549e8bbd42ebc56803ddc0c0bf2259995e6",
+    "test_harness_commit": "b0683e6f1222a17e1e05d760eadce6a0c5d0e293",
+    "workflow_commit": "3a5de91bbfe6d29e008ba65a6098938d47028cab"
+  },
+  "verification": {
+    "local_dependency_free_smoke_test": "pass",
+    "github_actions_result": "unobserved",
+    "vercel_status": "failure_build_rate_limit",
+    "deployment_attempted": false,
+    "physical_device_tested": false
+  },
+  "evidence_strength": "implementation_verified_locally_provider_execution_pending",
+  "falsification_route": [
+    "Run node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs tools/frontier-research/audio-route-capability.test.mjs at commit 3a5de91bbfe6d29e008ba65a6098938d47028cab.",
+    "Reject the slice if importing scripts/vercel-exact-commit-runtime-evidence.mjs registers tests or mutates process state.",
+    "Reject runtime verification unless the exact-commit workflow artifact and manifest are observed."
+  ],
+  "limits": [
+    "No successful GitHub Actions run was observed.",
+    "No Vercel deployment was attempted.",
+    "No browser or physical audio route was exercised."
+  ]
+}
