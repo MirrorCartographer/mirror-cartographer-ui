@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-identifier-namespace-collision-2026-07-12T1834-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-12T18:34:04-04:00",
+  "purpose": "Prevent similarly numbered records from unrelated namespaces from being misidentified as missing continuity artifacts.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json at blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json at blob d4ef7db145f83d360f67765fed7bdc52d9378f2e",
+    "operations/SPECIALIST_REGISTRY.json at blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json at blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "recent repository commits through 6198c6751ab75131fa7740ada86af5522d99c8c8",
+    "provenance gap ledger commit 058aba56790230dd71096ca7360734f6e20f164d",
+    "File Library semantic and exact-string searches for M-004, M-005, and M-006"
+  ],
+  "durable_memory": {
+    "title": "Identifier suffixes are not identities",
+    "rule": "A numeric suffix match is insufficient to resolve a continuity identifier. Resolution requires namespace, owner, semantic role, temporal precedence, and immutable source agreement. Records such as V8-004, V9-004, V8-005, V9-005, V8-006, and V9-006 must not be promoted as M-004, M-005, or M-006 merely because the suffix matches.",
+    "graph_effect": "Add namespace as a mandatory key on identifier nodes and classify suffix-only matches as collision candidates rather than provenance evidence."
+  },
+  "claims": {
+    "observed": [
+      "The canonical continuity queue names M-004, M-005, and M-006 as unresolved continuity identifiers.",
+      "File Library searches returned records with matching numeric suffixes in V8 and V9 proof-machine namespaces, not records assigned to the M continuity namespace.",
+      "The returned records concern mathematical benchmark items and do not contain continuity-mining ownership, provenance-gap semantics, or the missing artifact identifiers."
+    ],
+    "inferred": [
+      "Loose semantic search can create false continuity by collapsing distinct identifier namespaces.",
+      "A future automated reconciler needs namespace-aware identity checks before accepting any candidate source."
+    ],
+    "proposed": [
+      "Require candidate_namespace, candidate_owner, semantic_role, created_at, immutable_locator, and predecessor_relation before a provenance-gap node can be resolved.",
+      "Reject suffix-only and fuzzy-name matches as namespace_collision unless corroborated by an immutable source assigning the exact continuity identifier."
+    ],
+    "superseded": [
+      "Treating any search hit ending in -004, -005, or -006 as evidence for M-004, M-005, or M-006.",
+      "Using semantic similarity alone as identity proof."
+    ],
+    "unresolved": [
+      "The authentic originating source, if any, for M-004, M-005, and M-006.",
+      "Whether those identifiers exist on an unobserved branch, another repository, private run log, or unpersisted automation output."
+    ]
+  },
+  "candidate_assessment": [
+    {
+      "candidate_pattern": "V8-004..006",
+      "classification": "namespace_collision",
+      "reason": "Proof-machine benchmark namespace and mathematical semantics do not match continuity-mining namespace or role."
+    },
+    {
+      "candidate_pattern": "V9-004..006",
+      "classification": "namespace_collision",
+      "reason": "Proof-machine benchmark namespace and mathematical semantics do not match continuity-mining namespace or role."
+    }
+  ],
+  "verification_status": "verified_boundary",
+  "evidence_strength": "moderate",
+  "coverage_limit": "File Library search is relevance-ranked and non-exhaustive; this artifact proves only that the observed suffix matches are invalid candidates, not that no authentic M artifacts exist.",
+  "falsification_route": "Produce an immutable source object that explicitly assigns the exact identifier M-004, M-005, or M-006 to a continuity artifact and predates the provenance-gap ledger.",
+  "privacy_boundary": "Only opaque identifiers, repository metadata, file titles, and abstract semantic classifications are persisted. No private dialogue, personal events, health information, credentials, or identifying details are reproduced."
+}
