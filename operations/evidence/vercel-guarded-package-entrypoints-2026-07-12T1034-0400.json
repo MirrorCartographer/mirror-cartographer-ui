@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T10:34:56-04:00",
+  "slice": "Route canonical package-level Vercel deployment commands through the fail-closed admission wrapper.",
+  "commits": [
+    "3b044c6fe2a599fa558e0153a97990a08584747a",
+    "82c735c206e66608cd8054d811a5fb88f92c09cc",
+    "27d3e3009ddfe461b2657a27c74351dab14dc6dc",
+    "42419ac398be093fe85653213b4e9971bde809c2"
+  ],
+  "source_evidence": {
+    "sentinel_entrypoint": "npm run deploy:vercel:sentinel -- <vercel args>",
+    "exact_commit_entrypoint": "npm run deploy:vercel:exact -- <vercel args>",
+    "state_input": "operations/CURRENT_STATE.json",
+    "changed_paths_input": "operations/changed-paths.json",
+    "wrapper": "tools/vercel-ops/deployment-invocation.mjs",
+    "contract_test": "scripts/vercel-guarded-entrypoint-contract-check.mjs",
+    "local_gate_integration": true
+  },
+  "verification": {
+    "method": "commit-bound source inspection through GitHub contents API",
+    "runtime_attempt": "git clone and Node execution attempted",
+    "runtime_result": "blocked because the execution environment could not resolve github.com",
+    "deployment_attempted": false
+  },
+  "claim_boundary": "This evidence proves committed package-script routing and a static contract test. It does not prove test execution, Vercel provider capacity, skip behavior, deployment success, served commit identity, Safari routing, or physical audibility.",
+  "rollback": [
+    "42419ac398be093fe85653213b4e9971bde809c2",
+    "27d3e3009ddfe461b2657a27c74351dab14dc6dc",
+    "82c735c206e66608cd8054d811a5fb88f92c09cc",
+    "3b044c6fe2a599fa558e0153a97990a08584747a"
+  ]
+}
