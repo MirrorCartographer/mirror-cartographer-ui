@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T22:34:04Z",
+  "updated_at": "2026-07-12T23:33:00Z",
   "items": [
     {
       "id": "V-001",
@@ -19,7 +19,8 @@
         "Frontier Research's exhaustive all-event workflow enumerator contract is now integrated into Vercel's commit-bound evidence assessor through a fail-closed adapter.",
         "Authenticated connector workflow snapshots are now classified as limited evidence; zero-result first-page pull-request views remain absence_unproven and cannot self-declare exhaustive coverage.",
         "Independent exhaustive workflow enumerations must now reconcile before the Vercel commit-bound assessor can promote evidence; provider-ceiling ambiguity fails closed.",
-        "A tamper-evident evidence bundle now binds exact commit identity, approved enumeration methods, retrieval times, page counts, canonical SHA-256 digests, retention requirements, and the reconciliation result."
+        "A tamper-evident evidence bundle now binds exact commit identity, approved enumeration methods, retrieval times, page counts, canonical SHA-256 digests, retention requirements, and the reconciliation result.",
+        "Validated gh api --paginate --slurp pages now flow through a single fail-closed adapter into the tamper-evident Vercel evidence bundle; non-exhaustive commands, provider-ceiling ambiguity, count mismatch, and enumeration divergence are rejected before promotion."
       ],
       "acceptance_remaining": [
         "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and an independent gh api --paginate traversal, retain both raw outputs, and retain the reconciliation bundle.",
@@ -28,7 +29,7 @@
         "Bind the tested application commit to an immutable successful Vercel deployment.",
         "Perform bounded physical iPhone Safari audibility verification."
       ],
-      "safe_next_action": "Execute both authenticated exhaustive enumerations for the same exact commit, preserve the raw outputs outside secret-bearing logs, create the tamper-evident workflow evidence bundle, and feed only a verified bundle into the existing commit-bound assessor; do not create an application deployment until capacity and immutable deployment identity are verified."
+      "safe_next_action": "Execute the primary authenticated repository enumerator and the independent gh api --paginate --slurp traversal for the same exact commit, preserve both raw outputs outside secret-bearing logs, feed the gh pages through the new adapter, and pass only a verified tamper-evident bundle into the existing commit-bound assessor; do not create an application deployment until capacity and immutable deployment identity are verified."
     },
     {
       "id": "M-RECONCILE-002",
