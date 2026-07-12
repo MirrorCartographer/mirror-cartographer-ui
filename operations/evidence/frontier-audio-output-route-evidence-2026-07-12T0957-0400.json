@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-027",
+  "recorded_at": "2026-07-12T13:57:00Z",
+  "finding": "Browser-visible audio output route selection is an independent evidence layer. A fulfilled route-selection operation and matching sink identifier support route binding, but do not prove continuing device availability, acoustic emission, or human audibility.",
+  "source_status": [
+    {
+      "source": "W3C Audio Output Devices API",
+      "status": "Candidate Recommendation Draft",
+      "published": "2025-10-09",
+      "url": "https://www.w3.org/TR/audio-output/"
+    },
+    {
+      "source": "Web Audio API 1.1",
+      "status": "Editor's Draft",
+      "published": "2026-06-12",
+      "url": "https://webaudio.github.io/web-audio-api/"
+    }
+  ],
+  "evidence_strength": "moderate",
+  "uncertainty": [
+    "Browser implementation support differs by API surface and browser version.",
+    "A stored sink identifier can remain after the physical device becomes unavailable.",
+    "The validator establishes browser-observed routing state only."
+  ],
+  "falsification_routes": [
+    "Cause a mismatched requested and observed sink to validate.",
+    "Cause a selected sink absent from enumerateDevices evidence to validate.",
+    "Retain a non-empty device label without rejection.",
+    "Derive physical output or human audibility from route binding alone."
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/audio-output-route-evidence.mjs",
+    "tests": "tools/frontier-research/audio-output-route-evidence.test.mjs",
+    "implementation_commit": "98d7c1b5f4b67f3f7ac24e71ff505b2abeac160e",
+    "test_commit": "d0af7616c3507556833fcca7c6e1ad8121234650"
+  },
+  "verification": {
+    "command": "node --test audio-output-route-evidence.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "environment": "isolated Node.js runtime using byte-identical file contents"
+  }
+}
