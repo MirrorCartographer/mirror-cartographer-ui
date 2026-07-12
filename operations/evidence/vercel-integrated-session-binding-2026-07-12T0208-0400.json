@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T06:08:00Z",
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "Integrate bounded physical-test session identity into the authoritative physical audibility verifier.",
+  "specialists": [
+    "Reliability Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "changes": [
+    {
+      "path": "operations/vercel/verify-physical-audibility-evidence.mjs",
+      "commit": "86e74775a4f1047b3d25a163437e1e24d077f913",
+      "effect": "The authoritative physical audibility gate now incorporates runtime and human session binding and exposes the binding result in schema 1.3.0."
+    },
+    {
+      "path": "operations/vercel/verify-physical-audibility-evidence.test.mjs",
+      "commit": "9066bfcf82764b9a5ac625e53be4b98020077d50",
+      "effect": "The integrated suite now requires matching device, runtime, and human session identifiers and rejects drift."
+    }
+  ],
+  "verification": {
+    "route": "Isolated Node.js deterministic integration test using exact committed logic and dependencies",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "cases": [
+      "coherent bounded session passes",
+      "runtime session drift fails closed",
+      "human confirmation session drift fails closed"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE forbids application deployment attempts while Vercel build capacity is exhausted.",
+    "claim": "No deployment or physical audibility claim is made."
+  },
+  "rollback": [
+    "Revert commit 9066bfcf82764b9a5ac625e53be4b98020077d50.",
+    "Revert commit 86e74775a4f1047b3d25a163437e1e24d077f913."
+  ]
+}
