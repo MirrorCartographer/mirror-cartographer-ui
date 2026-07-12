@@ -1,0 +1,69 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { verifyPhysicalAudibilityEvidence } from './verify-physical-audibility-evidence.mjs';
+
+const commit = 'a'.repeat(40);
+const validPacket = {
+  applicationCommit: commit,
+  testedCommit: commit,
+  deployment: { sourceCommit: commit, immutable: true, status: 'ready' },
+  device: {
+    platform: 'iPhone',
+    browser: 'Safari',
+    audioRoute: 'built-in-speaker',
+    volumeState: 'audible-nonzero',
+    sessionId: 'bounded-session-1'
+  },
+  humanCheck: { observedAt: '2026-07-12T04:57:00Z' },
+  runtimeEvidence: {
+    audioContextSupported: true,
+    userActivationObserved: true,
+    resumeFulfilled: true,
+    contextStateAfter: 'running',
+    sourceStarted: true,
+    destinationConnected: true,
+    signalObserved: true,
+    humanReportedAudible: true
+  }
+};
+
+test('passes only exact-commit immutable deployment plus bounded human confirmation', () => {
+  const result = verifyPhysicalAudibilityEvidence(validPacket);
+  assert.equal(result.status, 'pass');
+  assert.equal(result.supportsPhysicalAudibilityClaim, true);
+});
+
+test('fails closed for machine signal without human confirmation', () => {
+  const packet = structuredClone(validPacket);
+  delete packet.humanCheck;
+  packet.runtimeEvidence.humanReportedAudible = undefined;
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.equal(result.status, 'fail');
+  assert.ok(result.failures.includes('audibility_signal_observed'));
+});
+
+test('preserves contradiction when signal exists but human reports silence', () => {
+  const packet = structuredClone(validPacket);
+  packet.runtimeEvidence.humanReportedAudible = false;
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.equal(result.runtime.state, 'contradicted');
+  assert.ok(result.failures.includes('audibility_contradicted'));
+});
+
+test('rejects deployment or tested commit drift', () => {
+  const packet = structuredClone(validPacket);
+  packet.deployment.sourceCommit = 'b'.repeat(40);
+  packet.testedCommit = 'c'.repeat(40);
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('deployment_commit_mismatch'));
+  assert.ok(result.failures.includes('tested_commit_mismatch'));
+});
+
+test('rejects unbounded device evidence', () => {
+  const packet = structuredClone(validPacket);
+  packet.device.audioRoute = '';
+  packet.device.volumeState = '';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('missing_device_audioRoute'));
+  assert.ok(result.failures.includes('missing_device_volumeState'));
+});
