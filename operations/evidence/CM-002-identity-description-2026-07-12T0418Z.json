@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "queue_item": "CM-002",
+  "evidence_type": "decision_recovery",
+  "completed_slice": "Recovered and committed the distinction between stable Mirror Cartographer project identity and evolving descriptive frames.",
+  "artifact": "operations/continuity/decisions/MC-identity-description-separation-2026-07-12.json",
+  "artifact_commit": "971eabc788c55d88cf6a8297d30d8aa4a439a2c4",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "mind/continuity/2026-07-11-source-authority-and-self-continuity.md",
+    "operations/evidence/CM-001-continuity-validator-2026-07-11T2254-0400.json",
+    "recent repository commits",
+    "Mirror_Cartographer_Core_Specification_v1.md",
+    "Mirror_Cartographer_One_Page.pdf",
+    "privacy-filtered excerpts from copied project logs"
+  ],
+  "claim_states": {
+    "observed": "The project name remains Mirror Cartographer across canonical repository state and inspected artifacts while descriptions differ.",
+    "inferred": "Description evolution should not be encoded as project renaming.",
+    "proposed": "Create a canonical language lexicon with identity/description/implementation/metaphor classes.",
+    "superseded": "Changing descriptions imply changing project names.",
+    "unresolved": "The full dated descriptive-frame chronology and original metadata for copied records remain incomplete."
+  },
+  "verification": {
+    "route": "GitHub contents API commit confirmation plus cross-source comparison",
+    "commit_confirmed": true,
+    "runtime_required": false,
+    "historical_completeness_claimed": false
+  },
+  "privacy_boundary": "Only project-level abstractions and artifact titles were used. Raw private conversation, health material, credentials, identifying events, and sensitive passages were excluded.",
+  "recorded_at": "2026-07-12T04:18:42Z"
+}
