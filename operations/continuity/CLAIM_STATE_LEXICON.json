@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-claim-state-lexicon-v1",
+  "purpose": "Define the epistemic meaning, minimum evidence, and permitted transitions for continuity claims without storing private source material.",
+  "states": {
+    "observed": {
+      "definition": "Directly supported by an inspectable source or runtime artifact available to the current run.",
+      "minimum_evidence": [
+        "A stable source identifier or repository path.",
+        "A bounded description of what the source actually establishes.",
+        "No stronger conclusion than the source supports."
+      ],
+      "prohibited_shortcuts": [
+        "Treating recollection as direct observation.",
+        "Treating a committed workflow as proof that the workflow ran.",
+        "Treating a fixture result as truth of the underlying real-world claim."
+      ]
+    },
+    "inferred": {
+      "definition": "A conclusion derived from one or more observed claims through an explicit reasoning step.",
+      "minimum_evidence": [
+        "At least one observed supporting claim.",
+        "The inference rule or reasoning bridge is stated.",
+        "Plausible alternatives are not silently excluded."
+      ],
+      "prohibited_shortcuts": [
+        "Relabeling an inference as observed because it is highly plausible.",
+        "Using private source content when a bounded provenance reference is sufficient."
+      ]
+    },
+    "proposed": {
+      "definition": "A candidate interpretation, structure, test, or future project decision that has not yet been accepted as project state.",
+      "minimum_evidence": [
+        "The proposal is clearly separated from current state.",
+        "An acceptance, falsification, or decision route is named."
+      ],
+      "prohibited_shortcuts": [
+        "Writing a proposal as though it were already implemented or agreed.",
+        "Using a proposal to overwrite contradictory observed history."
+      ]
+    },
+    "superseded": {
+      "definition": "A formerly active claim or decision that has been replaced while its historical provenance remains preserved.",
+      "minimum_evidence": [
+        "Identifier of the replacing claim or decision.",
+        "Reason for replacement.",
+        "Original provenance remains addressable."
+      ],
+      "prohibited_shortcuts": [
+        "Deleting or rewriting the prior claim.",
+        "Marking a contradiction as superseded without a replacement decision."
+      ]
+    },
+    "unresolved": {
+      "definition": "A material question, contradiction, evidence gap, or verification step that remains open.",
+      "minimum_evidence": [
+        "The missing evidence or decision is named.",
+        "The next feasible resolution route is stated when known."
+      ],
+      "prohibited_shortcuts": [
+        "Converting absence of evidence into evidence of absence.",
+        "Closing the item solely because a tool or provider was temporarily unavailable."
+      ]
+    }
+  },
+  "permitted_transitions": [
+    {
+      "from": "proposed",
+      "to": "observed",
+      "condition": "Implementation or decision acceptance is directly evidenced; the observation must describe only the evidenced event, not the truth of every premise behind it."
+    },
+    {
+      "from": "proposed",
+      "to": "superseded",
+      "condition": "A different proposal or decision replaces it and the replacement is identified."
+    },
+    {
+      "from": "unresolved",
+      "to": "observed",
+      "condition": "The missing source, runtime artifact, or decision becomes inspectable."
+    },
+    {
+      "from": "observed",
+      "to": "superseded",
+      "condition": "The observation represented mutable project state that was later replaced; the historical event itself remains observed."
+    },
+    {
+      "from": "inferred",
+      "to": "observed",
+      "condition": "New direct evidence independently establishes the same bounded claim."
+    },
+    {
+      "from": "inferred",
+      "to": "superseded",
+      "condition": "New evidence or a stronger inference replaces it while preserving the prior reasoning record."
+    }
+  ],
+  "forbidden_transitions": [
+    {
+      "from": "unresolved",
+      "to": "superseded",
+      "reason": "An unresolved question cannot be retired without a replacement, explicit cancellation decision, or evidence that it is no longer material."
+    },
+    {
+      "from": "observed",
+      "to": "inferred",
+      "reason": "Direct evidence may support additional inferences, but the observed record must not be downgraded or rewritten."
+    },
+    {
+      "from": "superseded",
+      "to": "observed",
+      "reason": "A superseded claim may remain historically observed, but reactivation requires a new claim identifier and new evidence."
+    }
+  ],
+  "evidence_layers": [
+    "source_present",
+    "content_bounded",
+    "runtime_verified_only",
+    "deployment_verified",
+    "real_world_claim_verified"
+  ],
+  "non_equivalence_rules": [
+    "repository implementation is not runtime execution",
+    "runtime execution is not deployment verification",
+    "deployment verification is not scientific or medical truth",
+    "synthetic fixture validity is not truth of private memory content",
+    "peer trigger attempt is not peer execution"
+  ],
+  "privacy_boundary": {
+    "allowed": [
+      "Repository paths and immutable commit identifiers.",
+      "Synthetic fixture identifiers.",
+      "Hashed or bounded provenance references that do not expose private content.",
+      "State labels and contradiction metadata."
+    ],
+    "disallowed": [
+      "Raw private chat excerpts.",
+      "Private health, identity, relationship, or location narratives.",
+      "Secret values, access tokens, or provider credentials.",
+      "A source quotation when a bounded provenance reference is sufficient."
+    ]
+  },
+  "compatibility": {
+    "claim_transition_contract": "This lexicon narrows interpretation of claim states; it does not replace the append-only claim transition contract or its validator.",
+    "canonical_queue": "This artifact does not alter another team's canonical queue item."
+  }
+}
