@@ -15,14 +15,15 @@ const validPacket = {
     readyAt: '2026-07-12T05:00:00Z'
   },
   device: { platform: 'iPhone', browser: 'Safari', audioRoute: 'built-in-speaker', volumeState: 'audible-nonzero', sessionId: 'bounded-session-1' },
-  humanCheck: { observedAt: '2026-07-12T05:02:00Z' },
-  runtimeEvidence: { audioContextSupported: true, userActivationObserved: true, resumeFulfilled: true, contextStateAfter: 'running', sourceStarted: true, destinationConnected: true, signalObserved: true, humanReportedAudible: true }
+  humanCheck: { observedAt: '2026-07-12T05:02:00Z', sessionId: 'bounded-session-1' },
+  runtimeEvidence: { sessionId: 'bounded-session-1', audioContextSupported: true, userActivationObserved: true, resumeFulfilled: true, contextStateAfter: 'running', sourceStarted: true, destinationConnected: true, signalObserved: true, humanReportedAudible: true }
 };
 
-test('passes exact-commit immutable Vercel deployment plus bounded human confirmation', () => {
+test('passes exact-commit immutable Vercel deployment plus session-bound human confirmation', () => {
   const result = verifyPhysicalAudibilityEvidence(validPacket);
   assert.equal(result.status, 'pass');
-  assert.equal(result.schemaVersion, '1.2.0');
+  assert.equal(result.schemaVersion, '1.3.0');
+  assert.equal(result.sessionBinding.sessionBound, true);
 });
 
 test('fails closed for machine signal without human confirmation', () => {
@@ -93,4 +94,20 @@ test('rejects unbounded device evidence', () => {
   const result = verifyPhysicalAudibilityEvidence(packet);
   assert.ok(result.failures.includes('missing_device_audioRoute'));
   assert.ok(result.failures.includes('missing_device_volumeState'));
+});
+
+test('rejects runtime evidence from a different physical test session', () => {
+  const packet = structuredClone(validPacket);
+  packet.runtimeEvidence.sessionId = 'other-session';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('runtime_session_mismatch'));
+  assert.equal(result.supportsPhysicalAudibilityClaim, false);
+});
+
+test('rejects human confirmation from a different physical test session', () => {
+  const packet = structuredClone(validPacket);
+  packet.humanCheck.sessionId = 'other-session';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('human_session_mismatch'));
+  assert.equal(result.supportsPhysicalAudibilityClaim, false);
 });
