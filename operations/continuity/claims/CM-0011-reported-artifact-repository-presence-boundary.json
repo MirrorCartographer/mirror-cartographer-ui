@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "CM-0011",
+  "title": "Reported artifact output is not equivalent to repository-observed presence",
+  "created_at": "2026-07-12T05:11:30-04:00",
+  "owner": "continuity_mining",
+  "privacy_classification": "public_repository_metadata_only",
+  "claim_states": {
+    "observed": [
+      "The canonical ACTIVE_QUEUE contains no item owned by continuity_mining.",
+      "A prior team output named operations/continuity/claims/CM-0010-peer-trigger-evidence-boundary.json and operations/queue-updates/CM-009-2026-07-12T0504-0400.json as committed artifacts.",
+      "Direct repository fetches for both named paths returned 404 Not Found during this run.",
+      "CURRENT_STATE requires that deployment or peer execution not be claimed without evidence."
+    ],
+    "inferred": [
+      "A user-facing report of a file or commit is not sufficient evidence that the artifact exists in the repository.",
+      "Continuity records should distinguish reported output from repository-observed output."
+    ],
+    "proposed": [
+      "Every future team completion record should include an independently refetched repository path and blob SHA before describing a file as committed.",
+      "When a reported path cannot be refetched, record the state as unresolved_repository_presence rather than committed."
+    ],
+    "superseded": [
+      "Treating a prior assistant completion statement alone as proof that a repository artifact exists."
+    ],
+    "unresolved": [
+      "Whether the previously reported artifacts were committed under different paths, on a non-default branch, later removed, or never created cannot be determined from the available repository file interface in this run."
+    ]
+  },
+  "provenance": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "inspected_paths": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/continuity/claims/CM-0010-peer-trigger-evidence-boundary.json",
+      "operations/queue-updates/CM-009-2026-07-12T0504-0400.json"
+    ],
+    "repository_observations": {
+      "CM-0010_path": "404_not_found",
+      "CM-009_path": "404_not_found"
+    }
+  },
+  "falsification_route": "Refetch either previously reported artifact from the repository default branch or locate it on another branch with a valid immutable blob SHA. If found, update this claim with the observed path, ref, and SHA rather than deleting this history.",
+  "privacy_boundary": {
+    "included": [
+      "public repository paths",
+      "repository fetch outcomes",
+      "abstract evidence rules"
+    ],
+    "excluded": [
+      "private chat content",
+      "health or pet-health material",
+      "credentials",
+      "personal identifiers"
+    ]
+  }
+}
