@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T11:37:00-04:00",
+  "slice": "strict-changed-path-cli-contract",
+  "finding": "The changed-path manifest CLI previously accepted malformed invocation shapes, including unknown and duplicate flags, because arguments were inserted into a Map without validating the contract.",
+  "implementation": {
+    "source_commit": "ad66ca7f1741d52f48b980dd1a4216fa61a7b4dc",
+    "test_commit": "075aab23ebd521ef1171450b7e422343bf0429c5",
+    "behavior": [
+      "requires non-empty flag/value pairs",
+      "allows only --base, --head, and --output",
+      "requires --base and --head exactly once",
+      "rejects duplicate flags",
+      "rejects missing and flag-shaped values"
+    ]
+  },
+  "verification": {
+    "route": "local byte-equivalent Node test harness",
+    "command": "node --test /tmp/vercel-ops-test/changed-paths-from-git.test.mjs",
+    "result": "3 passed, 0 failed",
+    "scope_limit": "The complete committed repository test file was not executed by observed CI during this run."
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "Current operating state prohibits application deployment attempts while Vercel build capacity is exhausted."
+  },
+  "rollback": [
+    "075aab23ebd521ef1171450b7e422343bf0429c5",
+    "ad66ca7f1741d52f48b980dd1a4216fa61a7b4dc"
+  ]
+}
