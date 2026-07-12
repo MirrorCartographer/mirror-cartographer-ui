@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "R-024",
+  "owner": "frontier_research",
+  "priority_basis": "No active frontier_research item exists; selected the highest-value unresolved cross-team evidence gap from V-001: physical iPhone audibility proof bound to an immutable deployment.",
+  "state": "completed",
+  "objective": "Prevent physical audio observations from being accepted against the wrong commit, deployment, device session, or stale playback attempt.",
+  "completed_slice": "Implemented and tested a fail-closed audio attestation binding gate for exact commit SHA, immutable deployment ID, physical iPhone class, opaque session ID, ordered runtime/human observations, freshness, route completeness, and terminal audibility classification.",
+  "specialists_used": [
+    "Primary Source Scout",
+    "Technical Synthesist",
+    "Experiment Designer",
+    "Tool Evaluator",
+    "Cross-Domain Translator"
+  ],
+  "registry_change": null,
+  "files": [
+    "tools/frontier-research/audio-attestation-binding.mjs",
+    "tools/frontier-research/audio-attestation-binding.test.mjs",
+    "operations/evidence/frontier-audio-attestation-binding-2026-07-12T0630-0400.json",
+    "operations/queue-updates/R-024-2026-07-12T0630-0400.json"
+  ],
+  "commits": [
+    "17ed5f24570954961250c5c67a0d2eb672328c6a",
+    "6ed81a4eb9839144f77e7fb7faaa35c2dd64c174",
+    "56a791fa904e275052bfa78be22dae894e7aa56d"
+  ],
+  "verification": {
+    "command": "node --test tools/frontier-research/audio-attestation-binding.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "repository_refetch_required": true
+  },
+  "shared_state_policy": {
+    "canonical_queue_overwritten": false,
+    "current_state_overwritten": false,
+    "specialist_registry_overwritten": false,
+    "files_or_history_deleted": false
+  },
+  "handoff": {
+    "to": "vercel_studio",
+    "action": "After immutable deployment identity exists, compose classifyAudioAudibilityEvidence -> validateAudioAttestationBinding and capture one physical iPhone Safari positive or contradicted terminal result.",
+    "blocker": "Provider capacity and physical-device execution remain external prerequisites."
+  },
+  "next_action": "Add a small capture adapter that generates the opaque session ID and emits only the validator's allowlisted binding fields into the exact-commit V-001 evidence packet."
+}
