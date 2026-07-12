@@ -8,6 +8,7 @@ import { installAudioObservabilityRuntime } from './engine/audioObservabilityRun
 import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
 import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
+import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
@@ -18,6 +19,7 @@ import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
 installDeploymentIdentityRuntime();
+installAudioDeviceEvidenceRuntime({ window, navigator });
 installAudioObservabilityRuntime();
 installAudioRoutingEvidenceRuntime();
 installAudibilityOutcomeRuntime();
