@@ -20,6 +20,22 @@ function layers(overrides = {}) {
   };
 }
 
+function routeObservation(overrides = {}) {
+  return {
+    secureContext: true,
+    setSinkIdSupported: true,
+    selectAudioOutputSupported: true,
+    speakerSelectionAllowed: true,
+    transientActivationObserved: true,
+    requestedSinkId: 'speaker-2',
+    observedSinkId: 'speaker-2',
+    setSinkIdOutcome: 'resolved',
+    selectedDeviceExposed: true,
+    sinkPresentAfterBind: true,
+    ...overrides
+  };
+}
+
 function observedContext() {
   let n = 0;
   return {
@@ -53,6 +69,64 @@ test('composes one identity-bound evidence session', async () => {
   assert.equal(result.clockEvaluation.classification, 'consistent');
   assert.deepEqual(result.packet.identity, identity);
   assert.equal(result.packet.classification, 'incomplete');
+});
+
+test('normalizes and binds a non-default route observation before composition', async () => {
+  const result = await runAudioEvidenceSession({
+    ...identity,
+    context: observedContext(),
+    samplerOptions,
+    ...layers({ route: undefined, routeObservation: routeObservation() })
+  });
+  assert.equal(result.status, 'composed');
+  assert.equal(result.routeEvaluation.classification, 'bound_non_default');
+  assert.equal(result.routeEvaluation.sessionId, identity.sessionId);
+  assert.equal(result.packet.layers.route.classification, 'bound_non_default');
+  assert.equal(result.packet.claimBoundary.routeBinding, true);
+  assert.equal(result.packet.claimBoundary.physicalAudibility, 'not_tested');
+});
+
+test('preserves permissions-policy denial as rejected route evidence', async () => {
+  const result = await runAudioEvidenceSession({
+    ...identity,
+    context: observedContext(),
+    samplerOptions,
+    ...layers({
+      route: undefined,
+      routeObservation: routeObservation({ speakerSelectionAllowed: false, setSinkIdOutcome: 'NotAllowedError' })
+    })
+  });
+  assert.equal(result.routeEvaluation.classification, 'rejected');
+  assert.ok(result.routeEvaluation.reasons.includes('speaker_selection_policy_denied'));
+  assert.equal(result.packet.classification, 'contradicted');
+  assert.ok(result.packet.contradictions.includes('route_selection_rejected_but_rendering_observed'));
+});
+
+test('preserves post-bind device loss as rejected route evidence', async () => {
+  const result = await runAudioEvidenceSession({
+    ...identity,
+    context: observedContext(),
+    samplerOptions,
+    ...layers({
+      route: undefined,
+      routeObservation: routeObservation({ sinkPresentAfterBind: false }),
+      deviceChange: { classification: 'changed', rebound: false }
+    })
+  });
+  assert.equal(result.routeEvaluation.classification, 'rejected');
+  assert.ok(result.routeEvaluation.reasons.includes('bound_sink_became_unavailable'));
+  assert.equal(result.packet.classification, 'contradicted');
+});
+
+test('rejects identity injected by a route evaluator', async () => {
+  await assert.rejects(() => runAudioEvidenceSession({
+    ...identity,
+    context: observedContext(),
+    samplerOptions,
+    ...layers({ route: undefined, routeObservation: routeObservation() })
+  }, {
+    evaluateAudioRoute: () => ({ classification: 'bound_non_default', sessionId: 'other' })
+  }), /route sessionId mismatch/);
 });
 
 test('fails closed when getOutputTimestamp is unavailable', async () => {
