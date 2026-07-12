@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "artifact_type": "alias_occurrence_contract",
+  "recorded_at": "2026-07-12T12:34:57-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "queue_item": "CM-006",
+  "status": "implementation_ready",
+  "supersedes_for_future_occurrences": "operations/continuity/alias-registry-2026-07-12T1033-0400.json#claims/CM3-004",
+  "depends_on": [
+    "operations/continuity/alias-lifecycle-dimensions-2026-07-12T1149-0400.json",
+    "scripts/continuity-alias-occurrence-scanner.mjs"
+  ],
+  "purpose": "Record one provenance-preserving row per alias occurrence while preventing private source passages and cross-dimension lifecycle differences from being misclassified as contradictions.",
+  "required_occurrence_fields": [
+    "occurrence_id",
+    "raw_value",
+    "normalized_value",
+    "entity_type",
+    "lifecycle_dimension",
+    "lifecycle_status",
+    "claim_status",
+    "confidence",
+    "source_reference",
+    "source_visibility",
+    "observed_at_or_range",
+    "evidence_strength",
+    "review_state"
+  ],
+  "field_contracts": {
+    "occurrence_id": "Stable opaque identifier; must not contain quoted source text or personal data.",
+    "raw_value": "Only the minimal label or name token necessary for continuity resolution; no surrounding private passage.",
+    "normalized_value": "Canonical comparison value without implying canonical project-name status.",
+    "entity_type": "Typed structural role such as project_name, abbreviation, repository_name, visual_branch_or_mode_label, document_series, or derived_compendium_or_module_family.",
+    "lifecycle_dimension": "Explicit dimension from the lifecycle registry; scanner fallback is allowed only for schema_version 1 compatibility.",
+    "lifecycle_status": "Status within the declared lifecycle dimension.",
+    "claim_status": "One of observed, inferred, proposed, superseded, or unresolved.",
+    "confidence": "One of high, medium, or low, with unresolved preferred over unsupported promotion.",
+    "source_reference": "Repository path and immutable SHA, or private-source title plus non-content locator; never copy private prose.",
+    "source_visibility": "One of public_repository, private_file_library, private_chat_history, or derived_artifact.",
+    "observed_at_or_range": "ISO timestamp, date, bounded date range, or unknown; uncertainty must be retained.",
+    "evidence_strength": "One of direct_source, corroborated_summary, deterministic_derivation, or weak_context.",
+    "review_state": "One of accepted, needs_review, conflict, superseded, or privacy_blocked."
+  },
+  "validation_rules": [
+    "Reject an occurrence lacking lifecycle_dimension in schema_version 2.",
+    "Reject source_reference values containing copied private passages.",
+    "Treat different lifecycle_status values as a conflict only when normalized_value and lifecycle_dimension both match.",
+    "Do not promote unresolved or weak_context evidence to canonical project identity.",
+    "Preserve raw_value even when normalized_value resolves to an existing entity.",
+    "Require review_state=privacy_blocked when minimal safe provenance cannot be represented without exposing private material."
+  ],
+  "migration_rules": [
+    "Schema-version-1 rows may derive lifecycle_dimension from the lifecycle registry by entity_type.",
+    "A derived lifecycle_dimension must be marked evidence_strength=deterministic_derivation.",
+    "Unknown entity types migrate to unresolved_dimension and review_state=needs_review.",
+    "Migration must be additive; original artifacts remain immutable and addressable."
+  ],
+  "claim_states": {
+    "observed": "The existing typed alias registry stores alias summaries but not one complete provenance row per occurrence.",
+    "inferred": "Occurrence-level provenance is necessary to distinguish language evolution from project renaming without reproducing private text.",
+    "proposed": "All new continuity occurrence artifacts should conform to this schema-version-2 contract.",
+    "superseded": "A normalized label plus one undifferentiated lifecycle status is sufficient for contradiction detection.",
+    "unresolved": "Historical labels still require decision-log evidence before stronger lifecycle promotion."
+  },
+  "falsification_route": "Construct two rows with the same normalized_value but different lifecycle dimensions; they must not conflict. Construct two rows with the same normalized_value and lifecycle_dimension but different lifecycle_status values; they must enter review_state=conflict.",
+  "privacy_boundary": {
+    "included": "Minimal labels, typed roles, abstract status, source titles or repository paths, hashes, bounded dates, confidence, and evidence strength.",
+    "excluded": "Raw private passages, personal narrative, health data, relationship material, financial data, credentials, and identifying conversational context.",
+    "publication_risk": "low"
+  },
+  "next_action": "Add valid and invalid fixtures plus deterministic validation to the continuity scanner, then run the committed tests in trusted CI."
+}
