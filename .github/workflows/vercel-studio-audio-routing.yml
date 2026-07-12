@@ -7,6 +7,8 @@ on:
       - 'src/engine/audioRoutingEvidenceRuntime.js'
       - 'tests/audio-routing-sticky.spec.js'
       - 'scripts/audio-routing-evidence-contract-check.mjs'
+      - 'scripts/verify-vercel-studio-audio-evidence.mjs'
+      - 'scripts/verify-vercel-studio-audio-evidence.test.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/vercel-studio-audio-routing.yml'
@@ -15,6 +17,8 @@ on:
       - 'src/engine/audioRoutingEvidenceRuntime.js'
       - 'tests/audio-routing-sticky.spec.js'
       - 'scripts/audio-routing-evidence-contract-check.mjs'
+      - 'scripts/verify-vercel-studio-audio-evidence.mjs'
+      - 'scripts/verify-vercel-studio-audio-evidence.test.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/vercel-studio-audio-routing.yml'
@@ -57,6 +61,10 @@ jobs:
         id: regression
         run: npm run test:audio-routing-browser
 
+      - name: Run evidence-verifier contract tests
+        id: evidence_verifier
+        run: npm run test:audio-routing-evidence
+
       - name: Build production bundle
         id: build
         run: npm run build
@@ -68,6 +76,7 @@ jobs:
           BROWSER_INSTALL_OUTCOME: ${{ steps.browser.outcome }}
           CONTRACT_OUTCOME: ${{ steps.contract.outcome }}
           REGRESSION_OUTCOME: ${{ steps.regression.outcome }}
+          EVIDENCE_VERIFIER_OUTCOME: ${{ steps.evidence_verifier.outcome }}
           BUILD_OUTCOME: ${{ steps.build.outcome }}
         run: |
           mkdir -p test-results/evidence
@@ -78,9 +87,10 @@ jobs:
             browser_install: process.env.BROWSER_INSTALL_OUTCOME || 'not-run',
             source_contract: process.env.CONTRACT_OUTCOME || 'not-run',
             browser_regression: process.env.REGRESSION_OUTCOME || 'not-run',
+            evidence_verifier: process.env.EVIDENCE_VERIFIER_OUTCOME || 'not-run',
             production_build: process.env.BUILD_OUTCOME || 'not-run',
           };
-          const required = ['source_contract', 'browser_regression', 'production_build'];
+          const required = ['source_contract', 'browser_regression', 'evidence_verifier', 'production_build'];
           const verificationPassed = required.every((key) => outcomes[key] === 'success');
           const evidence = {
             schema_version: 2,
@@ -93,7 +103,7 @@ jobs:
             ref: process.env.GITHUB_REF,
             outcomes,
             verification_passed: verificationPassed,
-            evidence_scope: 'source contract, browser regression, and production build; not physical speaker emission or Vercel deployment',
+            evidence_scope: 'source contract, browser regression, evidence verifier, and production build; not physical speaker emission or Vercel deployment',
             generated_at_utc: new Date().toISOString(),
           };
           fs.writeFileSync(
@@ -101,6 +111,14 @@ jobs:
             `${JSON.stringify(evidence, null, 2)}\n`,
           );
           NODE
+
+      - name: Verify generated evidence packet
+        if: always()
+        run: >-
+          node scripts/verify-vercel-studio-audio-evidence.mjs
+          test-results/evidence/vercel-studio-audio-routing.json
+          "$GITHUB_REPOSITORY"
+          "$GITHUB_SHA"
 
       - name: Upload evidence and Playwright output
         if: always()
