@@ -19,7 +19,7 @@ import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
 installDeploymentIdentityRuntime();
-installAudioDeviceEvidenceRuntime({ window, navigator });
+installAudioDeviceEvidenceRuntime({ window, navigator, document });
 installAudioObservabilityRuntime();
 installAudioRoutingEvidenceRuntime();
 installAudibilityOutcomeRuntime();
