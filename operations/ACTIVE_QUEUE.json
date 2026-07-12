@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T22:19:05Z",
+  "updated_at": "2026-07-12T22:20:00Z",
   "items": [
     {
       "id": "V-001",
@@ -81,15 +81,16 @@
         "Implemented a fail-closed reconciliation gate for primary and independent workflow-run enumerations.",
         "Added detection for incomplete envelopes, commit mismatch, cross-commit records, duplicate run identifiers, missing run identifiers, and metadata divergence.",
         "Verified the implementation with five deterministic Node tests.",
-        "Vercel Studio wired reconciliation ahead of commit-bound evidence assessment and retained provider-ceiling ambiguity as a separate fail-closed condition."
+        "Vercel Studio wired reconciliation ahead of commit-bound evidence assessment and retained provider-ceiling ambiguity as a separate fail-closed condition.",
+        "Added a machine-checkable gh api --paginate --slurp envelope that rejects non-exhaustive commands, count drift, count mismatch, duplicate or cross-commit records, and the 1000-result provider ceiling; verified with six deterministic Node tests."
       ],
       "acceptance_remaining": [
         "Execute the authenticated repository enumerator for an exact commit.",
-        "Execute an independent gh api --paginate traversal for the same commit.",
+        "Execute the documented independent gh api --paginate --slurp traversal for the same commit and construct its validated envelope.",
         "Run both outputs through the reconciliation gate and retain the result.",
         "Keep provider-ceiling ambiguity as a separate fail-closed condition."
       ],
-      "safe_next_action": "Execute both exhaustive clients against one exact commit and retain raw outputs plus the Vercel reconciliation and assessment artifacts; no deployment claim is permitted until verified=true and provider-ceiling ambiguity is absent."
+      "safe_next_action": "Execute both exhaustive clients against one exact commit, validate the gh paginated envelope, and retain raw outputs plus the Vercel reconciliation and assessment artifacts; no deployment claim is permitted until verified=true and provider-ceiling ambiguity is absent."
     }
   ]
 }
