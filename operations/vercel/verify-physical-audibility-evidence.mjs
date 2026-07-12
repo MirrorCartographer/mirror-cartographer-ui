@@ -33,6 +33,13 @@ export function verifyPhysicalAudibilityEvidence(packet = {}) {
   if (!verifyImmutableVercelUrl(packet.deployment?.url)) failures.push('invalid_immutable_vercel_url');
   if (!validIsoTime(packet.deployment?.readyAt)) failures.push('invalid_deployment_ready_time');
   if (!validIsoTime(packet.testedAt)) failures.push('invalid_tested_time');
+  if (
+    validIsoTime(packet.deployment?.readyAt) &&
+    validIsoTime(packet.testedAt) &&
+    Date.parse(packet.testedAt) < Date.parse(packet.deployment.readyAt)
+  ) {
+    failures.push('test_precedes_deployment_ready');
+  }
 
   for (const field of REQUIRED_DEVICE_FIELDS) {
     if (typeof packet.device?.[field] !== 'string' || packet.device[field].trim() === '') failures.push(`missing_device_${field}`);
@@ -47,7 +54,7 @@ export function verifyPhysicalAudibilityEvidence(packet = {}) {
   if (!runtime.supportsAudibilityClaim) failures.push(`audibility_${runtime.state}`);
 
   return Object.freeze({
-    schemaVersion: '1.1.0',
+    schemaVersion: '1.2.0',
     status: failures.length === 0 ? 'pass' : 'fail',
     supportsPhysicalAudibilityClaim: failures.length === 0,
     runtime,
