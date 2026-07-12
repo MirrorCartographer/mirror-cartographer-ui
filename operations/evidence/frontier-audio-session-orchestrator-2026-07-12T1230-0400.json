@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "artifact": "identity_bound_audio_session_orchestrator",
+  "source_status": "primary_specification_inherited_plus_isolated_runtime_test",
+  "sources": [
+    {
+      "title": "Web Audio API 1.1",
+      "publisher": "W3C Web Audio Working Group",
+      "url": "https://www.w3.org/TR/webaudio-1.1/",
+      "status": "first_public_working_draft",
+      "retrieved_on": "2026-07-12",
+      "relevance": "Defines AudioContext output timestamps and the separation between rendering and control timelines used by the existing sampler and evaluator."
+    },
+    {
+      "title": "Web Audio API Editor's Draft",
+      "publisher": "W3C Web Audio Working Group",
+      "url": "https://webaudio.github.io/web-audio-api/",
+      "status": "editors_draft",
+      "retrieved_on": "2026-07-12",
+      "relevance": "Current primary working specification for getOutputTimestamp, baseLatency, and outputLatency behavior."
+    }
+  ],
+  "finding": "The remaining evidence gap after R-030 was not another clock evaluator but orchestration: raw capture, clock evaluation, route layers, deployment identity, and the final packet could be produced under different identifiers or composed after unavailable or contradicted clock evidence. A single fail-closed session boundary removes that ambiguity.",
+  "design_implication": "Use one orchestrator that binds sessionId, commitSha, and deploymentId to every layer; preserve raw capture and clock evaluation; refuse packet composition unless clock evidence is observed and consistent; and preserve physical not-heard contradictions rather than converting browser rendering into an audibility claim.",
+  "comparison_against_prior_work": {
+    "R-028": "Composes pre-existing evidence layers but does not acquire or evaluate browser clock evidence.",
+    "R-029": "Evaluates already-captured clock samples.",
+    "R-030": "Captures browser clock samples and gates forwarding.",
+    "R-031": "Integrates R-028 through R-030 into one identity-bound session and fails closed before composition."
+  },
+  "implementation": {
+    "source": "tools/frontier-research/audio-session-orchestrator.mjs",
+    "tests": "tools/frontier-research/audio-session-orchestrator.test.mjs",
+    "source_commit": "c15f43faa86e40f46ca1db17a44a4ea45f5065e0",
+    "test_commit": "e24e858eaef16de88aa3f764eff7e1bd5c6419e4"
+  },
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-session-orchestrator.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "verified_behaviors": [
+      "one shared identity across capture, evaluation, and composed packet",
+      "unavailable getOutputTimestamp blocks composition",
+      "contradicted clock evaluation blocks composition",
+      "layer identity mismatch is rejected",
+      "physical not-heard contradiction is preserved",
+      "invalid commit identity is rejected"
+    ]
+  },
+  "evidence_strength": "implementation_tested_in_isolated_node_harness",
+  "uncertainty": [
+    "No immutable deployment session was executed.",
+    "No browser microphone or physical speaker evidence was collected.",
+    "The test context is deterministic and does not reproduce browser scheduling jitter.",
+    "Safari implementation support remains an empirical question."
+  ],
+  "falsification_route": [
+    "Run the orchestrator inside an immutable exact-commit browser session.",
+    "Verify every emitted layer carries the same sessionId, commitSha, and deploymentId.",
+    "Inject unavailable and regressing output timestamps and confirm no packet is composed.",
+    "Record a render-advancing but not-heard physical outcome and confirm the final packet remains contradicted.",
+    "Reject the design if any absent, contradicted, or mismatched layer is promoted to supported evidence."
+  ],
+  "claim_boundary": "This artifact coordinates browser evidence provenance. It does not prove acoustic output, physical audibility, conscious perception, diagnosis, or treatment."
+}
