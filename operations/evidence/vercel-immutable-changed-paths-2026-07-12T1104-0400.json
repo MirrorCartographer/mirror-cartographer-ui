@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "immutable_changed_path_manifest",
+  "finding": "The guarded Vercel deployment entrypoints consumed operations/changed-paths.json but did not themselves establish that its contents came from an immutable Git comparison. A stale or manually edited manifest could therefore misclassify deployment admission.",
+  "implementation": {
+    "generator": "tools/vercel-ops/changed-paths-from-git.mjs",
+    "test": "tools/vercel-ops/changed-paths-from-git.test.mjs",
+    "package_entrypoint": "vercel:changed-paths",
+    "local_gate_integration": "test:vercel-changed-paths"
+  },
+  "security_properties": [
+    "requires full lowercase 40-character base and head commit SHAs",
+    "rejects equal commits and empty comparisons",
+    "uses git diff name-only with explicit change filters",
+    "deduplicates and deterministically sorts paths",
+    "rejects absolute, traversal-like, and backslash paths",
+    "fails closed on Git resolution errors"
+  ],
+  "verification": {
+    "command": "node --test tools/vercel-ops/changed-paths-from-git.test.mjs",
+    "environment": "isolated Node runtime using the committed source and test contents",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "github_actions_run_observed": false
+  },
+  "commits": {
+    "generator": "dcb443162ffc46a3fb4db5ca0b430f76f37d4401",
+    "tests": "be441e38b4ac05735f24660e540d0d72f8137d24",
+    "package_wiring": "99f482a05a3719d6c97e3716399c07fa7f6fe3b9"
+  },
+  "deployment_attempted": false,
+  "deployment_reason": "Current state explicitly prohibits application deployment attempts while provider build capacity is exhausted.",
+  "limits": [
+    "No Vercel provider execution was performed.",
+    "The manifest establishes changed-path provenance only when generated in a trusted checkout containing both commits.",
+    "The downstream deployment invocation still must consume the newly generated file without intervening modification.",
+    "Physical iPhone Safari audibility remains unverified."
+  ],
+  "rollback": "Revert package wiring commit 99f482a05a3719d6c97e3716399c07fa7f6fe3b9 and the two additive tool commits; no canonical state or history deletion is required."
+}
