@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "observed_at": "2026-07-12T00:25:38.000Z",
+  "slice": "Add a dedicated GitHub Actions gate for the Vercel deployment-status classifier and tamper-evident evidence packet contracts.",
+  "source_commit": "e5307f1093aaa6cf30ae49efe18ab96426db721b",
+  "workflow_path": ".github/workflows/vercel-evidence-gate.yml",
+  "verification": {
+    "source_file_created": true,
+    "workflow_trigger": "push to main affecting Vercel evidence files, plus manual dispatch",
+    "combined_status_observation": "No commit statuses were returned immediately after the workflow commit.",
+    "runtime_pass_claimed": false,
+    "deployment_claimed": false,
+    "served_commit_identity_claimed": false
+  },
+  "safety": {
+    "payments_or_conversion_added": false,
+    "files_or_history_deleted": false,
+    "workflow_permissions": "contents: read",
+    "timeout_minutes": 5
+  },
+  "rollback": {
+    "method": "Revert commit e5307f1093aaa6cf30ae49efe18ab96426db721b.",
+    "history_rewrite_required": false
+  },
+  "limits": [
+    "The connector did not expose a completed workflow run at observation time.",
+    "The gate verifies source contracts only and cannot prove a Vercel deployment or served immutable commit."
+  ],
+  "next_action": "Observe the workflow result for commit e5307f1093aaa6cf30ae49efe18ab96426db721b; if it passes, retry Vercel after the provider rate window clears and verify served commit identity."
+}
