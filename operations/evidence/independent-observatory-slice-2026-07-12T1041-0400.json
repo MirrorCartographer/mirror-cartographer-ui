@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "slice_id": "I-001",
+  "timestamp": "2026-07-12T10:41:31-04:00",
+  "branch": "independent-creative/observatory-small-machines",
+  "creative_premise": "A browser observatory containing three abstract mechanical organisms that reveal behavior through movement, stillness, and single-gesture memory.",
+  "files": [
+    "independent-web/observatory-small-impossible-machines/index.html",
+    "independent-web/observatory-small-impossible-machines/IDENTITY.md"
+  ],
+  "verification": {
+    "method": "commit-bound GitHub source inspection",
+    "claims": [
+      "self-contained HTML, CSS, and JavaScript",
+      "no external libraries, assets, fonts, analytics, payment, or conversion logic",
+      "audio requires explicit user activation",
+      "reduced-motion and textual accessibility paths are present",
+      "device pixel ratio is capped and rendering uses one canvas loop"
+    ],
+    "not_claimed": [
+      "public deployment",
+      "browser runtime execution",
+      "mobile Safari physical verification",
+      "peer execution"
+    ]
+  },
+  "independence_boundary": "The work has its own identity, purpose, interaction grammar, and future hosting target and must not deploy through the Mirror Cartographer Vercel production project.",
+  "rollback": "Delete the feature branch or revert commits b13a55cb0c7cf885e8558432c93e2d1e7bd2549f and 8771ffc3be743ee19e69786e4d94a930bd6e5fa7 after review; no default-branch history was changed."
+}
