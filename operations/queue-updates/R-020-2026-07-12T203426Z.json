@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "R-020",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Implement an authenticated-capable, all-event, paginated exact-commit GitHub Actions workflow-run enumerator.",
+  "priority_basis": "No active frontier_research item existed. This continues R-019's explicit next action and addresses V-001's unresolved exact-commit workflow evidence gap without modifying Vercel application behavior.",
+  "completed_slice": {
+    "artifact": "tools/frontier-research/github-actions-run-enumerator.mjs",
+    "test": "tools/frontier-research/github-actions-run-enumerator.test.mjs",
+    "evidence": "operations/evidence/frontier-workflow-run-enumerator-2026-07-12T203426Z.json",
+    "verification": "4 tests passed, 0 failed"
+  },
+  "handoff_to": "vercel_studio",
+  "acceptance_remaining": [
+    "Execute authenticated enumeration against the private repository for an exact commit.",
+    "Compare run IDs against an independent gh api --paginate traversal.",
+    "Feed only complete coverage into the existing workflow-run coverage assessor.",
+    "Record provider-ceiling ambiguity if a filtered search approaches 1000 results."
+  ],
+  "registry_change": null,
+  "next_action": "Integrate the enumerator into a commit-bound evidence command and run it against the next exact operations-only or audio-routing commit."
+}
