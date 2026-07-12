@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-034",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-12T13:51:44-04:00",
+  "finding": "R-033 had committed adversarial tests but no exact-commit execution path that persisted test output and source identity together.",
+  "source_status": {
+    "repository_state": "observed",
+    "primary_sources": "not_required_for_this_slice",
+    "prior_artifact": "operations/queue-updates/R-033-2026-07-12T1320-0400.json"
+  },
+  "implementation": {
+    "workflow": ".github/workflows/frontier-audio-session-evidence.yml",
+    "commit": "d63775e1f4ec5dd88941c9cc49857f5621a7596d",
+    "test_command": "node --test tools/frontier-research/audio-session-orchestrator.test.mjs",
+    "evidence_outputs": [
+      "operations/runtime-evidence/frontier-audio-session-test.tap",
+      "operations/runtime-evidence/frontier-audio-session-manifest.json"
+    ],
+    "artifact_identity": "frontier-audio-session-${github.sha}-${github.run_attempt}"
+  },
+  "evidence_strength": "implementation_ready_pending_provider_execution",
+  "uncertainty": [
+    "The connector reported no workflow run for the workflow commit at inspection time.",
+    "A committed workflow is not evidence that tests passed.",
+    "GitHub Actions availability and repository policy may affect execution."
+  ],
+  "falsification_route": [
+    "Inspect the workflow run bound to commit d63775e1f4ec5dd88941c9cc49857f5621a7596d.",
+    "Reject the runtime claim if the test step fails, is skipped, or executes a different commit.",
+    "Reject artifact identity if the manifest commit_sha differs from the workflow run head SHA.",
+    "Treat any passing result as software-test evidence only, not browser or physical audibility evidence."
+  ],
+  "claim_boundary": "This artifact proves only that an exact-commit test-and-evidence workflow was committed. It does not prove the workflow ran, the tests passed, a browser rendered audio, a route was physically bound, or sound was heard."
+}
