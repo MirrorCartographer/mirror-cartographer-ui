@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "classification": "reported_artifacts_unverified",
+  "observed_at": "2026-07-12T07:47:00-04:00",
+  "prior_report": {
+    "label": "Continuity Mining queue promotion reconciliation",
+    "claimed_artifacts": [
+      {
+        "path": "tools/continuity-mining/queue-promotion-gate.mjs",
+        "commit": "8d5a39d15683c11813f5b28d40f17b8e680822f5"
+      },
+      {
+        "path": "tools/continuity-mining/queue-promotion-gate.test.mjs",
+        "commit": "c4d7571bb3267e6a383beac2c4ad9f0bbd93aa70"
+      },
+      {
+        "path": "operations/evidence/continuity-queue-promotion-gate-2026-07-12T0740-0400.json",
+        "commit": "1f815d92a5085451cc1f83a19e05b8232c6068e7"
+      },
+      {
+        "path": "operations/queue-updates/CM-014-2026-07-12T0740-0400.json",
+        "commit": "eb92c563af4c3abf4676cae8b1724392c8fb4087"
+      }
+    ]
+  },
+  "repository_observations": {
+    "default_branch_path_checks": {
+      "tools/continuity-mining/queue-promotion-gate.mjs": "not_found",
+      "tools/continuity-mining/queue-promotion-gate.test.mjs": "not_found",
+      "operations/evidence/continuity-queue-promotion-gate-2026-07-12T0740-0400.json": "not_found",
+      "operations/queue-updates/CM-014-2026-07-12T0740-0400.json": "not_found"
+    },
+    "commit_check": {
+      "8d5a39d15683c11813f5b28d40f17b8e680822f5": "not_found"
+    },
+    "canonical_queue_contains_continuity_item": false
+  },
+  "status_model": {
+    "observed": [
+      "The four claimed paths are absent from the repository default branch.",
+      "At least one claimed commit identifier is not resolvable through the repository API.",
+      "The canonical active queue contains only V-001 owned by vercel_studio."
+    ],
+    "inferred": [
+      "The prior continuity completion report was not durably committed to the current repository state."
+    ],
+    "proposed": [
+      "Require repository-observed path and commit evidence before promoting narrative completion reports into project memory."
+    ],
+    "superseded": [
+      "Treating assistant-reported commit hashes as repository evidence without independent observation."
+    ],
+    "unresolved": [
+      "Whether the prior artifacts existed transiently on another branch or external workspace cannot be established from current repository evidence."
+    ]
+  },
+  "privacy_boundary": "Contains repository paths, commit identifiers, and governance state only; excludes private chat text and personal data."
+}
