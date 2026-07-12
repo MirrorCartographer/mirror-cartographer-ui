@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Make Vercel build suppression fail closed by ignoring only operations-only commits and requiring builds for unknown, empty, mixed, application, asset, and configuration changes.",
+  "evidence": "operations/evidence/V-001-fail-closed-build-suppression-2026-07-12T0417Z.json",
+  "commits": [
+    "4b5daa6ad2e9531de2db722a361be429d22be8fe",
+    "fc4a4919130da91a5f0c852d77c7dbf495ce39da",
+    "efb77432f59e5c71889f145fad9eb0a04d1f735b"
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only commit reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "When Vercel capacity returns, use one operations-only sentinel to verify suppression; then perform one exact-commit audio workflow and immutable deployment check."
+}
