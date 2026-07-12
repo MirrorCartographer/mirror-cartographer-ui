@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-12T22:20:00Z",
+  "finding": "The independent gh api traversal requires a machine-checkable envelope proving paginate/slurp usage, stable total_count, exact-commit purity, duplicate absence, observed-count agreement, and explicit provider-ceiling ambiguity.",
+  "primary_sources": [
+    {
+      "url": "https://cli.github.com/manual/gh_api",
+      "status": "official",
+      "supports": "gh api --paginate requests all pages and --slurp wraps page objects into an outer JSON array"
+    },
+    {
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "status": "official",
+      "supports": "head_sha-filtered workflow-run searches return at most 1000 results"
+    }
+  ],
+  "artifact": "tools/frontier-research/gh-workflow-run-envelope.mjs",
+  "test": "tools/frontier-research/gh-workflow-run-envelope.test.mjs",
+  "verification": {
+    "route": "node --test tools/frontier-research/gh-workflow-run-envelope.test.mjs",
+    "local_result": "6 passed, 0 failed",
+    "scope": [
+      "complete traversal acceptance",
+      "non-exhaustive command rejection",
+      "count mismatch rejection",
+      "provider ceiling rejection",
+      "cross-commit and duplicate rejection",
+      "changing total_count rejection"
+    ]
+  },
+  "evidence_strength": "implementation_ready_locally_verified",
+  "uncertainty": [
+    "No authenticated private-repository traversal was executed in this run.",
+    "The command string is retained as provenance but is not cryptographically bound to the captured stdout.",
+    "A result below 1000 can still be wrong if the upstream service omits records without reflecting that omission in total_count."
+  ],
+  "falsification_route": "Run the documented gh api command for one exact commit, independently run the repository enumerator, construct both envelopes, and require the existing reconciliation gate to verify equality. Any count, metadata, commit, or run-id divergence falsifies completeness."
+}
