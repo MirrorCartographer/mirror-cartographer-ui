@@ -2,7 +2,11 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildVercelStatusEvidence } from './vercel-status-evidence.mjs';
+import {
+  buildVercelStatusEvidence,
+  computeEvidenceDigest,
+  verifyEvidenceDigest,
+} from './vercel-status-evidence.mjs';
 
 const EXPECTED_COMMIT = '277bb9a2f8d72b7f1d60765b6548332ac21990c1';
 const GENERATED_AT = '2026-07-12T00:13:21.000Z';
@@ -23,6 +27,7 @@ test('classifies Vercel build-rate limit without claiming source regression', ()
     generatedAt: GENERATED_AT,
   });
 
+  assert.equal(evidence.schema_version, 2);
   assert.equal(evidence.expected_commit, EXPECTED_COMMIT);
   assert.equal(evidence.generated_at, GENERATED_AT);
   assert.equal(evidence.classification.classification, 'transient_provider_rate_limit');
@@ -30,6 +35,8 @@ test('classifies Vercel build-rate limit without claiming source regression', ()
   assert.equal(evidence.claims.deployment_verified, false);
   assert.equal(evidence.claims.source_regression_proven, false);
   assert.equal(evidence.claims.served_commit_identity_verified, false);
+  assert.match(evidence.evidence_digest, /^sha256:[0-9a-f]{64}$/);
+  assert.equal(verifyEvidenceDigest(evidence), true);
 });
 
 test('accepts a direct status object and preserves provider success uncertainty', () => {
@@ -46,6 +53,7 @@ test('accepts a direct status object and preserves provider success uncertainty'
   assert.equal(evidence.classification.classification, 'provider_reports_success');
   assert.equal(evidence.claims.deployment_verified, false);
   assert.equal(evidence.claims.served_commit_identity_verified, false);
+  assert.equal(verifyEvidenceDigest(evidence), true);
 });
 
 test('reports insufficient evidence when no Vercel status exists', () => {
@@ -57,6 +65,7 @@ test('reports insufficient evidence when no Vercel status exists', () => {
 
   assert.equal(evidence.observed_status, null);
   assert.equal(evidence.classification.classification, 'insufficient_status_evidence');
+  assert.equal(verifyEvidenceDigest(evidence), true);
 });
 
 test('rejects malformed expected commit identity', () => {
@@ -64,4 +73,35 @@ test('rejects malformed expected commit identity', () => {
     () => buildVercelStatusEvidence({}, { expectedCommit: 'abc' }),
     /40-character lowercase hexadecimal SHA/,
   );
+});
+
+test('detects any mutation after evidence generation', () => {
+  const evidence = buildVercelStatusEvidence({
+    context: 'Vercel',
+    state: 'failure',
+    description: 'Build failed',
+  }, {
+    expectedCommit: EXPECTED_COMMIT,
+    generatedAt: GENERATED_AT,
+  });
+
+  const tampered = structuredClone(evidence);
+  tampered.claims.source_regression_proven = true;
+
+  assert.equal(verifyEvidenceDigest(evidence), true);
+  assert.equal(verifyEvidenceDigest(tampered), false);
+  assert.notEqual(computeEvidenceDigest(tampered), evidence.evidence_digest);
+});
+
+test('digest is deterministic across object key order', () => {
+  const first = {
+    evidence_type: 'vercel_deployment_status',
+    claims: { deployment_verified: false, source_regression_proven: false },
+  };
+  const second = {
+    claims: { source_regression_proven: false, deployment_verified: false },
+    evidence_type: 'vercel_deployment_status',
+  };
+
+  assert.equal(computeEvidenceDigest(first), computeEvidenceDigest(second));
 });
