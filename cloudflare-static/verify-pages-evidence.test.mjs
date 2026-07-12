@@ -26,6 +26,16 @@ test('rejects lookalike deployment host', () => {
   assert.equal(result.code, 'HOSTNAME_NOT_BOUND');
 });
 
+test('rejects non-HTTPS deployment evidence', () => {
+  const result = verifyPagesEvidence({ ...base, deployment: { ...base.deployment, url: 'http://abc123.mc-research.pages.dev' } });
+  assert.equal(result.code, 'INVALID_DEPLOYMENT_URL');
+});
+
+test('rejects URL credentials in deployment evidence', () => {
+  const result = verifyPagesEvidence({ ...base, deployment: { ...base.deployment, url: 'https://user:secret@abc123.mc-research.pages.dev' } });
+  assert.equal(result.code, 'INVALID_DEPLOYMENT_URL');
+});
+
 test('rejects served commit mismatch', () => {
   const result = verifyPagesEvidence({ ...base, identity: { ...base.identity, served_commit: 'c'.repeat(40) } });
   assert.equal(result.code, 'IDENTITY_MISMATCH');
@@ -34,4 +44,15 @@ test('rejects served commit mismatch', () => {
 test('rejects missing privacy review', () => {
   const result = verifyPagesEvidence({ ...base, provenance: { ...base.provenance, privacy_review: 'pending' } });
   assert.equal(result.code, 'PROVENANCE_INCOMPLETE');
+});
+
+test('produces the same digest for equivalent objects with different key order', () => {
+  const reordered = {
+    provenance: { privacy_review: 'passed', artifact_digest: 'b'.repeat(64) },
+    identity: { served_commit: 'a'.repeat(40), surface: 'mirror-cartographer-research' },
+    network: { http_status: 200, dns_resolved: true },
+    deployment: { commit_sha: 'a'.repeat(40), url: 'https://abc123.mc-research.pages.dev' },
+    project: { custom_domains: ['research.example.org'], source: 'cloudflare_pages_api', canonical_origin: 'https://mc-research.pages.dev' }
+  };
+  assert.equal(verifyPagesEvidence(base).evidence_digest, verifyPagesEvidence(reordered).evidence_digest);
 });
