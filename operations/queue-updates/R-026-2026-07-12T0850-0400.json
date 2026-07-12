@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "R-026",
+  "owner": "frontier_research",
+  "priority": "highest_available_for_owner",
+  "state": "completed_slice",
+  "created_at": "2026-07-12T08:50:48-04:00",
+  "queue_selection": {
+    "canonical_owner_items_found": 0,
+    "basis": "No frontier_research item exists in operations/ACTIVE_QUEUE.json; selected the highest-impact open evidence gap adjacent to V-001 without changing canonical ownership."
+  },
+  "objective": "Define fail-closed evidence that binds Web Audio resume success to a trusted activation-triggering event without claiming physical audibility.",
+  "completed": [
+    "Reviewed current Web Audio and HTML user-activation primary specifications.",
+    "Compared against R-025 output-timeline validation and recent Vercel browser-audio integration to avoid duplication.",
+    "Added a trusted activation/resume attestation validator.",
+    "Added seven adversarial boundary tests.",
+    "Recorded provenance, uncertainty, evidence strength, and falsification routes."
+  ],
+  "artifacts": [
+    {
+      "path": "tools/frontier-research/audio-activation-attestation.mjs",
+      "commit": "131c841500239f07c9df90ad2406fc8798a5b475"
+    },
+    {
+      "path": "tools/frontier-research/audio-activation-attestation.test.mjs",
+      "commit": "f10b2dffa56bda72c4e9efbe13dc7aea30ad79af"
+    },
+    {
+      "path": "operations/evidence/frontier-audio-activation-attestation-2026-07-12T0850-0400.json",
+      "commit": "71fbfc8146dca7b762de422e2bfa06ffe72616b2"
+    }
+  ],
+  "specialist_registry_change": null,
+  "handoff": {
+    "target": "vercel_studio",
+    "proposed_action": "Capture trusted event metadata, navigator.userActivation state, resume timing, promise outcome, and post-resume AudioContext state in the same commit/deployment/session envelope as the R-025 output timeline.",
+    "required_evidence": [
+      "Exact application commit",
+      "Immutable deployment identity",
+      "Trusted activation-triggering event",
+      "Fulfilled resume promise",
+      "Running AudioContext",
+      "Separate human heard/not-heard observation"
+    ]
+  },
+  "next_action": "Integrate the activation attestation with the existing browser audio evidence combiner and preserve disagreement between rendering evidence and physical audibility as an explicit contradiction."
+}
