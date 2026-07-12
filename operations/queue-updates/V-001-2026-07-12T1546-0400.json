@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:46:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed workflow artifact manifest gate so expired, duplicated, incomplete, missing, or wrong-run artifacts cannot be treated as exact-commit evidence.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "scripts/vercel-workflow-artifact-manifest-gate.mjs",
+    "scripts/vercel-workflow-artifact-manifest-gate.test.mjs",
+    "operations/evidence/vercel-artifact-manifest-gate-2026-07-12T1546-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1546-0400.json"
+  ],
+  "implementation_commit": "f68a9971990d2f5914bd0ad3092e9b689608acd8",
+  "test_commit": "328be0dee8c02bdc668bc67b75ee5a9fa3ed9bdb",
+  "evidence_commit": "3a1e5a2f9d48ab07ca6ddd1b5784e8987a7ac0b3",
+  "verification": {
+    "route": "dependency-free Node test suite",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "provider_observation": "No workflow run or Vercel deployment was accepted in this slice."
+  },
+  "rollback": "Remove the new gate from any future composition point; the current observation pipeline remains unchanged, so this slice is additive and reversible.",
+  "acceptance_remaining": [
+    "Compose the artifact manifest gate into the exact-commit workflow observation pipeline.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe a qualifying push or workflow_dispatch run and inspect its artifacts.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Compose evaluateArtifactManifest into scripts/vercel-workflow-observation-pipeline.mjs after run identity acceptance and before artifact-name acceptance, then test wrong-run and expired provider manifests end to end."
+}
