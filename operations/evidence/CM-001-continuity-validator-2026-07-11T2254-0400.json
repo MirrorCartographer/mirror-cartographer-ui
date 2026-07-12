@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "queue_item": "CM-001",
+  "evidence_type": "source_contract",
+  "completed_slice": "Implemented a non-destructive continuity record validator and five contract cases enforcing source class, claim state, copy qualification, contradiction retention, revision provenance, and privacy boundaries.",
+  "files": [
+    "scripts/continuity-record-validator.mjs",
+    "scripts/continuity-record-validator.test.mjs",
+    "package.json"
+  ],
+  "commits": [
+    "c5729df56b8b17116486578a9d7f38cc4db2103b",
+    "36d1ffd80c7a94db91cfdfe2fe07547989f2854e",
+    "bf9d83c008df96035f5e92ed8cabd70e32b7e60f"
+  ],
+  "claim_states": {
+    "observed": [
+      "The prior CM-001 artifact explicitly identified missing automated enforcement as unresolved.",
+      "The repository package gate is composed from independently named Node contract tests."
+    ],
+    "inferred": [
+      "A small deterministic validator integrated into existing gates is the least destructive enforcement route."
+    ],
+    "proposed": [
+      "Inventory existing continuity artifacts in report-only mode before migrating any historical record."
+    ],
+    "superseded": [
+      "The statement that continuity enforcement tooling is only proposed is superseded for the implemented contract subset."
+    ],
+    "unresolved": [
+      "No GitHub Actions or local process execution was available in this run to prove test runtime success.",
+      "Canonical storage for the complete decision graph remains unresolved.",
+      "Legacy continuity artifacts do not yet conform to the new machine-readable record shape."
+    ]
+  },
+  "verification": {
+    "strongest_feasible_route": "GitHub contents API commit confirmation and package script wiring inspection",
+    "runtime_executed": false,
+    "runtime_claim": "No test-pass claim is made until an exact-commit process or CI run executes npm run test:continuity-record."
+  },
+  "privacy_boundary": "Public-safe schema and synthetic fixtures only. No private transcript, medical detail, credential, personal identifier, or copied personal passage was committed.",
+  "recorded_at": "2026-07-12T02:54:13Z"
+}
