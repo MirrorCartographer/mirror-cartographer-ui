@@ -1,6 +1,7 @@
 import { classifyWorkflowQueryResult } from './vercel-workflow-query-classifier.mjs';
 import { evaluateWorkflowObservation } from './vercel-workflow-observation-gate.mjs';
 import { evaluateArtifactManifest } from './vercel-workflow-artifact-manifest-gate.mjs';
+import { normalizeGitHubArtifactListResponse } from './vercel-github-artifact-list-adapter.mjs';
 
 export function evaluateWorkflowQueryPipeline(input, expected = {}) {
   const queryDecision = classifyWorkflowQueryResult(input?.query_result, expected);
@@ -16,7 +17,25 @@ export function evaluateWorkflowQueryPipeline(input, expected = {}) {
 
   const run = queryDecision.run;
   const runId = run.id ?? run.run_id ?? null;
-  const manifestDecision = evaluateArtifactManifest(input, {
+  let manifestInput = input;
+  let artifactListDecision = null;
+
+  if (input?.github_artifact_response !== undefined) {
+    artifactListDecision = normalizeGitHubArtifactListResponse(input.github_artifact_response, { run_id: runId });
+    if (!artifactListDecision.accepted) {
+      return {
+        accepted: false,
+        stage: 'artifact_list',
+        decision: artifactListDecision.decision,
+        reason: artifactListDecision.reason,
+        query: queryDecision,
+        artifact_list: artifactListDecision
+      };
+    }
+    manifestInput = { ...input, artifacts: artifactListDecision.artifacts };
+  }
+
+  const manifestDecision = evaluateArtifactManifest(manifestInput, {
     run_id: runId,
     required_artifacts: expected.required_artifacts
   });
@@ -27,6 +46,7 @@ export function evaluateWorkflowQueryPipeline(input, expected = {}) {
       decision: manifestDecision.decision,
       reason: manifestDecision.reason,
       query: queryDecision,
+      artifact_list: artifactListDecision,
       artifact_manifest: manifestDecision
     };
   }
@@ -51,6 +71,7 @@ export function evaluateWorkflowQueryPipeline(input, expected = {}) {
       decision: observationDecision.decision,
       reason: observationDecision.reason,
       query: queryDecision,
+      artifact_list: artifactListDecision,
       artifact_manifest: manifestDecision,
       observation: observationDecision
     };
@@ -66,6 +87,7 @@ export function evaluateWorkflowQueryPipeline(input, expected = {}) {
       reason: queryDecision.reason,
       expected_commit_sha: queryDecision.expected_commit_sha
     },
+    artifact_list: artifactListDecision,
     artifact_manifest: manifestDecision,
     observation: observationDecision
   };
