@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T15:10:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed classifier that separates Vercel provider-capacity blocking, pending state, non-capacity execution failure, and provider-reported success without immutable commit binding.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "evidence": [
+    "operations/evidence/vercel-provider-status-classifier-2026-07-12T1510-0400.json",
+    "scripts/vercel-provider-status-classifier.mjs",
+    "scripts/vercel-provider-status-classifier.test.mjs"
+  ],
+  "verification": {
+    "local_tests_passed": 5,
+    "provider_capacity_observed": "blocked",
+    "deployment_attempted": false,
+    "immutable_deployment_verified": false,
+    "physical_device_tested": false
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Poll a later commit status without deploying. When the classifier no longer returns provider_capacity_blocked, inspect the operations-only sentinel before permitting one commit-bound deployment verification.",
+  "registry_change": null,
+  "destructive_changes": false
+}
