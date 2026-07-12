@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-003",
+  "owner": "continuity_mining",
+  "priority": "highest_available",
+  "state": "completed_slice",
+  "recorded_at": "2026-07-12T10:33:17-04:00",
+  "selection_basis": "No continuity_mining-owned item exists in the canonical queue; advanced the explicit next action from the prior continuity artifact.",
+  "objective": "Create a provenance-preserving typed alias registry that prevents technical, visual, and document labels from being interpreted as project renames.",
+  "completed": [
+    "Added classification rules for canonical names, abbreviations, technical containers, visual branches, document series, and derived module families.",
+    "Recorded observed, inferred, proposed, superseded, and unresolved claims.",
+    "Resolved the contradiction created when branded child entities are flattened into a single project-name timeline.",
+    "Preserved private-source provenance without reproducing raw private text."
+  ],
+  "artifacts": [
+    {
+      "path": "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+      "commit": "de89d09f7b8a78da1e1f40ac867793c9a35b076e"
+    }
+  ],
+  "shared_state_policy": "Additive queue update only; operations/ACTIVE_QUEUE.json and operations/CURRENT_STATE.json were not overwritten.",
+  "specialist_registry_change": "none",
+  "privacy_boundary": "No raw private chat passages or personal material were committed.",
+  "next_action": "Build a deterministic occurrence scanner and lifecycle-conflict report for alias evidence."
+}
