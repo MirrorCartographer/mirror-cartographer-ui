@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "slice": "commit_bound_audio_routing_ci",
+  "status": "implemented_pending_ci_execution",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Audio Engineer",
+    "Mobile Safari Investigator",
+    "Test Harness Engineer",
+    "Deployment Verifier"
+  ],
+  "implementation": {
+    "workflow_path": ".github/workflows/vercel-studio-audio-routing.yml",
+    "workflow_commit": "146303caa13979dad2f2eb5c293ef1ff75c487c2",
+    "checks": [
+      "npm run test:audio-routing",
+      "npm run test:audio-routing-browser",
+      "npm run build"
+    ],
+    "artifact": "vercel-studio-audio-routing-${commit_sha}",
+    "artifact_retention_days": 30
+  },
+  "verification": {
+    "source_commit_created": true,
+    "workflow_runs_returned_for_commit": 0,
+    "combined_status": {
+      "context": "Vercel",
+      "state": "failure",
+      "reason": "build-rate-limit",
+      "target": "Vercel project upgrade page"
+    },
+    "claims_not_made": [
+      "GitHub Actions passed",
+      "Vercel deployed this commit",
+      "physical iPhone audio was emitted",
+      "a listener perceived sound"
+    ]
+  },
+  "reversibility": {
+    "rollback": "Revert the queue and evidence records, then revert workflow commit 146303caa13979dad2f2eb5c293ef1ff75c487c2.",
+    "production_runtime_modified": false
+  },
+  "privacy_and_scope": {
+    "payments_added": false,
+    "conversion_logic_added": false,
+    "private_user_material_published": false
+  },
+  "next_action": "Wait for or dispatch the workflow when Actions recognizes the file, then inspect the exact run and artifact. Resolve the independent Vercel build-rate-limit before claiming deployment.",
+  "recorded_at": "2026-07-12T02:47:28Z"
+}
