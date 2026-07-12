@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T12:19:32-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a provenance-preserving fail-closed CI observation for the latest Vercel operations slice, explicitly preventing source-only test commits from being misreported as runtime-verified.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/evidence/vercel-ci-observation-2026-07-12T1219-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1219-0400.json"
+  ],
+  "commits": [
+    "a47e0ad5219ed36c970af2d541bab08506006180"
+  ],
+  "runtime_or_deployment_evidence": {
+    "runtime_test": "not_observed",
+    "deployment": "not_attempted_provider_capacity_blocked",
+    "source_commit": "observed"
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback_route": "Supersede this observation with a later additive evidence record when trusted runtime or deployment evidence exists; do not rewrite or delete history.",
+  "canonical_files_overwritten": false,
+  "next_action": "Run the committed Vercel operations and audio evidence tests in a trusted CI context, then attach the exact commit and six-outcome artifact before any completion upgrade."
+}
