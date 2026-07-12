@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T01:58:00-04:00",
+  "item": {
+    "id": "V-001",
+    "owner": "vercel_studio",
+    "priority": "highest",
+    "state": "in_progress_blocked",
+    "completed_slice": "Added and verified a fail-closed gate requiring device, runtime, and human audibility evidence to share one opaque bounded session identifier.",
+    "artifacts": [
+      "operations/vercel/verify-audibility-session-binding.mjs",
+      "operations/vercel/verify-audibility-session-binding.test.mjs",
+      "operations/evidence/vercel-audibility-session-binding-2026-07-12T0158-0400.json"
+    ],
+    "commits": [
+      "d59bdaecfc32eef1aad29c13eb0d650da9ccc872",
+      "3f3a16ec0785db5e31feecf63dfd51e49e1f517a",
+      "069d4ecc73b5ba67175db19c2e65d469c3e55fa5"
+    ],
+    "verification": {
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "acceptance_remaining": [
+      "Integrate the session-binding gate with the existing physical audibility verifier.",
+      "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+      "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+      "Bind the tested application commit to an immutable successful Vercel deployment.",
+      "Perform bounded physical iPhone Safari audibility verification."
+    ],
+    "safe_next_action": "Keep application deployment attempts paused while rate-limited; integrate the new gate through a reviewed operations-only change, then execute the provider checks after capacity returns."
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "registry_change": null
+}
