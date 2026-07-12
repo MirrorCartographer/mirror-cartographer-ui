@@ -11,6 +11,7 @@ const OUTCOMES = [
 ];
 const SHA = /^[0-9a-f]{40}$/;
 const DIGEST = /^sha256:[0-9a-f]{64}$/;
+const REF = /^refs\/(heads|tags)\/.+/;
 const isUri = (value) => {
   try {
     return typeof value === 'string' && Boolean(new URL(value));
@@ -29,8 +30,13 @@ export function validateEvidence(evidence) {
   require(evidence?.queue_item === 'V-001', 'queue_item');
   require(evidence?.repository === 'MirrorCartographer/mirror-cartographer-ui', 'repository');
   require(SHA.test(evidence?.commit_sha ?? ''), 'commit_sha');
+  require(['push', 'workflow_dispatch'].includes(evidence?.trigger_provenance?.event_name), 'trigger_provenance.event_name');
+  require(REF.test(evidence?.trigger_provenance?.ref ?? ''), 'trigger_provenance.ref');
+  require(Boolean(evidence?.trigger_provenance?.ref_name), 'trigger_provenance.ref_name');
+  require(['branch', 'tag'].includes(evidence?.trigger_provenance?.ref_type), 'trigger_provenance.ref_type');
   require(['github_actions', 'trusted_local_runner', 'other_trusted_ci'].includes(evidence?.run_identity?.provider), 'run_identity.provider');
   require(Boolean(evidence?.run_identity?.run_id), 'run_identity.run_id');
+  require(Boolean(evidence?.run_identity?.run_attempt), 'run_identity.run_attempt');
   require(isUri(evidence?.run_identity?.immutable_url), 'run_identity.immutable_url');
   require(SHA.test(evidence?.source_checkout?.observed_sha ?? ''), 'source_checkout.observed_sha');
   require(typeof evidence?.source_checkout?.dirty === 'boolean', 'source_checkout.dirty');
@@ -39,6 +45,7 @@ export function validateEvidence(evidence) {
   require(Number.isInteger(evidence?.test_execution?.exit_code), 'test_execution.exit_code');
   require(DIGEST.test(evidence?.test_execution?.artifact_digest ?? ''), 'test_execution.artifact_digest');
   require(isUri(evidence?.test_execution?.artifact_url), 'test_execution.artifact_url');
+  require(Boolean(evidence?.test_execution?.artifact_name), 'test_execution.artifact_name');
   require(JSON.stringify(evidence?.audio_outcomes?.expected_set) === JSON.stringify(OUTCOMES), 'audio_outcomes.expected_set');
   require(
     Array.isArray(evidence?.audio_outcomes?.observed_set)
@@ -75,9 +82,16 @@ const valid = {
   queue_item: 'V-001',
   repository: 'MirrorCartographer/mirror-cartographer-ui',
   commit_sha: 'a'.repeat(40),
+  trigger_provenance: {
+    event_name: 'push',
+    ref: 'refs/heads/main',
+    ref_name: 'main',
+    ref_type: 'branch'
+  },
   run_identity: {
     provider: 'github_actions',
     run_id: '42',
+    run_attempt: '1',
     started_at: '2026-07-12T16:30:00Z',
     completed_at: '2026-07-12T16:31:00Z',
     immutable_url: 'https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/42'
@@ -87,7 +101,8 @@ const valid = {
     command: 'node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs',
     exit_code: 0,
     artifact_digest: `sha256:${'b'.repeat(64)}`,
-    artifact_url: 'https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/42/artifacts/7'
+    artifact_url: 'https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/42/artifacts/7',
+    artifact_name: `vercel-evidence-contract-${'a'.repeat(40)}-1`
   },
   audio_outcomes: { expected_set: OUTCOMES, observed_set: OUTCOMES, complete: true },
   deployment_binding: {
@@ -126,4 +141,26 @@ test('rejects missing six-outcome set', () => {
   const invalid = structuredClone(valid);
   invalid.audio_outcomes.expected_set = OUTCOMES.slice(0, 5);
   assert.ok(validateEvidence(invalid).includes('audio_outcomes.expected_set'));
+});
+
+test('rejects evidence without trigger provenance', () => {
+  const invalid = structuredClone(valid);
+  delete invalid.trigger_provenance;
+  assert.deepEqual(
+    validateEvidence(invalid).filter((path) => path.startsWith('trigger_provenance.')),
+    [
+      'trigger_provenance.event_name',
+      'trigger_provenance.ref',
+      'trigger_provenance.ref_name',
+      'trigger_provenance.ref_type'
+    ]
+  );
+});
+
+test('rejects unsupported trigger event and malformed ref', () => {
+  const invalid = structuredClone(valid);
+  invalid.trigger_provenance.event_name = 'schedule';
+  invalid.trigger_provenance.ref = 'main';
+  assert.ok(validateEvidence(invalid).includes('trigger_provenance.event_name'));
+  assert.ok(validateEvidence(invalid).includes('trigger_provenance.ref'));
 });
