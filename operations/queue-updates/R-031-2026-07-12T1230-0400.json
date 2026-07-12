@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "R-031",
+  "owner": "frontier_research",
+  "priority": "research_support",
+  "state": "completed_slice",
+  "objective": "Integrate browser clock capture, clock evaluation, route evidence layers, and final evidence composition under one exact session, commit, and deployment identity.",
+  "queue_selection": {
+    "canonical_owned_item_found": false,
+    "basis": "operations/ACTIVE_QUEUE.json contains only V-001 owned by vercel_studio; this slice follows the recorded R-030 next action without mutating canonical queue state."
+  },
+  "comparison_against_prior_work": {
+    "prior_artifacts": [
+      "tools/frontier-research/audio-evidence-packet.mjs",
+      "tools/frontier-research/audio-clock-evidence.mjs",
+      "tools/frontier-research/audio-clock-sampler.mjs"
+    ],
+    "non_duplication": "R-028 composes supplied layers, R-029 evaluates clock samples, and R-030 acquires them. R-031 is the missing orchestration boundary that enforces shared provenance and blocks composition after unavailable or contradicted clock evidence."
+  },
+  "completed": [
+    "Added one session orchestrator for raw capture, clock evaluation, and composed evidence.",
+    "Bound sessionId, commitSha, and deploymentId to every evidence layer.",
+    "Failed closed before packet composition when getOutputTimestamp is unavailable or clock evidence is contradicted.",
+    "Rejected pre-existing layer identity mismatches.",
+    "Preserved render-observed but physically not-heard contradictions.",
+    "Added six deterministic tests and a primary-source evidence packet."
+  ],
+  "files": [
+    "tools/frontier-research/audio-session-orchestrator.mjs",
+    "tools/frontier-research/audio-session-orchestrator.test.mjs",
+    "operations/evidence/frontier-audio-session-orchestrator-2026-07-12T1230-0400.json",
+    "operations/queue-updates/R-031-2026-07-12T1230-0400.json"
+  ],
+  "commits": [
+    "c15f43faa86e40f46ca1db17a44a4ea45f5065e0",
+    "e24e858eaef16de88aa3f764eff7e1bd5c6419e4",
+    "37e7602af451f3a30c9510729b0226c769b40126"
+  ],
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-session-orchestrator.test.mjs",
+    "passed": 6,
+    "failed": 0
+  },
+  "limits": [
+    "No immutable deployed browser session was observed.",
+    "No physical iPhone Safari evidence was collected.",
+    "No microphone recording or acoustic correlation was performed.",
+    "Deterministic tests do not establish browser scheduling behavior."
+  ],
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 37e7602af451f3a30c9510729b0226c769b40126.",
+    "Revert e24e858eaef16de88aa3f764eff7e1bd5c6419e4.",
+    "Revert c15f43faa86e40f46ca1db17a44a4ea45f5065e0."
+  ],
+  "next_action": "Wire runAudioEvidenceSession into the exact-commit browser harness and emit one immutable JSON artifact containing rawCapture, clockEvaluation, and packet under the deployment session identity.",
+  "canonical_queue_mutated": false,
+  "specialist_registry_change": null
+}
