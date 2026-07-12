@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "update_id": "CM-011",
+  "recorded_at": "2026-07-12T17:45:00Z",
+  "owner": "continuity_mining",
+  "selection_basis": "No canonical continuity_mining queue item existed; selected the highest-priority unresolved continuity gap recorded by CM-010 without modifying another team's queue item.",
+  "memory_recovered": "A durable claim-transition contract is incomplete until valid, conflicting, superseding, and privacy-violating examples can be evaluated deterministically.",
+  "completed_slice": [
+    "Added a dependency-free Node validator for the current continuity claim-transition contract.",
+    "Added six deterministic fixtures covering valid refinement, private-content rejection, private hash requirement, valid contradiction, invalid contradiction, and invalid supersession.",
+    "Recorded provenance, uncertainty, privacy boundary, and falsification route."
+  ],
+  "claim_states": {
+    "observed": "The schema was committed but had no executable fixture harness in the inspected continuity artifacts.",
+    "inferred": "Document-only constraints can drift from implementation unless fixtures bind intended semantics.",
+    "proposed": "Add exact-commit CI execution and retain its result as evidence.",
+    "superseded": "The schema alone was sufficient enforcement.",
+    "unresolved": "Trusted runtime execution remains pending."
+  },
+  "canonical_queue_changed": false,
+  "registry_changed": false,
+  "artifacts": [
+    "tools/continuity/validate-claim-transition.mjs",
+    "tools/continuity/validate-claim-transition.test.mjs",
+    "operations/evidence/continuity-claim-transition-validator-2026-07-12.json"
+  ],
+  "privacy_boundary": "No raw private conversation or file-library content was stored; fixtures are synthetic.",
+  "next_action": "Run the fixture suite in exact-commit GitHub Actions, then compare validator behavior against a standards-compliant JSON Schema 2020-12 implementation."
+}
