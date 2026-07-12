@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T12:22:16-04:00",
+  "state": "in_progress_blocked",
+  "priority": "highest",
+  "completed_slice": "Created a machine-readable exact-commit runtime evidence contract joining trusted test execution, six-outcome audio evidence, immutable Vercel deployment identity, and physical iPhone Safari verification.",
+  "files": [
+    "operations/contracts/vercel-exact-commit-runtime-evidence.schema.json",
+    "operations/evidence/vercel-exact-commit-runtime-contract-2026-07-12T1222-0400.json"
+  ],
+  "commits": [
+    "5a21c132557b1655bbf3664db3181b019ac44943",
+    "884eec73eb71cad21d0f1b8b9faf12e521f0c444"
+  ],
+  "verification": {
+    "source_commit_verified": true,
+    "trusted_runtime_verified": false,
+    "deployment_verified": false,
+    "physical_device_verified": false,
+    "classification": "source_contract_only"
+  },
+  "acceptance_remaining": [
+    "Execute schema fixtures and the exact-commit audio workflow in trusted CI.",
+    "Inspect and retain the six-outcome artifact with an immutable digest and run URL.",
+    "After provider capacity returns, bind one successful immutable Vercel deployment to the same commit.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add passing and failing fixtures plus a validator command in an operations-only path, then execute it in trusted CI without attempting a Vercel application deployment.",
+  "canonical_state_modified": false,
+  "files_deleted": false,
+  "registry_changed": false
+}
