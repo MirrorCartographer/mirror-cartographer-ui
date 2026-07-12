@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-003",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T04:24:00Z",
+  "objective": "Prevent project-memory fragmentation by separating identity aliases from operational language modes.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits including CM-002 identity-description recovery",
+    "privacy-filtered current conversation correction concerning nicknames, abbreviations, misspellings, feel, and think"
+  ],
+  "artifact": "operations/continuity/language/mirror-cartographer-language-lexicon.json",
+  "verification": {
+    "method": "GitHub contents API commit",
+    "commit_sha": "440e56ca44e8e698a985fd9259548da6a932e32e",
+    "checks": [
+      "canonical project node is singular",
+      "surface forms retain provenance",
+      "misspellings require confidence-gated normalization",
+      "feel and think are preserved as distinct complementary operations",
+      "claim statuses include observed, inferred, proposed, superseded, and unresolved",
+      "artifact excludes raw private chat and sensitive data"
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "prior_frame": "Identity-description separation alone is sufficient for language continuity.",
+      "resolution": "Alias normalization is a separate layer required to prevent spelling, nickname, and abbreviation variants from fragmenting the identity graph."
+    },
+    {
+      "prior_frame": "Feel and think may be treated as stylistic synonyms.",
+      "resolution": "They are retained as distinct operational requests: integrated model-state reporting and explicit reasoning."
+    }
+  ],
+  "limits": [
+    "No complete historical alias inventory has yet been reconstructed.",
+    "The lexicon records proposed operational semantics; future evidence may refine them.",
+    "No peer execution is established by this evidence record."
+  ],
+  "privacy_boundary": "Project-level semantic abstractions only; no raw transcript, personal identifiers, medical information, credentials, or private narrative committed."
+}
