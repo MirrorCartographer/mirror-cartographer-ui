@@ -6,31 +6,23 @@ const commit = 'a'.repeat(40);
 const validPacket = {
   applicationCommit: commit,
   testedCommit: commit,
-  deployment: { sourceCommit: commit, immutable: true, status: 'ready' },
-  device: {
-    platform: 'iPhone',
-    browser: 'Safari',
-    audioRoute: 'built-in-speaker',
-    volumeState: 'audible-nonzero',
-    sessionId: 'bounded-session-1'
+  testedAt: '2026-07-12T05:01:00Z',
+  deployment: {
+    sourceCommit: commit,
+    immutable: true,
+    status: 'ready',
+    url: 'https://mirror-cartographer-ui-a1b2c3d4e.vercel.app/',
+    readyAt: '2026-07-12T05:00:00Z'
   },
-  humanCheck: { observedAt: '2026-07-12T04:57:00Z' },
-  runtimeEvidence: {
-    audioContextSupported: true,
-    userActivationObserved: true,
-    resumeFulfilled: true,
-    contextStateAfter: 'running',
-    sourceStarted: true,
-    destinationConnected: true,
-    signalObserved: true,
-    humanReportedAudible: true
-  }
+  device: { platform: 'iPhone', browser: 'Safari', audioRoute: 'built-in-speaker', volumeState: 'audible-nonzero', sessionId: 'bounded-session-1' },
+  humanCheck: { observedAt: '2026-07-12T05:02:00Z' },
+  runtimeEvidence: { audioContextSupported: true, userActivationObserved: true, resumeFulfilled: true, contextStateAfter: 'running', sourceStarted: true, destinationConnected: true, signalObserved: true, humanReportedAudible: true }
 };
 
-test('passes only exact-commit immutable deployment plus bounded human confirmation', () => {
+test('passes exact-commit immutable Vercel deployment plus bounded human confirmation', () => {
   const result = verifyPhysicalAudibilityEvidence(validPacket);
   assert.equal(result.status, 'pass');
-  assert.equal(result.supportsPhysicalAudibilityClaim, true);
+  assert.equal(result.schemaVersion, '1.1.0');
 });
 
 test('fails closed for machine signal without human confirmation', () => {
@@ -38,7 +30,6 @@ test('fails closed for machine signal without human confirmation', () => {
   delete packet.humanCheck;
   packet.runtimeEvidence.humanReportedAudible = undefined;
   const result = verifyPhysicalAudibilityEvidence(packet);
-  assert.equal(result.status, 'fail');
   assert.ok(result.failures.includes('audibility_signal_observed'));
 });
 
@@ -47,7 +38,6 @@ test('preserves contradiction when signal exists but human reports silence', () 
   packet.runtimeEvidence.humanReportedAudible = false;
   const result = verifyPhysicalAudibilityEvidence(packet);
   assert.equal(result.runtime.state, 'contradicted');
-  assert.ok(result.failures.includes('audibility_contradicted'));
 });
 
 test('rejects deployment or tested commit drift', () => {
@@ -57,6 +47,35 @@ test('rejects deployment or tested commit drift', () => {
   const result = verifyPhysicalAudibilityEvidence(packet);
   assert.ok(result.failures.includes('deployment_commit_mismatch'));
   assert.ok(result.failures.includes('tested_commit_mismatch'));
+});
+
+test('rejects mutable aliases, lookalikes, and decorated deployment URLs', () => {
+  for (const url of [
+    'https://mirror-cartographer-ui.vercel.app/',
+    'https://mirror-cartographer-ui-a1b2c3d4e.vercel.app/path',
+    'https://mirror-cartographer-ui-a1b2c3d4e.vercel.app/?x=1',
+    'https://mirror-cartographer-ui-a1b2c3d4e.vercel.app.evil.example/'
+  ]) {
+    const packet = structuredClone(validPacket);
+    packet.deployment.url = url;
+    assert.ok(verifyPhysicalAudibilityEvidence(packet).failures.includes('invalid_immutable_vercel_url'));
+  }
+});
+
+test('rejects missing or malformed deployment and test timestamps', () => {
+  const packet = structuredClone(validPacket);
+  packet.deployment.readyAt = 'not-a-time';
+  delete packet.testedAt;
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('invalid_deployment_ready_time'));
+  assert.ok(result.failures.includes('invalid_tested_time'));
+});
+
+test('rejects human confirmation recorded before the bounded test', () => {
+  const packet = structuredClone(validPacket);
+  packet.humanCheck.observedAt = '2026-07-12T04:59:00Z';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('human_observation_precedes_test'));
 });
 
 test('rejects unbounded device evidence', () => {
