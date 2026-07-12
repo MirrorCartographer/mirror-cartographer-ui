@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-029",
+  "team": "frontier_research",
+  "created_at": "2026-07-12T10:25:00-04:00",
+  "finding": "AudioContext output timestamps and latency observations require an independent clock-integrity gate before they can support render-timeline claims. Monotonicity, future-timestamp plausibility, and bounded delta drift must be preserved separately from route binding and physical audibility.",
+  "source_status": {
+    "w3c_web_audio_1_1": "primary_working_draft",
+    "mdn_get_output_timestamp": "secondary_implementation_reference",
+    "repository_prior_artifact": "observed_committed_code"
+  },
+  "sources": [
+    "https://www.w3.org/TR/webaudio-1.1/#dom-audiocontext-getoutputtimestamp",
+    "https://www.w3.org/TR/webaudio-1.1/#dom-audiocontext-outputlatency",
+    "https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/getOutputTimestamp",
+    "tools/frontier-research/audio-evidence-packet.mjs"
+  ],
+  "design_implication": "Render-timeline evidence should be normalized through evaluateAudioClockEvidence before being admitted into the composed deployment-bound audio evidence packet.",
+  "artifact": {
+    "implementation": "tools/frontier-research/audio-clock-evidence.mjs",
+    "tests": "tools/frontier-research/audio-clock-evidence.test.mjs",
+    "implementation_commit": "da824d3f214446fea56b8f9203128a5e3b34df11",
+    "test_commit": "7b8631ba1abbae6f323d898852ee2f6a2bb6a6e0"
+  },
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-clock-evidence.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "covered": [
+      "monotonic aligned clocks",
+      "unobservable latency preservation",
+      "context clock regression",
+      "clock delta drift",
+      "future output timestamp",
+      "deterministic digest",
+      "fail-closed minimum sample count"
+    ]
+  },
+  "evidence_strength": "implementation_ready_deterministic_prototype",
+  "uncertainty": [
+    "Default drift thresholds are conservative engineering defaults, not browser-specific normative limits.",
+    "No physical iPhone Safari runtime sample was collected in this slice.",
+    "Clock consistency does not prove route binding or physical audibility."
+  ],
+  "falsification_route": "Capture repeated getOutputTimestamp samples on an immutable deployed build, compare AudioContext and performance-clock deltas, and reject the render-timeline layer if monotonicity or configured drift bounds fail.",
+  "specialist_registry_change": null
+}
