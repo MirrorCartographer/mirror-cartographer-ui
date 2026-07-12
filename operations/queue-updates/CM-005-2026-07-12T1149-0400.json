@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-005",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T11:49:00-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "operations/ACTIVE_QUEUE.json contains no continuity_mining-owned item; canonical queue state was not overwritten.",
+  "completed_slice": "Introduced lifecycle dimensions into alias conflict detection, added a typed dimension registry, and added regression coverage separating compatible canonical-entity/contextual-alias coexistence from true same-dimension lifecycle conflicts.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "scripts/continuity-alias-occurrence-scanner.test.mjs",
+    "operations/queue-updates/CM-004-2026-07-12T1103-0400.json",
+    "recent repository commits"
+  ],
+  "files": [
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "scripts/continuity-alias-occurrence-scanner.test.mjs",
+    "operations/continuity/alias-lifecycle-dimensions-2026-07-12T1149-0400.json",
+    "operations/queue-updates/CM-005-2026-07-12T1149-0400.json"
+  ],
+  "commits": [
+    "e449f9d22e51db741d9263a04cf04be4296791b2",
+    "5c815f524f83e5d9d403191691a417e45d5e13e0",
+    "76a7e38194cedf4b3561110f19e46a081341548b"
+  ],
+  "verification": {
+    "result": "passed_local_reconstruction",
+    "route": "Executed byte-equivalent scanner logic through Node's test runner in a local temporary workspace.",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "limitation": "This is deterministic source-behavior evidence, not a trusted checkout or GitHub Actions run of the committed files."
+  },
+  "claim_states": {
+    "observed": "The prior scanner grouped lifecycle conflicts by normalized value alone.",
+    "inferred": "Canonical entity status and contextual alias status are independent lifecycle dimensions.",
+    "proposed": "Require explicit lifecycle_dimension in future typed alias registry versions while preserving scanner fallbacks for older artifacts.",
+    "superseded": "Different statuses attached to one normalized value always constitute contradiction.",
+    "unresolved": "Historical unresolved labels still require stronger decision-log evidence before lifecycle promotion."
+  },
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist"
+  ],
+  "registry_change": null,
+  "privacy_boundary": "Only public repository labels, paths, abstract dimensions, claim states, tests, and commit identifiers were persisted; no raw private conversation or sensitive personal material was included.",
+  "next_action": "Run the committed test file in a trusted checkout or GitHub Actions, then migrate future occurrence artifacts to schema_version 2 with explicit lifecycle_dimension values."
+}
