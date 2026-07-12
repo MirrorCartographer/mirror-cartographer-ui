@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-001",
+  "canonical_queue_state": "absent",
+  "working_state": "committed_unpromoted",
+  "completed_slice": "Hardened Cloudflare Pages evidence verification against insecure URLs and insertion-order-dependent digests.",
+  "specialists_used": [
+    "Cloudflare Deployment Engineer",
+    "Provenance Engineer",
+    "Evidence Auditor",
+    "Privacy Boundary Reviewer",
+    "Test Harness Engineer"
+  ],
+  "files": [
+    "cloudflare-static/verify-pages-evidence.mjs",
+    "cloudflare-static/verify-pages-evidence.test.mjs",
+    "operations/evidence/cloudflare-pages-evidence-integrity-2026-07-12T1030-0400.json"
+  ],
+  "commits": [
+    "dacd39947fdcad7135e75b9b667fa9889a3769da",
+    "3d8c11366da1a382aea028e8f07be56886b9aaf7",
+    "88f48b1a8604db75675bbd6f67779e9775c3980e"
+  ],
+  "acceptance_remaining": [
+    "Promote C-001 into operations/ACTIVE_QUEUE.json through the canonical authorization mechanism.",
+    "Execute the committed test suite in a trusted runtime and retain the result.",
+    "Configure protected Cloudflare credentials.",
+    "Generate and verify a real deployment evidence object with DNS, HTTP, identity, commit, and provenance bindings."
+  ],
+  "shared_state_policy": "Canonical queue and current-state files were not overwritten because no Cloudflare-owned item is authorized there.",
+  "specialist_registry_change": "none"
+}
