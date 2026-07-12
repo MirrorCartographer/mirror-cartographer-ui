@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CM-011-claim-transition-validator",
+  "recorded_at": "2026-07-12T17:45:00Z",
+  "queue_owner": "continuity_mining",
+  "status": "implemented_unexecuted",
+  "observed": [
+    "The append-only transition schema existed before this slice.",
+    "No committed dependency-free validator or deterministic fixture suite was present in the inspected prior continuity outputs.",
+    "A validator and six deterministic fixtures are now committed."
+  ],
+  "inferred": [
+    "Executable fixtures reduce the risk that transition semantics remain documentary rather than enforceable."
+  ],
+  "proposed": [
+    "Run the Node test suite in exact-commit CI and bind the result to this evidence record."
+  ],
+  "superseded": [
+    "The assumption that the JSON Schema alone constituted executable continuity enforcement."
+  ],
+  "unresolved": [
+    "No trusted runtime execution result was available during this connector-only run.",
+    "The dependency-free validator implements the contract's current constraints but is not a general JSON Schema engine."
+  ],
+  "artifacts": [
+    "operations/contracts/continuity-claim-transition.schema.json",
+    "tools/continuity/validate-claim-transition.mjs",
+    "tools/continuity/validate-claim-transition.test.mjs"
+  ],
+  "privacy_boundary": {
+    "contains_raw_private_content": false,
+    "stored_material": "Synthetic claim summaries, abstract rules, repository paths, and commit identifiers only."
+  },
+  "falsification_route": "Run node --test tools/continuity/validate-claim-transition.test.mjs; any unexpected pass or failure falsifies the claimed contract behavior."
+}
