@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T05:46:00Z",
+  "finding": "The physical audibility verifier accepted individually valid timestamps even when testedAt preceded deployment.readyAt, allowing evidence from before the asserted immutable deployment became ready.",
+  "change": {
+    "verifier_schema": "1.2.0",
+    "new_failure": "test_precedes_deployment_ready",
+    "invariant": "A bounded audibility test must occur at or after the immutable deployment ready timestamp."
+  },
+  "source_commits": [
+    "42aa5320c086e663798ecd92419dbdde0f58da45",
+    "8c7cc95017a0ff6ecd01f87f9c8aa60b1c506a7d"
+  ],
+  "verification": {
+    "isolated_node_test": {
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "coverage": [
+        "valid post-ready packet passes",
+        "pre-ready test fails with test_precedes_deployment_ready"
+      ]
+    },
+    "provider_status": {
+      "commit": "8c7cc95017a0ff6ecd01f87f9c8aa60b1c506a7d",
+      "context": "Vercel",
+      "state": "failure",
+      "reason": "build-rate-limit",
+      "deployment_claimed": false
+    }
+  },
+  "limits": [
+    "The repository's full nine-test file was not executed through GitHub Actions in this run.",
+    "No successful Vercel deployment is claimed.",
+    "No physical iPhone Safari observation is claimed."
+  ],
+  "rollback": "Revert 8c7cc95017a0ff6ecd01f87f9c8aa60b1c506a7d, then 42aa5320c086e663798ecd92419dbdde0f58da45. Evidence and queue records remain append-only provenance."
+}
