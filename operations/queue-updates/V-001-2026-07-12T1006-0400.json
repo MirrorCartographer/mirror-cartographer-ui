@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T10:06:00-04:00",
+  "prior_state": "in_progress_blocked",
+  "resulting_state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic fail-closed deployment admission gate that distinguishes operations-only sentinels from application-affecting changes and requires explicit exact-commit verification before one application deployment when capacity is available.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "specialist_registry_change": null,
+  "artifacts": [
+    {
+      "path": "tools/vercel-ops/deployment-admission.mjs",
+      "commit": "bc1ae521acdd9645d0826051d6f9f4f55f907cda"
+    },
+    {
+      "path": "tools/vercel-ops/deployment-admission.test.mjs",
+      "commit": "53cf1c7a56f8fb9245cfacb526a6bc88e1900da9"
+    },
+    {
+      "path": "operations/evidence/vercel-deployment-admission-2026-07-12T1006-0400.json",
+      "commit": "d7ef7d7b9ace1a6c950c04199b1a7b2bd407047c"
+    }
+  ],
+  "verification": {
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "reason": "Canonical state prohibits application deployment attempts while provider build capacity is exhausted."
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Wire the admission gate into the deployment caller; after capacity returns, run one operations-only sentinel and admit at most one exact-commit application verification.",
+  "shared_state_policy": "Additive queue update only; operations/ACTIVE_QUEUE.json and operations/CURRENT_STATE.json were not overwritten.",
+  "rollback": [
+    "Revert this queue-update commit",
+    "Revert evidence commit d7ef7d7b9ace1a6c950c04199b1a7b2bd407047c",
+    "Revert test commit 53cf1c7a56f8fb9245cfacb526a6bc88e1900da9",
+    "Revert implementation commit bc1ae521acdd9645d0826051d6f9f4f55f907cda"
+  ]
+}
