@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_blocked_transient_provider",
+  "completed_slice": "Add deterministic tamper-evidence to normalized Vercel deployment-status packets.",
+  "evidence_path": "operations/evidence/V-001-vercel-status-integrity-2026-07-11T2017-0400.json",
+  "blocking_condition": "Vercel reports build-rate-limit for the latest commit, so deployment and served commit identity remain unverified.",
+  "next_action": "Run npm run test:vercel-status-evidence in GitHub Actions or an authenticated checkout, then retry deployment after the provider rate window clears and verify the served immutable commit identity.",
+  "updated_at": "2026-07-12T00:17:48.000Z"
+}
