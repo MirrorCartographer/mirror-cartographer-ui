@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "status": "implemented_unverified",
+  "finding": "The workflow failed closed but early step failures prevented later independent checks from running, reducing diagnostic value.",
+  "implementation": {
+    "workflow_commit": "b1f42baffc30ca7fb02fa205d082d72bd7c9382d",
+    "verifier_commit": "73a834b7a81e14d656a4da16b61f244718b29112",
+    "test_commit": "de0c44c14fa5b44ecf3b11fed11c59d4c61f6a29",
+    "behavior": "All six diagnostic steps continue after failure; the final evidence verifier remains the hard acceptance gate.",
+    "required_outcomes": [
+      "dependencies",
+      "browser_install",
+      "source_contract",
+      "browser_regression",
+      "evidence_verifier",
+      "production_build"
+    ]
+  },
+  "verification": {
+    "source_commits_confirmed": true,
+    "workflow_run_observed": false,
+    "runtime_pass_claimed": false,
+    "deployment_claimed": false,
+    "physical_device_claimed": false
+  },
+  "rollback": [
+    "de0c44c14fa5b44ecf3b11fed11c59d4c61f6a29",
+    "73a834b7a81e14d656a4da16b61f244718b29112",
+    "b1f42baffc30ca7fb02fa205d082d72bd7c9382d"
+  ],
+  "limits": [
+    "No exact-commit GitHub Actions result was observable during this run.",
+    "No immutable successful Vercel deployment was observed.",
+    "No physical iPhone Safari speaker test was performed."
+  ]
+}
