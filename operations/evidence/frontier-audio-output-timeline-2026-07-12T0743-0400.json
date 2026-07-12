@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "slice_id": "R-025",
+  "recorded_at": "2026-07-12T07:43:37-04:00",
+  "finding": "Web Audio render progression can be evidenced independently from human audibility by validating multiple non-zero, advancing getOutputTimestamp samples. outputLatency is optional because Safari may not expose it.",
+  "primary_sources": [
+    {
+      "title": "Web Audio API 1.1 Editor's Draft",
+      "section": "AudioContext.getOutputTimestamp",
+      "status": "primary_working_draft",
+      "observations": [
+        "Zero contextTime and performanceTime indicate that no render block has been processed.",
+        "After rendering starts, currentTime exceeds contextTime.",
+        "currentTime minus contextTime is not a reliable latency estimate."
+      ]
+    },
+    {
+      "title": "Web Audio API 1.1 Editor's Draft",
+      "section": "AudioContext.outputLatency",
+      "status": "primary_working_draft",
+      "observations": [
+        "outputLatency estimates device-output latency.",
+        "The value may change with platform and output hardware.",
+        "Safari support is absent in the specification's compatibility data."
+      ]
+    }
+  ],
+  "artifacts": [
+    "tools/frontier-research/audio-output-timeline.mjs",
+    "tools/frontier-research/audio-output-timeline.test.mjs"
+  ],
+  "commits": [
+    "6dbe15d9789270d3623db87fe2103e77d1546b8d",
+    "fcc50081feb8c5d2ed042a9f9c2c67e5c3c6555b"
+  ],
+  "verification": {
+    "command": "node --test audio-output-timeline.test.mjs",
+    "result": "passed",
+    "tests": 6,
+    "failures": 0,
+    "coverage": [
+      "Safari-compatible timeline without outputLatency",
+      "latency-derived acoustic-time estimate when available",
+      "zero timestamp rejection",
+      "non-advancing timeline rejection",
+      "performance-clock incoherence rejection",
+      "invalid currentTime/contextTime relation rejection"
+    ]
+  },
+  "evidence_strength": "implementation_verified_against_primary_specification",
+  "epistemic_limits": [
+    "Render progression does not prove human audibility.",
+    "Estimated acoustic time is unavailable without outputLatency.",
+    "The 250 ms coherence threshold is an operational capture guard, not a Web Audio conformance requirement.",
+    "No physical iPhone observation or immutable Vercel deployment was available in this slice."
+  ],
+  "falsification_route": [
+    "Feed zero or non-advancing output timestamps and require rejection.",
+    "Provide a running context whose currentTime does not exceed contextTime and require rejection.",
+    "Compare a later physical-device attestation against the render classification; disagreement must remain represented rather than collapsed."
+  ]
+}
