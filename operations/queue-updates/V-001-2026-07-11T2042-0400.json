@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_delivery_contract_committed_provider_rate_limited",
+  "completed_slice": "Harden the public deployment identity endpoint with explicit JSON, no-store, and nosniff headers and wire a five-assertion source contract into local and pages-preview gates.",
+  "evidence_paths": [
+    "operations/evidence/V-001-identity-delivery-contract-2026-07-11T2042-0400.json"
+  ],
+  "source_commit": "0dd422b0ea3d046a80010a19d4a432093691ed23",
+  "remaining_condition": "Vercel remains build-rate-limited, so the public endpoint headers, body, and served immutable commit have not been observed.",
+  "next_action": "After provider success, fetch /.well-known/mirror-cartographer-deployment.json with response headers, require application/json, no-store and nosniff, then compare commit_sha with the successful deployment commit.",
+  "updated_at": "2026-07-12T00:42:00Z"
+}
