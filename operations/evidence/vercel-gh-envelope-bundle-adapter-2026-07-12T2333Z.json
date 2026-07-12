@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T23:33:00Z",
+  "slice": "Validated gh --paginate --slurp output is now converted directly into the independent enumeration accepted by the tamper-evident Vercel workflow evidence bundle.",
+  "files": [
+    "tools/vercel-studio/gh-envelope-bundle-adapter.mjs",
+    "tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs"
+  ],
+  "commits": [
+    "e4be08c22dfe2e1dce4e7f75fcf0e48d81dd5b72",
+    "0421ec4deffb30ace37b84be04d6a2be6a256dd9"
+  ],
+  "verification": {
+    "command": "node --test tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "verified bundle after envelope validation and reconciliation",
+      "non-exhaustive command rejection",
+      "provider-ceiling ambiguity rejection",
+      "pagination count mismatch rejection",
+      "primary-independent divergence rejection"
+    ]
+  },
+  "claims_not_made": [
+    "authenticated private-repository pagination executed",
+    "Vercel build capacity restored",
+    "deployment produced",
+    "physical iPhone Safari audio verified"
+  ],
+  "rollback": [
+    "Revert the queue projection commit.",
+    "Revert the evidence record commit.",
+    "Revert 0421ec4deffb30ace37b84be04d6a2be6a256dd9.",
+    "Revert e4be08c22dfe2e1dce4e7f75fcf0e48d81dd5b72."
+  ]
+}
