@@ -3,25 +3,19 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-const BUILD_RELEVANT_EXACT_PATHS = new Set([
-  'index.html',
-  'package.json',
-  'package-lock.json',
-  'vercel.json',
-]);
-
-const BUILD_RELEVANT_PREFIXES = [
-  'src/',
-  'public/',
-  'vite.config.',
-  'scripts/vercel-',
+const DEPLOYMENT_IRRELEVANT_PREFIXES = [
+  'operations/',
 ];
 
+export function isDeploymentIrrelevantPath(path) {
+  return DEPLOYMENT_IRRELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
 export function requiresVercelBuild(paths) {
-  return paths.some((path) =>
-    BUILD_RELEVANT_EXACT_PATHS.has(path)
-      || BUILD_RELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix)),
-  );
+  // Suppress a deployment only when the commit has at least one changed path
+  // and every changed path is inside an explicitly deployment-irrelevant area.
+  // Unknown paths fail closed and therefore receive a Vercel build.
+  return paths.length === 0 || paths.some((path) => !isDeploymentIrrelevantPath(path));
 }
 
 export function changedPaths() {
