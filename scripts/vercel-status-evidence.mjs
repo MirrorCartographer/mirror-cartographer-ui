@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import process from 'node:process';
 import { classifyVercelDeploymentStatus } from './vercel-deployment-status-classifier.mjs';
@@ -66,13 +67,37 @@ function selectVercelStatus(payload) {
   }) ?? null;
 }
 
+function stableSerialize(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stableSerialize(item)).join(',')}]`;
+  }
+  if (value && typeof value === 'object') {
+    const entries = Object.entries(value)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, item]) => `${JSON.stringify(key)}:${stableSerialize(item)}`);
+    return `{${entries.join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
+export function computeEvidenceDigest(evidence) {
+  const unsignedEvidence = { ...evidence };
+  delete unsignedEvidence.evidence_digest;
+  return `sha256:${createHash('sha256').update(stableSerialize(unsignedEvidence)).digest('hex')}`;
+}
+
+export function verifyEvidenceDigest(evidence) {
+  return typeof evidence?.evidence_digest === 'string'
+    && evidence.evidence_digest === computeEvidenceDigest(evidence);
+}
+
 export function buildVercelStatusEvidence(payload, options = {}) {
   const observedStatus = selectVercelStatus(payload);
   const expectedCommit = assertCommit(options.expectedCommit);
   const classification = classifyVercelDeploymentStatus(observedStatus ?? {});
 
-  return {
-    schema_version: 1,
+  const evidence = {
+    schema_version: 2,
     evidence_type: 'vercel_deployment_status',
     generated_at: options.generatedAt ?? new Date().toISOString(),
     expected_commit: expectedCommit,
@@ -91,6 +116,11 @@ export function buildVercelStatusEvidence(payload, options = {}) {
       served_commit_identity_verified: false,
     },
     next_action: classification.nextAction,
+  };
+
+  return {
+    ...evidence,
+    evidence_digest: computeEvidenceDigest(evidence),
   };
 }
 
