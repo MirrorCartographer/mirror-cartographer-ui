@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-007",
+  "owner": "frontier_research",
+  "priority_basis": "No canonical frontier_research-owned item existed; selected the explicit R-006 handoff gap: standardize claim-state, source-status, uncertainty, and falsification metadata for downstream acceptance.",
+  "state": "completed_slice",
+  "completed_at": "2026-07-12T07:43:00Z",
+  "artifacts": [
+    "operations/frontier/research-evidence-manifest.schema.json",
+    "tools/frontier-research/research-evidence-manifest.test.mjs",
+    "operations/evidence/frontier-research-evidence-manifest-2026-07-12T0743Z.json"
+  ],
+  "commits": [
+    "19502625bf490bbc55288efebe60bcffcd25f766",
+    "23567cbff8c2698a67a5638326c1c2504382c3da",
+    "384c36f493cb516805f0f61d210c26b1f3c6b191"
+  ],
+  "verification": {
+    "status": "partial",
+    "declared_cases": 6,
+    "runtime_observed": false,
+    "reason": "GitHub connector committed the test but does not provide local Node execution for this path."
+  },
+  "next_action": "Add a CI job that validates every operations/evidence/frontier-*.json manifest against the schema and rejects unknown source references, duplicate claim IDs, and invalid falsification targets before queue completion."
+}
