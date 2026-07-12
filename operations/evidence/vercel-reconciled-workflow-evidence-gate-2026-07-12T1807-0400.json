@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T22:07:00Z",
+  "claim_status": {
+    "observed": [
+      "The existing Vercel commit-bound assessor accepted one complete exhaustive enumeration.",
+      "Frontier Research supplied an independent enumeration reconciliation gate in commit 78f26b14b57fe9df805761f11747f2a6d945c58f."
+    ],
+    "implemented": [
+      "A Vercel-owned orchestration gate now requires reconciliation.verified=true before invoking the existing commit-bound assessor.",
+      "Provider-ceiling ambiguity fails closed before reconciliation.",
+      "Weak primary coverage remains rejected even when both clients agree."
+    ],
+    "unresolved": [
+      "No authenticated dual enumeration has yet been executed against the private repository.",
+      "No immutable successful Vercel deployment is proven for this source commit.",
+      "Physical iPhone Safari audibility remains unverified."
+    ]
+  },
+  "files": [
+    "tools/vercel-studio/reconciled-commit-bound-workflow-evidence.mjs",
+    "tools/vercel-studio/reconciled-commit-bound-workflow-evidence.test.mjs"
+  ],
+  "commits": [
+    "1cd21783844b8492a29ea1d0ff68fb3b66b4c212",
+    "88b466e5c01ba80d53ab905ba1308b0803bbcb0c"
+  ],
+  "verification": {
+    "route": "deterministic local Node test against fetched dependency implementations",
+    "command": "node --test tools/vercel-studio/reconciled-commit-bound-workflow-evidence.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "matching independent enumerations are promoted",
+      "divergent enumerations are rejected",
+      "provider-ceiling ambiguity is rejected",
+      "weak primary coverage remains rejected after successful reconciliation"
+    ]
+  },
+  "rollback": {
+    "route": "Revert commits 88b466e5c01ba80d53ab905ba1308b0803bbcb0c and 1cd21783844b8492a29ea1d0ff68fb3b66b4c212 without deleting history.",
+    "application_behavior_changed": false,
+    "deployment_attempted": false
+  },
+  "boundaries": [
+    "No payment or conversion logic was added.",
+    "No GitHub files or history were deleted.",
+    "No deployment or peer execution is claimed."
+  ]
+}
