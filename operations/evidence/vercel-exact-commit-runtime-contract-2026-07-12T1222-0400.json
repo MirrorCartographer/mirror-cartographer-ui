@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T12:22:16-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "artifact": "operations/contracts/vercel-exact-commit-runtime-evidence.schema.json",
+  "artifact_commit": "5a21c132557b1655bbf3664db3181b019ac44943",
+  "finding": "V-001 lacked one machine-readable contract that binds source checkout, trusted runtime execution, the six audio outcomes, immutable deployment identity, and physical iPhone Safari evidence to the same exact commit.",
+  "completed_slice": "Added a fail-closed JSON Schema that prevents fully_verified classification unless the checkout is clean and commit-matched, tests exit successfully, all six outcomes are present, the immutable deployment is successful and commit-matched, and physical-device verification passes.",
+  "evidence_strength": "committed source contract verified by GitHub contents retrieval",
+  "deployment_attempted": false,
+  "deployment_reason": "CURRENT_STATE forbids application deployment attempts while provider build capacity is exhausted.",
+  "privacy_boundary": "The contract stores run identifiers, commit hashes, result classifications, digests, and evidence URLs only; it does not require raw microphone recordings or personal device identifiers.",
+  "falsification_route": [
+    "Validate a fixture classified fully_verified while any required exact-commit, six-outcome, deployment, or device condition is false; schema validation must fail.",
+    "Validate a blocked or inconclusive fixture with null deployment or device evidence; schema validation may succeed only under a non-success classification.",
+    "Run the contract in trusted CI and preserve the validator output and artifact digest."
+  ],
+  "limits": [
+    "No trusted CI execution occurred in this slice.",
+    "No Vercel deployment was attempted.",
+    "No physical iPhone Safari test was performed.",
+    "JSON Schema format enforcement depends on the future validator configuration."
+  ],
+  "rollback": "Supersede through a new versioned schema and additive evidence record; do not delete this file or rewrite repository history."
+}
