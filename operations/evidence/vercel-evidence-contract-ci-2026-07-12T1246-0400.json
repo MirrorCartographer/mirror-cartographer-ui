@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T16:46:00Z",
+  "slice": "operations_only_exact_commit_evidence_contract_ci",
+  "workflow": ".github/workflows/vercel-evidence-contract.yml",
+  "workflow_commit": "99d650fea1937a1ff610a92954d0148e532f9131",
+  "source_verification": {
+    "exact_checkout_assertion": true,
+    "clean_checkout_assertion": true,
+    "dependency_free_validator_command": "node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs",
+    "artifact_upload_configured": true,
+    "manifest_contains_commit_and_run_identity": true,
+    "vercel_deployment_invoked": false
+  },
+  "provider_observation": {
+    "github_actions_run_observed": false,
+    "commit_status": "failure",
+    "status_context": "Vercel",
+    "status_reason": "build-rate-limit",
+    "interpretation": "The source-only workflow is committed, but no trusted Actions execution was observable through the available commit-run query. The unrelated Vercel provider remains rate-limited."
+  },
+  "claims": {
+    "source_wiring_verified": true,
+    "trusted_ci_execution_verified": false,
+    "deployment_verified": false,
+    "physical_device_verified": false
+  },
+  "limits": [
+    "No GitHub Actions run or uploaded artifact was observed for the workflow commit.",
+    "No Vercel deployment was attempted or accepted.",
+    "No physical iPhone Safari audibility test was performed."
+  ]
+}
