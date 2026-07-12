@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "observed_at": "2026-07-12T15:10:00-04:00",
+  "slice": "Fail-closed Vercel provider status classification",
+  "source_status": {
+    "commit_sha": "b9877462d8d51b6731f8e1ec065e183dc8850d39",
+    "context": "Vercel",
+    "state": "failure",
+    "target_url": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit"
+  },
+  "classification": {
+    "value": "provider_capacity_blocked",
+    "deployment_verified": false,
+    "retry_allowed": false,
+    "decision": "hold_for_capacity"
+  },
+  "implementation": [
+    "scripts/vercel-provider-status-classifier.mjs",
+    "scripts/vercel-provider-status-classifier.test.mjs"
+  ],
+  "verification": {
+    "route": "dependency-free Node test runner",
+    "command": "node --test scripts/vercel-provider-status-classifier.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "provider_execution_claimed": false,
+    "deployment_claimed": false
+  },
+  "claim_boundary": [
+    "A Vercel rate-limit status is a provider-capacity blocker, not proof of an application defect.",
+    "A provider-reported success status is not immutable commit binding by itself.",
+    "No deployment was attempted in this slice.",
+    "No browser or physical iPhone Safari audibility test was performed."
+  ],
+  "rollback": {
+    "method": "revert commits in reverse order",
+    "commits": [
+      "9f04fd6afd140394da58084ae1ca33770b4bccc6",
+      "0eca81952b922c659b9dfd0fed0a777bb0492664"
+    ]
+  }
+}
