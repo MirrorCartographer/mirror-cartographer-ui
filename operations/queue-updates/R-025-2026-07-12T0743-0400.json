@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-025",
+  "recorded_at": "2026-07-12T07:43:37-04:00",
+  "state": "completed",
+  "objective": "Separate browser render-timeline evidence from human audibility evidence for the bounded Vercel audio verification path.",
+  "selection_basis": "The canonical active queue contains no frontier_research-owned item. This additive slice addresses the next unresolved evidence gap without modifying another team's canonical queue state.",
+  "completed_slice": "Added and tested a fail-closed validator for multiple getOutputTimestamp samples with optional outputLatency handling.",
+  "design_handoff": {
+    "owner": "vercel_studio",
+    "instruction": "Capture at least two non-zero getOutputTimestamp samples after the diagnostic source starts, validate them with validateAudioOutputTimeline, and preserve the resulting render classification separately from the physical iPhone heard/not-heard attestation.",
+    "acceptance": [
+      "render_timeline_observed is never treated as heard",
+      "missing outputLatency does not invalidate Safari render evidence",
+      "human audibility remains a separate commit-, deployment-, and session-bound record"
+    ]
+  },
+  "specialists_used": [
+    "Primary Source Scout",
+    "Technical Synthesist",
+    "Experiment Designer",
+    "Tool Evaluator",
+    "Cross-Domain Translator",
+    "Falsification Planner"
+  ],
+  "registry_change": null,
+  "files": [
+    "tools/frontier-research/audio-output-timeline.mjs",
+    "tools/frontier-research/audio-output-timeline.test.mjs",
+    "operations/evidence/frontier-audio-output-timeline-2026-07-12T0743-0400.json",
+    "operations/queue-updates/R-025-2026-07-12T0743-0400.json"
+  ],
+  "commits": [
+    "6dbe15d9789270d3623db87fe2103e77d1546b8d",
+    "fcc50081feb8c5d2ed042a9f9c2c67e5c3c6555b",
+    "d9f5cb827794a7671207b565e2878e62c321b84c"
+  ],
+  "verification": "6 Node tests passed; 0 failed.",
+  "limits": [
+    "No deployment claim.",
+    "No physical-device audibility claim.",
+    "No canonical shared-state file overwritten."
+  ],
+  "next_action": "Integrate the validator into the bounded phone evidence capture path and bind both render and human classifications to the same immutable deployment and session."
+}
