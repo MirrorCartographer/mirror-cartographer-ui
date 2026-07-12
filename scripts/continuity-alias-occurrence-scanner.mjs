@@ -2,6 +2,16 @@ import { createHash } from 'node:crypto';
 
 const CLAIM_STATES = new Set(['observed', 'inferred', 'proposed', 'superseded', 'unresolved']);
 const PRIVATE_KEYS = new Set(['raw_text', 'quote', 'excerpt', 'content', 'body', 'message']);
+const DEFAULT_DIMENSION_BY_TYPE = new Map([
+  ['project_name', 'canonical_entity'],
+  ['abbreviation', 'contextual_alias'],
+  ['repository_name', 'implementation_container'],
+  ['migration_surface', 'implementation_container'],
+  ['framework_or_repository_candidate', 'implementation_container'],
+  ['visual_branch_or_mode_label', 'derived_surface'],
+  ['document_series', 'document_family'],
+  ['derived_compendium_or_module_family', 'derived_module']
+]);
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -9,6 +19,13 @@ function stable(value) {
     return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
   }
   return value;
+}
+
+function lifecycleDimension(alias, occurrence) {
+  return occurrence.lifecycle_dimension
+    ?? alias?.lifecycle_dimension
+    ?? DEFAULT_DIMENSION_BY_TYPE.get(alias?.type)
+    ?? 'unresolved_dimension';
 }
 
 export function scanAliasOccurrences(registry, occurrences) {
@@ -33,6 +50,7 @@ export function scanAliasOccurrences(registry, occurrences) {
       raw_value: occurrence.raw_value,
       normalized_value: alias?.normalized_value ?? occurrence.raw_value,
       entity_type: alias?.type ?? 'unresolved_alias',
+      lifecycle_dimension: lifecycleDimension(alias, occurrence),
       lifecycle_status: occurrence.lifecycle_status ?? alias?.status ?? 'unresolved',
       confidence: occurrence.confidence ?? alias?.confidence ?? 'low',
       claim_state: occurrence.claim_state,
@@ -48,13 +66,17 @@ export function scanAliasOccurrences(registry, occurrences) {
 
   const statuses = new Map();
   for (const row of rows) {
-    if (!statuses.has(row.normalized_value)) statuses.set(row.normalized_value, new Set());
-    statuses.get(row.normalized_value).add(row.lifecycle_status);
+    const key = `${row.normalized_value}\u0000${row.lifecycle_dimension}`;
+    if (!statuses.has(key)) statuses.set(key, new Set());
+    statuses.get(key).add(row.lifecycle_status);
   }
-  for (const row of rows) row.conflict = statuses.get(row.normalized_value).size > 1;
+  for (const row of rows) {
+    const key = `${row.normalized_value}\u0000${row.lifecycle_dimension}`;
+    row.conflict = statuses.get(key).size > 1;
+  }
 
   rows.sort((a, b) => JSON.stringify(stable(a)).localeCompare(JSON.stringify(stable(b))));
-  const canonical = stable({ schema_version: 1, rows });
+  const canonical = stable({ schema_version: 2, rows });
   return {
     ...canonical,
     digest_sha256: createHash('sha256').update(JSON.stringify(canonical)).digest('hex')
