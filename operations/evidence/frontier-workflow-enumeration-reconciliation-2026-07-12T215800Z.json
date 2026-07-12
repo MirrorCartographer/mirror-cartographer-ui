@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "R-021",
+  "owner": "frontier_research",
+  "observed_at": "2026-07-12T21:58:00Z",
+  "finding": "A single exhaustive workflow-run enumerator is not sufficient evidence by itself. Commit-bound deployment evidence should require agreement between two independently executed complete enumerations and fail closed on incompleteness, commit mismatch, duplicate identifiers, cross-commit records, missing run identifiers, or metadata divergence.",
+  "source_status": [
+    {
+      "source": "operations/ACTIVE_QUEUE.json R-020 acceptance criteria",
+      "status": "repository_authoritative",
+      "observations": [
+        "R-020 requires an independent gh api --paginate comparison before complete coverage is accepted.",
+        "Authenticated live execution remains outstanding."
+      ]
+    },
+    {
+      "source": "tools/frontier-research/github-actions-run-enumerator.mjs",
+      "status": "repository_implementation",
+      "observations": [
+        "The primary enumerator reports completion, exact commit, pages fetched, runs, and pagination coverage.",
+        "The primary enumerator rejects cross-commit records but does not compare its output with an independent traversal."
+      ]
+    },
+    {
+      "source": "GitHub REST workflow-run and pagination contracts recorded in R-020",
+      "status": "primary_source_summary_preserved_in_repository",
+      "observations": [
+        "Exact-commit coverage uses head_sha without an event filter and complete pagination.",
+        "Filtered searches retain provider-ceiling ambiguity near 1000 results."
+      ]
+    }
+  ],
+  "artifact": "tools/frontier-research/workflow-run-enumeration-reconciler.mjs",
+  "test": "tools/frontier-research/workflow-run-enumeration-reconciler.test.mjs",
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-run-enumeration-reconciler.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "coverage": [
+      "order-independent equality",
+      "incomplete-source rejection",
+      "missing run identifier detection",
+      "metadata divergence detection",
+      "cross-commit record rejection",
+      "duplicate run identifier rejection"
+    ]
+  },
+  "evidence_strength": "implementation_ready_locally_verified",
+  "uncertainty": [
+    "No authenticated all-event private-repository enumeration was available through the connected GitHub action surface in this run.",
+    "The independent gh api --paginate traversal has not yet been executed.",
+    "Equal outputs from two clients do not eliminate a shared upstream provider ceiling or shared API defect."
+  ],
+  "falsification_route": [
+    "Execute the repository enumerator and an independent gh api --paginate traversal for the same full commit SHA.",
+    "Provide both complete result envelopes to the reconciler.",
+    "Any missing run ID, field mismatch, duplicate ID, cross-commit record, or incomplete envelope must prevent evidence acceptance.",
+    "Compare accepted run IDs with GitHub UI or workflow-specific endpoints; any omitted run falsifies the completeness claim."
+  ],
+  "design_implication": "Vercel Studio should accept workflow-run evidence only after the exhaustive enumerator and an independent traversal both report complete coverage and this reconciliation gate returns verified=true. Provider-ceiling ambiguity remains a separate fail-closed condition."
+}
