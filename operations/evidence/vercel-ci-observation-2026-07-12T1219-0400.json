@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T12:19:32-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "commit_inspected": "8950a4d7996dd4ed928201e2c4ee3842ba76807c",
+  "commit_message": "ops(vercel): record output confinement slice",
+  "workflow_observation": {
+    "associated_pull_request_workflow_runs": [],
+    "runtime_test_evidence_available": false,
+    "deployment_evidence_available": false
+  },
+  "classification": "unverified_source_commit",
+  "evidence_strength": "direct GitHub API observation",
+  "limits": [
+    "The workflow-run endpoint currently exposes pull-request-triggered runs only.",
+    "Absence of returned runs does not prove no workflow of any trigger type executed.",
+    "No Vercel deployment attempt was made because CURRENT_STATE forbids application deployment while provider capacity is exhausted."
+  ],
+  "fail_closed_effect": "Do not upgrade the committed test contract to runtime-verified and do not change V-001 completion state.",
+  "rollback": "Delete only through a future additive supersession record; repository history must remain intact."
+}
