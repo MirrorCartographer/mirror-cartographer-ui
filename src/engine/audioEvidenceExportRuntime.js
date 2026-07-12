@@ -9,28 +9,46 @@ const SAFE_KEYS = [
   'render',
 ];
 
+const ROUTING_SAFE_KEYS = [
+  'status',
+  'browserConfirmed',
+  'physicalOutputProven',
+  'sinkId',
+  'sampledAt',
+  'evidenceLimit',
+];
+
 function cloneJson(value) {
   return value == null ? null : JSON.parse(JSON.stringify(value));
+}
+
+function selectSafeKeys(source, keys) {
+  if (!source || typeof source !== 'object') return null;
+  const selected = {};
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) selected[key] = cloneJson(source[key]);
+  }
+  return selected;
 }
 
 export function buildAudioRuntimeEvidencePacket(target = globalThis) {
   const source = target.__MC_AUDIBILITY_EVIDENCE__;
   if (!source || typeof source !== 'object') return null;
 
-  const evidence = {};
-  for (const key of SAFE_KEYS) {
-    if (Object.prototype.hasOwnProperty.call(source, key)) evidence[key] = cloneJson(source[key]);
-  }
+  const evidence = selectSafeKeys(source, SAFE_KEYS);
+  const routing = selectSafeKeys(target.__MC_AUDIO_ROUTING__, ROUTING_SAFE_KEYS);
 
   return {
-    schemaVersion: '1.0.0',
+    schemaVersion: '1.1.0',
     kind: 'mirror-cartographer-audio-runtime-evidence',
     capturedAt: new Date().toISOString(),
     deployment: cloneJson(target.__MC_DEPLOYMENT_IDENTITY__ ?? null),
     evidence,
+    routing,
     limits: [
       'Human audibility is self-reported.',
       'Browser render evidence does not prove speaker output.',
+      'Browser routing state does not prove speaker emission or listener perception.',
       'Deployment identity must be verified independently.',
     ],
   };
