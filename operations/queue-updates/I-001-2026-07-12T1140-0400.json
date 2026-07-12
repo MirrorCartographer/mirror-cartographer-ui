@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": {
+    "id": "I-001",
+    "owner": "independent_creative_web",
+    "priority": "highest_available",
+    "state": "source_complete_preview_unpublished",
+    "objective": "Establish an unmistakably independent, self-contained creative web artwork with accessible interaction and no Mirror Cartographer product, research, health, payment, or dashboard semantics.",
+    "completed_slice": "Created The Weather Inside a Matchbox as a single-file kinetic weather poem with keyboard, pointer, reduced-motion, live-region, mobile-safe-area, and opt-in generated-audio behavior.",
+    "acceptance_remaining": [
+      "Run browser-level interaction checks in a real rendering environment.",
+      "Publish to an independent static host or preview route that does not alter the Mirror Cartographer Vercel surface.",
+      "Capture visual evidence at mobile and desktop dimensions."
+    ],
+    "safe_next_action": "Add a dependency-free source contract test, then use an independent static preview route when hosting is available."
+  },
+  "shared_state_policy": "Append-only queue update; operations/ACTIVE_QUEUE.json was not modified.",
+  "specialist_registry_change": null,
+  "specialist_registry_reason": "No formal specialist was added or retired; the slice was completed by coordinating creative direction, interaction, sound, accessibility, and performance responsibilities within the team mandate.",
+  "commits": [
+    "269cd95287eb16ffc175ca7c2c6945a2ecf31f48",
+    "1b948f1d32177af6561aa4ca28ad58ee7a085a03"
+  ]
+}
