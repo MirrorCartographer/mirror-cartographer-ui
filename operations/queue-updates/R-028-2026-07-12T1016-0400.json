@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-028",
+  "owner": "frontier_research",
+  "priority": "research_supporting_highest_delivery_item",
+  "state": "completed",
+  "objective": "Compose activation, runtime, render-timeline, output-route, device-change, and physical audibility evidence into one deployment-bound packet without collapsing distinct claims or hiding contradictions.",
+  "selected_because": "The canonical queue contains no frontier_research-owned item. The immediately preceding Frontier slice R-027 named this composition layer as its next action, and the work directly supports V-001 without modifying canonical ownership.",
+  "completed_slice": [
+    "Inspected current W3C Web Audio and Audio Output Devices primary sources.",
+    "Implemented strict commit, deployment, and session identity binding across six evidence layers.",
+    "Preserved render/not-heard, route-rejected/rendering, and device-change-without-rebind contradictions as explicit outputs.",
+    "Added deterministic SHA-256 evidence digests and seven boundary tests."
+  ],
+  "files": [
+    "tools/frontier-research/audio-evidence-packet.mjs",
+    "tools/frontier-research/audio-evidence-packet.test.mjs",
+    "operations/evidence/frontier-audio-evidence-packet-2026-07-12T1016-0400.json",
+    "operations/queue-updates/R-028-2026-07-12T1016-0400.json"
+  ],
+  "commits": [
+    "1efaf778b906b5a98ebfe45688e65767c186cded",
+    "69c356aeb15ef41f5872709a5a6d936fa9b300a7",
+    "13bd67640125097156b655c6e183e219aefa3b82"
+  ],
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-evidence-packet.test.mjs",
+    "passed": 7,
+    "failed": 0
+  },
+  "registry_change": null,
+  "canonical_state_modified": false,
+  "limits": [
+    "No immutable Vercel deployment was available for live packet binding.",
+    "No physical iPhone Safari run was performed.",
+    "Existing evidence adapters are not yet wired into the new packet composer."
+  ],
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert the evidence-record commit 13bd67640125097156b655c6e183e219aefa3b82.",
+    "Revert the test commit 69c356aeb15ef41f5872709a5a6d936fa9b300a7.",
+    "Revert the implementation commit 1efaf778b906b5a98ebfe45688e65767c186cded."
+  ],
+  "next_action": "Add adapters that normalize the existing Frontier and Vercel evidence artifacts into this packet schema, then execute the packet against one immutable deployment and one bounded physical iPhone Safari session."
+}
