@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T11:45:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Changed-path evidence output is now confined to .json files inside operations/, preventing arbitrary repository or filesystem writes through --output.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "tools/vercel-ops/changed-paths-from-git.mjs",
+    "tools/vercel-ops/changed-paths-from-git.test.mjs",
+    "operations/evidence/vercel-output-confinement-2026-07-12T1145-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1145-0400.json"
+  ],
+  "commits": [
+    "d88316468a691ce68156bf05420523105699cd59",
+    "117083a572ae56dfa00bd9f45fd8fe2c3b0613a1",
+    "0bbd9cb53ae9e875bf33157e1552f679298a2e49"
+  ],
+  "evidence": "operations/evidence/vercel-output-confinement-2026-07-12T1145-0400.json",
+  "verification_state": {
+    "source": "verified_on_default_branch",
+    "test_contract": "committed_not_runtime_observed",
+    "deployment": "not_attempted_provider_capacity_blocked"
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the committed node:test file through GitHub Actions or a trusted checkout; after provider capacity returns, perform one operations-only sentinel before any application deployment.",
+  "canonical_files_overwritten": false
+}
