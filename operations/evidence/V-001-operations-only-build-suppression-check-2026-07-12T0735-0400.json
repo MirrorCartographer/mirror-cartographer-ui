@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "slice": "operations_only_build_suppression_observation",
+  "status": "completed_blocked",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Deployment Verifier",
+    "Test Harness Engineer",
+    "Rollback Engineer"
+  ],
+  "subject_commit": "aee398dbff8fba4dcad91d439d96de9f305c91c8",
+  "subject_change_scope": [
+    "operations/queue-updates/V-001-2026-07-11T2321-0400.json"
+  ],
+  "expected_behavior": "Vercel ignoreCommand classifies the operations-only commit as non-build-relevant and does not consume a deployment build.",
+  "observed_behavior": {
+    "context": "Vercel",
+    "state": "failure",
+    "target": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit",
+    "interpretation": "The commit reached a Vercel build-rate-limit failure. This does not prove that ignoreCommand executed, and therefore does not satisfy build-suppression acceptance."
+  },
+  "workflow_observation": {
+    "tested_filter_commit": "98d3fd9c0f30a623fcd225993a336dfe5fc0e949",
+    "workflow_runs_returned": 0,
+    "exact_commit_ci_pass_claimed": false
+  },
+  "acceptance_effect": {
+    "operations_only_build_suppression": "not_proven",
+    "immutable_successful_vercel_deployment": "blocked_by_build_rate_limit",
+    "exact_commit_audio_routing_ci": "not_observed",
+    "physical_iphone_audibility": "external_verification_required"
+  },
+  "claims_not_made": [
+    "Vercel ignored the operations-only commit",
+    "The tested application commit deployed successfully",
+    "GitHub Actions passed for the tested application commit",
+    "Physical iPhone Safari emitted audible sound"
+  ],
+  "reversibility": {
+    "production_runtime_modified": false,
+    "rollback": "Revert this evidence record and its paired queue update. No application source or deployment configuration changed in this slice."
+  },
+  "privacy_and_scope": {
+    "payments_added": false,
+    "conversion_logic_added": false,
+    "private_user_material_published": false
+  },
+  "next_action": "After Vercel build capacity resets or is increased, push one operations-only sentinel commit and verify that its Vercel status is skipped/ignored rather than failed. Separately dispatch the commit-bound audio-routing workflow and inspect its exact artifact before deployment acceptance.",
+  "recorded_at": "2026-07-12T11:35:00Z"
+}
