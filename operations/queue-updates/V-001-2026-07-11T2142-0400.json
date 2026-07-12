@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_sticky_audio_routing_confirmation_committed",
+  "completed_slice": "Prevent confirmed browser audio-routing evidence from regressing to selected-unverified during later diagnostic refreshes by retaining sinkchange confirmation per AudioContext instance.",
+  "specialists_used": [
+    "reliability_engineer",
+    "audio_systems_engineer",
+    "test_harness_engineer",
+    "deployment_verifier"
+  ],
+  "evidence_paths": [
+    "operations/evidence/V-001-sticky-audio-routing-confirmation-2026-07-11T2142-0400.json"
+  ],
+  "source_commits": [
+    "a47b57a87590d58dbf17fe15542c364b5d2cfefc",
+    "7720ea747378a7f5f45dfa0f2a8ef112f9a78be0",
+    "52574de76d47284f30e8b94faf998c4789f613d1"
+  ],
+  "verification": "Four isolated Node.js contract assertions passed; Vercel delivery remains unverified because the runtime environment could not resolve the public hostname.",
+  "remaining_condition": "Run the repository audio-routing contract and full local gate in CI, then verify the deployed immutable commit and exercise a real sinkchange followed by a diagnostic refresh in a supported browser.",
+  "rollback": "Revert the queue/evidence commits, then revert 7720ea747378a7f5f45dfa0f2a8ef112f9a78be0 and a47b57a87590d58dbf17fe15542c364b5d2cfefc in reverse order.",
+  "next_action": "Add a browser-level regression test that dispatches sinkchange, triggers the diagnostic control, and asserts window.__MC_AUDIO_ROUTING__.status remains selected-confirmed for the same context.",
+  "updated_at": "2026-07-12T01:42:00Z"
+}
