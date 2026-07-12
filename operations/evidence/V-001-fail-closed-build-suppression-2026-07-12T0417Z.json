@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T04:17:00Z",
+  "completed_slice": "Replace the deployment-relevant allowlist with an explicit operations-only suppression boundary so unknown, empty, mixed, and application changes fail closed into a Vercel build.",
+  "specialists": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "scripts/vercel-ignore-build.mjs",
+    "scripts/vercel-ignore-build.test.mjs"
+  ],
+  "commits": [
+    "4b5daa6ad2e9531de2db722a361be429d22be8fe",
+    "fc4a4919130da91a5f0c852d77c7dbf495ce39da"
+  ],
+  "source_verification": {
+    "status": "reviewed",
+    "claims": [
+      "Only paths under operations/ are now eligible for build suppression.",
+      "Unknown root and nested configuration paths require a build.",
+      "Mixed operations and application commits require a build.",
+      "An empty changed-path set requires a build."
+    ],
+    "test_execution": "not observed through the available connector"
+  },
+  "provider_evidence": {
+    "commit": "fc4a4919130da91a5f0c852d77c7dbf495ce39da",
+    "vercel_status": "failure",
+    "target": "Vercel build-rate-limit upgrade route",
+    "interpretation": "The provider remains rate-limited; this is not deployment success and does not validate runtime behavior."
+  },
+  "rollback": "Revert fc4a4919130da91a5f0c852d77c7dbf495ce39da, then 4b5daa6ad2e9531de2db722a361be429d22be8fe. No production assets or history are deleted.",
+  "limits": [
+    "No successful Vercel deployment was observed.",
+    "No exact-commit test workflow was observed.",
+    "Physical iPhone Safari audibility remains unverified."
+  ]
+}
