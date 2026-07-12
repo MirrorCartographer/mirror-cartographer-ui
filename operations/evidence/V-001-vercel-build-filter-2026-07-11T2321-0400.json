@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "Prevent evidence-only and queue-only commits from consuming Vercel builds while failing open for unknown git state.",
+  "source_commits": [
+    "4e36e0c6191933bc5f45e7c90fafde9f6d6568f3",
+    "0ca99ba662993381c3b49660bea34e8ff37cea26",
+    "140d9565154a6141f488415a33c4498d119ac552",
+    "98d3fd9c0f30a623fcd225993a336dfe5fc0e949"
+  ],
+  "verification": {
+    "method": "isolated Node.js test execution against byte-identical script and test content",
+    "command": "node --test scripts/vercel-ignore-build.test.mjs",
+    "result": "passed",
+    "tests": 5,
+    "covered": [
+      "operations-only commits are ignored",
+      "src changes deploy",
+      "public asset changes deploy",
+      "dependency and Vercel configuration changes deploy",
+      "changes to the filter itself deploy"
+    ]
+  },
+  "runtime_evidence": {
+    "prior_queue_head_commit": "4945880b09180135f7448381e7e7c469c067dc0b",
+    "github_actions_runs_observed": 0,
+    "vercel_status": "failure",
+    "vercel_status_reason": "build-rate-limit",
+    "new_exact_commit_deployment": "not yet observed"
+  },
+  "safety": {
+    "unknown_git_state": "proceed with build",
+    "payment_logic_added": false,
+    "files_deleted": false,
+    "history_rewritten": false
+  },
+  "limits": [
+    "The Vercel project must honor vercel.json ignoreCommand for the Git integration.",
+    "An ignored evidence-only commit has not yet been observed after this change.",
+    "This slice does not prove a successful immutable production deployment or physical iPhone Safari audibility."
+  ]
+}
