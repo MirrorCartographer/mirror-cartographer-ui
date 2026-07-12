@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-001",
+  "team": "continuity_mining",
+  "recorded_at": "2026-07-12T10:15:18-04:00",
+  "priority_basis": "No continuity_mining item exists in ACTIVE_QUEUE; repository history shows cross-team queue identifiers absent from the canonical queue, creating the highest-priority continuity and authority gap.",
+  "prior_state": "unlisted",
+  "resulting_state": "completed_slice_pending_canonical_reconciliation",
+  "completed_slice": "Recovered and formalized the distinction between canonical delivery authority and additive cross-team work evidence, preserving observed, inferred, proposed, superseded, and unresolved claims without overwriting shared state.",
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Provenance Engineer",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist"
+  ],
+  "specialist_registry_change": null,
+  "artifact": {
+    "path": "operations/continuity/queue-authority-map-2026-07-12T1015-0400.json",
+    "commit": "0dd04e255efb600aa6e4f6c49977af5223626b84",
+    "evidence_digest": "9761bcf5c4e0166b8cc0c43b2abf74fefa7dc8a31dad268c03085b013e2bdce3"
+  },
+  "verification": {
+    "json_parse": "passed",
+    "source_shas_bound": 4,
+    "commit_sources_bound": 3,
+    "claim_statuses_present": ["observed", "inferred", "proposed", "superseded", "unresolved"],
+    "canonical_files_overwritten": false,
+    "files_deleted": false
+  },
+  "contradiction_resolved": "ACTIVE_QUEUE remains authoritative for current delivery gating but cannot be treated as a complete cross-team work ledger while committed C-001 and R-027 outputs are absent from it.",
+  "privacy_boundary": "Only repository operational metadata and governance inferences were persisted; private chat and personal-domain content were excluded.",
+  "shared_state_policy": "Additive queue update only; operations/CURRENT_STATE.json, operations/ACTIVE_QUEUE.json, operations/SPECIALIST_REGISTRY.json, and operations/TRIGGER_REQUESTS.json were not overwritten.",
+  "rollback": [
+    "Revert this queue-update commit",
+    "Revert continuity artifact commit 0dd04e255efb600aa6e4f6c49977af5223626b84"
+  ],
+  "next_action": "Implement a deterministic derived queue-index generator over operations/queue-updates/* that reports conflicts and provenance without mutating ACTIVE_QUEUE."
+}
