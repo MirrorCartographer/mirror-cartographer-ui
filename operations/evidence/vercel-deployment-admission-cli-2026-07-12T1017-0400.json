@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "executable_deployment_admission_caller",
+  "implemented_files": [
+    "tools/vercel-ops/deployment-admission-cli.mjs",
+    "tools/vercel-ops/deployment-admission-cli.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test deployment-admission-cli.test.mjs",
+    "environment": "isolated Node runtime with byte-equivalent repository evaluator and authored CLI/test files",
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "operations-only sentinel exits 0 while capacity is blocked",
+      "application change exits 3 while capacity is blocked",
+      "malformed input exits 2 and fails closed",
+      "one exact-commit application attempt exits 0 when capacity is represented as available"
+    ]
+  },
+  "runtime_claims": {
+    "source_behavior_verified": true,
+    "vercel_deployment_attempted": false,
+    "provider_capacity_observed": false,
+    "production_acceptance": false
+  },
+  "claim_boundary": "The executable caller enforces admission decisions through process exit status and JSON output. It does not prove provider capacity, Vercel skip behavior, deployment success, served commit identity, or physical audibility.",
+  "rollback": [
+    "revert the queue update commit",
+    "revert this evidence commit",
+    "revert the CLI test commit",
+    "revert the CLI implementation commit"
+  ]
+}
