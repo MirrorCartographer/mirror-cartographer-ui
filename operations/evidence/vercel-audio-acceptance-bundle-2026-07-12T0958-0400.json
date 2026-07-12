@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T13:58:50Z",
+  "slice": "Six-outcome audio acceptance bundle",
+  "source_artifacts": [
+    "tools/vercel-ops/browser-audio-evidence.mjs",
+    "tools/vercel-ops/physical-audio-verification.mjs"
+  ],
+  "new_artifacts": [
+    {
+      "path": "tools/vercel-ops/audio-acceptance-bundle.mjs",
+      "commit": "0bcc5dd6872b09886e77a693c28249e49cef90e8"
+    },
+    {
+      "path": "tools/vercel-ops/audio-acceptance-bundle.test.mjs",
+      "commit": "a4695431dd44c529348c740807cb89491ed1e9c7"
+    }
+  ],
+  "outcomes": [
+    "accepted",
+    "rejected",
+    "contradicted",
+    "incomplete",
+    "invalid",
+    "identity_mismatch"
+  ],
+  "verification": {
+    "command": "node --test audio-acceptance-bundle.test.mjs",
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "physical_device_trial_observed": false
+  },
+  "claim_boundary": "This gate combines repository-defined browser and bounded physical evidence under one commit and deployment identity. It does not prove device identity, deployment ownership, speaker output causality, or universal audibility.",
+  "privacy_boundary": "No private chat, credentials, personal identifiers, health information, or payment data included.",
+  "shared_state_overwritten": false
+}
