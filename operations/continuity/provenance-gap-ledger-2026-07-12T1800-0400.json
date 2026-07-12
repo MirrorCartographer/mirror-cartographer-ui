@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "ledger_id": "continuity-provenance-gap-ledger-2026-07-12T1800-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-12T18:00:37-04:00",
+  "purpose": "Preserve missing continuity identifiers as explicit provenance gaps without reconstructing unverified history.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json at blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json at blob dfe8f342ce43c0e75048e1b21ec01d722a9fceb0",
+    "operations/SPECIALIST_REGISTRY.json at blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json at blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "recent commits through ef5471598eac6f21d92d35ea975858594d756547",
+    "commit 9cf1bbca04ee5e3c0f2cb41949ef79a4af7c5775",
+    "commit 0e1b649c32f7128a369ebcfc4724b9c44bdd2ef3",
+    "repository code search for M-004, M-005, and M-006"
+  ],
+  "durable_memory": {
+    "title": "Provenance gaps are first-class records",
+    "rule": "When a reported memory identifier lacks an immutable source object, preserve the identifier, claim boundary, search coverage, and falsification route as a provenance-gap record. Do not recreate the artifact, reuse the identifier, or promote run-report prose into canonical history.",
+    "graph_effect": "Create a provenance_gap node linked to the lead source and target claim; do not create an authoritative memory node until verification_status becomes verified."
+  },
+  "claims": {
+    "observed": [
+      "M-004, M-005, and M-006 are named by the canonical continuity reconciliation queue as unresolved identifiers.",
+      "Prior immutable audits found no repository-verifiable source for those identifiers within recorded default-branch, indexed-code, and bounded commit-search coverage.",
+      "Repository code search is demonstrably non-exhaustive because it failed to return a known identifier present in a canonical file."
+    ],
+    "inferred": [
+      "The identifiers may have originated in automation narration, an unobserved branch, another repository, private chat history, or an artifact that was never persisted.",
+      "Reconstructing files under those identifiers would collapse the distinction between historical evidence and present repair."
+    ],
+    "proposed": [
+      "Represent each missing identifier with source_class, lead_locator, coverage, privacy_class, verification_status, claim_status, and falsification_route.",
+      "Permit promotion from provenance_gap to authoritative memory only after an immutable source object is independently resolved."
+    ],
+    "superseded": [
+      "Treating detailed completion prose as proof of repository persistence.",
+      "Treating non-exhaustive negative search as proof of nonexistence.",
+      "Repairing continuity by silently recreating a missing artifact under its historical identifier."
+    ],
+    "unresolved": [
+      "The originating source that first assigned M-004, M-005, and M-006.",
+      "Whether authentic objects for those identifiers exist outside currently observed history coverage.",
+      "Whether exhaustive branch and commit traversal will locate or finally classify each identifier as unlocated."
+    ]
+  },
+  "gaps": [
+    {
+      "identifier": "M-004",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage": "default branch canonical files, indexed code search, bounded recent commit search",
+      "privacy_class": "restricted_locator_only",
+      "falsification_route": "Produce an authentic immutable source object predating this ledger that contains or assigns M-004."
+    },
+    {
+      "identifier": "M-005",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage": "default branch canonical files, indexed code search, bounded recent commit search",
+      "privacy_class": "restricted_locator_only",
+      "falsification_route": "Produce an authentic immutable source object predating this ledger that contains or assigns M-005."
+    },
+    {
+      "identifier": "M-006",
+      "source_class": "run_report_lead",
+      "verification_status": "unresolved",
+      "claim_status": "quarantined",
+      "coverage": "default branch canonical files, indexed code search, bounded recent commit search",
+      "privacy_class": "restricted_locator_only",
+      "falsification_route": "Produce an authentic immutable source object predating this ledger that contains or assigns M-006."
+    }
+  ],
+  "evidence_strength": "moderate",
+  "coverage_limit": "No exhaustive branch inventory, exhaustive commit traversal, or private chat-history export was available in this run.",
+  "privacy_boundary": "Only repository metadata, abstract continuity rules, and opaque identifiers are persisted. No private dialogue, personal events, health information, credentials, or identifying details are reproduced."
+}
