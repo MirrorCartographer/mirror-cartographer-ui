@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "observed_at": "2026-07-12T00:17:48.000Z",
+  "source_commits": [
+    "a4c6d96bea59113a1de8af882de96af3b986491b",
+    "5c339d9348e186523d79fcee1f2980744817bc77"
+  ],
+  "improvement": "Vercel deployment-status evidence now carries a deterministic SHA-256 digest and exposes verification helpers that detect post-generation mutation.",
+  "verification": {
+    "source_reviewed": true,
+    "contract_cases_added": 6,
+    "runtime_test_executed": false,
+    "runtime_test_limit": "The connected GitHub surface provided source and status access but no repository checkout execution environment.",
+    "provider_status": {
+      "context": "Vercel",
+      "state": "failure",
+      "target_url": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit"
+    },
+    "classification": "transient_provider_rate_limit",
+    "deployment_verified": false,
+    "source_regression_proven": false
+  },
+  "safety": {
+    "payments_added": false,
+    "conversion_logic_added": false,
+    "files_deleted": false,
+    "history_rewritten": false
+  },
+  "rollback": [
+    "Revert commit 5c339d9348e186523d79fcee1f2980744817bc77.",
+    "Revert commit a4c6d96bea59113a1de8af882de96af3b986491b."
+  ]
+}
