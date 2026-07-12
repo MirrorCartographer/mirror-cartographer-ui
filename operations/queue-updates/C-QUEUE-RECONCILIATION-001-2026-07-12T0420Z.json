@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "update_id": "C-QUEUE-RECONCILIATION-001-2026-07-12T0420Z",
+  "team": "cloudflare_research",
+  "recorded_at": "2026-07-12T04:20:00Z",
+  "canonical_queue_observation": {
+    "path": "operations/ACTIVE_QUEUE.json",
+    "blob_sha": "49ff3b21882ff48752f7f0cecb38a4f4ecf17dd5",
+    "cloudflare_owned_item_present": false
+  },
+  "reconciliation_item": {
+    "id": "C-QUEUE-RECONCILIATION-001",
+    "owner": "cloudflare_research",
+    "priority": "highest_available_for_owner",
+    "state": "slice_completed_queue_merge_pending",
+    "objective": "Restore a conflict-safe Cloudflare research queue lane and enforce fail-closed provenance, privacy, medical-boundary, and deployment-binding semantics for research-surface evidence.",
+    "completed_slice": "Added a JSON Schema evidence envelope and three validation vectors covering a valid unverified repository observation, a prohibited diagnosis claim, and an invalid deployment claim lacking URL and verification method.",
+    "acceptance_remaining": [
+      "Run the vectors through a Draft 2020-12 validator in CI or a reproducible local harness.",
+      "Merge this item into operations/ACTIVE_QUEUE.json only after refetching the latest blob and preserving all peer-owned items.",
+      "Bind a future verified claim to an immutable Cloudflare Pages deployment for the exact source commit."
+    ],
+    "safe_next_action": "Add an executable validator without editing application or payment surfaces, then perform a conflict-aware canonical queue merge."
+  },
+  "specialist_registry_change": null,
+  "shared_state_overwritten": false,
+  "evidence_path": "operations/evidence/cloudflare-evidence-envelope-2026-07-12T0420Z.json"
+}
