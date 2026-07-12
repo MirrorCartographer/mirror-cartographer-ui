@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "claim_state": "implemented_unverified_in_ci",
+  "completed_slice": "Added a Playwright browser regression that injects a controllable AudioContext, creates the context through the installed routing wrapper, dispatches sinkchange, activates a data-audio-diagnostic control, and asserts that the published routing status and document dataset remain selected-confirmed.",
+  "source_commits": {
+    "browser_test": "63a2b3f373f229106f86a84600eb2a41d928bda7",
+    "gate_wiring": "e2379ce50fa232311a34328c9e3df729c5540f74",
+    "runtime_under_test": "a47b57a87590d58dbf17fe15542c364b5d2cfefc"
+  },
+  "files": [
+    "tests/audio-routing-sticky.spec.js",
+    "package.json"
+  ],
+  "acceptance_contract": [
+    "sinkchange promotes the wrapped context to selected-confirmed",
+    "a later diagnostic click cannot downgrade that same context",
+    "the attempt identifier remains bound to the browser evidence",
+    "document.documentElement.dataset.audioRouting remains selected-confirmed"
+  ],
+  "verification": {
+    "source_inspection": "passed",
+    "workflow_runs_for_gate_commit": 0,
+    "ci_result": "not_available",
+    "deployment_identity": "not_proven"
+  },
+  "evidence_strength": "committed browser test and deterministic contract definition; execution evidence pending",
+  "limits": [
+    "No GitHub Actions run was associated with the gate-wiring commit at inspection time.",
+    "The test uses a browser-injected AudioContext double and does not prove physical speaker emission or listener perception.",
+    "No immutable Vercel deployment identity was available for the new commit.",
+    "Chromium coverage does not substitute for a physical iPhone Safari retest."
+  ],
+  "privacy_boundary": "No private chat, health information, credentials, payment logic, or personal identifiers were added.",
+  "rollback": [
+    "revert the queue-update and evidence commits",
+    "revert e2379ce50fa232311a34328c9e3df729c5540f74",
+    "revert 63a2b3f373f229106f86a84600eb2a41d928bda7"
+  ],
+  "next_action": "Obtain a CI execution of test:audio-routing-browser, then bind the passing result and a successful Vercel deployment identity to the exact descendant commit before requesting an iPhone audible retest.",
+  "recorded_at": "2026-07-12T01:45:00Z"
+}
