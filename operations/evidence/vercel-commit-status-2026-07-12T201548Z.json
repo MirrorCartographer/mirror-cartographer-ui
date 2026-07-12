@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "observed_at": "2026-07-12T20:15:48Z",
+  "commit_sha": "a3b095267bfd7ac7e98cfd98ae94de3d34bb44c3",
+  "source": {
+    "kind": "github_combined_commit_status",
+    "connector_action": "get_commit_combined_status"
+  },
+  "observed_statuses": [
+    {
+      "context": "Vercel",
+      "state": "failure",
+      "target_url": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit"
+    }
+  ],
+  "assessment": {
+    "accepted": true,
+    "deployable": false,
+    "decision": "provider_build_rate_limited",
+    "reason": "The exact commit has a failing Vercel status whose target identifies the provider build-rate limit."
+  },
+  "claims_not_established": [
+    "No deployment was created.",
+    "No immutable deployment identity was verified.",
+    "No browser or physical-device behavior was verified.",
+    "No peer execution was observed."
+  ],
+  "rollback": "Revert the additive evaluator, test, evidence, and queue-update commits."
+}
