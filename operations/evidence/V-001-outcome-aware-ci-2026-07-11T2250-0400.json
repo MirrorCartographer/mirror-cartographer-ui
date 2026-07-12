@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-11T22:50:00-04:00",
+  "change": "The dedicated audio-routing workflow now records per-step outcomes and computes verification_passed from the source contract, browser regression, and production build outcomes.",
+  "source_commit": "d892aeffb78eeec581b03b92aaf98d4aa973423e",
+  "verification": {
+    "source_file_updated": true,
+    "github_actions_run_observed": false,
+    "vercel_status": "failure",
+    "vercel_reason": "build-rate-limit"
+  },
+  "claim_boundary": "This record proves the workflow source contract changed. It does not prove that GitHub Actions executed, that Vercel deployed the commit, or that audio was physically audible on iPhone Safari.",
+  "rollback": "Revert commit d892aeffb78eeec581b03b92aaf98d4aa973423e."
+}
