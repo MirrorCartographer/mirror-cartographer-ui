@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "observed_at": "2026-07-12T11:45:00-04:00",
+  "slice": "Confine changed-path manifest writes to JSON files inside operations/.",
+  "source_commits": {
+    "implementation": "d88316468a691ce68156bf05420523105699cd59",
+    "test": "117083a572ae56dfa00bd9f45fd8fe2c3b0613a1"
+  },
+  "source_blobs": {
+    "tools/vercel-ops/changed-paths-from-git.mjs": "26ff3ca512fcee3ea3caf070ad7b0d005e0f5312",
+    "tools/vercel-ops/changed-paths-from-git.test.mjs": "a4293f77084a8743e09a26a7c1dfcf926002eb24"
+  },
+  "verified_contract": [
+    "Default output resolves to operations/changed-paths.json.",
+    "Explicit output must remain below operations/.",
+    "Explicit output must use a .json extension.",
+    "Absolute paths, traversal, repository-root outputs, directory-only targets, non-JSON extensions, and control characters are rejected before writing."
+  ],
+  "verification": {
+    "strongest_feasible_route": "Committed-source fetch and deterministic node:test contract inspection.",
+    "runtime_claim": "not_observed",
+    "deployment_claim": "not_attempted_provider_capacity_blocked",
+    "fail_closed": true
+  },
+  "constraints_preserved": [
+    "No payments or conversion logic added to Vercel.",
+    "No GitHub files or history deleted.",
+    "No application deployment attempted while provider capacity remains blocked."
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert this evidence commit.",
+    "Revert 117083a572ae56dfa00bd9f45fd8fe2c3b0613a1.",
+    "Revert d88316468a691ce68156bf05420523105699cd59."
+  ]
+}
