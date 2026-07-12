@@ -1,0 +1,32 @@
+{
+  "schema_version": 2,
+  "artifact_type": "alias_lifecycle_dimension_registry",
+  "recorded_at": "2026-07-12T11:49:00-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "queue_item": "CM-005",
+  "supersedes_for_conflict_comparison": "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+  "scope": "Define compatible lifecycle dimensions so canonical entity, contextual alias, implementation container, derived surface, document family, and derived module statuses are not flattened into one contradiction axis.",
+  "dimensions": [
+    {"id":"canonical_entity","applies_to":["project_name"],"meaning":"Lifecycle of the canonical project identity."},
+    {"id":"contextual_alias","applies_to":["abbreviation","misspelling","nickname"],"meaning":"Lifecycle of a context-dependent reference to a canonical entity."},
+    {"id":"implementation_container","applies_to":["repository_name","migration_surface","framework_or_repository_candidate"],"meaning":"Lifecycle of a technical container without identity-renaming authority."},
+    {"id":"derived_surface","applies_to":["visual_branch_or_mode_label"],"meaning":"Lifecycle of a visual, experiential, or interaction branch."},
+    {"id":"document_family","applies_to":["document_series"],"meaning":"Lifecycle of a documentation family or volume series."},
+    {"id":"derived_module","applies_to":["derived_compendium_or_module_family"],"meaning":"Lifecycle of a derived conceptual or technical module."},
+    {"id":"unresolved_dimension","applies_to":["unresolved_alias"],"meaning":"Temporary fail-closed dimension pending stronger evidence."}
+  ],
+  "compatibility_rule": "A lifecycle conflict exists only when two or more occurrences share both normalized_value and lifecycle_dimension but report different lifecycle_status values.",
+  "claims": [
+    {"status":"observed","claim":"The prior scanner grouped conflicts only by normalized_value."},
+    {"status":"observed","claim":"Mirror Cartographer and MC can normalize to one entity while occupying canonical_entity and contextual_alias dimensions."},
+    {"status":"inferred","claim":"Cross-dimension status differences are structural coexistence, not contradiction."},
+    {"status":"proposed","claim":"Future alias types should declare lifecycle_dimension explicitly; scanner defaults are compatibility fallbacks."},
+    {"status":"superseded","claim":"Any differing lifecycle status for one normalized value is necessarily a contradiction."},
+    {"status":"unresolved","claim":"Historical labels without adequate decision-log evidence remain unresolved rather than being assigned a stronger lifecycle status."}
+  ],
+  "privacy_boundary": {
+    "included":"Public repository labels, abstract entity roles, lifecycle dimensions, source paths, and deterministic rules.",
+    "excluded":"Raw private conversation, quotations, personal material, health information, relationship material, finances, and identifying narrative context.",
+    "publication_risk":"low"
+  }
+}
