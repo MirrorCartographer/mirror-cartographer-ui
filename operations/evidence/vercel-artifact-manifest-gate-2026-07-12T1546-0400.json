@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:46:00Z",
+  "finding": "Workflow artifact names alone are insufficient evidence because expired artifacts, duplicate names, incomplete identities, and artifacts from another workflow run can be misbound to an otherwise valid run observation.",
+  "implementation": "Added a fail-closed artifact manifest gate that requires positive artifact and run identifiers, exact workflow-run binding, non-expiration, unique names, and complete presence of the required artifact set.",
+  "files": [
+    "scripts/vercel-workflow-artifact-manifest-gate.mjs",
+    "scripts/vercel-workflow-artifact-manifest-gate.test.mjs"
+  ],
+  "commits": {
+    "implementation": "f68a9971990d2f5914bd0ad3092e9b689608acd8",
+    "tests": "328be0dee8c02bdc668bc67b75ee5a9fa3ed9bdb"
+  },
+  "verification": {
+    "route": "dependency-free Node test suite executed against byte-identical local source before commit",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "covered_outcomes": [
+      "accept exact-run unique unexpired artifacts",
+      "reject wrong-run artifact",
+      "reject expired artifact",
+      "reject duplicate artifact name",
+      "reject missing required artifact",
+      "reject incomplete artifact identity"
+    ]
+  },
+  "provider_evidence": {
+    "workflow_runs_for_latest_commit": 0,
+    "deployment_attempted": false,
+    "deployment_claimed": false
+  },
+  "limits": [
+    "The gate is not yet composed into scripts/vercel-workflow-observation-pipeline.mjs.",
+    "No qualifying push or workflow_dispatch run was available through the connector.",
+    "No Vercel deployment or physical iPhone Safari audibility is proven."
+  ]
+}
