@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "observed_at": "2026-07-12T20:28:07Z",
+  "slice": "Correct provider-success deployment classification to remain fail-closed until immutable deployment identity is independently verified.",
+  "source_commits": {
+    "implementation": "8ffad9fd80b2bf6fdc915cc2fa8b0d3d2b7ccdba",
+    "tests": "ce861d7e362671ea473689cb4c71d1cd1c07aa88"
+  },
+  "verification": {
+    "command": "node --test vercel-commit-status-assessment.test.mjs",
+    "environment": "Node.js local isolated execution against the exact committed source and test contents",
+    "passed": 5,
+    "failed": 0,
+    "covered_outcomes": [
+      "provider build-rate failure remains non-deployable",
+      "missing Vercel status remains non-deployable",
+      "provider success remains non-deployable until immutable deployment identity is verified",
+      "pending provider state remains non-deployable",
+      "malformed status rows are rejected"
+    ]
+  },
+  "runtime_observation": {
+    "commit_sha": "ce861d7e362671ea473689cb4c71d1cd1c07aa88",
+    "combined_status_rows": 0,
+    "classification": "vercel_status_absent",
+    "deployment_claim": "not established"
+  },
+  "evidence_strength": {
+    "implementation_and_unit_tests": "strong",
+    "provider_runtime": "absence observed but not proof of skip, success, or failure",
+    "immutable_deployment_binding": "not established",
+    "physical_iphone_safari_audibility": "not tested"
+  },
+  "reversibility": {
+    "route": "Revert test commit ce861d7e362671ea473689cb4c71d1cd1c07aa88, then implementation commit 8ffad9fd80b2bf6fdc915cc2fa8b0d3d2b7ccdba.",
+    "application_behavior_changed": false
+  }
+}
