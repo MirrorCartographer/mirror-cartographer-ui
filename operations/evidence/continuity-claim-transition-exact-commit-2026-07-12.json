@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "evidence_id": "continuity-claim-transition-exact-commit-2026-07-12",
+  "recorded_at": "2026-07-12T19:10:00Z",
+  "owner": "continuity_mining",
+  "queue_update": "CM-012",
+  "source_status": {
+    "canonical_queue": "No continuity_mining item exists in operations/ACTIVE_QUEUE.json.",
+    "prior_handoff": "CM-011 identified exact-commit GitHub Actions execution as the next unresolved action.",
+    "workflow_commit": "2ee5c5a434f55694f5b153dbf262702f72f6d7b7",
+    "workflow_run_observed": false
+  },
+  "memory_recovered": "The continuity claim-transition validator was already implemented and fixture-tested, but its trusted-runtime boundary remained unresolved. The durable next step is a commit-bound CI contract that proves the tested checkout SHA, preserves the TAP log, records the exit code, and emits an immutable run manifest without exposing private source content.",
+  "claim_states": {
+    "observed": [
+      "CM-011 committed a dependency-free validator and six synthetic fixtures.",
+      "CM-011 explicitly left trusted runtime execution unresolved.",
+      "No workflow run was returned for the workflow-creation commit at inspection time."
+    ],
+    "inferred": [
+      "A clean exact-SHA checkout plus retained TAP, exit code, digest, and run identity narrows the gap between repository code and claimed execution evidence."
+    ],
+    "proposed": [
+      "Treat a passing workflow artifact as runtime verification only, not as proof that an underlying memory claim is true."
+    ],
+    "superseded": [
+      "Local or undocumented test execution is sufficient durable verification."
+    ],
+    "unresolved": [
+      "Provider execution has not yet been observed.",
+      "Comparison with an independent JSON Schema 2020-12 validator remains pending."
+    ]
+  },
+  "artifact": {
+    "path": ".github/workflows/continuity-claim-transition.yml",
+    "commit": "2ee5c5a434f55694f5b153dbf262702f72f6d7b7",
+    "expected_outputs": [
+      "checkout-proof.txt",
+      "continuity-claim-transition.tap",
+      "continuity-claim-transition.exit-code",
+      "continuity-claim-transition-manifest.json"
+    ]
+  },
+  "verification": {
+    "repository_write": "confirmed",
+    "workflow_run": "not_observed",
+    "claim_boundary": "No CI pass is claimed."
+  },
+  "privacy_boundary": "Only synthetic fixture metadata and repository paths are used. No raw private conversations, file-library contents, health data, or identity-bearing excerpts are stored or uploaded.",
+  "falsification_route": [
+    "Reject exact-commit verification if checkout-proof.txt does not equal the workflow GITHUB_SHA.",
+    "Reject runtime verification if the test exit code is nonzero or the TAP artifact is absent.",
+    "Reject artifact identity if its digest does not match the retained TAP file.",
+    "Reject broader truth claims because passing fixtures validate contract behavior only."
+  ]
+}
