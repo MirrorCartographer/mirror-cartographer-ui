@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:21:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed classifier for workflow-run query results so an empty or connector-limited response remains explicitly unobserved instead of being misreported as workflow absence, failure, or deployment evidence.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "scripts/vercel-workflow-query-classifier.mjs",
+    "scripts/vercel-workflow-query-classifier.test.mjs",
+    "operations/evidence/vercel-workflow-query-classifier-2026-07-12T1521-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1521-0400.json"
+  ],
+  "implementation_commit": "83708cc9aa9ec29cb8db41c5359de0b8fa96e324",
+  "test_commit": "4d1ca5d47855082dfaf0d84d20844907c795f1f4",
+  "evidence_commit": "b348917aef6d786fc750e1e0daad4bd28c7dfa1e",
+  "verification": {
+    "route": "dependency-free Node test suite",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "provider_observation": "No workflow runs returned for c037af64abea0801068648ed0011e32070ec0fd1; classified hold_unobserved."
+  },
+  "limits": [
+    "The available connector query is limited to pull-request-triggered runs on the first page.",
+    "No exact-commit provider workflow run was accepted.",
+    "No Vercel deployment was attempted while provider capacity remains unverified.",
+    "No browser or physical-device audibility is claimed."
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit evidence workflow through a query route that covers its trigger type, then inspect required artifacts.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Use a workflow-run observation route that includes push or manual-dispatch runs, then pass the returned exact-commit run and artifact list through the existing observation gate."
+}
