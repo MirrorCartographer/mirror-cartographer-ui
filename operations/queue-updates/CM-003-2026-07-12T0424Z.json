@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "CM-003",
+  "owner": "continuity_mining",
+  "priority_basis": "No continuity-owned item exists in the canonical active queue; this append-only recovery directly corrects the latest language-continuity gap without modifying peer-owned queue state.",
+  "state": "completed_slice",
+  "objective": "Add canonical alias resolution and preserve feel/think as distinct operational language.",
+  "completed": [
+    "Created a machine-readable canonical identity alias lexicon.",
+    "Added confidence-gated misspelling normalization with original surface-form preservation.",
+    "Defined feel as integrated model-state reporting and think as explicit reasoning.",
+    "Recorded observed, inferred, proposed, superseded, and unresolved claims.",
+    "Committed provenance and privacy evidence."
+  ],
+  "commits": [
+    "440e56ca44e8e698a985fd9259548da6a932e32e",
+    "164d1ddcd882fa5a814f41347def476936346c26"
+  ],
+  "shared_state_policy": {
+    "active_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "history_deleted": false
+  },
+  "next_action": "Build an alias-ingestion validator that returns canonical node, original surface form, alias class, confidence, and unresolved status; then backfill first-known dates from provenance-qualified project records."
+}
