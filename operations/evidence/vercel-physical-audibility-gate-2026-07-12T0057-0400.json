@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T04:57:00Z",
+  "slice": "Bind Frontier Research audibility states to exact-commit Vercel deployment and bounded physical-device evidence.",
+  "source_dependencies": [
+    "tools/frontier-research/audio-audibility-evidence.mjs",
+    "operations/vercel/verify-physical-audibility-evidence.mjs"
+  ],
+  "verification": {
+    "method": "Local Node.js test execution against exact committed source content before repository write.",
+    "command": "node --test operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered_fail_closed_routes": [
+      "machine signal without human confirmation",
+      "signal-human contradiction",
+      "deployment commit mismatch",
+      "tested commit mismatch",
+      "missing bounded device route or volume state"
+    ]
+  },
+  "commits": {
+    "gate": "b96dabdc43aa0c60a996ab75771f12d2bc21d931",
+    "tests": "3453e1c3a4bcbfbff018e8101b5288092a564af7"
+  },
+  "deployment_attempted": false,
+  "deployment_reason": "Current state prohibits application deployment attempts while Vercel build capacity is exhausted.",
+  "privacy": {
+    "raw_audio_collected": false,
+    "microphone_input_collected": false,
+    "raw_user_agent_collected": false,
+    "persistent_identifier_collected": false
+  },
+  "acceptance_effect": "Physical audibility can pass only when runtime evidence is human_confirmed, the tested commit equals the immutable ready deployment source commit, and bounded device-route fields are present.",
+  "limits": [
+    "No Vercel provider deployment was attempted or observed.",
+    "No physical iPhone Safari session was performed.",
+    "The test proves gate behavior, not audible hardware output."
+  ]
+}
