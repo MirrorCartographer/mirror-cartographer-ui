@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T10:06:00-04:00",
+  "slice": "fail_closed_deployment_admission",
+  "source_commits": {
+    "implementation": "bc1ae521acdd9645d0826051d6f9f4f55f907cda",
+    "tests": "53cf1c7a56f8fb9245cfacb526a6bc88e1900da9"
+  },
+  "verification": {
+    "command": "node --test deployment-admission.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "environment": "isolated Node runtime using byte-identical authored files before commit"
+  },
+  "observed_state": {
+    "delivery_state": "in_progress_blocked",
+    "blocker": "Vercel account build-rate limit prevented immutable deployment verification",
+    "deployment_attempted": false
+  },
+  "proved": [
+    "Operations-only changes can be admitted as sentinel attempts while capacity is blocked.",
+    "Application, configuration, workflow, unknown, empty, and ambiguous change sets fail closed while capacity is blocked.",
+    "A single application deployment is admitted only when capacity is represented as available and exact-commit verification is explicitly required.",
+    "Equivalent changed-path sets produce deterministic evidence digests."
+  ],
+  "not_proved": [
+    "Current provider capacity",
+    "Vercel ignoreCommand behavior",
+    "Deployment success",
+    "Served commit identity",
+    "Physical iPhone Safari audibility"
+  ],
+  "privacy_boundary": "No credentials, private chat content, medical material, payment logic, or personal identifiers were added.",
+  "rollback": [
+    "Revert the queue-update commit",
+    "Revert this evidence record",
+    "Revert test commit 53cf1c7a56f8fb9245cfacb526a6bc88e1900da9",
+    "Revert implementation commit bc1ae521acdd9645d0826051d6f9f4f55f907cda"
+  ]
+}
