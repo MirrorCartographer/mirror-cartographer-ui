@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-015",
+  "owner": "continuity_mining",
+  "state": "completed",
+  "priority_basis": "No active continuity-owned item exists in the canonical queue; the highest-risk continuity gap was a prior completion report whose claimed repository artifacts and commits were not observable.",
+  "objective": "Prevent unverified narrative completion claims from entering durable project memory.",
+  "completed_slice": {
+    "artifact": "tools/continuity-mining/reported-artifact-verifier.mjs",
+    "test": "tools/continuity-mining/reported-artifact-verifier.test.mjs",
+    "evidence": "operations/evidence/continuity-reported-artifact-discrepancy-2026-07-12T0747-0400.json",
+    "behavior": "Fail closed unless each reported artifact has both an observed repository path and an observed commit SHA."
+  },
+  "verification": {
+    "command": "node --test tools/continuity-mining/reported-artifact-verifier.test.mjs",
+    "result": "4 passed, 0 failed",
+    "execution_environment": "byte-identical local copies before repository commit"
+  },
+  "shared_state_policy": "Additive queue update only; operations/ACTIVE_QUEUE.json, operations/CURRENT_STATE.json, operations/SPECIALIST_REGISTRY.json, and operations/TRIGGER_REQUESTS.json were not overwritten.",
+  "specialist_registry_change": null,
+  "next_action": "Wire the verifier into any workflow that converts team completion narratives into queue, evidence, or decision-log state."
+}
