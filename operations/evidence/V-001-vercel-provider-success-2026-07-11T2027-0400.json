@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "observed_at": "2026-07-12T00:27:20.000Z",
+  "commit": "e5307f1093aaa6cf30ae49efe18ab96426db721b",
+  "provider_status": {
+    "context": "Vercel",
+    "state": "success",
+    "target_url": "https://vercel.com/mirror-cartographers-projects/mirror-cartographer-ui/4cjcE4P74f11Ydyhr3XQsxXZt34F"
+  },
+  "claims": {
+    "provider_build_succeeded": true,
+    "public_runtime_verified": false,
+    "served_commit_identity_verified": false,
+    "github_actions_contract_gate_verified": false
+  },
+  "interpretation": "The previous transient build-rate-limit cleared for this commit. Provider success is evidence of a successful Vercel status check, but it is not sufficient by itself to prove the public runtime or served immutable commit identity.",
+  "next_action": "Resolve the public deployment URL from deployment evidence and compare its served build identity with commit e5307f1093aaa6cf30ae49efe18ab96426db721b."
+}
