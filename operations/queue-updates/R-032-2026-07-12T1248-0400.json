@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-032",
+  "owner": "frontier_research",
+  "priority": "highest_available_frontier_item",
+  "state": "completed_source_verified",
+  "objective": "Add standards-bound route provenance to the identity-bound browser audio evidence chain.",
+  "basis": "The canonical active queue currently contains no frontier_research-owned item. This continuation follows the latest committed Frontier slice, R-031, and addresses its next unresolved evidence boundary without modifying the canonical queue.",
+  "completed_slice": [
+    "Researched the current W3C Audio Output Devices API and implementation documentation.",
+    "Added a fail-closed evaluator for secure context, API support, speaker-selection policy, transient activation, setSinkId outcomes, observed sink identity, device exposure, and post-bind availability.",
+    "Added six deterministic adversarial tests.",
+    "Recorded source status, uncertainty, claim boundary, and falsification conditions."
+  ],
+  "files": [
+    "tools/frontier-research/audio-route-capability.mjs",
+    "tools/frontier-research/audio-route-capability.test.mjs",
+    "operations/evidence/frontier-audio-route-capability-2026-07-12T1248-0400.json",
+    "operations/queue-updates/R-032-2026-07-12T1248-0400.json"
+  ],
+  "acceptance": {
+    "source_level": "passed",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "deployment": "not_attempted",
+    "physical_audibility": "not_tested"
+  },
+  "registry_change": null,
+  "next_action": "Integrate evaluateAudioRouteCapability into audio-session-orchestrator.mjs so packet composition consumes normalized route evidence, then test identity mismatch, permissions-policy denial, device loss, and non-default sink binding end to end."
+}
