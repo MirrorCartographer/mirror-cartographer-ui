@@ -22,7 +22,7 @@ const validPacket = {
 test('passes exact-commit immutable Vercel deployment plus bounded human confirmation', () => {
   const result = verifyPhysicalAudibilityEvidence(validPacket);
   assert.equal(result.status, 'pass');
-  assert.equal(result.schemaVersion, '1.1.0');
+  assert.equal(result.schemaVersion, '1.2.0');
 });
 
 test('fails closed for machine signal without human confirmation', () => {
@@ -69,6 +69,14 @@ test('rejects missing or malformed deployment and test timestamps', () => {
   const result = verifyPhysicalAudibilityEvidence(packet);
   assert.ok(result.failures.includes('invalid_deployment_ready_time'));
   assert.ok(result.failures.includes('invalid_tested_time'));
+});
+
+test('rejects a bounded test recorded before the deployment became ready', () => {
+  const packet = structuredClone(validPacket);
+  packet.testedAt = '2026-07-12T04:59:59Z';
+  packet.humanCheck.observedAt = '2026-07-12T05:02:00Z';
+  const result = verifyPhysicalAudibilityEvidence(packet);
+  assert.ok(result.failures.includes('test_precedes_deployment_ready'));
 });
 
 test('rejects human confirmation recorded before the bounded test', () => {
