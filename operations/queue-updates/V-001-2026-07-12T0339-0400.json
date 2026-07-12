@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T07:39:35Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and locally verified an operations-only static gate that detects the current Vercel ignore command's merge-topology blind spot without consuming provider build capacity.",
+  "evidence": "operations/evidence/vercel-ignore-command-merge-topology-2026-07-12T0339-0400.json",
+  "commits": [
+    "982d9d5fd57ac5dcdb102d37483406d9f04893de",
+    "21d7f912ac93da2aa44d4b572e4a30a91d66a045",
+    "566d94625a8c899dbd8e91b89a371ac09a71c534"
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Replace first-parent-only path discovery with merge-aware discovery and verify merge fixtures.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Keep changes operations-only until capacity returns; then observe one sentinel before changing the runtime filter and making one exact-commit verification attempt."
+}
