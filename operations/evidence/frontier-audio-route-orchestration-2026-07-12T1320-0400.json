@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-033",
+  "team": "frontier_research",
+  "recorded_at": "2026-07-12T13:20:00-04:00",
+  "finding": "Route provenance must be normalized inside the identity-bound audio session before packet composition. Passing caller-supplied route classifications directly leaves the evidence packet unable to distinguish policy denial, identity injection, post-bind device loss, or a verified non-default sink binding.",
+  "source_status": {
+    "w3c_audio_output_devices_api": {
+      "url": "https://www.w3.org/TR/audio-output/",
+      "status": "Candidate Recommendation Draft",
+      "published": "2025-10-09",
+      "checked_at": "2026-07-12",
+      "evidence_strength": "primary normative specification",
+      "relevant_requirements": [
+        "sinkId identifies the browser-selected output route and the empty string represents the user-agent default",
+        "speaker-selection policy denial produces NotAllowedError",
+        "transient activation may be required for setSinkId and is required for selectAudioOutput",
+        "NotFoundError and AbortError distinguish missing devices from switch failure",
+        "a bound sink can become unavailable without automatic recovery or audible rendering"
+      ]
+    },
+    "mdn_setSinkId": {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/setSinkId",
+      "status": "implementation documentation",
+      "checked_at": "2026-07-12",
+      "evidence_strength": "secondary implementation cross-check"
+    }
+  },
+  "implementation": {
+    "module": "tools/frontier-research/audio-session-orchestrator.mjs",
+    "test": "tools/frontier-research/audio-session-orchestrator.test.mjs",
+    "behavior": [
+      "When routeObservation is supplied, evaluateAudioRouteCapability normalizes it before identity binding and packet composition.",
+      "The existing normalized route input remains supported for backward compatibility.",
+      "The returned session exposes routeEvaluation separately from the packet.",
+      "The claim boundary explicitly refuses to infer physical audibility from clock consistency or route binding."
+    ]
+  },
+  "adversarial_cases_added": [
+    "non-default sink binding is normalized and bound to the session identity",
+    "speaker-selection policy denial remains rejected and contradicts rendering evidence",
+    "post-bind device loss remains rejected",
+    "an evaluator-injected mismatched session identity is rejected before composition"
+  ],
+  "verification": {
+    "source_commits": [
+      "10d0569bddfe91e571b3dd37f5fc8ec83c439fd8",
+      "4ea5ec8a5aaa8aa0ee06c0f9ef0162efe1e49150"
+    ],
+    "method": "exact-commit source inspection plus repository status check",
+    "test_execution": "not independently executed in this connector runtime",
+    "provider_status": "Vercel status failure: build-rate-limit",
+    "claim": "Implementation and adversarial tests are committed; runtime pass is not claimed."
+  },
+  "falsification": [
+    "A raw policy-denied observation reaches packet composition as bound_non_default.",
+    "A route evaluator can inject a conflicting session, commit, or deployment identity.",
+    "A disappeared sink remains represented as a valid active binding.",
+    "The packet claims physical audibility when the physical outcome is not_tested."
+  ],
+  "limits": [
+    "No browser execution was performed.",
+    "No physical audio output was measured.",
+    "The W3C document remains a draft and may change.",
+    "The canonical active queue contains no frontier_research-owned item; R-033 is a continuation record, not a canonical queue rewrite."
+  ]
+}
