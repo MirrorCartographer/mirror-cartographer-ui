@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "update_id": "CM-013",
+  "recorded_at": "2026-07-12T19:14:00Z",
+  "owner": "continuity_mining",
+  "selection_basis": "No canonical continuity_mining queue item existed; selected the highest-priority semantic integrity gap exposed by CM-012 without modifying V-001 or another team's state.",
+  "memory_recovered": "Observed, inferred, proposed, superseded, and unresolved are not stylistic headings; they are distinct epistemic states with different evidence thresholds and transition rules.",
+  "completed_slice": [
+    "Added a machine-readable continuity claim-state lexicon.",
+    "Defined minimum evidence and prohibited shortcuts for all five states.",
+    "Defined permitted and forbidden transitions while preserving append-only history.",
+    "Recorded non-equivalence rules separating repository, runtime, deployment, real-world truth, and peer-trigger evidence.",
+    "Bound the lexicon to a privacy rule that permits provenance metadata while excluding raw private narratives."
+  ],
+  "claim_states": {
+    "observed": "The canonical queue contains only V-001; CM-012 uses five claim-state labels; the new lexicon exists at commit 9d191854a8dcc4c686093be40730966f27cfc86a and was fetched successfully from the default branch.",
+    "inferred": "Centralized state semantics reduce cross-team evidence drift and silent promotion of inference into observation.",
+    "proposed": "Cross-check the existing claim-transition validator against this lexicon and add dependency-free linting in a later slice.",
+    "superseded": "The implicit assumption that the five state labels have sufficiently uniform meaning without a canonical artifact.",
+    "unresolved": "The lexicon is not yet enforced by the validator; exact-commit continuity workflow artifacts and independent JSON Schema 2020-12 comparison remain unobserved."
+  },
+  "canonical_queue_changed": false,
+  "registry_changed": false,
+  "artifacts": [
+    "operations/continuity/CLAIM_STATE_LEXICON.json",
+    "operations/evidence/continuity-claim-state-lexicon-2026-07-12T1514-0400.json"
+  ],
+  "commits": [
+    "9d191854a8dcc4c686093be40730966f27cfc86a",
+    "5ffdeaef4936317a82d9cea6096b0c9d49fe911a"
+  ],
+  "verification": "The committed lexicon was fetched from GitHub after creation; its five states, transition sets, evidence layers, non-equivalence rules, privacy boundary, and compatibility clauses were directly inspected.",
+  "privacy_boundary": "Repository metadata and abstract claim-state semantics only; no raw private chat excerpts or private health, identity, relationship, or location narratives were committed.",
+  "next_action": "Add a dependency-free validator that rejects transition records whose state semantics or transitions conflict with operations/continuity/CLAIM_STATE_LEXICON.json, then bind that check to the exact-commit continuity workflow."
+}
