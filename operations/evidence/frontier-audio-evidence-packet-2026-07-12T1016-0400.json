@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-028",
+  "owner": "frontier_research",
+  "finding": "Web Audio rendering, output-route selection, device-change handling, and physical audibility are separate evidence layers and must remain separately inspectable even when combined into one deployment-bound packet.",
+  "design_implication": "A packet may classify aligned evidence as supported, but browser render progression or route binding alone must never be promoted into proof that a person heard sound. Contradictions remain first-class outputs.",
+  "primary_sources": [
+    {
+      "title": "Web Audio API 1.1",
+      "url": "https://www.w3.org/TR/webaudio/",
+      "status": "W3C First Public Working Draft, 5 November 2024",
+      "relevance": "Defines AudioContext state, routing, sink selection, and output timestamp concepts."
+    },
+    {
+      "title": "Audio Output Devices API",
+      "url": "https://www.w3.org/TR/audio-output/",
+      "status": "W3C technical report",
+      "relevance": "Defines output-device selection semantics and privacy-sensitive device exposure."
+    },
+    {
+      "title": "Audio Output Devices API Editor's Draft",
+      "url": "https://w3c.github.io/mediacapture-output/",
+      "status": "Editor's Draft inspected 2026-07-12",
+      "relevance": "Current algorithm and event surface for output-device selection and changes."
+    }
+  ],
+  "evidence_strength": "implementation-ready deterministic prototype with seven passing boundary tests; browser and physical-device execution not performed",
+  "uncertainty": [
+    "Browser support and behavior remain implementation-dependent, especially on mobile Safari.",
+    "A valid packet structure cannot establish physical audibility without a physical heard/not-heard observation.",
+    "The prototype validates normalized evidence objects; adapters must still map existing repository artifacts into this schema."
+  ],
+  "falsification_routes": [
+    "Supply mismatched session, commit, or deployment identities and confirm fail-closed rejection.",
+    "Supply advancing render evidence with a not-heard physical outcome and confirm contradiction preservation.",
+    "Change the output device after non-default binding without confirmed rebinding and confirm contradiction preservation.",
+    "Run the adapter against a physical iPhone Safari session and compare packet classification with the retained raw observations."
+  ],
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-evidence-packet.test.mjs",
+    "passed": 7,
+    "failed": 0
+  },
+  "commits": [
+    "1efaf778b906b5a98ebfe45688e65767c186cded",
+    "69c356aeb15ef41f5872709a5a6d936fa9b300a7"
+  ]
+}
