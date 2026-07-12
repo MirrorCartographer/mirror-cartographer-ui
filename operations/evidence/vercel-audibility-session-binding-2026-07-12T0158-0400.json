@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T01:58:00-04:00",
+  "slice": "Bind device, runtime, and human audibility evidence to one opaque bounded session before accepting physical audibility evidence.",
+  "source_commits": {
+    "gate": "d59bdaecfc32eef1aad29c13eb0d650da9ccc872",
+    "tests": "3f3a16ec0785db5e31feecf63dfd51e49e1f517a"
+  },
+  "verification": {
+    "command": "node --test verify-audibility-session-binding.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "verified_cases": [
+      "matching bounded sessions pass",
+      "runtime evidence from another session fails",
+      "human confirmation from another session fails",
+      "missing device session fails"
+    ]
+  },
+  "claim_boundary": {
+    "establishes": "The three evidence layers carry the same opaque session identifier.",
+    "does_not_establish": [
+      "that audio was physically audible",
+      "that the deployment is ready",
+      "that an iPhone Safari observation occurred",
+      "that the session identifier is globally unique"
+    ]
+  },
+  "privacy": {
+    "retained": ["opaque session equality", "pass or fail reasons"],
+    "excluded": ["user identity", "raw interaction events", "selectors", "audio recordings", "private chat", "health information"]
+  },
+  "rollback": [
+    "revert commit 3f3a16ec0785db5e31feecf63dfd51e49e1f517a",
+    "revert commit d59bdaecfc32eef1aad29c13eb0d650da9ccc872"
+  ]
+}
