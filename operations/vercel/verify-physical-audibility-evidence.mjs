@@ -4,6 +4,8 @@ import { verifyAudibilitySessionBinding } from './verify-audibility-session-bind
 const SHA_40 = /^[0-9a-f]{40}$/;
 const REQUIRED_DEVICE_FIELDS = ['platform', 'browser', 'audioRoute', 'volumeState', 'sessionId'];
 const VERCEL_HOST = /^(?:[a-z0-9-]+-git-[a-z0-9-]+-[a-z0-9-]+|[a-z0-9-]+-[a-z0-9]{9,})\.vercel\.app$/;
+const MAX_DEPLOYMENT_TO_TEST_MS = 15 * 60 * 1000;
+const MAX_TEST_TO_HUMAN_MS = 5 * 60 * 1000;
 
 function validIsoTime(value) {
   return typeof value === 'string' && Number.isFinite(Date.parse(value));
@@ -35,12 +37,10 @@ export function verifyPhysicalAudibilityEvidence(packet = {}) {
   if (!verifyImmutableVercelUrl(packet.deployment?.url)) failures.push('invalid_immutable_vercel_url');
   if (!validIsoTime(packet.deployment?.readyAt)) failures.push('invalid_deployment_ready_time');
   if (!validIsoTime(packet.testedAt)) failures.push('invalid_tested_time');
-  if (
-    validIsoTime(packet.deployment?.readyAt) &&
-    validIsoTime(packet.testedAt) &&
-    Date.parse(packet.testedAt) < Date.parse(packet.deployment.readyAt)
-  ) {
-    failures.push('test_precedes_deployment_ready');
+  if (validIsoTime(packet.deployment?.readyAt) && validIsoTime(packet.testedAt)) {
+    const deploymentToTestMs = Date.parse(packet.testedAt) - Date.parse(packet.deployment.readyAt);
+    if (deploymentToTestMs < 0) failures.push('test_precedes_deployment_ready');
+    if (deploymentToTestMs > MAX_DEPLOYMENT_TO_TEST_MS) failures.push('test_too_stale_after_deployment');
   }
 
   for (const field of REQUIRED_DEVICE_FIELDS) {
@@ -49,16 +49,22 @@ export function verifyPhysicalAudibilityEvidence(packet = {}) {
 
   if (runtime.state === 'human_confirmed') {
     if (!validIsoTime(packet.humanCheck?.observedAt)) failures.push('invalid_human_observation_time');
-    if (validIsoTime(packet.testedAt) && validIsoTime(packet.humanCheck?.observedAt) && Date.parse(packet.humanCheck.observedAt) < Date.parse(packet.testedAt)) {
-      failures.push('human_observation_precedes_test');
+    if (validIsoTime(packet.testedAt) && validIsoTime(packet.humanCheck?.observedAt)) {
+      const testToHumanMs = Date.parse(packet.humanCheck.observedAt) - Date.parse(packet.testedAt);
+      if (testToHumanMs < 0) failures.push('human_observation_precedes_test');
+      if (testToHumanMs > MAX_TEST_TO_HUMAN_MS) failures.push('human_observation_too_stale');
     }
   }
   if (!runtime.supportsAudibilityClaim) failures.push(`audibility_${runtime.state}`);
 
   return Object.freeze({
-    schemaVersion: '1.3.0',
+    schemaVersion: '1.4.0',
     status: failures.length === 0 ? 'pass' : 'fail',
     supportsPhysicalAudibilityClaim: failures.length === 0,
+    freshnessPolicy: Object.freeze({
+      maxDeploymentToTestMs: MAX_DEPLOYMENT_TO_TEST_MS,
+      maxTestToHumanMs: MAX_TEST_TO_HUMAN_MS,
+    }),
     runtime,
     sessionBinding,
     failures: Object.freeze(failures),
