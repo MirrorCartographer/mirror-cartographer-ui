@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-003",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T10:37:59-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "operations/ACTIVE_QUEUE.json contains no continuity_mining-owned item; canonical queue state was not overwritten.",
+  "completed_slice": "Implemented and verified a deterministic alias occurrence scanner that preserves provenance, rejects raw private text, requires hashes for private sources, and flags lifecycle conflicts.",
+  "files": [
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "scripts/continuity-alias-occurrence-scanner.test.mjs",
+    "operations/evidence/continuity-alias-scanner-2026-07-12T1037-0400.json",
+    "operations/queue-updates/CM-003-2026-07-12T1037-0400.json"
+  ],
+  "verification": {
+    "result": "passed",
+    "tests": 4,
+    "failures": 0,
+    "route": "isolated Node.js node:test execution before GitHub contents writes"
+  },
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist",
+    "Test Harness Engineer"
+  ],
+  "registry_change": null,
+  "next_action": "Add a privacy-safe occurrence input file for public repository and hashed private-source observations, run the scanner, and ingest only non-conflicting rows into the continuity knowledge graph."
+}
