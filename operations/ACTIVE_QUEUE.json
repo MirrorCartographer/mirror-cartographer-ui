@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T20:34:26Z",
+  "updated_at": "2026-07-12T21:37:27Z",
   "items": [
     {
       "id": "V-001",
@@ -34,15 +34,16 @@
       "completed_slices": [
         "Recorded a coverage-bounded branch and history reconciliation.",
         "Recovered the repository truth hierarchy as a durable continuity rule.",
-        "Established an authoritative continuity-owned queue projection without overwriting V-001."
+        "Established an authoritative continuity-owned queue projection without overwriting V-001.",
+        "Classified automation completion prose as a lead-only provenance source and preserved missing artifact identifiers as unresolved."
       ],
       "acceptance_remaining": [
         "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
         "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
         "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
-        "Update the canonical knowledge graph with claim status while preserving the privacy boundary."
+        "Update the canonical knowledge graph with source_class and verification_status while preserving the privacy boundary."
       ],
-      "safe_next_action": "Acquire exhaustive branch/history coverage, then reconcile each missing identifier against immutable commits before mining new substantive memory."
+      "safe_next_action": "Acquire exhaustive branch/history coverage, then reconcile each missing identifier against immutable commits while treating run-report prose as lead-only evidence."
     },
     {
       "id": "R-020",
