@@ -38,22 +38,39 @@ jobs:
           printf 'observed_sha=%s\n' "$observed" | tee checkout-proof.txt
 
       - name: Run dependency-free contract tests
+        id: contract_tests
         shell: bash
         run: |
+          set +e
           set -o pipefail
           node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs 2>&1 | tee evidence-contract.tap
+          status="${PIPESTATUS[0]}"
+          printf '%s\n' "$status" > evidence-contract.exit-code
+          exit "$status"
 
       - name: Build immutable run manifest
         if: always()
         shell: bash
         env:
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ARTIFACT_NAME: vercel-evidence-contract-${{ github.sha }}-${{ github.run_attempt }}
         run: |
           set -euo pipefail
           test -f evidence-contract.tap || printf 'test log unavailable\n' > evidence-contract.tap
+          test -f evidence-contract.exit-code || printf '1\n' > evidence-contract.exit-code
           export DIGEST="$(sha256sum evidence-contract.tap | awk '{print $1}')"
+          export TEST_EXIT_CODE="$(cat evidence-contract.exit-code)"
           node - <<'NODE'
           const fs = require('node:fs');
+          const expectedOutcomes = [
+            'audible_verified',
+            'signal_detected_not_audible',
+            'route_changed',
+            'permission_blocked',
+            'unsupported',
+            'inconclusive'
+          ];
+          const exitCode = Number.parseInt(process.env.TEST_EXIT_CODE, 10);
           const manifest = {
             schema_version: 1,
             queue_item: 'V-001',
@@ -72,13 +89,50 @@ jobs:
             },
             test_execution: {
               command: 'node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs',
-              artifact_digest: `sha256:${process.env.DIGEST}`
+              exit_code: exitCode,
+              artifact_digest: `sha256:${process.env.DIGEST}`,
+              artifact_url: `${process.env.RUN_URL}#artifacts`,
+              artifact_name: process.env.ARTIFACT_NAME
             },
-            scope: 'contract_validator_ci_only',
-            deployment_attempted: false,
-            physical_device_performed: false
+            audio_outcomes: {
+              expected_set: expectedOutcomes,
+              observed_set: [],
+              complete: false
+            },
+            deployment_binding: {
+              attempted: false,
+              status: 'not_attempted',
+              match: false
+            },
+            physical_device: {
+              performed: false,
+              result: 'not_performed'
+            },
+            classification: exitCode === 0 ? 'runtime_verified_only' : 'failed',
+            limits: [
+              'No Vercel deployment was attempted.',
+              'No physical iPhone Safari verification was performed.',
+              'Artifact URL resolves to the immutable workflow run artifact section; artifact_name identifies the uploaded bundle.'
+            ]
           };
           fs.writeFileSync('vercel-evidence-contract-manifest.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+
+      - name: Validate generated manifest against V-001 contract
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import { validateEvidence } from './scripts/vercel-exact-commit-runtime-evidence.test.mjs';
+          const evidence = JSON.parse(fs.readFileSync('vercel-evidence-contract-manifest.json', 'utf8'));
+          const errors = validateEvidence(evidence);
+          if (errors.length > 0) {
+            console.error(`Generated manifest violates V-001 contract: ${errors.join(', ')}`);
+            process.exit(1);
+          }
+          console.log('Generated manifest satisfies V-001 evidence contract.');
           NODE
 
       - name: Upload contract evidence
@@ -89,6 +143,7 @@ jobs:
           path: |
             checkout-proof.txt
             evidence-contract.tap
+            evidence-contract.exit-code
             vercel-evidence-contract-manifest.json
           if-no-files-found: error
           retention-days: 30
