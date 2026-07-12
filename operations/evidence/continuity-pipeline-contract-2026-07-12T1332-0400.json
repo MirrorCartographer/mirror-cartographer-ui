@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T13:32:40-04:00",
+  "queue_item": "CM-009",
+  "evidence_type": "source_contract",
+  "implementation_commit": "aeaf63287e1312fbba1761ac704b4f5db3c29fcc",
+  "subject": "scan-normalize-validate continuity pipeline",
+  "verified_source_behavior": [
+    "Public observed aliases retain normalized identity, lifecycle dimension, lifecycle status, claim status, visibility, evidence strength, and accepted review state across all three stages.",
+    "Private-source occurrences are rejected without a source hash and remain summary references rather than copied passages.",
+    "Contradictory lifecycle statuses remain conflict-marked after normalization and validate only with review_state=conflict.",
+    "Raw private passage fields are rejected before persistence."
+  ],
+  "claim_states": {
+    "observed": "Scanner, adapter, and validator expose composable functions with compatible container schema version 2 after the prior adapter slice.",
+    "inferred": "An end-to-end executable test is the minimum durable proof that semantic and privacy invariants cross the transformation boundary.",
+    "proposed": "Run node --test tests/continuity-alias-occurrence-pipeline.test.mjs in trusted CI and attach the result.",
+    "superseded": "Independent unit coverage alone is sufficient evidence that the composed continuity path preserves meaning.",
+    "unresolved": "No trusted CI execution result is claimed in this evidence record."
+  },
+  "privacy_boundary": "Fixtures contain synthetic identifiers and abstract project-language examples only; no raw chat, health, identity, or private file-library passages are stored.",
+  "verification": {
+    "source_commit_created": true,
+    "runtime_execution_observed": false,
+    "command": "node --test tests/continuity-alias-occurrence-pipeline.test.mjs"
+  }
+}
