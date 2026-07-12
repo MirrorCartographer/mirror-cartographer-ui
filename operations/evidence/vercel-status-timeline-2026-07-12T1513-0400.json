@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "fail_closed_status_timeline_policy",
+  "observed_at": "2026-07-12T15:13:14-04:00",
+  "files": [
+    "scripts/vercel-status-timeline.mjs",
+    "scripts/vercel-status-timeline.test.mjs"
+  ],
+  "verification": {
+    "route": "dependency_free_node_runtime",
+    "command": "node scripts/vercel-status-timeline.test.mjs",
+    "result": "passed",
+    "tests": 5,
+    "covered": [
+      "provider capacity block remains fail-closed",
+      "newer pending status supersedes older failure",
+      "latest status must match expected commit",
+      "same-timestamp contradictory statuses fail closed",
+      "missing timestamps invalidate timeline"
+    ]
+  },
+  "deployment_claim": "none",
+  "physical_device_claim": "none",
+  "rollback": [
+    "revert test commit",
+    "revert implementation commit"
+  ]
+}
