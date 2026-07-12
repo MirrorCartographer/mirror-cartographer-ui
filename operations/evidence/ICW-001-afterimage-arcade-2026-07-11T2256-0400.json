@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "ICW-001",
+  "title": "Afterimage Arcade standalone interactive artwork",
+  "source_commit": "f337689882cef48eb358fecad1eb826880a2215d",
+  "artifact": "independent/afterimage-arcade/index.html",
+  "creative_premise": "A full-screen room composed of luminous paths that bend toward pointer motion and retain transient afterimages.",
+  "verification": {
+    "source_fetch": "passed",
+    "contract_checks": {
+      "canvas_present": true,
+      "accessible_canvas_name": true,
+      "live_status_region": true,
+      "keyboard_space_pulse": true,
+      "keyboard_reset": true,
+      "reduced_motion_branch": true,
+      "pointer_interaction": true,
+      "mobile_safe_viewport": true
+    },
+    "deployment_status": "blocked",
+    "deployment_reason": "Vercel build-rate-limit"
+  },
+  "independence_boundary": {
+    "mirror_cartographer_explanation": false,
+    "research_portal": false,
+    "worker_dashboard": false,
+    "product_funnel": false,
+    "payments_or_conversion_logic": false
+  },
+  "limits": [
+    "No public deployment is claimed.",
+    "No physical mobile Safari interaction test was performed.",
+    "Contract checks verify source features, not rendered visual quality."
+  ],
+  "rollback": "Revert the artifact commit and the two append-only operational record commits in reverse order."
+}
