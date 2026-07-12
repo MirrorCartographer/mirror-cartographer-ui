@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T17:52:00-04:00",
+  "tested_commit_sha": "2d63dbcd02bc12b1acead87847a2963e713f48ee",
+  "source": {
+    "provider": "github_connector",
+    "authenticated": true,
+    "event_scope": "pull_request_only",
+    "pagination_scope": "first_page_only"
+  },
+  "observation": {
+    "workflow_runs_returned": 0,
+    "finding": "absence_unproven",
+    "evidence_strength": "limited",
+    "exhaustive": false
+  },
+  "implemented_slice": {
+    "tool": "tools/vercel-studio/connector-workflow-snapshot-gate.mjs",
+    "test": "tools/vercel-studio/connector-workflow-snapshot-gate.test.mjs",
+    "purpose": "Prevent a zero-result connector snapshot from being promoted to exhaustive exact-commit deployment evidence."
+  },
+  "verification": {
+    "command": "node --test connector-workflow-snapshot-gate.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "zero-result absence remains unproven",
+      "matching runs remain limited evidence",
+      "cross-commit contamination fails closed",
+      "connector snapshots cannot self-declare exhaustive coverage"
+    ]
+  },
+  "limits": [
+    "The connector action exposes pull-request-triggered runs from the first page only.",
+    "No immutable Vercel deployment identity was established.",
+    "No browser or physical-device audio verification was performed.",
+    "Exhaustive evidence still requires authenticated all-event pagination through the Frontier enumerator."
+  ],
+  "rollback": "Revert commits c4844d34c6b4cbdfb2be3c41752e8c3ae9532cd2 and dd7a38942c16b4583698adbbb8912c963f3ad971; no existing files or history were deleted."
+}
