@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "slice": "Harden the public deployment identity manifest with explicit JSON content type, no-store delivery, and nosniff protection, then add a deterministic source contract.",
+  "specialists": [
+    "reliability_engineering",
+    "deployment_verification",
+    "test_harness_design",
+    "security_headers_review",
+    "rollback_review"
+  ],
+  "files": [
+    "vercel.json",
+    "scripts/vercel-identity-delivery-contract-check.mjs",
+    "package.json"
+  ],
+  "commits": [
+    "9b947526e8588d0bdbde9311353760cb1f3381b6",
+    "197526d00d46ff6e78c2170ab12408283b18eec6",
+    "0dd422b0ea3d046a80010a19d4a432093691ed23"
+  ],
+  "verification": {
+    "route": "Reconstructed the committed Vercel configuration and contract script in an isolated Node runtime.",
+    "result": "passed",
+    "assertions": 5,
+    "observed_output": "Vercel identity delivery contract passed: 5/5"
+  },
+  "provider_status": {
+    "commit": "0dd422b0ea3d046a80010a19d4a432093691ed23",
+    "context": "Vercel",
+    "state": "failure",
+    "classification": "build_rate_limit",
+    "deployment_proven": false
+  },
+  "boundaries": {
+    "payments_added": false,
+    "conversion_logic_added": false,
+    "files_deleted": false,
+    "history_rewritten": false
+  },
+  "rollback": [
+    "Revert 0dd422b0ea3d046a80010a19d4a432093691ed23",
+    "Revert 197526d00d46ff6e78c2170ab12408283b18eec6",
+    "Revert 9b947526e8588d0bdbde9311353760cb1f3381b6"
+  ],
+  "remaining_condition": "A successful Vercel build must serve the manifest with the committed headers, and the fetched commit_sha must match the deployed source commit.",
+  "recorded_at": "2026-07-12T00:42:00Z"
+}
