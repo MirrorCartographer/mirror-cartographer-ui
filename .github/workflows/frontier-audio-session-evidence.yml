@@ -1,0 +1,78 @@
+name: Frontier Audio Session Evidence
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/frontier-research/audio-session-orchestrator.mjs'
+      - 'tools/frontier-research/audio-session-orchestrator.test.mjs'
+      - 'tools/frontier-research/audio-clock-sampler.mjs'
+      - 'tools/frontier-research/audio-clock-evidence.mjs'
+      - 'tools/frontier-research/audio-evidence-packet.mjs'
+      - 'tools/frontier-research/audio-route-capability.mjs'
+      - '.github/workflows/frontier-audio-session-evidence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Run frontier audio orchestration tests
+        id: tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p operations/runtime-evidence
+          node --test tools/frontier-research/audio-session-orchestrator.test.mjs \
+            2>&1 | tee operations/runtime-evidence/frontier-audio-session-test.tap
+
+      - name: Write exact-commit evidence manifest
+        if: always()
+        shell: bash
+        env:
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const manifest = {
+            schema_version: 1,
+            evidence_type: 'exact_commit_test_execution',
+            repository: process.env.GITHUB_REPOSITORY,
+            commit_sha: process.env.GITHUB_SHA,
+            workflow: process.env.GITHUB_WORKFLOW,
+            run_id: process.env.GITHUB_RUN_ID,
+            run_attempt: process.env.GITHUB_RUN_ATTEMPT,
+            test_file: 'tools/frontier-research/audio-session-orchestrator.test.mjs',
+            outcome: process.env.TEST_OUTCOME,
+            claim_boundary: 'A passing Node test run validates committed software behavior only; it does not prove browser support, deployed behavior, route binding on a physical device, or audibility.'
+          };
+          fs.mkdirSync('operations/runtime-evidence', { recursive: true });
+          fs.writeFileSync(
+            'operations/runtime-evidence/frontier-audio-session-manifest.json',
+            JSON.stringify(manifest, null, 2) + '\n'
+          );
+          NODE
+
+      - name: Upload immutable run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-audio-session-${{ github.sha }}-${{ github.run_attempt }}
+          path: operations/runtime-evidence/
+          if-no-files-found: error
+          retention-days: 30
