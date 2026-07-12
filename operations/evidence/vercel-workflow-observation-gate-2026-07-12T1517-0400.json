@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:17:00Z",
+  "slice": "exact_commit_workflow_observation_gate",
+  "observed": [
+    "The active queue still requires an exact-commit audio-routing workflow observation and retained artifact inspection.",
+    "Provider build capacity remains unverified, so no application deployment was attempted.",
+    "The new gate was exercised locally with five dependency-free Node tests and all passed."
+  ],
+  "acceptance_contract": {
+    "requires": [
+      "valid observation timestamp",
+      "expected commit SHA equals workflow head SHA",
+      "expected workflow name",
+      "completed status",
+      "successful conclusion",
+      "vercel-audio-route-capability artifact",
+      "vercel-exact-commit-manifest artifact",
+      "run id, run attempt, and immutable run URL"
+    ],
+    "fail_closed_states": [
+      "missing observation",
+      "invalid timestamp",
+      "commit mismatch",
+      "wrong workflow",
+      "incomplete run",
+      "failed conclusion",
+      "missing artifacts",
+      "incomplete immutable run identity"
+    ]
+  },
+  "verification": {
+    "command": "node --test scripts/vercel-workflow-observation-gate.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "claim_boundary": {
+    "proves": "The repository contains a deterministic fail-closed policy for evaluating an observed exact-commit workflow run.",
+    "does_not_prove": [
+      "that a GitHub Actions run occurred",
+      "that required artifacts currently exist",
+      "that Vercel deployed the commit",
+      "that audio was audible in a browser or on physical iPhone Safari"
+    ]
+  },
+  "rollback": [
+    "Revert the queue update commit.",
+    "Revert this evidence commit.",
+    "Revert the test commit.",
+    "Revert the implementation commit."
+  ]
+}
