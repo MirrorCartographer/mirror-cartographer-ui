@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "R-024",
+  "owner": "frontier_research",
+  "created_at": "2026-07-12T10:30:00Z",
+  "finding": "Human audibility evidence is not sufficient unless it is bound to one exact commit, immutable deployment identifier, physical-device class, bounded session identifier, runtime route, and ordered fresh observation window.",
+  "source_status": {
+    "primary": [
+      {
+        "title": "Web Audio API",
+        "url": "https://www.w3.org/TR/webaudio/",
+        "use": "Defines AudioContext lifecycle, state, resume behavior, audio graph routing, and destination semantics."
+      },
+      {
+        "title": "HTML Standard: User activation",
+        "url": "https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation",
+        "use": "Defines transient and sticky user activation as browser-maintained state rather than a durable proof of later audible output."
+      }
+    ],
+    "repository": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "tools/frontier-research/audio-audibility-evidence.mjs"
+    ]
+  },
+  "evidence_strength": "implementation-tested contract; physical-device behavior remains unobserved",
+  "artifact": {
+    "implementation": "tools/frontier-research/audio-attestation-binding.mjs",
+    "test": "tools/frontier-research/audio-attestation-binding.test.mjs",
+    "implementation_commit": "17ed5f24570954961250c5c67a0d2eb672328c6a",
+    "test_commit": "6ed81a4eb9839144f77e7fb7faaa35c2dd64c174",
+    "test_result": {
+      "command": "node --test tools/frontier-research/audio-attestation-binding.test.mjs",
+      "passed": 7,
+      "failed": 0
+    }
+  },
+  "observed": [
+    "The canonical queue contains no active frontier_research item.",
+    "V-001 still requires bounded physical iPhone Safari audibility verification.",
+    "The prior audibility classifier distinguishes human-confirmed and contradicted evidence but does not bind the result to a deployment, session, and freshness window."
+  ],
+  "inferred": [
+    "An unbound human report can be accidentally associated with the wrong build, deployment, device, or playback attempt."
+  ],
+  "proposed": [
+    "Run the existing audibility classifier first, then validate the resulting terminal classification through this binding gate before accepting it into V-001 evidence."
+  ],
+  "superseded": [
+    "Treating a human-confirmed classifier result alone as sufficient commit-bound deployment evidence."
+  ],
+  "unresolved": [
+    "Physical iPhone Safari execution has not occurred.",
+    "Immutable Vercel deployment identity is not yet available for the blocked application commit.",
+    "Session identifiers still require a concrete generator and capture UI."
+  ],
+  "falsification_route": [
+    "Reject this contract if a test demonstrates that accepted evidence can be replayed across deployments or device sessions.",
+    "Reject or revise the temporal bounds if real physical verification cannot complete within them without weakening deployment identity.",
+    "Treat any physical silent-output result as contradiction evidence, not success, even when the AudioContext reports running."
+  ],
+  "privacy_boundary": "Retains only opaque commit, deployment, session, device-class, classification, boolean audibility, and timestamp fields; drops free-form notes and personal content."
+}
