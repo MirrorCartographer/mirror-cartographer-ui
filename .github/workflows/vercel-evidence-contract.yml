@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/vercel-evidence-contract.yml'
+      - 'scripts/vercel-exact-commit-runtime-evidence.mjs'
       - 'scripts/vercel-exact-commit-runtime-evidence.test.mjs'
       - 'tools/frontier-research/audio-route-capability.mjs'
       - 'tools/frontier-research/audio-route-capability.test.mjs'
@@ -143,7 +144,7 @@ jobs:
           set -euo pipefail
           node --input-type=module - <<'NODE'
           import fs from 'node:fs';
-          import { validateEvidence } from './scripts/vercel-exact-commit-runtime-evidence.test.mjs';
+          import { validateEvidence } from './scripts/vercel-exact-commit-runtime-evidence.mjs';
           const evidence = JSON.parse(fs.readFileSync('vercel-evidence-contract-manifest.json', 'utf8'));
           const errors = validateEvidence(evidence);
           if (errors.length > 0) {
