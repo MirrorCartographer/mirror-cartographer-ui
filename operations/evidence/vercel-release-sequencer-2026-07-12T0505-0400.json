@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T09:05:17Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "Fail-closed release sequencer for the blocked Vercel acceptance path.",
+  "inputs": [
+    "provider_capacity",
+    "operations_only_sentinel_skipped",
+    "exact_commit_audio_artifact_passed",
+    "immutable_deployment_bound",
+    "physical_iphone_safari_audible"
+  ],
+  "ordered_actions": [
+    "operations_only_wait",
+    "run_operations_only_sentinel",
+    "run_exact_commit_audio_verification",
+    "bind_immutable_deployment",
+    "run_physical_iphone_safari_check",
+    "acceptance_complete"
+  ],
+  "verification": {
+    "command": "node --test tools/vercel-ops/vercel-release-sequencer.test.mjs",
+    "environment": "isolated Node runtime using byte-identical committed source and tests",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0
+  },
+  "observed_current_decision": {
+    "next_action": "operations_only_wait",
+    "reason": "provider_capacity_not_observed_available",
+    "consumes_provider_build": false,
+    "fail_closed": true
+  },
+  "deployment_attempted": false,
+  "deployment_claimed": false,
+  "rollback": "Revert commits 5e95fba5e3b0d91fe81fa5b0b867826089e09b93 and d075e9a2ee01fca6d31caed9afb2fc3024f6dad5; no runtime or deployment configuration was changed.",
+  "limits": [
+    "No provider-capacity recovery was observed.",
+    "No Vercel deployment was attempted.",
+    "No physical iPhone Safari check was performed.",
+    "The sequencer enforces ordering but does not itself collect provider evidence."
+  ]
+}
