@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
+import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
 import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
@@ -18,6 +19,7 @@ import './assets/comet-garden.css';
 
 installDeploymentIdentityRuntime();
 installAudioObservabilityRuntime();
+installAudioRoutingEvidenceRuntime();
 installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
 installPossibilityFieldRuntime();
