@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T06:22:49Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound physical audibility evidence to a fresh post-deployment window so stale runtime or human observations cannot support a current-device audibility claim.",
+  "evidence": "operations/evidence/vercel-audibility-freshness-bound-2026-07-12T0222-0400.json",
+  "commits": [
+    "f62c8a76599c6dbf1372287747b4cb5c4d2ce181",
+    "50dc46741fc38daf31401ef57f9ff1a9f4110a86",
+    "78e968d39a6f9b5750c32d9b97ed16494e87eead"
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification within the freshness policy and one shared session identifier."
+  ],
+  "safe_next_action": "Continue operations-only verification while provider capacity is exhausted; when capacity returns, run one sentinel and then one commit-bound application verification."
+}
