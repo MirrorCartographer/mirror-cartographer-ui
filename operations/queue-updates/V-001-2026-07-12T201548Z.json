@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T20:15:48Z",
+  "slice": "Exact-commit Vercel provider-status assessment",
+  "state": "completed_slice_blocked",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "completed": [
+    "Added a fail-closed evaluator for exact-commit Vercel status observations.",
+    "Added tests for provider rate limits, absent status, successful status without immutable binding, and malformed rows.",
+    "Recorded the exact commit's observed Vercel build-rate-limit failure as durable evidence."
+  ],
+  "verification": {
+    "local_node_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "github_status_observation": {
+      "commit_sha": "a3b095267bfd7ac7e98cfd98ae94de3d34bb44c3",
+      "context": "Vercel",
+      "state": "failure",
+      "classification": "provider_build_rate_limited"
+    }
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Continue operations-only evidence work. Recheck exact-commit Vercel status before any application deployment attempt; proceed only after the rate-limit failure clears.",
+  "rollback": [
+    "Revert commit 35084a939ee3286ce9e9f12c565316d1893e8210.",
+    "Revert commit 0fc8ffeacc9ef64087a1ba594f511e70716d006f.",
+    "Revert commit a67964dc108b1d801f08b69f6d0306095b1b8c68.",
+    "Revert the commit that created this queue update."
+  ]
+}
