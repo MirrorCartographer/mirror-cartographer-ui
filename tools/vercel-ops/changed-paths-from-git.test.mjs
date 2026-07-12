@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildChangedPathsManifest, parseArgs } from './changed-paths-from-git.mjs';
+import path from 'node:path';
+import { buildChangedPathsManifest, parseArgs, resolveOutputPath } from './changed-paths-from-git.mjs';
 
 const BASE = '1111111111111111111111111111111111111111';
 const HEAD = '2222222222222222222222222222222222222222';
 
-test('builds a deterministic manifest from immutable commits', () => {
+ test('builds a deterministic manifest from immutable commits', () => {
   const calls = [];
   const manifest = buildChangedPathsManifest({
     base: BASE,
@@ -89,5 +90,29 @@ test('rejects malformed, unknown, duplicate, or incomplete CLI arguments', () =>
     ['--base', BASE, '--head', '--output']
   ]) {
     assert.throws(() => parseArgs(argv));
+  }
+});
+
+test('confines output to JSON files inside operations', () => {
+  const cwd = path.resolve('/tmp/mirror-cartographer');
+  assert.equal(
+    resolveOutputPath(cwd),
+    path.join(cwd, 'operations', 'changed-paths.json')
+  );
+  assert.equal(
+    resolveOutputPath(cwd, 'operations/evidence/result.json'),
+    path.join(cwd, 'operations', 'evidence', 'result.json')
+  );
+
+  for (const unsafe of [
+    'result.json',
+    '../result.json',
+    '/tmp/result.json',
+    'operations',
+    'operations/result.txt',
+    'operations/../result.json',
+    'operations/bad\nname.json'
+  ]) {
+    assert.throws(() => resolveOutputPath(cwd, unsafe));
   }
 });
