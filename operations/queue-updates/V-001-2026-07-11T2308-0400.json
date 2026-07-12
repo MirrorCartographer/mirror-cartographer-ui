@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress",
+  "completed_slice": "Collect all independent CI diagnostic outcomes despite intermediate failures, then fail closed at final evidence verification.",
+  "evidence": "operations/evidence/V-001-complete-diagnostic-matrix-2026-07-11T2308-0400.json",
+  "commits": [
+    "b1f42baffc30ca7fb02fa205d082d72bd7c9382d",
+    "73a834b7a81e14d656a4da16b61f244718b29112",
+    "de0c44c14fa5b44ecf3b11fed11c59d4c61f6a29",
+    "6777e451cedb2a1da389197db4f28441ee1d64d2"
+  ],
+  "acceptance_remaining": [
+    "Observe an exact-commit GitHub Actions run and inspect its artifact.",
+    "Bind the tested commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Inspect the workflow run triggered by the workflow change, verify the six-outcome packet, and record immutable deployment status without conflating browser automation with physical speaker evidence."
+}
