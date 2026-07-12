@@ -66,6 +66,26 @@ export function parseArgs(argv) {
   return args;
 }
 
+export function resolveOutputPath(cwd, requested = 'operations/changed-paths.json') {
+  if (typeof cwd !== 'string' || cwd.length === 0) throw new Error('cwd must be a non-empty path');
+  if (typeof requested !== 'string' || requested.length === 0 || CONTROL_CHARACTER.test(requested)) {
+    throw new Error('output must be a non-empty control-character-free path');
+  }
+
+  const root = path.resolve(cwd);
+  const operationsRoot = path.join(root, 'operations');
+  const output = path.resolve(root, requested);
+  const relative = path.relative(operationsRoot, output);
+
+  if (relative === '' || relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('output must resolve to a file inside operations/');
+  }
+  if (path.extname(output).toLowerCase() !== '.json') {
+    throw new Error('output must use a .json extension');
+  }
+  return output;
+}
+
 export function runChangedPathsCli({ argv = process.argv.slice(2), cwd = process.cwd(), runGit = execFileSync } = {}) {
   try {
     const args = parseArgs(argv);
@@ -74,7 +94,7 @@ export function runChangedPathsCli({ argv = process.argv.slice(2), cwd = process
       head: args.get('--head'),
       runGit
     });
-    const output = path.resolve(cwd, args.get('--output') || 'operations/changed-paths.json');
+    const output = resolveOutputPath(cwd, args.get('--output'));
     writeFileSync(output, `${JSON.stringify(manifest, null, 2)}\n`, { encoding: 'utf8', flag: 'w' });
     process.stdout.write(`${JSON.stringify({ schema_version: 1, stage: 'changed_paths', output, path_count: manifest.path_count, comparison: manifest.comparison })}\n`);
     return 0;
