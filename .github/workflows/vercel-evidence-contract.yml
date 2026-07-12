@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/vercel-evidence-contract.yml'
       - 'scripts/vercel-exact-commit-runtime-evidence.test.mjs'
+      - 'tools/frontier-research/audio-route-capability.mjs'
+      - 'tools/frontier-research/audio-route-capability.test.mjs'
       - 'operations/evidence/vercel-exact-commit-runtime-*.json'
       - 'operations/queue-updates/V-001-*.json'
 
@@ -37,13 +39,16 @@ jobs:
           test -z "$(git status --porcelain)"
           printf 'observed_sha=%s\n' "$observed" | tee checkout-proof.txt
 
-      - name: Run dependency-free contract tests
+      - name: Run dependency-free V-001 contract and route tests
         id: contract_tests
         shell: bash
         run: |
           set +e
           set -o pipefail
-          node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs 2>&1 | tee evidence-contract.tap
+          node --test \
+            scripts/vercel-exact-commit-runtime-evidence.test.mjs \
+            tools/frontier-research/audio-route-capability.test.mjs \
+            2>&1 | tee evidence-contract.tap
           status="${PIPESTATUS[0]}"
           printf '%s\n' "$status" > evidence-contract.exit-code
           exit "$status"
@@ -88,16 +93,22 @@ jobs:
               match: true
             },
             test_execution: {
-              command: 'node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs',
+              command: 'node --test scripts/vercel-exact-commit-runtime-evidence.test.mjs tools/frontier-research/audio-route-capability.test.mjs',
               exit_code: exitCode,
               artifact_digest: `sha256:${process.env.DIGEST}`,
               artifact_url: `${process.env.RUN_URL}#artifacts`,
-              artifact_name: process.env.ARTIFACT_NAME
+              artifact_name: process.env.ARTIFACT_NAME,
+              suites: [
+                'V-001 evidence schema and claim-boundary contract',
+                'audio route capability classification boundaries'
+              ]
             },
             audio_outcomes: {
               expected_set: expectedOutcomes,
               observed_set: [],
-              complete: false
+              complete: false,
+              route_evaluator_contract_tested: exitCode === 0,
+              physical_audibility_claimed: false
             },
             deployment_binding: {
               attempted: false,
@@ -112,6 +123,7 @@ jobs:
             limits: [
               'No Vercel deployment was attempted.',
               'No physical iPhone Safari verification was performed.',
+              'Route evaluator tests validate classification logic but do not observe a browser or physical output device.',
               'Artifact URL resolves to the immutable workflow run artifact section; artifact_name identifies the uploaded bundle.'
             ]
           };
