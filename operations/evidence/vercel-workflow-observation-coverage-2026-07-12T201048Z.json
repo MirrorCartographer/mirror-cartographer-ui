@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-12T20:10:48Z",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "commit_queried": "6fb752e32f1b5f93e47ab57600586fd2c922bb31",
+  "source": {
+    "tool": "GitHub.fetch_commit_workflow_runs",
+    "documented_scope": {
+      "event_filter": "pull_request",
+      "pagination": "first_page_only",
+      "exhaustive_events": false,
+      "exhaustive_pages": false
+    },
+    "observed_response": {
+      "workflow_runs": []
+    }
+  },
+  "assessment": {
+    "accepted": true,
+    "observable": false,
+    "exhaustive": false,
+    "decision": "absence_unproven_due_incomplete_scope",
+    "reason": "The available query does not cover every workflow event or every result page, so an empty result cannot establish non-execution."
+  },
+  "implementation": {
+    "module": "operations/tools/vercel-workflow-observation-assessment.mjs",
+    "tests": "operations/tools/vercel-workflow-observation-assessment.test.mjs",
+    "verification": {
+      "command": "node --test vercel-workflow-observation-assessment.test.mjs",
+      "passed": 5,
+      "failed": 0
+    }
+  },
+  "claims_not_established": [
+    "No workflow ran for the queried commit.",
+    "The exact-commit audio-routing workflow executed.",
+    "A workflow artifact exists.",
+    "A Vercel deployment exists or succeeded."
+  ]
+}
