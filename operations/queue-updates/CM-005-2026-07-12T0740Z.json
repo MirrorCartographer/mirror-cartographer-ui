@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CM-005",
+  "owner": "continuity_mining",
+  "priority_basis": "CM-004 explicitly names provenance-qualified alias dates as its next action, and no continuity-owned item exists in the canonical ACTIVE_QUEUE snapshot.",
+  "state": "completed_slice",
+  "objective": "Prevent invented alias chronology by validating first-known and last-seen dates against explicit privacy-safe source records.",
+  "completed": [
+    "Implemented source-type and source-date validation.",
+    "Bound first-known and last-seen dates to the minimum and maximum source dates.",
+    "Rejected guessed chronology, duplicate source identifiers, reversed ranges, unsupported source types, and raw private content.",
+    "Added six deterministic boundary tests and append-only evidence."
+  ],
+  "files": [
+    "tools/continuity/alias-provenance-validator.mjs",
+    "tools/continuity/alias-provenance-validator.test.mjs",
+    "operations/evidence/continuity-alias-provenance-2026-07-12T0740Z.json"
+  ],
+  "commits": [
+    "3e7c9b2707fefef7c3e39220ebebd894a40d5a0d",
+    "9ef0dcc091e53fb055fa5693bcf4701ef14f1a68",
+    "b243749dd8c165174d2c1a50d3d8fa65d502f7de"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "committed_ci_execution": false
+  },
+  "shared_state_policy": {
+    "active_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "history_deleted": false,
+    "specialist_registry_changed": false
+  },
+  "next_action": "Compose alias resolution and provenance validation into one ingestion boundary, then pass one authentic privacy-safe alias record through the combined path."
+}
