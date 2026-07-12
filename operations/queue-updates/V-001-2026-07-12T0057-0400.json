@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T04:57:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed physical audibility acceptance gate that binds the Frontier Research six-state classifier to an exact application commit, immutable ready Vercel deployment identity, tested commit, bounded iPhone Safari device route, volume state, session, and human observation time.",
+  "files": [
+    "operations/vercel/verify-physical-audibility-evidence.mjs",
+    "operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "operations/evidence/vercel-physical-audibility-gate-2026-07-12T0057-0400.json"
+  ],
+  "commits": [
+    "b96dabdc43aa0c60a996ab75771f12d2bc21d931",
+    "3453e1c3a4bcbfbff018e8101b5288092a564af7",
+    "e705415448e880c13cb64702b5f291e80353b8a2"
+  ],
+  "verification": {
+    "tests": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Run the exact-commit audio-routing workflow and feed its artifact into the new gate.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform the bounded physical iPhone Safari audibility observation required for human_confirmed."
+  ],
+  "safe_next_action": "Do not deploy while provider capacity remains exhausted. When capacity returns, first verify an operations-only sentinel is ignored, then perform one exact-commit deployment and run the physical audibility evidence packet through the new gate."
+}
