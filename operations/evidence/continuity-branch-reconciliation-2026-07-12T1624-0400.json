@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "evidence_id": "continuity-branch-reconciliation-2026-07-12T1624-0400",
+  "owner": "continuity_mining",
+  "created_at": "2026-07-12T16:24:32-04:00",
+  "objective": "Reconcile reported continuity artifacts M-004, M-005, and M-006 against repository-observable evidence before extending their claims.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/queue-updates/M-RECONCILE-001-2026-07-12T1608-0400.json via commit 89026d449e4ce4729ecc934ffd00d06d614727a6",
+    "recent repository commits through 531c89f3dddc9bf371485ada80a44689fddb9330",
+    "repository code search for M-006 continuity",
+    "repository commit search for M-006",
+    "branch search for continuity",
+    "repository metadata for default branch identity"
+  ],
+  "claims": {
+    "observed": [
+      "The canonical ACTIVE_QUEUE contains only V-001 and no continuity_mining-owned item.",
+      "The continuity_mining registry is empty.",
+      "TRIGGER_REQUESTS contains no pending requests.",
+      "Repository code search returned no match for M-006 continuity.",
+      "Repository commit search returned no commit matching M-006.",
+      "Branch search returned no branch matching continuity.",
+      "The repository default branch is main.",
+      "The available branch-search result is not an exhaustive branch inventory and therefore cannot establish nonexistence outside the default branch."
+    ],
+    "inferred": [
+      "The most likely continuity failure is a reporting-to-repository mismatch: prior prose described artifacts that are not observable through the current repository connection.",
+      "Because exhaustive branch enumeration was not available, the location of the reported artifacts remains unresolved rather than disproven."
+    ],
+    "proposed": [
+      "Treat canonical repository files and immutable commit evidence as authoritative over assistant completion prose.",
+      "Create one explicit continuity queue item for provenance reconciliation and do not reconstruct M-004, M-005, or M-006 without source evidence.",
+      "Add a future branch-inventory capability only if a queue item documents the durable gap and reversible registry change."
+    ],
+    "superseded": [
+      "Assuming a named artifact exists because a prior run reported a path or commit.",
+      "Treating a negative non-exhaustive branch search as proof of repository-wide absence."
+    ],
+    "unresolved": [
+      "Whether M-004, M-005, and M-006 exist on an unobserved branch, another repository, or never persisted.",
+      "The source conversation or artifact that originally defined M-004, M-005, and M-006.",
+      "Whether a specialist registry addition is warranted after exhaustive branch and history access becomes available."
+    ]
+  },
+  "memory_recovered": {
+    "title": "Repository truth hierarchy",
+    "durable_rule": "For project continuity, canonical repository state and immutable commit evidence outrank run summaries. Negative search results prove absence only within the recorded coverage envelope.",
+    "operational_effect": "Future teams must preserve mismatches as unresolved claims, include query coverage, and avoid recreating missing artifacts under the same identifiers."
+  },
+  "evidence_strength": "moderate",
+  "coverage_limit": "Exact default-branch files and repository-indexed commit/code search were inspected, but exhaustive branch enumeration and private chat-history provenance were unavailable.",
+  "privacy_boundary": "Only repository metadata, operational identifiers, and abstract process rules are included. No private chat text, health information, personal identifiers, or sensitive project content is reproduced.",
+  "falsification_route": "This reconciliation is falsified if an immutable repository commit or branch is later produced containing authentic M-004, M-005, or M-006 artifacts that predate this evidence. In that case, link the commit, revise the unresolved claims, and preserve this audit as the earlier coverage-limited observation."
+}
