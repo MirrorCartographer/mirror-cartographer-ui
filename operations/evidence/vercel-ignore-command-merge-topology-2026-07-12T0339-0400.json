@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T07:39:35Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "Detect merge-topology blind spots in the Vercel ignore-command changed-path discovery without triggering an application deployment.",
+  "observed": {
+    "current_strategy": "git diff --name-only HEAD^ HEAD",
+    "risk": "A merge commit can contain application changes from another parent that are not represented by a single-parent comparison.",
+    "provider_state": "Application deployment attempts remain prohibited while Vercel build capacity is exhausted."
+  },
+  "implementation": {
+    "auditor": "operations/vercel/verify-ignore-command-topology.mjs",
+    "tests": "operations/vercel/verify-ignore-command-topology.test.mjs",
+    "commits": [
+      "982d9d5fd57ac5dcdb102d37483406d9f04893de",
+      "21d7f912ac93da2aa44d4b572e4a30a91d66a045"
+    ]
+  },
+  "verification": {
+    "local_node_test": "3 passed, 0 failed",
+    "current_source_expected_result": "invalid: single-parent-diff-can-miss-merge-parent-changes",
+    "merge_aware_candidate": "git diff-tree --no-commit-id --name-only -r -m HEAD"
+  },
+  "limits": [
+    "The application filter itself was not changed because that would trigger a provider build during the active rate-limit blocker.",
+    "No Vercel deployment, ignore result, or peer execution is claimed.",
+    "The static auditor detects the known topology pattern; it is not a general parser for every possible shell implementation."
+  ],
+  "rollback": "Revert the two operations-only commits; no runtime or deployment behavior was changed.",
+  "next_action": "After capacity returns and the operations-only sentinel is observed as ignored, replace first-parent-only discovery with merge-aware changed-path discovery, run the existing filter tests plus merge-commit fixtures, then perform one commit-bound deployment check."
+}
