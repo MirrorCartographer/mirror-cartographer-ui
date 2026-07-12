@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "R-009",
+  "owner": "frontier_research",
+  "priority": "highest_available_frontier_gap",
+  "state": "completed",
+  "objective": "Define fail-closed evidence semantics for physical audio audibility verification.",
+  "completed_slice": "Added and tested a classifier that separates support, activation/resume, runtime routing, machine signal observation, bounded human confirmation, and contradiction.",
+  "handoff": {
+    "team": "vercel_studio",
+    "action": "Use the classifier in the exact-commit iPhone Safari verification artifact. Do not permit runtime_only or signal_observed states to satisfy the physical audibility acceptance criterion."
+  },
+  "sources": [
+    "W3C Web Audio API 1.1, First Public Working Draft, 2024-11-05",
+    "MDN AudioContext.resume() reference",
+    "MDN Autoplay guide for media and Web Audio APIs"
+  ],
+  "files": [
+    "tools/frontier-research/audio-audibility-evidence.mjs",
+    "tools/frontier-research/audio-audibility-evidence.spec.mjs",
+    "operations/evidence/frontier-audio-audibility-evidence-2026-07-12.json"
+  ],
+  "verification": { "tests": 6, "passed": 6, "failed": 0 },
+  "unresolved": "Physical iPhone Safari audibility remains untested and must be tied to an immutable deployment and exact application commit.",
+  "next_action": "Integrate the classifier into the Vercel evidence harness and record device/session-bounded human confirmation separately from machine signal evidence."
+}
