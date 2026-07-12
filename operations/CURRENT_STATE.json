@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "project": "Mirror Cartographer",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "updated_at": "2026-07-12T04:16:00Z",
+  "active_delivery_item": "V-001",
+  "delivery_state": "in_progress_blocked",
+  "observed_blocker": "Vercel account build-rate limit prevented immutable deployment verification; production acceptance remains fail-closed.",
+  "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
+  "operating_constraints": [
+    "Do not add payments or conversion logic to Vercel.",
+    "Do not delete GitHub files or history.",
+    "Do not claim deployment or peer execution without evidence.",
+    "Avoid application deployment attempts while provider build capacity is exhausted."
+  ],
+  "next_action": "Use operations-only changes until Vercel capacity returns, then verify ignoreCommand suppression before one commit-bound deployment check."
+}
