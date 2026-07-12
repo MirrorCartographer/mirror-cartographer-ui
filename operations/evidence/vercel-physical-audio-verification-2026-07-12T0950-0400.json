@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T13:50:57Z",
+  "slice": "bounded_physical_iphone_safari_audio_verification",
+  "status": "implemented_and_tested_not_physically_observed",
+  "source_commits": {
+    "implementation": "dd46d96bc8a7c9e81bbb7629ca09c0acfdd7f3b3",
+    "tests": "1fd19204c49dc48fb4ebb86719abbcbdca2fdb5d"
+  },
+  "verification": {
+    "command": "node --test physical-audio-verification.test.mjs",
+    "environment": "isolated local Node runtime using byte-identical committed source and test content",
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "three unanimous audible trials accepted",
+      "mixed audibility preserved as contradiction",
+      "unanimous inaudibility rejected without corrupting structural validity",
+      "non-iPhone device and missing activation fail closed",
+      "deterministic evidence digest"
+    ]
+  },
+  "claim_boundary": {
+    "proved": [
+      "A deterministic validator now exists for three bounded physical iPhone Safari trials tied to one commit and deployment identity.",
+      "The validator separates structural validity from acceptance and preserves mixed human outcomes as contradictions.",
+      "Equivalent records produce the same SHA-256 evidence digest."
+    ],
+    "not_proved": [
+      "A physical iPhone Safari trial occurred.",
+      "The named deployment exists or belongs to the project.",
+      "Audio was physically audible on a production deployment.",
+      "Vercel build capacity has recovered."
+    ]
+  },
+  "privacy": {
+    "contains_private_chat": false,
+    "contains_health_data": false,
+    "contains_credentials": false,
+    "device_record_policy": "Store only coarse device model, OS version, browser version, timestamps, and bounded trial outcomes; do not store personal identifiers."
+  },
+  "deployment_attempted": false,
+  "reason_no_deployment": "CURRENT_STATE prohibits application deployment attempts while provider build capacity remains exhausted."
+}
