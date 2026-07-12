@@ -1,0 +1,53 @@
+name: Vercel evidence gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/vercel-deployment-status-classifier.mjs"
+      - "scripts/vercel-deployment-status-classifier.test.mjs"
+      - "scripts/vercel-status-evidence.mjs"
+      - "scripts/vercel-status-evidence.test.mjs"
+      - "package.json"
+      - ".github/workflows/vercel-evidence-gate.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Deployment evidence contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout immutable revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify classifier contract
+        run: npm run test:vercel-status-classifier
+
+      - name: Verify evidence contract
+        run: npm run test:vercel-status-evidence
+
+      - name: Record immutable verification summary
+        if: always()
+        run: |
+          {
+            echo "## Vercel evidence gate"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Repository: \`${GITHUB_REPOSITORY}\`"
+            echo "- Contract job: \`${{ job.status }}\`"
+            echo "- This gate verifies source contracts only; it does not claim a Vercel deployment or served-commit identity."
+          } >> "$GITHUB_STEP_SUMMARY"
