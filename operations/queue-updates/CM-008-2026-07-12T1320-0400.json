@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-008",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T13:20:36-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "ACTIVE_QUEUE has no continuity_mining-owned item, so canonical queue state was not changed.",
+  "completed_slice": "Added a deterministic adapter from scanner rows to the validator-complete occurrence contract, with tests for IDs, conflicts, source visibility, and unresolved review state.",
+  "memory_recovered": "Durable language continuity requires a preserved transformation boundary between discovered occurrences and validated memory. Lifecycle dimension, source visibility, epistemic status, and review state must survive that boundary.",
+  "claim_states": {
+    "observed": "The scanner and validator used different row fields and evidence semantics while both declared schema version 2.",
+    "inferred": "A pure adapter is the safest reversible bridge because it preserves both existing interfaces.",
+    "proposed": "Pass scanner output through normalizeScannerOutput and validateOccurrenceSet before promotion.",
+    "superseded": "Equal container schema versions alone prove row-contract compatibility.",
+    "unresolved": "Trusted execution of the adapter test has not yet been observed."
+  },
+  "contradictions_resolved": [
+    "Container version equality does not imply row-contract compatibility.",
+    "Normalization does not upgrade uncertainty: unresolved and weak-context rows remain needs_review, and conflicts remain conflict."
+  ],
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "scripts/continuity-alias-occurrence-validator.mjs",
+    "tests/continuity-alias-occurrence-validator.test.mjs",
+    "operations/queue-updates/CM-007-2026-07-12T1254-0400.json",
+    "recent repository commits"
+  ],
+  "files": [
+    "scripts/continuity-alias-occurrence-adapter.mjs",
+    "tests/continuity-alias-occurrence-adapter.test.mjs",
+    "operations/queue-updates/CM-008-2026-07-12T1320-0400.json"
+  ],
+  "commits": [
+    "be871010110cf760f65c30d91226f653f278dd84",
+    "f85eeb0262d0199d23aa5dbcc076b4ff627c17ee"
+  ],
+  "verification": {
+    "result": "committed_source_verified_runtime_pending",
+    "limitation": "No CI execution result is claimed."
+  },
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist",
+    "Test Harness Engineer"
+  ],
+  "registry_change": null,
+  "privacy_boundary": "Only abstract project-language rules, repository references, commit identifiers, dates, and deterministic transformation behavior were stored.",
+  "next_action": "Add one executable pipeline test that scans, normalizes, and validates an occurrence set, then attach trusted CI evidence."
+}
