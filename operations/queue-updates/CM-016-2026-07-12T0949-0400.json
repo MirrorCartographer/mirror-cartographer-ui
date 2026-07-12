@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-016",
+  "owner": "continuity_mining",
+  "state": "completed",
+  "priority_basis": "No continuity-owned item exists in the canonical queue; the highest-risk continuity gap is conflating committed evidence with canonical authorization.",
+  "objective": "Preserve the distinction between repository history, additive queue evidence, and executable canonical queue state.",
+  "completed_slice": {
+    "artifact": "operations/continuity/records/CM-0011-canonical-queue-authorization-boundary.json",
+    "commit": "c196cb8216ccd36abc2e7f58401770ca52dca826",
+    "behavior": "Classify committed but unpromoted continuity work as historical evidence rather than an authorized successor queue item."
+  },
+  "verification": {
+    "canonical_queue_blob": "49ff3b21882ff48752f7f0cecb38a4f4ecf17dd5",
+    "observed_continuity_items": 0,
+    "observed_active_item": "V-001"
+  },
+  "shared_state_policy": "Additive queue update only; canonical shared-state files were not overwritten.",
+  "specialist_registry_change": null,
+  "next_action": "Create an atomic provenance-preserving queue promotion mechanism before treating any successor continuity item as authorized."
+}
