@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T19:17:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed observation gate that accepts a GitHub Actions run only when workflow identity, exact commit SHA, successful completion, immutable run identity, and both required retained artifacts are present together.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "scripts/vercel-workflow-observation-gate.mjs",
+    "scripts/vercel-workflow-observation-gate.test.mjs",
+    "operations/evidence/vercel-workflow-observation-gate-2026-07-12T1517-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1517-0400.json"
+  ],
+  "implementation_commit": "aff41d4a57d95ad0a7f655d355871893bebfe08f",
+  "test_commit": "5055b35b789cc163fd325c4ec58e532563cc8299",
+  "evidence_commit": "6b83c9ec0a26c95f4975eedeb85e6176a42fa5bf",
+  "verification": {
+    "route": "dependency-free Node test suite",
+    "tests_passed": 5,
+    "tests_failed": 0
+  },
+  "limits": [
+    "No provider workflow run was observed in this slice.",
+    "No Vercel deployment was attempted while capacity remains unverified.",
+    "No browser or physical-device audibility is claimed."
+  ],
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit evidence workflow and pass its run metadata plus artifact names through the new gate.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Fetch the next exact-commit workflow run and its artifact list; accept it only if the new gate returns accept_workflow_observation."
+}
