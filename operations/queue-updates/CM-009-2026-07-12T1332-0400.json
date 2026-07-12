@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-009",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T13:32:40-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "ACTIVE_QUEUE has no continuity_mining-owned item, so canonical queue state was not overwritten.",
+  "completed_slice": "Added an executable end-to-end contract test spanning alias occurrence scanning, normalization, and validation, including semantic preservation, conflict retention, and privacy rejection.",
+  "memory_recovered": "Continuity is not the storage of a name alone. A durable occurrence must carry identity, lifecycle dimension, lifecycle status, epistemic status, source visibility, evidence strength, conflict state, and privacy boundary through every transformation stage.",
+  "claim_states": {
+    "observed": "The scanner, adapter, and validator can now be exercised as one deterministic pipeline using synthetic fixtures.",
+    "inferred": "Pipeline-level tests detect semantic drift that isolated stage tests cannot detect.",
+    "proposed": "Promote this test into the trusted continuity CI path and attach execution evidence.",
+    "superseded": "The prior unverified assumption that stage compatibility follows from matching schema versions.",
+    "unresolved": "Trusted execution of the new pipeline test has not yet been observed."
+  },
+  "contradictions_resolved": [
+    "A private source can be continuity evidence without storing its passage: a summary reference plus hash preserves provenance while enforcing privacy.",
+    "Conflicting lifecycle claims are not normalized into a winner; both survive as conflict-marked occurrences pending review.",
+    "An accepted alias occurrence requires more than normalization: its evidence and review state must also remain valid after composition."
+  ],
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/queue-updates/CM-008-2026-07-12T1320-0400.json",
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "scripts/continuity-alias-occurrence-adapter.mjs",
+    "scripts/continuity-alias-occurrence-validator.mjs",
+    "package.json",
+    "recent repository commits"
+  ],
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist",
+    "Test Harness Engineer"
+  ],
+  "registry_change": null,
+  "files": [
+    "tests/continuity-alias-occurrence-pipeline.test.mjs",
+    "operations/evidence/continuity-pipeline-contract-2026-07-12T1332-0400.json",
+    "operations/queue-updates/CM-009-2026-07-12T1332-0400.json"
+  ],
+  "commits": [
+    "aeaf63287e1312fbba1761ac704b4f5db3c29fcc",
+    "ea70c0c22f3a6750d6d8898ef0ed09b833204f0d"
+  ],
+  "verification": {
+    "result": "committed_source_verified_runtime_pending",
+    "command": "node --test tests/continuity-alias-occurrence-pipeline.test.mjs",
+    "limitation": "No CI or local runtime execution result is claimed."
+  },
+  "privacy_boundary": "Only synthetic alias fixtures, abstract continuity rules, repository paths, dates, and commit identifiers were stored. No private conversation passage or personal/medical content was copied.",
+  "next_action": "Add the pipeline test to a trusted GitHub Actions continuity job, observe its execution for the exact commit, and record the artifact or job evidence without modifying the canonical queue unless a continuity-owned item is added."
+}
