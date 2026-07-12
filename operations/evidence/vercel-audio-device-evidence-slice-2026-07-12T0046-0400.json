@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T04:46:00Z",
+  "slice": "operations-only verifier for privacy-safe audio device evidence wiring",
+  "source_commits_inspected": [
+    "97838d3f419799fba40a1e2f014c4840d0f4235a",
+    "8a5b891e681338389063f793d9bd0b261a6d1f75",
+    "4a2a3cda1cf957ccdf3bd9be744fb8a5bbd348d2",
+    "fcf189ec2d0cc65298f53e9cd3c10634ec11a06b"
+  ],
+  "verifier": "operations/vercel/verify-audio-device-evidence-slice.mjs",
+  "verification": {
+    "method": "deterministic Node.js fixture execution",
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "checks": [
+      "runtime requires injected document",
+      "runtime writes through injected document",
+      "zero-sized viewport is classified unknown",
+      "main entry injects window, navigator, and document",
+      "privacy assertions are present",
+      "unknown viewport assertions are present"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE forbids application deployment attempts while provider build capacity is exhausted."
+  },
+  "claim_boundary": "This proves the verifier behavior and confirms the inspected source contracts. It does not prove physical iPhone audibility, a successful Vercel deployment, or exact-commit production identity.",
+  "rollback": "Revert commit f20bef17d838f5d5180bf76720e2f9e6bb52e624; no application runtime file was changed."
+}
