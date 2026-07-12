@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "R-029",
+  "owner": "frontier_research",
+  "priority": "research_support",
+  "state": "completed_slice",
+  "objective": "Add a deterministic integrity gate for AudioContext output-clock evidence before render-timeline claims are composed into deployment-bound audio evidence.",
+  "comparison_against_prior_work": {
+    "prior_artifact": "tools/frontier-research/audio-evidence-packet.mjs",
+    "non_duplication": "The prior artifact composes evidence layers and preserves cross-layer contradictions. This slice validates the internal clock consistency of the render-timeline layer itself."
+  },
+  "completed": [
+    "Added monotonicity checks for context, output-performance, and sampling clocks.",
+    "Added bounded delta-drift detection between AudioContext and performance timelines.",
+    "Added future-output-timestamp plausibility checks.",
+    "Preserved unavailable baseLatency and outputLatency as unobservable rather than zero.",
+    "Added deterministic evidence digests and seven boundary tests."
+  ],
+  "files": [
+    "tools/frontier-research/audio-clock-evidence.mjs",
+    "tools/frontier-research/audio-clock-evidence.test.mjs",
+    "operations/evidence/frontier-audio-clock-integrity-2026-07-12T1025-0400.json",
+    "operations/queue-updates/R-029-2026-07-12T1025-0400.json"
+  ],
+  "commits": [
+    "da824d3f214446fea56b8f9203128a5e3b34df11",
+    "7b8631ba1abbae6f323d898852ee2f6a2bb6a6e0",
+    "0e4b5de1992deff8be37cbcbedfce2ba7ebff226"
+  ],
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-clock-evidence.test.mjs",
+    "passed": 7,
+    "failed": 0
+  },
+  "limits": [
+    "No live immutable deployment was sampled.",
+    "No physical iPhone Safari evidence was collected.",
+    "Drift thresholds remain configurable engineering policy rather than normative browser limits."
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert 0e4b5de1992deff8be37cbcbedfce2ba7ebff226.",
+    "Revert 7b8631ba1abbae6f323d898852ee2f6a2bb6a6e0.",
+    "Revert da824d3f214446fea56b8f9203128a5e3b34df11."
+  ],
+  "next_action": "Add a browser-side sampler adapter that captures getOutputTimestamp, baseLatency, outputLatency, and performance.now observations from one immutable deployment session, then feed only consistent output into the composed audio evidence packet.",
+  "canonical_queue_mutated": false,
+  "specialist_registry_change": null
+}
