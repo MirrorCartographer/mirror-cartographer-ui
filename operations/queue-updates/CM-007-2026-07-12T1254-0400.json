@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-007",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-12T12:54:12-04:00",
+  "state": "completed_slice_unpromoted",
+  "reason_unpromoted": "operations/ACTIVE_QUEUE.json contains no continuity_mining-owned item; canonical queue state was not overwritten.",
+  "completed_slice": "Implemented deterministic schema-version-2 alias occurrence validation, valid and invalid fixtures, and lifecycle-dimension conflict tests.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/alias-occurrence-schema-v2-2026-07-12T1234-0400.json",
+    "scripts/continuity-alias-occurrence-scanner.mjs",
+    "operations/queue-updates/CM-006-2026-07-12T1234-0400.json",
+    "recent continuity and cross-team commits",
+    "relevant chat-history summary available to this run"
+  ],
+  "memory_recovered": "Mirror Cartographer identity continuity requires occurrence-level provenance and dimension-scoped lifecycle comparison: the same normalized label may validly appear as canonical project identity and contextual abbreviation without implying a rename or contradiction.",
+  "contradictions_resolved": [
+    {
+      "contradiction": "Different lifecycle statuses for one normalized label always imply a continuity conflict.",
+      "resolution": "A conflict exists only when normalized_value and lifecycle_dimension both match and lifecycle_status differs."
+    },
+    {
+      "contradiction": "Private-source provenance requires storing enough source prose to explain the label.",
+      "resolution": "Validation permits only compact non-content source references and rejects markers consistent with copied passages."
+    }
+  ],
+  "claim_states": {
+    "observed": "The schema-v2 contract required executable validation and fixtures, while the existing scanner emitted a related but not contract-complete row shape.",
+    "inferred": "A separate validator is the lowest-risk additive path because it preserves the existing scanner and historical artifacts.",
+    "proposed": "Future scanner output should be normalized into the schema-v2 row shape and passed through validateOccurrenceSet before promotion.",
+    "superseded": "Normalized-value equality alone is sufficient to detect renames or lifecycle contradictions.",
+    "unresolved": "Trusted CI execution of the new test file has not yet been observed."
+  },
+  "files": [
+    "scripts/continuity-alias-occurrence-validator.mjs",
+    "tests/fixtures/continuity-alias-occurrence-v2.json",
+    "tests/continuity-alias-occurrence-validator.test.mjs",
+    "operations/queue-updates/CM-007-2026-07-12T1254-0400.json"
+  ],
+  "commits": [
+    "4fda00c2201ae38f085d2f738e301a4284bc3c06",
+    "18dc8445f092cd87d566f6d33f0ec9b369f5b7ed",
+    "14ff62111752a9d442c18251ecab2540bce27612"
+  ],
+  "verification": {
+    "result": "committed_source_verified_no_ci_run_observed",
+    "route": "Files were committed through the GitHub contents API; the exact test commit was checked for workflow runs and none were returned.",
+    "limitation": "Source presence and deterministic test design are verified; runtime execution in trusted CI is not yet proven."
+  },
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist",
+    "Test Harness Engineer"
+  ],
+  "registry_change": null,
+  "privacy_boundary": "Only minimal project labels, abstract lifecycle roles, repository paths, short commit identifiers, dates, and deterministic validation rules were persisted. No raw private conversation, personal narrative, health, relationship, financial, credential, or identifying contextual content was stored.",
+  "next_action": "Wire scanner output through a schema-v2 normalization adapter, run the committed tests in trusted CI, and record the immutable run and artifact evidence without promoting continuity work into the canonical queue absent authorization."
+}
