@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "R-026-E1",
+  "team": "frontier_research",
+  "created_at": "2026-07-12T08:50:48-04:00",
+  "subject": "Trusted user-activation binding for Web Audio resume evidence",
+  "source_status": {
+    "web_audio_spec": {
+      "status": "primary_working_draft",
+      "title": "Web Audio API 1.1",
+      "date": "2026-06-12",
+      "url": "https://webaudio.github.io/web-audio-api/"
+    },
+    "html_standard": {
+      "status": "primary_living_standard",
+      "title": "HTML Standard: Tracking user activation",
+      "url": "https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation"
+    },
+    "webkit_guidance": {
+      "status": "vendor_guidance_historical",
+      "title": "Auto-Play Policy Changes for macOS",
+      "url": "https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/"
+    }
+  },
+  "finding": "A fulfilled AudioContext.resume() promise and a running state can establish that rendering was allowed to begin, but they do not by themselves prove a trusted activation caused the transition or that a human heard sound. Evidence should bind the resume call to a trusted activation-triggering input event and preserve navigator.userActivation observations as supporting, not sufficient, evidence.",
+  "implementation": {
+    "module": "tools/frontier-research/audio-activation-attestation.mjs",
+    "test": "tools/frontier-research/audio-activation-attestation.test.mjs",
+    "module_commit": "131c841500239f07c9df90ad2406fc8798a5b475",
+    "test_commit": "f10b2dffa56bda72c4e9efbe13dc7aea30ad79af",
+    "classification": "trusted_activation_bound_resume_observed"
+  },
+  "evidence_strength": "moderate",
+  "uncertainty": [
+    "The five-second event-to-resume threshold is an operational capture bound, not a browser conformance requirement.",
+    "Sticky activation records historical interaction and cannot prove exact-event causation by itself.",
+    "A running AudioContext does not prove physical output or human audibility."
+  ],
+  "falsification_route": [
+    "Show that the accepted event is not activation-triggering under the HTML Standard.",
+    "Produce a synthetic event that passes the validator.",
+    "Produce an accepted record where resume precedes the activation event.",
+    "Demonstrate that the module emits a human-audibility classification."
+  ],
+  "verification": {
+    "command": "node --test audio-activation-attestation.test.mjs",
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "runtime": "Node.js built-in test runner"
+  }
+}
