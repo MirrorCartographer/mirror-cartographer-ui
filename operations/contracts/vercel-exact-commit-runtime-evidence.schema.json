@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operations/contracts/vercel-exact-commit-runtime-evidence.schema.json",
+  "title": "Vercel Studio exact-commit runtime evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "queue_item",
+    "repository",
+    "commit_sha",
+    "run_identity",
+    "source_checkout",
+    "test_execution",
+    "audio_outcomes",
+    "deployment_binding",
+    "physical_device",
+    "classification",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "queue_item": { "const": "V-001" },
+    "repository": { "const": "MirrorCartographer/mirror-cartographer-ui" },
+    "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "run_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "run_id", "started_at", "completed_at", "immutable_url"],
+      "properties": {
+        "provider": { "enum": ["github_actions", "trusted_local_runner", "other_trusted_ci"] },
+        "run_id": { "type": "string", "minLength": 1 },
+        "started_at": { "type": "string", "format": "date-time" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "immutable_url": { "type": "string", "format": "uri" }
+      }
+    },
+    "source_checkout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_sha", "dirty", "match"],
+      "properties": {
+        "observed_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "dirty": { "type": "boolean" },
+        "match": { "type": "boolean" }
+      }
+    },
+    "test_execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "exit_code", "artifact_digest", "artifact_url"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "exit_code": { "type": "integer" },
+        "artifact_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "artifact_url": { "type": "string", "format": "uri" }
+      }
+    },
+    "audio_outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_set", "observed_set", "complete"],
+      "properties": {
+        "expected_set": {
+          "const": [
+            "audible_verified",
+            "signal_detected_not_audible",
+            "route_changed",
+            "permission_blocked",
+            "unsupported",
+            "inconclusive"
+          ]
+        },
+        "observed_set": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "audible_verified",
+              "signal_detected_not_audible",
+              "route_changed",
+              "permission_blocked",
+              "unsupported",
+              "inconclusive"
+            ]
+          }
+        },
+        "complete": { "type": "boolean" }
+      }
+    },
+    "deployment_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted", "immutable_deployment_url", "provider_commit_sha", "match", "status"],
+      "properties": {
+        "attempted": { "type": "boolean" },
+        "immutable_deployment_url": { "type": ["string", "null"], "format": "uri" },
+        "provider_commit_sha": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$" },
+        "match": { "type": "boolean" },
+        "status": { "enum": ["not_attempted", "successful", "failed", "blocked"] }
+      }
+    },
+    "physical_device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["performed", "platform", "browser", "result", "evidence_url"],
+      "properties": {
+        "performed": { "type": "boolean" },
+        "platform": { "type": ["string", "null"] },
+        "browser": { "type": ["string", "null"] },
+        "result": { "enum": ["not_performed", "pass", "fail", "inconclusive"] },
+        "evidence_url": { "type": ["string", "null"], "format": "uri" }
+      }
+    },
+    "classification": {
+      "enum": [
+        "runtime_verified_only",
+        "deployment_verified",
+        "device_verified",
+        "fully_verified",
+        "blocked",
+        "failed",
+        "inconclusive"
+      ]
+    },
+    "limits": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "classification": { "const": "fully_verified" } } },
+      "then": {
+        "properties": {
+          "source_checkout": { "properties": { "match": { "const": true }, "dirty": { "const": false } } },
+          "test_execution": { "properties": { "exit_code": { "const": 0 } } },
+          "audio_outcomes": { "properties": { "complete": { "const": true } } },
+          "deployment_binding": { "properties": { "status": { "const": "successful" }, "match": { "const": true } } },
+          "physical_device": { "properties": { "performed": { "const": true }, "result": { "const": "pass" } } }
+        }
+      }
+    }
+  ]
+}
