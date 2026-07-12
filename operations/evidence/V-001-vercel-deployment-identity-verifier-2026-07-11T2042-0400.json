@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "artifact": "scripts/vercel-deployment-identity-verifier.mjs",
+  "test": "scripts/vercel-deployment-identity-verifier.test.mjs",
+  "finding": "A successful HTTP response is insufficient deployment evidence. Verification must bind an allowlisted HTTPS Vercel host, final redirect target, required response headers, and the served manifest commit_sha to the expected immutable source commit.",
+  "verification": {
+    "method": "isolated Node runtime using byte-identical committed source and test content",
+    "result": "passed",
+    "assertions": 5,
+    "coverage": [
+      "canonical Vercel host accepted",
+      "lookalike host rejected",
+      "matching immutable commit accepted",
+      "mismatched commit rejected",
+      "redirect to untrusted host rejected"
+    ]
+  },
+  "source_commits": [
+    "26852c9e98d95581ecb2cb1e22e577e93d8718f6",
+    "903dd4f4eb02d66fdecb83a8cc381afcc1016907"
+  ],
+  "deployment_state": "unverified_provider_rate_limited",
+  "limits": [
+    "No live Vercel response was observed in this run.",
+    "The verifier proves contract behavior, not that Vercel deployed the commit.",
+    "Audibility still requires a paired phone observation or device-level acoustic measurement."
+  ],
+  "rollback": "Revert commits 903dd4f4eb02d66fdecb83a8cc381afcc1016907 and 26852c9e98d95581ecb2cb1e22e577e93d8718f6; no existing runtime path was modified.",
+  "created_at": "2026-07-12T00:42:39Z"
+}
