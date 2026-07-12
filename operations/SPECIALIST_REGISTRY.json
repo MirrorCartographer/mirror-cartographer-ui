@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-12T04:16:00Z",
+  "registry_rule": "Specialist roles may be added or retired only when a queue item demonstrates a durable capability gap, names the evidence for that gap, and records the reversible registry change in a dedicated queue update.",
+  "teams": {
+    "vercel_studio": [
+      "Reliability Engineer",
+      "Graphics Engineer",
+      "Interaction Designer",
+      "Mobile Safari Engineer",
+      "Audio Engineer",
+      "Accessibility Engineer",
+      "Performance Engineer",
+      "Test Harness Engineer",
+      "Deployment Verifier",
+      "Rollback Engineer",
+      "Visual Transformation Director"
+    ],
+    "continuity_mining": [],
+    "frontier_research": [],
+    "cloudflare_research": [],
+    "independent_creative_web": []
+  },
+  "changes_this_slice": []
+}
