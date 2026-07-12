@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T07:40:00Z",
+  "queue_item": "CM-005",
+  "owner": "continuity_mining",
+  "source_artifacts": [
+    "operations/continuity/language/mirror-cartographer-language-lexicon.json",
+    "operations/queue-updates/CM-004-2026-07-12T0156-0400.json",
+    "tools/continuity/alias-ingestion-validator.mjs"
+  ],
+  "finding": "Alias first-known and last-seen dates must be derived from explicit provenance records rather than inferred from current salience, repository modification time, or recalled chronology.",
+  "implementation": {
+    "validator": "tools/continuity/alias-provenance-validator.mjs",
+    "tests": "tools/continuity/alias-provenance-validator.test.mjs",
+    "rules": [
+      "Require one or more typed source records.",
+      "Require ISO calendar dates on every source.",
+      "Bind first_known_on to the earliest source date.",
+      "Bind last_seen_on to the latest source date.",
+      "Reject duplicate source identifiers.",
+      "Reject records carrying raw private content."
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/continuity/alias-provenance-validator.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "environment": "isolated local Node.js execution before repository commit"
+  },
+  "claim_register": {
+    "observed": [
+      "CM-004 explicitly names provenance-qualified first-known and last-seen alias dates as its next action.",
+      "The existing lexicon marks complete historical alias dates as unresolved.",
+      "Six deterministic validator tests passed before commit."
+    ],
+    "inferred": [
+      "Source-bound date ranges reduce false chronology and make later backfills auditable."
+    ],
+    "proposed": [
+      "Attach validated provenance ranges to accepted alias records at the continuity ingestion boundary.",
+      "Backfill dates only when a repository artifact, decision log, privacy-safe chat summary, or other approved artifact supports the observation date."
+    ],
+    "superseded": [
+      "Use repository file modification time as the alias first-known date.",
+      "Treat remembered or likely chronology as observed history."
+    ],
+    "unresolved": [
+      "The complete historical alias inventory remains incomplete.",
+      "No production alias record has yet been passed through both alias resolution and provenance validation.",
+      "Repository CI has not yet executed the committed test file."
+    ]
+  },
+  "privacy_boundary": {
+    "contains_raw_chat": false,
+    "contains_personal_or_medical_data": false,
+    "contains_project_level_abstraction_only": true
+  },
+  "commits": [
+    "3e7c9b2707fefef7c3e39220ebebd894a40d5a0d",
+    "9ef0dcc091e53fb055fa5693bcf4701ef14f1a68"
+  ]
+}
