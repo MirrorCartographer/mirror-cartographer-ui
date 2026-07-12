@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "priority": "highest",
+  "state": "in_progress",
+  "created_at": "2026-07-12T16:24:32-04:00",
+  "objective": "Resolve the provenance and location of reported continuity artifacts M-004, M-005, and M-006 without reconstructing unverified history.",
+  "selected_because": "M-RECONCILE-001 identified a repository/reporting mismatch and named branch-aware reconciliation as the next action; canonical ACTIVE_QUEUE had no continuity-owned item.",
+  "completed_slice": {
+    "summary": "Recorded a coverage-bounded branch and history reconciliation, recovered the repository truth hierarchy as a durable rule, and established a canonical continuity-owned queue projection.",
+    "evidence_path": "operations/evidence/continuity-branch-reconciliation-2026-07-12T1624-0400.json",
+    "evidence_commit": "9cf1bbca04ee5e3c0f2cb41949ef79a4af7c5775"
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or explicitly classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Update the canonical knowledge graph with observed, inferred, proposed, superseded, and unresolved status without exposing private source material."
+  ],
+  "claims": {
+    "observed": [
+      "No M-006 file or commit was found through current code and commit search.",
+      "Current branch search did not return a continuity-named branch but was not exhaustive.",
+      "The default branch is main."
+    ],
+    "inferred": [
+      "A reporting-to-repository mismatch remains the leading explanation, not a proven deletion or loss event."
+    ],
+    "proposed": [
+      "Use immutable repository provenance as the authority boundary for continuity claims."
+    ],
+    "superseded": [
+      "Extending missing artifacts solely from prior completion summaries."
+    ],
+    "unresolved": [
+      "Authentic location or non-persistence of M-004, M-005, and M-006."
+    ]
+  },
+  "registry_change": null,
+  "privacy_boundary": "Operational metadata and abstract continuity rules only; no private source text reproduced.",
+  "safe_next_action": "Acquire exhaustive branch/history coverage, then reconcile each missing identifier against immutable commits before mining new substantive memory."
+}
