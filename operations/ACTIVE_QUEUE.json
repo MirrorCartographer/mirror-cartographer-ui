@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-12T04:16:00Z",
+  "items": [
+    {
+      "id": "V-001",
+      "owner": "vercel_studio",
+      "priority": "highest",
+      "state": "in_progress_blocked",
+      "objective": "Establish commit-bound, fail-closed deployment and audio-routing evidence for the Vercel surface.",
+      "completed_slices": [
+        "Path-aware Vercel build filtering added and corrected.",
+        "Fail-closed evidence verifier and diagnostic matrix added.",
+        "Public deployment identity delivery contract added to local and pages-preview gates.",
+        "Real provider rate-limit outcome recorded for an operations-only sentinel."
+      ],
+      "acceptance_remaining": [
+        "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+        "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+        "Bind the tested application commit to an immutable successful Vercel deployment.",
+        "Perform bounded physical iPhone Safari audibility verification."
+      ],
+      "safe_next_action": "Do not create another application deployment while rate-limited; maintain evidence and verification tooling only."
+    }
+  ]
+}
