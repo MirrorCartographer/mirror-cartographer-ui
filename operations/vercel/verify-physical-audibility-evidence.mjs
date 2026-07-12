@@ -1,4 +1,5 @@
 import { classifyAudioAudibilityEvidence } from '../../tools/frontier-research/audio-audibility-evidence.mjs';
+import { verifyAudibilitySessionBinding } from './verify-audibility-session-binding.mjs';
 
 const SHA_40 = /^[0-9a-f]{40}$/;
 const REQUIRED_DEVICE_FIELDS = ['platform', 'browser', 'audioRoute', 'volumeState', 'sessionId'];
@@ -23,7 +24,8 @@ function verifyImmutableVercelUrl(value) {
 
 export function verifyPhysicalAudibilityEvidence(packet = {}) {
   const runtime = classifyAudioAudibilityEvidence(packet.runtimeEvidence);
-  const failures = [];
+  const sessionBinding = verifyAudibilitySessionBinding(packet);
+  const failures = [...sessionBinding.failures];
 
   if (!SHA_40.test(packet.applicationCommit ?? '')) failures.push('invalid_application_commit');
   if (packet.deployment?.sourceCommit !== packet.applicationCommit) failures.push('deployment_commit_mismatch');
@@ -54,10 +56,11 @@ export function verifyPhysicalAudibilityEvidence(packet = {}) {
   if (!runtime.supportsAudibilityClaim) failures.push(`audibility_${runtime.state}`);
 
   return Object.freeze({
-    schemaVersion: '1.2.0',
+    schemaVersion: '1.3.0',
     status: failures.length === 0 ? 'pass' : 'fail',
     supportsPhysicalAudibilityClaim: failures.length === 0,
     runtime,
+    sessionBinding,
     failures: Object.freeze(failures),
   });
 }
