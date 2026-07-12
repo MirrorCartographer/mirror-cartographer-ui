@@ -42,38 +42,65 @@ jobs:
           cache: npm
 
       - name: Install locked dependencies
+        id: dependencies
         run: npm ci
 
       - name: Install Playwright Chromium
+        id: browser
         run: npx playwright install --with-deps chromium
 
       - name: Run isolated audio-routing contract
+        id: contract
         run: npm run test:audio-routing
 
       - name: Run browser sticky-routing regression
+        id: regression
         run: npm run test:audio-routing-browser
 
       - name: Build production bundle
+        id: build
         run: npm run build
 
       - name: Record commit-bound evidence
         if: always()
+        env:
+          DEPENDENCIES_OUTCOME: ${{ steps.dependencies.outcome }}
+          BROWSER_INSTALL_OUTCOME: ${{ steps.browser.outcome }}
+          CONTRACT_OUTCOME: ${{ steps.contract.outcome }}
+          REGRESSION_OUTCOME: ${{ steps.regression.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
         run: |
           mkdir -p test-results/evidence
-          cat > test-results/evidence/vercel-studio-audio-routing.json <<JSON
-          {
-            "schema_version": 1,
-            "queue_item": "V-001",
-            "repository": "${GITHUB_REPOSITORY}",
-            "commit_sha": "${GITHUB_SHA}",
-            "workflow": "${GITHUB_WORKFLOW}",
-            "run_id": "${GITHUB_RUN_ID}",
-            "run_attempt": "${GITHUB_RUN_ATTEMPT}",
-            "ref": "${GITHUB_REF}",
-            "evidence_scope": "source contract, browser regression, and production build; not physical speaker emission or Vercel deployment",
-            "generated_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          }
-          JSON
+          node <<'NODE'
+          const fs = require('node:fs');
+          const outcomes = {
+            dependencies: process.env.DEPENDENCIES_OUTCOME || 'not-run',
+            browser_install: process.env.BROWSER_INSTALL_OUTCOME || 'not-run',
+            source_contract: process.env.CONTRACT_OUTCOME || 'not-run',
+            browser_regression: process.env.REGRESSION_OUTCOME || 'not-run',
+            production_build: process.env.BUILD_OUTCOME || 'not-run',
+          };
+          const required = ['source_contract', 'browser_regression', 'production_build'];
+          const verificationPassed = required.every((key) => outcomes[key] === 'success');
+          const evidence = {
+            schema_version: 2,
+            queue_item: 'V-001',
+            repository: process.env.GITHUB_REPOSITORY,
+            commit_sha: process.env.GITHUB_SHA,
+            workflow: process.env.GITHUB_WORKFLOW,
+            run_id: process.env.GITHUB_RUN_ID,
+            run_attempt: process.env.GITHUB_RUN_ATTEMPT,
+            ref: process.env.GITHUB_REF,
+            outcomes,
+            verification_passed: verificationPassed,
+            evidence_scope: 'source contract, browser regression, and production build; not physical speaker emission or Vercel deployment',
+            generated_at_utc: new Date().toISOString(),
+          };
+          fs.writeFileSync(
+            'test-results/evidence/vercel-studio-audio-routing.json',
+            `${JSON.stringify(evidence, null, 2)}\n`,
+          );
+          NODE
 
       - name: Upload evidence and Playwright output
         if: always()
@@ -83,5 +110,5 @@ jobs:
           path: |
             test-results/
             playwright-report/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
