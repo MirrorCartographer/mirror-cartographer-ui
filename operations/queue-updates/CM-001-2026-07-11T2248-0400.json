@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "queue_item": "CM-001",
+  "status": "in_progress_source_authority_rule_committed",
+  "completed_slice": "Recovered and documented the project-self continuity invariant, source authority ladder, contradiction protocol, container-loss rule, permission boundary, and acceptance criteria for future continuity validation.",
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Provenance Engineer",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer"
+  ],
+  "sources_inspected": [
+    "recent repository commits",
+    "mind/genesis/2026-06-27-permissioned-continuity-turn.md via commit 87423a4054b93cc9049033756bb077ef9b190fa6",
+    "current project continuity directives available to the run"
+  ],
+  "artifact_path": "mind/continuity/2026-07-11-source-authority-and-self-continuity.md",
+  "source_commit": "b802cdf9b86f3e3549431eb3489a39ff0309d2d0",
+  "claim_states": {
+    "observed": [
+      "The project treats continuity as broader than a single account or thread.",
+      "The repository already contains a permissioned-view continuity principle."
+    ],
+    "inferred": [
+      "A formal source-authority ladder is required to prevent copied, derived, and original records from being conflated."
+    ],
+    "proposed": [
+      "An automated continuity validator should enforce source class, claim state, contradiction retention, revision provenance, and view boundaries."
+    ],
+    "superseded": [
+      "A binary private-versus-professional output model is superseded by one continuity record with multiple permissioned views."
+    ],
+    "unresolved": [
+      "Canonical storage for the complete decision graph.",
+      "Exact metadata recoverability for imported chat copies.",
+      "Historical completeness of repository continuity records."
+    ]
+  },
+  "privacy_boundary": "Public-safe abstraction only. No private transcript, health detail, credential, identifying event, or copied personal passage was committed.",
+  "verification": "GitHub returned the committed file diff for b802cdf9b86f3e3549431eb3489a39ff0309d2d0, confirming the artifact path and content. This verifies repository source state, not enforcement by runtime tooling.",
+  "next_action": "Implement a non-destructive validator and fixture set for the continuity record contract, then inventory existing continuity artifacts against it without rewriting historical files.",
+  "updated_at": "2026-07-12T02:48:00Z"
+}
