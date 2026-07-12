@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T13:25:00-04:00",
+  "slice": "Bind exact-commit evidence manifests to explicit GitHub trigger provenance.",
+  "source_commit": "97361b5437c27760930f9c1310fa4069412cf31b",
+  "files_changed": [
+    ".github/workflows/vercel-evidence-contract.yml"
+  ],
+  "verification": {
+    "source_write": "verified_by_github_contents_api",
+    "combined_status_observed": "failure",
+    "vercel_status_context": "build-rate-limit",
+    "github_actions_runtime": "pending_or_not_observable_through_available_commit-run query"
+  },
+  "claims": {
+    "trigger_provenance_fields_added": true,
+    "application_code_changed": false,
+    "payment_or_conversion_logic_added": false,
+    "vercel_deployment_verified": false,
+    "physical_audibility_verified": false
+  },
+  "rollback": {
+    "method": "Revert commit 97361b5437c27760930f9c1310fa4069412cf31b.",
+    "scope": "One workflow file; no application source or history deletion."
+  },
+  "limits": [
+    "The Vercel provider still reports the existing build-rate-limit failure.",
+    "No immutable successful Vercel deployment was observed.",
+    "No physical iPhone Safari test was performed.",
+    "GitHub Actions execution must be inspected separately before claiming runtime success."
+  ]
+}
