@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "artifact_type": "continuity_alias_scanner_evidence",
+  "recorded_at": "2026-07-12T10:37:59-04:00",
+  "queue_item": "CM-003",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "objective": "Convert the typed alias registry into a deterministic, privacy-safe occurrence pipeline that flags lifecycle conflicts without storing private passages.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/alias-registry-2026-07-12T1033-0400.json",
+    "package.json",
+    "recent repository commits"
+  ],
+  "implementation": {
+    "source": "scripts/continuity-alias-occurrence-scanner.mjs",
+    "test": "scripts/continuity-alias-occurrence-scanner.test.mjs",
+    "behaviors": [
+      "Rejects raw private-text fields.",
+      "Requires hashes for private source references.",
+      "Preserves observed, inferred, proposed, superseded, and unresolved claim states.",
+      "Normalizes known aliases while retaining raw values.",
+      "Flags conflicting lifecycle states for the same normalized entity.",
+      "Produces an order-independent canonical SHA-256 digest."
+    ]
+  },
+  "verification": {
+    "method": "isolated Node.js node:test execution against the exact implementation and test logic before repository write",
+    "result": "passed",
+    "tests": 4,
+    "failures": 0
+  },
+  "claims": [
+    {"status": "observed", "claim": "The canonical queue contains no continuity_mining-owned item."},
+    {"status": "observed", "claim": "CM-003's prior next action requested a deterministic alias occurrence scanner."},
+    {"status": "inferred", "claim": "A machine-enforced privacy and conflict boundary is more durable than another narrative-only continuity artifact."},
+    {"status": "proposed", "claim": "Future continuity imports should pass through this scanner before publication or graph ingestion."},
+    {"status": "superseded", "claim": "Private-source continuity can be safely preserved by copying excerpts into repository evidence."},
+    {"status": "unresolved", "claim": "The exact lifecycle of Liminal Thread and General Field Engine remains unresolved until stronger decision evidence is found."}
+  ],
+  "privacy_boundary": {
+    "included": "Alias values, source identifiers, source kinds, source hashes, timestamps, classifications, confidence, lifecycle status, and conflict flags.",
+    "excluded": "Raw private conversation text, excerpts, quotes, health details, relationship details, finances, location narratives, and personal interpretation.",
+    "enforcement": "Forbidden text-bearing fields are rejected; private references require a hash."
+  },
+  "limits": [
+    "The scanner does not discover source material by itself.",
+    "Lifecycle conflicts are flagged, not automatically resolved.",
+    "No canonical queue file was overwritten because no continuity-owned item is authorized there."
+  ]
+}
