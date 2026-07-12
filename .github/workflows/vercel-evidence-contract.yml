@@ -51,7 +51,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f evidence-contract.tap || printf 'test log unavailable\n' > evidence-contract.tap
-          digest="$(sha256sum evidence-contract.tap | awk '{print $1}')"
+          export DIGEST="$(sha256sum evidence-contract.tap | awk '{print $1}')"
           node - <<'NODE'
           const fs = require('node:fs');
           const manifest = {
@@ -80,8 +80,6 @@ jobs:
           };
           fs.writeFileSync('vercel-evidence-contract-manifest.json', JSON.stringify(manifest, null, 2) + '\n');
           NODE
-        env:
-          DIGEST: ${{ hashFiles('evidence-contract.tap') }}
 
       - name: Upload contract evidence
         if: always()
