@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T20:04:52Z",
+  "subject": "Exact-commit GitHub workflow query receipt",
+  "query": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "commit_sha": "00c96b0409c4540f6c6e1bf510974296c08b2463",
+    "workflow_runs": []
+  },
+  "finding": {
+    "observable": false,
+    "decision": "no_workflow_runs_observed",
+    "claim_boundary": "The exact-commit query returned no workflow runs. Test execution, deployment, artifacts, and runtime behavior are not proven."
+  },
+  "implementation": {
+    "files": [
+      "operations/tools/vercel-workflow-query-receipt.mjs",
+      "operations/tools/vercel-workflow-query-receipt.test.mjs"
+    ],
+    "commits": [
+      "7cc066e4965bc3a76bc597c27e4ff4b3ae814bb3",
+      "6e9362dbff6074c41eb415605ed8aa24be79e2f1"
+    ]
+  },
+  "verification": {
+    "runtime": "node --test operations/tools/vercel-workflow-query-receipt.test.mjs in an isolated local checkout equivalent",
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "empty exact-commit result is recorded without claiming execution",
+      "exact-commit run acceptance",
+      "cross-commit run rejection",
+      "mutable commit identity rejection",
+      "malformed run rejection"
+    ]
+  },
+  "deployment_effect": "Operations-only files were added. No Vercel application deployment was intentionally initiated.",
+  "limits": [
+    "The GitHub connector returned no workflow runs for the queried commit.",
+    "No GitHub Actions job or artifact exists to inspect for this commit through the observed query.",
+    "No Vercel provider-capacity recovery is established.",
+    "No browser or physical-device audio behavior is established."
+  ]
+}
