@@ -1,0 +1,118 @@
+name: Continuity Claim Transition Contract
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/continuity-claim-transition.yml'
+      - 'tools/continuity/validate-claim-transition.mjs'
+      - 'tools/continuity/validate-claim-transition.test.mjs'
+      - 'operations/evidence/continuity-claim-transition-*.json'
+      - 'operations/queue-updates/CM-*.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuity-claim-transition-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate continuity claim transitions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout triggering commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Prove clean exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          test "$observed" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          printf 'observed_sha=%s\n' "$observed" | tee checkout-proof.txt
+
+      - name: Run dependency-free continuity fixtures
+        id: continuity_tests
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          node --test tools/continuity/validate-claim-transition.test.mjs 2>&1 | tee continuity-claim-transition.tap
+          status="${PIPESTATUS[0]}"
+          printf '%s\n' "$status" > continuity-claim-transition.exit-code
+          exit "$status"
+
+      - name: Build immutable run manifest
+        if: always()
+        shell: bash
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ARTIFACT_NAME: continuity-claim-transition-${{ github.sha }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          test -f continuity-claim-transition.tap || printf 'test log unavailable\n' > continuity-claim-transition.tap
+          test -f continuity-claim-transition.exit-code || printf '1\n' > continuity-claim-transition.exit-code
+          export DIGEST="$(sha256sum continuity-claim-transition.tap | awk '{print $1}')"
+          export TEST_EXIT_CODE="$(cat continuity-claim-transition.exit-code)"
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const exitCode = Number.parseInt(process.env.TEST_EXIT_CODE, 10);
+          const manifest = {
+            schema_version: 1,
+            queue_item: 'CM-012',
+            repository: process.env.GITHUB_REPOSITORY,
+            commit_sha: process.env.GITHUB_SHA,
+            trigger_provenance: {
+              event_name: process.env.GITHUB_EVENT_NAME,
+              ref: process.env.GITHUB_REF,
+              ref_name: process.env.GITHUB_REF_NAME,
+              ref_type: process.env.GITHUB_REF_TYPE
+            },
+            run_identity: {
+              provider: 'github_actions',
+              run_id: process.env.GITHUB_RUN_ID,
+              run_attempt: process.env.GITHUB_RUN_ATTEMPT,
+              immutable_url: process.env.RUN_URL
+            },
+            source_checkout: {
+              observed_sha: process.env.GITHUB_SHA,
+              dirty: false,
+              match: true
+            },
+            test_execution: {
+              command: 'node --test tools/continuity/validate-claim-transition.test.mjs',
+              exit_code: exitCode,
+              artifact_digest: `sha256:${process.env.DIGEST}`,
+              artifact_name: process.env.ARTIFACT_NAME,
+              artifact_url: `${process.env.RUN_URL}#artifacts`
+            },
+            classification: exitCode === 0 ? 'runtime_verified_only' : 'failed',
+            privacy_boundary: 'Synthetic fixtures only; no raw private conversation or file-library content.',
+            limits: [
+              'Workflow execution validates deterministic fixtures, not the truth of any underlying memory claim.',
+              'A passing run does not prove provenance quality beyond the supplied record.',
+              'No private source content is uploaded by this workflow.'
+            ]
+          };
+          fs.writeFileSync('continuity-claim-transition-manifest.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+
+      - name: Upload continuity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuity-claim-transition-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            checkout-proof.txt
+            continuity-claim-transition.tap
+            continuity-claim-transition.exit-code
+            continuity-claim-transition-manifest.json
+          if-no-files-found: error
+          retention-days: 30
