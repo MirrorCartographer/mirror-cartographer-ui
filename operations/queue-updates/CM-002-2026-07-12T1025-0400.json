@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "CM-002",
+  "owner": "continuity_mining",
+  "state": "completed_slice",
+  "priority_basis": "No continuity-owned item exists in the canonical queue; selected the highest-evidence unresolved naming contradiction from current chat history and historical project artifacts.",
+  "objective": "Preserve the enduring Mirror Cartographer project identity while typing repository, folder, framework, deployment, and abbreviation aliases by role.",
+  "completed_slice": {
+    "artifact": "operations/continuity/project-identity-invariant-2026-07-12T1025-0400.json",
+    "commit": "b7bb31e7fee1e6b55d139500bb2fe4c7da58e37b",
+    "result": "Established that Mirror Cartographer is the canonical project name and that mirror-cartographer-ui, mirror-cartographer-ui-v2, mirror-cartographer-next, mirror-cartographer, and MC are typed technical or contextual aliases rather than evidence of project renaming."
+  },
+  "claim_statuses_present": [
+    "observed",
+    "inferred",
+    "proposed",
+    "superseded",
+    "unresolved"
+  ],
+  "contradiction_resolved": "Historical instructions promoted technical container names into apparent project-name changes. The new invariant separates project identity from implementation-surface naming unless an explicit rename decision exists.",
+  "canonical_state_policy": "Additive only. CURRENT_STATE.json, ACTIVE_QUEUE.json, SPECIALIST_REGISTRY.json, and TRIGGER_REQUESTS.json were not overwritten.",
+  "specialists_used": [
+    "Chat Archaeologist",
+    "Language Evolution Mapper",
+    "Decision Historian",
+    "Contradiction Resolver",
+    "Source Tracker",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesist"
+  ],
+  "registry_change": null,
+  "verification": {
+    "method": "Cross-source semantic comparison of canonical repository state, project-facing documents, and historical implementation logs; JSON artifact generated with deterministic SHA-256 evidence digest.",
+    "evidence_digest": "a67d7b280da103085235513c9e676959df847bb182926ab51ce0b5b0a0f0937f",
+    "limits": "Historical alias operational status remains unresolved until repository, deployment, redirect, and local-folder evidence is reconciled."
+  },
+  "privacy_boundary": {
+    "included": "Project naming and technical aliases.",
+    "excluded": "Raw chat passages and unrelated personal material."
+  },
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert b7bb31e7fee1e6b55d139500bb2fe4c7da58e37b."
+  ],
+  "next_action": "Build a deterministic typed alias registry and scan historical artifacts for untyped names, confidence, and current versus abandoned status without changing the canonical project name."
+}
