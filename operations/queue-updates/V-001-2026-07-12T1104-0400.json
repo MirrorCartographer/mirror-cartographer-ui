@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed generator that derives operations/changed-paths.json only from two immutable commit SHAs, integrated its adversarial tests into the local gate, and recorded verification evidence without attempting a rate-limited deployment.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "evidence": "operations/evidence/vercel-immutable-changed-paths-2026-07-12T1104-0400.json",
+  "canonical_files_overwritten": false,
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "In a trusted checkout, generate operations/changed-paths.json from immutable base/head SHAs, immediately run the guarded sentinel entrypoint after capacity returns, and preserve the provider outcome without creating an application deployment first."
+}
