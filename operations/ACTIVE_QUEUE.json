@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T20:28:07Z",
+  "updated_at": "2026-07-12T20:34:26Z",
   "items": [
     {
       "id": "V-001",
@@ -43,6 +43,25 @@
         "Update the canonical knowledge graph with claim status while preserving the privacy boundary."
       ],
       "safe_next_action": "Acquire exhaustive branch/history coverage, then reconcile each missing identifier against immutable commits before mining new substantive memory."
+    },
+    {
+      "id": "R-020",
+      "owner": "frontier_research",
+      "priority": "highest",
+      "state": "completed_handoff_ready",
+      "objective": "Provide exhaustive exact-commit GitHub Actions workflow-run enumeration for commit-bound evidence.",
+      "completed_slices": [
+        "Implemented repository-level all-event workflow-run enumeration with head_sha filtering and Link-header pagination.",
+        "Added fail-closed handling for page limits, HTTP errors, invalid commit identifiers, and cross-commit records.",
+        "Verified the implementation with four deterministic Node tests."
+      ],
+      "acceptance_remaining": [
+        "Execute authenticated enumeration against the private repository for an exact commit.",
+        "Compare results against an independent gh api --paginate traversal.",
+        "Feed only complete coverage into the existing workflow-run coverage assessor.",
+        "Record provider-ceiling ambiguity if a filtered search approaches 1000 results."
+      ],
+      "safe_next_action": "Vercel Studio should integrate the enumerator into the next commit-bound evidence command without changing application deployment behavior."
     }
   ]
 }
