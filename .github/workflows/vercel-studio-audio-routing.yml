@@ -47,26 +47,32 @@ jobs:
 
       - name: Install locked dependencies
         id: dependencies
+        continue-on-error: true
         run: npm ci
 
       - name: Install Playwright Chromium
         id: browser
+        continue-on-error: true
         run: npx playwright install --with-deps chromium
 
       - name: Run isolated audio-routing contract
         id: contract
+        continue-on-error: true
         run: npm run test:audio-routing
 
       - name: Run browser sticky-routing regression
         id: regression
+        continue-on-error: true
         run: npm run test:audio-routing-browser
 
       - name: Run evidence-verifier contract tests
         id: evidence_verifier
+        continue-on-error: true
         run: npm run test:audio-routing-evidence
 
       - name: Build production bundle
         id: build
+        continue-on-error: true
         run: npm run build
 
       - name: Record commit-bound evidence
@@ -90,7 +96,7 @@ jobs:
             evidence_verifier: process.env.EVIDENCE_VERIFIER_OUTCOME || 'not-run',
             production_build: process.env.BUILD_OUTCOME || 'not-run',
           };
-          const required = ['source_contract', 'browser_regression', 'evidence_verifier', 'production_build'];
+          const required = ['dependencies', 'browser_install', 'source_contract', 'browser_regression', 'evidence_verifier', 'production_build'];
           const verificationPassed = required.every((key) => outcomes[key] === 'success');
           const evidence = {
             schema_version: 2,
@@ -103,7 +109,7 @@ jobs:
             ref: process.env.GITHUB_REF,
             outcomes,
             verification_passed: verificationPassed,
-            evidence_scope: 'source contract, browser regression, evidence verifier, and production build; not physical speaker emission or Vercel deployment',
+            evidence_scope: 'dependency install, browser install, source contract, browser regression, evidence verifier, and production build; not physical speaker emission or Vercel deployment',
             generated_at_utc: new Date().toISOString(),
           };
           fs.writeFileSync(
