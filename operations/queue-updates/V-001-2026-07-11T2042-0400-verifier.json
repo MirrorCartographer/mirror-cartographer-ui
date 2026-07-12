@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_post_deploy_verifier_committed_provider_unverified",
+  "completed_slice": "Added a deny-by-default post-deploy identity verifier that validates the canonical Vercel host, final redirect target, required delivery headers, and exact served commit SHA.",
+  "evidence_paths": [
+    "operations/evidence/V-001-vercel-deployment-identity-verifier-2026-07-11T2042-0400.json"
+  ],
+  "commits": [
+    "26852c9e98d95581ecb2cb1e22e577e93d8718f6",
+    "903dd4f4eb02d66fdecb83a8cc381afcc1016907",
+    "569c64c770a29115ae0cb29802cd4f85061f2e67"
+  ],
+  "verification": "5 deterministic assertions passed in an isolated Node runtime.",
+  "remaining_condition": "A successful Vercel deployment and live endpoint response are still required, followed by an iPhone audible outcome or device-level acoustic measurement.",
+  "next_action": "Run the verifier against the first successful Vercel deployment using its immutable commit SHA, then pair the verified deployment identity with window.__MC_AUDIO_PULSE__, window.__MC_AUDIO_EVIDENCE__, and the phone observation.",
+  "updated_at": "2026-07-12T00:42:39Z"
+}
