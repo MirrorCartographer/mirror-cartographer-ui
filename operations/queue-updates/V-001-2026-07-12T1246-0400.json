@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T16:46:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added an operations-only GitHub Actions gate that checks out the triggering commit exactly, proves a clean checkout, runs the dependency-free V-001 evidence-contract tests, builds a run manifest, and uploads immutable CI artifacts without invoking Vercel deployment.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    ".github/workflows/vercel-evidence-contract.yml",
+    "operations/evidence/vercel-evidence-contract-ci-2026-07-12T1246-0400.json"
+  ],
+  "commits": [
+    "923bf97d04d42601e03b7e2bcf8e3f7002d14491",
+    "99d650fea1937a1ff610a92954d0148e532f9131",
+    "ca44512c7bf72772dba3c534605e3f7cbf01c570"
+  ],
+  "verification": {
+    "workflow_source_verified": true,
+    "trusted_ci_run_observed": false,
+    "deployment_attempted": false,
+    "vercel_status": "failure_build_rate_limit"
+  },
+  "acceptance_remaining": [
+    "Observe a successful trusted run of the operations-only evidence-contract workflow and retain its artifact URL and digest.",
+    "Observe an operations-only Vercel sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe and inspect the exact-commit six-outcome audio artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": {
+    "method": "Revert the queue update, evidence record, workflow fix, and workflow creation commits in reverse order.",
+    "commits_reverse_order": [
+      "ca44512c7bf72772dba3c534605e3f7cbf01c570",
+      "99d650fea1937a1ff610a92954d0148e532f9131",
+      "923bf97d04d42601e03b7e2bcf8e3f7002d14491"
+    ]
+  },
+  "safe_next_action": "Observe or manually dispatch the source-only workflow when Actions execution is available; do not attempt an application deployment until Vercel capacity returns."
+}
