@@ -37,8 +37,26 @@ export function buildAudioRoutingEvidence({ context, sinkChangeObserved = false,
   };
 }
 
+export function createAudioRoutingEvidenceTracker() {
+  const confirmedContexts = new WeakSet();
+
+  return {
+    build({ context, sinkChangeObserved = false, attemptId = null, sampledAt } = {}) {
+      if (context && sinkChangeObserved) confirmedContexts.add(context);
+      return buildAudioRoutingEvidence({
+        context,
+        sinkChangeObserved: Boolean(context && confirmedContexts.has(context)),
+        attemptId,
+        sampledAt,
+      });
+    },
+  };
+}
+
+const routingTracker = createAudioRoutingEvidenceTracker();
+
 function publish(context, sinkChangeObserved = false) {
-  const result = buildAudioRoutingEvidence({
+  const result = routingTracker.build({
     context,
     sinkChangeObserved,
     attemptId: window.__MC_AUDIO_ATTEMPT_ID__,
