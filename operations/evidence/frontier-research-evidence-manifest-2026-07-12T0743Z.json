@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "artifact_id": "R-007:research-evidence-contract",
+  "queue_item": "R-007",
+  "owner": "frontier_research",
+  "created_at": "2026-07-12T07:43:00Z",
+  "sources": [
+    {
+      "id": "current-state",
+      "kind": "repository",
+      "status": "verified",
+      "locator": "operations/CURRENT_STATE.json@894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "accessed_at": "2026-07-12T07:43:00Z"
+    },
+    {
+      "id": "active-queue",
+      "kind": "repository",
+      "status": "verified",
+      "locator": "operations/ACTIVE_QUEUE.json@49ff3b21882ff48752f7f0cecb38a4f4ecf17dd5",
+      "accessed_at": "2026-07-12T07:43:00Z"
+    },
+    {
+      "id": "prior-r006",
+      "kind": "repository",
+      "status": "verified",
+      "locator": "commit:d55b9fa6315a9f49bf6e2612a950d0ff5dbaec56",
+      "accessed_at": "2026-07-12T07:43:00Z"
+    }
+  ],
+  "claims": {
+    "observed": [
+      {
+        "id": "observed-queue-gap",
+        "text": "The canonical active queue contains no frontier_research-owned item.",
+        "source_ids": ["active-queue"],
+        "strength": "direct"
+      },
+      {
+        "id": "observed-r006",
+        "text": "Prior Frontier work implemented an evidence transition gate but did not standardize research claim-state manifests.",
+        "source_ids": ["prior-r006"],
+        "strength": "strong"
+      }
+    ],
+    "inferred": [
+      {
+        "id": "inferred-gap",
+        "text": "Without a manifest contract, research artifacts can preserve provenance while still mixing observed, inferred, proposed, superseded, and unresolved claims.",
+        "source_ids": ["prior-r006"],
+        "strength": "moderate"
+      }
+    ],
+    "proposed": [
+      {
+        "id": "proposed-gate",
+        "text": "Require the research evidence manifest before a Frontier queue item can be marked complete.",
+        "source_ids": ["active-queue", "prior-r006"],
+        "strength": "moderate"
+      }
+    ],
+    "superseded": [],
+    "unresolved": [
+      {
+        "id": "unresolved-ci",
+        "text": "The committed Node test has not yet been observed in CI or a clean checkout.",
+        "source_ids": ["current-state"],
+        "strength": "direct"
+      }
+    ]
+  },
+  "falsification": {
+    "target_claim_ids": ["inferred-gap", "proposed-gate"],
+    "test": "Attempt to encode a research result with a missing claim category, unknown source reference, duplicate claim identifier, or unknown falsification target.",
+    "failure_condition": "The manifest is accepted despite any of those defects.",
+    "reproduction": "node tools/frontier-research/research-evidence-manifest.test.mjs"
+  },
+  "verification": {
+    "status": "partial",
+    "method": "Schema inspection plus six deterministic committed fixtures.",
+    "evidence_refs": [
+      "operations/frontier/research-evidence-manifest.schema.json",
+      "tools/frontier-research/research-evidence-manifest.test.mjs"
+    ],
+    "limits": [
+      "Runtime execution was not available through the GitHub connector.",
+      "JSON Schema format validation depends on the downstream validator implementation.",
+      "The contract does not establish scientific truth; it makes epistemic state and falsification routes explicit."
+    ]
+  }
+}
