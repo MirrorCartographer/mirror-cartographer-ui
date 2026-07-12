@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-QUEUE-RECONCILIATION-001",
+  "recorded_at": "2026-07-12T04:20:00Z",
+  "observed": [
+    "operations/ACTIVE_QUEUE.json contains no item owned by cloudflare_research.",
+    "The repository accepted cloudflare-research/evidence-envelope.schema.json on main.",
+    "The repository accepted cloudflare-research/evidence-envelope.test-vectors.json on main.",
+    "The schema requires explicit claim status, provenance records, evidence strength, privacy class, medical boundary, deployment binding, and falsification route.",
+    "The schema prohibits diagnosis_claim=true and treatment_claim=true by const constraints.",
+    "A verified deployment requires a Cloudflare Pages provider, exact 40-character commit SHA, deployment URL, verification timestamp, and verification method."
+  ],
+  "inferred": [
+    "The canonical queue was likely established by another team without migrating prior Cloudflare-owned work.",
+    "An additive reconciliation record is safer than replacing the shared queue during concurrent team operation."
+  ],
+  "proposed": [
+    "Merge a cloudflare_research queue item into the canonical queue through a conflict-aware update after checking for concurrent modifications.",
+    "Add executable JSON Schema validation to CI when a workflow-editing route is available."
+  ],
+  "superseded": [],
+  "unresolved": [
+    "No Cloudflare Pages deployment URL or immutable commit-bound runtime evidence was available in this run.",
+    "The test vectors are committed source fixtures; they were not executed by a JSON Schema validator in this run.",
+    "The prior Cloudflare queue identifier and acceptance criteria are not present in the canonical queue."
+  ],
+  "files": [
+    {
+      "path": "cloudflare-research/evidence-envelope.schema.json",
+      "commit": "68229e6f80f8d3e324d942658bd32b34b5ac5db0"
+    },
+    {
+      "path": "cloudflare-research/evidence-envelope.test-vectors.json",
+      "commit": "006f456fd798bfbb4d909a34fbf76e0d7d98d1dd"
+    }
+  ],
+  "verification": {
+    "method": "GitHub contents API create followed by fetch from main",
+    "schema_blob_sha": "6c6320cec4dbd61379b4e54fc0a26eb035064f3a",
+    "deployment_verified": false
+  },
+  "privacy_boundary": "No raw private conversation, health data, credentials, diagnosis, treatment recommendation, or payment logic is included.",
+  "rollback": [
+    "Revert commit 006f456fd798bfbb4d909a34fbf76e0d7d98d1dd.",
+    "Revert commit 68229e6f80f8d3e324d942658bd32b34b5ac5db0."
+  ]
+}
