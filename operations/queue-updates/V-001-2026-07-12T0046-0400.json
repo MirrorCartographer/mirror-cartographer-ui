@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T04:46:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and deterministically tested an operations-only verifier for the privacy-safe audio device evidence wiring introduced by recent commits.",
+  "evidence": "operations/evidence/vercel-audio-device-evidence-slice-2026-07-12T0046-0400.json",
+  "acceptance_effect": {
+    "advanced": "source-level audio device context evidence is now independently checkable without triggering a Vercel build",
+    "still_remaining": [
+      "observe an operations-only sentinel skipped or ignored after provider capacity returns",
+      "observe an exact-commit audio-routing workflow and inspect its six-outcome artifact",
+      "bind the tested application commit to an immutable successful Vercel deployment",
+      "perform bounded physical iPhone Safari audibility verification"
+    ]
+  },
+  "safe_next_action": "Keep changes operations-only until Vercel capacity returns; then run one sentinel before one exact-commit application verification.",
+  "registry_change": null
+}
