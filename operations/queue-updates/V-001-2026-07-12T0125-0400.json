@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T05:25:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Hardened the physical audibility acceptance gate so immutable deployment identity and evidence chronology are verified rather than trusted from boolean flags. Mutable production aliases, lookalike hosts, decorated URLs, malformed timestamps, and pre-test human observations now fail closed.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/vercel/verify-physical-audibility-evidence.mjs",
+    "operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "operations/evidence/vercel-audibility-deployment-authority-2026-07-12T0125-0400.json"
+  ],
+  "commits": [
+    "c9a18e0c459541b62adab3bd119e4ea6c7f02fa4",
+    "a7ae5137060f8e5df0e9d1989d547ad4d493a691",
+    "f07ca3641e9d26b9db395d6a5ab0d36bf350020a"
+  ],
+  "verification": {
+    "command": "node --test operations/vercel/verify-physical-audibility-evidence.test.mjs",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Run the exact-commit audio-routing workflow and feed its artifact into the hardened gate.",
+    "Bind the tested application commit to an immutable successful Vercel deployment URL accepted by the new authority rule.",
+    "Perform the bounded physical iPhone Safari audibility observation required for human_confirmed."
+  ],
+  "rollback": "Revert a7ae5137060f8e5df0e9d1989d547ad4d493a691, then c9a18e0c459541b62adab3bd119e4ea6c7f02fa4; evidence and queue records remain append-only provenance.",
+  "safe_next_action": "Do not deploy while capacity remains exhausted. When capacity returns, first observe one operations-only sentinel suppression, then perform one exact-commit application deployment and validate its immutable URL, timestamps, workflow artifact, and bounded iPhone Safari observation through schema 1.1.0."
+}
