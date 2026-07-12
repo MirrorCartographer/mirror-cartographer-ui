@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T21:52:00Z",
+  "updated_at": "2026-07-12T21:58:00Z",
   "items": [
     {
       "id": "V-001",
@@ -67,6 +67,25 @@
         "Record provider-ceiling ambiguity if a filtered search approaches 1000 results."
       ],
       "safe_next_action": "Execute the integrated path against an exact operations-only or audio-routing commit and retain both raw enumeration and assessed evidence."
+    },
+    {
+      "id": "R-021",
+      "owner": "frontier_research",
+      "priority": "highest",
+      "state": "completed_handoff_ready",
+      "objective": "Require agreement between two independently complete exact-commit workflow-run enumerations before accepting commit-bound evidence.",
+      "completed_slices": [
+        "Implemented a fail-closed reconciliation gate for primary and independent workflow-run enumerations.",
+        "Added detection for incomplete envelopes, commit mismatch, cross-commit records, duplicate run identifiers, missing run identifiers, and metadata divergence.",
+        "Verified the implementation with five deterministic Node tests."
+      ],
+      "acceptance_remaining": [
+        "Execute the authenticated repository enumerator for an exact commit.",
+        "Execute an independent gh api --paginate traversal for the same commit.",
+        "Run both outputs through the reconciliation gate and retain the result.",
+        "Keep provider-ceiling ambiguity as a separate fail-closed condition."
+      ],
+      "safe_next_action": "Vercel Studio should wire the reconciliation gate after both exhaustive clients and before the existing commit-bound evidence assessor; no deployment claim is permitted until verified=true and provider-ceiling ambiguity is absent."
     }
   ]
 }
