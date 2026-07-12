@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "artifact_type": "typed_alias_registry",
+  "recorded_at": "2026-07-12T10:33:17-04:00",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "queue_item": "CM-003",
+  "scope": "Prevent abbreviations, implementation containers, visual branches, and symbolic module titles from being misread as project renames.",
+  "sources": [
+    {
+      "path": "operations/CURRENT_STATE.json",
+      "sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "status": "observed",
+      "meaning": "Canonical project and repository identities."
+    },
+    {
+      "path": "operations/continuity/project-identity-invariant-2026-07-12T1025-0400.json",
+      "sha": "ae828a4c0769577895ea02f071d590ef9393966d",
+      "status": "observed",
+      "meaning": "Prior identity invariant and initial typed aliases."
+    },
+    {
+      "file_library_title": "conversations.json",
+      "status": "observed_private_source",
+      "meaning": "Historical usage includes MC as abbreviation and Liminal Thread as a visual branch label; raw private text is not reproduced."
+    },
+    {
+      "file_library_title": "Mirror_Cartographer_Atlas_Omnibus.pdf",
+      "status": "observed_private_source",
+      "meaning": "Atlas is a project document family and volume title, not a project rename."
+    },
+    {
+      "file_library_title": "General_Field_Engine_1000_Pages.pdf",
+      "status": "observed_private_source",
+      "meaning": "General Field Engine is a derived compendium/module family, not established as the canonical project identity."
+    }
+  ],
+  "classification_rules": [
+    {
+      "rule_id": "AR-001",
+      "rule": "Only an explicit project-level rename decision may replace the canonical project name."
+    },
+    {
+      "rule_id": "AR-002",
+      "rule": "Repository, folder, package, branch, framework, deployment, document-series, volume, mode, and visual-branch labels remain typed child entities."
+    },
+    {
+      "rule_id": "AR-003",
+      "rule": "Abbreviations and misspellings may resolve to the canonical entity but must retain their raw observed form and provenance."
+    },
+    {
+      "rule_id": "AR-004",
+      "rule": "An alias with insufficient context remains unresolved rather than being promoted to canonical status."
+    }
+  ],
+  "aliases": [
+    {
+      "raw_value": "Mirror Cartographer",
+      "normalized_value": "Mirror Cartographer",
+      "type": "project_name",
+      "status": "canonical",
+      "confidence": "high"
+    },
+    {
+      "raw_value": "MC",
+      "normalized_value": "Mirror Cartographer",
+      "type": "abbreviation",
+      "status": "accepted_contextual_alias",
+      "confidence": "high"
+    },
+    {
+      "raw_value": "MirrorCartographer/mirror-cartographer-ui",
+      "normalized_value": "MirrorCartographer/mirror-cartographer-ui",
+      "type": "repository_name",
+      "status": "current",
+      "confidence": "high"
+    },
+    {
+      "raw_value": "mirror-cartographer-ui-v2",
+      "normalized_value": "mirror-cartographer-ui-v2",
+      "type": "migration_surface",
+      "status": "historical_unresolved",
+      "confidence": "medium"
+    },
+    {
+      "raw_value": "mirror-cartographer-next",
+      "normalized_value": "mirror-cartographer-next",
+      "type": "framework_or_repository_candidate",
+      "status": "historical_unresolved",
+      "confidence": "medium"
+    },
+    {
+      "raw_value": "Liminal Thread",
+      "normalized_value": "Liminal Thread",
+      "type": "visual_branch_or_mode_label",
+      "status": "historical_contextual",
+      "confidence": "medium"
+    },
+    {
+      "raw_value": "Mirror Cartographer Atlas",
+      "normalized_value": "Mirror Cartographer Atlas",
+      "type": "document_series",
+      "status": "observed",
+      "confidence": "high"
+    },
+    {
+      "raw_value": "General Field Engine",
+      "normalized_value": "General Field Engine",
+      "type": "derived_compendium_or_module_family",
+      "status": "observed_not_canonical",
+      "confidence": "medium"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CM3-001",
+      "status": "observed",
+      "claim": "Mirror Cartographer is the canonical project identity in current operational state."
+    },
+    {
+      "id": "CM3-002",
+      "status": "observed",
+      "claim": "Historical records use MC, Liminal Thread, Atlas, General Field Engine, and multiple repository or folder labels."
+    },
+    {
+      "id": "CM3-003",
+      "status": "inferred",
+      "claim": "These labels occupy different entity roles and should not be flattened into one name-history sequence."
+    },
+    {
+      "id": "CM3-004",
+      "status": "proposed",
+      "claim": "Future continuity mining should emit one registry row per raw occurrence with source, date, entity type, confidence, and lifecycle status."
+    },
+    {
+      "id": "CM3-005",
+      "status": "superseded",
+      "claim": "Every capitalized or branded phrase associated with the work is a former project name."
+    },
+    {
+      "id": "CM3-006",
+      "status": "unresolved",
+      "claim": "The exact lifecycle status of Liminal Thread and General Field Engine requires stronger decision-log evidence."
+    }
+  ],
+  "contradictions_resolved": [
+    {
+      "contradiction": "Historical materials present several branded labels near Mirror Cartographer, which can look like renames when stripped of their structural role.",
+      "resolution": "Treat each label as a typed entity. Only explicit project-level rename evidence can alter canonical identity."
+    }
+  ],
+  "knowledge_graph_edges": [
+    {"from": "MC", "relation": "abbreviates", "to": "Mirror Cartographer"},
+    {"from": "Mirror Cartographer Atlas", "relation": "documents", "to": "Mirror Cartographer"},
+    {"from": "Liminal Thread", "relation": "historical_visual_branch_of", "to": "Mirror Cartographer"},
+    {"from": "General Field Engine", "relation": "derived_module_family_related_to", "to": "Mirror Cartographer"},
+    {"from": "implementation_container", "relation": "must_not_be_flattened_into", "to": "project_name_history"}
+  ],
+  "privacy_boundary": {
+    "included": "Project labels, technical containers, document-series names, abstract relationships, and source titles.",
+    "excluded": "Raw private conversations, personal interpretations, health information, relationship material, finances, and identifying narrative context.",
+    "publication_risk": "low"
+  },
+  "next_action": "Implement a deterministic scanner schema that records every alias occurrence without copying private source passages and flags lifecycle-status conflicts for review."
+}
