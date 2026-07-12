@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-12T16:36:00Z",
+  "slice": "dependency-free executable validator fixtures for exact-commit runtime evidence",
+  "source_commit": "ed476c3dadb83891f6a65c40b18df0f94f068b95",
+  "source_path": "scripts/vercel-exact-commit-runtime-evidence.test.mjs",
+  "verification": {
+    "local_precommit_command": "node --test /tmp/vercel-test.mjs",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "committed_source_refetched": true,
+    "pull_request_workflow_runs_observed": 0
+  },
+  "coverage": [
+    "accept complete fully_verified evidence",
+    "reject fully_verified when checkout, tests, audio completeness, deployment, or physical-device evidence fail",
+    "reject an incomplete six-outcome contract"
+  ],
+  "evidence_strength": "deterministic local execution against byte-equivalent source plus committed-source refetch; no trusted CI run observed",
+  "deployment_attempted": false,
+  "deployment_reason": "CURRENT_STATE prohibits application deployment attempts while provider build capacity is exhausted",
+  "limits": [
+    "The dependency-free validator covers the fail-closed invariants exercised by these fixtures, not every JSON Schema keyword.",
+    "The available workflow-run endpoint reports pull-request-triggered runs only.",
+    "No browser microphone, Vercel deployment, or physical iPhone Safari test was performed."
+  ],
+  "rollback": "Supersede additively with a versioned validator or broader schema-engine test; do not delete this evidence record."
+}
