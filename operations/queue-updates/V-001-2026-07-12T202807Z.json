@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "updated_at": "2026-07-12T20:28:07Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Removed a fail-open semantic inconsistency: a successful Vercel commit status no longer marks a commit deployable before immutable deployment identity is independently verified.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-commit-status-assessment.mjs",
+    "operations/tools/vercel-commit-status-assessment.test.mjs",
+    "operations/evidence/vercel-immutable-identity-gate-2026-07-12T202807Z.json"
+  ],
+  "commits": [
+    "8ffad9fd80b2bf6fdc915cc2fa8b0d3d2b7ccdba",
+    "ce861d7e362671ea473689cb4c71d1cd1c07aa88",
+    "0e9e7e7b2cea2619c34a411de04395e54c36f89b"
+  ],
+  "verification": {
+    "node_tests_passed": 5,
+    "node_tests_failed": 0,
+    "provider_status_rows_for_test_commit": 0,
+    "deployment_evidence": "not established"
+  },
+  "rollback": "Revert the evidence commit, then the test commit, then the implementation commit. No application or payment behavior was changed.",
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Wait for a provider status on the exact operations-only commit; classify it with the corrected fail-closed evaluator and do not attempt an application deployment until capacity and immutable identity can both be verified."
+}
