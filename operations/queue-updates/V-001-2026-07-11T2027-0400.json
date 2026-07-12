@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_provider_success_runtime_unverified",
+  "completed_slice": "Add a dedicated read-only GitHub Actions contract gate and observe a successful Vercel status for its immutable commit.",
+  "evidence_paths": [
+    "operations/evidence/V-001-vercel-evidence-gate-2026-07-11T2025-0400.json",
+    "operations/evidence/V-001-vercel-provider-success-2026-07-11T2027-0400.json"
+  ],
+  "source_commit": "e5307f1093aaa6cf30ae49efe18ab96426db721b",
+  "remaining_condition": "Public runtime behavior and served immutable commit identity are not yet verified.",
+  "next_action": "Resolve the public deployment URL and compare the served build identity with commit e5307f1093aaa6cf30ae49efe18ab96426db721b.",
+  "updated_at": "2026-07-12T00:27:20.000Z"
+}
