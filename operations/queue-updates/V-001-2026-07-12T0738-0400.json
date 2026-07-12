@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a browser-facing audio observation adapter that binds transient activation, AudioContext runtime state, route completeness, and human audibility outcome into the existing fail-closed attestation session.",
+  "evidence": "operations/evidence/vercel-browser-audio-observation-2026-07-12T0738-0400.json",
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "After provider capacity returns, run one operations-only sentinel, then wire the adapter into one exact-commit diagnostic pulse and collect a physical iPhone Safari positive-or-contradicted result.",
+  "canonical_files_overwritten": false
+}
