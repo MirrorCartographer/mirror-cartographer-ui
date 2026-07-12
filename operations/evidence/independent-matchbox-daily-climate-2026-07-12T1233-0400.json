@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "artifact": "independent-web/weather-inside-a-matchbox",
+  "premise": "A hand-drawn matchbox contains a deterministic impossible climate that changes once per UTC day while preserving reproducible visual and forecast states.",
+  "source_commit": "a68153ce88393efac96193c7ff35e923c4e72b2b",
+  "implementation_commit": "194b957a78a1b25fdc1b260283461ba5245ce3ac",
+  "test_commit": "a68153ce88393efac96193c7ff35e923c4e72b2b",
+  "verification": {
+    "command": "node independent-web/weather-inside-a-matchbox/test-contract.mjs",
+    "exit_code": 0,
+    "source_basis": "byte-identical committed HTML and test content fetched from GitHub",
+    "observed": [
+      "four deterministic daily climate families",
+      "seeded particle and forecast generation",
+      "explicit keyboard focus styling",
+      "aria-live atomic forecast announcements",
+      "reduced-motion contract",
+      "suspended AudioContext resume path for mobile browsers",
+      "no network, storage, payment, or conversion dependency"
+    ]
+  },
+  "deployment": {
+    "status": "not_attempted",
+    "reason": "The repository current state prohibits application deployment attempts while provider build capacity is exhausted."
+  },
+  "independence_boundary": {
+    "mirror_cartographer_dependency": false,
+    "research_portal": false,
+    "worker_dashboard": false,
+    "product_funnel": false,
+    "payment_surface": false,
+    "personal_data": false
+  },
+  "rollback": "Revert commits a68153ce88393efac96193c7ff35e923c4e72b2b and 194b957a78a1b25fdc1b260283461ba5245ce3ac. No shared application, deployment configuration, or history deletion is required.",
+  "limits": [
+    "No public hosting verification was performed.",
+    "No physical iPhone Safari interaction or audibility test was performed.",
+    "The contract test is structural and does not replace browser rendering or assistive-technology testing."
+  ]
+}
