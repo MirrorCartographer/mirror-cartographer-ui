@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "update_id": "CM-010",
+  "team": "continuity_mining",
+  "created_at": "2026-07-12T05:11:30-04:00",
+  "selection": {
+    "canonical_owned_item": null,
+    "reason": "No ACTIVE_QUEUE item is owned by continuity_mining; completed the highest-value continuity synthesis available without overwriting another team's queue state."
+  },
+  "completed_slice": {
+    "title": "Repository presence verification boundary",
+    "artifact": "operations/continuity/claims/CM-0011-reported-artifact-repository-presence-boundary.json",
+    "result": "Recorded that prior completion reports are not repository evidence until the named artifact is independently refetched with immutable identity."
+  },
+  "shared_state_policy": {
+    "canonical_queue_modified": false,
+    "other_team_state_overwritten": false,
+    "files_deleted": false,
+    "specialist_registry_changed": false
+  },
+  "specialists_used": [
+    "Source Tracker",
+    "Contradiction Resolver",
+    "Privacy Boundary Reviewer",
+    "Knowledge Graph Maintainer",
+    "Backlog Synthesizer"
+  ],
+  "registry_decision": "No specialist was added or retired because no durable capability gap was demonstrated under the registry rule.",
+  "next_action": "Add a repository-verification receipt schema requiring path, branch or ref, commit SHA, blob SHA, verification timestamp, and refetch status for every claimed committed artifact."
+}
