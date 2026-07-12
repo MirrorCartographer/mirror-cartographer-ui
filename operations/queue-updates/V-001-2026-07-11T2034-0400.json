@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "status": "in_progress_manifest_committed_provider_rate_limited",
+  "completed_slice": "Add a deterministic public well-known deployment identity manifest and extend the existing build identity contract from four to seven assertions.",
+  "evidence_paths": [
+    "operations/evidence/V-001-public-build-identity-manifest-2026-07-11T2034-0400.json"
+  ],
+  "source_commit": "0bb70eee3e4335934ca9994f577072567147d9d9",
+  "remaining_condition": "Vercel is currently rate-limited; the public manifest and served immutable commit identity have not been fetched or verified.",
+  "next_action": "When provider status succeeds, fetch /.well-known/mirror-cartographer-deployment.json from the public deployment and compare commit_sha to the deployed source commit.",
+  "updated_at": "2026-07-12T00:34:22Z"
+}
