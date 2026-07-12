@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-035",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-12T15:13:00-04:00",
+  "subject": "Fail-closed classification of GitHub Actions workflow-run observations",
+  "sources": [
+    {
+      "status": "primary_current",
+      "title": "GitHub REST API endpoints for workflow runs",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+      "finding": "Repository workflow-run queries can be filtered by event, head_sha, status, and creation interval; head_sha identifies runs associated with a specified commit."
+    },
+    {
+      "status": "primary_current",
+      "title": "GitHub Actions workflow syntax",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "finding": "Workflow triggering depends on configured events and filters, so observation coverage must include every event capable of creating the expected run."
+    }
+  ],
+  "prior_artifact": {
+    "queue_item": "R-034",
+    "workflow_commit": "d63775e1f4ec5dd88941c9cc49857f5621a7596d",
+    "workflow": "Frontier Audio Session Evidence",
+    "state": "implemented_pending_runtime_verification",
+    "observed_workflow_runs": []
+  },
+  "finding": "An empty workflow-run response is not evidence that no run exists unless the query is bound to the expected head SHA, covers the expected trigger event or events, and exhausts pagination. The available commit-run observation returned no runs but is limited to pull-request-triggered runs, while the expected frontier workflow is push or manual-dispatch oriented; therefore the observation is inconclusive rather than negative.",
+  "artifact": {
+    "module": "tools/frontier-research/workflow-observation-classifier.mjs",
+    "tests": "tools/frontier-research/workflow-observation-classifier.test.mjs",
+    "classifications": [
+      "matching_run_observed",
+      "observation_inconclusive",
+      "no_matching_run_observed_with_complete_scope"
+    ],
+    "claim_boundary": "Provider-reported run metadata does not by itself prove retained artifact contents, digest integrity, physical audibility, or application truth."
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-observation-classifier.test.mjs",
+    "environment": "local Node test runner before commit",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "committed_module": "b3323b9dc714e6e00a799023ea95ebb31450b566",
+    "committed_tests": "73a44c73be1768acc5ed5c80fcf1468e51d67d7e"
+  },
+  "uncertainty": [
+    "No complete repository-level workflow-run query was available in this run.",
+    "No workflow artifact was downloaded or inspected.",
+    "No exact-commit CI success is claimed.",
+    "The classifier was tested with deterministic synthetic run records."
+  ],
+  "falsification_route": "Query the repository workflow-run endpoint with head_sha=d63775e1f4ec5dd88941c9cc49857f5621a7596d, include push and workflow_dispatch events, exhaust pagination, and compare any exact workflow-name match. If a matching successful completed run exists, the prior empty pull-request-only observation was incomplete; if complete scope returns none, classify no matching run without inferring why it did not start."
+}
