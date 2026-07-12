@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T04:16:00Z",
+  "updated_at": "2026-07-12T04:17:00Z",
   "items": [
     {
       "id": "V-001",
@@ -12,7 +12,8 @@
         "Path-aware Vercel build filtering added and corrected.",
         "Fail-closed evidence verifier and diagnostic matrix added.",
         "Public deployment identity delivery contract added to local and pages-preview gates.",
-        "Real provider rate-limit outcome recorded for an operations-only sentinel."
+        "Real provider rate-limit outcome recorded for an operations-only sentinel.",
+        "Vercel build suppression narrowed to explicit operations-only paths; unknown, empty, mixed, application, asset, and configuration changes now require a build."
       ],
       "acceptance_remaining": [
         "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
@@ -20,7 +21,7 @@
         "Bind the tested application commit to an immutable successful Vercel deployment.",
         "Perform bounded physical iPhone Safari audibility verification."
       ],
-      "safe_next_action": "Do not create another application deployment while rate-limited; maintain evidence and verification tooling only."
+      "safe_next_action": "Do not create another application deployment while rate-limited; after capacity returns, use one operations-only sentinel before one exact-commit application verification."
     }
   ]
 }
