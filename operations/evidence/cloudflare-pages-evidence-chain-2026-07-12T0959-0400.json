@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-001",
+  "queue_status": "committed_unpromoted",
+  "improvement": "Fail-closed verifier for authoritative hostname, deployment binding, network reachability, served identity, provenance digest, and privacy review.",
+  "implementation_commit": "bf5540f17d43e6cb0f0461dd657ac87ab272cbe1",
+  "test_commit": "ea0e3735487f0d44dbd75ba037c1beadb2edca0e",
+  "verification": {
+    "command": "node --test verify-pages-evidence.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "environment": "isolated local Node runtime using byte-identical committed contents"
+  },
+  "claim_boundaries": {
+    "proved": [
+      "validator implementation is committed",
+      "test suite passes",
+      "evidence acceptance fails closed on authority, hostname, commit, network, identity, provenance, and privacy mismatches"
+    ],
+    "not_proved": [
+      "Cloudflare credentials are configured",
+      "a Pages project exists",
+      "the production hostname resolves",
+      "the research surface is deployed",
+      "scientific claims are true"
+    ]
+  },
+  "privacy_boundary": "No credentials, private chat, personal identifiers, diagnoses, or treatment claims included."
+}
