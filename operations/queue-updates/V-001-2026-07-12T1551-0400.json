@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-12T15:51:32-04:00",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Composed the workflow artifact manifest gate into the exact-commit observation pipeline and verified eight fail-closed and acceptance outcomes.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "scripts/vercel-workflow-observation-pipeline.mjs",
+    "scripts/vercel-workflow-observation-pipeline.test.mjs",
+    "operations/evidence/vercel-artifact-manifest-pipeline-composition-2026-07-12T1551-0400.json"
+  ],
+  "commits": [
+    "5bb7a3fea3d5d70eb1ded1a59b3b37db7f0ad851",
+    "c8673d6d374ceded4d1245a62792a82caa8098b2",
+    "43ef8647a3ddcc81008e385de5ff799dae4d00c2"
+  ],
+  "verification": {
+    "node_tests_passed": 8,
+    "node_tests_failed": 0,
+    "deployment_observed": false,
+    "physical_iphone_audibility_observed": false
+  },
+  "acceptance_remaining": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact through the composed manifest pipeline.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add a fixture-driven adapter for the GitHub Actions artifact-list response and run it through the composed pipeline; do not create an application deployment while provider capacity remains unverified.",
+  "rollback": "Revert only the pipeline composition commit; standalone gates and prior behavior remain recoverable.",
+  "registry_change": null
+}
