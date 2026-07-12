@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "evidence_id": "continuity-claim-source-classification-2026-07-12T1737-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-12T17:37:27-04:00",
+  "objective": "Preserve the provenance distinction between reported automation completion prose and repository-verifiable project memory while reconciling M-004, M-005, and M-006.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json at blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json at blob 3286ed7e5da2d3390ce2f4ba8fe5b89ec7c20a2a",
+    "operations/SPECIALIST_REGISTRY.json at blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json at blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "recent commits through a92f61499f157c6a486190401231bcf1714b4e3f",
+    "commit 9cf1bbca04ee5e3c0f2cb41949ef79a4af7c5775 and its continuity reconciliation evidence",
+    "repository code search for M-004, M-005, M-006, and M-RECONCILE-002",
+    "repository commit search for M-004",
+    "available automation completion prose naming continuity artifacts"
+  ],
+  "claims": {
+    "observed": [
+      "The canonical queue contains M-RECONCILE-002 as the highest-priority continuity_mining item.",
+      "The queue explicitly requires locating immutable provenance for M-004, M-005, and M-006 or classifying them as unlocated after exhaustive coverage.",
+      "Repository code search returned no result for M-004, no combined result for M-004 M-005 M-006, and no result for M-RECONCILE-002 despite the canonical file containing that identifier, demonstrating that code-search non-results are not exhaustive repository evidence.",
+      "Repository commit search returned no commit matching M-004.",
+      "A prior immutable continuity evidence commit already classified M-004, M-005, and M-006 as unresolved under bounded branch and history coverage.",
+      "Automation completion prose has reported paths and commits for later continuity artifacts, but prose alone is not an immutable repository object."
+    ],
+    "inferred": [
+      "The missing identifiers may originate in automation narration rather than persisted repository history.",
+      "Because repository code search failed to return even a known canonical identifier, search absence cannot upgrade any missing artifact from unresolved to nonexistent.",
+      "Completion prose is useful as a lead for provenance recovery but must be classified as an unverified claim source until linked to a repository object or retained private source."
+    ],
+    "proposed": [
+      "Represent every recovered memory source with source_class, immutability, coverage, privacy, and verification_status fields.",
+      "Classify automation completion prose as source_class=run_report, immutability=unproven, verification_status=lead_only unless a commit, blob, artifact, or retained source is independently resolved.",
+      "Do not reuse M-004, M-005, or M-006 identifiers for reconstructed artifacts; preserve them as provenance gaps."
+    ],
+    "superseded": [
+      "Treating a detailed completion report as proof that its named files and commits exist.",
+      "Treating an empty repository code-search response as exhaustive absence evidence.",
+      "Repairing continuity by silently recreating a reported artifact under the same identifier."
+    ],
+    "unresolved": [
+      "The originating private or historical source that first assigned M-004, M-005, and M-006.",
+      "Whether any authentic pre-reconciliation repository objects for those identifiers exist outside currently observed history coverage.",
+      "Whether exhaustive branch and commit traversal will locate the identifiers or justify final unlocated classification."
+    ]
+  },
+  "memory_recovered": {
+    "title": "Claim-source separation",
+    "durable_rule": "A run report is a provenance lead, not project truth. Persisted memory becomes authoritative only when its source object, coverage envelope, privacy boundary, and verification status are recorded.",
+    "schema_fields": [
+      "source_class",
+      "source_locator",
+      "immutability",
+      "coverage",
+      "privacy_class",
+      "verification_status",
+      "claim_status",
+      "falsification_route"
+    ],
+    "operational_effect": "Continuity mining can use prior prose to search, but cannot promote the prose's claims into canonical history without independent evidence."
+  },
+  "evidence_strength": "moderate",
+  "coverage_limit": "Default-branch canonical files, recent indexed commits, selected immutable reconciliation evidence, repository code search, and one identifier-specific commit search were inspected. Exhaustive branch inventory, exhaustive commit traversal, private chat-history retrieval, and full file-library provenance were not available in this run.",
+  "privacy_boundary": "Only repository metadata, operational identifiers, and abstract provenance rules are persisted. No private chat passages, health information, personal identifiers, credentials, or sensitive project content are reproduced.",
+  "falsification_route": "Produce an authentic immutable source object predating this audit that contains M-004, M-005, or M-006. Link the object, preserve this bounded observation, and revise the affected claim from unresolved to observed with the newly established coverage."
+}
