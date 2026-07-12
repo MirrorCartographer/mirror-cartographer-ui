@@ -8,6 +8,15 @@ assert.equal(buildAudioRuntimeEvidencePacket({}), null);
 
 const packet = buildAudioRuntimeEvidencePacket({
   __MC_DEPLOYMENT_IDENTITY__: { commit: 'abc123', provider: 'vercel' },
+  __MC_AUDIO_ROUTING__: {
+    status: 'default-or-undisclosed',
+    browserConfirmed: false,
+    physicalOutputProven: false,
+    sinkId: null,
+    sampledAt: '2026-07-11T22:00:01.000Z',
+    evidenceLimit: 'Browser routing state does not prove speaker emission or listener perception.',
+    secret: 'must-not-export',
+  },
   __MC_AUDIBILITY_EVIDENCE__: {
     schemaVersion: '1.2.0',
     attemptId: 'attempt 1/unsafe',
@@ -21,13 +30,22 @@ const packet = buildAudioRuntimeEvidencePacket({
   },
 });
 
+assert.equal(packet.schemaVersion, '1.1.0');
 assert.equal(packet.kind, 'mirror-cartographer-audio-runtime-evidence');
 assert.equal(packet.deployment.commit, 'abc123');
 assert.equal(packet.evidence.attemptMatched, true);
 assert.equal(packet.evidence.outcome, 'heard');
 assert.equal(packet.evidence.secret, undefined);
-assert.equal(packet.limits.length, 3);
+assert.equal(packet.routing.status, 'default-or-undisclosed');
+assert.equal(packet.routing.physicalOutputProven, false);
+assert.equal(packet.routing.secret, undefined);
+assert.equal(packet.limits.length, 4);
 assert.match(packet.capturedAt, /^\d{4}-\d{2}-\d{2}T/);
+
+const packetWithoutRouting = buildAudioRuntimeEvidencePacket({
+  __MC_AUDIBILITY_EVIDENCE__: { attemptId: 'no-routing', outcome: 'not-heard' },
+});
+assert.equal(packetWithoutRouting.routing, null);
 
 const filename = buildAudioEvidenceFilename({
   capturedAt: '2026-07-11T22:00:00.000Z',
