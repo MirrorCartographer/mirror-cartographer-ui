@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact": "browser_audio_clock_sampler",
+  "source_status": "primary_specification_plus_runtime_test",
+  "sources": [
+    {
+      "title": "Web Audio API 1.1",
+      "publisher": "W3C Web Audio Working Group",
+      "url": "https://www.w3.org/TR/webaudio-1.1/",
+      "status": "first_public_working_draft",
+      "retrieved_on": "2026-07-12",
+      "relevance": "Defines AudioContext, AudioTimestamp, getOutputTimestamp, baseLatency, outputLatency, and the distinction between control and rendering timelines."
+    },
+    {
+      "title": "Web Audio API Editor's Draft",
+      "publisher": "W3C Web Audio Working Group",
+      "url": "https://webaudio.github.io/web-audio-api/",
+      "status": "editors_draft",
+      "retrieved_on": "2026-07-12",
+      "relevance": "Current working specification used to check that the sampler shape remains aligned with the evolving API."
+    }
+  ],
+  "finding": "Clock-consistency evaluation is only as trustworthy as acquisition. Browser capture must represent unsupported getOutputTimestamp and unavailable latency explicitly, validate timestamp shape at the boundary, and prevent unavailable or contradicted evidence from entering higher-level audio claims.",
+  "design_implication": "Use a browser-safe, dependency-injected sampler. Keep cryptographic digesting and policy evaluation outside the capture module; forward a session only when the existing evaluator classifies it as consistent.",
+  "implementation": {
+    "source": "tools/frontier-research/audio-clock-sampler.mjs",
+    "tests": "tools/frontier-research/audio-clock-sampler.test.mjs",
+    "source_commit": "d691a80614478589c3352fb17ce96b68a0936408",
+    "test_commit": "f97ed737335d5b2b093dd6e62b5f7749c878dbff"
+  },
+  "verification": {
+    "command": "node --test /tmp/frontier/audio-clock-sampler.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "verified_behaviors": [
+      "standards-shaped output timestamp capture",
+      "explicit unsupported-API evidence",
+      "deterministic multi-sample session capture",
+      "null preservation for unavailable latency",
+      "evaluator bypass when capture is unavailable",
+      "forwarding only after consistent classification",
+      "fail-closed malformed timestamp handling"
+    ]
+  },
+  "evidence_strength": "implementation_tested_in_isolated_node_harness",
+  "uncertainty": [
+    "No immutable browser deployment session was sampled.",
+    "No physical Safari or iPhone runtime was observed.",
+    "Specification support does not establish implementation support in every browser version."
+  ],
+  "falsification_route": [
+    "Run the sampler in the immutable deployed application after a user gesture activates AudioContext.",
+    "Persist raw capture and evaluator result from the same session.",
+    "Reject the design if unsupported APIs are represented as observed values, malformed timestamps pass, or contradicted evidence is forwarded.",
+    "Compare Safari, Chromium, and Firefox behavior without converting absence into zero latency."
+  ],
+  "claim_boundary": "This artifact can support render-clock consistency only. It cannot prove route binding, acoustic output, physical audibility, diagnosis, or treatment."
+}
