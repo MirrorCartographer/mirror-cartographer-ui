@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T11:31:23Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a bounded audio attestation capture adapter that generates an opaque session identifier, enforces activation/runtime/human ordering, and emits only validator-approved terminal evidence.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "tools/vercel-ops/audio-attestation-capture.mjs",
+    "tools/vercel-ops/audio-attestation-capture.test.mjs",
+    "operations/evidence/vercel-audio-attestation-capture-2026-07-12T0731-0400.json"
+  ],
+  "commits": [
+    "60790c5bbf3d53154bf50f989bd26649a63a1936",
+    "2f690701eea4f0df64026055710d07a4aa3b7179",
+    "30f84ee39fa622bb8f5986ac8fcc6d43edd4c1d7"
+  ],
+  "verification": {
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "deployment_attempted": false
+  },
+  "rollback": "Revert the four additive commits from this slice. No application runtime, visual layer, payment logic, deployment configuration, canonical queue file, or shared current-state file was modified.",
+  "remaining_acceptance": [
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Wire this adapter into a reversible application capture surface and perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "After a fresh provider-capacity observation validates availability, run one operations-only sentinel. Only after that succeeds, wire the capture adapter into one reversible exact-commit application verification build."
+}
