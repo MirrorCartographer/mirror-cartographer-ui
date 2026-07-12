@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-12T12:50:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Made the operations-only GitHub Actions evidence manifest satisfy and self-check against the V-001 fail-closed validator.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Audio Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    ".github/workflows/vercel-evidence-contract.yml",
+    "operations/evidence/vercel-evidence-contract-self-validation-2026-07-12T1250-0400.json",
+    "operations/queue-updates/V-001-2026-07-12T1250-0400.json"
+  ],
+  "commits": {
+    "implementation": "6331f05a0ccb66de8042d3904d1133bb10236840",
+    "evidence": "5938da885bfef3f49d22e06bd95b5b6a55d227a0"
+  },
+  "verification": {
+    "source_behavior": "The workflow now records the real test exit code, emits the complete validator-required runtime evidence shape, and invokes validateEvidence on the generated manifest before upload.",
+    "trusted_runtime": "not_observed",
+    "vercel_status": "failure_build_rate_limit",
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Observe a successful run of the operations-only evidence workflow and retain its immutable run and artifact identifiers.",
+    "Observe an operations-only Vercel sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert this queue update, the paired evidence record, and implementation commit 6331f05a0ccb66de8042d3904d1133bb10236840 in reverse order.",
+  "next_action": "Observe or dispatch the self-validating operations-only workflow; if successful, retain the immutable run URL and uploaded artifact metadata without initiating an application deployment."
+}
