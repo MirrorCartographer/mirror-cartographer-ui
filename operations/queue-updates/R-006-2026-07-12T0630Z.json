@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "R-006",
+  "owner": "frontier_research",
+  "priority": "highest_available_for_owner",
+  "state": "completed_slice",
+  "objective": "Add a fail-closed epistemic transition gate for provenance-bearing research claims.",
+  "selection_basis": "The canonical active queue had no frontier_research-owned item, and the previously reported lifecycle-gate artifact was absent from the repository. This append-only item records the first verifiable frontier slice without overwriting another team's queue state.",
+  "completed": [
+    "Implemented status and evidence-strength validation.",
+    "Required parent claims for inferred claims.",
+    "Required replacement identity for superseded claims.",
+    "Rejected future-dated provenance.",
+    "Added five deterministic Node tests and a primary-source evidence record."
+  ],
+  "files": [
+    "tools/frontier-research/evidence-transition-gate.mjs",
+    "tools/frontier-research/evidence-transition-gate.test.mjs",
+    "operations/evidence/frontier-evidence-transition-gate-2026-07-12T0630Z.json"
+  ],
+  "commits": [
+    "e4f9e8d3469201732716155327e5c3f3fde4cbe1",
+    "eafe1b24ee694ecbe11b2e4009ecbc183a375945",
+    "469a607ecd3d42ad5f8e967fcffe875cd6978bf2"
+  ],
+  "next_action": "Integrate the gate into one evidence consumer and prove that rejected packets cannot enter an accepted downstream state.",
+  "recorded_at": "2026-07-12T06:30:00Z"
+}
