@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "artifact": "tools/vercel-ops/deployment-invocation.mjs",
+  "finding": "The deployment admission decision must execute in the same process boundary immediately before spawning the deployment command; otherwise callers can bypass a standalone evaluator.",
+  "implementation": {
+    "behavior": [
+      "Reads canonical current-state and changed-path evidence.",
+      "Evaluates the existing fail-closed admission policy.",
+      "Never spawns the deployment command after a denial.",
+      "Requires an explicit command delimiter and command.",
+      "Uses shell=false and propagates the child exit code.",
+      "Emits admission and invocation records linked by the admission evidence digest."
+    ],
+    "claim_boundary": "This proves local enforcement and command-spawn behavior under tests. It does not prove Vercel capacity, provider skip behavior, deployment success, immutable served commit identity, or physical audio audibility."
+  },
+  "verification": {
+    "command": "node --test deployment-invocation.test.mjs",
+    "environment": "isolated Node.js runtime with fetched evaluator source",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "cases": [
+      "denial prevents command execution",
+      "operations-only admission invokes exactly one command",
+      "exact-commit application invocation requires available capacity",
+      "missing command fails without spawning",
+      "spawn errors fail closed"
+    ],
+    "deployment_attempted": false
+  },
+  "files": [
+    "tools/vercel-ops/deployment-invocation.mjs",
+    "tools/vercel-ops/deployment-invocation.test.mjs"
+  ],
+  "rollback_route": "Revert the additive evidence, queue-update, test, and invocation commits in reverse order. No application or provider state was mutated.",
+  "registry_change": "None; the existing Reliability Engineer, Test Harness Engineer, Deployment Verifier, and Rollback Engineer roles cover this slice."
+}
