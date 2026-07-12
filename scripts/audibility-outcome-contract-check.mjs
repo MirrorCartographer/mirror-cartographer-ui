@@ -24,11 +24,19 @@ const render = {
   currentTime: 2.5,
   sampledAt: '2026-07-11T21:00:00.420Z',
 };
+const routing = {
+  status: 'default-output-confirmed',
+  browserConfirmed: true,
+  physicalOutputProven: false,
+  sinkId: 'default',
+  sampledAt: '2026-07-11T21:00:00.450Z',
+  evidenceLimit: 'Browser routing state does not prove physical speaker emission.',
+};
 
 assert.deepEqual(
-  buildAudibilityEvidence('heard', pulse, render, '2026-07-11T21:00:01.000Z'),
+  buildAudibilityEvidence('heard', pulse, render, '2026-07-11T21:00:01.000Z', routing),
   {
-    schemaVersion: '1.2.0',
+    schemaVersion: '1.3.0',
     attemptId,
     attemptMatched: true,
     outcome: 'heard',
@@ -51,10 +59,30 @@ assert.deepEqual(
       currentTime: 2.5,
       sampledAt: '2026-07-11T21:00:00.420Z',
     },
+    routing,
   },
 );
 
-assert.equal(classifyAudibilityDiagnostic('not-heard', pulse, render), 'render-confirmed-not-heard');
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, render, routing),
+  'render-confirmed-default-route-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, render, { ...routing, status: 'selected-output-confirmed' }),
+  'render-confirmed-selected-route-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, render, { ...routing, status: 'unsupported' }),
+  'render-confirmed-routing-unavailable-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, render, { ...routing, status: 'policy-blocked' }),
+  'render-confirmed-routing-policy-blocked-not-heard',
+);
+assert.equal(
+  classifyAudibilityDiagnostic('not-heard', pulse, render),
+  'render-confirmed-route-unresolved-not-heard',
+);
 assert.equal(
   classifyAudibilityDiagnostic('not-heard', pulse, { result: 'clock-progress-only' }),
   'clock-advanced-not-heard',
@@ -73,6 +101,7 @@ const mismatched = buildAudibilityEvidence(
   pulse,
   { ...render, attemptId: 'mc-audio-attempt-older' },
   '2026-07-11T21:00:01.500Z',
+  routing,
 );
 assert.equal(mismatched.attemptMatched, false);
 assert.equal(mismatched.diagnosis, 'attempt-evidence-mismatch');
@@ -82,6 +111,7 @@ const missingRenderIdentity = buildAudibilityEvidence(
   pulse,
   { ...render, attemptId: null },
   '2026-07-11T21:00:01.750Z',
+  routing,
 );
 assert.equal(missingRenderIdentity.attemptMatched, false);
 assert.equal(missingRenderIdentity.diagnosis, 'attempt-evidence-mismatch');
@@ -90,14 +120,26 @@ const failedPulse = buildPulseFailureEvidence(
   { attemptId, played: false, reason: 'context-suspended', state: 'suspended' },
   null,
   '2026-07-11T21:00:03.000Z',
+  routing,
 );
 assert.equal(failedPulse.attemptMatched, true);
 assert.equal(failedPulse.outcome, 'not-heard');
 assert.equal(failedPulse.diagnosis, 'pulse-not-scheduled');
 assert.equal(failedPulse.pulse.reason, 'context-suspended');
+assert.equal(failedPulse.routing.status, 'default-output-confirmed');
 assert.throws(() => buildPulseFailureEvidence(pulse, render), /requires an unscheduled pulse/);
 assert.throws(() => buildAudibilityEvidence('maybe', pulse, render), /Invalid audibility outcome/);
 assert.throws(() => classifyAudibilityDiagnostic('maybe', pulse, render), /Invalid audibility outcome/);
+
+const unobservedRouting = buildAudibilityEvidence(
+  'not-heard',
+  pulse,
+  render,
+  '2026-07-11T21:00:03.500Z',
+);
+assert.equal(unobservedRouting.routing.status, 'unobserved');
+assert.equal(unobservedRouting.routing.browserConfirmed, false);
+assert.equal(unobservedRouting.routing.physicalOutputProven, false);
 
 const retryState = {
   __MC_AUDIO_PULSE__: pulse,
