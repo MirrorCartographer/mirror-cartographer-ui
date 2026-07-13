@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
 import { readFile, writeFile, access } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { resolve } from 'node:path';
@@ -23,6 +24,30 @@ async function assertOutputAbsent(path) {
   }
 }
 
+function canonicalBindingDigest(targetCommit, bindings) {
+  const canonical = {
+    target_commit: targetCommit,
+    bindings: bindings.map(({
+      path,
+      blob_sha,
+      target_commit,
+      verification_method,
+      verified_at,
+      independent_methods,
+      agreement_verified
+    }) => ({
+      path,
+      blob_sha,
+      target_commit,
+      verification_method,
+      verified_at,
+      independent_methods: [...independent_methods],
+      agreement_verified
+    }))
+  };
+  return createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
+}
+
 export function buildReconciledSourceBindingPacket(input) {
   assertObject(input, 'input');
   if (!Array.isArray(input.bindings) || input.bindings.length === 0) {
@@ -42,14 +67,18 @@ export function buildReconciledSourceBindingPacket(input) {
     }
     seenPaths.add(reconciled.path);
     return reconciled;
-  });
+  }).sort((a, b) => a.path.localeCompare(b.path));
+
+  const canonical_digest_sha256 = canonicalBindingDigest(input.target_commit, bindings);
 
   return Object.freeze({
-    schema_version: 1,
+    schema_version: 2,
     artifact_type: 'vercel-reconciled-source-binding-packet',
     target_commit: input.target_commit,
     generated_at: new Date().toISOString(),
     verification_method: 'independent-exact-commit-source-reconciliation',
+    canonicalization: 'bindings-sorted-by-repository-path; sha256-over-target-commit-and-verification-fields',
+    canonical_digest_sha256,
     binding_count: bindings.length,
     bindings,
     all_bindings_agreement_verified: bindings.every((binding) => binding.agreement_verified === true),
