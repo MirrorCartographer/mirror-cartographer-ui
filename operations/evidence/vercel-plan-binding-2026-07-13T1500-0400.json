@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T15:00:00-04:00",
+  "slice": "tamper_evident_execution_plan_binding",
+  "observed_gap": "The retained-evidence preflight validated repository, commit, command, output routes, and no-overwrite behavior but did not emit a stable digest that later evidence could use to prove it referred to the same canonical validated plan.",
+  "implementation": {
+    "source": "operations/tools/bind-vercel-evidence-execution-plan.mjs",
+    "test": "operations/tools/bind-vercel-evidence-execution-plan.test.mjs",
+    "algorithm": "sha256",
+    "canonicalization": "recursive_lexicographic_object_keys_preserve_array_order",
+    "bound_fields": [
+      "schema_version",
+      "repository",
+      "commit_sha",
+      "command",
+      "outputs",
+      "overwrite",
+      "pending",
+      "deployment_requested"
+    ]
+  },
+  "verification": {
+    "method": "local deterministic Node test execution against the new binding module and a byte-compatible validator contract",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "covered": [
+      "deterministic digest generation",
+      "canonical path alias equivalence",
+      "command mutation changes digest",
+      "invalid plan fails closed without binding"
+    ]
+  },
+  "claims_not_proven": [
+    "authenticated GitHub execution",
+    "workflow-run completeness",
+    "retained-output authenticity",
+    "dual-client reconciliation",
+    "Vercel deployment identity",
+    "browser behavior",
+    "audio audibility",
+    "physical iPhone Safari behavior"
+  ],
+  "deployment_attempted": false,
+  "reason_deployment_not_attempted": "CURRENT_STATE prohibits application deployment attempts while provider build capacity is exhausted.",
+  "privacy_boundary": "The binding contains only repository-scoped operational metadata, canonical output paths, command text without credentials, and a digest. It does not persist tokens, private user content, health data, payment logic, or conversion logic.",
+  "rollback": "Revert commit 0c799759cb3906828b171a8bac3ff037c75d7277; the additive test and evidence records may remain as historical evidence."
+}
