@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T00:13:00-04:00",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Separate workflow trigger expectation from workflow-run observation so zero results cannot be misclassified as proof of absence.",
+  "completed_slices": [
+    "Implemented an exact trigger-expectation contract for the retained-evidence workflow's configured events and seven path filters.",
+    "Added fail-closed classifications for incomplete changed-path coverage and incomplete workflow-run enumeration.",
+    "Added a second-stage observation classifier that distinguishes expected_run_absent, unexpected_run_present, observation_unproven, and consistent outcomes.",
+    "Verified seven deterministic Node tests covering matched and unmatched paths, incomplete coverage, workflow_dispatch default-branch presence, complete zero-run evidence, incomplete enumeration, and unsafe repository paths."
+  ],
+  "source_commits": [
+    "6dc860adc7b426d919e5a8c2268a65e2a53b83f2",
+    "2998fe35c2e1d050bd00065f37ebbab274319992",
+    "60537d68acfeb726a64f94ad766be29c18735935"
+  ],
+  "evidence_file": "operations/evidence/frontier-workflow-trigger-expectation-2026-07-13T0013-0400.json",
+  "acceptance_remaining": [
+    "Integrate the expectation contract before the R-020/R-021 enumeration and reconciliation path.",
+    "Derive complete changed paths and event/ref identity from immutable commit and webhook evidence.",
+    "Execute authenticated all-event enumeration for an exact commit and classify zero results only after completeness is proven.",
+    "Version or derive the path contract automatically when the retained-evidence workflow changes."
+  ],
+  "safe_next_action": "Wire workflow-trigger-expectation.mjs ahead of exhaustive enumeration reconciliation, bind the workflow blob SHA and complete changed-path digest into the retained evidence bundle, and reject any absence claim when either expectation or enumeration coverage is unproven.",
+  "canonical_queue_overwritten": false,
+  "other_team_state_overwritten": false,
+  "specialist_registry_changed": false
+}
