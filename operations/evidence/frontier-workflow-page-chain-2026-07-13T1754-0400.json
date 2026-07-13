@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-020",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T21:54:00Z",
+  "finding": "A retained exact-commit workflow enumeration is not independently auditable unless each raw HTTP page is bound to its request URL, response status, retrieval time, selected API version, unique GitHub request identifier, body digest, workflow-run identifiers, and the exact Link-header next relation.",
+  "source_status": "primary_documentation",
+  "evidence_strength": "strong_contract_evidence_local_test_only",
+  "primary_sources": [
+    {
+      "title": "Using pagination in the REST API",
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "observed_contract": "GitHub pagination is driven by Link response headers; pagination clients continue until the Link header no longer contains rel=next."
+    },
+    {
+      "title": "REST API endpoints for workflow runs",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs#list-workflow-runs-for-a-repository",
+      "observed_contract": "Repository workflow-run enumeration supports exact head_sha filtering and per_page pagination under the current versioned REST API."
+    }
+  ],
+  "artifact": "operations/tools/validate-workflow-page-chain.mjs",
+  "test": "operations/tools/validate-workflow-page-chain.test.mjs",
+  "verification": {
+    "command": "node --test operations/tools/validate-workflow-page-chain.test.mjs",
+    "local_reconstruction_result": "5 passed, 0 failed",
+    "repository_ci_claimed": false,
+    "authenticated_api_execution_claimed": false
+  },
+  "falsification_route": "Provide a retained raw-page set that passes the existing execution-envelope validator while demonstrating a non-contiguous request URL, broken Link next relation, duplicate x-github-request-id, duplicate workflow-run ID across pages, or changed body bytes without a changed body digest. The new validator must reject each case.",
+  "handoff": "Bind the page_chain_digest into the retained execution envelope and require it before dual-enumeration reconciliation or Vercel promotion."
+}
