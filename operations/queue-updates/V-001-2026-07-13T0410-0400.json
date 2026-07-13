@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T04:10:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Hardened the retained-evidence deployment pipeline so stale, future-dated, path-unsafe, and acquisition-method-substituted artifacts fail closed before a Vercel deployment attempt can be authorized.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-retained-evidence-pipeline.mjs",
+    "operations/tools/vercel-retained-evidence-pipeline.test.mjs",
+    "operations/evidence/vercel-retained-evidence-metadata-gate-2026-07-13T0410-0400.json"
+  ],
+  "commits": [
+    "04a4d4b0a6166662311f7725de89640e638e0201",
+    "a92034316d603d62ca50537dd31a14e5e3502c85",
+    "7e7d0d962647d5274b66c013bdfa812488f0fec0"
+  ],
+  "verification": {
+    "new_deterministic_tests": 4,
+    "repository_source_refetched": true,
+    "github_combined_status": "failure",
+    "vercel_rate_limit_observed": true,
+    "runtime_test_execution_observed": false,
+    "application_deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute the full retained-evidence test suite in an authenticated checkout or CI runner.",
+    "Execute both exhaustive workflow enumerators for one exact commit and retain fresh artifacts within the bounded collection window.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert commits 7e7d0d962647d5274b66c013bdfa812488f0fec0, a92034316d603d62ca50537dd31a14e5e3502c85, and 04a4d4b0a6166662311f7725de89640e638e0201. No production application path was changed.",
+  "safe_next_action": "Run node --test operations/tools/vercel-retained-evidence-pipeline.test.mjs in an authenticated checkout, then acquire both exact-commit enumerations within fifteen minutes of evaluation. Do not request an application deployment until Vercel capacity and immutable deployment identity are independently verified.",
+  "canonical_queue_modified": false
+}
