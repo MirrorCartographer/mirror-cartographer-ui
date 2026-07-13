@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:30:00Z",
+  "update_type": "additive_vertical_slice",
+  "state": "in_progress_blocked",
+  "durable_improvement": "Composed Frontier Research's current-source workflow-run query contract ahead of the independent gh pagination envelope, failing closed on stale documentation, narrowed event coverage, commit mismatch, retained-command mismatch, and incomplete pagination before evidence can enter reconciliation.",
+  "files": [
+    "operations/tools/build-vercel-workflow-evidence-envelope.mjs",
+    "operations/tools/build-vercel-workflow-evidence-envelope.test.mjs",
+    ".github/workflows/vercel-workflow-query-envelope-contract.yml",
+    "operations/evidence/vercel-query-envelope-integration-2026-07-13T1330-0400.json"
+  ],
+  "commits": [
+    "4db2175d1c588ca4919d6fa7d1c3703e22d7454f",
+    "ab491ccfe2bc6f71d26ea94de3d7775c8ad3051c",
+    "3161dd726a5c31559d8906c7ac0316e097902004",
+    "b617a3ef49056441218a41adef1afdd66d4e33c2"
+  ],
+  "verification": {
+    "source_readback": "passed",
+    "tests_authored": 6,
+    "workflow_execution": "unobserved",
+    "deployment": "blocked_by_vercel_build_rate_limit"
+  },
+  "acceptance_remaining": [
+    "Observe the committed integration workflow and retain its exact run result.",
+    "Execute authenticated primary and independent all-event enumerations for one exact commit.",
+    "Retain the source contract, raw outputs, validated envelopes, reconciliation bundle, and downstream assessment.",
+    "Observe an operations-only Vercel skip after provider capacity returns.",
+    "Bind an application commit to immutable deployment identity and complete bounded iPhone Safari audio verification."
+  ],
+  "safe_next_action": "Inspect the exact GitHub Actions run for commit 3161dd726a5c31559d8906c7ac0316e097902004; if successful, use the composed builder in the retained-evidence CLI before reconciliation. Do not create an application deployment while the provider build-rate limit remains active.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
