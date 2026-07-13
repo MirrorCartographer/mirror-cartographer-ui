@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "recorded_at": "2026-07-13T22:36:42Z",
+  "objective": "Bind each retained GitHub REST workflow-run page to its HTTP status, selected API version, provider request identifier, Link-header pagination chain, and exact body digest.",
+  "selection_basis": "R-020 and R-021 already cover exhaustive enumeration, independent reconciliation, stabilization, and whole-manifest retention. The remaining unimplemented evidence gap was per-page transport provenance without introducing another enumeration path.",
+  "completed_slices": [
+    "Researched current GitHub primary documentation for REST pagination, API-version selection, response headers, and workflow-run search limits.",
+    "Implemented a fail-closed page-chain receipt verifier.",
+    "Bound exact body bytes to SHA-256 digests and each page to status 200, the requested selected API version, a unique provider request ID, and the preceding Link rel=next URL.",
+    "Added six deterministic Node tests covering valid and falsifying cases.",
+    "Recorded source status, evidence strength, uncertainty, claim boundary, and falsification route."
+  ],
+  "acceptance_remaining": [
+    "Integrate the verifier into the authenticated retained-evidence CLI after raw page capture and before whole-manifest promotion.",
+    "Capture response headers and exact bodies for both exhaustive clients against one exact commit.",
+    "Retain a valid page-chain receipt for the authenticated repository execution.",
+    "Continue to reject provider-ceiling ambiguity independently; a valid page chain does not prove completeness above the documented filtered-search limit."
+  ],
+  "artifacts": [
+    "tools/frontier-research/github-page-chain-receipt.mjs",
+    "tools/frontier-research/github-page-chain-receipt.test.mjs",
+    "operations/evidence/frontier-github-page-chain-receipt-2026-07-13T1836-0400.json"
+  ],
+  "commits": {
+    "module": "79e9343194388730b28e061aa3e1a04fd161b67f",
+    "test": "dd60b0e85a2f9b0dfa3cd9e8dc8df63e6829dd84",
+    "evidence": "578b748be6be1d7a3ea102573815a24cfbcd59f0"
+  },
+  "safe_next_action": "Vercel Studio should add header-preserving capture to the authenticated retained-evidence CLI, validate each method's page chain with R-022, and include the verified transport receipt digest in the existing no-overwrite evidence manifest before any commit-bound evidence promotion.",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false,
+  "specialist_registry_change": null
+}
