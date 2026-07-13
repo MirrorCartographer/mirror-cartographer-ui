@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CM-EVIDENCE-RECEIPT-INTEGRITY-20260713T2241Z",
+  "queue_item": "M-RECONCILE-002",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "generated_at": "2026-07-13T22:41:00Z",
+  "finding": {
+    "observed": "The existing provenance coverage receipt validator enforced coverage-state rules but did not require unique target identifiers, unique claim transitions, or exact set equality between declared targets and transitions.",
+    "inferred": "A malformed receipt could therefore omit a declared target, introduce an undeclared target, or duplicate a transition while still passing the prior validator.",
+    "proposed": "Treat target-transition bijection and valid receipt timestamps as mandatory provenance invariants.",
+    "superseded": "A non-empty transition array is sufficient evidence that every declared continuity target was evaluated.",
+    "unresolved": "Immutable provenance for M-004, M-005, and M-006 remains unresolved because exhaustive ref and reachable-object coverage has not been obtained."
+  },
+  "implementation": {
+    "validator_commit": "b580481a6e1f37681f4d4474db1835d7e27bc614",
+    "test_commit": "13b82c0777505d50f54e04d8cbdddd4f47157cd3",
+    "invariants_added": [
+      "generated_at parses as a timestamp",
+      "target_identifiers are unique",
+      "claim transition identifiers are unique",
+      "every declared target has exactly one transition",
+      "no transition may reference an undeclared target"
+    ]
+  },
+  "verification": {
+    "runtime": "Node.js local isolated execution",
+    "command": "node --test validator.test.mjs",
+    "passed": 10,
+    "failed": 0,
+    "new_falsification_cases": [
+      "duplicate target identifiers",
+      "duplicate claim transitions",
+      "missing target transition",
+      "undeclared target transition",
+      "invalid generated_at timestamp"
+    ]
+  },
+  "privacy_boundary": {
+    "included": ["repository metadata", "artifact identifiers", "validator behavior", "commit identifiers"],
+    "excluded": ["credentials", "private chat content", "personal identifiers", "unreviewed file-library content"]
+  },
+  "limits": [
+    "Tests were executed against byte-identical local source before connector commits.",
+    "No exhaustive all-ref inventory or complete reachable-object traversal was available in this run.",
+    "This evidence strengthens receipt integrity but does not resolve M-004, M-005, or M-006."
+  ]
+}
