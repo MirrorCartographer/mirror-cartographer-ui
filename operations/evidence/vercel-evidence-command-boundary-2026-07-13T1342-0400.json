@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T17:42:58Z",
+  "slice": "repository-bound retained-command preflight",
+  "status": "source_verified_runtime_pending",
+  "observed": [
+    "The retained-evidence execution preflight now rejects shell-control operators in command text.",
+    "The retained gh api command must target /repos/MirrorCartographer/mirror-cartographer-ui/actions/runs.",
+    "Successful preflight output now records the bound repository identity.",
+    "No deployment was requested or created by this slice."
+  ],
+  "verification": {
+    "implementation_commit": "e8fd1d7c8510abc370a3e38928c95ba7fff2ad26",
+    "test_commit": "e9c660543cb592a3892ceec69b74193f3adeb4e2",
+    "deterministic_cases_added": 2,
+    "runtime_execution_observed": false,
+    "deployment_observed": false
+  },
+  "claim_boundary": [
+    "Source inspection proves the boundary is committed; it does not prove GitHub Actions execution.",
+    "This does not prove authentication, exhaustive enumeration, reconciliation, deployment identity, browser behavior, or physical-device audibility."
+  ],
+  "rollback": [
+    "Revert the queue-update commit for this slice.",
+    "Revert this evidence commit.",
+    "Revert e9c660543cb592a3892ceec69b74193f3adeb4e2.",
+    "Revert e8fd1d7c8510abc370a3e38928c95ba7fff2ad26."
+  ]
+}
