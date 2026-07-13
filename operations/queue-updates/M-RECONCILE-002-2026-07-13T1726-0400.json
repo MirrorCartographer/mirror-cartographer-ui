@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T21:26:18Z",
+  "state": "in_progress",
+  "completed_slice": "Added a fail-closed complete-set provenance ledger adjudicator for M-004, M-005, and M-006 that rejects missing nodes, missing candidate arrays, coverage-status disagreement, immutable-locator disagreement, and invalid coverage-backed decisions.",
+  "files": [
+    "operations/continuity/adjudicate-provenance-ledger.mjs",
+    "operations/continuity/adjudicate-provenance-ledger.test.mjs",
+    "operations/evidence/continuity-provenance-ledger-adjudication-2026-07-13T1726-0400.json"
+  ],
+  "commits": [
+    "9330142daa239c9b3d9cd045028cbd2d29a68445",
+    "9823a210e5282185cedc0eb4392d87cbe947f3d6",
+    "4b7643c9d2b532d4f6342e9f49c0db1007ec18bc"
+  ],
+  "verification": {
+    "tests_passed": 4,
+    "method": "deterministic Node execution against byte-equivalent committed source",
+    "authoritative": false
+  },
+  "acceptance_remaining": [
+    "Obtain exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Feed an independently verified repository coverage manifest and candidate sets for all three identifiers into the complete-set adjudicator; retain the resulting digest and reject any partial or inconsistent ledger without recreating historical identifiers."
+}
