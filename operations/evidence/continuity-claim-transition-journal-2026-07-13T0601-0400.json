@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "observed_at": "2026-07-13T10:01:57Z",
+  "artifact": "tools/continuity/claim-transition-journal.mjs",
+  "test_artifact": "tools/continuity/claim-transition-journal.test.mjs",
+  "finding": "Validated claim-state transitions require an append-only atomic persistence boundary; validation alone cannot prevent two writers from replacing the same active claim head.",
+  "implemented_contract": {
+    "storage_operations": ["read", "compareAndSet"],
+    "head_binding": "Each claim head stores transition_id, transition_digest, next_state, and observed_at.",
+    "stale_writer_behavior": "A transition whose prior_transition_digest does not equal the current claim head fails closed before persistence.",
+    "collision_behavior": "Two writers sharing one backend may not both append different transitions from the same prior head.",
+    "idempotency": "An identical transition_id and transition_digest retry returns idempotent without appending a duplicate record.",
+    "history_policy": "Transitions are appended; prior transition records are never replaced or deleted."
+  },
+  "verification": {
+    "command": "node --test claim-transition-journal.test.mjs",
+    "environment": "isolated Node runtime using byte-identical candidate module and test content",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "verified_cases": [
+      "first append plus identical retry idempotency",
+      "two-writer collision permits one durable head only",
+      "stale prior digest fails closed before persistence"
+    ],
+    "evidence_strength": "isolated-runtime test verified"
+  },
+  "claim_classification": {
+    "observed": [
+      "The executable transition validator existed before this slice.",
+      "The queue still required append-only atomic persistence and a two-writer collision test.",
+      "The new journal and tests are committed to the repository."
+    ],
+    "inferred": [
+      "A backend implementing non-atomic read then unconditional write would invalidate the journal guarantee."
+    ],
+    "proposed": [
+      "Wire this journal immediately before every continuity knowledge-graph active-state mutation."
+    ],
+    "superseded": [
+      "Treating transition validation alone as sufficient protection against concurrent history replacement."
+    ],
+    "unresolved": [
+      "Production durable backend selection and distributed collision verification.",
+      "Immutable assigning provenance for M-004, M-005, and M-006."
+    ]
+  },
+  "privacy_boundary": "Only opaque claim identifiers, repository locators, transition metadata, and verification results are persisted. No private chat text, personal events, health data, credentials, or account data are included.",
+  "limits": [
+    "The verified backend is an in-memory compare-and-set test double.",
+    "No production distributed storage adapter is included.",
+    "The knowledge-graph mutation caller is not yet wired to this journal.",
+    "This evidence does not resolve M-004, M-005, or M-006 provenance."
+  ],
+  "falsification_route": "Run two independent OS processes against one production atomic backend using the same claim head and different next transitions; exactly one transition may persist and a fresh read must show one append-only head."
+}
