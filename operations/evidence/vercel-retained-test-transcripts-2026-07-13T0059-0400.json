@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T00:59:35-04:00",
+  "implementation_commit": "bd5a114a4989416ccf6e21f091e088814e6df13a",
+  "finding": "The retained-evidence workflow preserved exact source checksums and commit identity but did not preserve the actual outputs of its five contract test suites.",
+  "change": {
+    "workflow": ".github/workflows/vercel-retained-evidence-contract.yml",
+    "test_transcripts": [
+      "vercel-retained-evidence-test-logs/retained-workflow-evidence-cli.tap",
+      "vercel-retained-evidence-test-logs/gh-envelope-bundle-adapter.tap",
+      "vercel-retained-evidence-test-logs/workflow-evidence-bundle.tap",
+      "vercel-retained-evidence-test-logs/workflow-trigger-expectation.tap",
+      "vercel-retained-evidence-test-logs/retained-workflow-trigger-gate.tap"
+    ],
+    "digest_manifest": "vercel-retained-evidence-test-transcripts.sha256",
+    "artifact_binding": "vercel-retained-evidence-contract-${github.sha}"
+  },
+  "verification": {
+    "source_fetch": "passed",
+    "expected_transcript_count": 5,
+    "digest_check_required": true,
+    "runtime_execution": "unproven_until_workflow_run_observed"
+  },
+  "claims_not_made": [
+    "No workflow success is claimed.",
+    "No deployment success is claimed.",
+    "No physical-device audibility is claimed."
+  ],
+  "rollback": "Revert commit bd5a114a4989416ccf6e21f091e088814e6df13a without deleting history."
+}
