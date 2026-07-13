@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "record_id": "V-001-2026-07-13T0345Z-evidence",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T03:45:00Z",
+  "slice": "Commit the retained workflow evidence contract tests to a dedicated non-deployment GitHub Actions workflow.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "source_commit": "d54c0106815e00a6ded0cf605409a19f3be7f4d2",
+  "workflow_path": ".github/workflows/vercel-retained-evidence-contract.yml",
+  "behavior": {
+    "deployment_invoked": false,
+    "vercel_credentials_required": false,
+    "permissions": ["contents:read"],
+    "tests": [
+      "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+      "tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs",
+      "tools/vercel-studio/workflow-evidence-bundle.test.mjs"
+    ],
+    "artifact": "vercel-retained-evidence-contract-${github.sha}",
+    "artifact_retention_days": 30
+  },
+  "verification": {
+    "source_committed": true,
+    "workflow_run_observed": false,
+    "workflow_run_query_result_count": 0,
+    "deployment_claimed": false,
+    "runtime_test_result_claimed": false
+  },
+  "limits": [
+    "The connected workflow-run lookup returned no run for the workflow commit, so CI execution is not claimed.",
+    "The workflow proves contract behavior only after an observed successful run and artifact inspection.",
+    "This slice does not establish immutable Vercel deployment identity, browser audibility, or physical iPhone Safari audibility."
+  ],
+  "rollback": {
+    "route": "Revert commit d54c0106815e00a6ded0cf605409a19f3be7f4d2 without deleting repository history.",
+    "application_runtime_impact": "none"
+  }
+}
