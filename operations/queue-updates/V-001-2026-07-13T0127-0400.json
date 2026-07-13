@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T05:27:39Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed Vercel integration gate for Frontier Research retained-evidence manifests. The gate requires exact-commit agreement, all four retained artifact roles, a valid manifest digest boundary, independent raw-byte re-verification, reconciliation re-verification, and no provider-ceiling ambiguity before setting exhaustive_workflow_evidence=true. It never permits a deployment claim.",
+  "files": [
+    "operations/tools/vercel-retained-evidence-handoff.mjs",
+    "operations/tools/vercel-retained-evidence-handoff.test.mjs",
+    "operations/evidence/vercel-retained-evidence-handoff-2026-07-13T0127-0400.json"
+  ],
+  "commits": [
+    "7f7a1b0f80393452029ad9085c6d7d1865453dd2",
+    "a0eddc5544771b67ef3a4c87e1ca828c76ecf8a8",
+    "a16755b9ff649f591d5c04bb3446081ac6bfdd28"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both enumerators and retain raw bytes.",
+    "Recompute retained digests and pass the new handoff gate without provider-ceiling ambiguity.",
+    "Observe an operations-only sentinel skipped after provider capacity returns.",
+    "Observe and inspect the exact-commit audio-routing artifact.",
+    "Bind an application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Wire assessRetainedEvidenceHandoff immediately before decideVercelDeploymentAttempt, then execute the authenticated retained-evidence path for one exact commit. Keep deployment blocked until provider capacity is available and immutable identity can be established.",
+  "canonical_queue_overwritten": false
+}
