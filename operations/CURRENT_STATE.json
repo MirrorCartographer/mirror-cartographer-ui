@@ -2,16 +2,23 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-07-12T04:16:00Z",
+  "updated_at": "2026-07-13T22:41:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_blocked",
   "observed_blocker": "Vercel account build-rate limit prevented immutable deployment verification; production acceptance remains fail-closed.",
   "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
+  "latest_unverified_application_slice": {
+    "head_commit": "77217ecd4f60ff4a20be1ce5e552077c0236581e",
+    "name": "deterministic hourly studio repertory",
+    "verification_status": "static_contract_added_execution_pending",
+    "deployment_status": "not_attempted_due_to_provider_capacity_constraint",
+    "rollback": "Revert the repertory runtime installation, stylesheet import, runtime module, and contract test commits."
+  },
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
     "Do not delete GitHub files or history.",
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Use operations-only changes until Vercel capacity returns, then verify ignoreCommand suppression before one commit-bound deployment check."
+  "next_action": "Run node --test scripts/studio-repertory-runtime.test.mjs and the existing local gate in an authenticated checkout; after provider capacity returns, bind the exact tested commit to immutable Vercel deployment evidence."
 }
