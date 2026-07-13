@@ -34,6 +34,7 @@ permissions:
 
 env:
   NODE_VERSION: '20'
+  TEST_LOG_DIR: vercel-retained-evidence-test-logs
 
 jobs:
   retained-evidence-contract:
@@ -71,20 +72,43 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --ignore-scripts
 
+      - name: Prepare retained test transcript directory
+        run: mkdir -p "${TEST_LOG_DIR}"
+
       - name: Verify retained evidence CLI and provenance boundaries
-        run: node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/retained-workflow-evidence-cli.tap"
 
       - name: Verify gh envelope adapter
-        run: node --test tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/gh-envelope-bundle-adapter.tap"
 
       - name: Verify tamper-evident workflow bundle
-        run: node --test tools/vercel-studio/workflow-evidence-bundle.test.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tools/vercel-studio/workflow-evidence-bundle.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/workflow-evidence-bundle.tap"
 
       - name: Verify trigger expectation contract
-        run: node --test tools/frontier-research/workflow-trigger-expectation.test.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tools/frontier-research/workflow-trigger-expectation.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/workflow-trigger-expectation.tap"
 
       - name: Verify retained workflow trigger gate
-        run: node --test tools/vercel-studio/retained-workflow-trigger-gate.test.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tools/vercel-studio/retained-workflow-trigger-gate.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/retained-workflow-trigger-gate.tap"
 
       - name: Record exact tested sources
         run: |
@@ -106,6 +130,13 @@ jobs:
           test "$(wc -l < vercel-retained-evidence-tested-sources.sha256)" -eq 11
           sha256sum --check vercel-retained-evidence-tested-sources.sha256
 
+      - name: Record retained test transcript digests
+        run: |
+          test "$(find "${TEST_LOG_DIR}" -maxdepth 1 -type f -name '*.tap' | wc -l)" -eq 5
+          sha256sum "${TEST_LOG_DIR}"/*.tap > vercel-retained-evidence-test-transcripts.sha256
+          test "$(wc -l < vercel-retained-evidence-test-transcripts.sha256)" -eq 5
+          sha256sum --check vercel-retained-evidence-test-transcripts.sha256
+
       - name: Upload commit-bound test record
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -113,5 +144,7 @@ jobs:
           path: |
             vercel-retained-evidence-tested-commit.txt
             vercel-retained-evidence-tested-sources.sha256
+            vercel-retained-evidence-test-transcripts.sha256
+            vercel-retained-evidence-test-logs/*.tap
           if-no-files-found: error
           retention-days: 30
