@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_type": "vercel_retained_source_identity_hardening",
+  "recorded_at": "2026-07-13T01:09:00Z",
+  "queue_item": "V-001",
+  "objective": "Ensure retained workflow evidence is built only from distinct regular files with stable source identity.",
+  "implementation_commits": [
+    "58e6073ff5b069855e4876348d7c9282a4833d90",
+    "aeb91d9d38183fd23ff1eb7f7ff43380db511c20"
+  ],
+  "behavior": {
+    "reject_symbolic_links": true,
+    "reject_non_regular_files": true,
+    "reject_canonical_path_aliases": true,
+    "preserve_no_overwrite_output": true,
+    "deployment_requested": false
+  },
+  "verification": {
+    "method": "isolated Node execution reconstructed from committed source and direct dependencies",
+    "syntax_check": "passed",
+    "verified_bundle_fixture": true,
+    "alias_guard": "passed",
+    "symlink_guard": "passed",
+    "github_actions_runs_for_test_commit": 0
+  },
+  "evidence_strength": "locally_executed_source_level",
+  "limits": [
+    "The complete committed test file has not run in GitHub Actions.",
+    "No Vercel deployment was requested because provider capacity remains blocked.",
+    "No browser or physical-device audio verification was performed.",
+    "Regular-file validation reduces source alias ambiguity but does not prove long-term storage durability."
+  ],
+  "rollback": {
+    "strategy": "revert commits without rewriting history",
+    "commits": [
+      "aeb91d9d38183fd23ff1eb7f7ff43380db511c20",
+      "58e6073ff5b069855e4876348d7c9282a4833d90"
+    ]
+  }
+}
