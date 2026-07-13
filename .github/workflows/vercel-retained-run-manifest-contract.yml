@@ -1,0 +1,101 @@
+name: Vercel retained run manifest contract
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vercel-retained-run-manifest-contract.yml'
+      - 'operations/tools/vercel-retained-run-manifest.mjs'
+      - 'operations/tools/vercel-retained-run-manifest.test.mjs'
+  pull_request:
+    paths:
+      - '.github/workflows/vercel-retained-run-manifest-contract.yml'
+      - 'operations/tools/vercel-retained-run-manifest.mjs'
+      - 'operations/tools/vercel-retained-run-manifest.test.mjs'
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '20'
+  VERCEL_RETAINED_RETENTION_DAYS: '30'
+
+jobs:
+  retained-run-manifest-contract:
+    name: Retained run manifest contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact workflow commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Verify checkout identity
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+
+      - name: Verify immutable action references
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r line; do
+            reference="${line##*@}"
+            reference="${reference%% *}"
+            if [[ ! "${reference}" =~ ^[0-9a-f]{40}$ ]]; then
+              printf 'Mutable action reference rejected: %s\n' "${line}" >&2
+              exit 1
+            fi
+          done < <(grep -E '^[[:space:]]+uses:[[:space:]]+[^[:space:]]+@' .github/workflows/vercel-retained-run-manifest-contract.yml)
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify run manifest contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test operations/tools/vercel-retained-run-manifest.test.mjs \
+            2>&1 | tee vercel-retained-run-manifest.tap
+
+      - name: Generate exact run manifest
+        shell: bash
+        env:
+          VERCEL_RETAINED_ARTIFACT_NAME: vercel-retained-run-manifest-${{ github.sha }}
+        run: |
+          set -euo pipefail
+          export VERCEL_RETAINED_GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          node operations/tools/vercel-retained-run-manifest.mjs > vercel-retained-run-manifest.json
+          node -e "const fs=require('node:fs');const m=JSON.parse(fs.readFileSync('vercel-retained-run-manifest.json','utf8'));if(m.sha!==process.env.GITHUB_SHA||m.run_id!==Number(process.env.GITHUB_RUN_ID)||m.run_attempt!==Number(process.env.GITHUB_RUN_ATTEMPT))process.exit(1)"
+
+      - name: Record retained source and transcript digests
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/vercel-retained-run-manifest-contract.yml \
+            operations/tools/vercel-retained-run-manifest.mjs \
+            operations/tools/vercel-retained-run-manifest.test.mjs \
+            > vercel-retained-run-manifest-sources.sha256
+          test "$(wc -l < vercel-retained-run-manifest-sources.sha256)" -eq 3
+          sha256sum --check vercel-retained-run-manifest-sources.sha256
+          sha256sum vercel-retained-run-manifest.tap vercel-retained-run-manifest.json \
+            > vercel-retained-run-manifest-artifacts.sha256
+          sha256sum --check vercel-retained-run-manifest-artifacts.sha256
+
+      - name: Upload commit-bound run manifest record
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vercel-retained-run-manifest-${{ github.sha }}
+          path: |
+            vercel-retained-run-manifest.json
+            vercel-retained-run-manifest.tap
+            vercel-retained-run-manifest-sources.sha256
+            vercel-retained-run-manifest-artifacts.sha256
+          if-no-files-found: error
+          retention-days: 30
