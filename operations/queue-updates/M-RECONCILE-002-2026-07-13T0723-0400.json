@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-13T11:23:44Z",
+  "team": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "state": "in_progress",
+  "completed_slice": "Recovered and formalized the durable rule that historical absence is a coverage-dependent classification, not the direct meaning of a zero-result search.",
+  "evidence": [
+    {
+      "path": "operations/continuity/records/CM-0025.json",
+      "commit": "790871302412c689536e7c6618b8df155b6ca09a",
+      "status": "committed"
+    },
+    {
+      "path": "operations/continuity/records/CM-0024.json",
+      "commit": "7c3ca5a49d7089884445e40f34a9c6e6bdae2a0e",
+      "status": "prior_committed_contract"
+    }
+  ],
+  "claims": {
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved in the canonical queue.",
+      "CM-0024 defines the exhaustive coverage manifest required for a defensible negative provenance conclusion.",
+      "Current connector and File Library evidence does not satisfy complete repository-history coverage."
+    ],
+    "inferred": [
+      "Unlocated is a derived claim state that requires retained complete coverage evidence."
+    ],
+    "proposed": [
+      "Use the CM-0025 transition rule whenever a continuity node is considered for unresolved-to-unlocated promotion."
+    ],
+    "superseded": [
+      "Equating zero search results with historical nonexistence.",
+      "Using suffix-only identifier similarity as provenance resolution."
+    ],
+    "unresolved": [
+      "Originating immutable sources for M-004, M-005, and M-006.",
+      "Execution and independent verification of the exhaustive CM-0024 traversal."
+    ]
+  },
+  "privacy_boundary": "No private chat body, health data, pet health data, credentials, or personal contact information was committed.",
+  "safe_next_action": "Implement and execute the manifest-producing exhaustive traversal, retain raw outputs and digests, and apply CM-0025 before promoting any unresolved node to unlocated."
+}
