@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "ICW-002",
+  "owner": "independent_creative_web",
+  "creative_premise": "Matchbox Weather is a pocket climate instrument: touch or keys seed ash, rain, moths, or static inside a matchbox-sized field.",
+  "source_commit": "2e453582961e90a77cf0b833f0a4bf278f1b8750",
+  "contract_commit": "9d0347d62d7d00fa840fb9e259e3b44a1d7c033f",
+  "source_blob": "579956b2968d7cb5190929c475a50700465ccc57",
+  "verified_from_repository": [
+    "Four explicit touch-operable weather selectors exist with pressed-state semantics.",
+    "Pointer down and pointer move interactions seed visible weather.",
+    "Arrow-key mode switching, space-to-clear, focus visibility, and live status text are present.",
+    "Sound begins off and requires an explicit user gesture.",
+    "Reduced-motion preference suppresses particle seeding while retaining state and optional sound feedback.",
+    "The artifact contains no network request, commerce, Mirror Cartographer runtime reference, or product-funnel copy."
+  ],
+  "verification_status": "source_contract_committed_runtime_not_executed",
+  "deployment_status": "not_attempted_provider_capacity_constraint",
+  "limits": [
+    "The Node source-contract test was committed but not executed in this connector-only run.",
+    "No rendered-browser screenshot, frame-time profile, audio audibility check, or physical mobile Safari result is claimed.",
+    "Repository source presence is not public-host deployment evidence."
+  ],
+  "rollback": "Revert commits 9d0347d62d7d00fa840fb9e259e3b44a1d7c033f and 2e453582961e90a77cf0b833f0a4bf278f1b8750; the earlier Matchbox Weather source remains in Git history.",
+  "independence_boundary": "Standalone artwork under independent-creative-web; no Mirror Cartographer application runtime, research surface, operations UI, therapy claim, or conversion path was modified."
+}
