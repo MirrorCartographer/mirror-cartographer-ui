@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T15:00:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic SHA-256 binding over the canonical validated retained-evidence execution plan so later raw evidence and bundles can prove they refer to the same repository, exact commit, command, and canonical output set without claiming execution or deployment.",
+  "files": [
+    "operations/tools/bind-vercel-evidence-execution-plan.mjs",
+    "operations/tools/bind-vercel-evidence-execution-plan.test.mjs",
+    "operations/evidence/vercel-plan-binding-2026-07-13T1500-0400.json"
+  ],
+  "commits": [
+    "0c799759cb3906828b171a8bac3ff037c75d7277",
+    "ec0390dfcf36707f6d6c905140c3262fac13e549",
+    "bea7240e9df37287175dbe3419012fe93cef3595"
+  ],
+  "verification": {
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "evidence_class": "source_and_local_deterministic_test_evidence"
+  },
+  "acceptance_remaining": [
+    "Execute the authenticated dual-client retained-evidence workflow for one exact commit.",
+    "Record the validated plan binding digest in every raw-output manifest and final reconciliation bundle.",
+    "Observe operations-only build suppression after Vercel capacity returns.",
+    "Bind one tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audio verification."
+  ],
+  "safe_next_action": "Integrate plan_binding.digest as a required field in the retained-evidence bundle builder and fail closed when any raw manifest or derived bundle carries a different or missing digest; do not attempt an application deployment until provider capacity and immutable deployment identity are available.",
+  "rollback": "Revert 0c799759cb3906828b171a8bac3ff037c75d7277 to remove the binding layer. No existing evidence or history is deleted."
+}
