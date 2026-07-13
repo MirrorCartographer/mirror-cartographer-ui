@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-13T17:24:00Z",
+  "finding": "Exact-commit workflow-run evidence depends on a time-bounded upstream query contract. GitHub's current REST documentation states that head_sha-filtered workflow-run searches are capped at 1000 results, support per_page up to 100, require Actions read permission for private repositories, and currently show X-GitHub-Api-Version: 2026-03-10 in request examples. Retained commands therefore need an explicit API version, primary-source check date, maximal page size, all-page pagination intent, and no event/status/branch narrowing.",
+  "primary_sources": [
+    {
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "checked_on": "2026-07-13",
+      "status": "official_primary_source",
+      "supports": [
+        "private repository authentication boundary",
+        "1000-result filtered-search ceiling",
+        "per_page maximum 100",
+        "head_sha filter semantics",
+        "current request example API-version header"
+      ]
+    },
+    {
+      "url": "https://cli.github.com/manual/gh_api",
+      "checked_on": "2026-07-13",
+      "status": "official_primary_source",
+      "supports": [
+        "gh api pagination and slurp command semantics"
+      ]
+    }
+  ],
+  "artifact": {
+    "implementation": "operations/research/github-workflow-run-query-contract.mjs",
+    "tests": "operations/research/github-workflow-run-query-contract.test.mjs",
+    "implementation_commit": "715f1e0054e0a22ec716dd02bcf34fa073e34c4d",
+    "test_commit": "92a6c0b5925e45163d255ea86dd6f8e93e952cc1"
+  },
+  "verification": {
+    "method": "node --test in isolated runtime before commit",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "covered": [
+      "current explicit all-page exact-commit contract",
+      "API-version drift",
+      "stale documentation check",
+      "first-page-only command",
+      "event narrowing",
+      "non-maximal page size"
+    ]
+  },
+  "evidence_strength": "implementation_and_deterministic_test_with_current_primary_source",
+  "uncertainty": [
+    "The contract does not prove authentication succeeded.",
+    "The contract does not prove all pages were actually retrieved.",
+    "The contract does not remove GitHub's documented 1000-result filtered-search ceiling.",
+    "The contract does not prove workflow, deployment, runtime, audio, or human-observation outcomes."
+  ],
+  "falsification_route": "Change any retained command to omit pagination, use a stale or mismatched API version, reduce per_page, or add an event/status/branch filter; the contract must fail closed. Recheck official GitHub documentation within 30 days or whenever GitHub changes the documented API version or endpoint semantics."
+}
