@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "recorded_at": "2026-07-13T22:42:45Z",
+  "objective": "Bind R-022 page-chain transport receipts to the exact whole-output evidence accepted by the authenticated Vercel evidence manifest.",
+  "selection_basis": "R-020 and R-021 already cover exhaustive enumeration and reconciliation, and R-022 covers page-chain verification. The remaining non-duplicative gap was a fail-closed relationship between those page receipts and the manifest method hashes, counts, and commit.",
+  "completed_slices": [
+    "Implemented a fail-closed transport-binding validator for primary and independent enumeration methods.",
+    "Required exact agreement on commit SHA, page count, record count, and raw-output SHA-256.",
+    "Required successful, version-matched, request-identified, terminal page chains and distinct receipt digests.",
+    "Verified five deterministic Node cases including four falsifiers.",
+    "Recorded evidence strength, uncertainty, claim boundary, and falsification route."
+  ],
+  "acceptance_remaining": [
+    "Import the binding validator into operations/tools/write-vercel-authenticated-evidence-manifest.mjs before manifest validation succeeds.",
+    "Capture exact response headers and bodies for both authenticated exhaustive clients.",
+    "Generate and retain two valid R-022 receipts with distinct receipt digests.",
+    "Run the integrated no-overwrite manifest writer against one exact commit.",
+    "Continue to reject provider-ceiling ambiguity independently."
+  ],
+  "artifacts": [
+    "tools/frontier-research/authenticated-evidence-transport-binding.mjs",
+    "tools/frontier-research/authenticated-evidence-transport-binding.test.mjs",
+    "operations/evidence/frontier-authenticated-transport-binding-2026-07-13T1842-0400.json"
+  ],
+  "commits": {
+    "module": "86946e40fc690202626056b7269eeead3cc5827b",
+    "test": "46e7ed9d8613d056beeaeeee54e6956467107488",
+    "evidence": "1b2d5002c921b43aaa58f68bfee334000b0e45c9"
+  },
+  "verification": {
+    "route": "local Node execution of connector-fetched exact-commit source and test content",
+    "result": "5 tests passed"
+  },
+  "safe_next_action": "Vercel Studio should import validateAuthenticatedEvidenceTransportBinding into the no-overwrite authenticated evidence manifest writer, require verified primary and independent transport receipts before promotion, extend its tests with receipt mismatch cases, and retain the integrated manifest without attempting an application deployment.",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false,
+  "specialist_registry_change": null
+}
