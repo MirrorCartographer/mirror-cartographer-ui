@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:41:00-04:00",
+  "slice": "Integrated the complete retained-evidence manifest-set verifier into the no-overwrite persistence CLI.",
+  "implementation_commit": "dcfb13232051c4bfbda070e51e52713e2883b4f9",
+  "test_commit": "0819d02e50e4c49be8d54804a486965a6faed6ad",
+  "behavior": [
+    "Requires one explicit retention root.",
+    "Requires the three retained inputs and two generated outputs to use the five canonical immediate-child paths.",
+    "Writes reconciliation.json and evidence-bundle.json without overwrite.",
+    "Verifies the complete five-file set, current regular-file bytes, and shared plan-binding digest before returning a promotion-capable result.",
+    "Deletes only the two newly created outputs when integrated verification rejects the set."
+  ],
+  "verification": {
+    "repository_commit_diff_fetched": true,
+    "deterministic_test_vectors_committed": 2,
+    "github_actions_execution_observed": false,
+    "vercel_status": "failure",
+    "vercel_target_class": "build-rate-limit",
+    "deployment_attempted": false
+  },
+  "claim_boundary": [
+    "The committed implementation and tests are present on the default branch.",
+    "No GitHub Actions test execution, Vercel deployment, browser behavior, audio audibility, immutable deployment identity, or physical-device acceptance is claimed."
+  ],
+  "rollback": "Revert dcfb13232051c4bfbda070e51e52713e2883b4f9. The additive test and evidence records may remain as provenance.",
+  "cross_team_overwrite": false
+}
