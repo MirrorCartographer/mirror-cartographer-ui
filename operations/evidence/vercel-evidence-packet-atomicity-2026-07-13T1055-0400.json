@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T14:55:00Z",
+  "finding": "The retained evidence packet writer previously persisted the receipt before manifest construction, so a later manifest failure could leave a misleading orphaned receipt.",
+  "change": {
+    "implementation_commit": "d40485f783d0dd5f258f4e2a69a08b8cbaa7d478",
+    "test_commit": "d0cfeb9fae99fa42a4eeb52bc52de56fa9fc1e25",
+    "behavior": "On any failure after receipt creation, remove both packet outputs before rethrowing; existing output paths remain protected by no-overwrite checks."
+  },
+  "verification": {
+    "method": "committed source and deterministic test inspection through the GitHub contents API",
+    "runtime_executed": false,
+    "test_added": "An invalid absolute subject identity must reject and leave neither receipt nor manifest output present.",
+    "claim_ceiling": "source-level implementation and test coverage only"
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE requires operations-only changes while Vercel provider capacity remains blocked."
+  },
+  "constraints_preserved": {
+    "payments_or_conversion_added": false,
+    "github_files_or_history_deleted": false,
+    "deployment_claimed": false,
+    "peer_execution_claimed": false
+  },
+  "rollback": [
+    "Revert d0cfeb9fae99fa42a4eeb52bc52de56fa9fc1e25",
+    "Revert d40485f783d0dd5f258f4e2a69a08b8cbaa7d478"
+  ]
+}
