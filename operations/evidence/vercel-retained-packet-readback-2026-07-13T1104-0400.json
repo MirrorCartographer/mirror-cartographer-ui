@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T15:04:00Z",
+  "slice": "retained evidence packet exact-byte readback",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "observed": {
+    "source_commit": "367d64d29213684a4c76058f8b48ed7ae8c49841",
+    "test_commit": "0b906e2c72fd0ffb82a855413230ba13c1c30938",
+    "writer_behavior": [
+      "receipt output is reread and compared byte-for-byte before manifest construction",
+      "manifest output is reread and compared byte-for-byte before success is returned",
+      "a mismatch enters the existing cleanup path and removes both retained outputs"
+    ],
+    "test_coverage_added": [
+      "exact retained byte sequence accepted",
+      "different retained byte sequence rejected"
+    ]
+  },
+  "verification": {
+    "source_inspection": "completed",
+    "test_execution": "not_available_in_connector_runtime",
+    "deployment_attempted": false,
+    "deployment_verified": false,
+    "audio_audibility_verified": false
+  },
+  "claim_ceiling": "committed source and test construction only; runtime execution, deployment identity, workflow outcome, browser audio, and physical-device audibility remain unproven",
+  "reversible": true,
+  "rollback": [
+    "revert 0b906e2c72fd0ffb82a855413230ba13c1c30938",
+    "revert 367d64d29213684a4c76058f8b48ed7ae8c49841"
+  ]
+}
