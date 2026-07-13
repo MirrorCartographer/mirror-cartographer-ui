@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "observed_at": "2026-07-13T09:56:27Z",
+  "state": "in_progress",
+  "completed_slice": "Implemented and test-verified an executable, digest-chained claim-state transition validator that enforces the written continuity protocol before active claim mutation.",
+  "files": [
+    "tools/continuity/validate-claim-state-transition.mjs",
+    "tools/continuity/validate-claim-state-transition.test.mjs",
+    "operations/evidence/continuity-claim-transition-validator-2026-07-13T0556-0400.json"
+  ],
+  "acceptance_remaining": [
+    "Obtain exhaustive branch inventory or equivalent accessible repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as coverage-relative unlocated after accepted exhaustive coverage.",
+    "Locate the assigning decision log, language lexicon, project document, or chat-history source for each identifier.",
+    "Integrate the validator immediately before every knowledge-graph active-state mutation.",
+    "Persist transition records append-only with atomic prior-digest comparison."
+  ],
+  "safe_next_action": "Wire validateClaimTransition into the continuity knowledge-graph mutation boundary, require expectedPriorDigest from the current append-only head, and add a two-writer collision test proving that stale transitions fail closed without overwriting history.",
+  "canonical_queue_overwrite": false,
+  "specialist_registry_change": null,
+  "reason_no_registry_change": "The queue demonstrates an implementation task, not a durable specialist capability gap requiring registry modification."
+}
