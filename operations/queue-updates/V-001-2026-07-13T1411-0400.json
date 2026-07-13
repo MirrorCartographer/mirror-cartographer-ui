@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:11:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence execution preflight now canonicalizes all output paths before enforcing distinctness, rejecting dot-segment and path-separator aliases that could overwrite one retained artifact with another.",
+  "files": [
+    "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+    "operations/evidence/vercel-canonical-output-path-gate-2026-07-13T1411-0400.json"
+  ],
+  "commits": [
+    "8f052bfe22d667c80f16fb41d9947a8aae25fa26",
+    "7f928c8f77f6f258def1056b9d1ef945cb5c3c8c",
+    "a4e6f91fc158434b47e948f97f03ad9b57d95f21"
+  ],
+  "verification": {
+    "exact_commit_source_readback": true,
+    "workflow_runs_for_test_commit": 0,
+    "tests_executed": false,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute the retained-evidence CLI tests in an authenticated checkout.",
+    "Execute both exhaustive workflow-run clients against one exact commit and retain raw outputs, headers, command, rate-limit proof, reconciliation, and final bundle.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after provider capacity returns.",
+    "Bind an application commit to an immutable successful Vercel deployment.",
+    "Complete exact-commit audio workflow artifact inspection and bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the updated preflight test suite, then execute the authenticated no-overwrite retained-evidence plan using canonically distinct new output paths; do not request a Vercel application deployment until provider capacity and immutable deployment identity are available.",
+  "rollback": "Revert the two implementation commits; the evidence and queue-update records may remain as historical provenance."
+}
