@@ -34,7 +34,8 @@ function hasExpectedRepositoryEndpoint(command) {
 /**
  * Validate an execution plan for the authenticated dual-client Vercel evidence run.
  * This does not execute GitHub or Vercel operations. It only proves that the plan is
- * bounded, non-secret-bearing, no-overwrite, repository-bound, and exact-commit scoped.
+ * bounded, non-secret-bearing, no-overwrite, repository-bound, exact-commit scoped,
+ * and retains the raw response-header material required by the final evidence bundle.
  */
 export function validateVercelEvidenceExecutionPlan(plan) {
   if (!plan || typeof plan !== 'object' || Array.isArray(plan)) {
@@ -44,8 +45,11 @@ export function validateVercelEvidenceExecutionPlan(plan) {
   const {
     commit_sha: commitSha,
     primary_output: primaryOutput,
+    primary_headers_output: primaryHeadersOutput,
     independent_output: independentOutput,
+    independent_headers_output: independentHeadersOutput,
     retained_command_output: retainedCommandOutput,
+    rate_limit_proof_output: rateLimitProofOutput,
     bundle_output: bundleOutput,
     command,
     overwrite = false,
@@ -58,7 +62,15 @@ export function validateVercelEvidenceExecutionPlan(plan) {
   if (overwrite) return fail('overwrite_not_permitted', { commitSha });
   if (deploymentRequested) return fail('deployment_not_permitted_in_evidence_preflight', { commitSha });
 
-  const outputs = [primaryOutput, independentOutput, retainedCommandOutput, bundleOutput];
+  const outputs = [
+    primaryOutput,
+    primaryHeadersOutput,
+    independentOutput,
+    independentHeadersOutput,
+    retainedCommandOutput,
+    rateLimitProofOutput,
+    bundleOutput,
+  ];
   if (!outputs.every(isSafeRelativeFile)) {
     return fail('unsafe_or_missing_output_path', { commitSha });
   }
@@ -90,18 +102,30 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     ok: true,
     reason: 'execution_plan_ready',
     execution_permitted: true,
-    evidence_class: 'bounded_execution_plan',
+    evidence_class: 'bounded_execution_plan_with_retained_rate_limit_proof',
     commitSha,
     repository: EXPECTED_REPOSITORY,
     outputs: {
       primary: primaryOutput,
+      primary_headers: primaryHeadersOutput,
       independent: independentOutput,
+      independent_headers: independentHeadersOutput,
       retained_command: retainedCommandOutput,
+      rate_limit_proof: rateLimitProofOutput,
       bundle: bundleOutput,
     },
+    retention_contract: {
+      raw_enumerations: true,
+      raw_response_headers: true,
+      retained_command: true,
+      dual_client_rate_limit_proof: true,
+      final_bundle: true,
+      outputs_must_be_distinct: true,
+      overwrite_forbidden: true,
+    },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and free of obvious secret-bearing or shell-control command text.',
-      'Does not prove authentication, workflow-run completeness, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves distinct paths for both raw response-header streams and the derived dual-client rate-limit proof.',
+      'Does not prove authentication, workflow-run completeness, response-header authenticity, rate-limit proof acceptance, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
 }
