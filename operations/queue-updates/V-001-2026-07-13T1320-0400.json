@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T17:20:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "A fail-closed offline verifier now validates downloaded retained-run artifacts against exact commit SHA, run ID, run attempt, artifact naming, required source bindings, safe relative paths, and SHA-256 manifests; its five-test contract and local self-verification are bound into the retained-run workflow.",
+  "acceptance_effect": {
+    "advanced": [
+      "Retained exact-run artifacts now have a deterministic offline verification route after download.",
+      "The retained workflow now self-verifies the generated artifact before upload and retains the verification record."
+    ],
+    "remaining": [
+      "Observe the exact-commit GitHub Actions run and retrieve the retained artifact.",
+      "Execute authenticated dual-client exhaustive workflow enumeration for one exact commit.",
+      "Observe operations-only Vercel suppression after provider capacity returns.",
+      "Bind a tested application commit to an immutable successful deployment.",
+      "Perform bounded physical iPhone Safari audibility verification."
+    ]
+  },
+  "evidence_path": "operations/evidence/vercel-retained-artifact-offline-verifier-2026-07-13T1320-0400.json",
+  "canonical_queue_overwritten": false,
+  "next_action": "Inspect Actions for commit dcaa847219bcebbfeb78f4a1e77a0a03b54b1e6f; if successful, download the artifact and run operations/tools/verify-vercel-retained-run-artifact.mjs with the exact run identity."
+}
