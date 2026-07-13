@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T17:19:07Z",
+  "finding": "GitHub documents artifact attestations as available for public repositories on current plans, while private or internal repositories require GitHub Enterprise Cloud. The target repository is observed private; account-plan eligibility is not established by repository metadata, so producer-attestation rollout must fail closed until independent plan evidence exists.",
+  "source_status": [
+    {
+      "type": "primary_documentation",
+      "publisher": "GitHub Docs",
+      "title": "Using artifact attestations to establish provenance for builds",
+      "retrieved_at": "2026-07-13T17:19:07Z",
+      "supports": [
+        "availability boundary by repository visibility and plan",
+        "required workflow permissions",
+        "actions/attest generation path",
+        "gh attestation verify verification path"
+      ]
+    },
+    {
+      "type": "authenticated_repository_metadata",
+      "repository": "MirrorCartographer/mirror-cartographer-ui",
+      "observed_visibility": "private",
+      "retrieved_at": "2026-07-13T17:19:07Z"
+    }
+  ],
+  "evidence_strength": "strong_for_documented_feature_boundary; incomplete_for_account_plan",
+  "artifact": "operations/research/github-attestation-eligibility.mjs",
+  "verification": {
+    "command": "node --test github-attestation-eligibility.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "scope": "isolated Node execution against the committed contract logic"
+  },
+  "current_assessment": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "visibility": "private",
+    "plan_status": "unknown",
+    "eligible": false,
+    "reason": "enterprise_cloud_plan_unverified"
+  },
+  "falsification_route": "Provide independently observed GitHub Enterprise Cloud plan evidence with a source locator and timestamp, then rerun the preflight. If GitHub changes the documented availability boundary, update the contract and tests against the new primary documentation.",
+  "claim_boundary": "This finding does not establish the user's GitHub plan, generate or verify an attestation, prove producer identity, prove workflow outcome, or prove deployment/runtime behavior."
+}
