@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#17120d" />
+  <title>Matchbox Weather</title>
+  <style>
+    :root{color-scheme:dark;--paper:#ead9b7;--ink:#17120d;--ember:#e66b3d;--dim:#9d8d75}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}
+    body{display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+    main{width:min(980px,100%);height:min(720px,92vh);display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+    header,footer{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}
+    h1{font-size:clamp(1rem,2.7vw,1.65rem);letter-spacing:.16em;text-transform:uppercase;margin:0;font-weight:600}
+    p{margin:0;color:var(--dim);font-size:.78rem;line-height:1.45;max-width:48ch}
+    .box{position:relative;border:1px solid #5e4e3c;border-radius:8px;background:#211912;box-shadow:0 24px 80px #0008,inset 0 0 0 8px #140f0b;overflow:hidden;touch-action:none}
+    canvas{display:block;width:100%;height:100%}
+    .label{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%) rotate(-1.5deg);pointer-events:none;text-align:center;color:#2a2017;background:#d8bf91;padding:14px 18px;border:1px solid #8a704e;box-shadow:4px 5px 0 #0003;font-family:Georgia,serif;transition:opacity .4s}
+    .label b{display:block;font-size:clamp(1rem,3vw,2rem);letter-spacing:.04em}.label span{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em}
+    .awake .label{opacity:.08}
+    button{appearance:none;border:1px solid #7e6649;background:transparent;color:var(--paper);padding:9px 12px;border-radius:999px;font:inherit;font-size:.75rem;cursor:pointer}
+    button:hover,button:focus-visible{background:#ead9b7;color:#17120d;outline:2px solid transparent}
+    .status{min-width:9ch;text-align:right;color:var(--ember)}
+    @media (max-width:600px){header{align-items:flex-start;flex-direction:column}.box{min-height:60vh}.hint{display:none}}
+    @media (prefers-reduced-motion:reduce){.label{transition:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>Matchbox Weather</h1><p>A pocket climate. Drag to strike wind. Tap to seed sparks. Keys 1–4 change the sky.</p></div>
+    <button id="sound" type="button" aria-pressed="false">sound: off</button>
+  </header>
+  <section class="box" id="box" aria-label="Interactive generative weather instrument">
+    <canvas id="sky"></canvas>
+    <div class="label" aria-hidden="true"><b>WEATHER</b><span>strike anywhere</span></div>
+  </section>
+  <footer><p class="hint">1 ash · 2 rain · 3 moths · 4 static · space clears</p><p class="status" id="status" aria-live="polite">ash</p></footer>
+</main>
+<script>
+(() => {
+  const canvas=document.querySelector('#sky'),ctx=canvas.getContext('2d'),box=document.querySelector('#box');
+  const status=document.querySelector('#status'),soundBtn=document.querySelector('#sound');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let dpr=1,w=0,h=0,last=0,mode=0,pointer=null,audio=null,sound=false;
+  const names=['ash','rain','moths','static'];
+  const particles=[];
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+  function particle(x,y,force=1){
+    const a=rand(0,Math.PI*2),s=rand(.2,2.8)*force;
+    return {x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rand(80,240),age:0,size:rand(.7,3.2),phase:rand(0,99)};
+  }
+  function seed(x,y,n=18,force=1){for(let i=0;i<n;i++)particles.push(particle(x,y,force));box.classList.add('awake');tone(x/w,y/h)}
+  function tone(nx,ny){if(!sound)return;if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain(),f=audio.createBiquadFilter();o.type=mode===3?'square':'sine';o.frequency.value=110+nx*520;f.type='lowpass';f.frequency.value=450+ny*1800;g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.045,audio.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.22);o.connect(f).connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.24)}
+  function backdrop(t){
+    const g=ctx.createRadialGradient(w*.5,h*.48,10,w*.5,h*.5,Math.max(w,h)*.72);
+    const palettes=[['#3a2d20','#100d0a'],['#203039','#080d10'],['#30283a','#0c0911'],['#30302c','#0b0b09']][mode];
+    g.addColorStop(0,palettes[0]);g.addColorStop(1,palettes[1]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.globalAlpha=.13;ctx.strokeStyle='#ead9b7';ctx.lineWidth=1;
+    for(let y=10;y<h;y+=9){ctx.beginPath();for(let x=0;x<=w;x+=18){const yy=y+Math.sin(x*.018+t*.0002+y)*1.7; x?ctx.lineTo(x,yy):ctx.moveTo(x,yy)}ctx.stroke()}ctx.globalAlpha=1;
+  }
+  function draw(p,t){
+    p.px=p.x;p.py=p.y;p.age++;const life=1-p.age/p.life;
+    if(mode===0){p.vy-=.008;p.vx+=Math.sin(p.phase+t*.001)*.006;ctx.fillStyle=`rgba(230,107,61,${life*.8})`;ctx.fillRect(p.x,p.y,p.size,p.size)}
+    if(mode===1){p.vy+=.035;p.vx+=Math.sin(p.phase)*.002;ctx.strokeStyle=`rgba(174,211,223,${life*.75})`;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-8-p.vy*2);ctx.stroke()}
+    if(mode===2){p.vx+=Math.sin(t*.004+p.phase)*.035;p.vy+=Math.cos(t*.003+p.phase)*.025;ctx.fillStyle=`rgba(234,217,183,${life*.7})`;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(t*.01+p.phase));ctx.fillRect(-p.size*2,-1,p.size*4,2);ctx.restore()}
+    if(mode===3){p.vx*=.985;p.vy*=.985;ctx.strokeStyle=`rgba(232,225,176,${life})`;ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x+rand(-6,6),p.y+rand(-6,6));ctx.stroke()}
+    p.x+=p.vx;p.y+=p.vy;
+  }
+  function ambient(){if(reduce)return;const target=[55,95,38,70][mode];if(particles.length<target&&Math.random()<.22)seed(rand(0,w),mode===1?-5:rand(0,h),1,.25)}
+  function frame(t){const dt=t-last;last=t;backdrop(t);ambient();for(let i=particles.length-1;i>=0;i--){draw(particles[i],t);const p=particles[i];if(p.age>p.life||p.x<-30||p.x>w+30||p.y>h+40)particles.splice(i,1)}requestAnimationFrame(frame)}
+  function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+  box.addEventListener('pointerdown',e=>{box.setPointerCapture(e.pointerId);pointer=point(e);seed(pointer.x,pointer.y,24,1.5)});
+  box.addEventListener('pointermove',e=>{if(!pointer)return;const q=point(e),dx=q.x-pointer.x,dy=q.y-pointer.y,force=Math.min(4,Math.hypot(dx,dy)/12);seed(q.x,q.y,Math.ceil(force*3),force);pointer=q});
+  box.addEventListener('pointerup',()=>pointer=null);box.addEventListener('pointercancel',()=>pointer=null);
+  addEventListener('keydown',e=>{if(e.key===' '){particles.length=0;box.classList.remove('awake');e.preventDefault();return}const n=Number(e.key);if(n>=1&&n<=4){mode=n-1;status.textContent=names[mode];particles.length=0;seed(w/2,h/2,30,1)}});
+  soundBtn.addEventListener('click',async()=>{sound=!sound;soundBtn.textContent=`sound: ${sound?'on':'off'}`;soundBtn.setAttribute('aria-pressed',String(sound));if(sound){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();await audio.resume();tone(.5,.5)}});
+  new ResizeObserver(resize).observe(canvas);resize();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
