@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-claim-transition-validator-2026-07-13T0556-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "memory_recovered": "A continuity claim is not safely changed by replacing its current value. The state change itself is a first-class provenance object whose evidence class, prior digest, privacy boundary, and falsification route must be validated before the active claim can change.",
+  "implemented": {
+    "validator": "tools/continuity/validate-claim-state-transition.mjs",
+    "tests": "tools/continuity/validate-claim-state-transition.test.mjs",
+    "guards": [
+      "allowed state-transition lattice",
+      "direct inspectable source or decision source required for observed",
+      "accepted provenance coverage event required for located and unlocated",
+      "coverage resolution must agree with requested state",
+      "prior transition digest chain must agree",
+      "private source text cannot be embedded in evidence references",
+      "located claims may reopen only through named integrity or provenance failure classes",
+      "canonical SHA-256 transition digest must match"
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/continuity/validate-claim-state-transition.test.mjs",
+    "environment": "isolated local Node runtime using byte-identical candidate source",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "evidence_strength": "isolated-runtime-test-verified",
+    "limitations": [
+      "The connector did not execute the committed test directly inside GitHub Actions.",
+      "The validator is not yet integrated into a knowledge-graph write path.",
+      "M-004, M-005, and M-006 remain unresolved pending exhaustive accessible history coverage."
+    ]
+  },
+  "claim_status": {
+    "observed": [
+      "M-RECONCILE-002 remains the highest-priority continuity-owned queue item.",
+      "A written claim-state transition protocol existed before this slice.",
+      "The repository had a provenance coverage validator but no executable claim-transition validator."
+    ],
+    "inferred": [
+      "Without transition enforcement, a future graph writer could silently promote evidence strength or erase contradiction history."
+    ],
+    "proposed": [
+      "Require validateClaimTransition to succeed immediately before every active claim-state mutation."
+    ],
+    "superseded": [
+      "Treating latest-value replacement as sufficient continuity preservation."
+    ],
+    "unresolved": [
+      "Immutable assigning provenance for M-004, M-005, and M-006.",
+      "Exhaustive branch and reachable-commit coverage.",
+      "Production integration into the knowledge-graph mutation boundary."
+    ]
+  },
+  "privacy_boundary": {
+    "persisted": [
+      "opaque claim identifiers",
+      "repository paths",
+      "evidence classes",
+      "digests",
+      "transition semantics",
+      "falsification routes"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal health information",
+      "credentials",
+      "account data",
+      "identifying personal events"
+    ]
+  }
+}
