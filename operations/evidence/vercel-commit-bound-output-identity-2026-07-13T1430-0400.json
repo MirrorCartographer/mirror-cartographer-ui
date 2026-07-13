@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:30:00-04:00",
+  "slice": "Commit-bound retained-evidence output identity",
+  "problem": "The retained-evidence preflight previously required safe, distinct, role-routed paths but still allowed filenames that omitted the exact commit and artifact role, weakening provenance and increasing collision or misassociation risk.",
+  "implementation": {
+    "source_path": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "source_commit": "8a73d3e4c19df60b6de3de6485a4ec945d2f6f26",
+    "test_path": "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+    "test_commit": "78e30175a096c346f159ed9dc1797854d1417e9b",
+    "contract": [
+      "Every retained output basename must contain the full 40-character exact commit SHA.",
+      "Every retained output basename must contain its designated artifact-role token.",
+      "Existing canonicalization, role routing, no-overwrite, repository binding, pagination, and deployment-prohibition checks remain fail-closed."
+    ]
+  },
+  "verification": {
+    "local_runtime": "node --test",
+    "tests_passed": 12,
+    "tests_failed": 0,
+    "new_cases": [
+      "reject output names omitting the exact commit SHA",
+      "reject output names omitting or misstating the artifact role"
+    ],
+    "exact_commit_readback": true,
+    "workflow_runs_returned": 0,
+    "deployment_attempted": false
+  },
+  "claim_boundary": [
+    "This proves deterministic preflight classification in the isolated Node runtime and exact-commit source readback.",
+    "It does not prove GitHub authentication, exhaustive workflow enumeration, raw-header authenticity, Vercel deployment identity, browser behavior, audio audibility, or physical-device verification."
+  ],
+  "preservation": {
+    "other_team_records_overwritten": false,
+    "files_deleted": false,
+    "git_history_deleted": false,
+    "payments_or_conversion_added": false
+  },
+  "rollback": "Revert commits 78e30175a096c346f159ed9dc1797854d1417e9b and 8a73d3e4c19df60b6de3de6485a4ec945d2f6f26; no deployment state or user data changed."
+}
