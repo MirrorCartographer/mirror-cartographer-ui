@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T13:49:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Frontier Research's retained workflow-run rate-limit envelope is now composed into a Vercel-owned dual-client promotion gate. Both primary and independent retained page sequences must pass before promotion; resource mismatch and either client failure reject the evidence.",
+  "files": [
+    "operations/tools/assess-vercel-retained-rate-limit-proof.mjs",
+    "operations/tools/assess-vercel-retained-rate-limit-proof.test.mjs",
+    "operations/evidence/vercel-dual-client-rate-limit-proof-2026-07-13T1349-0400.json",
+    "operations/queue-updates/V-001-2026-07-13T1349-0400.json"
+  ],
+  "commits": [
+    "52ba002625e63303bfa48002b4dd36bc91436225",
+    "ec76b432d07f1c1d9e1ec000eb4e6f5e79c37481",
+    "2f566a9f8bdf4cc572df8952adf5230bc5ce30a4"
+  ],
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "registry_change": null,
+  "verification": {
+    "strongest_feasible_route": "immutable source readback and committed deterministic test contract",
+    "test_execution_observed": false,
+    "deployment_attempted": false,
+    "reason_no_deployment": "CURRENT_STATE forbids application deployment attempts while Vercel build capacity is exhausted."
+  },
+  "acceptance_remaining": [
+    "Run the new Node test through an observed GitHub Actions job.",
+    "Wire the accepted dual-client rate-limit result into the final retained evidence bundle constructor before reconciliation promotion.",
+    "Execute authenticated all-event pagination for one exact commit with both clients and retain bodies plus raw headers.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after capacity returns.",
+    "Observe the exact-commit audio-routing artifact, bind the application commit to an immutable successful deployment, and perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add the dual-client rate-limit gate as a mandatory input to the retained evidence bundle constructor, then run deterministic tests in GitHub Actions. Do not request a Vercel deployment until provider capacity and immutable deployment identity are available.",
+  "non_overwrite_statement": "Canonical operations/ACTIVE_QUEUE.json was not overwritten; this is an append-only team projection.",
+  "rollback": [
+    "Revert this queue projection commit.",
+    "Revert 2f566a9f8bdf4cc572df8952adf5230bc5ce30a4.",
+    "Revert ec76b432d07f1c1d9e1ec000eb4e6f5e79c37481.",
+    "Revert 52ba002625e63303bfa48002b4dd36bc91436225."
+  ]
+}
