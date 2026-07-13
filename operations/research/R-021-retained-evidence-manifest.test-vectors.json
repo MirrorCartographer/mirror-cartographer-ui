@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "schema_path": "operations/research/R-021-retained-evidence-manifest.schema.json",
+  "vectors": [
+    {
+      "name": "accept_complete_reconciled_retention",
+      "expected_valid": true,
+      "instance": {
+        "schema_version": 1,
+        "queue_item": "R-021",
+        "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "execution_status": "complete",
+        "provider_ceiling_ambiguous": false,
+        "primary": { "complete": true, "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+        "independent": { "complete": true, "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+        "reconciliation": { "verified": true, "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+        "outputs": {
+          "primary": { "path": "operations/evidence/raw/r021-primary.json", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "bytes": 10, "overwrite_allowed": false },
+          "independent": { "path": "operations/evidence/raw/r021-independent.json", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "bytes": 11, "overwrite_allowed": false },
+          "command": { "path": "operations/evidence/raw/r021-command.txt", "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "bytes": 12, "overwrite_allowed": false },
+          "reconciliation": { "path": "operations/evidence/raw/r021-reconciliation.json", "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "bytes": 13, "overwrite_allowed": false }
+        }
+      }
+    },
+    {
+      "name": "reject_provider_ceiling_ambiguity",
+      "expected_valid": false,
+      "mutation": { "provider_ceiling_ambiguous": true }
+    },
+    {
+      "name": "reject_incomplete_independent_enumeration",
+      "expected_valid": false,
+      "mutation": { "independent.complete": false }
+    },
+    {
+      "name": "reject_unverified_reconciliation",
+      "expected_valid": false,
+      "mutation": { "reconciliation.verified": false }
+    },
+    {
+      "name": "reject_overwrite_permission",
+      "expected_valid": false,
+      "mutation": { "outputs.primary.overwrite_allowed": true }
+    },
+    {
+      "name": "reject_output_outside_retention_root",
+      "expected_valid": false,
+      "mutation": { "outputs.command.path": "tmp/r021-command.txt" }
+    }
+  ],
+  "limitations": [
+    "JSON Schema alone cannot assert equality among commit_sha fields.",
+    "JSON Schema alone cannot assert uniqueness among retained output paths.",
+    "A procedural validator must enforce cross-field equality and path uniqueness before evidence promotion."
+  ]
+}
