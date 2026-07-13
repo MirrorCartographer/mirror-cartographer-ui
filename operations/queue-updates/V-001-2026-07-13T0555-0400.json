@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T05:55:16-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed source-lock gate that requires successful runtime verification receipts to bind exactly to the committed retained-evidence pipeline and test blobs before they can be treated as valid operations evidence.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-runtime-receipt-source-lock.mjs",
+    "operations/tools/vercel-runtime-receipt-source-lock.test.mjs",
+    "operations/evidence/vercel-runtime-receipt-source-lock-2026-07-13T0555-0400.json"
+  ],
+  "commits": [
+    "513ff14291817f5c65d654cbc4c135c30e98d89e",
+    "6ffb6337f2cc5063ed69fd9a438347404566569d",
+    "f5e7c4d0f6ede6e2dc5f7c23c60d5b1869b954f5"
+  ],
+  "verification": {
+    "new_deterministic_tests": 5,
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "bound_pipeline_blob_sha": "58ae900a946f98c5441b5179e701580c615b4759",
+    "bound_test_blob_sha": "a30aad724153e093799ddafb7f4798bc903aa432",
+    "application_deployment_attempted": false,
+    "deployment_claim_permitted": false
+  },
+  "acceptance_remaining": [
+    "Run the committed retained-evidence pipeline test itself in an authenticated checkout or CI runner and emit a receipt bound to these exact source blobs.",
+    "Pass that receipt through the committed source-lock gate and retain the resulting verification object.",
+    "Execute both exhaustive workflow enumerators for one exact commit and retain fresh artifacts within the bounded collection window.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert commits f5e7c4d0f6ede6e2dc5f7c23c60d5b1869b954f5, 6ffb6337f2cc5063ed69fd9a438347404566569d, and 513ff14291817f5c65d654cbc4c135c30e98d89e. No production application path was changed.",
+  "safe_next_action": "Execute the committed retained-evidence pipeline test in an authenticated checkout, create its runtime verification receipt with exact blob bindings, then verify that receipt through operations/tools/vercel-runtime-receipt-source-lock.mjs before any deployment authorization decision.",
+  "canonical_queue_modified": false
+}
