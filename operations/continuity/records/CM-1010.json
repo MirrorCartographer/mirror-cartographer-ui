@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1010",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T22:01:36Z",
+  "title": "Commit-search asymmetry does not resolve M-004, M-005, or M-006",
+  "memory": {
+    "observed": [
+      "The canonical queue keeps M-004, M-005, and M-006 unresolved under M-RECONCILE-002 and requires immutable provenance or exhaustive coverage before adjudication.",
+      "Repository code search for M-004 returned no result while repository metadata reported code search as unindexed.",
+      "Commit search for M-004 and M-006 located commit 83205275e023fccf602127ca4ff1cf3075bd1c26, whose diff is a later continuity reconciliation record that mentions all three identifiers but does not contain their originating artifacts.",
+      "Commit search for M-005 returned no result in this connector query despite the same later reconciliation commit visibly containing M-005 in its diff."
+    ],
+    "inferred": [
+      "Connector commit-search matching is not a complete content traversal and may match commit messages, selected diffs, or indexed fragments inconsistently.",
+      "The located 2026-07-13 reconciliation commit establishes only a latest-known reference point for the identifiers, not their origin, authorship, or prior existence.",
+      "Search-result asymmetry across identifiers that co-occur in one immutable diff is direct evidence that zero-result commit search cannot be treated as absence proof."
+    ],
+    "proposed": [
+      "Classify connector commit search as lead_generation_only for M-004, M-005, and M-006 unless its coverage is independently proven exhaustive.",
+      "Use the immutable reconciliation commit only as a temporal reference node and provenance lead, never as the source object resolving the three identifiers.",
+      "Require retained refs enumeration plus tree or blob traversal across every accessible branch before classifying any identifier as unlocated after exhaustive coverage."
+    ],
+    "superseded": [
+      "Treating a commit-search hit as proof that the hit commit originated the referenced artifact.",
+      "Treating a zero-result commit search as evidence that an identifier is absent from repository history."
+    ],
+    "unresolved": [
+      "The originating immutable objects for M-004, M-005, and M-006 remain unlocated.",
+      "The full branch, ref, tree, blob, and historical commit inventory remains unenumerated.",
+      "The decision log, language lexicon, project document, or chat-history source that assigned the identifiers remains unlocated."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "M-005 is visibly present in the diff of a located reconciliation commit, yet an exact M-005 commit search returned zero results.",
+    "resolution": "The connector search is classified as non-exhaustive and index-dependent. The immutable commit diff is authoritative for what that commit contains; the zero-result search is only a coverage observation and cannot negate the diff.",
+    "claim_ceiling": "coverage_incomplete"
+  },
+  "provenance": [
+    {
+      "source_type": "canonical_active_queue",
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "status": "observed"
+    },
+    {
+      "source_type": "github_commit",
+      "locator": "83205275e023fccf602127ca4ff1cf3075bd1c26",
+      "status": "observed_later_reference_not_origin"
+    },
+    {
+      "source_type": "github_connector_commit_search",
+      "locator": "exact searches M-004, M-005, M-006",
+      "status": "observed_non_exhaustive_asymmetric_results"
+    },
+    {
+      "source_type": "continuity_record",
+      "locator": "operations/continuity/records/CM-1009.json",
+      "status": "prior_search_coverage_boundary"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository operational identifiers",
+      "immutable commit hash",
+      "connector result classes",
+      "queue claim states"
+    ],
+    "excluded": [
+      "raw private chat content",
+      "health or pet-health information",
+      "credentials",
+      "contacts",
+      "personal identifying details",
+      "unreviewed uploaded-file contents"
+    ],
+    "publication_rule": "Retain only repository provenance mechanics and claim classifications; do not reproduce private source material."
+  },
+  "authoritative": false,
+  "reversible": true,
+  "falsification_route": "Produce retained exhaustive refs and object traversal showing complete coverage, or locate an immutable pre-existing source object whose namespace, owner, semantic role, temporal precedence, and locator resolve one of M-004, M-005, or M-006.",
+  "next_action": "Build and retain an authenticated all-refs inventory, then traverse reachable trees and blobs for exact identifiers and source-assignment context."
+}
