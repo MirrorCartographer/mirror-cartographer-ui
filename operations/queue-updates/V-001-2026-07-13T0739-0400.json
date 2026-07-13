@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T11:39:35Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "A no-overwrite operations CLI now converts paired authenticated exact-commit source observations into receipt-ready agreement-verified bindings while rejecting duplicate paths, malformed provenance, commit/path/blob disagreement, empty inputs, and output replacement.",
+  "evidence": "operations/evidence/vercel-source-binding-cli-2026-07-13T0739-0400.json",
+  "commits": [
+    "1226fa392aa4ab1d53db268aa0057759ba17fbe0",
+    "17cb899eff25c684902c848b81499ce6e2b7cc6e",
+    "6dfb47b8a9a27ce63ecd68383332690467e42b6d"
+  ],
+  "verification": {
+    "deterministic_node_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled outputs.",
+    "Execute authenticated GitHub contents and git ls-tree source lookups for every receipt-bound path, run this CLI, and pass only agreement-verified bindings downstream.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "In an authenticated checkout, collect GitHub contents-at-commit and git ls-tree-at-commit observations for every receipt-bound path at one exact commit, run the retained source-binding CLI to a new output path, then feed only the agreement-verified packet into the existing evidence receipt pipeline; do not create an application deployment until provider capacity and immutable identity verification are available."
+}
