@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T16:28:27-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added fail-closed verification that declared retained-output SHA-256 values match the current bytes of regular non-symlink files before those outputs are treated as promotable evidence.",
+  "evidence": "operations/evidence/vercel-retained-output-byte-verification-2026-07-13T1628-0400.json",
+  "commits": [
+    "16bae3dccaf40b64765d1e1ee4b8e200bc68d2d6",
+    "11bbc23c863b9d4b471ff6e2f62734e3f7d8f298",
+    "a9c69f045de54c6f9a2645c3795d45327a1fb3c1"
+  ],
+  "acceptance_remaining": [
+    "Integrate current-byte verification into the bound retained-evidence persistence wrapper before paired persistence.",
+    "Execute authenticated dual enumeration for one exact commit and persist the bound byte-verified records.",
+    "Observe an operations-only sentinel skipped after provider capacity returns.",
+    "Verify exact-commit audio-routing artifact, immutable deployment identity, and bounded physical iPhone Safari audibility."
+  ],
+  "safe_next_action": "Wire verifyRetainedOutputBytes into persist-bound-retained-workflow-evidence.mjs so raw retained inputs are byte-verified against the declared digest set before the bundle and manifest are written; retain fail-closed claim boundaries and do not create an application deployment until provider capacity and immutable identity are proven.",
+  "preservation": {
+    "canonical_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "files_deleted": false,
+    "history_rewritten": false,
+    "payments_or_conversion_added": false
+  }
+}
