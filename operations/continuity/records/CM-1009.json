@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1009",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T21:43:51Z",
+  "title": "Unindexed repository code search cannot adjudicate missing continuity identifiers",
+  "memory": {
+    "observed": [
+      "The connected repository metadata reports is_code_search_indexed=false for MirrorCartographer/mirror-cartographer-ui.",
+      "Repository-scoped connector searches for the exact identifiers M-004, M-005, and M-006 each returned zero results.",
+      "The canonical continuity queue still classifies the provenance and immutable locations of M-004, M-005, and M-006 as unresolved."
+    ],
+    "inferred": [
+      "Zero-result code searches cannot establish repository-wide absence while the repository is reported as not code-search indexed.",
+      "The three zero-result searches add no admissible negative evidence to the provenance-gap adjudication beyond documenting connector coverage limits."
+    ],
+    "proposed": [
+      "Resolve M-004, M-005, and M-006 only through exhaustive authenticated Git object or tree traversal, retained refs enumeration, or immutable source objects located through an independently complete mechanism.",
+      "Record future search results with an explicit search_index_status and coverage_class before using them in continuity decisions."
+    ],
+    "superseded": [
+      "Treating exact-identifier zero-result connector code searches as proof that the identifiers are absent from repository history."
+    ],
+    "unresolved": [
+      "The complete branch, tree, and historical object inventory remains unenumerated.",
+      "The immutable provenance and locations of M-004, M-005, and M-006 remain unresolved.",
+      "The originating decision log, language lexicon, project document, or chat-history source assigning those identifiers remains unlocated."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "Exact identifier searches return no matches while prior completion prose and the active queue refer to M-004, M-005, and M-006.",
+    "resolution": "Because repository code search is reported as unindexed, zero results are classified as coverage_unavailable rather than absence. Prior completion prose remains lead-only and the identifiers remain quarantined as unresolved.",
+    "claim_ceiling": "coverage_incomplete"
+  },
+  "provenance": [
+    {
+      "source_type": "github_installed_repository_metadata",
+      "locator": "MirrorCartographer/mirror-cartographer-ui#is_code_search_indexed=false",
+      "status": "observed"
+    },
+    {
+      "source_type": "github_connector_code_search",
+      "locator": "repository-scoped exact searches for M-004, M-005, and M-006",
+      "status": "observed_zero_result_unindexed_non_exhaustive"
+    },
+    {
+      "source_type": "canonical_active_queue",
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "status": "observed"
+    },
+    {
+      "source_type": "continuity_record",
+      "locator": "operations/continuity/records/CM-1008.json",
+      "status": "prior_capability_boundary"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "private repository coordinates",
+      "repository indexing metadata",
+      "exact operational identifiers",
+      "connector result classes",
+      "queue claim states"
+    ],
+    "excluded": [
+      "raw chat content",
+      "health or pet-health information",
+      "credentials",
+      "private contacts",
+      "identifying personal data",
+      "unreviewed uploaded-file contents"
+    ]
+  },
+  "authoritative": false,
+  "reversible": true,
+  "falsification_route": "Produce a retained exhaustive Git refs, tree, and history traversal or immutable source object that either locates one of M-004, M-005, or M-006 or proves complete historical coverage without that identifier."
+}
