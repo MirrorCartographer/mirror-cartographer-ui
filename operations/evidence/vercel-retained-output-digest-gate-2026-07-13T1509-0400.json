@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T15:09:59-04:00",
+  "slice": "Require the retained raw-output manifest and reconciliation bundle to declare an identical non-empty set of path-bound SHA-256 digests before evidence promotion.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/verify-retained-output-digests.mjs",
+    "operations/tools/verify-retained-output-digests.test.mjs"
+  ],
+  "commits": {
+    "implementation": "abe007e33635b028ac6784f67807414896254647",
+    "tests": "bc530eefd20500bef7b7813f77ffe1ca2872b599"
+  },
+  "verification": {
+    "route": "node --test against byte-identical local copies before repository write",
+    "tests_total": 5,
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "covered": [
+      "order-independent equality",
+      "digest mutation rejection",
+      "path mismatch rejection",
+      "duplicate path rejection",
+      "empty set rejection"
+    ]
+  },
+  "claim_boundary": [
+    "This proves deterministic source behavior for the committed verifier under the recorded tests.",
+    "It does not prove authenticated retrieval, current-file byte hashing, exhaustive workflow enumeration, immutable Vercel deployment identity, browser audio behavior, audibility, or physical-device observation."
+  ],
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE forbids application deployment attempts while provider build capacity is exhausted."
+  },
+  "rollback": {
+    "route": "Revert implementation commit abe007e33635b028ac6784f67807414896254647; the additive test and evidence records may remain as history."
+  }
+}
