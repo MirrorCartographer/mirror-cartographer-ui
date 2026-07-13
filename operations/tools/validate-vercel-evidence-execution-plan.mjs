@@ -4,6 +4,15 @@ const SHA_RE = /^[0-9a-f]{40}$/;
 const FORBIDDEN_SECRET_RE = /(authorization:|bearer\s+[a-z0-9._-]+|ghp_[a-z0-9]+|github_token|api[_-]?token|access[_-]?token)/i;
 const FORBIDDEN_SHELL_CONTROL_RE = /(?:^|\s)(?:&&|\|\||;|\||>|>>|<|`|\$\()/;
 const EXPECTED_REPOSITORY = 'MirrorCartographer/mirror-cartographer-ui';
+const OUTPUT_ROUTE_CONTRACT = [
+  { role: 'primary', prefix: 'operations/evidence/raw/', suffix: '.json' },
+  { role: 'primary_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json' },
+  { role: 'independent', prefix: 'operations/evidence/raw/', suffix: '.json' },
+  { role: 'independent_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json' },
+  { role: 'retained_command', prefix: 'operations/evidence/raw/', suffix: '.txt' },
+  { role: 'rate_limit_proof', prefix: 'operations/evidence/derived/', suffix: '.json' },
+  { role: 'bundle', prefix: 'operations/evidence/bundles/', suffix: '.json' },
+];
 
 function fail(reason, extra = {}) {
   return {
@@ -19,8 +28,26 @@ function canonicalRelativeFile(value) {
   if (typeof value !== 'string' || value.trim() === '') return null;
   if (path.isAbsolute(value)) return null;
   const normalized = path.posix.normalize(value.replaceAll('\\', '/'));
+  if (normalized === '.' || normalized.endsWith('/')) return null;
   if (normalized === '..' || normalized.startsWith('../') || normalized.includes('/../')) return null;
   return normalized;
+}
+
+function validateOutputRoutes(outputs) {
+  for (let index = 0; index < OUTPUT_ROUTE_CONTRACT.length; index += 1) {
+    const contract = OUTPUT_ROUTE_CONTRACT[index];
+    const output = outputs[index];
+    if (!output.startsWith(contract.prefix) || !output.endsWith(contract.suffix)) {
+      return {
+        ok: false,
+        role: contract.role,
+        output,
+        expectedPrefix: contract.prefix,
+        expectedSuffix: contract.suffix,
+      };
+    }
+  }
+  return { ok: true };
 }
 
 function hasExpectedRepositoryEndpoint(command) {
@@ -75,6 +102,10 @@ export function validateVercelEvidenceExecutionPlan(plan) {
   if (new Set(canonicalOutputs).size !== canonicalOutputs.length) {
     return fail('canonical_output_paths_must_be_distinct', { commitSha });
   }
+  const routeValidation = validateOutputRoutes(canonicalOutputs);
+  if (!routeValidation.ok) {
+    return fail('output_route_contract_mismatch', { commitSha, ...routeValidation });
+  }
 
   if (typeof command !== 'string' || command.trim() === '') {
     return fail('missing_retained_command', { commitSha });
@@ -102,7 +133,7 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     ok: true,
     reason: 'execution_plan_ready',
     execution_permitted: true,
-    evidence_class: 'bounded_execution_plan_with_canonical_retained_paths',
+    evidence_class: 'bounded_execution_plan_with_typed_canonical_retained_paths',
     commitSha,
     repository: EXPECTED_REPOSITORY,
     outputs: {
@@ -121,10 +152,11 @@ export function validateVercelEvidenceExecutionPlan(plan) {
       dual_client_rate_limit_proof: true,
       final_bundle: true,
       outputs_must_be_canonically_distinct: true,
+      outputs_must_follow_role_routes: true,
       overwrite_forbidden: true,
     },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct paths for both raw response-header streams and the derived dual-client rate-limit proof.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct, role-routed paths for raw evidence, derived proof, retained command text, and the final bundle.',
       'Does not prove authentication, workflow-run completeness, response-header authenticity, rate-limit proof acceptance, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
