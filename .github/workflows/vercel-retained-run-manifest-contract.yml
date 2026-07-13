@@ -7,11 +7,15 @@ on:
       - '.github/workflows/vercel-retained-run-manifest-contract.yml'
       - 'operations/tools/vercel-retained-run-manifest.mjs'
       - 'operations/tools/vercel-retained-run-manifest.test.mjs'
+      - 'operations/tools/verify-vercel-retained-run-artifact.mjs'
+      - 'operations/tools/verify-vercel-retained-run-artifact.test.mjs'
   pull_request:
     paths:
       - '.github/workflows/vercel-retained-run-manifest-contract.yml'
       - 'operations/tools/vercel-retained-run-manifest.mjs'
       - 'operations/tools/vercel-retained-run-manifest.test.mjs'
+      - 'operations/tools/verify-vercel-retained-run-artifact.mjs'
+      - 'operations/tools/verify-vercel-retained-run-artifact.test.mjs'
 
 permissions:
   contents: read
@@ -63,6 +67,13 @@ jobs:
           node --test operations/tools/vercel-retained-run-manifest.test.mjs \
             2>&1 | tee vercel-retained-run-manifest.tap
 
+      - name: Verify offline artifact verifier contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test operations/tools/verify-vercel-retained-run-artifact.test.mjs \
+            2>&1 | tee verify-vercel-retained-run-artifact.tap
+
       - name: Generate exact run manifest
         shell: bash
         env:
@@ -81,12 +92,32 @@ jobs:
             .github/workflows/vercel-retained-run-manifest-contract.yml \
             operations/tools/vercel-retained-run-manifest.mjs \
             operations/tools/vercel-retained-run-manifest.test.mjs \
+            operations/tools/verify-vercel-retained-run-artifact.mjs \
+            operations/tools/verify-vercel-retained-run-artifact.test.mjs \
             > vercel-retained-run-manifest-sources.sha256
-          test "$(wc -l < vercel-retained-run-manifest-sources.sha256)" -eq 3
+          test "$(wc -l < vercel-retained-run-manifest-sources.sha256)" -eq 5
           sha256sum --check vercel-retained-run-manifest-sources.sha256
-          sha256sum vercel-retained-run-manifest.tap vercel-retained-run-manifest.json \
+          sha256sum \
+            vercel-retained-run-manifest.tap \
+            verify-vercel-retained-run-artifact.tap \
+            vercel-retained-run-manifest.json \
             > vercel-retained-run-manifest-artifacts.sha256
           sha256sum --check vercel-retained-run-manifest-artifacts.sha256
+
+      - name: Verify generated artifact locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          node operations/tools/verify-vercel-retained-run-artifact.mjs \
+            . \
+            "${GITHUB_SHA}" \
+            "${GITHUB_RUN_ID}" \
+            "${GITHUB_RUN_ATTEMPT}" \
+            > vercel-retained-run-artifact-verification.json
+          node -e "const fs=require('node:fs');const v=JSON.parse(fs.readFileSync('vercel-retained-run-artifact-verification.json','utf8'));if(v.verified!==true||v.sha!==process.env.GITHUB_SHA)process.exit(1)"
+          sha256sum vercel-retained-run-artifact-verification.json \
+            > vercel-retained-run-artifact-verification.sha256
+          sha256sum --check vercel-retained-run-artifact-verification.sha256
 
       - name: Upload commit-bound run manifest record
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -95,7 +126,10 @@ jobs:
           path: |
             vercel-retained-run-manifest.json
             vercel-retained-run-manifest.tap
+            verify-vercel-retained-run-artifact.tap
             vercel-retained-run-manifest-sources.sha256
             vercel-retained-run-manifest-artifacts.sha256
+            vercel-retained-run-artifact-verification.json
+            vercel-retained-run-artifact-verification.sha256
           if-no-files-found: error
           retention-days: 30
