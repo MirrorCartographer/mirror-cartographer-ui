@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "site_id": "weather-organ",
+  "title": "Weather Organ",
+  "status": "active_experiment",
+  "premise": "A solitary browser instrument that turns pointer movement, local time, and optional microphone energy into a shifting atmospheric score.",
+  "independence_constraints": [
+    "Do not explain or reference Mirror Cartographer.",
+    "Do not present research, project status, worker operations, or dashboards.",
+    "Do not include payments, conversion logic, lead capture, accounts, or product funnels.",
+    "Remain usable as a self-contained artwork when audio input is unavailable or denied.",
+    "Respect reduced-motion and reduced-transparency preferences."
+  ],
+  "creative_system": {
+    "visual_language": "slow orbital weather, paper-grain light, typographic pressure readings",
+    "interaction": "pointer position shapes pressure and wind; click toggles the instrument; keyboard arrows provide an equivalent path",
+    "sound": "procedural Web Audio drones activated only by explicit user input",
+    "world_rule": "the page behaves like a small climate rather than a document"
+  },
+  "privacy_boundary": {
+    "network_requests": "none required",
+    "storage": "none",
+    "microphone": "not requested in this slice",
+    "analytics": "none"
+  }
+}
