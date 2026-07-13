@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T22:45:44Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Defined and verified a deterministic 24-hour repertory contract with one distinct production per America/New_York local hour, a shared continuity-state channel, no autoplay, and reduced-motion requirements.",
+  "evidence": "operations/evidence/vercel-hourly-repertory-2026-07-13T1845-0400.json",
+  "canonical_queue_overwritten": false,
+  "deployment_attempted": false,
+  "specialist_registry_change": null,
+  "design_classification": {
+    "observed": [
+      "Preference for hand-drawn visual language over bubble-pop styling.",
+      "Preference for spatial words, rings, coordinates, symbolic typography, and functional interaction.",
+      "Requirement that aesthetic transformations preserve underlying continuity."
+    ],
+    "inferred": [
+      "Hourly change should operate as repertory programming rather than cosmetic theme rotation.",
+      "Distinct productions require distinct interaction grammars."
+    ],
+    "experiment": "A 24-slot deterministic local-hour schedule with fail-closed validation.",
+    "current_decision": "Keep the repertory operations-only until provider capacity returns and the public runtime can be changed and verified commit-bound."
+  },
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients.",
+    "Observe operations-only build suppression after provider capacity returns.",
+    "Observe exact-commit audio-routing evidence.",
+    "Bind an application commit to an immutable successful deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "When provider capacity and immutable deployment verification are available, add an application adapter that reads the schedule, selects by local hour, preserves shared runtime state, and renders hour-18 first behind a reversible feature flag."
+}
