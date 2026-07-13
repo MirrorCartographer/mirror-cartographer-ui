@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_verification",
+  "queue_item": "R-021",
+  "captured_at": "2026-07-13T23:06:00Z",
+  "finding": "A reconciliation-valid manifest remained promotable without proving retained pagination-chain continuity and transport binding in the manifest writer itself.",
+  "implementation": {
+    "manifest_writer": "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+    "test": "operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+    "gate": "tools/frontier-research/authenticated-pagination-evidence-gate.mjs",
+    "manifest_schema_version": 2,
+    "promotion_order": [
+      "enumeration method validation",
+      "pagination chain integrity",
+      "authenticated transport binding",
+      "snapshot stabilization",
+      "enumeration reconciliation",
+      "claim-boundary validation"
+    ]
+  },
+  "verification": {
+    "command": "node operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+    "observed_result": "18 assertions passed",
+    "falsification_cases": [
+      "disconnected next_url chain",
+      "replayed request_url",
+      "credential-bearing request_url",
+      "transport record-count mismatch",
+      "provider-ceiling ambiguity",
+      "unsafe claim-boundary expansion"
+    ]
+  },
+  "evidence_strength": "deterministic_local_test",
+  "source_status": {
+    "repository_files": "primary_project_source",
+    "runtime_test": "direct_observation",
+    "authenticated_private_repository_run": "not_executed"
+  },
+  "uncertainty": [
+    "No authenticated repository enumeration was executed in this slice.",
+    "The gate proves retained URL-chain continuity and transport metadata agreement, not response-body authenticity or semantic completeness.",
+    "No Vercel deployment identity, browser behavior, or physical-device behavior was tested."
+  ],
+  "falsification_route": "Supply a manifest whose retained receipt has a disconnected, replayed, credential-bearing, digest-mismatched, or count-mismatched page chain; validation must fail before output creation."
+}
