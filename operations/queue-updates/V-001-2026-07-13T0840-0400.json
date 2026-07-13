@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T12:40:59Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained source-binding packets are now sorted by repository path and bound to a canonical SHA-256 digest over exact-commit verification fields; equivalent input order produces the same digest and verified blob changes produce a different digest.",
+  "evidence": {
+    "implementation_commit": "72dca37b843b8bf75ff38ffedb529c4f5d1b15ea",
+    "test_commit": "bd7d8cb6bad87f45d4d9adf0579a2327e30d559f",
+    "evidence_commit": "dc080bb3f2c9770489de6bd8280a3e85eadf427d",
+    "runtime_result": "7 deterministic Node tests passed; 0 failed",
+    "vercel_commit_status": "pending",
+    "immutable_deployment_verified": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled raw outputs.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe and inspect the six-outcome exact-commit audio-routing artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Use the schema-v2 CLI in an authenticated checkout to generate a new no-overwrite packet, independently recompute canonical_digest_sha256 from the retained binding fields, and only then feed it into the evidence receipt path. Do not claim deployment while Vercel status is pending or immutable identity is absent.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false
+}
