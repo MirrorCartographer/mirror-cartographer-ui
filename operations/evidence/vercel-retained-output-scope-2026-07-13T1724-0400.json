@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T17:24:00-04:00",
+  "slice": "Constrain retained evidence verification to explicitly allowed immediate-child files beneath one approved retention root before byte-digest verification.",
+  "implementation": {
+    "file": "operations/tools/verify-retained-output-scope.mjs",
+    "commit": "cb861a6d0359bad93e23ba127c9ecd372d451830",
+    "delegates_to": "operations/tools/verify-retained-output-bytes.mjs",
+    "controls": [
+      "Reject missing or invalid retention roots.",
+      "Reject allowlist entries that are not plain basenames.",
+      "Reject output paths outside the approved root.",
+      "Reject nested descendants even when they remain beneath the root.",
+      "Reject basenames absent from the explicit allowlist.",
+      "Preserve existing regular-file, no-symlink, and SHA-256 byte checks."
+    ]
+  },
+  "verification": {
+    "test_file": "operations/tools/verify-retained-output-scope.test.mjs",
+    "test_commit": "b4a3de8837ddbde72e9edfc034bef9d6d9b89ebd",
+    "runner": "node --test",
+    "local_result": {
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "cases": [
+        "allowed immediate child accepted when bytes match",
+        "path outside root rejected",
+        "nested descendant rejected",
+        "unapproved basename rejected"
+      ]
+    },
+    "strongest_feasible_route": "Deterministic local Node execution against byte-equivalent source followed by additive GitHub commits.",
+    "not_claimed": [
+      "GitHub Actions execution",
+      "authenticated retained-evidence collection",
+      "Vercel deployment",
+      "immutable deployment identity",
+      "browser or audio behavior",
+      "physical iPhone Safari audibility"
+    ]
+  },
+  "reversibility": {
+    "route": "Revert commit cb861a6d0359bad93e23ba127c9ecd372d451830; the test and evidence records may remain as historical provenance.",
+    "destructive_action_required": false
+  },
+  "claim_boundary": "This slice proves only deterministic path-scope enforcement in source and local tests. It does not prove that retained outputs were authentically collected or that any deployment or device behavior occurred."
+}
