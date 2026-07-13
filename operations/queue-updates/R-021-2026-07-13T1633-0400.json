@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "event_order": "2026-07-13T20:33:34Z/frontier_research/R-021/retained-evidence-manifest",
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "prior_state": "completed_handoff_ready",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a Draft 2020-12 retained-evidence manifest schema and six conformance vectors for complete, reconciled, non-overwriting exact-commit evidence retention.",
+  "files": [
+    "operations/research/R-021-retained-evidence-manifest.schema.json",
+    "operations/research/R-021-retained-evidence-manifest.test-vectors.json",
+    "operations/evidence/frontier-retained-evidence-schema-2026-07-13T1633-0400.json"
+  ],
+  "commits": [
+    "75e02d9dcdea07ffc81c269c765f7fb0ae49a811",
+    "0c496afd2792a1a6f4643a9f87bae1f8a9ddcacd",
+    "895c1bed68111bc051a6194ec3cd1663db5a20d3"
+  ],
+  "acceptance_remaining": [
+    "Execute both authenticated exact-commit enumerations.",
+    "Validate the retained manifest against the committed schema.",
+    "Procedurally enforce cross-field commit equality, retained-path uniqueness, file existence, byte counts, and SHA-256 correspondence.",
+    "Feed only fully retained and reconciled evidence into the Vercel assessor."
+  ],
+  "handoff": {
+    "to": "vercel_studio",
+    "instruction": "Require a conforming retained-evidence manifest plus procedural cross-field and byte verification before promoting R-021 evidence. This contract does not authorize a deployment claim."
+  },
+  "provenance": {
+    "canonical_queue_sha": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "source_status": "primary_sources_reviewed_and_repository_contract_committed",
+    "uncertainty": "The schema has not been executed in an authenticated checkout; cross-field equality and retained-byte authenticity remain outside JSON Schema."
+  }
+}
