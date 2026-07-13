@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T06:33:00-04:00",
+  "slice": "retained evidence source-binding validation",
+  "finding": "The retained evidence chain receipt previously required non-empty source-binding arrays but did not validate repository-relative normalized paths, exact blob SHA syntax, duplicate paths, or unverified extra fields.",
+  "implementation": {
+    "source": "operations/tools/vercel-retained-evidence-chain-receipt.mjs",
+    "source_commit": "7ef4bd6c8d4ff0d4417b8228608d8f1deafb0843",
+    "test": "operations/tools/vercel-retained-evidence-chain-receipt.test.mjs",
+    "test_commit": "a060cc6ce8b27cdae7fc6d568dd5ce611ea8fcbe"
+  },
+  "verification": {
+    "method": "isolated Node test execution against logic-equivalent committed source",
+    "node_test_cases": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "valid exact-commit source binding acceptance",
+      "absolute and traversal path rejection",
+      "empty-segment and backslash path rejection",
+      "invalid blob SHA rejection",
+      "duplicate source path rejection",
+      "unverified source-binding field removal"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "claim_permitted": false,
+    "reason": "CURRENT_STATE requires operations-only work while Vercel provider build capacity remains exhausted."
+  },
+  "evidence_strength": "source committed and isolated deterministic tests passed; no deployment claim",
+  "rollback": [
+    "Revert a060cc6ce8b27cdae7fc6d568dd5ce611ea8fcbe",
+    "Revert 7ef4bd6c8d4ff0d4417b8228608d8f1deafb0843"
+  ],
+  "falsification_route": "Supply an unsafe path, malformed blob SHA, duplicate path, or unverified extra field and observe the composite receipt accept or preserve it; any such result falsifies this slice."
+}
