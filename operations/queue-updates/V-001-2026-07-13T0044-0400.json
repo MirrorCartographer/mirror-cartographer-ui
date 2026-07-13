@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T04:44:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound the retained workflow trigger gate and its Frontier trigger-expectation dependency into the exact-commit workflow test matrix, path filters, and eleven-source checksum manifest.",
+  "completed_commits": [
+    "5f14566917c9ba05cf2666324c56bcb8d267f741",
+    "c78f4f3368c2470c4a22400d64699ecdff9392ed",
+    "caf9e9d0328f68e76470e3d8524b8fcf6f01edf9",
+    "19776461385773445f9b633bd57d9529e98b115f"
+  ],
+  "evidence_path": "operations/evidence/vercel-trigger-gate-workflow-binding-2026-07-13T0044-0400.json",
+  "acceptance_remaining": [
+    "Observe and retain an artifact-bearing successful exact-commit retained-evidence workflow run.",
+    "Execute authenticated exhaustive all-event enumeration and independent gh pagination for the same commit and reconcile them.",
+    "Observe an operations-only Vercel sentinel reported as skipped or ignored after capacity returns.",
+    "Observe the exact-commit audio-routing artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "blockers": [
+    "Vercel build-rate limit remains active on the latest commit status.",
+    "The available workflow-run connector view is non-exhaustive and returned zero runs, so run absence and workflow passage remain unproven."
+  ],
+  "safe_next_action": "Use authenticated exhaustive workflow enumeration to locate the exact-commit retained-evidence run, retrieve its artifact, verify the eleven-source checksum manifest, and retain the reconciliation bundle; do not attempt an application deployment while Vercel capacity remains exhausted.",
+  "canonical_queue_overwritten": false
+}
