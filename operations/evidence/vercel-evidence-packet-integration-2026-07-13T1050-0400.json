@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T10:50:26-04:00",
+  "slice": "Integrate the fresh exact-commit evidence receipt with Frontier Research's repository-relative digest subject manifest.",
+  "source_commits": {
+    "implementation": "791df8304849f6a5bf3b675b486befc6cbe6f712",
+    "tests": "cffffe47f397de664c15baf7eb350cfa75576b62",
+    "frontier_manifest_source": "0643b4a0173b422b19eebf9557da069a13fb3afa"
+  },
+  "verification": {
+    "route": "node --test against the committed implementation and test contents with repository dependencies reproduced from their current committed contents",
+    "command": "node --test operations/tools/write-vercel-evidence-packet.test.mjs",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "covered": [
+      "receipt and four-subject repository-relative SHA-256 manifest are written",
+      "receipt and manifest outputs refuse overwrite",
+      "absolute machine-local subject identities are rejected"
+    ]
+  },
+  "claim_boundary": {
+    "artifact_identity_and_byte_integrity": "tested",
+    "authenticated_workflow_enumeration": "not_executed",
+    "workflow_outcome": "unproven",
+    "vercel_deployment": "not_attempted",
+    "runtime_audio": "unproven",
+    "physical_iphone_safari_audibility": "unproven",
+    "deployment_claim_permitted": false
+  },
+  "reversibility": "Revert the evidence, test, and implementation commits. No deployment, migration, file deletion, or history rewrite occurred.",
+  "next_gate": "Execute both authenticated exhaustive workflow enumeration clients for one exact commit, reconcile them, then write a retained receipt and subject manifest through the new packet writer."
+}
