@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T01:33:35-04:00",
+  "slice": "retained_evidence_deployment_binding",
+  "finding": "The retained-evidence handoff and deployment-attempt gate could previously be invoked separately, allowing a caller to provide an untrusted exhaustive_workflow_evidence boolean directly to the deployment gate.",
+  "implementation": {
+    "module": "operations/tools/vercel-deployment-evidence-decision.mjs",
+    "test": "operations/tools/vercel-deployment-evidence-decision.test.mjs",
+    "module_commit": "8ef2c2f39c089877912a2c6fbc35c4fe9e031511",
+    "test_commit": "d5c8faf5aed6258e2843c40f7d1d1733656c131c"
+  },
+  "contract": {
+    "exact_commit_alignment_required": true,
+    "caller_supplied_exhaustive_evidence_ignored": true,
+    "retained_handoff_must_accept": true,
+    "provider_capacity_must_be_available": true,
+    "immutable_deployment_identity_must_be_available": true,
+    "operations_only_application_build_forbidden": true,
+    "deployment_claim_permitted": false
+  },
+  "verification": {
+    "command": "node --test vercel-deployment-evidence-decision.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "accepted exact-commit handoff authorizes only when every deployment prerequisite also passes",
+      "cross-commit retained evidence is rejected",
+      "caller-supplied exhaustive workflow evidence cannot bypass a blocked handoff",
+      "provider capacity and immutable identity blockers remain fail-closed",
+      "malformed envelopes are rejected"
+    ]
+  },
+  "deployment_evidence": {
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "reason": "Current state records exhausted Vercel build capacity and prohibits application deployment attempts until capacity returns."
+  },
+  "privacy_and_scope": {
+    "credentials_persisted": false,
+    "private_response_bodies_persisted": false,
+    "payment_or_conversion_logic_added": false,
+    "files_deleted": false
+  }
+}
