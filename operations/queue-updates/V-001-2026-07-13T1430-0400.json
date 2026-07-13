@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:30:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence preflight now requires every output basename to bind both the full exact-commit SHA and its artifact-role token, preventing correctly routed but provenance-ambiguous filenames from reaching execution.",
+  "evidence": {
+    "source_commit": "8a73d3e4c19df60b6de3de6485a4ec945d2f6f26",
+    "test_commit": "78e30175a096c346f159ed9dc1797854d1417e9b",
+    "evidence_commit": "9e4495c4a1776670d34e65b51a50dd2268f0617e",
+    "evidence_path": "operations/evidence/vercel-commit-bound-output-identity-2026-07-13T1430-0400.json",
+    "local_tests_passed": 12,
+    "local_tests_failed": 0,
+    "exact_commit_readback": true,
+    "workflow_runs_returned": 0,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute the committed preflight tests in an authenticated checkout.",
+    "Execute authenticated all-event pagination for one exact commit with both clients and retain commit-bound, role-routed raw outputs, headers, command text, derived proof, and final bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the updated preflight test file in an authenticated checkout, then execute the dual-client retained-evidence workflow using filenames containing the exact commit SHA and designated role token. Do not request an application deployment until provider capacity and immutable deployment identity are available.",
+  "canonical_mutation_performed": false,
+  "preservation": {
+    "other_team_records_overwritten": false,
+    "files_deleted": false,
+    "git_history_deleted": false,
+    "payments_or_conversion_added": false
+  }
+}
