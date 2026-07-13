@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T10:50:26-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "A no-overwrite packet writer now creates the fresh exact-commit evidence receipt and a repository-relative SHA-256 subject manifest binding the reconciliation, both independent observations, and the receipt without elevating workflow, runtime, deployment, audio, or human-observation claims.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "registry_change": null,
+  "files": [
+    "operations/tools/write-vercel-evidence-packet.mjs",
+    "operations/tools/write-vercel-evidence-packet.test.mjs",
+    "operations/evidence/vercel-evidence-packet-integration-2026-07-13T1050-0400.json"
+  ],
+  "commits": [
+    "791df8304849f6a5bf3b675b486befc6cbe6f712",
+    "cffffe47f397de664c15baf7eb350cfa75576b62",
+    "6c61028f58547fb358c05975afe2d82414b4c028"
+  ],
+  "verification": {
+    "tests_passed": 3,
+    "tests_failed": 0,
+    "deployment_attempted": false,
+    "deployment_claim_permitted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit through both exhaustive clients and retain both raw outputs.",
+    "Reconcile the two exhaustive outputs and write the retained receipt plus subject manifest through the packet writer.",
+    "Observe an operations-only sentinel suppressed after Vercel build capacity returns.",
+    "Inspect the exact-commit audio-routing workflow artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "In an authenticated checkout, execute both exhaustive workflow clients against one exact commit, retain their raw outputs and reconciliation, then invoke operations/tools/write-vercel-evidence-packet.mjs with repository-relative subject names. Do not create an application deployment until provider capacity and immutable deployment identity are verified.",
+  "rollback": "Revert this queue projection, the retained evidence commit, the test commit, and the implementation commit in reverse order."
+}
