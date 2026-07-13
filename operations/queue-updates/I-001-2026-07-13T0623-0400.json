@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": {
+    "id": "I-001",
+    "owner": "independent_creative_web",
+    "priority": "highest",
+    "state": "completed_slice_preview_ready",
+    "objective": "Establish an independent creative-web identity and ship one bold self-contained interactive work without modifying the Mirror Cartographer application surface.",
+    "completed_slices": [
+      "Defined the independent studio identity boundary.",
+      "Created Matchbox Weather as a self-contained generative visual-and-audio instrument.",
+      "Included pointer, touch, keyboard, responsive-layout, reduced-motion, and user-initiated-audio behavior.",
+      "Re-read the artifact from its exact creation commit and recorded source-bound evidence."
+    ],
+    "acceptance_remaining": [
+      "Run browser-level interaction tests in Chromium and WebKit.",
+      "Publish through a hosting path that does not alter or masquerade as the Mirror Cartographer production surface.",
+      "Record a public or immutable preview URL bound to an exact commit.",
+      "Perform bounded mobile touch and audio verification."
+    ],
+    "safe_next_action": "Add a minimal independent static-hosting workflow or isolated preview route, then execute browser tests for pointer drawing, keyboard mode switching, reduced-motion behavior, and explicit audio activation before claiming a public deployment."
+  },
+  "evidence": "operations/evidence/independent-matchbox-weather-2026-07-13T0623-0400.json",
+  "canonical_queue_mutated": false,
+  "specialist_registry_changed": false,
+  "privacy": "No private source material is included."
+}
