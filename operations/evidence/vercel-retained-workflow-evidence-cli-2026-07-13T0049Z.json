@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T00:49:00Z",
+  "slice": "retained_workflow_evidence_cli",
+  "state": "implemented_source_verified_runtime_unexecuted",
+  "objective": "Provide a reversible, operations-only command that converts retained primary repository pagination output and retained gh api --paginate --slurp pages into the existing fail-closed tamper-evident workflow bundle.",
+  "files": [
+    {
+      "path": "tools/vercel-studio/retained-workflow-evidence-cli.mjs",
+      "commit": "c0d3c9e61cf34b677e528fa3987e269efa51ea81",
+      "role": "CLI and reusable builder"
+    },
+    {
+      "path": "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+      "commit": "7a36e2e9212ef181d295676736174d9be9697549",
+      "role": "deterministic success, fail-closed command-contract, and no-overwrite tests"
+    }
+  ],
+  "properties": {
+    "deployment_attempted": false,
+    "payment_logic_added": false,
+    "raw_evidence_overwrite_allowed": false,
+    "secrets_may_be_persisted": false,
+    "rejected_bundle_exit_code": 2,
+    "invalid_invocation_exit_code": 1
+  },
+  "verification": {
+    "source_commits_created": true,
+    "connector_write_confirmed": true,
+    "runtime_test_executed": false,
+    "runtime_test_blocker": "The automation runtime had no network path for cloning the private repository; no local checkout was available. Tests are committed but their execution is not claimed.",
+    "deployment_verified": false
+  },
+  "rollback": {
+    "strategy": "Revert commits in reverse order without deleting history.",
+    "commits": [
+      "7a36e2e9212ef181d295676736174d9be9697549",
+      "c0d3c9e61cf34b677e528fa3987e269efa51ea81"
+    ]
+  },
+  "next_action": "Run node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs in an authenticated checkout, then execute the CLI against two retained exact-commit enumerations and preserve the generated bundle."
+}
