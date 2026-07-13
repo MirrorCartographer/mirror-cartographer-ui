@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T11:39:35Z",
+  "slice": "retained-independent-source-binding-cli",
+  "implementation": {
+    "path": "operations/tools/vercel-source-binding-cli.mjs",
+    "commit": "1226fa392aa4ab1d53db268aa0057759ba17fbe0",
+    "test_path": "operations/tools/vercel-source-binding-cli.test.mjs",
+    "test_commit": "17cb899eff25c684902c848b81499ce6e2b7cc6e"
+  },
+  "behavior": [
+    "Ingests a target commit and paired GitHub contents-at-commit and git ls-tree-at-commit observations for one or more repository paths.",
+    "Delegates each pair to the existing fail-closed independent source-binding reconciler.",
+    "Rejects empty binding sets, duplicate paths, target-commit mismatch, path mismatch, blob-SHA mismatch, malformed provenance, and output overwrite attempts.",
+    "Writes a receipt-ready packet only to a previously absent output path.",
+    "Explicitly forbids deployment claims and records that no application deployment was attempted."
+  ],
+  "verification": {
+    "method": "local Node deterministic test execution against the committed module logic",
+    "command": "node --test /tmp/vercel-slice/test.mjs",
+    "result": "pass",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered_cases": [
+      "agreeing independent bindings accepted",
+      "duplicate path rejected",
+      "blob-SHA disagreement rejected",
+      "retained output overwrite rejected",
+      "empty binding set rejected"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "The current operating state forbids application deployment attempts while Vercel build capacity is exhausted.",
+    "claim": "No deployment or browser-runtime verification is claimed."
+  },
+  "rollback": {
+    "route": "Revert commits 17cb899eff25c684902c848b81499ce6e2b7cc6e and 1226fa392aa4ab1d53db268aa0057759ba17fbe0; retained evidence outputs remain append-only and must not be deleted."
+  },
+  "trust_boundary": "This slice proves deterministic construction and no-overwrite handling for reconciled source-binding packets. It does not prove authenticated GitHub lookup execution, workflow execution, Vercel deployment, runtime behavior, audio audibility, or physical iPhone Safari behavior."
+}
