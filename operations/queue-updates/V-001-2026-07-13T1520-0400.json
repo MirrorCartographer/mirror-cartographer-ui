@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:20:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained manifests and reconciliation bundles now fail closed unless both carry the same valid SHA-256 execution-plan digest as the approved bound plan.",
+  "evidence": "operations/evidence/vercel-retained-plan-binding-2026-07-13T1520-0400.json",
+  "commits": [
+    "de6a2e81c3dfee3a3ccad414274c423bb9fd1eea",
+    "20daa85236eefcd1d805bc0c263d23d6c3b7239b",
+    "971f28f634e7a879c4afb1c80ea50911be0ded31"
+  ],
+  "acceptance_remaining": [
+    "Integrate the verifier into the retained-evidence CLI before bundle persistence.",
+    "Execute authenticated dual enumeration for one exact commit and retain raw outputs plus the reconciled bundle.",
+    "Observe an operations-only sentinel skipped after provider capacity returns.",
+    "Verify exact-commit audio-routing artifact, immutable deployment identity, and bounded physical iPhone Safari audibility."
+  ],
+  "safe_next_action": "Wire verifyVercelRetainedPlanBinding into the committed retained-evidence CLI so persistence and promotion fail closed on a missing or mismatched plan binding; keep deployment disabled until provider capacity and immutable identity are proven.",
+  "preservation": {
+    "canonical_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "files_deleted": false,
+    "history_rewritten": false
+  }
+}
