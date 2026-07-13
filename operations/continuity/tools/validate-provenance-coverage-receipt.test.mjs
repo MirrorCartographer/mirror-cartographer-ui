@@ -24,35 +24,13 @@ const base = () => ({
   reproduction: { steps: ['repeat repository search'], expected_evidence: ['connector result'] }
 });
 
-test('incomplete coverage preserves unresolved claims', () => {
-  assert.equal(validateCoverageReceipt(base()).valid, true);
-});
-
-test('incomplete coverage cannot become unlocated', () => {
-  const item = base();
-  item.claim_transitions[0].next_status = 'unlocated';
-  assert.equal(validateCoverageReceipt(item).valid, false);
-});
-
-test('complete coverage can classify unlocated', () => {
-  const item = base();
-  item.coverage_result = 'complete';
-  item.known_exclusions = [];
-  item.ref_inventory.complete = true;
-  item.history_traversal.complete = true;
-  item.claim_transitions = item.claim_transitions.map(entry => ({ ...entry, next_status: 'unlocated' }));
-  assert.equal(validateCoverageReceipt(item).valid, true);
-});
-
-test('located claims require immutable locators', () => {
-  const item = base();
-  item.coverage_result = 'complete_with_declared_exclusions';
-  item.claim_transitions[1].next_status = 'located';
-  assert.equal(validateCoverageReceipt(item).valid, false);
-});
-
-test('malformed target identifiers are rejected', () => {
-  const item = base();
-  item.target_identifiers = ['M-4'];
-  assert.equal(validateCoverageReceipt(item).valid, false);
-});
+test('incomplete coverage preserves unresolved claims', () => assert.equal(validateCoverageReceipt(base()).valid, true));
+test('incomplete coverage cannot become unlocated', () => { const item = base(); item.claim_transitions[0].next_status = 'unlocated'; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('complete coverage can classify unlocated', () => { const item = base(); item.coverage_result = 'complete'; item.known_exclusions = []; item.ref_inventory.complete = true; item.history_traversal.complete = true; item.claim_transitions = item.claim_transitions.map(entry => ({ ...entry, next_status: 'unlocated' })); assert.equal(validateCoverageReceipt(item).valid, true); });
+test('located claims require immutable locators', () => { const item = base(); item.coverage_result = 'complete_with_declared_exclusions'; item.claim_transitions[1].next_status = 'located'; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('malformed target identifiers are rejected', () => { const item = base(); item.target_identifiers = ['M-4']; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('duplicate target identifiers are rejected', () => { const item = base(); item.target_identifiers = ['M-004', 'M-004']; item.claim_transitions = [item.claim_transitions[0]]; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('duplicate claim transitions are rejected', () => { const item = base(); item.claim_transitions.push({ ...item.claim_transitions[0] }); assert.equal(validateCoverageReceipt(item).valid, false); });
+test('missing target transitions are rejected', () => { const item = base(); item.claim_transitions = item.claim_transitions.slice(0, 2); const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.some(error => error.includes('missing targets: M-006'))); });
+test('undeclared target transitions are rejected', () => { const item = base(); item.claim_transitions.push({ ...item.claim_transitions[0], identifier: 'M-007' }); const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.some(error => error.includes('undeclared targets: M-007'))); });
+test('invalid generated_at timestamps are rejected', () => { const item = base(); item.generated_at = 'not-a-timestamp'; assert.equal(validateCoverageReceipt(item).valid, false); });
