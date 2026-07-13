@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T18:38:26Z",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Demonstrated and recorded that authenticated repository code search can return zero exact-identifier results while an immutable committed object contains the identifier, establishing code search as bounded discovery rather than absence proof.",
+  "evidence": [
+    {
+      "path": "operations/continuity/M-RECONCILE-002-code-search-index-boundary-2026-07-13T1438-0400.json",
+      "commit": "cc0b78d409eb5c2a0e3369d4072d56cc22aeed5a",
+      "evidence_class": "append_only_coverage_boundary"
+    },
+    {
+      "path": "operations/continuity/M-RECONCILE-002-file-library-namespace-rejection-2026-07-13T1219-0400.json",
+      "commit": "83205275e023fccf602127ca4ff1cf3075bd1c26",
+      "evidence_class": "known_positive_immutable_control"
+    }
+  ],
+  "claim_state": {
+    "observed": "Exact repository code search returned no M-004 result while immutable commit 83205275e023fccf602127ca4ff1cf3075bd1c26 contains M-004.",
+    "inferred": "Code-search silence cannot establish absence from committed history.",
+    "proposed": "Use immutable fetches and exhaustive reachable-history traversal for provenance resolution; retain code search only for candidate discovery.",
+    "superseded": "Zero-result code search as historical absence proof.",
+    "unresolved": "Origins of M-004, M-005, and M-006 and the exact endpoint indexing mechanism remain unresolved."
+  },
+  "canonical_queue_mutated": false,
+  "specialist_registry_mutated": false,
+  "privacy_boundary": "Only repository identifiers, paths, commit locators, and abstract coverage metadata were retained; no private chat, uploaded-file body, health data, credentials, or identifying personal content was copied.",
+  "safe_next_action": "Perform complete accessible ref enumeration and reachable commit/tree traversal, using known-positive controls to measure discovery coverage and preserving unresolved status until an originating assignment is immutably located."
+}
