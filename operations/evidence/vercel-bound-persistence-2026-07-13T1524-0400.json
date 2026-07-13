@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:24:00-04:00",
+  "slice": "Require approved execution-plan binding verification before retained manifest and reconciliation bundle persistence.",
+  "files": [
+    "tools/vercel-studio/persist-bound-retained-workflow-evidence.mjs",
+    "tools/vercel-studio/persist-bound-retained-workflow-evidence.test.mjs"
+  ],
+  "verification": {
+    "route": "Node syntax validation against byte-equivalent local copies plus source review against committed retained-evidence builder and binding verifier contracts",
+    "syntax_checks_passed": 2,
+    "contract_tests_added": 4,
+    "contract_tests_executed": false,
+    "execution_limit": "The private repository was not available as an authenticated local checkout in this run, so imported integration tests could not be executed end to end.",
+    "cases_added": [
+      "binds manifest and reconciliation bundle to the approved plan before persistence",
+      "fails closed on malformed approved-plan binding",
+      "writes both retained records once and refuses overwrite",
+      "rejects a shared output path for two logical records"
+    ]
+  },
+  "behavior": {
+    "persistence_allowed_only_when": "approved plan has a valid sha256 binding and the generated retained manifest and reconciliation bundle pass the three-way binding verifier",
+    "write_semantics": "both outputs are created with exclusive no-overwrite handles; partial newly-created outputs are cleaned up if paired persistence fails",
+    "deployment_attempted": false,
+    "payments_or_conversion_added": false
+  },
+  "claim_boundary": [
+    "This source change closes a persistence-ordering seam only.",
+    "It does not prove authenticated workflow enumeration, deployment identity, browser execution, audio audibility, or physical-device acceptance.",
+    "Committed tests exist but are not claimed as executed in this run."
+  ],
+  "rollback": "Revert commit 38ca048dd80b61a64cf4267ff156b2322793fa2a; the test and evidence records may remain as historical provenance."
+}
