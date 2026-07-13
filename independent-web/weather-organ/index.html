@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#101218" />
+  <title>Weather Organ</title>
+  <style>
+    :root{color-scheme:dark;--x:50%;--y:50%;--pressure:50;--wind:0;--veil:.58;--ink:#f4efe6;--night:#101218;--glow:#d7a77a}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--night);color:var(--ink);font-family:Georgia,"Times New Roman",serif;overflow:hidden}
+    body{min-height:100svh;display:grid;place-items:center;background:
+      radial-gradient(circle at var(--x) var(--y),rgba(215,167,122,.22),transparent 28vmax),
+      linear-gradient(145deg,#0c0e13,#171b22 60%,#0d1016)}
+    body::before{content:"";position:fixed;inset:-20%;pointer-events:none;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");mix-blend-mode:screen;animation:drift 18s linear infinite}
+    main{position:relative;width:min(92vw,820px);height:min(82svh,720px);display:grid;place-items:center;isolation:isolate}
+    .orbit{position:absolute;border:1px solid rgba(244,239,230,.22);border-radius:50%;transform:rotate(calc(var(--wind)*1deg));transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+    .orbit.a{width:min(76vw,620px);aspect-ratio:1;animation:breathe 11s ease-in-out infinite}
+    .orbit.b{width:min(54vw,430px);aspect-ratio:1;border-style:dashed;animation:spin 34s linear infinite reverse}
+    .orbit.c{width:min(30vw,240px);aspect-ratio:1;box-shadow:0 0 80px rgba(215,167,122,.15) inset}
+    .needle{position:absolute;width:1px;height:46%;top:4%;left:50%;transform-origin:50% 100%;transform:rotate(calc((var(--pressure) - 50)*2.4deg));background:linear-gradient(transparent,var(--ink));opacity:.68;transition:transform .45s ease-out}
+    .core{z-index:2;width:min(68vw,520px);text-align:center;padding:2rem;backdrop-filter:blur(4px)}
+    h1{font-size:clamp(3rem,10vw,7.2rem);font-weight:400;letter-spacing:-.06em;line-height:.82;margin:0;text-wrap:balance}
+    .reading{margin:1.4rem auto 0;font:600 .75rem/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;opacity:.72}
+    .instruction{max-width:34rem;margin:1rem auto 0;font-size:clamp(.95rem,2vw,1.15rem);line-height:1.55;opacity:.72}
+    button{margin-top:1.6rem;border:1px solid rgba(244,239,230,.4);border-radius:999px;background:rgba(16,18,24,.28);color:inherit;padding:.8rem 1.15rem;font:600 .72rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+    button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+    .status{position:fixed;left:max(1rem,env(safe-area-inset-left));bottom:max(1rem,env(safe-area-inset-bottom));font:500 .66rem/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.52}
+    @keyframes spin{to{transform:rotate(360deg)}}@keyframes breathe{50%{scale:1.04;opacity:.55}}@keyframes drift{to{transform:translate3d(8%,5%,0)}}
+    @media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition-duration:.01ms!important}}
+    @media (prefers-reduced-transparency:reduce){.core{backdrop-filter:none;background:#101218}}
+  </style>
+</head>
+<body>
+  <main id="instrument" aria-label="Weather Organ interactive instrument">
+    <div class="orbit a" aria-hidden="true"></div><div class="orbit b" aria-hidden="true"></div><div class="orbit c" aria-hidden="true"></div><div class="needle" aria-hidden="true"></div>
+    <section class="core">
+      <h1>Weather<br>Organ</h1>
+      <p class="reading" id="reading" aria-live="polite">pressure 50 · wind still</p>
+      <p class="instruction">Move through the field. The page changes pressure, direction, light, and—after activation—tone. Arrow keys offer the same path.</p>
+      <button id="sound" type="button" aria-pressed="false">wake the instrument</button>
+    </section>
+  </main>
+  <div class="status" id="status">local climate · no data leaves this page</div>
+<script>
+(() => {
+  const root=document.documentElement,reading=document.querySelector('#reading'),button=document.querySelector('#sound');
+  let x=.5,y=.5,audio=null,osc=[],gain=null;
+  const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
+  function render(){
+    const pressure=Math.round((1-y)*100),wind=Math.round((x-.5)*180);
+    root.style.setProperty('--x',`${x*100}%`);root.style.setProperty('--y',`${y*100}%`);root.style.setProperty('--pressure',pressure);root.style.setProperty('--wind',wind);
+    reading.textContent=`pressure ${pressure} · wind ${wind===0?'still':`${Math.abs(wind)} ${wind<0?'west':'east'}`}`;
+    if(audio){const base=90+x*110;osc[0].frequency.setTargetAtTime(base,audio.currentTime,.15);osc[1].frequency.setTargetAtTime(base*(1.48+y*.08),audio.currentTime,.15);gain.gain.setTargetAtTime(.018+y*.025,audio.currentTime,.2)}
+  }
+  function setFromPoint(px,py){x=clamp(px/innerWidth,0,1);y=clamp(py/innerHeight,0,1);render()}
+  addEventListener('pointermove',e=>setFromPoint(e.clientX,e.clientY),{passive:true});
+  addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();x=clamp(x+(e.key==='ArrowRight'?.04:e.key==='ArrowLeft'?-.04:0),0,1);y=clamp(y+(e.key==='ArrowDown'?.04:e.key==='ArrowUp'?-.04:0),0,1);render()});
+  button.addEventListener('click',async()=>{
+    if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();gain=audio.createGain();gain.gain.value=.025;gain.connect(audio.destination);osc=[audio.createOscillator(),audio.createOscillator()];osc.forEach((o,i)=>{o.type=i?'triangle':'sine';o.connect(gain);o.start()});button.textContent='quiet the instrument';button.setAttribute('aria-pressed','true');render();return}
+    if(audio.state==='running'){await audio.suspend();button.textContent='wake the instrument';button.setAttribute('aria-pressed','false')}else{await audio.resume();button.textContent='quiet the instrument';button.setAttribute('aria-pressed','true')}
+  });
+  const hour=new Date().getHours();root.style.setProperty('--glow',hour<7||hour>19?'#8d91d8':'#d7a77a');render();
+})();
+</script>
+</body>
+</html>
