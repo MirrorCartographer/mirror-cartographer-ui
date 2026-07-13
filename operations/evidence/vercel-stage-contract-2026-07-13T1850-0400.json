@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T18:50:42-04:00",
+  "slice": "fail-closed repertory stage contract",
+  "production_on_stage": {
+    "hour": 18,
+    "id": "hour-18",
+    "title": "The Rehearsal Room",
+    "grammar": "editable production blocking"
+  },
+  "source_status": {
+    "current_state": "repository default branch",
+    "active_queue": "repository default branch",
+    "repertory_schedule": "repository default branch",
+    "deployment": "not attempted because provider capacity constraint remains active"
+  },
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/stage-contract.mjs",
+    "test": "operations/vercel-studio/repertory/stage-contract.test.mjs",
+    "module_commit": "36763d7dee0b1466417545c47401d1686c6b36c8",
+    "test_commit": "19d1f1f42068998f76b132e38fc8c9b72623be75"
+  },
+  "verified_invariants": [
+    "production belongs to the deterministic schedule",
+    "shared continuity channel cannot be forked",
+    "autoplay remains disabled and media requires a user gesture",
+    "keyboard, screen-reader, and reduced-motion declarations are mandatory",
+    "payments and conversion logic remain disabled",
+    "private source material is prohibited from the public payload",
+    "feature-flag rollback route is encoded"
+  ],
+  "verification": {
+    "command": "node --test stage-contract.test.mjs",
+    "environment": "local Node.js fixture execution",
+    "passed": 5,
+    "failed": 0
+  },
+  "claim_boundary": [
+    "No application code was changed.",
+    "No Vercel deployment was attempted or observed.",
+    "No browser, audio, mobile Safari, or physical-device behavior is claimed.",
+    "The contract is implementation-ready but remains operations-preview-only until explicitly feature-flagged."
+  ],
+  "rollback": {
+    "mode": "revert additive commits",
+    "commits": [
+      "19d1f1f42068998f76b132e38fc8c9b72623be75",
+      "36763d7dee0b1466417545c47401d1686c6b36c8"
+    ]
+  }
+}
