@@ -1,0 +1,24 @@
+name: Vercel evidence execution preflight
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'operations/tools/validate-vercel-evidence-execution-plan.mjs'
+      - 'operations/tools/validate-vercel-evidence-execution-plan.test.mjs'
+      - '.github/workflows/vercel-evidence-execution-preflight.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preflight-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run deterministic contract tests
+        run: node --test operations/tools/validate-vercel-evidence-execution-plan.test.mjs
