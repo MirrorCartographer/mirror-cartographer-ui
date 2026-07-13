@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T17:38:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "retained_evidence_execution_preflight",
+  "source_commits": {
+    "implementation": "a515467297f69edfc55512b12b11712d704051d6",
+    "tests": "0f81db3be9c8ddcf4907a3556963d621fa08ea21",
+    "workflow": "69a4f9093f6d7cb51f7a1e3204969f2842733d17"
+  },
+  "verified_by": [
+    "GitHub immutable source readback",
+    "deterministic Node test contract committed",
+    "GitHub Actions workflow committed"
+  ],
+  "claim_boundary": [
+    "The slice validates only an execution plan before authenticated evidence collection.",
+    "It does not prove tests executed, authentication identity, workflow enumeration completeness, dual-client agreement, deployment identity, browser runtime behavior, audio audibility, or physical-device observation."
+  ],
+  "reversible": true,
+  "canonical_queue_overwritten": false,
+  "payments_or_conversion_added_to_vercel": false,
+  "files_or_history_deleted": false
+}
