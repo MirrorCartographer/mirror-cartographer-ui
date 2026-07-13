@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:41:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The no-overwrite retained-evidence CLI now requires one canonical retention root and verifies the complete five-file retained set, current bytes, and shared plan binding before returning a promotion-capable result.",
+  "files": [
+    "tools/vercel-studio/persist-bound-retained-workflow-evidence.mjs",
+    "tools/vercel-studio/persist-bound-retained-workflow-evidence.manifest-set.test.mjs",
+    "operations/evidence/vercel-retained-cli-integrated-promotion-gate-2026-07-13T1741-0400.json"
+  ],
+  "commits": [
+    "dcfb13232051c4bfbda070e51e52713e2883b4f9",
+    "0819d02e50e4c49be8d54804a486965a6faed6ad",
+    "32aded2e5cc8ca14469389b153b347f48f3a34b4"
+  ],
+  "verification": {
+    "commit_diff_verified": true,
+    "test_vectors_committed": 2,
+    "tests_executed_in_github_actions": false,
+    "vercel_status": "failure_build_rate_limit",
+    "deployment_attempted": false
+  },
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both clients and retain raw outputs plus reconciliation bundle.",
+    "Observe an operations-only sentinel skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the integrated CLI test in an authenticated checkout, then execute both exhaustive enumerators against one exact commit and retain all five canonical files under one new retention root; do not create an application deployment while the build-rate limit remains active.",
+  "rollback": "Revert dcfb13232051c4bfbda070e51e52713e2883b4f9. No destructive history operation is required.",
+  "cross_team_overwrite": false
+}
