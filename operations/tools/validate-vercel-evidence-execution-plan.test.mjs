@@ -9,8 +9,11 @@ function validPlan(overrides = {}) {
   return {
     commit_sha: sha,
     primary_output: 'operations/evidence/raw/primary.json',
+    primary_headers_output: 'operations/evidence/raw/primary.headers.json',
     independent_output: 'operations/evidence/raw/independent.json',
+    independent_headers_output: 'operations/evidence/raw/independent.headers.json',
     retained_command_output: 'operations/evidence/raw/command.txt',
+    rate_limit_proof_output: 'operations/evidence/derived/rate-limit-proof.json',
     bundle_output: 'operations/evidence/bundles/v-001.json',
     command,
     overwrite: false,
@@ -20,21 +23,46 @@ function validPlan(overrides = {}) {
   };
 }
 
-test('accepts a bounded exact-commit repository-bound no-overwrite plan', () => {
+test('accepts a bounded exact-commit repository-bound no-overwrite plan with retained header proof paths', () => {
   const result = validateVercelEvidenceExecutionPlan(validPlan());
   assert.equal(result.ok, true);
   assert.equal(result.execution_permitted, true);
   assert.equal(result.commitSha, sha);
   assert.equal(result.repository, 'MirrorCartographer/mirror-cartographer-ui');
+  assert.equal(result.evidence_class, 'bounded_execution_plan_with_retained_rate_limit_proof');
+  assert.equal(result.outputs.primary_headers, 'operations/evidence/raw/primary.headers.json');
+  assert.equal(result.outputs.independent_headers, 'operations/evidence/raw/independent.headers.json');
+  assert.equal(result.outputs.rate_limit_proof, 'operations/evidence/derived/rate-limit-proof.json');
+  assert.equal(result.retention_contract.raw_response_headers, true);
+  assert.equal(result.retention_contract.dual_client_rate_limit_proof, true);
 });
 
-test('rejects unsafe or duplicate output paths', () => {
+test('rejects missing retained response-header or rate-limit proof paths', () => {
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ primary_headers_output: undefined })).reason,
+    'unsafe_or_missing_output_path',
+  );
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ independent_headers_output: '' })).reason,
+    'unsafe_or_missing_output_path',
+  );
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ rate_limit_proof_output: null })).reason,
+    'unsafe_or_missing_output_path',
+  );
+});
+
+test('rejects unsafe or duplicate output paths across all retained artifacts', () => {
   assert.equal(
     validateVercelEvidenceExecutionPlan(validPlan({ primary_output: '../primary.json' })).reason,
     'unsafe_or_missing_output_path',
   );
   assert.equal(
-    validateVercelEvidenceExecutionPlan(validPlan({ independent_output: 'operations/evidence/raw/primary.json' })).reason,
+    validateVercelEvidenceExecutionPlan(validPlan({ independent_headers_output: 'operations/evidence/raw/primary.headers.json' })).reason,
+    'output_paths_must_be_distinct',
+  );
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ rate_limit_proof_output: 'operations/evidence/bundles/v-001.json' })).reason,
     'output_paths_must_be_distinct',
   );
 });
