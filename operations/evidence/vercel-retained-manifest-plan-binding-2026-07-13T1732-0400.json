@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T17:32:00-04:00",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "retained_manifest_plan_binding_gate",
+  "source_commits": {
+    "implementation": "667020c4062f8b9beed0d7882f1bb463f6d7e0f6",
+    "tests": "a5197b72357e2d5122b195c80789ba8744c08bbb"
+  },
+  "implementation": {
+    "path": "operations/tools/verify-retained-evidence-manifest-set.mjs",
+    "behavior": [
+      "Requires the exact five-file retained evidence set.",
+      "Delegates approved-root, immediate-child, regular-file, non-symlink, and SHA-256 byte verification to existing fail-closed verifiers.",
+      "Requires reconciliation.json and evidence-bundle.json to carry the same approved plan_binding.digest.",
+      "Rejects missing files, extra files, byte mutation, invalid JSON, absent bindings, and binding mismatch before evidence promotion."
+    ]
+  },
+  "verification": {
+    "route": "local deterministic Node test execution against byte-compatible copies of the committed module and its two committed dependencies",
+    "command": "node --test operations/tools/check.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "vectors": [
+      "accept exact byte-verified set with matching plan binding",
+      "reject missing required retained output",
+      "reject reconciliation plan-binding mismatch",
+      "reject byte mutation before trusting embedded binding"
+    ]
+  },
+  "claim_boundary": {
+    "proven": [
+      "The committed source defines a deterministic exact-set and plan-binding gate.",
+      "Four deterministic behavioral vectors passed against byte-compatible source and dependency copies."
+    ],
+    "not_proven": [
+      "Authenticated GitHub enumeration execution",
+      "Enumeration completeness",
+      "GitHub Actions runtime success",
+      "Vercel build or deployment behavior",
+      "Immutable deployment identity",
+      "Browser audio routing",
+      "Physical iPhone Safari audibility"
+    ]
+  },
+  "privacy": "No credentials, secret-bearing logs, private chat, health data, payment logic, or personal identifiers were stored.",
+  "rollback": "Revert implementation commit 667020c4062f8b9beed0d7882f1bb463f6d7e0f6; the additive test and evidence records may remain as history."
+}
