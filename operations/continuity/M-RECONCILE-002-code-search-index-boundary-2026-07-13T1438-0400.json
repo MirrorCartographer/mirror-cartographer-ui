@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T18:38:26Z",
+  "record_type": "search_coverage_boundary",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "purpose": "Preserve the demonstrated difference between repository code-search visibility and immutable commit content so provenance resolution does not mistake index silence for historical absence.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "operations/continuity/M-RECONCILE-002-identifier-search-ledger-2026-07-13T1403-0400.json",
+    "commit 83205275e023fccf602127ca4ff1cf3075bd1c26",
+    "authenticated repository code search for exact identifier M-004"
+  ],
+  "claim_states": {
+    "observed": [
+      "Authenticated repository code search for the exact string M-004 returned zero results during this run.",
+      "Immutable commit 83205275e023fccf602127ca4ff1cf3075bd1c26 contains the exact string M-004 in a committed continuity record."
+    ],
+    "inferred": [
+      "Repository code-search visibility is not complete enough to establish absence from reachable commit history or committed file content.",
+      "Search-index lag, branch scope, indexing policy, or endpoint coverage may explain the discrepancy, but the specific mechanism is unresolved."
+    ],
+    "proposed": [
+      "Classify code-search results as candidate discovery only and require immutable fetch or exhaustive reachable-history traversal before changing a provenance node.",
+      "Retain both the search query and a known-positive immutable control object when evaluating search coverage."
+    ],
+    "superseded": [
+      "Treating a zero-result repository code search as proof that an identifier is absent from the repository's committed history."
+    ],
+    "unresolved": [
+      "The exact indexing scope and freshness guarantees of the authenticated code-search endpoint for this repository.",
+      "The originating immutable objects and assigning contexts for M-004, M-005, and M-006."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "Code search reported no M-004 match while an immutable commit visibly contains M-004.",
+    "resolution": "The two sources answer different coverage questions. The fetched commit proves one committed occurrence; the search endpoint supplies only bounded indexed discovery and cannot negate that occurrence.",
+    "evidence_strength": "high for the demonstrated mismatch; insufficient to identify the search endpoint's internal cause"
+  },
+  "coverage_rule": {
+    "source_class": "authenticated_repository_code_search",
+    "allowed_use": "candidate_discovery",
+    "forbidden_use": "proof_of_absence_or_exhaustive_history",
+    "required_confirmation": [
+      "immutable object fetch",
+      "complete accessible ref inventory",
+      "reachable commit and tree traversal",
+      "coverage-qualified result ledger"
+    ]
+  },
+  "falsification_routes": [
+    "Repeat the exact code search after indexing convergence and show the known-positive committed file is returned.",
+    "Document an official endpoint guarantee proving exhaustive all-ref historical file-body coverage for the query used.",
+    "Perform complete accessible ref and reachable-history traversal and compare all exact identifier occurrences against search results."
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit SHA",
+      "identifier string",
+      "search result count",
+      "coverage classification"
+    ],
+    "excluded": [
+      "private chat text",
+      "raw uploaded-file content",
+      "health or pet-health information",
+      "credentials",
+      "personal identifying details"
+    ],
+    "publication_rule": "Store only repository locator and abstract coverage metadata; do not reproduce private source material."
+  },
+  "claim_ceiling": "This record demonstrates one false-negative relative to a known immutable committed occurrence. It does not establish why indexing differed, quantify the false-negative rate, or complete repository-history coverage.",
+  "next_action": "Use a complete accessible ref inventory and reachable commit/tree traversal as the authoritative repository-history test, retaining code search only as a bounded discovery accelerator."
+}
