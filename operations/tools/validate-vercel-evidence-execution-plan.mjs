@@ -5,13 +5,13 @@ const FORBIDDEN_SECRET_RE = /(authorization:|bearer\s+[a-z0-9._-]+|ghp_[a-z0-9]+
 const FORBIDDEN_SHELL_CONTROL_RE = /(?:^|\s)(?:&&|\|\||;|\||>|>>|<|`|\$\()/;
 const EXPECTED_REPOSITORY = 'MirrorCartographer/mirror-cartographer-ui';
 const OUTPUT_ROUTE_CONTRACT = [
-  { role: 'primary', prefix: 'operations/evidence/raw/', suffix: '.json' },
-  { role: 'primary_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json' },
-  { role: 'independent', prefix: 'operations/evidence/raw/', suffix: '.json' },
-  { role: 'independent_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json' },
-  { role: 'retained_command', prefix: 'operations/evidence/raw/', suffix: '.txt' },
-  { role: 'rate_limit_proof', prefix: 'operations/evidence/derived/', suffix: '.json' },
-  { role: 'bundle', prefix: 'operations/evidence/bundles/', suffix: '.json' },
+  { role: 'primary', prefix: 'operations/evidence/raw/', suffix: '.json', token: 'primary' },
+  { role: 'primary_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json', token: 'primary-headers' },
+  { role: 'independent', prefix: 'operations/evidence/raw/', suffix: '.json', token: 'independent' },
+  { role: 'independent_headers', prefix: 'operations/evidence/raw/', suffix: '.headers.json', token: 'independent-headers' },
+  { role: 'retained_command', prefix: 'operations/evidence/raw/', suffix: '.txt', token: 'command' },
+  { role: 'rate_limit_proof', prefix: 'operations/evidence/derived/', suffix: '.json', token: 'rate-limit-proof' },
+  { role: 'bundle', prefix: 'operations/evidence/bundles/', suffix: '.json', token: 'bundle' },
 ];
 
 function fail(reason, extra = {}) {
@@ -44,6 +44,31 @@ function validateOutputRoutes(outputs) {
         output,
         expectedPrefix: contract.prefix,
         expectedSuffix: contract.suffix,
+      };
+    }
+  }
+  return { ok: true };
+}
+
+function validateOutputIdentity(outputs, commitSha) {
+  for (let index = 0; index < OUTPUT_ROUTE_CONTRACT.length; index += 1) {
+    const contract = OUTPUT_ROUTE_CONTRACT[index];
+    const output = outputs[index];
+    const basename = path.posix.basename(output);
+    if (!basename.includes(commitSha)) {
+      return {
+        ok: false,
+        role: contract.role,
+        output,
+        requiredCommitSha: commitSha,
+      };
+    }
+    if (!basename.includes(contract.token)) {
+      return {
+        ok: false,
+        role: contract.role,
+        output,
+        requiredRoleToken: contract.token,
       };
     }
   }
@@ -106,6 +131,10 @@ export function validateVercelEvidenceExecutionPlan(plan) {
   if (!routeValidation.ok) {
     return fail('output_route_contract_mismatch', { commitSha, ...routeValidation });
   }
+  const identityValidation = validateOutputIdentity(canonicalOutputs, commitSha);
+  if (!identityValidation.ok) {
+    return fail('output_identity_contract_mismatch', { commitSha, ...identityValidation });
+  }
 
   if (typeof command !== 'string' || command.trim() === '') {
     return fail('missing_retained_command', { commitSha });
@@ -133,7 +162,7 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     ok: true,
     reason: 'execution_plan_ready',
     execution_permitted: true,
-    evidence_class: 'bounded_execution_plan_with_typed_canonical_retained_paths',
+    evidence_class: 'bounded_execution_plan_with_commit_bound_typed_paths',
     commitSha,
     repository: EXPECTED_REPOSITORY,
     outputs: {
@@ -153,10 +182,11 @@ export function validateVercelEvidenceExecutionPlan(plan) {
       final_bundle: true,
       outputs_must_be_canonically_distinct: true,
       outputs_must_follow_role_routes: true,
+      output_names_must_bind_commit_and_role: true,
       overwrite_forbidden: true,
     },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct, role-routed paths for raw evidence, derived proof, retained command text, and the final bundle.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct, role-routed, commit-bound paths for raw evidence, derived proof, retained command text, and the final bundle.',
       'Does not prove authentication, workflow-run completeness, response-header authenticity, rate-limit proof acceptance, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
