@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "R-022-EVIDENCE-2026-07-13T1836-0400",
+  "owner": "frontier_research",
+  "queue_item": "R-022",
+  "captured_at": "2026-07-13T22:36:42Z",
+  "finding": "Retained workflow-run response bodies do not by themselves prove the API version, HTTP success, provider request identity, or Link-header chain that produced each page. A complete evidence package should bind those transport facts to exact retained body bytes and fail closed when the chain is broken or truncated.",
+  "primary_sources": [
+    {
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "status": "current_primary_documentation",
+      "observed": "GitHub REST pagination is driven by the response Link header; the next relation may be absent when pagination is complete, and response headers can be retained with --include. The documentation identifies 2026-03-10 as the latest REST API version on the capture date."
+    },
+    {
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api",
+      "status": "current_primary_documentation",
+      "observed": "Requests should specify X-GitHub-Api-Version. Responses include status and headers including ETag, Link, X-GitHub-Api-Version-Selected, and X-GitHub-Request-Id."
+    },
+    {
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs",
+      "status": "current_primary_documentation",
+      "observed": "The repository workflow-runs endpoint supports head_sha filtering, a maximum page size of 100, and up to 1000 results for filtered searches including head_sha."
+    }
+  ],
+  "repository_comparison": {
+    "prior_artifact": "operations/research/frontier-authenticated-evidence-manifest-contract.md",
+    "prior_commit": "4fb142856d239ff1f026acc4f3704d2056b39262",
+    "nonduplication": "The prior artifact defines whole-manifest provenance and raw-output hashing. R-022 adds per-page transport and pagination-chain verification; it does not add another enumeration path."
+  },
+  "implementation": {
+    "module": "tools/frontier-research/github-page-chain-receipt.mjs",
+    "test": "tools/frontier-research/github-page-chain-receipt.test.mjs",
+    "module_commit": "79e9343194388730b28e061aa3e1a04fd161b67f",
+    "test_commit": "dd60b0e85a2f9b0dfa3cd9e8dc8df63e6829dd84"
+  },
+  "verification": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test github-page-receipt.test.mjs",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "coverage": [
+      "valid complete version-bound chain",
+      "selected API version mismatch",
+      "broken Link-header chain",
+      "retained body mutation",
+      "truncated final page",
+      "duplicate provider request identifier"
+    ],
+    "execution_scope": "byte-identical local pre-commit files"
+  },
+  "evidence_strength": "implementation_verified_locally_not_authenticated_provider_verified",
+  "uncertainty": [
+    "No authenticated repository workflow-run page chain was captured in this run.",
+    "Provider headers can change and optional ETag presence is not treated as a completeness requirement.",
+    "A valid transport receipt proves request-chain provenance, not semantic completeness beyond the documented 1000-result ceiling, deployment identity, or physical-device behavior."
+  ],
+  "falsification_route": "Fetch the committed module and test at their exact commits, rerun the tests, then capture authenticated pages with response headers and exact bodies. Reject the receipt if any selected API version differs, any request ID is absent or duplicated, a body hash differs, the next URL does not equal the preceding Link rel=next URL, or the terminal page still advertises rel=next.",
+  "claim_boundary": "transport_and_pagination_receipt_only"
+}
