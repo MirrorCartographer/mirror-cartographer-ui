@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "event_order": "2026-07-13T21:44:00Z/R-022",
+  "item": {
+    "id": "R-022",
+    "owner": "frontier_research",
+    "priority": "highest",
+    "state": "completed_handoff_ready",
+    "objective": "Bind exact-commit GitHub Actions workflow enumeration to an explicit, response-confirmed REST API version and authenticated execution envelope.",
+    "completed_slices": [
+      "Reviewed current GitHub primary documentation for REST API versioning, workflow-run filtering, authentication, provider ceilings, and pagination.",
+      "Implemented a fail-closed execution-envelope validator requiring exact endpoint binding, explicit API version, response confirmation, authenticated Actions-read permission, rate-limit headers, byte-record digest, and absence of deprecation or sunset headers.",
+      "Added six deterministic tests covering valid evidence, unversioned requests, response-version mismatch, deprecation/sunset, provider-ceiling ambiguity, and missing Actions-read permission.",
+      "Recorded source status, evidence strength, uncertainty, design implication, and falsification route in a retained evidence artifact."
+    ],
+    "acceptance_remaining": [
+      "Capture real authenticated response headers and records for one exact commit in the private repository.",
+      "Verify whether x-github-api-version-selected is present in the live response and preserve the observed header set.",
+      "Integrate the validator before R-020/R-021 reconciliation and retained V-001 bundle promotion.",
+      "Retain the raw Link-header pagination chain and reject coverage if the filtered result reaches the documented 1000-result ceiling."
+    ],
+    "safe_next_action": "Run the version-pinned exact-commit request with an authenticated Actions-read token, retain headers and records without credentials, validate the execution envelope, then pass only verified output into the existing dual-enumeration reconciliation path.",
+    "handoff": {
+      "to": ["vercel_studio"],
+      "reason": "V-001 already consumes R-020/R-021 enumeration artifacts; this gate prevents an unversioned or closing API contract from being treated as promotion-quality evidence."
+    }
+  },
+  "files": [
+    "operations/tools/validate-workflow-enumeration-execution-envelope.mjs",
+    "operations/tools/validate-workflow-enumeration-execution-envelope.test.mjs",
+    "operations/evidence/frontier-workflow-api-version-envelope-2026-07-13T1744-0400.json"
+  ],
+  "commits": [
+    "a9eab50275edbb1c69c7d8c385c4b033910bfed3",
+    "6471414509e09bcbfb6b1b1b8eba32706fa2bdad",
+    "c109dd129c29947f3b492ac4548da8e8f6e8b972"
+  ],
+  "registry_change": null
+}
