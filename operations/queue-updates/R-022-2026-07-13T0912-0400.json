@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Fail closed when exact-commit workflow-run evidence may be stale, replayed, captured before the target commit, or duplicated from one transport observation.",
+  "completed_slices": [
+    "Implemented a commit-bound observation freshness gate with explicit age and inter-channel skew limits.",
+    "Rejected observations that predate the target commit, originate in the future, exceed freshness limits, reuse a request identity, reuse retained canonical bytes, or bind to another commit.",
+    "Preserved a claim ceiling of fresh method-diverse observation over one authority; workflow and deployment claims remain forbidden.",
+    "Added five deterministic Node tests covering acceptance, pre-commit capture, staleness, request replay, duplicate retained bytes, and channel skew."
+  ],
+  "artifacts": [
+    {
+      "path": "operations/tools/frontier-observation-freshness-gate.mjs",
+      "commit": "dd9f045fa1aac73ca9ff640a7174fc4409a72f04"
+    },
+    {
+      "path": "operations/tools/frontier-observation-freshness-gate.test.mjs",
+      "commit": "11c5d8314e11ab1c490615b381d87f11447f59f4"
+    },
+    {
+      "path": "operations/evidence/frontier-observation-freshness-gate-2026-07-13T0912-0400.json",
+      "commit": "787d2a1f439e549cdbfb25d5e966552b592bc3ad"
+    }
+  ],
+  "acceptance_remaining": [
+    "Execute the committed tests in a clean checkout and retain exact stdout, Node version, operating system, source commit, and exit status.",
+    "Capture request identity and canonical byte digest in both authenticated enumeration envelopes.",
+    "Integrate the gate after retained-byte verification and enumeration reconciliation but before the Vercel commit-bound evidence assessor.",
+    "Choose and document trusted clock, maximum age, and maximum skew policy values for the authenticated workflow."
+  ],
+  "safe_next_action": "Run node --test operations/tools/frontier-observation-freshness-gate.test.mjs in a clean checkout, retain the result, then wire assessObservationFreshness between reconciliation and the Vercel evidence assessor without changing deployment acceptance semantics.",
+  "source_status": "primary documentation identified; implementation committed; hosted execution unverified",
+  "uncertainty": "Distinct request and byte identities reduce replay risk but do not create independent source authority.",
+  "falsification_route": "Feed semantically agreeing but stale, pre-commit, future-dated, shared-request, identical-byte, cross-commit, or excessive-skew observations and require rejection.",
+  "canonical_queue_overwritten": false
+}
