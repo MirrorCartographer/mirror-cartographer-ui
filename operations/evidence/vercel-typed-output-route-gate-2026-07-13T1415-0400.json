@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T14:15:00-04:00",
+  "slice": "typed retained-evidence output routes",
+  "problem": "Canonical path distinctness alone allowed raw enumerations, response headers, retained command text, derived rate-limit proof, and final bundles to be assigned to the wrong evidence directories or file types.",
+  "change": {
+    "source_commit": "34fb077a19f1485eaa5e5b7cc705a6dfb7659e0d",
+    "test_commit": "1b69da719e3e33b467e816add0c13ad9098810a5",
+    "source_path": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "test_path": "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+    "rules": [
+      "raw enumerations and response headers must remain under operations/evidence/raw/",
+      "response-header artifacts must end in .headers.json",
+      "retained command text must end in .txt",
+      "derived rate-limit proof must remain under operations/evidence/derived/",
+      "final bundle must remain under operations/evidence/bundles/",
+      "directory-only output paths are rejected",
+      "all prior canonical distinctness, no-overwrite, exact-commit, repository, command, pagination, secret, and no-deployment gates remain active"
+    ]
+  },
+  "verification": {
+    "exact_commit_readback": true,
+    "workflow_runs_returned": 0,
+    "test_execution_claimed": false,
+    "deployment_attempted": false,
+    "deployment_identity_claimed": false,
+    "browser_behavior_claimed": false,
+    "audio_audibility_claimed": false
+  },
+  "reversibility": {
+    "revert_order": [
+      "1b69da719e3e33b467e816add0c13ad9098810a5",
+      "34fb077a19f1485eaa5e5b7cc705a6dfb7659e0d"
+    ],
+    "history_deletion_required": false
+  },
+  "constraints_preserved": [
+    "No payments or conversion logic were added to Vercel.",
+    "No GitHub files or history were deleted.",
+    "No deployment or peer execution is claimed without evidence.",
+    "The canonical shared queue was not overwritten."
+  ]
+}
