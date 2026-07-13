@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>The Night Office for Lost Weather</title>
+<style>
+:root{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#111;color:#f1ead7;--line:#807866;--panel:#1a1916;--glow:#d8c389}*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(circle at 50% 12%,#29251b 0,#151411 42%,#0c0c0b 100%);display:grid;place-items:center;padding:clamp(1rem,4vw,3rem)}main{width:min(760px,100%);border:1px solid var(--line);background:linear-gradient(145deg,#1d1b17,#12110f);box-shadow:0 30px 80px #0008;padding:clamp(1rem,4vw,2.5rem)}header{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:1rem}.kicker{letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;color:#b9ae92}h1{font-size:clamp(1.35rem,4vw,2.5rem);line-height:1.05;margin:.35rem 0 0;max-width:16ch}.stamp{border:1px solid var(--line);padding:.45rem .6rem;font-size:.7rem;transform:rotate(2deg)}.console{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.45fr);gap:1.25rem;padding-top:1.25rem}.screen{min-height:300px;border:1px solid var(--line);padding:1.25rem;background:repeating-linear-gradient(0deg,#141510 0 2px,#11120e 2px 4px);position:relative;overflow:hidden}.screen:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 49%,#fff1 50%,transparent 51%);background-size:100% 8px;pointer-events:none;animation:scan 8s linear infinite}.label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#a9a083}.transmission{margin:2rem 0 0;font-family:Georgia,serif;font-size:clamp(1.3rem,4vw,2.2rem);line-height:1.25;text-wrap:balance}.coordinates{position:absolute;bottom:1rem;left:1.25rem;font-size:.72rem;color:#9b927d}.controls{display:grid;gap:1rem;align-content:start}.dial{border:1px solid var(--line);padding:1rem;background:var(--panel)}label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}input[type=range]{width:100%;accent-color:var(--glow)}button{width:100%;font:inherit;border:1px solid var(--line);background:#242118;color:inherit;padding:.85rem;cursor:pointer}button:hover,button:focus-visible{outline:2px solid var(--glow);outline-offset:2px}.status{font-size:.76rem;line-height:1.5;color:#bdb49f;border-top:1px solid var(--line);padding-top:1rem}.lamp{display:inline-block;width:.7em;height:.7em;border-radius:50%;background:#786f5a;margin-right:.45em;box-shadow:0 0 0 transparent}.lamp.on{background:#e7ce83;box-shadow:0 0 16px #e7ce83}.footer{margin-top:1.25rem;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#8d856f}@keyframes scan{to{transform:translateY(8px)}}@media(max-width:620px){.console{grid-template-columns:1fr}.screen{min-height:260px}.stamp{display:none}}@media(prefers-reduced-motion:reduce){.screen:after{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<header><div><div class="kicker">Municipal frequency 7B</div><h1>The Night Office for Lost Weather</h1></div><div class="stamp">AFTER-HOURS<br>RECEPTION</div></header>
+<section class="console" aria-labelledby="transmission-label">
+<div class="screen" aria-live="polite"><div class="label" id="transmission-label">Recovered transmission</div><p class="transmission" id="transmission"></p><div class="coordinates" id="coordinates"></div></div>
+<div class="controls">
+<div class="dial"><label for="frequency">Frequency</label><input id="frequency" type="range" min="0" max="11" value="4" step="1"><div class="status" id="frequency-readout">04 / 11</div></div>
+<button id="receive" type="button">Receive next condition</button>
+<button id="audio" type="button" aria-pressed="false"><span class="lamp" id="lamp"></span>Enable signal tone</button>
+<div class="status" id="status">Line open. No account required. Sound remains off until enabled.</div>
+</div>
+</section>
+<div class="footer">Archive class: unrealized atmosphere · public terminal</div>
+</main>
+<script>
+const reports=[
+"A snowfall intended for a kitchen window has been circling the county since 1988.",
+"Thunder arrived at the empty cinema after the last seat had been removed.",
+"A warm front remembers the shape of a coat nobody owns anymore.",
+"Fog is waiting beneath the bridge for a town that changed its name.",
+"One square mile of August has been found inside a closed department store.",
+"Rain addressed to a red bicycle was returned without explanation.",
+"A north wind has kept the smell of cut grass in sealed custody.",
+"Lightning rehearsed over the quarry but declined to appear in public.",
+"The first frost missed its train and is sleeping in the signal house.",
+"A small blue storm continues to ask for the room above the bakery.",
+"Heat from an abandoned dance hall is moving slowly toward the coast.",
+"Cloud cover belonging to no recorded afternoon has entered the district."
+];
+const frequency=document.querySelector('#frequency');const output=document.querySelector('#transmission');const coordinates=document.querySelector('#coordinates');const readout=document.querySelector('#frequency-readout');const status=document.querySelector('#status');let context=null,oscillator=null,gain=null;
+function render(index){const i=Number(index);output.textContent=reports[i];coordinates.textContent=`SECTOR ${String((i*7+13)%97).padStart(2,'0')} · ${String(310+i*9).padStart(3,'0')} kHz`;readout.textContent=`${String(i).padStart(2,'0')} / 11`;if(oscillator)oscillator.frequency.setTargetAtTime(160+i*13,context.currentTime,.04)}
+frequency.addEventListener('input',e=>render(e.target.value));
+document.querySelector('#receive').addEventListener('click',()=>{frequency.value=(Number(frequency.value)+1)%12;render(frequency.value);status.textContent='Condition received and held for local inspection.'});
+document.querySelector('#audio').addEventListener('click',async e=>{if(!context){context=new AudioContext();oscillator=context.createOscillator();gain=context.createGain();gain.gain.value=.025;oscillator.type='sine';oscillator.frequency.value=160+Number(frequency.value)*13;oscillator.connect(gain).connect(context.destination);oscillator.start();e.currentTarget.setAttribute('aria-pressed','true');document.querySelector('#lamp').classList.add('on');status.textContent='Signal tone enabled by user gesture.'}else{await context.close();context=null;oscillator=null;gain=null;e.currentTarget.setAttribute('aria-pressed','false');document.querySelector('#lamp').classList.remove('on');status.textContent='Signal tone disabled.'}});
+render(frequency.value);
+</script>
+</body>
+</html>
