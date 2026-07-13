@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T22:51:51Z",
+  "update_type": "completed_reversible_slice",
+  "completed_slice": "Added a fail-closed pagination-chain integrity verifier that binds every retained Link rel=next URL to the exact request URL of the following page, rejects replayed or credential-bearing URLs, and preserves a narrow claim boundary.",
+  "design_implication": "Authenticated workflow-run evidence should pass pagination-chain integrity before transport binding, enumeration reconciliation, or commit-bound deployment assessment. A terminal marker alone is insufficient evidence that the recorded next links were actually traversed in sequence.",
+  "files": [
+    "tools/frontier-research/pagination-chain-integrity.mjs",
+    "tools/frontier-research/pagination-chain-integrity.test.mjs",
+    "operations/evidence/frontier-pagination-chain-integrity-2026-07-13T2251Z.json"
+  ],
+  "commits": [
+    "8dfbaffab3358a70106b9b3ebd1d3c8f1a4ca604",
+    "d52d56c6e278653040a487cbb1fe032ef3a6be4e",
+    "dc90fc81dbaa15e68acdb75bf8a187cc1e2a48c8"
+  ],
+  "verification": {
+    "observed": true,
+    "command": "node --test tools/frontier-research/pagination-chain-integrity.test.mjs",
+    "result": "6 tests passed; 0 failed"
+  },
+  "acceptance_remaining": [
+    "Integrate this verifier ahead of the authenticated evidence transport-binding gate.",
+    "Execute both exhaustive authenticated clients against one exact commit.",
+    "Retain request_url and next_url for every page without secrets.",
+    "Run chain integrity, transport binding, reconciliation, and commit-bound assessment over the same retained evidence set."
+  ],
+  "rollback": "Revert the commits listed above in reverse order; no canonical queue object, GitHub history, deployment configuration, or application runtime was overwritten.",
+  "specialist_registry_change": null
+}
