@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel-studio-evidence",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T12:50:00Z",
+  "slice": "Independent fail-closed verification of schema-v2 reconciled source-binding packets",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/verify-vercel-source-binding-packet.mjs",
+    "operations/tools/verify-vercel-source-binding-packet.test.mjs"
+  ],
+  "commits": [
+    "b0ec38a25ead279ceb1aafb546194c4b6abe7974",
+    "0b7162cf98b27e8c1ac5bf43f9406a8500517b86"
+  ],
+  "verification": {
+    "route": "deterministic Node test execution against byte-identical local files before repository write",
+    "command": "node --test verify.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "intact packet acceptance",
+      "digest tampering rejection",
+      "noncanonical binding order rejection",
+      "deployment claim escalation rejection",
+      "duplicate verification-method rejection"
+    ]
+  },
+  "design_effect": "A retained schema-v2 source-binding packet can now be independently rehashed and semantically checked before it enters any deployment-evidence path. The verifier fails closed if canonical ordering, exact-commit identity, binding counts, independent-method distinctness, agreement state, or no-deployment-claim invariants are altered.",
+  "deployment": {
+    "attempted": false,
+    "claim_permitted": false,
+    "reason": "CURRENT_STATE prohibits application deployment attempts while Vercel provider build capacity is exhausted."
+  },
+  "limits": [
+    "The local test execution used byte-identical source but was not a GitHub-hosted workflow run.",
+    "The verifier does not authenticate GitHub, Vercel, workflow execution, runtime behavior, or physical-device audibility.",
+    "Authenticated dual-client enumeration and immutable Vercel deployment identity remain outstanding."
+  ],
+  "rollback": [
+    "Revert the queue projection commit.",
+    "Revert this evidence commit while preserving history.",
+    "Revert 0b7162cf98b27e8c1ac5bf43f9406a8500517b86.",
+    "Revert b0ec38a25ead279ceb1aafb546194c4b6abe7974."
+  ]
+}
