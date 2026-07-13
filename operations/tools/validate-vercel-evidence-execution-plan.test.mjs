@@ -23,13 +23,13 @@ function validPlan(overrides = {}) {
   };
 }
 
-test('accepts a bounded exact-commit repository-bound no-overwrite plan with commit-bound typed paths', () => {
+test('accepts a bounded exact-commit repository-bound no-overwrite plan with canonical commit-bound typed paths', () => {
   const result = validateVercelEvidenceExecutionPlan(validPlan());
   assert.equal(result.ok, true);
   assert.equal(result.execution_permitted, true);
   assert.equal(result.commitSha, sha);
   assert.equal(result.repository, 'MirrorCartographer/mirror-cartographer-ui');
-  assert.equal(result.evidence_class, 'bounded_execution_plan_with_commit_bound_typed_paths');
+  assert.equal(result.evidence_class, 'bounded_execution_plan_with_canonical_commit_bound_typed_paths');
   assert.equal(result.outputs.primary_headers, `operations/evidence/raw/${sha}-primary-headers.headers.json`);
   assert.equal(result.outputs.independent_headers, `operations/evidence/raw/${sha}-independent-headers.headers.json`);
   assert.equal(result.outputs.rate_limit_proof, `operations/evidence/derived/${sha}-rate-limit-proof.json`);
@@ -37,7 +37,7 @@ test('accepts a bounded exact-commit repository-bound no-overwrite plan with com
   assert.equal(result.retention_contract.dual_client_rate_limit_proof, true);
   assert.equal(result.retention_contract.outputs_must_be_canonically_distinct, true);
   assert.equal(result.retention_contract.outputs_must_follow_role_routes, true);
-  assert.equal(result.retention_contract.output_names_must_bind_commit_and_role, true);
+  assert.equal(result.retention_contract.output_names_must_match_canonical_commit_role_basename, true);
 });
 
 test('normalizes safe output paths before returning the execution plan', () => {
