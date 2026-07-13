@@ -25,6 +25,23 @@ export function validateCoverageReceipt(receipt) {
   if (!Array.isArray(receipt.known_exclusions)) errors.push('known_exclusions must be an array');
   if (!Array.isArray(receipt.claim_transitions) || receipt.claim_transitions.length === 0) errors.push('claim_transitions must be a non-empty array');
 
+  const refComplete = receipt.ref_inventory?.complete === true;
+  const historyComplete = receipt.history_traversal?.complete === true;
+  const exclusions = Array.isArray(receipt.known_exclusions) ? receipt.known_exclusions : [];
+  if (coverage === 'complete') {
+    if (!refComplete) errors.push('complete coverage requires complete ref inventory');
+    if (!historyComplete) errors.push('complete coverage requires complete history traversal');
+    if (exclusions.length !== 0) errors.push('complete coverage forbids known exclusions');
+  }
+  if (coverage === 'complete_with_declared_exclusions') {
+    if (!refComplete) errors.push('complete_with_declared_exclusions requires complete ref inventory');
+    if (!historyComplete) errors.push('complete_with_declared_exclusions requires complete history traversal');
+    if (exclusions.length === 0) errors.push('complete_with_declared_exclusions requires at least one known exclusion');
+  }
+  if (coverage === 'incomplete' && refComplete && historyComplete && exclusions.length === 0) {
+    errors.push('incomplete coverage contradicts complete ref and history traversal without exclusions');
+  }
+
   const transitionIds = [];
   for (const transition of receipt.claim_transitions ?? []) {
     if (!/^M-[0-9]{3}$/.test(transition.identifier ?? '')) errors.push('claim transition identifier is invalid');
