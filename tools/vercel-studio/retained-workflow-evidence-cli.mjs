@@ -9,9 +9,22 @@ function parseArgs(argv) {
     const key = argv[index];
     const value = argv[index + 1];
     if (!key?.startsWith('--') || value === undefined) throw new TypeError('arguments_must_be_flag_value_pairs');
-    values.set(key.slice(2), value);
+    const name = key.slice(2);
+    if (values.has(name)) throw new TypeError(`duplicate_argument:${name}`);
+    values.set(name, value);
   }
   return values;
+}
+
+function requireIsoTimestamp(value, label) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(value)) {
+    throw new TypeError(`${label}_timestamp_invalid`);
+  }
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed) || new Date(parsed).toISOString().slice(0, 19) !== value.slice(0, 19)) {
+    throw new TypeError(`${label}_timestamp_invalid`);
+  }
+  return value;
 }
 
 async function readJson(path, label) {
@@ -38,6 +51,13 @@ export async function buildRetainedWorkflowEvidence({
   generatedAt = new Date().toISOString()
 }) {
   if (!/^[0-9a-f]{40}$/i.test(commitSha || '')) throw new TypeError('invalid_commit_sha');
+  const validatedPrimaryRetrievedAt = requireIsoTimestamp(primaryRetrievedAt, 'primary_retrieved_at');
+  const validatedGhRetrievedAt = requireIsoTimestamp(ghRetrievedAt, 'gh_retrieved_at');
+  const validatedGeneratedAt = requireIsoTimestamp(generatedAt, 'generated_at');
+  if (Date.parse(validatedGeneratedAt) < Date.parse(validatedPrimaryRetrievedAt) || Date.parse(validatedGeneratedAt) < Date.parse(validatedGhRetrievedAt)) {
+    throw new TypeError('generated_at_precedes_source_retrieval');
+  }
+
   const [primary, ghPages, ghCommandText] = await Promise.all([
     readJson(primaryPath, 'primary'),
     readJson(ghPagesPath, 'gh_pages'),
@@ -53,13 +73,13 @@ export async function buildRetainedWorkflowEvidence({
     primary,
     primarySource: {
       method: 'repository_api_link_pagination',
-      retrieved_at: primaryRetrievedAt,
+      retrieved_at: validatedPrimaryRetrievedAt,
       pages_fetched: primary.pagesFetched ?? null
     },
     ghPages,
     ghCommand,
-    ghRetrievedAt,
-    generatedAt
+    ghRetrievedAt: validatedGhRetrievedAt,
+    generatedAt: validatedGeneratedAt
   });
 }
 
