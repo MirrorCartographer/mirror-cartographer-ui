@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "event_id": "M-RECONCILE-002-2026-07-13T1743-0400",
+  "event_order": "2026-07-13T21:43:51Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "operation": "append_completed_slice",
+  "state": "in_progress",
+  "completed_slice": "Classified exact M-004, M-005, and M-006 zero-result connector searches as coverage_unavailable because repository code search is reported unindexed; preserved all three identifiers as unresolved rather than absent.",
+  "evidence": [
+    "operations/continuity/records/CM-1009.json",
+    "MirrorCartographer/mirror-cartographer-ui#is_code_search_indexed=false",
+    "repository-scoped exact searches for M-004, M-005, and M-006"
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive authenticated branch, refs, tree, and commit-history traversal or equivalent complete repository object inventory.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Use an authenticated retained Git traversal or complete refs/tree API path; annotate every negative lookup with indexing and coverage status, and do not infer absence from connector search while code indexing is unavailable.",
+  "authoritative": false,
+  "reversible": true,
+  "privacy_class": "operational_metadata_only"
+}
