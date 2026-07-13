@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T10:43:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound every retained pipeline and verifier source proof to the exact receipt target commit, an approved immutable lookup method, and a UTC verification timestamp; added deterministic fail-closed coverage.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-retained-evidence-chain-receipt.mjs",
+    "operations/tools/vercel-retained-evidence-chain-receipt.test.mjs",
+    "operations/evidence/vercel-source-proof-exact-commit-binding-2026-07-13T0643-0400.json"
+  ],
+  "commits": [
+    "cdf909bf6c65f1386cea4f954a6df7be9b919086",
+    "e850e0d234ea97313cc4ab810028078836104ffa",
+    "362dc34c0f51b5f692b8ee547b9c67cfc6e4baf0"
+  ],
+  "verification": {
+    "result": "10 deterministic Node tests passed; 0 failed",
+    "deployment_attempted": false,
+    "deployment_claim_permitted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain reconciliation evidence.",
+    "Resolve each declared source binding against authenticated GitHub contents or git ls-tree output at that exact commit.",
+    "Observe operations-only Vercel suppression after provider capacity returns.",
+    "Observe and inspect the exact-commit six-outcome audio-routing artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add an authenticated source-binding resolver that obtains blob SHAs from GitHub contents-at-ref and git ls-tree for one exact commit, compares both methods, and feeds only agreeing bindings into the retained evidence chain; keep application deployment disabled until provider capacity and immutable identity are verified.",
+  "shared_state_policy": "Projection only; operations/ACTIVE_QUEUE.json was not overwritten."
+}
