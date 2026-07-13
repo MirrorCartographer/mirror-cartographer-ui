@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "event_order": "2026-07-13T15:04:44-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed gate requiring the validated execution plan, retained raw-output manifest, and reconciliation bundle to declare one identical SHA-256 plan binding before evidence promotion.",
+  "evidence": {
+    "implementation_commit": "1fe8554ee4809b6a82c8d3647113598f977e2ebb",
+    "test_commit": "805368b2deff0dc8ca24d574cc060bb9344bfa13",
+    "evidence_commit": "44d06f3224083c934f31f0b3102fdbe7daa7c02c",
+    "tests_passed": 5,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Integrate the binding-chain gate into the retained-evidence CLI output path so manifests and bundles are emitted with the validated digest.",
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain both raw outputs plus the bound reconciliation bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Wire verify-vercel-evidence-plan-binding-chain.mjs into the retained-evidence CLI after plan validation and before bundle promotion; preserve no-overwrite behavior and do not attempt application deployment until capacity returns."
+}
