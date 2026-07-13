@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "recorded_at": "2026-07-13T18:11:00-04:00",
+  "queue_items": ["R-020", "R-021"],
+  "source_status": {
+    "github_pagination_docs": {
+      "type": "primary_current_documentation",
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "api_version_displayed": "2026-03-10",
+      "observed_claims": [
+        "The Link response header supplies URLs for additional result pages.",
+        "Clients may use the supplied next URL directly.",
+        "per_page is automatically carried into Link URLs when supported."
+      ]
+    },
+    "workflow_runs_docs": {
+      "type": "primary_current_documentation",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs#list-workflow-runs-for-a-repository",
+      "api_version_displayed": "2026-03-10"
+    },
+    "prior_artifact": {
+      "path": "operations/tools/validate-workflow-page-chain.mjs",
+      "commit": "dd8c8b7ee0ee008c6c9ac520dce393fb5b214432",
+      "status": "implemented_prior_work"
+    }
+  },
+  "finding": {
+    "status": "observed_and_derived",
+    "statement": "Raw-string equality for GitHub pagination continuation URLs is stricter than the documented continuation contract and can reject semantically equivalent URLs when query parameters are reordered.",
+    "evidence_strength": "moderate",
+    "uncertainty": "GitHub documentation defines Link URLs as usable continuations but does not promise stable query-parameter ordering.",
+    "non_duplication": "Prior work validated exact raw URLs, Link chaining, API version confirmation, request IDs, record IDs, and body digests. This slice addresses semantic URL equivalence while retaining fail-closed endpoint and filter constraints."
+  },
+  "artifact": {
+    "path": "operations/tools/validate-workflow-pagination-url.mjs",
+    "commit": "63131ed9765a378f83b741d601579b9c9391663c",
+    "test_path": "operations/tools/validate-workflow-pagination-url.test.mjs",
+    "test_commit": "e33175ae734eecddaa2bd64bf2c6f078a83576d6",
+    "design": "Parse the URL structurally; accept query-order differences only; require HTTPS api.github.com, exact repository workflow-runs path, exactly one head_sha/per_page/page parameter, exact commit, page, and page size; reject extras, duplicates, userinfo, fragments, origin drift, and path drift."
+  },
+  "verification": {
+    "runtime": "Node.js local isolated execution",
+    "result": "8 passed, 0 failed",
+    "cases": [
+      "canonical ordering accepted",
+      "reordered equivalent parameters accepted",
+      "extra filter rejected",
+      "duplicate page rejected",
+      "cross-commit continuation rejected",
+      "different origin rejected",
+      "encoded path drift rejected",
+      "fragment rejected"
+    ]
+  },
+  "falsification_route": [
+    "Capture an authenticated GitHub workflow-runs Link header for an exact commit and test every next URL against the validator.",
+    "Falsify the design if GitHub emits a required continuation parameter outside head_sha, per_page, and page for this endpoint.",
+    "Falsify the implementation if two URLs with different endpoint semantics both canonicalize as verified."
+  ],
+  "limits": [
+    "No authenticated live Link header was captured in this run.",
+    "The artifact is not yet integrated into validate-workflow-page-chain.mjs.",
+    "Passing unit tests do not prove GitHub provider behavior."
+  ]
+}
