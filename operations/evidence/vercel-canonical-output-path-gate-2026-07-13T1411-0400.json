@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:11:00-04:00",
+  "slice": "canonical_output_path_collision_gate",
+  "problem": "The retained-evidence preflight compared output path strings before canonicalization, so syntactically different aliases could resolve to the same artifact path.",
+  "implementation": {
+    "source_commit": "8f052bfe22d667c80f16fb41d9947a8aae25fa26",
+    "test_commit": "7f928c8f77f6f258def1056b9d1ef945cb5c3c8c",
+    "source_path": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "test_path": "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+    "behavior": [
+      "Normalize path separators and dot segments before distinctness checks.",
+      "Reject canonical collisions across all seven retained output paths.",
+      "Return canonical paths in accepted execution plans.",
+      "Preserve no-overwrite, no-deployment, exact-commit, repository, command, and secret-boundary checks."
+    ]
+  },
+  "verification": {
+    "exact_commit_readback": true,
+    "readback_commit": "7f928c8f77f6f258def1056b9d1ef945cb5c3c8c",
+    "workflow_runs_observed": 0,
+    "tests_executed": false,
+    "tests_passed_claimed": false,
+    "deterministic_cases_added": [
+      "safe path normalization",
+      "exact duplicate rejection",
+      "dot-segment alias rejection",
+      "backslash versus slash alias rejection"
+    ]
+  },
+  "claim_boundary": [
+    "This proves the source and tests exist at the cited commit and that the preflight now fails closed on canonical path collisions.",
+    "This does not prove test execution, authenticated evidence enumeration, Vercel deployment identity, browser behavior, audio audibility, or physical-device observation."
+  ],
+  "rollback": {
+    "strategy": "Revert commits 7f928c8f77f6f258def1056b9d1ef945cb5c3c8c and 8f052bfe22d667c80f16fb41d9947a8aae25fa26.",
+    "data_loss": false
+  }
+}
