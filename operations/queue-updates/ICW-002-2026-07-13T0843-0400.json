@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "ICW-002",
+  "owner": "independent_creative_web",
+  "priority": "highest observed independent identity work",
+  "state": "implemented_source_verified_runtime_pending",
+  "objective": "Make Matchbox Weather a complete touch, keyboard, reduced-motion, and optional-audio instrument without coupling it to Mirror Cartographer.",
+  "completed_slices": [
+    "Added four explicit touch-operable climate selectors with pressed-state semantics.",
+    "Added keyboard mode cycling, focus treatment, clear behavior, and live status announcements.",
+    "Kept sound user-initiated and added reduced-motion particle suppression.",
+    "Added a deterministic Node source-contract test covering interaction, accessibility, independence, network absence, and commerce absence.",
+    "Retained source-bound evidence without overwriting the canonical active queue."
+  ],
+  "artifact_commit": "2e453582961e90a77cf0b833f0a4bf278f1b8750",
+  "contract_commit": "9d0347d62d7d00fa840fb9e259e3b44a1d7c033f",
+  "evidence_commit": "1fd1a784c19242104cc3f6cf95e8264a6aa2ceda",
+  "acceptance_remaining": [
+    "Execute node --test independent-creative-web/matchbox-weather/source-contract.test.mjs in a clean checkout and retain output.",
+    "Render desktop and narrow touch viewports and retain screenshots.",
+    "Verify pointer capture, keyboard behavior, reduced-motion behavior, and optional audio in browsers.",
+    "Obtain independent public hosting evidence when provider capacity permits."
+  ],
+  "safe_next_action": "Run the committed source contract and a bounded browser harness against the exact artifact commit; do not claim public deployment or physical-device behavior without retained evidence.",
+  "state_update_policy": "append_only_no_canonical_queue_overwrite"
+}
