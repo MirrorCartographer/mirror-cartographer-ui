@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel-studio-evidence",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T10:47:00-04:00",
+  "slice": "Retained fresh-evidence receipt replay verifier",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "implementation": {
+    "producer_update": "operations/tools/vercel-fresh-evidence-receipt.mjs now retains target commit time and freshness/skew limits required for deterministic replay.",
+    "verifier": "operations/tools/verify-vercel-fresh-evidence-receipt.mjs re-hashes all retained source files, enforces claim ceilings, replays the assessment, and rejects divergence.",
+    "tests": "operations/tools/verify-vercel-fresh-evidence-receipt.test.mjs covers unchanged evidence, post-write source mutation, stored-assessment tampering, and deployment-claim elevation."
+  },
+  "commits": [
+    "a8d83480da3364c68bf109e89f7c10649bea46b0",
+    "80d5ad2d065f53f5d091eda5a6e9e0824920a763",
+    "a7a8b7aab93d7ba59df1ad8d21e99a9fadba17eb",
+    "b85c59894c5bb0da2b9343984b549495f70d2154",
+    "28c2f67bbc474ad23a016c58236839587c6e0a00"
+  ],
+  "verification": {
+    "source_fetch": "Committed verifier was fetched from the repository after write.",
+    "commit_diff": "Final fail-closed correction was fetched by immutable commit SHA and confirmed to replace conditional replay with reasons.length === 0.",
+    "runtime_test_status": "not_executed_in_this_run",
+    "runtime_test_limit": "The execution environment could not resolve github.com and no authenticated repository checkout was available. Test files are committed but no passing runtime result is claimed."
+  },
+  "claims": {
+    "application_deployment_attempted": false,
+    "deployment_verified": false,
+    "audio_verified": false,
+    "physical_device_verified": false,
+    "payment_or_conversion_logic_added": false
+  },
+  "rollback": "Revert the five listed commits in reverse order. No deployment, migration, file deletion, or history rewrite occurred.",
+  "next_action": "Run both receipt test files in an authenticated clean checkout, then use the verifier on the first newly retained exact-commit reconciliation receipt before downstream workflow-outcome assessment."
+}
