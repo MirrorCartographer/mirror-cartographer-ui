@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-PROV-001",
+  "slice": "Bind reported GitHub object verification into Cloudflare research evidence ingestion before promotion.",
+  "source_commits": {
+    "reported_object_verifier": "453360de1f7b952c22775e3c88bab9fa11bce042",
+    "pages_evidence_verifier": "bf5540f17d43e6cb0f0461dd657ac87ab272cbe1",
+    "ingestion_binding": "eebfe18f424ea04383e0af57ced3b850c7442098",
+    "test_contract": "13d033980f24ec5fc3b4d27dad2dca914ee611d1"
+  },
+  "verification": {
+    "command": "node --test cloudflare-static/ingest-research-evidence.test.mjs",
+    "execution_mode": "local exact-copy verification of committed source and dependencies",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "verified_behaviors": [
+      "Malformed packets fail closed.",
+      "Any unverified reported repository object blocks promotion before Pages evidence evaluation.",
+      "Valid object provenance cannot bypass rejected Pages evidence.",
+      "Promotion is permitted only when both object provenance and Pages evidence pass.",
+      "Acceptance never establishes scientific truth."
+    ]
+  },
+  "claims": {
+    "source_behavior_verified": true,
+    "cloudflare_deployment_verified": false,
+    "network_behavior_verified": false,
+    "scientific_truth_established": false,
+    "diagnosis_or_treatment_claimed": false
+  },
+  "privacy_boundary": {
+    "status": "passed",
+    "included": [
+      "repository paths",
+      "commit identifiers",
+      "abstract verification outcomes",
+      "test counts"
+    ],
+    "excluded": [
+      "credentials",
+      "private chat content",
+      "health or pet-health material",
+      "identity-bearing research records"
+    ]
+  },
+  "limits": [
+    "The test was not executed in GitHub Actions.",
+    "No Cloudflare Pages deployment was created or inspected in this slice.",
+    "The verifier trusts the supplied authenticated observation envelope; observation acquisition remains a separate responsibility.",
+    "An empty reported_objects list is explicit and accepted only when the independent Pages evidence verifier passes."
+  ]
+}
