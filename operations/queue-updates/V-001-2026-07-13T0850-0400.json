@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T12:50:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added an independent fail-closed verifier for schema-v2 reconciled source-binding packets, including canonical digest recomputation and semantic invariant checks before deployment evidence can be considered.",
+  "evidence": "operations/evidence/vercel-source-binding-independent-verifier-2026-07-13T0850-0400.json",
+  "source_commits": [
+    "b0ec38a25ead279ceb1aafb546194c4b6abe7974",
+    "0b7162cf98b27e8c1ac5bf43f9406a8500517b86",
+    "37bd99c230def6926e817624a1dfae3c04be55a5"
+  ],
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit using both approved clients and retain their raw outputs.",
+    "Run the retained packet through the independent verifier in an authenticated checkout.",
+    "Observe an operations-only sentinel as skipped or ignored after provider capacity returns.",
+    "Observe the exact-commit audio-routing artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "In an authenticated checkout, execute both exhaustive workflow clients for one exact commit, build a new schema-v2 source-binding packet, run verify-vercel-source-binding-packet.mjs against it, and retain the verifier output. Do not attempt an application deployment until capacity and immutable deployment identity are available.",
+  "shared_state_policy": "Append-only projection; operations/ACTIVE_QUEUE.json and other teams' artifacts were not overwritten."
+}
