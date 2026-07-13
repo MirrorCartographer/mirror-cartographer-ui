@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "I-001",
+  "created_at": "2026-07-13T06:23:00-04:00",
+  "creative_premise": "A pocket climate inside a matchbox-like frame: visitors strike the surface to generate ash, rain, moths, or electrical static.",
+  "artifact": {
+    "path": "independent-creative-web/matchbox-weather/index.html",
+    "commit": "717e7ac0726f10218a3188af551a5da4b8f7788a",
+    "blob_sha": "04be743fce17c40565cd3be67be4c0620230bd70",
+    "format": "self-contained HTML/CSS/JavaScript"
+  },
+  "verification": {
+    "status": "source_verified",
+    "checks": [
+      "Artifact was re-read from the exact creation commit.",
+      "The document declares a responsive viewport and safe-area padding.",
+      "Pointer, keyboard, and touch-action behavior are present.",
+      "Audio is off by default and requires an explicit button action.",
+      "A prefers-reduced-motion rule is present.",
+      "The work has no imports, analytics, payment logic, product calls to action, or Mirror Cartographer runtime dependency."
+    ],
+    "limits": [
+      "No hosted public URL was created in this slice.",
+      "No browser automation or physical-device test was executed.",
+      "Source verification does not prove perceptual quality or audio audibility on every device."
+    ]
+  },
+  "independence_boundary": {
+    "identity_path": "independent-creative-web/IDENTITY.md",
+    "identity_commit": "4f40d51a25b45e9f041dda48c35c062a4d9b361e",
+    "not_mirror_cartographer_explainer": true,
+    "not_research_portal": true,
+    "not_worker_dashboard": true,
+    "not_product_funnel": true
+  },
+  "rollback": {
+    "method": "Revert commits 4f40d51a25b45e9f041dda48c35c062a4d9b361e and 717e7ac0726f10218a3188af551a5da4b8f7788a, or remove only the independent-creative-web paths in a future additive commit.",
+    "mirror_cartographer_runtime_touched": false
+  },
+  "privacy": "Contains no private chat text, personal data, credentials, health information, or account data."
+}
