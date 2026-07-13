@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": {
+    "id": "C-PROV-001",
+    "owner": "cloudflare_research",
+    "priority": "highest",
+    "state": "completed_handoff_ready",
+    "objective": "Prevent unobserved completion prose from entering Cloudflare research evidence as if repository objects existed.",
+    "completed_slices": [
+      "Observed that two previously reported commit identifiers are absent from the authenticated repository view.",
+      "Observed that the claimed atomic replay-store source path is absent.",
+      "Implemented a fail-closed verifier requiring exact repository, commit, and path observations.",
+      "Verified five deterministic boundary cases locally against an exact copy of the committed contract.",
+      "Recorded the provenance discrepancy without reconstructing or deleting history."
+    ],
+    "acceptance_remaining": [
+      "Run the committed test file in GitHub Actions.",
+      "Integrate the verifier into Cloudflare evidence-packet ingestion before any artifact can be promoted.",
+      "Recreate replay protection only as a new, explicitly attributed implementation if it remains required; do not reuse absent commit claims.",
+      "Resolve whether the missing completion reports originated from failed writes, incorrect repository context, or unsupported claims."
+    ],
+    "safe_next_action": "Bind verify-reported-github-object.mjs to evidence ingestion and require authenticated GitHub observations for every referenced commit and path before deployment or scientific evidence promotion."
+  },
+  "does_not_overwrite": [
+    "operations/ACTIVE_QUEUE.json",
+    "V-001",
+    "M-RECONCILE-002",
+    "R-020",
+    "R-021"
+  ],
+  "specialist_registry_change": null,
+  "evidence": "operations/evidence/cloudflare-reported-object-provenance-gate-2026-07-13T0057-0400.json"
+}
