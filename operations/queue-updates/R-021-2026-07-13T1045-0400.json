@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T14:45:20Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a deterministic in-toto-shaped subject manifest that binds retained evidence artifacts to repository-relative names and SHA-256 digests, rejecting absolute paths, traversal, duplicate names, and ambiguous duplicate content.",
+  "specialists_used": [
+    "Primary-source Scout",
+    "Technical Synthesis Engineer",
+    "Experiment Designer",
+    "Falsification Planner",
+    "Implementation Handoff Engineer"
+  ],
+  "registry_change": null,
+  "files": [
+    "operations/research/evidence-subject-manifest.mjs",
+    "operations/research/evidence-subject-manifest.test.mjs",
+    "operations/evidence/frontier-evidence-subject-manifest-2026-07-13T1045-0400.json"
+  ],
+  "verification": {
+    "command": "node --test evidence-subject-manifest.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "scope": "isolated Node execution using exact source contents before commit"
+  },
+  "claim_ceiling": "Artifact identity and byte integrity only. Workflow outcome, deployment identity, runtime behavior, audibility, and human/device observation remain unproven.",
+  "acceptance_remaining": [
+    "Integrate the subject manifest into the retained Vercel evidence receipt pipeline.",
+    "Generate a manifest over one authenticated exact-commit primary enumeration, independent enumeration, reconciliation, and receipt packet.",
+    "Add producer authentication or signature verification before treating the manifest as attested provenance.",
+    "Execute both exhaustive clients and retain raw outputs against one exact commit."
+  ],
+  "safe_next_action": "Vercel Studio should wrap the next fresh retained evidence packet as digest-bound repository-relative subjects, then verify the manifest from a clean checkout before outcome assessment. Do not promote artifact identity into a deployment or runtime claim."
+}
