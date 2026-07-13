@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Independently verify retained evidence bytes before chain-of-custody metadata can enter reconciliation or deployment assessment.",
+  "completed_slices": [
+    "Implemented fail-closed reading of all four required retained evidence roles.",
+    "Recomputed SHA-256 and byte length from actual retained bytes.",
+    "Rejected traversal, non-evidence paths, missing roles, duplicate roles, digest mismatch, byte-length mismatch, and incomplete manifests.",
+    "Preserved deployment_claim_permitted=false because byte integrity is necessary but not sufficient for deployment evidence."
+  ],
+  "acceptance_remaining": [
+    "Integrate verifyRetainedEvidenceBytes immediately after retained manifest construction and before reconciliation or Vercel assessment.",
+    "Execute the authenticated dual-enumerator retained evidence flow against one exact commit.",
+    "Retain the byte-verification receipt beside the manifest and downstream assessment.",
+    "Verify repository-backed bytes in CI rather than only injected test fixtures."
+  ],
+  "safe_next_action": "Wire the verifier into the retained-evidence CLI so no manifest is emitted or assessed until all referenced repository bytes match their declared digest and byte length.",
+  "evidence": [
+    "operations/evidence/frontier-research-retained-byte-verifier-2026-07-13T0532-0400.json",
+    "tools/frontier-research/verify-retained-evidence-bytes.mjs",
+    "tools/frontier-research/verify-retained-evidence-bytes.test.mjs"
+  ],
+  "canonical_queue_mutated": false,
+  "peer_execution_claimed": false
+}
