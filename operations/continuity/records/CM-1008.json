@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1008",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T21:33:01Z",
+  "title": "Branch-search connector results are not exhaustive branch inventory evidence",
+  "memory": {
+    "observed": [
+      "Repository metadata identifies the default branch as main.",
+      "Two branch-search calls against MirrorCartographer/mirror-cartographer-ui returned an empty result set, including a query for main.",
+      "Recent commit search continued to return commits from the repository during the same run."
+    ],
+    "inferred": [
+      "An empty branch-search connector result cannot establish that the repository has no branches.",
+      "The branch-search endpoint is unsuitable as the sole exhaustive-coverage mechanism for M-RECONCILE-002 under the observed connector behavior."
+    ],
+    "proposed": [
+      "Require an independently retained branch enumeration from an authenticated Git traversal or a GitHub refs endpoint that returns the known default branch before classifying branch coverage as complete."
+    ],
+    "superseded": [
+      "Treating a zero-result branch-search response as exhaustive absence evidence."
+    ],
+    "unresolved": [
+      "The complete branch inventory remains unknown.",
+      "The provenance and immutable locations of M-004, M-005, and M-006 remain unresolved.",
+      "The originating source that assigned those identifiers remains unlocated."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "Repository metadata names main while branch search returns no branches.",
+    "resolution": "The zero-result search is classified as a connector capability or indexing limitation, not repository absence.",
+    "claim_ceiling": "coverage_incomplete"
+  },
+  "provenance": [
+    {
+      "source_type": "github_repository_metadata",
+      "locator": "MirrorCartographer/mirror-cartographer-ui#default_branch=main",
+      "status": "observed"
+    },
+    {
+      "source_type": "github_connector_branch_search",
+      "locator": "search_branches(query='') and search_branches(query='main')",
+      "status": "observed_zero_result_non_exhaustive"
+    },
+    {
+      "source_type": "github_commit_search",
+      "locator": "recent commits through d7bd8c45028cd687e6a475bf2210d7f0fa8ea8f9",
+      "status": "observed"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "public repository coordinates",
+      "commit identifiers",
+      "connector behavior",
+      "operational claim states"
+    ],
+    "excluded": [
+      "raw chat content",
+      "health or pet-health information",
+      "credentials",
+      "private contacts",
+      "identifying personal data",
+      "unreviewed uploaded-file contents"
+    ]
+  },
+  "authoritative": false,
+  "reversible": true,
+  "falsification_route": "Produce an authenticated, retained refs or git-for-each-ref enumeration that includes main and proves pagination or traversal completeness."
+}
