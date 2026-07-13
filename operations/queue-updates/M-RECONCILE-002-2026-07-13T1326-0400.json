@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T17:26:12Z",
+  "state": "in_progress",
+  "completed_slice": "Defined a fail-closed repository and cross-source history coverage ladder that prevents bounded searches from being promoted into exhaustive absence claims for M-004, M-005, and M-006.",
+  "evidence": [
+    {
+      "path": "operations/continuity/M-RECONCILE-002-history-coverage-contract-2026-07-13T1326-0400.json",
+      "commit": "38bd9fd456c6dfaed5a778fb650e50aa378a0c7e",
+      "evidence_class": "source-and-connector-grounded contract",
+      "verification_status": "committed_readback_pending"
+    }
+  ],
+  "observed": [
+    "The active queue requires exhaustive accessible branch or equivalent repository-history coverage before an exhaustive unlocated classification.",
+    "Current branch and commit searches are bounded and do not establish complete reachable-history coverage."
+  ],
+  "inferred": [
+    "Without explicit ref inventory, pagination, traversal, and digest evidence, no-match results remain bounded-search evidence."
+  ],
+  "proposed": [
+    "Use the committed coverage ladder as the mandatory promotion gate for all future M-004, M-005, and M-006 provenance claims."
+  ],
+  "superseded": [
+    "Treating a provider search with no valid result as proof of repository-wide or universal absence."
+  ],
+  "unresolved": [
+    "Immutable provenance for M-004, M-005, and M-006.",
+    "Complete inventory of accessible refs.",
+    "Complete traversal of all commits reachable from those refs.",
+    "Originating decision-log, language-lexicon, project-document, or authorized chat-history assignment source."
+  ],
+  "canonical_queue_mutated": false,
+  "specialist_registry_change": null,
+  "privacy_boundary": "No private source text, health material, credentials, or personal identifiers were copied into the repository.",
+  "safe_next_action": "Execute an authenticated all-ref inventory with retained pagination output and digest, then traverse every reachable commit and reconcile candidates using namespace, owner, semantic role, temporal precedence, and immutable locator agreement."
+}
