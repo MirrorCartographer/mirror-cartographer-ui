@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-0024",
+  "created_at": "2026-07-13T10:36:59Z",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Exhaustive coverage manifest contract for unresolved continuity identifiers",
+  "memory": {
+    "observed": [
+      "The canonical queue requires exhaustive branch or equivalent repository-history coverage before M-004, M-005, or M-006 may be classified as unlocated.",
+      "Repository code search is not indexed, so zero connector search results are non-exhaustive.",
+      "File Library results contain suffix-shaped identifiers such as V8-004 and V9-004, but no immutable object assigning the continuity namespace identifiers M-004, M-005, or M-006 was located in this run."
+    ],
+    "inferred": [
+      "Identifier suffix agreement without namespace, owner, semantic role, temporal precedence, and immutable locator agreement is a collision, not provenance.",
+      "A negative provenance conclusion is valid only when the exact searched object universe and traversal completion are retained and independently checkable."
+    ],
+    "proposed": [
+      "Require every exhaustive reconciliation run to emit a coverage manifest containing repository identity, starting refs, tags, reachable commit count, tree count, blob count, query bytes, excluded objects, traversal errors, completion state, and SHA-256 digests of raw outputs.",
+      "Permit transition from unresolved to unlocated only when completion_state is complete, excluded_objects is empty or explicitly accepted, traversal_errors is empty, and no namespace-qualified immutable match exists."
+    ],
+    "superseded": [
+      "Treating suffix-equivalent File Library records as candidates capable of resolving continuity-owned M-series identifiers.",
+      "Treating zero unindexed connector search results as repository-wide absence evidence."
+    ],
+    "unresolved": [
+      "Immutable provenance and originating source for M-004.",
+      "Immutable provenance and originating source for M-005.",
+      "Immutable provenance and originating source for M-006.",
+      "Execution of the exhaustive manifest-producing traversal."
+    ]
+  },
+  "coverage_manifest_contract": {
+    "required_fields": [
+      "repository_full_name",
+      "repository_object_id",
+      "default_branch_head_sha",
+      "refs",
+      "tags",
+      "reachable_commit_count",
+      "tree_count",
+      "blob_count",
+      "queries_utf8",
+      "excluded_objects",
+      "traversal_errors",
+      "completion_state",
+      "raw_output_sha256",
+      "manifest_sha256"
+    ],
+    "completion_states": [
+      "complete",
+      "partial",
+      "failed"
+    ],
+    "promotion_rule": "unlocated is permitted only from complete coverage with no unaccepted exclusions, no traversal errors, and no immutable namespace-qualified match",
+    "current_state": "contract_defined_execution_pending"
+  },
+  "source_status": {
+    "canonical_queue": "observed",
+    "repository_connector_results": "observed_non_exhaustive",
+    "file_library_results": "lead_only_namespace_collision",
+    "historical_identifier_assignment": "unresolved"
+  },
+  "privacy_boundary": {
+    "included": [
+      "opaque identifiers",
+      "repository metadata requirements",
+      "coverage semantics",
+      "collision classification"
+    ],
+    "excluded": [
+      "private chat text",
+      "health information",
+      "pet health information",
+      "credentials",
+      "personal contact data"
+    ]
+  },
+  "falsification_route": "Produce an immutable source object predating the current reconciliation records that explicitly assigns M-004, M-005, or M-006 within the continuity namespace, or execute a complete manifest-backed traversal showing no such object exists.",
+  "next_action": "Implement and run the manifest-producing exhaustive ref, tag, commit, tree, and blob traversal; retain raw outputs and digests before changing any unresolved claim."
+}
