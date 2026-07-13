@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-claim-state-transition-protocol-2026-07-13T0544-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "memory_recovered": "Continuity is not only the latest claim value; it is the preserved sequence of evidence-bounded claim-state transitions. A later run may strengthen, weaken, supersede, or reopen a claim only through an append-only transition that names its prior state, evidence basis, privacy class, and falsification route.",
+  "claim_states": {
+    "observed": "Directly supported by an inspectable source available to the run.",
+    "inferred": "Derived from observed material but not directly stated by an assigning source.",
+    "proposed": "A prospective interpretation, rule, structure, or action not yet established as project truth.",
+    "superseded": "Previously active language or structure displaced by a later evidenced decision; retained for history and contradiction analysis.",
+    "unresolved": "Insufficient or conflicting evidence prevents responsible closure.",
+    "located": "Immutable assigning provenance has been resolved inside validated repository coverage.",
+    "unlocated": "No assigning source was found within validated exhaustive accessible coverage; this is coverage-relative, not nonexistence."
+  },
+  "transition_record_required_fields": [
+    "transition_id",
+    "claim_id",
+    "prior_state",
+    "next_state",
+    "observed_at",
+    "actor",
+    "evidence_refs",
+    "reason",
+    "privacy_class",
+    "falsification_route"
+  ],
+  "allowed_transition_rules": [
+    {
+      "from": "unresolved",
+      "to": ["observed", "inferred", "located", "unlocated"],
+      "guard": "The transition must cite new evidence. located and unlocated additionally require an accepted provenance coverage event."
+    },
+    {
+      "from": "inferred",
+      "to": ["observed", "superseded", "unresolved"],
+      "guard": "Promotion to observed requires a direct source; contradiction or lost support must weaken or reopen the claim rather than preserve inferred certainty."
+    },
+    {
+      "from": "observed",
+      "to": ["superseded", "unresolved"],
+      "guard": "The original observation remains retained. Only its active interpretation or authority may change."
+    },
+    {
+      "from": "proposed",
+      "to": ["observed", "inferred", "superseded", "unresolved"],
+      "guard": "Proposal adoption requires evidence or a recorded decision source; non-adoption is not deletion."
+    },
+    {
+      "from": "superseded",
+      "to": ["observed", "inferred", "unresolved"],
+      "guard": "Reactivation requires a new transition and cannot erase the superseding decision."
+    },
+    {
+      "from": "located",
+      "to": ["unresolved"],
+      "guard": "Only provenance invalidation, digest failure, namespace conflict, or source-integrity failure may reopen a located claim."
+    },
+    {
+      "from": "unlocated",
+      "to": ["located", "unresolved"],
+      "guard": "Newly accessible evidence may locate or reopen the claim; prior coverage-relative unlocated status remains historically valid for its declared coverage."
+    }
+  ],
+  "forbidden_operations": [
+    "Overwrite a prior claim state without retaining a transition record.",
+    "Promote inference or automation prose to observation without a direct inspectable source.",
+    "Treat superseded as deleted or false by definition.",
+    "Treat unresolved as absent.",
+    "Treat coverage-relative unlocated as proof of historical nonexistence.",
+    "Persist private source text when an opaque locator and classification are sufficient."
+  ],
+  "contradiction_policy": {
+    "rule": "Contradictions create a new unresolved or superseded transition; they do not authorize silent replacement.",
+    "resolution_order": [
+      "immutable assigning source",
+      "later explicit decision log",
+      "validated project document",
+      "language lexicon with temporal scope",
+      "bounded automation or chat lead"
+    ],
+    "tie_behavior": "Retain both claims, mark unresolved, and record the missing discriminating evidence."
+  },
+  "privacy_boundary": {
+    "default": "internal_opaque",
+    "persist": [
+      "opaque claim identifiers",
+      "source class",
+      "immutable repository locators",
+      "evidence strength",
+      "transition reason",
+      "privacy classification",
+      "falsification route"
+    ],
+    "exclude": [
+      "private chat text",
+      "personal health information",
+      "credentials",
+      "account data",
+      "identifying personal events unless explicitly required and authorized"
+    ]
+  },
+  "application_to_current_gap": [
+    {
+      "claim_id": "M-004",
+      "current_state": "unresolved",
+      "permitted_next_states": ["located", "unlocated"],
+      "required_guard": "accepted exhaustive provenance coverage event"
+    },
+    {
+      "claim_id": "M-005",
+      "current_state": "unresolved",
+      "permitted_next_states": ["located", "unlocated"],
+      "required_guard": "accepted exhaustive provenance coverage event"
+    },
+    {
+      "claim_id": "M-006",
+      "current_state": "unresolved",
+      "permitted_next_states": ["located", "unlocated"],
+      "required_guard": "accepted exhaustive provenance coverage event"
+    }
+  ],
+  "source_status": {
+    "observed": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "tools/continuity/validate-provenance-coverage-event.mjs",
+      "recent repository commit history"
+    ],
+    "inferred": [
+      "Silent claim-state replacement is a continuity risk unless transitions are append-only and source-bound."
+    ],
+    "proposed": [
+      "Future continuity knowledge-graph updates should validate transition records against this protocol before changing active claim state."
+    ],
+    "superseded": [
+      "Latest-value-only continuity records that omit prior state and evidence basis."
+    ],
+    "unresolved": [
+      "Immutable assigning provenance for M-004, M-005, and M-006.",
+      "Exhaustive accessible branch and reachable-commit coverage."
+    ]
+  }
+}
