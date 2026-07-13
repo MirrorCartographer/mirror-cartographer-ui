@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T01:04:00Z",
+  "slice": "retained_evidence_cli_provenance_hardening",
+  "finding": "The retained workflow evidence CLI silently accepted duplicate flags and did not validate source or generation timestamps, allowing ambiguous command provenance and malformed chronology to enter a bundle construction path.",
+  "implementation": {
+    "source_path": "tools/vercel-studio/retained-workflow-evidence-cli.mjs",
+    "source_commit": "181caed2919b821dd7f11f44d80b642ff5a31fec",
+    "test_path": "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+    "test_commit": "1e609a2240a6261f6f85ba0bf4f0ccdefdda0012",
+    "guards": [
+      "Reject duplicate CLI flags rather than silently accepting the final value.",
+      "Require explicit UTC ISO-8601 timestamps for both retained retrievals and bundle generation.",
+      "Reject impossible calendar timestamps.",
+      "Reject bundle generation timestamps that precede either retained source retrieval."
+    ]
+  },
+  "verification": {
+    "source_syntax_check": "passed",
+    "isolated_guard_checks": {
+      "passed": 4,
+      "failed": 0
+    },
+    "github_workflow_runs_for_test_commit": 0,
+    "evidence_strength": "source_behavior_partially_verified_ci_pending"
+  },
+  "deployment_claim": false,
+  "runtime_claim": false,
+  "limits": [
+    "The full repository test suite was not executed because the automation runtime could not clone GitHub over the container network.",
+    "No GitHub Actions workflow run was returned for the test commit at verification time.",
+    "No Vercel deployment was requested because provider capacity and immutable deployment identity remain unresolved.",
+    "The slice hardens evidence provenance only; it does not prove exhaustive workflow enumeration, Vercel deployment identity, browser audio routing, or physical-device audibility."
+  ],
+  "rollback": {
+    "method": "Revert commits 1e609a2240a6261f6f85ba0bf4f0ccdefdda0012 and 181caed2919b821dd7f11f44d80b642ff5a31fec without deleting history.",
+    "data_migration_required": false
+  }
+}
