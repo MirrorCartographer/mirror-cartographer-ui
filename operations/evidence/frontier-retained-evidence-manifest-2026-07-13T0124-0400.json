@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_context": ["R-020", "R-021"],
+  "finding": "Independent enumeration agreement is necessary but insufficient for durable evidence unless retained primary output, independent output, command text, and reconciliation output are cryptographically bound to one exact commit and one bounded collection window.",
+  "source_status": {
+    "operations/CURRENT_STATE.json": "observed",
+    "operations/ACTIVE_QUEUE.json": "observed",
+    "operations/SPECIALIST_REGISTRY.json": "observed",
+    "operations/TRIGGER_REQUESTS.json": "observed",
+    "recent_frontier_commits": "observed",
+    "GitHub Actions REST behavior": "primary documentation contract represented in existing repository implementation"
+  },
+  "evidence_strength": "implementation-tested",
+  "uncertainty": [
+    "No authenticated private-repository enumeration was executed in this run.",
+    "The default fifteen-minute capture window is an engineering bound and may require revision from operational evidence.",
+    "The manifest proves retained-byte identity and collection coherence, not GitHub, Vercel, or deployment authenticity by itself."
+  ],
+  "artifact": {
+    "implementation_path": "tools/frontier-research/retained-evidence-manifest.mjs",
+    "implementation_commit": "d26b03a09de149646cfbed1d9cee0a1072c54cc1",
+    "test_path": "tools/frontier-research/retained-evidence-manifest.test.mjs",
+    "test_commit": "34895b00fe1c090f5bc54c814a49cf005dd2a612",
+    "required_roles": ["primary_raw", "independent_raw", "independent_command", "reconciliation"],
+    "deployment_claim_permitted": false
+  },
+  "verification": {
+    "runtime": "node --test",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "cases": [
+      "deterministic complete manifest",
+      "missing required role rejection",
+      "same-method independence rejection",
+      "secret-bearing field rejection",
+      "stale mixed-run capture rejection",
+      "unsafe path and duplicate-byte rejection"
+    ]
+  },
+  "falsification_route": "Fetch the exact committed implementation and tests, rerun the test suite, then construct a manifest from retained authenticated enumeration bytes and independently recompute all SHA-256 digests. Reject the finding if mismatched bytes, missing roles, non-independent methods, or a capture-window violation are accepted.",
+  "privacy_boundary": "No credentials, authorization headers, cookies, raw tokens, private chat, personal data, or repository response bodies were retained in this evidence record."
+}
