@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T17:26:12Z",
+  "record_type": "repository_history_coverage_contract",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "identifiers": ["M-004", "M-005", "M-006"],
+    "purpose": "Prevent bounded repository or file-library searches from being promoted into exhaustive absence claims."
+  },
+  "observed": [
+    {
+      "claim": "The canonical queue requires an exhaustive accessible branch inventory or equivalent repository history traversal before M-004, M-005, or M-006 may be classified as unlocated after exhaustive coverage.",
+      "source": "operations/ACTIVE_QUEUE.json",
+      "confidence": "high"
+    },
+    {
+      "claim": "Prior continuity slices rejected numeric-suffix collisions and retained the missing identifiers as unresolved rather than reconstructing history.",
+      "source": "operations/continuity/M-RECONCILE-002-file-library-namespace-rejection-2026-07-13T1219-0400.json",
+      "confidence": "high"
+    },
+    {
+      "claim": "The available branch-search call returned no branch records, which is not evidence that the repository has no branches and cannot satisfy exhaustive coverage.",
+      "source": "authenticated GitHub connector branch-search result from this run",
+      "confidence": "high"
+    },
+    {
+      "claim": "A recent-commit listing and a commit-message search for M-004 provide bounded positive or negative evidence only; neither enumerates every reachable commit on every accessible ref.",
+      "source": "authenticated GitHub connector commit searches from this run",
+      "confidence": "high"
+    }
+  ],
+  "coverage_classes": {
+    "lead_only": {
+      "definition": "Unverified prose, automation completion text, filenames, or semantic hints without immutable repository identity.",
+      "may_support": ["candidate discovery"],
+      "may_not_support": ["artifact identity", "historical existence", "historical absence"]
+    },
+    "bounded_search": {
+      "definition": "A keyword, code, file-library, branch, or commit search with incomplete or provider-defined result coverage.",
+      "required_fields": ["query", "source_class", "retrieved_at", "result_count", "known_limits"],
+      "may_support": ["candidate discovery", "collision rejection", "bounded no-match statement"],
+      "may_not_support": ["exhaustive absence"]
+    },
+    "ref_inventory_complete": {
+      "definition": "All accessible branch and tag refs are enumerated with pagination completion evidence and immutable tip SHAs.",
+      "required_fields": ["repository", "retrieved_at", "enumeration_method", "pagination_complete", "refs", "raw_output_digest"],
+      "may_support": ["defined traversal root set"],
+      "may_not_support": ["exhaustive absence without commit traversal"]
+    },
+    "reachable_history_complete": {
+      "definition": "Every commit reachable from the complete accessible ref inventory is traversed exactly once or deduplicated by SHA, with traversal completion and raw-output integrity evidence.",
+      "required_fields": ["ref_inventory_digest", "commit_count", "unique_commit_count", "traversal_method", "completion_status", "raw_output_digest"],
+      "may_support": ["repository-history no-match statement for inspected object classes"],
+      "may_not_support": ["absence from inaccessible refs, deleted unreachable objects, private chat, or external storage"]
+    },
+    "cross_source_exhaustive": {
+      "definition": "Reachable repository history is complete and each required non-repository source class has its own explicit complete-coverage evidence or is marked inaccessible.",
+      "required_fields": ["repository_history_evidence", "source_classes", "inaccessible_sources", "query_contract", "reconciliation_digest"],
+      "may_support": ["coverage-scoped unlocated classification"],
+      "may_not_support": ["universal nonexistence"]
+    }
+  },
+  "promotion_rules": [
+    {
+      "from": "bounded_search",
+      "to": "ref_inventory_complete",
+      "requires": "An authenticated all-ref enumeration with explicit pagination completion and retained raw output."
+    },
+    {
+      "from": "ref_inventory_complete",
+      "to": "reachable_history_complete",
+      "requires": "A traversal of every commit reachable from every inventoried ref, with SHA deduplication and completion evidence."
+    },
+    {
+      "from": "reachable_history_complete",
+      "to": "cross_source_exhaustive",
+      "requires": "Independent coverage accounting for decision logs, language lexicons, project documents, and authorized chat-history or file-library sources."
+    }
+  ],
+  "identity_resolution_rule": {
+    "required_agreement": ["namespace", "owner", "semantic_role", "temporal_precedence", "immutable_locator"],
+    "decision": "A candidate resolves M-004, M-005, or M-006 only when all required dimensions agree. Numeric suffix or semantic similarity alone is insufficient."
+  },
+  "claim_states": {
+    "observed": "Coverage requirements and bounded search results are directly supported by current repository and connector evidence.",
+    "inferred": "Existing no-match results cannot establish exhaustive absence because their reachable-ref and commit coverage is unproven.",
+    "proposed": "Adopt this coverage ladder as the mandatory gate for future provenance resolution and absence claims.",
+    "superseded": "Any statement that M-004, M-005, or M-006 are absent solely because a bounded search returned no valid match.",
+    "unresolved": "The immutable originating objects and source documents for M-004, M-005, and M-006 remain unlocated."
+  },
+  "falsification_routes": [
+    "Produce an immutable candidate object satisfying namespace, owner, semantic role, temporal precedence, and locator agreement.",
+    "Produce complete ref and reachable-history evidence showing the candidate exists under a previously uninspected ref.",
+    "Demonstrate that this coverage contract omits an accessible source class capable of assigning continuity identifiers."
+  ],
+  "privacy_boundary": {
+    "included": ["repository operational metadata", "abstract source classes", "identifier classes", "coverage and provenance rules"],
+    "excluded": ["private chat text", "health or pet-health material", "credentials", "personal identifying details", "raw uploaded-file contents"],
+    "publication_rule": "Retain only source-class, coverage, digest, and classification metadata unless source content is independently approved for publication."
+  },
+  "claim_ceiling": "This contract defines what evidence would count as exhaustive. It does not itself provide exhaustive repository or cross-source coverage and does not classify the identifiers as nonexistent.",
+  "next_action": "Run an authenticated all-ref inventory, retain paginated raw output and digest, traverse every reachable commit by SHA, and reconcile exact identifiers plus assigning-context terms before changing any unresolved node."
+}
