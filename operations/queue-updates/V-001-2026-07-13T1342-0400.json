@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:42:58Z",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound the retained independent enumeration command to the intended private repository endpoint and rejected shell-control operators before execution.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    {
+      "path": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+      "commit": "e8fd1d7c8510abc370a3e38928c95ba7fff2ad26"
+    },
+    {
+      "path": "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+      "commit": "e9c660543cb592a3892ceec69b74193f3adeb4e2"
+    },
+    {
+      "path": "operations/evidence/vercel-evidence-command-boundary-2026-07-13T1342-0400.json",
+      "commit": "57ce81d83b38397b88e83617432aca7992fe0b45"
+    }
+  ],
+  "verification": {
+    "strongest_feasible_route": "immutable committed-source inspection plus deterministic test additions",
+    "runtime_execution_observed": false,
+    "deployment_observed": false,
+    "reason": "Provider capacity remains blocked and this operations-only slice intentionally did not create a deployment."
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both clients and retain raw outputs plus reconciliation bundle.",
+    "Observe the preflight test workflow passing at the exact implementation commit or a descendant containing the slice.",
+    "Observe an operations-only sentinel skipped or ignored after Vercel build capacity returns.",
+    "Observe and inspect the six-outcome audio-routing artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 57ce81d83b38397b88e83617432aca7992fe0b45.",
+    "Revert e9c660543cb592a3892ceec69b74193f3adeb4e2.",
+    "Revert e8fd1d7c8510abc370a3e38928c95ba7fff2ad26."
+  ],
+  "next_action": "Run the committed preflight tests through GitHub Actions and then execute the authenticated dual-client enumeration only when the plan passes with new, absent output paths."
+}
