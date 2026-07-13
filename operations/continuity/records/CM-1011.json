@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1011",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T22:09:34Z",
+  "title": "Canonical queue ownership is authoritative, but queue projections can lag additive evidence",
+  "memory": {
+    "observed": [
+      "operations/ACTIVE_QUEUE.json identifies M-RECONCILE-002 as the highest-priority continuity_mining item and remains the canonical source for queue ownership and acceptance criteria.",
+      "The canonical queue reports updated_at 2026-07-13T00:49:00Z.",
+      "Later immutable continuity commits and additive queue-update records exist, including CM-1010 and its queue projection recorded at 2026-07-13T22:01:36Z.",
+      "The later additive queue update explicitly states that the canonical queue was not overwritten."
+    ],
+    "inferred": [
+      "A canonical queue snapshot can remain authoritative for assignment while being temporally incomplete as a ledger of subsequent completed slices.",
+      "Absence of a later slice from the canonical queue cannot negate immutable commit evidence or additive queue-update evidence created after the queue snapshot's updated_at timestamp.",
+      "Conversely, additive evidence cannot silently change canonical ownership, priority, or acceptance criteria unless a dedicated canonical queue update is performed."
+    ],
+    "proposed": [
+      "Use a two-layer queue model: canonical queue for current assignment and acceptance contract; additive queue updates plus immutable commits for post-snapshot execution history.",
+      "At read time, compare canonical updated_at with additive record timestamps and classify any newer records as pending_projection rather than absent or canonicalized.",
+      "Require explicit reconciliation before promoting additive completion claims into the canonical queue."
+    ],
+    "superseded": [
+      "Treating the canonical queue as a complete event ledger for all work performed after its updated_at timestamp.",
+      "Treating a newer additive queue record as authority to alter ownership, priority, or acceptance criteria without canonical reconciliation.",
+      "Treating omission from a stale canonical snapshot as proof that a committed slice does not exist."
+    ],
+    "unresolved": [
+      "The canonical queue has not yet been reconciled with CM-1010 or CM-1011.",
+      "No automated projection validator currently reports canonical-to-additive timestamp lag or duplicate completed-slice promotion.",
+      "The immutable origins of M-004, M-005, and M-006 remain unlocated."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "The canonical queue is authoritative, yet it does not contain the newest committed continuity slices.",
+    "resolution": "Authority is field-scoped and time-scoped. The canonical queue governs ownership, priority, state contract, and acceptance criteria at its snapshot time. Later immutable commits and additive queue updates govern evidence that work occurred after that snapshot, but remain pending projection until canonical reconciliation.",
+    "claim_ceiling": "pending_canonical_projection"
+  },
+  "provenance": [
+    {
+      "source_type": "canonical_active_queue",
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "status": "observed_authoritative_assignment_snapshot"
+    },
+    {
+      "source_type": "continuity_record",
+      "locator": "operations/continuity/records/CM-1010.json",
+      "status": "observed_post_snapshot_evidence"
+    },
+    {
+      "source_type": "additive_queue_update",
+      "locator": "operations/queue-updates/M-RECONCILE-002-2026-07-13T1801-0400.json",
+      "status": "observed_pending_projection"
+    },
+    {
+      "source_type": "github_commit",
+      "locator": "16191e6d2d1cbc44b844bf54a8955e932dbacebd",
+      "status": "immutable_record_commit"
+    },
+    {
+      "source_type": "github_commit",
+      "locator": "53fd51e1b31bd833b59d5672cc37f2a178b987e7",
+      "status": "immutable_queue_projection_commit"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository operational identifiers",
+      "queue timestamps",
+      "immutable commit hashes",
+      "claim-state and projection-state rules"
+    ],
+    "excluded": [
+      "raw private chat content",
+      "health or pet-health information",
+      "credentials",
+      "contacts",
+      "personal identifying details",
+      "unreviewed uploaded-file contents"
+    ],
+    "publication_rule": "Retain only repository governance, provenance, and temporal projection mechanics."
+  },
+  "authoritative": false,
+  "reversible": true,
+  "falsification_route": "Produce a canonical queue revision that already includes every cited later slice with a timestamp at or after the additive evidence, or demonstrate that the cited commits or files are not part of the repository's accepted history.",
+  "next_action": "Add a deterministic projection validator that compares canonical queue timestamps and completed slices against additive queue updates, reporting pending, duplicated, conflicting, and safely promotable records without modifying the canonical queue."
+}
