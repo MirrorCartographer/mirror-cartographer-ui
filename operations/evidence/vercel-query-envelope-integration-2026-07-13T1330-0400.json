@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:30:00Z",
+  "slice": "source-freshness-gated independent workflow envelope",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "finding": "The independent gh pagination envelope could previously evaluate retained pages without first proving that the retained command matched a current official-source query contract.",
+  "implementation": {
+    "module": "operations/tools/build-vercel-workflow-evidence-envelope.mjs",
+    "test": "operations/tools/build-vercel-workflow-evidence-envelope.test.mjs",
+    "workflow": ".github/workflows/vercel-workflow-query-envelope-contract.yml",
+    "commits": [
+      "4db2175d1c588ca4919d6fa7d1c3703e22d7454f",
+      "ab491ccfe2bc6f71d26ea94de3d7775c8ad3051c",
+      "3161dd726a5c31559d8906c7ac0316e097902004"
+    ]
+  },
+  "verification": {
+    "source_readback": "passed",
+    "source_readback_ref": "3161dd726a5c31559d8906c7ac0316e097902004",
+    "test_cases_authored": 6,
+    "workflow_execution": "unobserved",
+    "workflow_observation_limit": "Available commit workflow-run connector returned no pull-request-triggered runs and is not exhaustive for push-triggered workflows.",
+    "vercel_status": "failure",
+    "vercel_status_reason": "provider build-rate limit",
+    "deployment_claim": false
+  },
+  "claim_boundary": [
+    "The source composition is committed and read back at an immutable commit.",
+    "No claim is made that GitHub Actions executed the six tests.",
+    "No claim is made that a Vercel deployment exists or succeeded.",
+    "No browser, mobile Safari, audio-routing, physical-device, or human-observation outcome is established."
+  ],
+  "rollback": [
+    "Revert 3161dd726a5c31559d8906c7ac0316e097902004",
+    "Revert ab491ccfe2bc6f71d26ea94de3d7775c8ad3051c",
+    "Revert 4db2175d1c588ca4919d6fa7d1c3703e22d7454f"
+  ],
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
