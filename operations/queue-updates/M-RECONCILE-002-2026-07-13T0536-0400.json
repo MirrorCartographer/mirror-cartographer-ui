@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T05:36:00-04:00",
+  "state": "in_progress",
+  "completed_slice": "Converted the provenance closure coverage lattice into a fail-closed executable validator with deterministic tests.",
+  "artifacts": [
+    "tools/continuity/validate-provenance-coverage-event.mjs",
+    "tools/continuity/validate-provenance-coverage-event.test.mjs",
+    "operations/evidence/continuity-provenance-coverage-validator-2026-07-13T0536-0400.json"
+  ],
+  "commits": [
+    "4cc4e776511800f001688230ab8bc69e920a4ee8",
+    "e9a732abd6c5da5d58e0c7ca9202d92436bc2d36",
+    "87bbc6e541607c4c4f414082d92bbcf5f95656ea"
+  ],
+  "verification": {
+    "command": "node --test validate-provenance-coverage-event.test.mjs",
+    "passed": 5,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Enumerate every accessible branch and tag ref with immutable tip SHAs.",
+    "Traverse all commits reachable from those refs without unresolved pagination, permission, or provider-ceiling ambiguity.",
+    "Emit and retain a validator-accepted production coverage event.",
+    "Locate immutable assigning provenance for M-004, M-005, and M-006 or classify each as coverage-relative unlocated."
+  ],
+  "safe_next_action": "Implement an authenticated Git ref and reachable-history enumerator that emits the validator input format; do not change any provenance-gap node from unresolved until the retained event validates.",
+  "canonical_queue_mutated": false,
+  "peer_execution_claimed": false,
+  "files_deleted": false
+}
