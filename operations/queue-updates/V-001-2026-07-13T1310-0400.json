@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:10:44Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed retained CI run provenance manifest that binds repository, workflow, run ID, attempt, event, ref, exact commit, artifact name, retention, and generation time; the dedicated workflow verifies and retains the manifest plus source and transcript digests without making a deployment claim.",
+  "evidence_file": "operations/evidence/vercel-retained-run-manifest-2026-07-13T1310-0400.json",
+  "implementation_commits": [
+    "01dee9f8e7d485a5a2edc5626b46070a635ed6b8",
+    "2613fe7cc15bc30ba94ff265754e831132b1da89",
+    "5c1f9ef25f24287db2b2cfc3efe340bc8c325521"
+  ],
+  "acceptance_remaining": [
+    "Inspect a successful GitHub Actions execution and retain the generated exact-run artifact.",
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled raw evidence.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "blocker": "Vercel commit status for 5c1f9ef25f24287db2b2cfc3efe340bc8c325521 remained failed at the provider build-rate-limit target. GitHub Actions execution was not visible through the connector and is not claimed.",
+  "safe_next_action": "Inspect the retained-run-manifest workflow result and artifact for the exact commit. Continue operations-only evidence work and avoid application deployment attempts until provider capacity returns."
+}
