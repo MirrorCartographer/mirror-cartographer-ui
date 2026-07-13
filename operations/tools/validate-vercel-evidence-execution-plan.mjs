@@ -15,15 +15,12 @@ function fail(reason, extra = {}) {
   };
 }
 
-function isSafeRelativeFile(value) {
-  if (typeof value !== 'string' || value.trim() === '') return false;
-  if (path.isAbsolute(value)) return false;
+function canonicalRelativeFile(value) {
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  if (path.isAbsolute(value)) return null;
   const normalized = path.posix.normalize(value.replaceAll('\\', '/'));
-  return normalized !== '..' && !normalized.startsWith('../') && !normalized.includes('/../');
-}
-
-function unique(values) {
-  return new Set(values).size === values.length;
+  if (normalized === '..' || normalized.startsWith('../') || normalized.includes('/../')) return null;
+  return normalized;
 }
 
 function hasExpectedRepositoryEndpoint(command) {
@@ -71,10 +68,13 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     rateLimitProofOutput,
     bundleOutput,
   ];
-  if (!outputs.every(isSafeRelativeFile)) {
+  const canonicalOutputs = outputs.map(canonicalRelativeFile);
+  if (canonicalOutputs.some((value) => value === null)) {
     return fail('unsafe_or_missing_output_path', { commitSha });
   }
-  if (!unique(outputs)) return fail('output_paths_must_be_distinct', { commitSha });
+  if (new Set(canonicalOutputs).size !== canonicalOutputs.length) {
+    return fail('canonical_output_paths_must_be_distinct', { commitSha });
+  }
 
   if (typeof command !== 'string' || command.trim() === '') {
     return fail('missing_retained_command', { commitSha });
@@ -102,17 +102,17 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     ok: true,
     reason: 'execution_plan_ready',
     execution_permitted: true,
-    evidence_class: 'bounded_execution_plan_with_retained_rate_limit_proof',
+    evidence_class: 'bounded_execution_plan_with_canonical_retained_paths',
     commitSha,
     repository: EXPECTED_REPOSITORY,
     outputs: {
-      primary: primaryOutput,
-      primary_headers: primaryHeadersOutput,
-      independent: independentOutput,
-      independent_headers: independentHeadersOutput,
-      retained_command: retainedCommandOutput,
-      rate_limit_proof: rateLimitProofOutput,
-      bundle: bundleOutput,
+      primary: canonicalOutputs[0],
+      primary_headers: canonicalOutputs[1],
+      independent: canonicalOutputs[2],
+      independent_headers: canonicalOutputs[3],
+      retained_command: canonicalOutputs[4],
+      rate_limit_proof: canonicalOutputs[5],
+      bundle: canonicalOutputs[6],
     },
     retention_contract: {
       raw_enumerations: true,
@@ -120,11 +120,11 @@ export function validateVercelEvidenceExecutionPlan(plan) {
       retained_command: true,
       dual_client_rate_limit_proof: true,
       final_bundle: true,
-      outputs_must_be_distinct: true,
+      outputs_must_be_canonically_distinct: true,
       overwrite_forbidden: true,
     },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves distinct paths for both raw response-header streams and the derived dual-client rate-limit proof.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct paths for both raw response-header streams and the derived dual-client rate-limit proof.',
       'Does not prove authentication, workflow-run completeness, response-header authenticity, rate-limit proof acceptance, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
