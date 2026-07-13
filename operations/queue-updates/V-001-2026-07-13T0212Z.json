@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "record_id": "V-001-2026-07-13T0212Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T02:12:00Z",
+  "status": "in_progress_blocked",
+  "completed_slice": "Retained workflow evidence sources are now opened once with no-follow semantics, validated as distinct regular files by device/inode identity, read through bound descriptors, and closed deterministically.",
+  "source_commits": [
+    "ba5c45a25de393428a0b375bb76063fc9fee64e4",
+    "483ce0d959308f8cb18d3ac122b25e76a1dfa050",
+    "6c2807a48be7f1017fea1ac75bcedfb5e2222668"
+  ],
+  "evidence_path": "operations/evidence/vercel-retained-file-handle-binding-2026-07-13T0212Z.json",
+  "verification": {
+    "tests_committed": true,
+    "tests_executed_in_ci": false,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain both raw outputs plus the reconciliation bundle.",
+    "Observe operations-only build suppression after Vercel capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the committed retained-evidence test file in an authenticated checkout, then execute both exhaustive workflow clients against one exact commit. Do not create an application deployment until provider capacity and immutable deployment identity are independently verified.",
+  "canonical_queue_mutated": false
+}
