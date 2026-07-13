@@ -38,6 +38,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Verify checkout identity
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -56,15 +59,28 @@ jobs:
       - name: Verify tamper-evident workflow bundle
         run: node --test tools/vercel-studio/workflow-evidence-bundle.test.mjs
 
-      - name: Record tested commit
+      - name: Record exact tested sources
         run: |
           printf '%s\n' "${GITHUB_SHA}" > vercel-retained-evidence-tested-commit.txt
           test "$(cat vercel-retained-evidence-tested-commit.txt)" = "${GITHUB_SHA}"
+          sha256sum \
+            .github/workflows/vercel-retained-evidence-contract.yml \
+            tools/vercel-studio/retained-workflow-evidence-cli.mjs \
+            tools/vercel-studio/retained-workflow-evidence-cli.test.mjs \
+            tools/vercel-studio/gh-envelope-bundle-adapter.mjs \
+            tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs \
+            tools/vercel-studio/workflow-evidence-bundle.mjs \
+            tools/vercel-studio/workflow-evidence-bundle.test.mjs \
+            > vercel-retained-evidence-tested-sources.sha256
+          test "$(wc -l < vercel-retained-evidence-tested-sources.sha256)" -eq 7
+          sha256sum --check vercel-retained-evidence-tested-sources.sha256
 
       - name: Upload commit-bound test record
         uses: actions/upload-artifact@v4
         with:
           name: vercel-retained-evidence-contract-${{ github.sha }}
-          path: vercel-retained-evidence-tested-commit.txt
+          path: |
+            vercel-retained-evidence-tested-commit.txt
+            vercel-retained-evidence-tested-sources.sha256
           if-no-files-found: error
           retention-days: 30
