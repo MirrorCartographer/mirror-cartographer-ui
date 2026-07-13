@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_type": "vercel_studio_vertical_slice",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T14:00:00-04:00",
+  "finding": "The execution preflight did not reserve distinct retained paths for both clients' raw response headers or the derived dual-client rate-limit proof, even though the final workflow evidence bundle requires those artifacts.",
+  "implemented_slice": {
+    "module": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "test": "operations/tools/validate-vercel-evidence-execution-plan.test.mjs",
+    "behavior": [
+      "Requires primary raw response-header output.",
+      "Requires independent raw response-header output.",
+      "Requires a derived dual-client rate-limit-proof output.",
+      "Requires all seven retained artifact paths to be safe, relative, and distinct.",
+      "Returns an explicit retention contract aligned with the schema-v2 final bundle.",
+      "Remains fail-closed and forbids deployment requests, overwrite, pending records, shell control operators, secret-bearing command text, repository drift, commit drift, and submaximal page size."
+    ]
+  },
+  "source_status": {
+    "current_state_read": true,
+    "active_queue_read": true,
+    "specialist_registry_read": true,
+    "trigger_requests_read": true,
+    "recent_commits_read": true,
+    "bundle_contract_read": true,
+    "preflight_and_tests_read": true
+  },
+  "verification": {
+    "method": "deterministic Node test definitions committed and exact file readback pending",
+    "runtime_observed": false,
+    "claims_permitted": [
+      "Source and tests now encode the retained header and rate-limit proof path requirements."
+    ],
+    "claims_forbidden": [
+      "Tests passed in CI.",
+      "Authenticated enumeration ran.",
+      "Retained response headers are authentic.",
+      "Rate-limit proof was accepted.",
+      "A Vercel deployment exists.",
+      "Browser or physical-device audio was verified."
+    ]
+  },
+  "reversibility": {
+    "strategy": "Revert the additive evidence and queue-update commits, then revert the test and source commits in reverse order.",
+    "destructive_actions": false
+  },
+  "privacy_boundary": "Repository operations metadata and source contracts only; no credentials, private chat content, health data, payment logic, or personal identifying material included."
+}
