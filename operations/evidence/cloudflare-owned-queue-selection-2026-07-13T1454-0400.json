@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T14:54:12-04:00",
+  "team": "cloudflare_research",
+  "queue_source": "operations/ACTIVE_QUEUE.json",
+  "queue_source_sha256_status": "not_computed_in_connector_runtime",
+  "observed_result": {
+    "status": "blocked_no_owned_queue_item",
+    "owned_active_item_count": 0,
+    "canonical_queue_item_ids_observed": ["V-001", "M-RECONCILE-002", "R-020", "R-021"]
+  },
+  "durable_improvement": {
+    "tool": "operations/tools/select-owned-queue-item.mjs",
+    "test": "operations/tools/select-owned-queue-item.test.mjs",
+    "behavior": "Fail closed when a team has no active owned queue item; otherwise select the highest-priority active owned item with stable queue-order tie-breaking."
+  },
+  "verification": {
+    "method": "node --test against byte-equivalent local copies",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "claims_not_proven": [
+      "GitHub Actions execution",
+      "Cloudflare deployment",
+      "production behavior",
+      "exhaustive repository tree coverage"
+    ]
+  },
+  "privacy_boundary": "Contains repository governance metadata only; no private user, health, pet-health, credential, payment, or contact data.",
+  "claim_boundary": "This record proves an observed queue-ownership gap and a deterministic local test result only. It does not authorize invention of a Cloudflare work item or claim deployment."
+}
