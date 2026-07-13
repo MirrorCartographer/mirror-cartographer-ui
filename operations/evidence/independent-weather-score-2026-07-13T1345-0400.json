@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "ICW-003",
+  "owner": "independent_creative_web",
+  "premise": "Weather Score is a sixteen-beat pocket-climate sequencer: visitors paint ash, rain, moths, and static into a visual score, then perform it with optional user-initiated sound.",
+  "artifact_path": "independent-creative-web/matchbox-weather/weather-score.html",
+  "artifact_commit": "bed9997eb757e8a9a2bc53581e6a3a008c3af827",
+  "contract_path": "independent-creative-web/matchbox-weather/weather-score.source-contract.test.mjs",
+  "contract_commit": "0c41cf56fe485af3ded8dfbd5297f4f83dfaa725",
+  "verification": {
+    "method": "local deterministic Node source-contract execution before commit",
+    "command": "node --test independent-creative-web/matchbox-weather/weather-score.source-contract.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "claims_bounded_to": [
+      "source contract",
+      "touch and keyboard affordance presence",
+      "assistive-state markup presence",
+      "optional audio contract",
+      "reduced-motion branch presence",
+      "absence of network and commerce code"
+    ],
+    "not_claimed": [
+      "public deployment",
+      "rendered browser behavior",
+      "physical mobile Safari behavior",
+      "audibility on a physical device"
+    ]
+  },
+  "independence_boundary": {
+    "mirror_cartographer_runtime_modified": false,
+    "network_calls": false,
+    "commerce_logic": false,
+    "scientific_or_therapeutic_claims": false
+  },
+  "rollback": "Revert commits 0c41cf56fe485af3ded8dfbd5297f4f83dfaa725 and bed9997eb757e8a9a2bc53581e6a3a008c3af827, or remove only the two Weather Score files in a future revert commit; do not rewrite history."
+}
