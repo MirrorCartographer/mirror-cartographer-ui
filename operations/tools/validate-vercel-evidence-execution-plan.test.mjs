@@ -23,19 +23,20 @@ function validPlan(overrides = {}) {
   };
 }
 
-test('accepts a bounded exact-commit repository-bound no-overwrite plan with canonical retained paths', () => {
+test('accepts a bounded exact-commit repository-bound no-overwrite plan with typed canonical retained paths', () => {
   const result = validateVercelEvidenceExecutionPlan(validPlan());
   assert.equal(result.ok, true);
   assert.equal(result.execution_permitted, true);
   assert.equal(result.commitSha, sha);
   assert.equal(result.repository, 'MirrorCartographer/mirror-cartographer-ui');
-  assert.equal(result.evidence_class, 'bounded_execution_plan_with_canonical_retained_paths');
+  assert.equal(result.evidence_class, 'bounded_execution_plan_with_typed_canonical_retained_paths');
   assert.equal(result.outputs.primary_headers, 'operations/evidence/raw/primary.headers.json');
   assert.equal(result.outputs.independent_headers, 'operations/evidence/raw/independent.headers.json');
   assert.equal(result.outputs.rate_limit_proof, 'operations/evidence/derived/rate-limit-proof.json');
   assert.equal(result.retention_contract.raw_response_headers, true);
   assert.equal(result.retention_contract.dual_client_rate_limit_proof, true);
   assert.equal(result.retention_contract.outputs_must_be_canonically_distinct, true);
+  assert.equal(result.retention_contract.outputs_must_follow_role_routes, true);
 });
 
 test('normalizes safe output paths before returning the execution plan', () => {
@@ -63,9 +64,13 @@ test('rejects missing retained response-header or rate-limit proof paths', () =>
   );
 });
 
-test('rejects unsafe or exactly duplicate output paths across all retained artifacts', () => {
+test('rejects unsafe, directory-only, or exactly duplicate output paths across retained artifacts', () => {
   assert.equal(
     validateVercelEvidenceExecutionPlan(validPlan({ primary_output: '../primary.json' })).reason,
+    'unsafe_or_missing_output_path',
+  );
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ primary_output: '.' })).reason,
     'unsafe_or_missing_output_path',
   );
   assert.equal(
@@ -91,6 +96,35 @@ test('rejects dot-segment and path-separator aliases that resolve to the same re
     })).reason,
     'canonical_output_paths_must_be_distinct',
   );
+});
+
+test('rejects cross-role output directories and file types', () => {
+  const bundleInRaw = validateVercelEvidenceExecutionPlan(validPlan({
+    bundle_output: 'operations/evidence/raw/v-001.json',
+  }));
+  assert.equal(bundleInRaw.reason, 'output_route_contract_mismatch');
+  assert.equal(bundleInRaw.role, 'bundle');
+  assert.equal(bundleInRaw.expectedPrefix, 'operations/evidence/bundles/');
+
+  const proofInBundle = validateVercelEvidenceExecutionPlan(validPlan({
+    rate_limit_proof_output: 'operations/evidence/bundles/rate-limit-proof.json',
+  }));
+  assert.equal(proofInBundle.reason, 'output_route_contract_mismatch');
+  assert.equal(proofInBundle.role, 'rate_limit_proof');
+
+  const commandAsJson = validateVercelEvidenceExecutionPlan(validPlan({
+    retained_command_output: 'operations/evidence/raw/command.json',
+  }));
+  assert.equal(commandAsJson.reason, 'output_route_contract_mismatch');
+  assert.equal(commandAsJson.role, 'retained_command');
+  assert.equal(commandAsJson.expectedSuffix, '.txt');
+
+  const headersWithoutTypedSuffix = validateVercelEvidenceExecutionPlan(validPlan({
+    primary_headers_output: 'operations/evidence/raw/primary.json',
+    primary_output: 'operations/evidence/raw/other-primary.json',
+  }));
+  assert.equal(headersWithoutTypedSuffix.reason, 'output_route_contract_mismatch');
+  assert.equal(headersWithoutTypedSuffix.role, 'primary_headers');
 });
 
 test('rejects overwrite, pending records, or deployment requests', () => {
