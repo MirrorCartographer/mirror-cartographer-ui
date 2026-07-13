@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T18:03:53Z",
+  "record_type": "identifier_specific_bounded_search_ledger",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "purpose": "Preserve exact identifier search outcomes without promoting bounded connector search into exhaustive repository-history claims.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "operations/continuity/M-RECONCILE-002-history-coverage-contract-2026-07-13T1326-0400.json",
+    "authenticated GitHub commit-message searches for M-004, M-005, and M-006"
+  ],
+  "searches": [
+    {
+      "identifier": "M-004",
+      "query": "M-004",
+      "source_class": "authenticated_connector_commit_search",
+      "coverage_class": "bounded_search",
+      "result_count": 1,
+      "result_shas": ["83205275e023fccf602127ca4ff1cf3075bd1c26"],
+      "classification": "later_quarantine_reference_only",
+      "resolution_effect": "does_not_resolve_origin",
+      "known_limits": [
+        "Search endpoint result coverage is provider-defined rather than an all-ref traversal.",
+        "Commit-message search does not inspect every historical file body, tree, deleted unreachable object, private chat, or external artifact store."
+      ]
+    },
+    {
+      "identifier": "M-005",
+      "query": "M-005",
+      "source_class": "authenticated_connector_commit_search",
+      "coverage_class": "bounded_search",
+      "result_count": 0,
+      "result_shas": [],
+      "classification": "bounded_no_match",
+      "resolution_effect": "remains_unresolved",
+      "known_limits": [
+        "Zero search results do not establish absence from reachable repository history.",
+        "Commit-message search does not inspect every historical file body, tree, deleted unreachable object, private chat, or external artifact store."
+      ]
+    },
+    {
+      "identifier": "M-006",
+      "query": "M-006",
+      "source_class": "authenticated_connector_commit_search",
+      "coverage_class": "bounded_search",
+      "result_count": 1,
+      "result_shas": ["83205275e023fccf602127ca4ff1cf3075bd1c26"],
+      "classification": "later_quarantine_reference_only",
+      "resolution_effect": "does_not_resolve_origin",
+      "known_limits": [
+        "Search endpoint result coverage is provider-defined rather than an all-ref traversal.",
+        "Commit-message search does not inspect every historical file body, tree, deleted unreachable object, private chat, or external artifact store."
+      ]
+    }
+  ],
+  "durable_memory": {
+    "observed": "The only exact commit-message match returned for M-004 and M-006 is the later namespace-rejection record at 83205275e023fccf602127ca4ff1cf3075bd1c26; M-005 returned no exact commit-message result.",
+    "inferred": "The asymmetry may reflect later documentation wording rather than distinct historical provenance and cannot rank one identifier as more likely to have existed.",
+    "proposed": "Use identifier-specific search ledgers as candidate-discovery inputs to the exhaustive all-ref and reachable-history traversal, preserving query, result set, limits, and immutable locators.",
+    "superseded": "Treating a zero-result exact search for M-005, or a later quarantine reference for M-004/M-006, as proof of historical absence or origin.",
+    "unresolved": "The originating immutable objects and assigning contexts for M-004, M-005, and M-006 remain unlocated."
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "M-004 and M-006 have exact commit-message matches while M-005 does not.",
+    "resolution": "The returned match is a later record that mentions the identifiers collectively and is not an originating artifact. Therefore all three identifiers retain the same unresolved provenance status.",
+    "evidence_strength": "high for bounded search outcomes; insufficient for exhaustive historical classification"
+  },
+  "identity_gate": {
+    "required_agreement": ["namespace", "owner", "semantic_role", "temporal_precedence", "immutable_locator"],
+    "current_result": {
+      "M-004": "unresolved",
+      "M-005": "unresolved",
+      "M-006": "unresolved"
+    }
+  },
+  "falsification_routes": [
+    "Produce an earlier immutable object that assigns one of the identifiers and satisfies all identity-gate dimensions.",
+    "Complete all-ref enumeration and reachable-history traversal and show an exact identifier in a previously uninspected commit or tree.",
+    "Show that the returned quarantine commit is itself the originating assignment rather than a later reconciliation record."
+  ],
+  "privacy_boundary": {
+    "included": ["repository paths", "commit SHAs", "identifier strings", "coverage classifications", "abstract provenance states"],
+    "excluded": ["private chat text", "raw uploaded-file content", "health or pet-health information", "credentials", "personal identifying details"],
+    "publication_rule": "Publish only locator and classification metadata until an originating source is independently verified and approved."
+  },
+  "claim_ceiling": "This ledger records exact bounded searches. It does not prove exhaustive repository coverage, artifact absence, or artifact origin.",
+  "next_action": "Feed these exact queries and the quarantine commit into an authenticated complete ref inventory plus reachable-history traversal, then inspect matching historical file bodies and assigning-context terms before changing any provenance node."
+}
