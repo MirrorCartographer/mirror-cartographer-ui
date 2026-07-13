@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T02:55:57-04:00",
+  "finding": "The retained-evidence manifest and final deployment-attempt decision were individually fail-closed, but no single integration surface recomputed artifact digests from supplied bytes, parsed the retained reconciliation result, built the manifest, and passed only derived evidence into the deployment gate.",
+  "design_implication": "Deployment-attempt authorization must be derived from retained bytes in one deterministic pipeline; caller-supplied digest and exhaustive-evidence assertions must not bypass byte recomputation or reconciliation verification.",
+  "implemented": {
+    "module": "operations/tools/vercel-retained-evidence-pipeline.mjs",
+    "test": "operations/tools/vercel-retained-evidence-pipeline.test.mjs",
+    "boundaries": [
+      "Recompute SHA-256 and byte length from each retained artifact.",
+      "Build the R-022 manifest from computed descriptors.",
+      "Parse reconciliation bytes and require verified=true, exact commit agreement, and provider_ceiling_ambiguous=false.",
+      "Feed derived handoff state into the existing Vercel deployment decision.",
+      "Keep deployment_claim_permitted=false even when an application build attempt is authorized.",
+      "Block operations-only changes from creating application builds."
+    ]
+  },
+  "verification": {
+    "command": "node --test operations/tools/vercel-retained-evidence-pipeline.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "cases": [
+      "successful byte-bound pipeline",
+      "digest recomputation after byte mutation",
+      "reconciliation commit mismatch",
+      "provider ceiling ambiguity",
+      "operations-only no-build boundary",
+      "malformed reconciliation JSON"
+    ],
+    "environment": "Local Node test harness reconstructed from exact repository source files fetched before the change."
+  },
+  "commits": [
+    "0cde2fffc53b88079294538b6e342c655d96a0ae",
+    "353c33c4a921e94495cc06207b5ed2576c9daa1c"
+  ],
+  "deployment_evidence": {
+    "application_deployment_attempted": false,
+    "reason": "CURRENT_STATE records exhausted provider build capacity and directs operations-only changes until capacity returns.",
+    "deployment_claim_permitted": false
+  },
+  "rollback": "Revert commits 353c33c4a921e94495cc06207b5ed2576c9daa1c and 0cde2fffc53b88079294538b6e342c655d96a0ae. No existing runtime path was modified.",
+  "limits": [
+    "The pipeline has not yet consumed authenticated retained artifacts from a real exact-commit collection.",
+    "The reconciliation JSON contract is verified structurally only through its bounded fields; authenticity still depends on independently retained bytes and execution provenance.",
+    "Authorization means an application build attempt may proceed when all prerequisites are true; it does not prove a deployment exists or is healthy.",
+    "No physical iPhone Safari audio verification was performed."
+  ]
+}
