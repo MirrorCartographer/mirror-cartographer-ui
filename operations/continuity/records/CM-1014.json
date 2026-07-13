@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1014",
+  "created_at": "2026-07-13T22:21:05Z",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Repository search absence is not exhaustive provenance absence",
+  "durable_memory": "A zero-result repository code-search response cannot classify M-004, M-005, or M-006 as unlocated. Unlocated status requires evidence that all relevant branches, reachable commits, decision logs, language lexicons, project documents, and retained continuity artifacts were traversed under a documented coverage method.",
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "Repository-scoped searches for the combined identifiers, M-004 provenance language, CM-1013, the queue objective text, and decision-log or lexicon terminology returned no indexed matches during this run.",
+      "source": "GitHub connector repository search responses for MirrorCartographer/mirror-cartographer-ui",
+      "coverage_class": "indexed_repository_search_only"
+    },
+    {
+      "status": "observed",
+      "claim": "The canonical queue still requires exhaustive branch inventory or equivalent history traversal before any unlocated classification.",
+      "source": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "coverage_class": "canonical_queue"
+    },
+    {
+      "status": "inferred",
+      "claim": "Indexed code search may omit unindexed refs, unreachable history, renamed files, deleted paths retained only in history, or content outside its search surface; therefore a zero-result response proves only no match within the returned search coverage.",
+      "evidence_strength": "strong_methodological_inference"
+    },
+    {
+      "status": "proposed",
+      "claim": "Require a coverage receipt before changing any M-004, M-005, or M-006 node from unresolved to unlocated. The receipt must identify enumerated refs, traversal method, commit/object coverage, searched namespaces, time, tool identity, and known exclusions.",
+      "acceptance_test": "A reviewer can reproduce the traversal and determine whether every relevant reachable object and named source class was covered."
+    },
+    {
+      "status": "superseded",
+      "claim": "No repository search result means the historical artifact never existed."
+    },
+    {
+      "status": "unresolved",
+      "claim": "The immutable origins and locations of M-004, M-005, and M-006 remain unresolved because exhaustive ref and history coverage was not available in this run."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository governance metadata",
+      "queue identifiers",
+      "search coverage classes",
+      "provenance requirements"
+    ],
+    "excluded": [
+      "private chat content",
+      "health or animal-health material",
+      "credentials",
+      "contacts",
+      "personal identifiers",
+      "unreviewed file-library content"
+    ]
+  },
+  "specialist_registry": {
+    "change": "none",
+    "reason": "The durable capability gap concerns evidence coverage, not a missing specialist role; the registry rule was not satisfied for an addition or retirement."
+  },
+  "falsification_route": "Produce an authenticated exhaustive branch and reachable-object traversal that locates an immutable source object assigning M-004, M-005, or M-006, or demonstrates documented exhaustive coverage with no such object.",
+  "next_action": "Create and execute a reproducible refs-and-history coverage receipt, then reconcile each identifier against immutable objects without recreating missing history."
+}
