@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel_studio_slice_evidence",
+  "queue_item": "V-001",
+  "captured_at": "2026-07-13T22:33:00Z",
+  "implementation_commit": "e50c51b00b2ee8e2597e75e3ebc16bdd85c3e1be",
+  "test_commit": "922685d0b7246cbf5be24a4ddad224f2ab18ccc2",
+  "files": [
+    {
+      "path": "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+      "blob_sha": "294c20a283587cc5d5a12fbbb28e207cee738879",
+      "verification": "connector_fetched_at_exact_commit"
+    },
+    {
+      "path": "operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+      "blob_sha": "5091631fb0a1919091a14169d14547d2ee235d39",
+      "verification": "connector_fetched_at_exact_commit"
+    }
+  ],
+  "implemented_guards": [
+    "exact repository and 40-character commit identity",
+    "complete primary and independent enumeration envelopes",
+    "retained raw-output paths and SHA-256 values",
+    "record-count consistency",
+    "missing and duplicate workflow-run identifier rejection",
+    "cross-commit and nonterminal record rejection",
+    "quiet-interval and stable-snapshot enforcement",
+    "reconciliation and provider-ceiling fail-closed behavior",
+    "enumeration record-set agreement",
+    "explicit no-deployment, no-browser-audibility, and no-physical-device claim boundary",
+    "no-overwrite output writing"
+  ],
+  "test_cases_committed": 11,
+  "runtime_verification": {
+    "status": "not_executed_in_isolated_runtime",
+    "reason": "The isolated runtime could not resolve raw.githubusercontent.com, so exact committed files could not be downloaded for Node execution.",
+    "strongest_completed_route": "Both files were independently fetched through the authenticated GitHub connector at exact commit 922685d0b7246cbf5be24a4ddad224f2ab18ccc2 and structurally inspected."
+  },
+  "claims": {
+    "deployment_identity_verified": false,
+    "browser_audibility_verified": false,
+    "physical_iphone_safari_verified": false,
+    "authenticated_enumeration_executed": false
+  },
+  "rollback": [
+    "Revert commit 922685d0b7246cbf5be24a4ddad224f2ab18ccc2",
+    "Revert commit e50c51b00b2ee8e2597e75e3ebc16bdd85c3e1be"
+  ]
+}
