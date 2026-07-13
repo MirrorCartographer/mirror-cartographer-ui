@@ -25,6 +25,12 @@ export async function verifyFreshEvidenceReceipt(receiptPath) {
   reason(reasons, receipt?.deployment_claim_permitted !== false, 'deployment_claim_ceiling_violated');
   reason(reasons, receipt?.application_deployment_attempted !== false, 'application_deployment_flag_violated');
 
+  const parameters = receipt?.evaluation_parameters;
+  reason(reasons, !parameters || typeof parameters !== 'object' || Array.isArray(parameters), 'evaluation_parameters_missing');
+  reason(reasons, typeof parameters?.target_commit_time !== 'string', 'target_commit_time_missing');
+  reason(reasons, !Number.isSafeInteger(parameters?.max_observation_age_ms), 'max_observation_age_ms_invalid');
+  reason(reasons, !Number.isSafeInteger(parameters?.max_channel_skew_ms), 'max_channel_skew_ms_invalid');
+
   const bindings = receipt?.source_bindings;
   if (!bindings || typeof bindings !== 'object' || Array.isArray(bindings)) {
     reasons.push('source_bindings_missing');
@@ -49,16 +55,16 @@ export async function verifyFreshEvidenceReceipt(receiptPath) {
     }
   }
 
-  if (names.every((name) => parsed[name])) {
+  if (names.every((name) => parsed[name]) && reasons.every((code) => !code.endsWith('_invalid') && !code.endsWith('_missing'))) {
     const expectedAssessment = assessFreshReconciledVercelEvidence({
       target_commit_sha: receipt.target_commit_sha,
-      target_commit_time: receipt.assessment?.target_commit_time,
+      target_commit_time: parameters.target_commit_time,
       evaluated_at: receipt.generated_at,
       reconciliation: parsed.reconciliation,
       primary_observation: parsed.primary_observation,
       independent_observation: parsed.independent_observation,
-      max_observation_age_ms: receipt.assessment?.limits?.max_observation_age_ms,
-      max_channel_skew_ms: receipt.assessment?.limits?.max_channel_skew_ms
+      max_observation_age_ms: parameters.max_observation_age_ms,
+      max_channel_skew_ms: parameters.max_channel_skew_ms
     });
     reason(reasons, !sameJson(receipt.assessment, expectedAssessment), 'assessment_replay_mismatch');
     const expectedNextGate = expectedAssessment.accepted
