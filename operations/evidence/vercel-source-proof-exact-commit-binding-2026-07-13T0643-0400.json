@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T10:43:00Z",
+  "finding": "Retained source bindings previously validated repository-relative paths and blob SHA shape but did not require each lookup to declare the exact target commit, approved immutable lookup method, and UTC verification time.",
+  "durable_improvement": {
+    "source": "operations/tools/vercel-retained-evidence-chain-receipt.mjs",
+    "test": "operations/tools/vercel-retained-evidence-chain-receipt.test.mjs",
+    "requirements_added": [
+      "Every source binding must carry a 40-character target_commit equal to the pipeline receipt target commit.",
+      "Every source binding must use github-contents-at-commit or git-ls-tree-at-commit.",
+      "Every source binding must carry a parseable ISO-8601 UTC verified_at timestamp.",
+      "Unverified extra fields remain stripped from the composite receipt."
+    ]
+  },
+  "commits": {
+    "implementation": "cdf909bf6c65f1386cea4f954a6df7be9b919086",
+    "tests": "e850e0d234ea97313cc4ab810028078836104ffa"
+  },
+  "verification": {
+    "method": "node --test operations/tools/vercel-retained-evidence-chain-receipt.test.mjs using the committed-equivalent source and test contents",
+    "result": "pass",
+    "tests_passed": 10,
+    "tests_failed": 0,
+    "covered_failures": [
+      "cross-commit source proof",
+      "missing or mutable-default-branch verification method",
+      "missing, non-UTC, or invalid verification timestamp",
+      "unsafe path",
+      "invalid blob SHA",
+      "duplicate source path",
+      "authority escalation"
+    ],
+    "evidence_strength": "source-and-local-runtime-verified"
+  },
+  "deployment": {
+    "application_deployment_attempted": false,
+    "deployment_claim_permitted": false,
+    "reason": "CURRENT_STATE requires operations-only work while Vercel build capacity is exhausted."
+  },
+  "rollback": {
+    "route": "Revert commits e850e0d234ea97313cc4ab810028078836104ffa and cdf909bf6c65f1386cea4f954a6df7be9b919086 in reverse order.",
+    "data_migration_required": false
+  },
+  "limits": [
+    "The validator checks proof metadata consistency; it does not itself query GitHub to establish that the declared blob exists at the target commit.",
+    "No Vercel deployment, browser run, physical-device audio test, or immutable deployment identity was produced in this slice."
+  ],
+  "falsification_route": "Supply a source binding from a different commit, an unapproved mutable lookup method, or a non-UTC timestamp; receipt construction must fail closed. Separately compare each declared blob SHA with an authenticated GitHub contents or git ls-tree lookup at the exact target commit."
+}
