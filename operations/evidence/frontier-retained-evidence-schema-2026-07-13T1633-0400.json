@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-13T20:33:34Z",
+  "finding": "The unresolved R-021 acceptance path needs a machine-checkable retention manifest before two enumerations can be promoted as durable evidence.",
+  "source_status": {
+    "canonical_queue": "observed",
+    "json_schema_draft_2020_12": "primary_source_reviewed",
+    "github_workflow_runs_api": "primary_source_reviewed"
+  },
+  "artifact": {
+    "schema": "operations/research/R-021-retained-evidence-manifest.schema.json",
+    "test_vectors": "operations/research/R-021-retained-evidence-manifest.test-vectors.json",
+    "commit_sha_schema": "75e02d9dcdea07ffc81c269c765f7fb0ae49a811",
+    "commit_sha_vectors": "0c496afd2792a1a6f4643a9f87bae1f8a9ddcacd"
+  },
+  "enforced_by_schema": [
+    "exact lowercase 40-hex commit form",
+    "complete primary and independent enumeration envelopes",
+    "verified reconciliation envelope",
+    "explicit absence of provider-ceiling ambiguity",
+    "four retained outputs under operations/evidence/raw",
+    "positive byte counts",
+    "lowercase SHA-256 digests",
+    "overwrite prohibition",
+    "closed object shapes"
+  ],
+  "not_enforced_by_schema": [
+    "cross-field commit equality",
+    "uniqueness of retained paths",
+    "existence or byte-level correspondence of referenced files",
+    "authenticity of GitHub responses",
+    "deployment identity or runtime behavior"
+  ],
+  "verification": {
+    "schema_json_committed": true,
+    "test_vectors_committed": true,
+    "authenticated_repository_execution": false,
+    "procedural_validator_execution": false,
+    "deployment_claim": false
+  },
+  "evidence_strength": "implementation_ready_contract_unexecuted",
+  "falsification_route": "Run a Draft 2020-12 validator over all six vectors, then add a procedural gate for commit equality, output-path uniqueness, and retained-file digest verification; reject the artifact if any expected result differs."
+}
