@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T05:23:00-04:00",
+  "slice": "Added and executed a fail-closed runtime verification receipt contract for the retained-evidence test command without requesting a Vercel deployment.",
+  "source_bindings": [
+    {
+      "path": "operations/tools/vercel-runtime-verification-receipt.mjs",
+      "blob_sha": "7ae4b7146e6bf67582002dd56f932dd544b18ee9"
+    },
+    {
+      "path": "operations/tools/vercel-runtime-verification-receipt.test.mjs",
+      "blob_sha": "10bdb96244377b6ebcb3442dde50d877b7cd56d9"
+    }
+  ],
+  "verification": {
+    "command": "node --test runtime-receipt.test.mjs",
+    "execution_environment": "isolated local Node runtime using byte-identical candidate source",
+    "exit_code": 0,
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "verified_behaviors": [
+      "successful exact-source receipt classification",
+      "failed test result remains failed",
+      "test-count drift rejection",
+      "unapproved command rejection",
+      "unsafe path and invalid blob identity rejection"
+    ]
+  },
+  "boundaries": {
+    "application_deployment_attempted": false,
+    "deployment_claim_permitted": false,
+    "provider_capacity_rechecked": false,
+    "physical_device_audibility_verified": false
+  },
+  "rollback": "Revert commits 144364fb66a1264f27f852305944fc0b6ac19ed2 and 4c36231fdb07343a7c3bfcc0a004d0f1fbf2d34b, then revert this additive evidence record. No application path was modified.",
+  "falsification_route": "Refetch both committed blobs, rerun the committed test file in Node, and reject this evidence if the source bytes or 5/5 result differ."
+}
