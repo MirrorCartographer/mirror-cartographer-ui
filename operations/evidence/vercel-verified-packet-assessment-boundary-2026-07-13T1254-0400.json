@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T16:54:00Z",
+  "slice": "Require complete-marker and cross-artifact coherent packet verification before exact-commit Vercel status assessment.",
+  "files": [
+    "operations/tools/assess-verified-vercel-evidence-packet.mjs",
+    "operations/tools/assess-verified-vercel-evidence-packet.test.mjs"
+  ],
+  "verification": {
+    "method": "Node test runner against byte-identical implementation logic with dependency-injected packet reader and status assessor",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered_boundaries": [
+      "verified and coherent packet is read before assessment",
+      "repository and commit identity are derived from the retained packet",
+      "unverified or incoherent packets fail before assessor invocation",
+      "assessor identity divergence fails closed",
+      "packet claim ceiling prevents deployment permission promotion"
+    ]
+  },
+  "claim_ceiling": "Deterministic contract verification only. This does not prove GitHub Actions execution, Vercel deployment, immutable deployment identity, audio audibility, physical-device behavior, or production runtime behavior.",
+  "deployment_attempted": false,
+  "canonical_queue_overwritten": false,
+  "rollback": "Revert commits e94c70fe762536c21ec61430dbf845cc30e94f67 and 9288850242cf22a6ac9381060e9acb1f1060f234; no application or deployment configuration changed."
+}
