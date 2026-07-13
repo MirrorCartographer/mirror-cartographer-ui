@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T01:05:14-04:00",
+  "target_commit": "bd5a114a4989416ccf6e21f091e088814e6df13a",
+  "observation": {
+    "source": "authenticated GitHub connector fetch_commit_workflow_runs",
+    "returned_run_count": 0,
+    "coverage_class": "pull_request_first_page_connector_snapshot",
+    "classification": "absence_unproven",
+    "completion_claim_allowed": false
+  },
+  "implementation": {
+    "path": "tools/vercel-studio/connector-workflow-observation.mjs",
+    "commit": "8098acfddc1d4b4125c84ecf4378f9a45c85f1dd",
+    "test_path": "tools/vercel-studio/connector-workflow-observation.test.mjs",
+    "test_commit": "f7ac64405ceea385cafa8cca6d8ece9688653d75"
+  },
+  "verification": {
+    "method": "Node 20 compatible local execution against exact committed source text",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered_cases": [
+      "zero-result limited snapshots remain absence_unproven",
+      "positive limited snapshots remain ineligible for completion claims",
+      "exhaustive positive observations may advance to downstream assessment",
+      "cross-commit and duplicate records fail closed"
+    ]
+  },
+  "limits": [
+    "The connector result is not an exhaustive all-event workflow enumeration.",
+    "No workflow artifact was available to download from this observation path.",
+    "No Vercel deployment was attempted while provider capacity remains constrained.",
+    "No browser or physical-device audio verification was performed."
+  ],
+  "rollback": "Remove the new classifier and test in a future additive revert commit; no existing evidence or application behavior was modified."
+}
