@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Make exact-commit workflow-run evidence fail closed when retained pagination was interrupted or made ambiguous by GitHub primary or secondary rate limiting.",
+  "selected_from": ["R-020", "R-021"],
+  "completed_slices": [
+    "Researched current official GitHub REST rate-limit and retry contracts.",
+    "Implemented a retained response-header envelope for every enumerated page.",
+    "Rejects 403/429 responses, retry-after, missing or incoherent rate-limit headers, zero remaining budget before the terminal page, resource drift, page gaps, and an unproven terminal page.",
+    "Added seven deterministic Node test cases.",
+    "Recorded source status, uncertainty, claim boundary, and falsification route."
+  ],
+  "files": [
+    "operations/research/github-workflow-run-rate-limit-envelope.mjs",
+    "operations/research/github-workflow-run-rate-limit-envelope.test.mjs",
+    "operations/evidence/frontier-workflow-rate-limit-provenance-2026-07-13T1344-0400.json"
+  ],
+  "commits": [
+    "862394c9b73274e24b99327b39bec53121993aa3",
+    "e2bd61d9ba230a81957a4e55a1caa0f19f156a7e",
+    "ebf16a0c62aeac19daf13d23b0f93fecfa02e42f"
+  ],
+  "verification": {
+    "source_readback": "pending final immutable readback",
+    "tests_committed": 7,
+    "tests_executed": false,
+    "authenticated_network_execution": false
+  },
+  "acceptance_remaining": [
+    "Compose the rate-limit envelope ahead of workflow-run reconciliation and coverage assessment.",
+    "Retain raw response headers for every page in both exhaustive clients or document why one client cannot expose equivalent header evidence.",
+    "Run the seven deterministic tests in CI at the exact integration commit.",
+    "Execute authenticated exact-commit enumeration and retain rate-limit, pagination, reconciliation, and assessment artifacts together."
+  ],
+  "safe_next_action": "Vercel Studio should integrate this gate before reconciliation promotion. Reject any evidence bundle whose retained page headers do not prove successful, coherent, non-rate-limited retrieval through the unique terminal page.",
+  "registry_change": null,
+  "deletions": []
+}
