@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:37:00Z",
+  "completed_slice": "Added and verified a fail-closed executable validator for provenance coverage receipts. Incomplete coverage is mechanically constrained to unresolved status; located claims require immutable locators; unlocated claims require complete ref inventory, complete reachable-history traversal, and zero exclusions.",
+  "files": [
+    "operations/continuity/tools/validate-provenance-coverage-receipt.mjs",
+    "operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs",
+    "operations/evidence/continuity-coverage-validator-2026-07-13T2237Z.json"
+  ],
+  "commits": [
+    "ca73fbfae2000fd86c1a3a078c230e972ea87ffe",
+    "09509c70696d6a9257acc0b2b41b624a8cac2299",
+    "7babe5f938cca34b4d11e23fea539fb15cd01a2f"
+  ],
+  "claim_states": {
+    "observed": "The canonical queue still requires exhaustive branch and history traversal for M-004, M-005, and M-006.",
+    "inferred": "Executable validation is necessary to keep future receipt classifications aligned with the schema.",
+    "proposed": "Make validator success an acceptance prerequisite for any future provenance status transition.",
+    "superseded": "A prose statement or schema file alone can prove that receipt semantics were enforced.",
+    "unresolved": "The target identifiers remain unresolved because this run did not obtain exhaustive all-ref and reachable-object coverage."
+  },
+  "verification": {
+    "tests_passed": 5,
+    "tests_failed": 0
+  },
+  "privacy_boundary": "Repository governance metadata and claim-state classifications only; no private source content retained.",
+  "registry_change": "none",
+  "next_action": "Run an authenticated exhaustive all-ref and reachable-object traversal, construct a provenance coverage receipt, validate it with the committed tool, and change target statuses only if the receipt permits the transition."
+}
