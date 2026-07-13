@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T16:28:27-04:00",
+  "slice": "retained_output_byte_verification",
+  "problem": "Existing retained-output digest verification compared declarations across records but explicitly did not prove that declared hashes matched the files' current bytes.",
+  "implementation": {
+    "source": "operations/tools/verify-retained-output-bytes.mjs",
+    "test": "operations/tools/verify-retained-output-bytes.test.mjs",
+    "behavior": [
+      "Requires a non-empty unique path-bound SHA-256 declaration set.",
+      "Opens each retained output read-only with O_NOFOLLOW.",
+      "Rejects symbolic links and non-regular files.",
+      "Streams and hashes current file bytes with SHA-256.",
+      "Fails closed on unreadable files or digest mismatch.",
+      "Returns observed byte sizes and digests only after all paths verify."
+    ]
+  },
+  "verification": {
+    "route": "deterministic local Node test against byte-equivalent committed source, followed by connector fetch of the committed source",
+    "command": "node --test verify-retained-output-bytes.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "matching regular-file bytes accepted",
+      "byte mutation rejected",
+      "duplicate path rejected",
+      "symbolic link rejected"
+    ],
+    "committed_source_fetch_verified": true
+  },
+  "commits": {
+    "implementation": "16bae3dccaf40b64765d1e1ee4b8e200bc68d2d6",
+    "test": "11bbc23c863b9d4b471ff6e2f62734e3f7d8f298"
+  },
+  "claim_boundary": [
+    "This proves deterministic source behavior and current-byte SHA-256 agreement for supplied local paths only.",
+    "It does not prove retrieval authenticity, exhaustive workflow enumeration, Vercel deployment identity, browser behavior, audio audibility, or physical-device acceptance.",
+    "No application deployment was attempted because current operating state prohibits attempts while provider capacity is exhausted."
+  ],
+  "preservation": {
+    "canonical_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "files_deleted": false,
+    "history_rewritten": false,
+    "payments_or_conversion_added": false
+  }
+}
