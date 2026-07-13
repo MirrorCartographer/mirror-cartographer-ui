@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:46:00Z",
+  "state": "in_progress",
+  "completed_slice": "Bound provenance coverage_result labels to the underlying completeness and exclusion evidence so receipts cannot overstate or contradict their actual search surface.",
+  "durable_memory": "Coverage class is derived from evidence, not declared independently: complete = complete ref inventory + complete history traversal + zero exclusions; complete_with_declared_exclusions = complete structural traversal + one or more named exclusions; incomplete must not contradict fully complete evidence.",
+  "claim_classes": {
+    "observed": "The prior validator did not enforce receipt-level consistency between coverage_result and its evidence fields except for unlocated transitions.",
+    "inferred": "This permitted semantic drift between a receipt's label and its actual repository coverage.",
+    "proposed": "Require fail-closed semantic consistency for every receipt regardless of claim transition status.",
+    "superseded": "A syntactically valid coverage_result is sufficient to establish coverage class.",
+    "unresolved": "Immutable provenance for M-004, M-005, and M-006 remains unlocated because exhaustive authenticated coverage has not been obtained."
+  },
+  "files": [
+    "operations/continuity/tools/validate-provenance-coverage-receipt.mjs",
+    "operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs",
+    "operations/evidence/continuity-coverage-result-consistency-2026-07-13T2246Z.json"
+  ],
+  "commits": [
+    "76271ed38cf73e1788eb6c70dfd557c3fd06df48",
+    "7fcdfb46482bd8b2113747eea042de801e90db3d",
+    "3d4221e6c33225f5cec4880b835c52cc62485ae5"
+  ],
+  "verification": {
+    "status": "specified_not_executed",
+    "tests_total_after_change": 16,
+    "new_falsification_cases": 6,
+    "next_verification": "Run the Node test file in an authenticated checkout and retain the result."
+  },
+  "registry_change": null,
+  "safe_next_action": "Execute the 16-test validator suite, then obtain an authenticated exhaustive ref inventory and reachable-history traversal and construct a real coverage receipt for M-004, M-005, and M-006."
+}
