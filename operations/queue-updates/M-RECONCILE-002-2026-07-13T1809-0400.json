@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:09:34Z",
+  "state": "in_progress",
+  "completed_slice": "Recorded CM-1011, which distinguishes canonical queue authority for ownership and acceptance from later additive evidence that remains pending canonical projection.",
+  "evidence": [
+    "operations/continuity/records/CM-1011.json",
+    "operations/continuity/records/CM-1010.json",
+    "operations/queue-updates/M-RECONCILE-002-2026-07-13T1801-0400.json",
+    "commit:28e1f916ffa6620dfa85aeee68aa054c54e857ec"
+  ],
+  "claim_status": {
+    "observed": "The canonical queue snapshot predates later committed continuity records and additive queue updates.",
+    "inferred": "Canonical assignment authority and post-snapshot execution evidence can coexist without contradiction when authority is field-scoped and time-scoped.",
+    "proposed": "Validate and reconcile additive queue updates before promoting them into the canonical queue.",
+    "superseded": "Omission from a stale canonical snapshot proves that a later committed slice does not exist.",
+    "unresolved": "Canonical projection lag is not yet machine-validated, and M-004, M-005, and M-006 remain unresolved."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch and refs inventory or equivalent repository-history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Reconcile pending additive continuity slices into the canonical queue through an explicit non-destructive projection update."
+  ],
+  "safe_next_action": "Implement a deterministic read-only projection validator that compares canonical queue snapshots with additive queue updates, then continue authenticated all-refs and object traversal for M-004, M-005, and M-006.",
+  "privacy_boundary": "Repository provenance and queue-governance metadata only; no private chat, health, credentials, contacts, or raw uploaded-file content was stored.",
+  "canonical_queue_overwritten": false,
+  "reversible": true
+}
