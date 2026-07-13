@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "artifact_id": "M-RECONCILE-002-enforcement-lineage-2026-07-13T0608-0400",
+  "created_at": "2026-07-13T10:08:49Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "purpose": "Preserve the verified evolution of continuity claim-state enforcement without implying that unresolved historical identifiers were located.",
+  "memory": {
+    "statement": "Continuity enforcement evolved from a descriptive transition protocol, to executable transition validation, to an atomic append-only transition journal. This lineage strengthens future provenance preservation but does not resolve the origin or location of M-004, M-005, or M-006.",
+    "stages": [
+      {
+        "order": 1,
+        "kind": "observed",
+        "name": "claim_state_transition_protocol",
+        "immutable_commit": "e1ed0b78bb533a0fcc23bfa2a0aae0c0185cc2bd",
+        "role": "Defined required prior state, next state, evidence, reason, privacy class, falsification route, timestamp, and actor semantics."
+      },
+      {
+        "order": 2,
+        "kind": "observed",
+        "name": "claim_state_transition_validator",
+        "immutable_commit": "7f2f117be8256a94e22b230006bbd2c424be7c44",
+        "role": "Converted transition semantics into executable fail-closed validation."
+      },
+      {
+        "order": 3,
+        "kind": "observed",
+        "name": "atomic_claim_transition_journal",
+        "immutable_commit": "fe6928f141e757b728cf151baf5a306b43df6fc7",
+        "role": "Added compare-and-set append semantics, idempotency, stale-head rejection, conflict detection, and bounded contention failure."
+      }
+    ]
+  },
+  "claim_classification": {
+    "observed": [
+      "The three-stage enforcement lineage exists in immutable repository commits.",
+      "The atomic journal validates a transition before compare-and-set append.",
+      "The canonical queue still lists M-004, M-005, and M-006 provenance as unresolved."
+    ],
+    "inferred": [
+      "Future knowledge-graph updates can preserve contradiction and prior-state history more reliably when routed through the journal."
+    ],
+    "proposed": [
+      "Bind M-RECONCILE-002 claim-state changes to the atomic transition journal once a durable backend is selected."
+    ],
+    "superseded": [
+      "Treating descriptive transition prose alone as sufficient enforcement."
+    ],
+    "unresolved": [
+      "Originating immutable sources for M-004, M-005, and M-006.",
+      "Exhaustive branch and reachable-history coverage.",
+      "Production durable backend for the transition journal."
+    ]
+  },
+  "contradiction_resolution": [
+    {
+      "incorrect_collapse": "new enforcement capability means historical provenance is resolved",
+      "resolution": "Capability lineage and artifact provenance are separate claims; the former is observed, the latter remains unresolved."
+    },
+    {
+      "incorrect_collapse": "latest active state replaces prior states",
+      "resolution": "The journal retains an append-only transition sequence and a current head; superseded states remain part of history."
+    }
+  ],
+  "privacy_boundary": {
+    "classification": "project_internal_nonpersonal",
+    "included": [
+      "opaque artifact identifiers",
+      "repository commit identifiers",
+      "implementation roles",
+      "claim-status semantics"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal events",
+      "health information",
+      "credentials",
+      "account data"
+    ]
+  },
+  "evidence_strength": "immutable_commit_observed",
+  "falsification_route": "Fetch each listed commit and verify that its patch implements the stated stage; reject this lineage if commit identity, ordering, or role does not match.",
+  "queue_effect": "Adds a completed continuity slice only; does not close any M-RECONCILE-002 acceptance criterion."
+}
