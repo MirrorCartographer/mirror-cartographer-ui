@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "record_id": "V-001-2026-07-13T0345Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T03:45:00Z",
+  "status": "in_progress_blocked",
+  "completed_slice": "A dedicated non-deployment GitHub Actions workflow now runs the retained evidence CLI, gh envelope adapter, and tamper-evident bundle tests on exact source changes and uploads a commit-bound test record.",
+  "source_commits": [
+    "d54c0106815e00a6ded0cf605409a19f3be7f4d2",
+    "f0aed4afa6c980901c426a981d0c0fbca9f805de"
+  ],
+  "evidence_path": "operations/evidence/vercel-retained-evidence-contract-workflow-2026-07-13T0345Z.json",
+  "verification": {
+    "source_behavior_verified": true,
+    "workflow_run_observed": false,
+    "tests_executed_in_ci": false,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Observe the committed retained-evidence workflow complete successfully and inspect its commit-bound artifact.",
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain both raw outputs plus the reconciliation bundle.",
+    "Observe operations-only build suppression after Vercel capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Inspect the first observed retained-evidence workflow run and artifact; if successful, use the authenticated checkout to execute both exhaustive workflow clients against one exact commit. Do not create an application deployment until Vercel capacity and immutable deployment identity are independently verified.",
+  "canonical_queue_mutated": false
+}
