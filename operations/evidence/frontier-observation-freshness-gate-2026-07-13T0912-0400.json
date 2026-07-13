@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-13T09:12:00-04:00",
+  "finding": "Agreement between two exact-commit enumeration packets is not sufficient when either packet may be stale, captured before the target commit existed, duplicated from one retained response, or replayed under a shared request identity.",
+  "prior_work_comparison": {
+    "R-020": "Establishes exhaustive repository-level workflow-run enumeration.",
+    "R-021": "Establishes reconciliation between independently complete enumerations and classifies method and authority independence.",
+    "gap": "Neither completed queue item establishes temporal freshness or replay resistance for the retained observations themselves."
+  },
+  "artifact": {
+    "path": "operations/tools/frontier-observation-freshness-gate.mjs",
+    "test_path": "operations/tools/frontier-observation-freshness-gate.test.mjs",
+    "source_commit": "dd9f045fa1aac73ca9ff640a7174fc4409a72f04",
+    "test_commit": "11c5d8314e11ab1c490615b381d87f11447f59f4"
+  },
+  "evidence_strength": "implementation_committed_source_verified_tests_not_hosted",
+  "source_status": [
+    {
+      "source": "https://docs.github.com/en/rest/actions/workflow-runs",
+      "status": "primary_current_documentation",
+      "use": "Defines the workflow-run REST surface whose responses are retained by R-020 and R-021."
+    },
+    {
+      "source": "https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api",
+      "status": "primary_current_documentation",
+      "use": "Supports treating API observations as bounded retrieval events rather than timeless facts."
+    }
+  ],
+  "design_implication": "Insert the freshness gate after byte verification and enumeration reconciliation but before any commit-bound evidence assessor. Require both observations to postdate the target commit, fall within explicit age and inter-channel skew bounds, and carry distinct request and retained-byte identities.",
+  "uncertainty": [
+    "A distinct request identifier proves distinct transport observations, not distinct underlying authority or data store.",
+    "Clock correctness is assumed and must be bounded by the caller's trusted time source.",
+    "Different retained-byte digests may result from harmless metadata ordering unless upstream canonicalization is stable.",
+    "This gate does not establish workflow success, deployment identity, or physical-device behavior."
+  ],
+  "falsification_route": "Construct packets that agree semantically but predate the commit, exceed age or skew limits, reuse a request identity, or reuse canonical bytes. The gate must reject each. Then execute the committed tests in a clean checkout and retain the exact output.",
+  "privacy_boundary": "No private chat, credentials, account identifiers, health information, or secret-bearing API responses are stored in this evidence record."
+}
