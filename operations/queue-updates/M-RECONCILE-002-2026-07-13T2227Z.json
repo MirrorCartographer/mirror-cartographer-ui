@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:27:05Z",
+  "completed_slice": "Added a fail-closed JSON Schema for reproducible provenance coverage receipts. Incomplete coverage preserves unresolved status; an unlocated transition requires complete ref inventory, complete reachable-history traversal, and no exclusions.",
+  "files": [
+    "operations/continuity/schemas/provenance-coverage-receipt.schema.json"
+  ],
+  "claim_states": {
+    "observed": "The canonical queue requires exhaustive repository history coverage.",
+    "inferred": "Structured receipts reduce ambiguity and narrative drift.",
+    "proposed": "Validate every future provenance classification against the schema.",
+    "superseded": "Unstructured prose alone can prove exhaustive coverage.",
+    "unresolved": "The three target artifact origins remain unresolved until an executed receipt passes."
+  },
+  "privacy_boundary": "Repository metadata and coverage classifications only; no personal source content retained.",
+  "registry_change": "none",
+  "next_action": "Add a validator and execute the first authenticated all-ref and reachable-object coverage receipt."
+}
