@@ -18,10 +18,10 @@ function lookup(method, path = 'operations/evidence/example.json', blob = BLOB) 
   };
 }
 
-function binding(path = 'operations/evidence/example.json') {
+function binding(path = 'operations/evidence/example.json', blob = BLOB) {
   return {
-    github_contents_lookup: lookup('github-contents-at-commit', path),
-    git_ls_tree_lookup: lookup('git-ls-tree-at-commit', path)
+    github_contents_lookup: lookup('github-contents-at-commit', path, blob),
+    git_ls_tree_lookup: lookup('git-ls-tree-at-commit', path, blob)
   };
 }
 
@@ -30,10 +30,33 @@ test('builds a receipt-ready packet only from agreeing independent bindings', ()
     target_commit: COMMIT,
     bindings: [binding()]
   });
+  assert.equal(packet.schema_version, 2);
   assert.equal(packet.binding_count, 1);
   assert.equal(packet.all_bindings_agreement_verified, true);
-  assert.equal(packet.bindings[0].target_commit, COMMIT);
+  assert.match(packet.canonical_digest_sha256, /^[0-9a-f]{64}$/);
   assert.equal(packet.deployment_claim_permitted, false);
+});
+
+test('canonicalizes binding order before digesting', () => {
+  const a = buildReconciledSourceBindingPacket({
+    target_commit: COMMIT,
+    bindings: [binding('z.json', 'c'.repeat(40)), binding('a.json')]
+  });
+  const b = buildReconciledSourceBindingPacket({
+    target_commit: COMMIT,
+    bindings: [binding('a.json'), binding('z.json', 'c'.repeat(40))]
+  });
+  assert.deepEqual(a.bindings.map((entry) => entry.path), ['a.json', 'z.json']);
+  assert.equal(a.canonical_digest_sha256, b.canonical_digest_sha256);
+});
+
+test('digest changes when a verified blob changes', () => {
+  const a = buildReconciledSourceBindingPacket({ target_commit: COMMIT, bindings: [binding()] });
+  const b = buildReconciledSourceBindingPacket({
+    target_commit: COMMIT,
+    bindings: [binding('operations/evidence/example.json', 'c'.repeat(40))]
+  });
+  assert.notEqual(a.canonical_digest_sha256, b.canonical_digest_sha256);
 });
 
 test('rejects duplicate paths', () => {
