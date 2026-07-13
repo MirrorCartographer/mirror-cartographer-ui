@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
+import { link, mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildRetainedWorkflowEvidence, main } from './retained-workflow-evidence-cli.mjs';
@@ -136,7 +136,7 @@ test('rejects a bundle generation time that precedes either retained source', as
   );
 });
 
-test('rejects retained source aliases that resolve to the same file', async () => {
+test('rejects retained source arguments that name the same file', async () => {
   const paths = await fixture();
   await assert.rejects(
     () => buildRetainedWorkflowEvidence({
@@ -148,7 +148,25 @@ test('rejects retained source aliases that resolve to the same file', async () =
       ghRetrievedAt: '2026-07-13T00:01:00Z',
       generatedAt: '2026-07-13T00:02:00Z'
     }),
-    /retained_source_paths_not_distinct/
+    /retained_source_files_not_distinct/
+  );
+});
+
+test('rejects hard-link aliases that name the same retained inode', async () => {
+  const paths = await fixture();
+  const hardLinkedPrimary = `${paths.primary}.hardlink`;
+  await link(paths.primary, hardLinkedPrimary);
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({
+      commitSha,
+      primaryPath: paths.primary,
+      ghPagesPath: hardLinkedPrimary,
+      ghCommandPath: paths.ghCommand,
+      primaryRetrievedAt: '2026-07-13T00:00:00Z',
+      ghRetrievedAt: '2026-07-13T00:01:00Z',
+      generatedAt: '2026-07-13T00:02:00Z'
+    }),
+    /retained_source_files_not_distinct/
   );
 });
 
