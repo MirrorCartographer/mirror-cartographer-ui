@@ -24,6 +24,12 @@ function assertNonEmptyString(value, name) {
   if (typeof value !== 'string' || value.trim() === '') throw new Error(`${name}_missing`);
 }
 
+export async function verifyRetainedText(path, expectedText, mismatchReason) {
+  const retainedText = await readFile(path, 'utf8');
+  if (retainedText !== expectedText) throw new Error(mismatchReason);
+  return Object.freeze({ path, exact_byte_match: true });
+}
+
 export async function writeVercelEvidencePacket({
   repository,
   source_commit_sha,
@@ -60,6 +66,11 @@ export async function writeVercelEvidencePacket({
       flag: fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_WRONLY
     });
     receiptWritten = true;
+    const retainedReceipt = await verifyRetainedText(
+      receipt_output_path,
+      receiptText,
+      'receipt_retained_bytes_mismatch'
+    );
 
     const artifacts = [
       { name: subject_names.reconciliation, path: receipt_request.reconciliation_path },
@@ -79,10 +90,19 @@ export async function writeVercelEvidencePacket({
       encoding: 'utf8',
       flag: fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_WRONLY
     });
+    const retainedManifest = await verifyRetainedText(
+      manifest_output_path,
+      manifestText,
+      'manifest_retained_bytes_mismatch'
+    );
 
     return Object.freeze({
       receipt,
       manifest,
+      retained_verification: Object.freeze({
+        receipt: retainedReceipt,
+        manifest: retainedManifest
+      }),
       claim_ceiling: 'artifact identity and byte integrity only; workflow outcome, runtime, deployment, audio audibility, and human observation remain unproven',
       deployment_claim_permitted: false,
       application_deployment_attempted: false
