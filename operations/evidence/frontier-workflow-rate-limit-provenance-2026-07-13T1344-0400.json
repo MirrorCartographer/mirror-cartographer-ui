@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-13T17:44:00Z",
+  "finding": "Exact-commit pagination evidence must retain and validate response status plus GitHub rate-limit headers for every page; body-only retention cannot distinguish complete retrieval from a collection interrupted by primary or secondary rate limiting.",
+  "source_status": {
+    "primary_sources": [
+      {
+        "url": "https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api",
+        "checked_on": "2026-07-13",
+        "observed_api_version": "2026-03-10",
+        "supports": [
+          "x-ratelimit-limit, remaining, used, reset, and resource are returned in response headers",
+          "primary limit exhaustion returns 403 or 429 with remaining equal to zero",
+          "secondary limit exhaustion returns 403 or 429 and may include retry-after",
+          "continued requests while rate limited may cause integration banning",
+          "secondary rate-limit status cannot be checked prospectively"
+        ]
+      },
+      {
+        "url": "https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api",
+        "checked_on": "2026-07-13",
+        "observed_api_version": "2026-03-10",
+        "supports": [
+          "clients should obey rate-limit and retry guidance rather than treating partial pagination as complete"
+        ]
+      }
+    ],
+    "evidence_strength": "official_current_documentation_plus_committed_contract",
+    "uncertainty": [
+      "No authenticated network enumeration was executed in this slice.",
+      "Secondary limits are partly undisclosed and cannot be prospectively queried.",
+      "Header validation does not independently prove Link-header completeness or absence of the 1000-result filtered-search ceiling."
+    ]
+  },
+  "artifact": {
+    "implementation": "operations/research/github-workflow-run-rate-limit-envelope.mjs",
+    "tests": "operations/research/github-workflow-run-rate-limit-envelope.test.mjs",
+    "implementation_commit": "862394c9b73274e24b99327b39bec53121993aa3",
+    "test_commit": "e2bd61d9ba230a81957a4e55a1caa0f19f156a7e",
+    "classification_on_success": "rate_limit_proven_nonblocking_for_retained_pages",
+    "fail_closed_conditions": [
+      "403 or 429 response",
+      "missing or invalid rate-limit headers",
+      "retry-after present",
+      "zero remaining budget before terminal page",
+      "rate-limit resource drift",
+      "page gap",
+      "terminal page not uniquely proven"
+    ]
+  },
+  "falsification_route": [
+    "Run the deterministic Node tests in CI.",
+    "Capture authenticated exact-commit pagination with raw response headers for every page.",
+    "Demonstrate that a retained 403, 429, retry-after, or pre-terminal remaining=0 response is rejected.",
+    "Demonstrate that contiguous successful pages with one terminal page and coherent headers are accepted.",
+    "Recheck official GitHub API documentation if the documented API version or rate-limit contract changes."
+  ],
+  "claim_boundary": "This slice adds a source-backed validation contract only. It does not claim an authenticated enumeration, workflow result, deployment, runtime behavior, or peer execution."
+}
