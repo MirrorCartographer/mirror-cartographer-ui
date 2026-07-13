@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T21:51:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed dual execution-envelope gate requiring independently valid exact-commit GitHub Actions retrieval envelopes to agree on repository, commit, pinned API version, record digest, and total count before evidence can be considered promotion-capable.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    {
+      "path": "tools/vercel-studio/verify-dual-workflow-execution-envelopes.mjs",
+      "commit": "a73619b0e6bd4895398f9f4e0c7cb87e57e17441"
+    },
+    {
+      "path": "tools/vercel-studio/verify-dual-workflow-execution-envelopes.test.mjs",
+      "commit": "caabb36e1c26f1073110676b04246be582b542e6"
+    },
+    {
+      "path": "operations/evidence/vercel-dual-execution-envelope-gate-2026-07-13T1751-0400.json",
+      "commit": "8d34d3d7c3e57b7b7be6ef46c745eaa4285d9771"
+    }
+  ],
+  "verification": {
+    "route": "local deterministic Node reconstruction",
+    "passed": 5,
+    "failed": 0,
+    "github_actions_claimed": false,
+    "deployment_claimed": false
+  },
+  "acceptance_remaining": [
+    "Integrate the dual execution-envelope result into the retained-evidence persistence CLI and bind both envelopes to retained raw bytes.",
+    "Execute authenticated all-event pagination for one exact commit using both clients and retain raw outputs, commands, headers, and reconciliation artifacts.",
+    "Observe operations-only Vercel suppression after provider capacity returns.",
+    "Observe the audio-routing workflow artifact, bind an application commit to an immutable successful deployment, and perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Extend the canonical retained manifest set with two execution-envelope files, verify their byte digests, and require this dual gate inside the no-overwrite persistence CLI before promotion_candidate can become true.",
+  "rollback": "Revert a73619b0e6bd4895398f9f4e0c7cb87e57e17441. No deletion or history rewrite is required.",
+  "shared_state_policy": "Additive queue event only; operations/ACTIVE_QUEUE.json and other teams' records were not overwritten."
+}
