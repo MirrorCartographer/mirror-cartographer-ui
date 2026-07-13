@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1012",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T22:12:27Z",
+  "title": "Canonical queue projection requires deterministic preflight classification",
+  "memory": {
+    "observed": [
+      "CM-1011 established that canonical queue authority is field-scoped and time-scoped.",
+      "The canonical queue snapshot predates later additive continuity records.",
+      "Before this slice, no committed validator classified additive records as duplicated, conflicting, or safely promotable without modifying the canonical queue.",
+      "The new validator performs no mutation and emits a reason-coded classification report."
+    ],
+    "inferred": [
+      "Temporal precedence alone is insufficient for promotion; owner agreement, queue-item existence, non-duplication, non-regression, and a non-empty completed slice are also required.",
+      "A newer additive record can still conflict with canonical authority even when its timestamp is valid.",
+      "Projection safety improves when promotion eligibility is separated from the act of canonical mutation."
+    ],
+    "proposed": [
+      "Run the validator before every canonical queue reconciliation.",
+      "Permit canonical promotion only for records classified safely_promotable and preserve duplicated or conflicting records as immutable evidence rather than deleting them.",
+      "Extend the validator later with explicit acceptance-criteria and state-transition compatibility rules."
+    ],
+    "superseded": [
+      "Treating every post-snapshot additive update as automatically promotable.",
+      "Using timestamp comparison as the sole reconciliation rule.",
+      "Combining projection analysis and canonical mutation in one irreversible step."
+    ],
+    "unresolved": [
+      "The canonical queue still has not been reconciled with all later continuity slices.",
+      "The validator does not yet prove exhaustive discovery of every additive queue-update file.",
+      "The immutable origins of M-004, M-005, and M-006 remain unlocated."
+    ]
+  },
+  "classification_contract": {
+    "pending": "Reserved for records not yet fully classified by a caller-specific policy.",
+    "duplicated": "The normalized completed slice is already present in the canonical item.",
+    "conflicting": "The record violates queue identity, ownership, state, timestamp, or minimum-content constraints.",
+    "safely_promotable": "The record is newer than the canonical snapshot, owner-consistent, non-duplicative, and contains a completed slice."
+  },
+  "provenance": [
+    {
+      "source_type": "canonical_active_queue",
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "status": "observed_authoritative_assignment_snapshot"
+    },
+    {
+      "source_type": "continuity_record",
+      "locator": "operations/continuity/records/CM-1011.json",
+      "status": "observed_predecessor_rule"
+    },
+    {
+      "source_type": "implementation",
+      "locator": "tools/continuity/validate-queue-projection.mjs",
+      "status": "committed_read_only_classifier",
+      "commit": "083237bed9655735f29821c2da5fef5ae122525c"
+    },
+    {
+      "source_type": "test",
+      "locator": "tools/continuity/validate-queue-projection.test.mjs",
+      "status": "committed_deterministic_contract",
+      "commit": "e5726533427437409c057b65a341a465448c8c51"
+    },
+    {
+      "source_type": "local_execution",
+      "locator": "node tools/continuity/validate-queue-projection.test.mjs",
+      "status": "observed_8_assertions_passed"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository operational identifiers",
+      "queue timestamps and ownership fields",
+      "classification rules",
+      "commit hashes and test outcomes"
+    ],
+    "excluded": [
+      "raw private chat content",
+      "health or pet-health information",
+      "credentials",
+      "contacts",
+      "personal identifying details",
+      "unreviewed uploaded-file contents"
+    ],
+    "publication_rule": "Retain only repository governance, provenance, and deterministic reconciliation mechanics."
+  },
+  "authoritative": false,
+  "reversible": true,
+  "falsification_route": "Provide a counterexample where the validator marks a conflicting or duplicate record safely_promotable, or show that a required canonical authority field is omitted from its decision contract.",
+  "next_action": "Use authenticated all-refs and object traversal to determine whether M-004, M-005, and M-006 have immutable repository provenance; keep them unresolved unless exhaustive evidence supports location or unlocated classification."
+}
