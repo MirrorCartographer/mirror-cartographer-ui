@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:24:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a bound retained-evidence persistence wrapper that verifies the approved execution-plan digest against both generated retained records before either record is persisted, with exclusive no-overwrite paired writes.",
+  "evidence": "operations/evidence/vercel-bound-persistence-2026-07-13T1524-0400.json",
+  "commits": [
+    "38ca048dd80b61a64cf4267ff156b2322793fa2a",
+    "d18f4081b7df60a4ab9a5473d6e8491ede27b9ea",
+    "df7d35fb6d9f4352d5f4966f1de3299a0511b09c"
+  ],
+  "acceptance_remaining": [
+    "Execute the committed integration test in an authenticated checkout.",
+    "Execute authenticated dual enumeration for one exact commit and persist both bound retained records.",
+    "Observe an operations-only sentinel skipped after provider capacity returns.",
+    "Verify exact-commit audio-routing artifact, immutable deployment identity, and bounded physical iPhone Safari audibility."
+  ],
+  "safe_next_action": "Run node --test tools/vercel-studio/persist-bound-retained-workflow-evidence.test.mjs in an authenticated checkout, then use the wrapper for one exact-commit dual-enumeration evidence package; do not create an application deployment until provider capacity and immutable identity are proven.",
+  "preservation": {
+    "canonical_queue_overwritten": false,
+    "peer_records_overwritten": false,
+    "files_deleted": false,
+    "history_rewritten": false
+  }
+}
