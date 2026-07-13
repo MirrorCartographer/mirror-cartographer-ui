@@ -1,0 +1,26 @@
+name: Vercel workflow query envelope contract
+
+on:
+  push:
+    paths:
+      - 'operations/tools/build-vercel-workflow-evidence-envelope.mjs'
+      - 'operations/tools/build-vercel-workflow-evidence-envelope.test.mjs'
+      - 'operations/research/github-workflow-run-query-contract.mjs'
+      - 'tools/frontier-research/gh-workflow-run-envelope.mjs'
+      - '.github/workflows/vercel-workflow-query-envelope-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run fail-closed integration tests
+        run: node --test operations/tools/build-vercel-workflow-evidence-envelope.test.mjs
