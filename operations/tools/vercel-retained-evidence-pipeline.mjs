@@ -9,6 +9,17 @@ const REQUIRED_ROLES = Object.freeze([
   'reconciliation'
 ]);
 
+const EXPECTED_METHODS = Object.freeze({
+  primary_raw: 'github-rest-link-pagination',
+  independent_raw: 'gh-api-paginate-slurp',
+  independent_command: 'retained-command-text',
+  reconciliation: 'deterministic-reconciliation'
+});
+
+const MAX_EVIDENCE_AGE_MS = 15 * 60 * 1000;
+const MAX_FUTURE_SKEW_MS = 60 * 1000;
+const SAFE_EVIDENCE_PATH = /^operations\/evidence\/[A-Za-z0-9._/-]+$/;
+
 function assertObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     throw new TypeError(`${name} must be an object`);
@@ -27,6 +38,33 @@ function parseJson(buffer, name) {
   } catch {
     throw new Error(`${name} must contain valid JSON`);
   }
+}
+
+function parseTimestamp(value, name) {
+  if (typeof value !== 'string') throw new TypeError(`${name} must be an ISO-8601 string`);
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) throw new Error(`${name} must be a valid timestamp`);
+  return timestamp;
+}
+
+function validateArtifactMetadata(artifact, deployment, index) {
+  const prefix = `input.artifacts[${index}]`;
+  if (artifact.method !== EXPECTED_METHODS[artifact.role]) {
+    throw new Error(`${artifact.role}.method is not the approved acquisition method`);
+  }
+  if (typeof artifact.path !== 'string' || !SAFE_EVIDENCE_PATH.test(artifact.path) || artifact.path.includes('..')) {
+    throw new Error(`${artifact.role}.path must remain under operations/evidence`);
+  }
+
+  const capturedAt = parseTimestamp(artifact.captured_at, `${artifact.role}.captured_at`);
+  const evaluatedAt = parseTimestamp(deployment.evaluated_at, 'input.deployment.evaluated_at');
+  if (capturedAt > evaluatedAt + MAX_FUTURE_SKEW_MS) {
+    throw new Error(`${artifact.role}.captured_at is future-dated`);
+  }
+  if (evaluatedAt - capturedAt > MAX_EVIDENCE_AGE_MS) {
+    throw new Error(`${artifact.role}.captured_at is stale`);
+  }
+  if (!artifact.path || !artifact.method) throw new Error(`${prefix} metadata is incomplete`);
 }
 
 function verifyReconciliation(reconciliation, expectedCommit) {
@@ -48,6 +86,7 @@ export function evaluateRetainedEvidenceDeploymentPipeline(input) {
     if (!REQUIRED_ROLES.includes(artifact.role)) throw new Error(`unsupported artifact role: ${artifact.role}`);
     if (seen.has(artifact.role)) throw new Error(`duplicate artifact role: ${artifact.role}`);
     seen.add(artifact.role);
+    validateArtifactMetadata(artifact, input.deployment, index);
 
     const bytes = toBuffer(artifact.bytes, `${artifact.role}.bytes`);
     return {
@@ -92,6 +131,7 @@ export function evaluateRetainedEvidenceDeploymentPipeline(input) {
     schema_version: 1,
     manifest,
     reconciliation_verified: reconciliationVerified,
+    evidence_freshness_window_ms: MAX_EVIDENCE_AGE_MS,
     decision,
     deployment_claim_permitted: false,
     retained_artifact_digests: Object.freeze(Object.fromEntries(
