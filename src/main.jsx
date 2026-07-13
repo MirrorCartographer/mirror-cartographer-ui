@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
 import ErrorBoundary from './components/ErrorBoundary';
+import AuthGate from './platform/AuthGate';
 import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
@@ -17,6 +18,7 @@ import './assets/source-feeling.css';
 import './assets/mobile-enter.css';
 import './assets/possibility-field.css';
 import './assets/comet-garden.css';
+import './assets/platform.css';
 
 installDeploymentIdentityRuntime();
 installAudioDeviceEvidenceRuntime({ window, navigator, document });
@@ -30,7 +32,9 @@ installCometGardenRuntime();
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <AuthGate>
+        <App />
+      </AuthGate>
     </ErrorBoundary>
   </React.StrictMode>,
 );
