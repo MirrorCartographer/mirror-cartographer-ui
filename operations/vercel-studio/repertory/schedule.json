@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "title": "Mirror Cartographer Hourly Repertory",
+  "status": "implementation_ready_operations_only",
+  "selection": {
+    "strategy": "local-hour-modulo",
+    "timezone": "America/New_York",
+    "fallback": "hour-00",
+    "randomness": false
+  },
+  "continuity": {
+    "state_channel": "shared-runtime-state",
+    "rule": "Productions may transform presentation grammar but must not fork, erase, or privately expose continuity state."
+  },
+  "provenance": {
+    "observed_preferences": [
+      "hand-drawn rather than bubble-pop visual language",
+      "words, rings, coordinates, symbolic typography, and spatial motion",
+      "working interactions rather than inert spectacle",
+      "aesthetic transformation with underlying continuity"
+    ],
+    "inferences": [
+      "hourly change should feel like repertory programming rather than theme rotation",
+      "each production needs a distinct interaction grammar, not only a palette change"
+    ],
+    "current_decision": "Use a deterministic 24-hour schedule with one production per local hour and a single shared runtime-state channel.",
+    "privacy_boundary": "Preference summaries only; no private source text or personal identifiers are embedded."
+  },
+  "productions": [
+    {"hour":0,"id":"hour-00","title":"Midnight Index","grammar":"constellation archive","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":1,"id":"hour-01","title":"Lantern Ledger","grammar":"illuminated decision log","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":2,"id":"hour-02","title":"Quiet Machinery","grammar":"slow mechanical diagram","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":3,"id":"hour-03","title":"Dream Cartography","grammar":"soft coordinate field","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":4,"id":"hour-04","title":"Blue Hour Relay","grammar":"signal relay stage","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":5,"id":"hour-05","title":"First Light Proof","grammar":"evidence sunrise","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":6,"id":"hour-06","title":"Field Notes","grammar":"hand-drawn notebook","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":7,"id":"hour-07","title":"Threshold Orchestra","grammar":"non-autoplay sound board","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":8,"id":"hour-08","title":"Working Memory","grammar":"layered task table","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":9,"id":"hour-09","title":"Signal Garden","grammar":"growing semantic paths","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":10,"id":"hour-10","title":"Archive Window","grammar":"provenance aperture","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":11,"id":"hour-11","title":"Mirror Assembly","grammar":"modular reflection bench","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":12,"id":"hour-12","title":"Noon Instrument","grammar":"high-contrast control surface","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":13,"id":"hour-13","title":"Crosswind Diagram","grammar":"kinetic systems map","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":14,"id":"hour-14","title":"Counterfactual Cinema","grammar":"branching hypothesis screen","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":15,"id":"hour-15","title":"Body of Evidence","grammar":"non-clinical evidence atlas","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":16,"id":"hour-16","title":"Carnival of Causes","grammar":"hand-painted causal wheel","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":17,"id":"hour-17","title":"Golden Thread","grammar":"continuity weaving table","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":18,"id":"hour-18","title":"The Rehearsal Room","grammar":"editable production blocking","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":19,"id":"hour-19","title":"Evening Transmission","grammar":"radio-dial interface","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":20,"id":"hour-20","title":"House Lights","grammar":"public screening foyer","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":21,"id":"hour-21","title":"Shadow Registry","grammar":"silhouette knowledge graph","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":22,"id":"hour-22","title":"Late Map","grammar":"night navigation console","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]},
+    {"hour":23,"id":"hour-23","title":"Closing Credits / Opening State","grammar":"continuity handoff reel","autoplay":false,"continuity_channel":"shared-runtime-state","accessibility":["keyboard-complete","screen-reader-labelled","reduced-motion-safe"]}
+  ]
+}
