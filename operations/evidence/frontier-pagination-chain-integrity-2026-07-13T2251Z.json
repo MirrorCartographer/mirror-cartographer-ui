@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-13T22:51:51Z",
+  "finding": "A pagination receipt that records only next_url terminality does not prove traversal continuity; each page must bind its recorded next_url to the exact request_url of the following retained page.",
+  "primary_sources": [
+    {
+      "title": "GitHub REST API pagination documentation",
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "observed": "GitHub specifies that the Link header's rel=next URL is used to request the next page and pagination ends when no next link remains.",
+      "source_status": "current_primary_documentation",
+      "observed_on": "2026-07-13"
+    }
+  ],
+  "artifacts": [
+    "tools/frontier-research/pagination-chain-integrity.mjs",
+    "tools/frontier-research/pagination-chain-integrity.test.mjs"
+  ],
+  "verification": {
+    "route": "node --test tools/frontier-research/pagination-chain-integrity.test.mjs",
+    "observed_result": "6 tests passed; 0 failed",
+    "environment": "isolated local Node runtime before repository commit",
+    "claims": [
+      "rejects discontinuous next_url-to-request_url chains",
+      "rejects replayed request URLs",
+      "rejects credential-bearing pagination URLs",
+      "rejects nonterminal final pages",
+      "rejects page-count drift"
+    ]
+  },
+  "evidence_strength": "deterministic_unit_verification",
+  "uncertainty": [
+    "No authenticated private-repository enumeration was executed in this slice.",
+    "The verifier proves retained-link continuity, not response-body authenticity, semantic completeness, provider absence, deployment identity, or device behavior."
+  ],
+  "falsification_route": "Provide a retained receipt whose next_url differs from the following request_url, repeats a prior request_url, contains a sensitive query key, or leaves the final page nonterminal; the verifier must fail closed.",
+  "privacy_boundary": "No credentials, private response bodies, personal identifiers, or private source material are retained."
+}
