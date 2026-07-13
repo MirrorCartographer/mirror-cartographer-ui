@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eee9dc">
+<title>Murmuration Desk</title>
+<style>
+:root{color-scheme:light;--paper:#eee9dc;--ink:#191915;--signal:#b8432f;--soft:rgba(25,25,21,.14)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Georgia,serif;overflow:hidden}
+body{touch-action:none}
+canvas{display:block;width:100vw;height:100vh}
+header{position:fixed;inset:0 0 auto 0;display:flex;justify-content:space-between;align-items:flex-start;padding:clamp(18px,3vw,34px);pointer-events:none;mix-blend-mode:multiply}
+h1{font:italic 500 clamp(17px,2vw,25px)/1 Georgia,serif;letter-spacing:.02em;margin:0}
+.cue{font:600 10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;text-align:right;max-width:20rem}
+button{position:fixed;left:clamp(18px,3vw,34px);bottom:clamp(18px,3vw,34px);border:1px solid var(--ink);background:rgba(238,233,220,.76);color:var(--ink);font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;padding:11px 13px;cursor:pointer;backdrop-filter:blur(8px)}
+button:focus-visible{outline:3px solid var(--signal);outline-offset:4px}
+.status{position:fixed;right:clamp(18px,3vw,34px);bottom:clamp(18px,3vw,34px);font:600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase}
+@media(prefers-reduced-motion:reduce){.cue::after{content:" · stepped motion"}}
+</style>
+</head>
+<body>
+<canvas id="desk" aria-label="An interactive field of moving ink marks. Move a pointer or use arrow keys to conduct them; press space to send a pulse."></canvas>
+<header><h1>Murmuration Desk</h1><div class="cue">move · press · arrows · space</div></header>
+<button id="sound" type="button" aria-pressed="false">sound asleep</button>
+<div class="status" id="status" role="status" aria-live="polite">field ready</div>
+<script>
+const canvas=document.querySelector('#desk'),ctx=canvas.getContext('2d',{alpha:false});
+const soundButton=document.querySelector('#sound'),status=document.querySelector('#status');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let w=0,h=0,dpr=1,last=0,pulse=0,frame=0,audio=null,muted=true;
+const pointer={x:.5,y:.5,active:false};
+const birds=Array.from({length:reduce?42:88},(_,i)=>({
+  x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0015,vy:(Math.random()-.5)*.0015,
+  s:1.2+Math.random()*2.8,phase:Math.random()*Math.PI*2,seed:i*1.618
+}));
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize,{passive:true});resize();
+function aim(x,y){pointer.x=x/w;pointer.y=y/h;pointer.active=true}
+addEventListener('pointermove',e=>aim(e.clientX,e.clientY),{passive:true});
+addEventListener('pointerdown',e=>{aim(e.clientX,e.clientY);strike();},{passive:true});
+addEventListener('keydown',e=>{
+ const step=.045;
+ if(e.key==='ArrowLeft')pointer.x=Math.max(0,pointer.x-step);
+ else if(e.key==='ArrowRight')pointer.x=Math.min(1,pointer.x+step);
+ else if(e.key==='ArrowUp')pointer.y=Math.max(0,pointer.y-step);
+ else if(e.key==='ArrowDown')pointer.y=Math.min(1,pointer.y+step);
+ else if(e.code==='Space'){e.preventDefault();strike()}
+ else if(e.key.toLowerCase()==='m')toggleSound();
+ else return;
+ pointer.active=true;
+},{passive:false});
+function ensureAudio(){
+ if(audio)return audio;
+ audio=new (window.AudioContext||window.webkitAudioContext)();
+ return audio;
+}
+function tone(){
+ if(muted)return;
+ const a=ensureAudio(),now=a.currentTime,o=a.createOscillator(),g=a.createGain(),f=110+[146.83,174.61,220,261.63][Math.floor(pointer.x*4)%4];
+ o.type='sine';o.frequency.setValueAtTime(f,now);o.frequency.exponentialRampToValueAtTime(f*1.5,now+.42);
+ g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.055,now+.018);g.gain.exponentialRampToValueAtTime(.0001,now+.7);
+ o.connect(g).connect(a.destination);o.start(now);o.stop(now+.72);
+}
+function strike(){pulse=1;status.textContent='pulse released';tone();setTimeout(()=>status.textContent='field listening',700)}
+async function toggleSound(){
+ muted=!muted;
+ if(!muted){const a=ensureAudio();if(a.state==='suspended')await a.resume();status.textContent='sound awake'}else status.textContent='sound asleep';
+ soundButton.textContent=muted?'sound asleep':'sound awake';soundButton.setAttribute('aria-pressed',String(!muted));
+}
+soundButton.addEventListener('click',toggleSound);
+function draw(t){
+ if(reduce&&t-last<180){requestAnimationFrame(draw);return}
+ const dt=Math.min(32,t-last||16);last=t;frame+=dt*.001;pulse*=reduce?.72:.94;
+ ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--paper');ctx.fillRect(0,0,w,h);
+ ctx.lineCap='round';
+ for(const b of birds){
+   const dx=pointer.x-b.x,dy=pointer.y-b.y,dist=Math.hypot(dx,dy)+.0001;
+   const pull=(pointer.active?.000014:.000004)*dt;
+   b.vx+=dx/dist*pull+(Math.sin(frame*.7+b.seed)-.5)*.000004*dt;
+   b.vy+=dy/dist*pull+(Math.cos(frame*.6+b.seed)-.5)*.000004*dt;
+   if(pulse>.01){const kick=(.00018*pulse*dt)/(dist+.08);b.vx-=dx*kick;b.vy-=dy*kick}
+   const speed=Math.hypot(b.vx,b.vy),cap=.006;if(speed>cap){b.vx=b.vx/speed*cap;b.vy=b.vy/speed*cap}
+   b.x=(b.x+b.vx*dt+1)%1;b.y=(b.y+b.vy*dt+1)%1;
+   const x=b.x*w,y=b.y*h,ang=Math.atan2(b.vy,b.vx),len=5+b.s*2+speed*800;
+   ctx.strokeStyle=pulse>.28?'#b8432f':'rgba(25,25,21,.76)';ctx.lineWidth=Math.max(.7,b.s*.42);
+   ctx.beginPath();ctx.moveTo(x-Math.cos(ang)*len*.5,y-Math.sin(ang)*len*.5);ctx.lineTo(x+Math.cos(ang)*len*.5,y+Math.sin(ang)*len*.5);ctx.stroke();
+ }
+ if(pointer.active){ctx.strokeStyle='rgba(25,25,21,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(pointer.x*w,pointer.y*h,18+pulse*120,0,Math.PI*2);ctx.stroke()}
+ requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
