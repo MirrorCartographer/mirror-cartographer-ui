@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CM-EVIDENCE-20260713-2246-COVERAGE-CONSISTENCY",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T22:46:00Z",
+  "finding": {
+    "observed": "The provenance coverage validator previously accepted coverage_result independently of the underlying ref_inventory.complete, history_traversal.complete, and known_exclusions fields except during unlocated transitions.",
+    "inferred": "A receipt could overstate or contradict its actual search surface while retaining unresolved or located transitions, weakening provenance guarantees.",
+    "proposed": "Treat coverage_result as a derived semantic classification: complete requires complete ref inventory, complete history traversal, and no exclusions; complete_with_declared_exclusions requires both structural traversals complete and at least one explicit exclusion; incomplete cannot coexist with both traversals complete and zero exclusions.",
+    "superseded": "The coverage_result label alone is sufficient evidence of coverage class.",
+    "unresolved": "M-004, M-005, and M-006 remain unresolved pending authenticated exhaustive repository coverage and immutable source-location evidence."
+  },
+  "changed_files": [
+    "operations/continuity/tools/validate-provenance-coverage-receipt.mjs",
+    "operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs"
+  ],
+  "commits": [
+    "76271ed38cf73e1788eb6c70dfd557c3fd06df48",
+    "7fcdfb46482bd8b2113747eea042de801e90db3d"
+  ],
+  "verification": {
+    "method": "static inspection of committed validator and deterministic Node test additions",
+    "tests_added": 6,
+    "execution_observed": false,
+    "claim_boundary": "The committed tests specify falsification cases, but this run did not obtain an authenticated runtime execution result."
+  },
+  "privacy_boundary": {
+    "included": ["repository paths", "commit identifiers", "queue identifiers", "validator semantics"],
+    "excluded": ["private chat text", "credentials", "personal identifiers", "unreviewed file-library contents"]
+  },
+  "falsification_route": "Run node --test operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs in an authenticated checkout and reject this slice if any test fails."
+}
