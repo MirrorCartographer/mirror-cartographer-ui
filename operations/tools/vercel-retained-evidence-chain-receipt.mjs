@@ -1,5 +1,10 @@
 const SHA40 = /^[0-9a-f]{40}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
+const ISO_UTC = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
+const APPROVED_SOURCE_VERIFICATION_METHODS = new Set([
+  'github-contents-at-commit',
+  'git-ls-tree-at-commit'
+]);
 
 function assertObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -20,7 +25,7 @@ function assertSafeRelativePath(value, name) {
   }
 }
 
-function validateBindings(bindings, name) {
+function validateBindings(bindings, name, targetCommit) {
   if (!Array.isArray(bindings) || bindings.length === 0) {
     throw new Error(`${name} missing`);
   }
@@ -30,9 +35,23 @@ function validateBindings(bindings, name) {
     assertObject(entry, `${name}[${index}]`);
     assertSafeRelativePath(entry.path, `${name}[${index}]`);
     assertSha(entry.blob_sha, SHA40, `${name}[${index}] blob sha`);
+    assertSha(entry.target_commit, SHA40, `${name}[${index}] target commit`);
+    if (entry.target_commit !== targetCommit) throw new Error(`${name}[${index}] target commit mismatch`);
+    if (!APPROVED_SOURCE_VERIFICATION_METHODS.has(entry.verification_method)) {
+      throw new Error(`${name}[${index}] verification method is not approved`);
+    }
+    if (!ISO_UTC.test(entry.verified_at ?? '') || Number.isNaN(Date.parse(entry.verified_at))) {
+      throw new Error(`${name}[${index}] verified_at must be an ISO UTC timestamp`);
+    }
     if (seenPaths.has(entry.path)) throw new Error(`${name} contains duplicate path`);
     seenPaths.add(entry.path);
-    return Object.freeze({ path: entry.path, blob_sha: entry.blob_sha });
+    return Object.freeze({
+      path: entry.path,
+      blob_sha: entry.blob_sha,
+      target_commit: entry.target_commit,
+      verification_method: entry.verification_method,
+      verified_at: entry.verified_at
+    });
   });
 }
 
@@ -61,8 +80,16 @@ export function bindRetainedEvidenceChainReceipt({ pipeline_receipt, chain_lock 
   }
 
   assertSha(pipeline_receipt.manifest_sha256, SHA256, 'manifest digest');
-  const pipelineSourceBindings = validateBindings(chain_lock.pipeline_source_bindings, 'pipeline source bindings');
-  const verifierSourceBindings = validateBindings(chain_lock.verifier_source_bindings, 'verifier source bindings');
+  const pipelineSourceBindings = validateBindings(
+    chain_lock.pipeline_source_bindings,
+    'pipeline source bindings',
+    pipeline_receipt.target_commit
+  );
+  const verifierSourceBindings = validateBindings(
+    chain_lock.verifier_source_bindings,
+    'verifier source bindings',
+    pipeline_receipt.target_commit
+  );
 
   return Object.freeze({
     schema_version: 1,
@@ -75,6 +102,6 @@ export function bindRetainedEvidenceChainReceipt({ pipeline_receipt, chain_lock 
     verifier_source_bindings: Object.freeze(verifierSourceBindings),
     application_deployment_attempted: false,
     deployment_claim_permitted: false,
-    falsification_route: 'Change the target commit, manifest digest, receipt verification state, chain-lock state, source binding path or blob SHA, or operations-only authority; composite receipt creation must fail closed.'
+    falsification_route: 'Change the target commit, manifest digest, receipt verification state, chain-lock state, source binding path, blob SHA, exact-commit proof, verification method, timestamp, or operations-only authority; composite receipt creation must fail closed.'
   });
 }
