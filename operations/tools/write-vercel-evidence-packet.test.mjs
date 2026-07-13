@@ -29,6 +29,7 @@ function request(paths) {
     generated_at: '2026-07-13T14:33:00Z',
     receipt_output_path: join(paths.dir, 'receipt.json'),
     manifest_output_path: join(paths.dir, 'manifest.json'),
+    packet_commit_output_path: join(paths.dir, 'packet-complete.json'),
     receipt_request: {
       reconciliation_path: paths.reconciliation,
       primary_observation_path: paths.primary,
@@ -48,13 +49,15 @@ function request(paths) {
   };
 }
 
-test('writes a receipt plus a four-subject digest manifest without raising the claim ceiling', async () => {
+test('writes a receipt, manifest, and packet-complete marker without raising the claim ceiling', async () => {
   const paths = await fixture();
   const result = await writeVercelEvidencePacket(request(paths));
   assert.equal(result.receipt.assessment.accepted, true);
   assert.equal(result.deployment_claim_permitted, false);
   assert.equal(result.application_deployment_attempted, false);
   assert.equal(result.manifest.subject.length, 4);
+  assert.equal(result.packet_commit.packet_state, 'complete');
+  assert.equal(result.committed_packet_verification.verified, true);
   assert.deepEqual(result.manifest.subject.map(({ name }) => name), [
     'operations/evidence/independent.json',
     'operations/evidence/primary.json',
@@ -64,14 +67,20 @@ test('writes a receipt plus a four-subject digest manifest without raising the c
   for (const subject of result.manifest.subject) assert.match(subject.digest.sha256, /^[a-f0-9]{64}$/);
 
   const retainedManifest = JSON.parse(await readFile(join(paths.dir, 'manifest.json'), 'utf8'));
+  const retainedPacketCommit = JSON.parse(await readFile(join(paths.dir, 'packet-complete.json'), 'utf8'));
   assert.equal(retainedManifest.predicate.source_commit_sha, commit);
+  assert.equal(retainedPacketCommit.source_commit_sha, commit);
+  assert.match(retainedPacketCommit.packet_id, /^[a-f0-9]{64}$/);
 });
 
-test('refuses to overwrite either retained output', async () => {
+test('refuses to overwrite any retained packet output', async () => {
   const paths = await fixture();
   const first = request(paths);
   await writeVercelEvidencePacket(first);
-  await assert.rejects(() => writeVercelEvidencePacket(first), /receipt_output_exists|manifest_output_exists/);
+  await assert.rejects(
+    () => writeVercelEvidencePacket(first),
+    /receipt_output_exists|manifest_output_exists|packet_commit_output_exists/
+  );
 });
 
 test('rejects absolute subject identities without leaving a partial packet', async () => {
@@ -81,4 +90,5 @@ test('rejects absolute subject identities without leaving a partial packet', asy
   await assert.rejects(() => writeVercelEvidencePacket(invalid), /absolute_subject_path_rejected/);
   await assert.rejects(() => access(invalid.receipt_output_path), /ENOENT/);
   await assert.rejects(() => access(invalid.manifest_output_path), /ENOENT/);
+  await assert.rejects(() => access(invalid.packet_commit_output_path), /ENOENT/);
 });
