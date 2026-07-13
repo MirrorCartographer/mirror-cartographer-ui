@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "retained_evidence_chain_receipt",
+  "status": "runtime_test_verified_operations_only",
+  "finding": "The retained-evidence pipeline receipt and verifier-chain lock existed as separate objects. Without a composite exact-commit binding, a receipt could be evaluated independently from the verifier sources that gave it meaning.",
+  "implementation": {
+    "module": "operations/tools/vercel-retained-evidence-chain-receipt.mjs",
+    "test": "operations/tools/vercel-retained-evidence-chain-receipt.test.mjs",
+    "module_commit": "4c67f4ac6161646b5c86a5d47e3528fd61cb15a7",
+    "test_commit": "e10e2a6e8589b364c3a6e49942d918b0afa0887f"
+  },
+  "verification": {
+    "command": "node --test vercel-retained-evidence-chain-receipt.test.mjs",
+    "working_directory": "/tmp",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "verified_behaviors": [
+      "creates one composite receipt bound to an exact commit",
+      "rejects commit divergence",
+      "rejects an unverified pipeline receipt",
+      "rejects an unlocked verifier chain",
+      "rejects missing source bindings",
+      "rejects deployment-claim authority escalation"
+    ]
+  },
+  "authority": {
+    "application_deployment_attempted": false,
+    "deployment_claim_permitted": false,
+    "payments_or_conversion_added": false
+  },
+  "evidence_strength": "isolated_node_runtime_test",
+  "limits": [
+    "No Vercel deployment was attempted because CURRENT_STATE records provider build-capacity exhaustion.",
+    "The test used byte-identical local candidate files before GitHub creation.",
+    "The composite receipt is not yet invoked by the retained-evidence CLI.",
+    "This does not prove immutable deployment identity, browser audio routing, or physical iPhone audibility."
+  ],
+  "rollback": "Revert commits 4c67f4ac6161646b5c86a5d47e3528fd61cb15a7 and e10e2a6e8589b364c3a6e49942d918b0afa0887f; no application code or deployment configuration was changed.",
+  "falsification_route": "Change the target commit, manifest digest, receipt verification state, chain-lock state, source bindings, or operations-only authority. Composite receipt creation must fail closed."
+}
