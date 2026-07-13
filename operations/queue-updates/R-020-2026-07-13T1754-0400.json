@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-020",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T21:54:00Z",
+  "state": "completed_handoff_ready",
+  "durable_improvement": "Added a fail-closed retained workflow page-chain validator that binds exact request URLs, response status, retrieval timestamps, selected API version, unique GitHub request IDs, raw body SHA-256 digests, workflow-run IDs, and Link-header continuity across every page.",
+  "files": [
+    "operations/tools/validate-workflow-page-chain.mjs",
+    "operations/tools/validate-workflow-page-chain.test.mjs",
+    "operations/evidence/frontier-workflow-page-chain-2026-07-13T1754-0400.json"
+  ],
+  "verification": {
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "execution_scope": "local deterministic reconstruction",
+    "authenticated_repository_execution": false
+  },
+  "acceptance_remaining": [
+    "Capture raw response bodies and headers for every authenticated exact-commit workflow-run page.",
+    "Run the page-chain validator over both independent enumeration methods.",
+    "Bind both page_chain_digest values into their execution envelopes and retained manifest set.",
+    "Reconcile only after both page chains and both execution envelopes verify."
+  ],
+  "safe_next_action": "Integrate validateWorkflowPageChain into the primary and gh retained-evidence adapters, then execute both authenticated clients against one exact commit and preserve raw bodies, headers, page manifests, execution envelopes, and reconciliation output."
+}
