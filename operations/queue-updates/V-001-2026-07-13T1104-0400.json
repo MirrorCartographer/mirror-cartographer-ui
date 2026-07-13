@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:04:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained evidence packet writer now rereads receipt and manifest outputs and requires exact byte equality before returning success; mismatch enters the existing cleanup path.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "outputs": [
+    {
+      "path": "operations/tools/write-vercel-evidence-packet.mjs",
+      "commit": "367d64d29213684a4c76058f8b48ed7ae8c49841"
+    },
+    {
+      "path": "operations/tools/write-vercel-evidence-packet-retention.test.mjs",
+      "commit": "0b906e2c72fd0ffb82a855413230ba13c1c30938"
+    },
+    {
+      "path": "operations/evidence/vercel-retained-packet-readback-2026-07-13T1104-0400.json",
+      "commit": "ab8e1c3da8dd1c917affac5cbc78e586d154835a"
+    }
+  ],
+  "verification": {
+    "source_inspection": "completed",
+    "test_execution": "not_available_in_connector_runtime",
+    "deployment_attempted": false,
+    "deployment_verified": false
+  },
+  "acceptance_remaining": [
+    "Run the retained evidence packet test suites in an authenticated checkout.",
+    "Execute authenticated all-event pagination for one exact commit through both independent clients and retain the reconciled packet.",
+    "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Inspect the six-outcome audio artifact and perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/tools/write-vercel-evidence-packet.test.mjs operations/tools/write-vercel-evidence-packet-retention.test.mjs in an authenticated checkout, then create a new retained packet only from two independently complete exact-commit enumerations. Do not attempt an application deployment until provider capacity and immutable deployment identity are verified.",
+  "claim_ceiling": "source and test construction only; no runtime, deployment, audio, or peer-execution claim",
+  "shared_state_policy": "append_only_team_owned_update; canonical queue not overwritten"
+}
