@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const EXACT_QUERIES = ['M-004', 'M-005', 'M-006'];
@@ -51,20 +51,13 @@ export function buildCoverageManifest({ repositoryFullName, repositoryObjectId, 
   const tags = lines(capture('tags', ['for-each-ref', '--format=%(refname) %(objectname)', 'refs/tags']));
   const commits = lines(capture('commits', ['rev-list', '--all']));
   const objects = lines(capture('objects', ['rev-list', '--objects', '--all']));
-  const objectIds = objects.map((line) => line.split(' ')[0]).filter(Boolean);
-  let typedObjects = [];
-  if (objectIds.length) {
-    try {
-      const output = execFileSync('git', ['-C', repoPath, 'cat-file', '--batch-check=%(objectname) %(objecttype)'], {
-        input: objectIds.join('\n') + '\n', encoding: 'utf8', maxBuffer: 128 * 1024 * 1024
-      }).trim();
-      raw.typed_objects = output;
-      typedObjects = lines(output);
-    } catch (error) {
-      errors.push({ step: 'typed_objects', message: String(error?.stderr || error?.message || error).slice(0, 500) });
-      raw.typed_objects = '';
-    }
+  const objectIds = [...new Set(objects.map((line) => line.split(' ')[0]).filter(Boolean))];
+  const typedObjects = [];
+  for (const objectId of objectIds) {
+    const type = capture(`object_type_${objectId}`, ['cat-file', '-t', objectId]);
+    if (type) typedObjects.push(`${objectId} ${type}`);
   }
+  raw.typed_objects = typedObjects.join('\n');
 
   const matches = [];
   for (const query of queries) {
