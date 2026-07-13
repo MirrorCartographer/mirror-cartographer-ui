@@ -55,19 +55,14 @@ function validateOutputIdentity(outputs, commitSha) {
     const contract = OUTPUT_ROUTE_CONTRACT[index];
     const output = outputs[index];
     const basename = path.posix.basename(output);
-    if (!basename.includes(commitSha)) {
+    const expectedBasename = `${commitSha}-${contract.token}${contract.suffix}`;
+    if (basename !== expectedBasename) {
       return {
         ok: false,
         role: contract.role,
         output,
+        expectedBasename,
         requiredCommitSha: commitSha,
-      };
-    }
-    if (!basename.includes(contract.token)) {
-      return {
-        ok: false,
-        role: contract.role,
-        output,
         requiredRoleToken: contract.token,
       };
     }
@@ -162,7 +157,7 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     ok: true,
     reason: 'execution_plan_ready',
     execution_permitted: true,
-    evidence_class: 'bounded_execution_plan_with_commit_bound_typed_paths',
+    evidence_class: 'bounded_execution_plan_with_canonical_commit_bound_typed_paths',
     commitSha,
     repository: EXPECTED_REPOSITORY,
     outputs: {
@@ -182,11 +177,11 @@ export function validateVercelEvidenceExecutionPlan(plan) {
       final_bundle: true,
       outputs_must_be_canonically_distinct: true,
       outputs_must_follow_role_routes: true,
-      output_names_must_bind_commit_and_role: true,
+      output_names_must_match_canonical_commit_role_basename: true,
       overwrite_forbidden: true,
     },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct, role-routed, commit-bound paths for raw evidence, derived proof, retained command text, and the final bundle.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and reserves canonically distinct, role-routed paths with exact commit-and-role basenames for raw evidence, derived proof, retained command text, and the final bundle.',
       'Does not prove authentication, workflow-run completeness, response-header authenticity, rate-limit proof acceptance, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
