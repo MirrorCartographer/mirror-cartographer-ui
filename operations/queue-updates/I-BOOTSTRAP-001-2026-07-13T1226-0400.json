@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "recorded_at": "2026-07-13T12:26:00-04:00",
+  "projection_type": "append_only_queue_update",
+  "canonical_queue_overwritten": false,
+  "item": {
+    "id": "I-BOOTSTRAP-001",
+    "owner": "independent_creative_web",
+    "priority": "highest_available_for_owner",
+    "state": "implemented_unpublished",
+    "objective": "Establish a durable independent creative identity boundary and one self-contained playable browser artifact.",
+    "completed_slices": [
+      "Established explicit separation from Mirror Cartographer, research, operations dashboards, personal reflection collection, and conversion flows.",
+      "Implemented Murmuration Desk as a dependency-free canvas and Web Audio instrument.",
+      "Added pointer, touch, keyboard, muted, reduced-motion, and live-status paths.",
+      "Committed a static contract test covering self-containment, explicit audio activation, accessibility paths, identity, and funnel-language exclusion.",
+      "Read the committed HTML back from the exact test commit."
+    ],
+    "acceptance_remaining": [
+      "Execute the committed Node contract test in an authenticated checkout.",
+      "Open the artifact in Chromium, WebKit, and mobile Safari and retain interaction evidence.",
+      "Choose an independent hosting target and publish without coupling it to the Mirror Cartographer product surface.",
+      "Verify audible and muted behavior on a physical device.",
+      "Promote this projection into the canonical queue only through a coordinated queue reconciliation."
+    ],
+    "safe_next_action": "Run node --test independent-web/murmuration-desk.contract.test.mjs, then perform a bounded browser pass with reduced motion, keyboard-only control, muted mode, and explicit audio activation before any publication claim."
+  }
+}
