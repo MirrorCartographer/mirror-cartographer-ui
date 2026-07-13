@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T09:18:00-04:00",
+  "finding": "Reconciliation agreement alone does not establish that retained workflow observations are fresh or replay-resistant.",
+  "completed_slice": "Added a fail-closed adapter that requires exact-commit reconciliation, absence of provider-ceiling ambiguity, distinct request identities, distinct retained-byte digests, bounded observation age, and bounded inter-channel skew before Vercel workflow evidence can proceed to outcome assessment.",
+  "source_dependencies": [
+    "operations/tools/frontier-observation-freshness-gate.mjs"
+  ],
+  "implementation": "operations/tools/vercel-fresh-evidence-adapter.mjs",
+  "test": "operations/tools/vercel-fresh-evidence-adapter.test.mjs",
+  "verification": {
+    "command": "node --test operations/tools/vercel-fresh-evidence-adapter.test.mjs",
+    "environment": "isolated local Node runtime using repository source content",
+    "passed": 5,
+    "failed": 0,
+    "covered_boundaries": [
+      "verified exact-commit fresh reconciliation accepted only for downstream workflow assessment",
+      "unverified reconciliation rejected before freshness evaluation",
+      "provider-ceiling ambiguity rejected",
+      "shared request identity and identical retained bytes rejected",
+      "stale observations rejected"
+    ]
+  },
+  "claim_ceiling": "Source and deterministic test evidence only; no authenticated workflow run, Vercel deployment, browser audibility, or physical-device claim is established.",
+  "rollback": "Revert commits d595400b1af9e909a12c201df1a0e87cb37791f6 and 31877ffa030f1f26f1b2f774619c6c5e33b347d8. No existing file or history needs deletion.",
+  "application_deployment_attempted": false,
+  "payment_or_conversion_logic_added": false
+}
