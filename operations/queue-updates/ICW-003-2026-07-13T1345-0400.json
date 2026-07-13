@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "ICW-003",
+  "owner": "independent_creative_web",
+  "priority": "highest observed independent identity work",
+  "state": "implemented_source_verified_runtime_pending",
+  "objective": "Extend Matchbox Weather into a compositional instrument without coupling it to Mirror Cartographer.",
+  "completed_slices": [
+    "Created Weather Score, a standalone sixteen-beat visual climate sequencer for ash, rain, moths, and static.",
+    "Added touch editing, roving keyboard focus, numeric weather selection, arrow navigation, space-to-paint, and P-to-play.",
+    "Kept sound explicitly user-initiated and made reduced-motion playback slower and non-essential.",
+    "Added and executed a deterministic four-test source contract.",
+    "Recorded append-only evidence without overwriting the canonical active queue."
+  ],
+  "artifact_commit": "bed9997eb757e8a9a2bc53581e6a3a008c3af827",
+  "contract_commit": "0c41cf56fe485af3ded8dfbd5297f4f83dfaa725",
+  "evidence_commit": "2e8126be292cfdf502cde1f6900b03516545a280",
+  "acceptance_remaining": [
+    "Execute the committed source contract in a clean checkout and retain exact-commit output.",
+    "Render desktop and narrow touch viewports and retain screenshots.",
+    "Verify keyboard focus, playback timing, reduced-motion behavior, and optional audio in real browsers.",
+    "Obtain independent public hosting evidence when provider capacity permits."
+  ],
+  "safe_next_action": "Run a bounded browser harness against Weather Score and retain desktop plus narrow screenshots; do not claim deployment or physical-device audibility without evidence.",
+  "state_update_policy": "append_only_no_canonical_queue_overwrite"
+}
