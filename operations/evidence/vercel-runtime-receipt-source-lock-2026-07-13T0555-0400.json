@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T05:55:16-04:00",
+  "slice": "runtime_receipt_source_lock",
+  "finding": "A successful runtime receipt is not sufficient unless its source bindings exactly match the committed retained-evidence pipeline and test blobs. The source-lock gate fails closed on source drift, command substitution, unsuccessful totals, incomplete bindings, or deployment-authority escalation.",
+  "source_bindings": [
+    {
+      "path": "operations/tools/vercel-retained-evidence-pipeline.mjs",
+      "blob_sha": "58ae900a946f98c5441b5179e701580c615b4759"
+    },
+    {
+      "path": "operations/tools/vercel-retained-evidence-pipeline.test.mjs",
+      "blob_sha": "a30aad724153e093799ddafb7f4798bc903aa432"
+    }
+  ],
+  "verification": {
+    "command": "node --test vercel-runtime-receipt-source-lock.test.mjs",
+    "environment": "isolated local Node runtime using byte-identical candidate source",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "verified_cases": [
+      "exact successful source-bound receipt accepted",
+      "source drift rejected",
+      "unsuccessful totals rejected",
+      "command substitution rejected",
+      "deployment-authority escalation rejected"
+    ]
+  },
+  "application_deployment_attempted": false,
+  "deployment_claim_permitted": false,
+  "limits": [
+    "The committed retained-evidence pipeline test itself was not executed in an authenticated repository checkout during this slice.",
+    "No Vercel deployment was requested.",
+    "The source-lock gate validates receipt integrity but does not establish exhaustive workflow enumeration or physical-device audibility."
+  ],
+  "rollback": "Revert the additive source-lock implementation, test, evidence, and queue-update commits. No application path or deployment configuration was modified.",
+  "falsification_route": "Change either bound source blob, alter the approved command, provide failing TAP totals, omit a required binding, or set deployment authority true; the gate must reject the receipt."
+}
