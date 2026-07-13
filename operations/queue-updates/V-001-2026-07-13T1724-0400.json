@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:24:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained evidence paths are now fail-closed to explicitly allowed immediate-child filenames under one approved retention root before existing no-symlink and SHA-256 byte verification runs.",
+  "files": [
+    "operations/tools/verify-retained-output-scope.mjs",
+    "operations/tools/verify-retained-output-scope.test.mjs",
+    "operations/evidence/vercel-retained-output-scope-2026-07-13T1724-0400.json"
+  ],
+  "commits": [
+    "cb861a6d0359bad93e23ba127c9ecd372d451830",
+    "b4a3de8837ddbde72e9edfc034bef9d6d9b89ebd",
+    "dbb05bc77daabe844824dc12bfa3b4c08b683820"
+  ],
+  "verification": {
+    "method": "node --test against byte-equivalent local source",
+    "passed": 4,
+    "failed": 0
+  },
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both clients and retain raw outputs plus reconciliation bundle.",
+    "Observe an operations-only sentinel skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Integrate the scope verifier into the retained-evidence CLI so the approved root and canonical filenames are bound by the validated execution plan before persistence; then run the integrated test path in an authenticated checkout without creating an application deployment.",
+  "rollback": "Revert cb861a6d0359bad93e23ba127c9ecd372d451830. No destructive history operation is required.",
+  "cross_team_overwrite": false
+}
