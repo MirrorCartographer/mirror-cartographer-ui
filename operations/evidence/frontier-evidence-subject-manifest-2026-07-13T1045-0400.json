@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier-research-finding",
+  "queue_item": "R-021",
+  "generated_at": "2026-07-13T14:45:20Z",
+  "finding": "Retained evidence should use portable repository-relative subject names plus cryptographic digests. Mutable or machine-local filesystem paths are useful retrieval hints but are not durable artifact identities.",
+  "source_status": {
+    "slsa_provenance": "primary specification",
+    "in_toto_statement_v1": "primary specification",
+    "repository_receipt_implementation": "observed repository source"
+  },
+  "evidence_strength": "implementation-backed design finding",
+  "design_implication": "Wrap retained workflow enumeration, reconciliation, receipt, and later deployment evidence as digest-bound subjects before promotion. Preserve a strict claim ceiling: artifact identity does not establish workflow outcome, deployment, runtime behavior, audibility, or human observation.",
+  "implementation": {
+    "module": "operations/research/evidence-subject-manifest.mjs",
+    "tests": "operations/research/evidence-subject-manifest.test.mjs",
+    "test_command": "node --test operations/research/evidence-subject-manifest.test.mjs",
+    "observed_result": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "environment": "isolated Node runtime using exact committed file contents"
+    }
+  },
+  "falsification_route": [
+    "Show that an absolute or traversal-containing subject name is required for cross-checkout verification.",
+    "Show that digest-bound repository-relative subjects cannot reproduce byte identity across clean checkouts.",
+    "Show that the duplicate-name or duplicate-digest rejection blocks a legitimate non-ambiguous evidence packet without an explicit role discriminator."
+  ],
+  "limits": [
+    "The manifest is unsigned and therefore does not establish producer identity.",
+    "The connector runtime did not execute the test from a full authenticated repository checkout.",
+    "No authenticated workflow enumeration or deployment was performed.",
+    "The module is an implementation-ready handoff and is not yet integrated into the Vercel receipt pipeline."
+  ]
+}
