@@ -7,7 +7,11 @@ export const RETAINED_EVIDENCE_PATHS = Object.freeze([
   'tools/vercel-studio/gh-envelope-bundle-adapter.mjs',
   'tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs',
   'tools/vercel-studio/workflow-evidence-bundle.mjs',
-  'tools/vercel-studio/workflow-evidence-bundle.test.mjs'
+  'tools/vercel-studio/workflow-evidence-bundle.test.mjs',
+  'tools/vercel-studio/retained-workflow-trigger-gate.mjs',
+  'tools/vercel-studio/retained-workflow-trigger-gate.test.mjs',
+  'tools/frontier-research/workflow-trigger-expectation.mjs',
+  'tools/frontier-research/workflow-trigger-expectation.test.mjs'
 ]);
 
 function assertString(value, name) {
