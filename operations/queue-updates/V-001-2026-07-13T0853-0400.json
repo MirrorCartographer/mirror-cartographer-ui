@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T08:53:57-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Hardened the independent schema-v2 source-binding packet verifier so substituted verification methods, malformed or causally impossible timestamps, and altered canonicalization metadata fail closed.",
+  "evidence_path": "operations/evidence/vercel-source-binding-verifier-hardening-2026-07-13T0853-0400.json",
+  "commits": [
+    "cfa0d9b497f9b2ccaff428eb4a9f5e15e029d634",
+    "9ba80a34452ee44c4f66ed0e914a15fef380510d",
+    "68c3bfda46886f5854d1298a84a61fea1d3b4755"
+  ],
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both independent clients and retain raw outputs plus reconciliation bundle.",
+    "Observe an operations-only sentinel skipped after Vercel build capacity returns.",
+    "Observe and inspect the exact-commit six-outcome audio-routing artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Run the committed verifier test directly in an authenticated clean checkout, then execute both exhaustive workflow enumeration clients against one exact commit and retain a verifier-approved packet. Do not create an application deployment until provider capacity and immutable deployment identity are available.",
+  "canonical_queue_overwritten": false,
+  "application_deployment_attempted": false,
+  "deployment_claim_permitted": false
+}
