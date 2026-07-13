@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T04:44:00Z",
+  "slice": "Bind retained workflow trigger gate and its dependency contract into the commit-bound GitHub Actions test workflow.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "commits": [
+    {
+      "sha": "5f14566917c9ba05cf2666324c56bcb8d267f741",
+      "purpose": "Add trigger-gate and dependency paths, tests, and source hashes to the retained evidence workflow."
+    },
+    {
+      "sha": "c78f4f3368c2470c4a22400d64699ecdff9392ed",
+      "purpose": "Align the trigger expectation contract with every workflow path that now triggers the retained evidence contract."
+    },
+    {
+      "sha": "caf9e9d0328f68e76470e3d8524b8fcf6f01edf9",
+      "purpose": "Add deterministic coverage for gate and dependency path alignment."
+    }
+  ],
+  "behavioral_change": {
+    "before": "The retained trigger gate existed outside the workflow test matrix and source manifest, and changes to the gate or its Frontier dependency did not trigger the workflow.",
+    "after": "The workflow now triggers on both gate files and both dependency-contract files, executes both test suites, hashes all eleven tested sources, and requires the source count to match exactly."
+  },
+  "verification": {
+    "repository_writes": "accepted_by_github",
+    "latest_commit_status": {
+      "commit_sha": "caf9e9d0328f68e76470e3d8524b8fcf6f01edf9",
+      "vercel": "failure_build_rate_limit"
+    },
+    "workflow_run_connector_view": {
+      "commit_sha": "caf9e9d0328f68e76470e3d8524b8fcf6f01edf9",
+      "observed_runs": 0,
+      "coverage": "first_page_pull_request_filtered_connector_view",
+      "interpretation": "absence_unproven"
+    },
+    "runtime_test_result": "not_yet_observed_through_an_exhaustive_or_artifact-bearing_route"
+  },
+  "constraints_respected": [
+    "No payment or conversion logic added to Vercel.",
+    "No GitHub files or history deleted.",
+    "No deployment success claimed.",
+    "No peer execution claimed."
+  ],
+  "rollback": {
+    "method": "Revert the three commits in reverse order without deleting history.",
+    "order": [
+      "caf9e9d0328f68e76470e3d8524b8fcf6f01edf9",
+      "c78f4f3368c2470c4a22400d64699ecdff9392ed",
+      "5f14566917c9ba05cf2666324c56bcb8d267f741"
+    ]
+  },
+  "next_action": "Obtain an artifact-bearing successful workflow run for the exact commit through authenticated exhaustive enumeration, then inspect and retain the eleven-source checksum manifest before allowing evidence promotion."
+}
