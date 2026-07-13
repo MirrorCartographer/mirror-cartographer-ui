@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T05:27:39Z",
+  "slice": "Fail-closed integration boundary for Frontier Research retained-evidence manifests.",
+  "source_handoff": {
+    "implementation_commit": "d26b03a09de149646cfbed1d9cee0a1072c54cc1",
+    "artifact": "tools/frontier-research/retained-evidence-manifest.mjs"
+  },
+  "implementation": {
+    "path": "operations/tools/vercel-retained-evidence-handoff.mjs",
+    "commit": "7f7a1b0f80393452029ad9085c6d7d1865453dd2",
+    "test_path": "operations/tools/vercel-retained-evidence-handoff.test.mjs",
+    "test_commit": "a0eddc5544771b67ef3a4c87e1ca828c76ecf8a8"
+  },
+  "verification": {
+    "runtime": "node --test",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "verified_behaviors": [
+      "Exact-commit retained manifests are accepted only after independent raw-byte and reconciliation re-verification.",
+      "A structurally valid manifest cannot self-promote to exhaustive workflow evidence.",
+      "Cross-commit handoffs fail closed.",
+      "Missing roles and artifact cardinality drift fail closed.",
+      "Provider-ceiling ambiguity remains an explicit blocker.",
+      "A manifest cannot grant deployment-claim permission."
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "Current state records exhausted Vercel build capacity and requires operations-only changes.",
+    "claim": "none"
+  },
+  "rollback": [
+    "a0eddc5544771b67ef3a4c87e1ca828c76ecf8a8",
+    "7f7a1b0f80393452029ad9085c6d7d1865453dd2"
+  ]
+}
