@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel-studio-slice-evidence",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T12:40:59Z",
+  "slice": "Canonicalize retained source-binding packets and bind their verification fields to a SHA-256 digest.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "source_commits": {
+    "implementation": "72dca37b843b8bf75ff38ffedb529c4f5d1b15ea",
+    "tests": "bd7d8cb6bad87f45d4d9adf0579a2327e30d559f"
+  },
+  "verification": {
+    "command": "node --test vercel-source-binding-cli.test.mjs",
+    "environment": "isolated local Node runtime reconstructed from exact repository source files",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "covered": [
+      "schema version and digest presence",
+      "path-order canonicalization",
+      "order-independent digest equality",
+      "digest sensitivity to verified blob changes",
+      "duplicate path rejection",
+      "independent lookup disagreement rejection",
+      "no-overwrite retained output",
+      "empty binding rejection"
+    ]
+  },
+  "deployment_evidence": {
+    "commit": "bd7d8cb6bad87f45d4d9adf0579a2327e30d559f",
+    "vercel_status_observed": "pending",
+    "immutable_deployment_verified": false,
+    "deployment_claim_permitted": false
+  },
+  "trust_boundary": "The passing deterministic tests verify packet construction behavior only. They do not prove authenticated source lookup execution, Vercel deployment, browser audio routing, or physical iPhone Safari audibility.",
+  "rollback": [
+    "Revert bd7d8cb6bad87f45d4d9adf0579a2327e30d559f",
+    "Revert 72dca37b843b8bf75ff38ffedb529c4f5d1b15ea"
+  ]
+}
