@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T05:44:00-04:00",
+  "state": "in_progress",
+  "completed_slice": "Established an append-only, provenance-preserving claim-state transition protocol so observed, inferred, proposed, superseded, unresolved, located, and coverage-relative unlocated claims cannot be silently rewritten.",
+  "artifact": "operations/continuity/claim-state-transition-protocol-2026-07-13T0544-0400.json",
+  "observed": [
+    "M-004, M-005, and M-006 remain unresolved in the canonical active queue.",
+    "The existing provenance coverage validator guards located and unlocated closure but does not itself preserve the full history of claim-state changes.",
+    "The specialist registry contains no continuity specialists and no registry-qualified capability gap was established in this slice."
+  ],
+  "inferred": [
+    "A latest-value-only knowledge graph can erase contradiction history even when each individual value is syntactically valid."
+  ],
+  "proposed": [
+    "Require a validated transition record before future continuity tooling changes an active claim state."
+  ],
+  "superseded": [
+    "Silent latest-value replacement without retained prior state, evidence basis, privacy class, and falsification route."
+  ],
+  "unresolved": [
+    "Immutable assigning provenance for M-004, M-005, and M-006.",
+    "Exhaustive accessible ref and reachable-history coverage.",
+    "Executable integration of the transition protocol into the continuity knowledge-graph update path."
+  ],
+  "acceptance_remaining": [
+    "Obtain exhaustive accessible ref and reachable-commit coverage.",
+    "Resolve M-004, M-005, and M-006 as located or coverage-relative unlocated through an accepted coverage event.",
+    "Implement a transition validator that rejects silent state replacement and source-strength inflation."
+  ],
+  "safe_next_action": "Implement and test an append-only claim transition validator, then bind it to the accepted provenance coverage event before resolving M-004, M-005, or M-006.",
+  "privacy_boundary": "Only opaque identifiers, repository paths, evidence classes, transition semantics, and falsification routes were persisted; no private chat text or personal material was written.",
+  "canonical_queue_mutated": false,
+  "specialist_registry_mutated": false,
+  "peer_execution_claimed": false
+}
