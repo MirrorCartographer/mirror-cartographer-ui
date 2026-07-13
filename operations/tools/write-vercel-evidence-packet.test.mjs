@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { writeVercelEvidencePacket } from './write-vercel-evidence-packet.mjs';
@@ -74,9 +74,11 @@ test('refuses to overwrite either retained output', async () => {
   await assert.rejects(() => writeVercelEvidencePacket(first), /receipt_output_exists|manifest_output_exists/);
 });
 
-test('rejects absolute subject identities before accepting a portable manifest', async () => {
+test('rejects absolute subject identities without leaving a partial packet', async () => {
   const paths = await fixture();
   const invalid = request(paths);
   invalid.subject_names.receipt = join(paths.dir, 'receipt.json');
   await assert.rejects(() => writeVercelEvidencePacket(invalid), /absolute_subject_path_rejected/);
+  await assert.rejects(() => access(invalid.receipt_output_path), /ENOENT/);
+  await assert.rejects(() => access(invalid.manifest_output_path), /ENOENT/);
 });
