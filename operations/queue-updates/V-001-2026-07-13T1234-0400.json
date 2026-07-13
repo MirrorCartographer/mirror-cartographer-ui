@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T16:34:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained evidence packets must now pass complete-marker verification and cross-artifact coherence verification at the read boundary before receipt or manifest content is exposed.",
+  "evidence": "operations/evidence/vercel-packet-reader-coherence-2026-07-13T1234-0400.json",
+  "canonical_queue_overwritten": false,
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled raw evidence.",
+    "Observe operations-only Vercel suppression after provider capacity returns.",
+    "Observe the exact-commit audio-routing workflow artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Wire readVerifiedVercelEvidencePacket into the final outcome assessment path so no assessor can bypass complete-packet and coherence verification; remain operations-only until Vercel capacity and immutable deployment identity are verified."
+}
