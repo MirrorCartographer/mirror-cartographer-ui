@@ -2,6 +2,13 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
+const EXPECTED_METHODS = Object.freeze([
+  'github-contents-at-commit',
+  'git-ls-tree-at-commit'
+]);
+const EXPECTED_CANONICALIZATION = 'bindings-sorted-by-repository-path; sha256-over-target-commit-and-verification-fields';
+const EXPECTED_VERIFICATION_METHOD = 'independent-exact-commit-source-reconciliation';
+
 function assertObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     throw new TypeError(`${name} must be an object`);
@@ -12,6 +19,13 @@ function assertHex(value, name, length) {
   if (typeof value !== 'string' || !new RegExp(`^[0-9a-f]{${length}}$`).test(value)) {
     throw new Error(`${name} must be ${length}-character lowercase hex`);
   }
+}
+
+function assertIsoTimestamp(value, name) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) {
+    throw new Error(`${name} must be a UTC ISO-8601 timestamp`);
+  }
+  if (Number.isNaN(Date.parse(value))) throw new Error(`${name} must be a valid timestamp`);
 }
 
 function canonicalDigest(targetCommit, bindings) {
@@ -44,6 +58,9 @@ export function verifyReconciledSourceBindingPacket(packet) {
   if (packet.artifact_type !== 'vercel-reconciled-source-binding-packet') throw new Error('unexpected artifact_type');
   assertHex(packet.target_commit, 'target_commit', 40);
   assertHex(packet.canonical_digest_sha256, 'canonical_digest_sha256', 64);
+  assertIsoTimestamp(packet.generated_at, 'generated_at');
+  if (packet.verification_method !== EXPECTED_VERIFICATION_METHOD) throw new Error('packet verification_method mismatch');
+  if (packet.canonicalization !== EXPECTED_CANONICALIZATION) throw new Error('canonicalization contract mismatch');
   if (!Array.isArray(packet.bindings) || packet.bindings.length === 0) throw new Error('bindings must be a non-empty array');
   if (packet.binding_count !== packet.bindings.length) throw new Error('binding_count mismatch');
 
@@ -53,9 +70,11 @@ export function verifyReconciledSourceBindingPacket(packet) {
     if (typeof binding.path !== 'string' || binding.path.length === 0) throw new Error(`bindings[${index}].path must be non-empty`);
     assertHex(binding.blob_sha, `bindings[${index}].blob_sha`, 40);
     if (binding.target_commit !== packet.target_commit) throw new Error(`bindings[${index}] target_commit mismatch`);
-    if (binding.verification_method !== 'independent-exact-commit-source-reconciliation') throw new Error(`bindings[${index}] verification_method mismatch`);
-    if (!Array.isArray(binding.independent_methods) || binding.independent_methods.length !== 2) throw new Error(`bindings[${index}] independent_methods mismatch`);
-    if (new Set(binding.independent_methods).size !== 2) throw new Error(`bindings[${index}] methods must be distinct`);
+    if (binding.verification_method !== EXPECTED_VERIFICATION_METHOD) throw new Error(`bindings[${index}] verification_method mismatch`);
+    assertIsoTimestamp(binding.verified_at, `bindings[${index}].verified_at`);
+    if (Date.parse(binding.verified_at) > Date.parse(packet.generated_at)) throw new Error(`bindings[${index}].verified_at occurs after generated_at`);
+    if (!Array.isArray(binding.independent_methods) || binding.independent_methods.length !== EXPECTED_METHODS.length) throw new Error(`bindings[${index}] independent_methods mismatch`);
+    if (JSON.stringify(binding.independent_methods) !== JSON.stringify(EXPECTED_METHODS)) throw new Error(`bindings[${index}] independent_methods must match approved canonical methods`);
     if (binding.agreement_verified !== true) throw new Error(`bindings[${index}] agreement not verified`);
     paths.push(binding.path);
   }
