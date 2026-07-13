@@ -11,6 +11,7 @@ import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRunti
 import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
 import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
+import { installStudioRepertoryRuntime } from './engine/studioRepertoryRuntime';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
@@ -19,6 +20,7 @@ import './assets/mobile-enter.css';
 import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 import './assets/platform.css';
+import './assets/studio-repertory.css';
 
 installDeploymentIdentityRuntime();
 installAudioDeviceEvidenceRuntime({ window, navigator, document });
@@ -28,6 +30,7 @@ installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
 installPossibilityFieldRuntime();
 installCometGardenRuntime();
+installStudioRepertoryRuntime();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
