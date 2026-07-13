@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T16:34:00Z",
+  "slice": "Require cross-artifact coherence before exposing retained Vercel evidence packet subjects.",
+  "source_state": {
+    "delivery_state": "in_progress_blocked",
+    "deployment_attempted": false,
+    "blocker": "Vercel build capacity remains unverified; operations-only work was selected."
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "changes": [
+    {
+      "path": "operations/tools/read-vercel-evidence-packet.mjs",
+      "commit": "570105ca5fa43078d34422ce34e7d368ff9e30a6",
+      "effect": "The read boundary now requires both complete-packet byte verification and evidence-packet coherence verification before returning receipt or manifest content."
+    },
+    {
+      "path": "operations/tools/read-vercel-evidence-packet.test.mjs",
+      "commit": "d329e1c2d478ed1140f0ef21960840273be37727",
+      "effect": "Fixtures now use an in-toto-shaped subject manifest and cover byte-valid cross-commit substitution."
+    }
+  ],
+  "verification": {
+    "route": "isolated Node test runner using repository-equivalent source modules",
+    "command": "node --test operations/tools/read-vercel-evidence-packet.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "complete and coherent packet accepted",
+      "receipt tampering rejected",
+      "manifest tampering rejected",
+      "incomplete marker rejected",
+      "byte-valid manifest bound to another commit rejected"
+    ]
+  },
+  "claim_ceiling": "Source-level and isolated-runtime verification only. No Vercel deployment, browser behavior, audio audibility, physical iPhone Safari observation, or peer execution is claimed.",
+  "rollback": {
+    "method": "revert commits in reverse order",
+    "commits": [
+      "d329e1c2d478ed1140f0ef21960840273be37727",
+      "570105ca5fa43078d34422ce34e7d368ff9e30a6"
+    ]
+  }
+}
