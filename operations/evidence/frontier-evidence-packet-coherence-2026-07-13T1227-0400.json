@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T16:27:48Z",
+  "finding": "Packet completeness and subject-manifest integrity are insufficient when verified independently; promotion requires a fail-closed coherence gate proving that marker and manifest identify the same repository, exact source commit, receipt path, receipt bytes, and receipt size.",
+  "source_status": {
+    "repository_sources": [
+      "operations/tools/vercel-evidence-packet-commit.mjs",
+      "operations/research/evidence-subject-manifest.mjs",
+      "operations/ACTIVE_QUEUE.json"
+    ],
+    "external_primary_sources": [],
+    "reason_external_research_not_required": "The finding concerns current internal evidence contracts and was derived from exact source inspection rather than a time-sensitive external behavior claim."
+  },
+  "evidence_strength": "deterministic_local_test",
+  "implemented_artifact": "operations/research/evidence-packet-coherence.mjs",
+  "verification": {
+    "command": "node --test evidence-packet-coherence.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered_failures": [
+      "repository mismatch",
+      "source commit mismatch",
+      "post-publication receipt tampering",
+      "receipt omitted from subject manifest"
+    ]
+  },
+  "uncertainty": "The gate verifies exact-byte and cross-artifact identity only. It does not authenticate the producer, prove GitHub Actions coverage, establish deployment identity, demonstrate runtime behavior, or prove physical-device audibility.",
+  "falsification_route": "Construct a marker and manifest that disagree on repository, source commit, receipt digest, receipt size, or receipt inclusion; the verifier must return verified=false. A future bypass that returns verified=true falsifies the contract.",
+  "privacy_boundary": "Only repository operational metadata and synthetic test fixtures were used."
+}
