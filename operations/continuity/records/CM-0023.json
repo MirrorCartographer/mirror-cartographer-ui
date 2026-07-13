@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-0023",
+  "created_at": "2026-07-13T10:20:55Z",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Connector search-index boundary for unresolved continuity identifiers",
+  "memory": {
+    "observed": [
+      "The GitHub repository metadata reports code search indexing as unavailable for MirrorCartographer/mirror-cartographer-ui.",
+      "Connector code search returned zero results for M-004 and for the combined M-004 M-005 M-006 query.",
+      "Commit search returned zero results for M-004, M-005, and M-006.",
+      "Branch search with an empty query returned no branch records and therefore did not establish exhaustive branch coverage."
+    ],
+    "inferred": [
+      "Zero connector code-search results are not evidence that the identifiers do not exist because code search indexing is unavailable.",
+      "Zero commit-message search results only excludes matching commit-message text within the connector search surface; it does not exclude file contents, unreachable history, deleted paths, unindexed branches, tags, or external decision sources."
+    ],
+    "proposed": [
+      "Treat connector code-search negatives as lead-only until an indexed search or direct exhaustive tree traversal is retained.",
+      "Require an explicit coverage manifest before changing M-004, M-005, or M-006 from unresolved to unlocated."
+    ],
+    "superseded": [
+      "Interpreting a zero-result connector search as proof of repository-wide absence."
+    ],
+    "unresolved": [
+      "Immutable provenance and originating source for M-004.",
+      "Immutable provenance and originating source for M-005.",
+      "Immutable provenance and originating source for M-006.",
+      "Exhaustive branch, tag, reachable-tree, and commit-history coverage."
+    ]
+  },
+  "coverage": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "default_branch": "main",
+    "code_search_indexed": false,
+    "queries": [
+      "code: M-004 M-005 M-006",
+      "code: M-004",
+      "commit message: M-004",
+      "commit message: M-005",
+      "commit message: M-006",
+      "branches: empty query"
+    ],
+    "coverage_class": "non_exhaustive_connector_probe",
+    "absence_claim_permitted": false
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "opaque continuity identifiers",
+      "connector query outcomes",
+      "coverage semantics"
+    ],
+    "excluded": [
+      "private chat text",
+      "health information",
+      "pet health information",
+      "credentials",
+      "personal contact data"
+    ]
+  },
+  "next_action": "Run a retained exhaustive traversal of refs, tags, reachable commits, and trees with content grep for M-004, M-005, and M-006; bind the result to an immutable coverage manifest before classifying any identifier as unlocated."
+}
