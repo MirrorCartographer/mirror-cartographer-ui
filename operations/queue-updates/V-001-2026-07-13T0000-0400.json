@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T00:00:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence workflow now pins checkout, setup-node, and upload-artifact to full commit SHAs and contains a fail-closed self-check that rejects mutable action references.",
+  "source_commit": "f61bb515c59dd6e77ec9eded1b2be8c8a38e6163",
+  "evidence_file": "operations/evidence/vercel-immutable-action-pins-2026-07-13T0000-0400.json",
+  "acceptance_remaining": [
+    "Observe a successful exact-commit retained-evidence workflow run and inspect its artifact.",
+    "Execute authenticated dual enumeration for one exact commit and retain reconciled evidence.",
+    "Observe operations-only Vercel build suppression after provider capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Inspect the first workflow run for f61bb515c59dd6e77ec9eded1b2be8c8a38e6163; require the immutable-reference gate and all retained-evidence tests to pass, then download and verify the commit-bound artifact before any evidence promotion.",
+  "canonical_queue_overwritten": false,
+  "other_team_state_overwritten": false
+}
