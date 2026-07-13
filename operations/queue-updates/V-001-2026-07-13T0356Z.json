@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T03:56:26Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence CI artifact now binds the checked-out GITHUB_SHA to a verified seven-entry SHA-256 manifest covering the workflow and all six tested retained-evidence source/test files.",
+  "evidence": [
+    "commit:02424942b4440840180ca9904b24803913d4ff87",
+    "operations/evidence/vercel-tested-source-manifest-2026-07-13T0356Z.json"
+  ],
+  "acceptance_remaining": [
+    "Observe the exact-commit retained-evidence workflow and inspect the uploaded commit and SHA-256 manifest artifact.",
+    "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and independent gh api traversal, retaining both raw outputs and reconciliation bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Inspect the first workflow run for commit 02424942b4440840180ca9904b24803913d4ff87 and validate the artifact contents before treating CI execution as evidence; do not create an application deployment while provider capacity and immutable deployment identity remain unverified.",
+  "canonical_queue_modified": false
+}
