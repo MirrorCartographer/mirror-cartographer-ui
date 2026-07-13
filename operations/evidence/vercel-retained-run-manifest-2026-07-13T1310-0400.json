@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T17:10:44Z",
+  "slice": "retained_run_provenance_manifest",
+  "objective": "Bind retained CI evidence to immutable workflow-run provenance without claiming a Vercel deployment or physical-device behavior.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-retained-run-manifest.mjs",
+    "operations/tools/vercel-retained-run-manifest.test.mjs",
+    ".github/workflows/vercel-retained-run-manifest-contract.yml"
+  ],
+  "commits": [
+    "01dee9f8e7d485a5a2edc5626b46070a635ed6b8",
+    "2613fe7cc15bc30ba94ff265754e831132b1da89",
+    "5c1f9ef25f24287db2b2cfc3efe340bc8c325521"
+  ],
+  "source_verification": {
+    "workflow_contract": "The committed workflow checks exact checkout identity, pins third-party actions by full SHA, executes five deterministic manifest tests, generates a run manifest, verifies run ID, attempt, and commit identity, hashes sources and retained outputs, and uploads a 30-day artifact.",
+    "manifest_fields": [
+      "repository",
+      "workflow",
+      "run_id",
+      "run_attempt",
+      "event_name",
+      "ref",
+      "sha",
+      "artifact_name",
+      "retention_days",
+      "generated_at"
+    ],
+    "claim_boundary": "The manifest proves only CI run and retained contract artifact identity. It does not prove Vercel deployment, browser audio, or physical-device audibility."
+  },
+  "provider_evidence": {
+    "commit": "5c1f9ef25f24287db2b2cfc3efe340bc8c325521",
+    "vercel_status": "failure",
+    "vercel_target": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit",
+    "github_workflow_runs_visible_to_connector": 0,
+    "interpretation": "The known Vercel build-rate blocker remains. The connector returned no pull-request-triggered workflow runs, so GitHub Actions execution is unproven."
+  },
+  "constraints_respected": [
+    "No payment or conversion logic was added to Vercel.",
+    "No application deployment was intentionally triggered.",
+    "No GitHub file or history was deleted.",
+    "No peer execution is claimed without evidence."
+  ],
+  "rollback": [
+    "Revert 5c1f9ef25f24287db2b2cfc3efe340bc8c325521",
+    "Revert 2613fe7cc15bc30ba94ff265754e831132b1da89",
+    "Revert 01dee9f8e7d485a5a2edc5626b46070a635ed6b8"
+  ],
+  "next_action": "Inspect the GitHub Actions run and retained artifact for commit 5c1f9ef25f24287db2b2cfc3efe340bc8c325521 when available; preserve the manifest and digest files as commit-bound CI evidence while continuing to avoid application deployment attempts until Vercel capacity returns."
+}
