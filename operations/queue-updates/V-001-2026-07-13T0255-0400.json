@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T02:55:57-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic end-to-end retained-evidence pipeline that recomputes digests from retained bytes, builds the chain-of-custody manifest, verifies exact-commit reconciliation and provider-ceiling status, and passes only derived evidence into the fail-closed deployment-attempt decision.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-retained-evidence-pipeline.mjs",
+    "operations/tools/vercel-retained-evidence-pipeline.test.mjs",
+    "operations/evidence/vercel-retained-evidence-pipeline-2026-07-13T0255-0400.json"
+  ],
+  "commits": [
+    "0cde2fffc53b88079294538b6e342c655d96a0ae",
+    "353c33c4a921e94495cc06207b5ed2576c9daa1c",
+    "413436e7281a71efdf1f1746d0fbeda01c81068f"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "application_deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated primary and independent exact-commit workflow enumerations and retain all four required artifacts.",
+    "Run the integrated pipeline against independently acquired retained bytes and preserve its output.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "rollback": "Revert commits 413436e7281a71efdf1f1746d0fbeda01c81068f, 353c33c4a921e94495cc06207b5ed2576c9daa1c, and 0cde2fffc53b88079294538b6e342c655d96a0ae. Existing production and deployment paths were not changed.",
+  "safe_next_action": "Use the new pipeline in an authenticated evidence-collection workflow or checkout against one exact commit, preserving primary raw output, independent gh pagination output, retained command text, reconciliation bytes, generated manifest, and final decision. Do not request an application deployment until provider capacity and immutable deployment identity are independently verified.",
+  "canonical_queue_modified": false
+}
