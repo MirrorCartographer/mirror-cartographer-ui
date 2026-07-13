@@ -55,7 +55,7 @@ export async function verifyFreshEvidenceReceipt(receiptPath) {
     }
   }
 
-  if (names.every((name) => parsed[name]) && reasons.every((code) => !code.endsWith('_invalid') && !code.endsWith('_missing'))) {
+  if (names.every((name) => parsed[name]) && reasons.length === 0) {
     const expectedAssessment = assessFreshReconciledVercelEvidence({
       target_commit_sha: receipt.target_commit_sha,
       target_commit_time: parameters.target_commit_time,
