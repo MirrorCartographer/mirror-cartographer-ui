@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T21:07:00Z",
+  "state": "in_progress",
+  "completed_slice": "Added a fail-closed provenance decision gate that binds candidate resolution to validated repository coverage before promoting M-004, M-005, or M-006 to located, collision_rejected, unlocated, or unresolved.",
+  "files": [
+    "operations/continuity/decide-provenance-status.mjs",
+    "operations/continuity/decide-provenance-status.test.mjs",
+    "operations/evidence/continuity-provenance-decision-gate-2026-07-13T1707-0400.json"
+  ],
+  "verification": {
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "deployment_claim": false
+  },
+  "acceptance_remaining": [
+    "Obtain exhaustive branch inventory or equivalent repository history traversal.",
+    "Run the decision gate with retained immutable candidate and coverage inputs for M-004, M-005, and M-006.",
+    "Locate each immutable source object or retain unresolved status until complete coverage supports unlocated."
+  ],
+  "safe_next_action": "Produce and retain one complete repository coverage manifest, then evaluate each identifier through decide-provenance-status.mjs without reconstructing missing history.",
+  "authoritative": false
+}
