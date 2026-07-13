@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "deterministic-hourly-repertory-contract",
+  "generated_at": "2026-07-13T22:45:44Z",
+  "status": "verified_operations_only",
+  "production_on_stage": {
+    "local_hour": 18,
+    "id": "hour-18",
+    "title": "The Rehearsal Room",
+    "grammar": "editable production blocking"
+  },
+  "artifacts": [
+    "operations/vercel-studio/repertory/schedule.json",
+    "operations/vercel-studio/repertory/repertory.mjs",
+    "operations/vercel-studio/repertory/repertory.test.mjs"
+  ],
+  "verification": {
+    "runtime": "Node.js",
+    "command": "node --test repertory.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "complete 24-hour schedule",
+      "deterministic hour selection",
+      "modulo normalization",
+      "duplicate-hour rejection",
+      "autoplay rejection",
+      "continuity-fork rejection"
+    ]
+  },
+  "constraints_preserved": {
+    "operations_only": true,
+    "vercel_build_attempted": false,
+    "payments_added": false,
+    "private_source_material_exposed": false,
+    "history_deleted": false
+  },
+  "rollback": "Revert the three repertory commits; no application runtime or deployment state was changed.",
+  "limits": [
+    "The repertory is implementation-ready but not wired into the public application.",
+    "No browser, mobile Safari, audio, or deployment claim is made.",
+    "Production titles and grammars are design contracts, not completed visual scenes."
+  ]
+}
