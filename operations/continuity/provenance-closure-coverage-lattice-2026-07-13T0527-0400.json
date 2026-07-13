@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-provenance-closure-coverage-lattice-2026-07-13T0527-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-13T05:27:23-04:00",
+  "purpose": "Define when an unresolved continuity identifier may be classified as located, collision-rejected, or unlocated without converting incomplete search coverage into a false nonexistence claim.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json at blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json at blob 7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "operations/SPECIALIST_REGISTRY.json at blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json at blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "continuity provenance-gap graph commit d217ae9da41f8fe781af382bdfad262462cf77dd",
+    "continuity namespace-collision boundary commit 1fffe49367e9918a51b66ff0cd5392d82a29ab2b",
+    "continuity provenance-gap ledger commit 058aba56790230dd71096ca7360734f6e20f164d",
+    "recent repository commit index through 9d297c6441642d72993127497c1dcb08ee847fff"
+  ],
+  "durable_memory": {
+    "title": "Unlocated is a coverage-relative resolution, not a claim of nonexistence",
+    "rule": "A provenance gap may transition from unresolved to unlocated only after the declared search coverage is complete, immutable, reproducible, and explicitly bounded. Unlocated means no qualifying assigning object was found inside that coverage boundary. It never means the artifact never existed.",
+    "why_it_matters": "This prevents continuity repair from fabricating history, silently promoting run prose, or treating connector limitations as evidence that a source does not exist."
+  },
+  "coverage_lattice": [
+    {
+      "level": 0,
+      "name": "lead_only",
+      "requirements": ["Narrative report, automation prose, or recollection names the identifier."],
+      "permitted_claim": "A provenance lead exists.",
+      "forbidden_claims": ["The artifact existed in GitHub.", "The artifact is canonical.", "The artifact is absent."]
+    },
+    {
+      "level": 1,
+      "name": "default_branch_observed",
+      "requirements": ["Current default-branch files and indexed repository search were inspected."],
+      "permitted_claim": "No qualifying source was located on the observed default-branch surface.",
+      "forbidden_claims": ["All branches were searched.", "Repository history is exhausted."]
+    },
+    {
+      "level": 2,
+      "name": "bounded_history_observed",
+      "requirements": ["A declared commit range or recent-history window was traversed with immutable commit locators."],
+      "permitted_claim": "No qualifying source was located inside the declared history window.",
+      "forbidden_claims": ["Older history is absent.", "Deleted or alternate-branch objects were searched."]
+    },
+    {
+      "level": 3,
+      "name": "branch_inventory_complete",
+      "requirements": ["Every accessible branch ref is enumerated.", "Each ref is bound to an immutable tip commit.", "Coverage errors and inaccessible refs are retained."],
+      "permitted_claim": "All accessible branch tips are known for this inventory event.",
+      "forbidden_claims": ["Every reachable historical object has been traversed."]
+    },
+    {
+      "level": 4,
+      "name": "reachable_history_complete",
+      "requirements": ["All commits reachable from every inventoried accessible branch and tag are traversed.", "Search criteria and object digests are retained.", "Provider ceilings, pagination gaps, and permission failures are absent or explicitly classified."],
+      "permitted_claim": "No qualifying assigning object was found in the exhaustively traversed accessible repository graph.",
+      "forbidden_claims": ["The artifact never existed outside the accessible repository graph."]
+    },
+    {
+      "level": 5,
+      "name": "coverage_relative_unlocated",
+      "requirements": ["Level 4 is satisfied.", "No immutable assigning object matches exact identifier, namespace, owner, semantic role, and temporal precedence.", "Rejected collisions and private-source boundaries are retained."],
+      "permitted_claim": "The identifier is unlocated within the exhaustively traversed accessible repository graph as of the inventory event.",
+      "forbidden_claims": ["The identifier never existed.", "A replacement historical artifact may be recreated under the missing identifier."]
+    }
+  ],
+  "resolution_states": {
+    "located": {
+      "definition": "An immutable source explicitly assigns the exact identifier in the continuity namespace and satisfies owner, semantic-role, and temporal-precedence checks.",
+      "effect": "The provenance-gap node may link to the assigning object and leave quarantine after exact-source verification."
+    },
+    "collision_rejected": {
+      "definition": "A candidate shares a suffix or fuzzy similarity but fails namespace, owner, semantic-role, temporal, or immutable-locator agreement.",
+      "effect": "The candidate remains evidence of search coverage, not evidence of identity."
+    },
+    "unresolved": {
+      "definition": "Coverage is incomplete, a qualifying source has not been found, or conflicting evidence remains.",
+      "effect": "The node remains quarantined and no historical reconstruction is permitted."
+    },
+    "unlocated": {
+      "definition": "Exhaustive accessible repository coverage is complete and no qualifying assigning object was found.",
+      "effect": "The node may close as coverage-relative unlocated while preserving the possibility of an external, private, inaccessible, or never-persisted origin."
+    }
+  },
+  "claims": {
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved in the continuity queue.",
+      "Current evidence includes default-branch inspection, bounded commit history, indexed search, and relevance-ranked File Library search, but not exhaustive accessible branch-history traversal.",
+      "Known V8 and V9 suffix matches were already rejected as namespace collisions."
+    ],
+    "inferred": [
+      "The missing identifiers may originate from non-persisted run prose, an unobserved branch, inaccessible history, another repository, or a private source outside the repository graph."
+    ],
+    "proposed": [
+      "Use this lattice as the transition guard for M-004, M-005, and M-006.",
+      "Do not classify any node as unlocated until branch inventory and reachable-history coverage reach level 5 with retained immutable evidence."
+    ],
+    "superseded": [
+      "Treating a failed search as evidence of nonexistence.",
+      "Treating numeric suffix agreement as identity.",
+      "Recreating a missing historical identifier to make the record appear complete."
+    ],
+    "unresolved": [
+      "The immutable assigning source for M-004, M-005, and M-006.",
+      "An exhaustive inventory of accessible branches, tags, and reachable commits.",
+      "Whether any inaccessible or private source assigned the identifiers."
+    ]
+  },
+  "knowledge_graph_effect": {
+    "new_node_type": "coverage_event",
+    "new_edge_types": ["searched_within", "not_found_within", "rejected_as_collision", "resolved_by_assigning_source"],
+    "transition_guard": "A provenance_gap node may become unlocated only when linked to a level-5 coverage_event whose retained evidence reports no qualifying assigning source and no unresolved coverage error."
+  },
+  "verification_status": "verified_rule_projection",
+  "evidence_strength": "moderate",
+  "coverage_limit": "This artifact defines the closure rule but does not itself perform exhaustive branch or reachable-history traversal.",
+  "privacy_boundary": "Only opaque identifiers, repository metadata, source classes, coverage semantics, and abstract provenance rules are persisted. No private dialogue, personal events, health information, credentials, or identifying details are reproduced."
+}
