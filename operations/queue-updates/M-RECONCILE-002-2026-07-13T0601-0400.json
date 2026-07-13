@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "observed_at": "2026-07-13T10:01:57Z",
+  "state": "in_progress",
+  "completed_slice": "Implemented and test-verified an append-only claim-transition journal that validates against the current claim head, uses atomic compare-and-set persistence, rejects stale writers, and prevents two concurrent writers from replacing the same transition history.",
+  "files": [
+    "tools/continuity/claim-transition-journal.mjs",
+    "tools/continuity/claim-transition-journal.test.mjs",
+    "operations/evidence/continuity-claim-transition-journal-2026-07-13T0601-0400.json"
+  ],
+  "commits": [
+    "fe6928f141e757b728cf151baf5a306b43df6fc7",
+    "9aa3f8e084ccca3ff4096d4661ec0fceca6f7ced",
+    "a0e594896fd647e88ac09cc36d81b968c9a5d344"
+  ],
+  "acceptance_remaining": [
+    "Obtain exhaustive branch inventory or equivalent accessible repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as coverage-relative unlocated after accepted exhaustive coverage.",
+    "Locate the assigning decision log, language lexicon, project document, or chat-history source for each identifier.",
+    "Wire ClaimTransitionJournal immediately before every continuity knowledge-graph active-state mutation.",
+    "Implement a production backend with genuinely atomic compare-and-set behavior.",
+    "Run a two-process collision test against the production backend and retain the resulting journal snapshot."
+  ],
+  "safe_next_action": "Identify the continuity knowledge-graph mutation entrypoint, require all active-state changes to pass through ClaimTransitionJournal, then implement one production atomic backend and run a two-process stale-head collision test.",
+  "canonical_queue_overwrite": false,
+  "specialist_registry_change": null,
+  "reason_no_registry_change": "The existing queue item defines an implementation and provenance task; it does not demonstrate a durable specialist capability gap under the registry rule."
+}
