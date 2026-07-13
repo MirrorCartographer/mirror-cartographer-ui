@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:15:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained evidence outputs are now constrained by artifact role: raw enumerations and headers, retained command text, derived rate-limit proof, and final bundles must use their designated directories and file types after canonicalization.",
+  "evidence": {
+    "source_commit": "34fb077a19f1485eaa5e5b7cc705a6dfb7659e0d",
+    "test_commit": "1b69da719e3e33b467e816add0c13ad9098810a5",
+    "evidence_commit": "138593eea2345c9a015055d4a95df1c4eddf5c48",
+    "evidence_path": "operations/evidence/vercel-typed-output-route-gate-2026-07-13T1415-0400.json",
+    "exact_commit_readback": true,
+    "workflow_runs_returned": 0,
+    "tests_executed": false,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute the committed preflight tests in an authenticated checkout.",
+    "Execute authenticated all-event pagination for one exact commit with both clients and retain role-routed raw outputs, headers, command text, derived proof, and final bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the updated validator tests, then execute the dual-client retained-evidence workflow using new canonically distinct and role-routed output paths. Do not request an application deployment until provider capacity and immutable deployment identity are available.",
+  "canonical_mutation_performed": false,
+  "preservation": {
+    "other_team_records_overwritten": false,
+    "files_deleted": false,
+    "git_history_deleted": false
+  }
+}
