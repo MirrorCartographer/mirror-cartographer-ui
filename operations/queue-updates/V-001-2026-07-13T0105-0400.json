@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T01:05:14-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed classifier for bounded GitHub connector workflow observations so zero-result first-page snapshots remain absence_unproven and cannot be promoted into workflow-completion evidence.",
+  "implementation_commit": "8098acfddc1d4b4125c84ecf4378f9a45c85f1dd",
+  "test_commit": "f7ac64405ceea385cafa8cca6d8ece9688653d75",
+  "evidence_commit": "0b5fa9465c46e6e1b8311b2486517bfe3cbec6ce",
+  "evidence_path": "operations/evidence/vercel-bounded-workflow-observation-2026-07-13T0105-0400.json",
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both approved exhaustive clients.",
+    "Observe the exact-commit retained-evidence workflow run and retrieve its artifact.",
+    "Verify the five transcript hashes and eleven tested-source hashes.",
+    "Bind a tested application commit to an immutable successful Vercel deployment after capacity returns.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run both exhaustive exact-commit workflow enumerators for bd5a114a4989416ccf6e21f091e088814e6df13a; retain raw outputs and reconciliation evidence, and keep the current zero-result connector snapshot classified as absence_unproven."
+}
