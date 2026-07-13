@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T00:33:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Integrated Frontier Research's trigger-expectation contract into a Vercel-owned fail-closed gate that requires a completely enumerated expected exact-commit workflow run before retained-evidence assessment eligibility.",
+  "source_commits": [
+    "c63d4600b690fdb8bdf1101022645cd9701d0e78",
+    "f556440d98725d0e1f47c325214c6901d56f3395"
+  ],
+  "evidence_file": "operations/evidence/vercel-retained-trigger-gate-2026-07-13T0033-0400.json",
+  "verification": "Five deterministic Node tests passed; the available connector observed zero runs for f61bb515c59dd6e77ec9eded1b2be8c8a38e6163, which is recorded as non-exhaustive absence evidence.",
+  "acceptance_remaining": [
+    "Wire the gate into .github/workflows/vercel-retained-evidence-contract.yml and include its decision in the uploaded artifact.",
+    "Execute authenticated exhaustive all-event pagination for an exact commit with both approved clients and retain reconciliation evidence.",
+    "Observe an operations-only Vercel sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add a workflow step that constructs trigger input and consumes exhaustive exact-commit enumeration, run the gate before bundle promotion, and upload the gate decision alongside the tested-source manifest; do not create an application deployment while provider capacity remains unverified.",
+  "canonical_queue_overwritten": false,
+  "other_team_state_overwritten": false,
+  "files_deleted": false
+}
