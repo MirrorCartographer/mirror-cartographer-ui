@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T00:59:35-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence workflow now captures all five Node contract-suite transcripts, hashes them into a five-entry SHA-256 manifest, and uploads both transcripts and digest manifest with the exact-commit source record.",
+  "implementation_commit": "bd5a114a4989416ccf6e21f091e088814e6df13a",
+  "evidence_path": "operations/evidence/vercel-retained-test-transcripts-2026-07-13T0059-0400.json",
+  "acceptance_remaining": [
+    "Observe the exact-commit workflow run.",
+    "Download the artifact and verify all five transcript digests.",
+    "Execute authenticated exhaustive workflow enumeration and reconcile independent outputs.",
+    "Bind a tested application commit to an immutable successful Vercel deployment after capacity returns.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Locate the exact-commit retained-evidence workflow run for bd5a114a4989416ccf6e21f091e088814e6df13a, retrieve its artifact, verify the five transcript hashes and eleven source hashes, and retain the observed run identity without making a deployment claim."
+}
