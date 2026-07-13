@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T10:47:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed replay verifier for retained fresh-evidence receipts, including source-byte digest checks, assessment replay, claim-ceiling enforcement, and tamper tests.",
+  "canonical_queue_overwritten": false,
+  "other_team_state_overwritten": false,
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit through both clients and retain raw outputs plus reconciliation.",
+    "Run the committed producer and verifier tests in an authenticated clean checkout.",
+    "Observe an operations-only sentinel as skipped or ignored after Vercel capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "In an authenticated clean checkout, run node --test operations/tools/vercel-fresh-evidence-receipt.test.mjs operations/tools/verify-vercel-fresh-evidence-receipt.test.mjs. Then generate a new exact-commit receipt at a unique path and require verifyFreshEvidenceReceipt(...).verified === true before workflow-outcome assessment. Do not create an application deployment while provider capacity remains unverified.",
+  "evidence": "operations/evidence/vercel-fresh-evidence-receipt-verifier-2026-07-13T1047-0400.json"
+}
