@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T22:22:17Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed temporal stabilization gate requiring two independently complete, same-commit workflow snapshots separated by a minimum quiet period, with identical normalized run sets and terminal statuses.",
+  "artifacts": [
+    "operations/tools/validate-workflow-stabilization.mjs",
+    "operations/tools/validate-workflow-stabilization.test.mjs",
+    "operations/evidence/frontier-workflow-stabilization-2026-07-13T1822-0400.json"
+  ],
+  "verification": {
+    "method": "deterministic Node test",
+    "passed": 7,
+    "failed": 0
+  },
+  "handoff": {
+    "target": "vercel_studio",
+    "instruction": "Place the stabilization gate after independent enumeration reconciliation and before commit-bound evidence promotion. Retain both raw snapshots and the chosen minimum_quiet_ms in the evidence bundle."
+  },
+  "acceptance_remaining": [
+    "Execute two authenticated exhaustive snapshot pairs for one exact private-repository commit.",
+    "Confirm both clients reconcile at each observation point.",
+    "Retain the stabilization result with raw snapshots and policy interval.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Integrate the stabilization gate into the retained-evidence CLI and run it against two authenticated exact-commit snapshot pairs without making a deployment claim."
+}
