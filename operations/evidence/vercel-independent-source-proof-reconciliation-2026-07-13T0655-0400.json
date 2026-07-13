@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T10:55:00Z",
+  "change": "Added a fail-closed reconciler requiring GitHub contents-at-exact-commit and git ls-tree-at-exact-commit to agree on repository path, blob SHA, and target commit before emitting a source binding.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "files": [
+    "operations/tools/vercel-source-binding-reconciler.mjs",
+    "operations/tools/vercel-source-binding-reconciler.test.mjs"
+  ],
+  "verification": {
+    "method": "local-node-test",
+    "command": "node --test operations/tools/vercel-source-binding-reconciler.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "matching independent exact-commit lookups",
+      "blob disagreement rejection",
+      "path disagreement rejection",
+      "cross-commit rejection",
+      "mutable or mislabeled lookup rejection",
+      "unsafe path rejection"
+    ]
+  },
+  "evidence_strength": "source-and-local-runtime-verified",
+  "deployment": {
+    "attempted": false,
+    "claimed": false,
+    "reason": "Current state prohibits application deployment attempts while Vercel provider build capacity remains exhausted."
+  },
+  "limits": [
+    "The reconciler validates supplied lookup envelopes but does not itself authenticate to GitHub or execute git ls-tree.",
+    "No GitHub Actions execution is claimed.",
+    "No Vercel deployment identity or physical Safari audibility is established."
+  ],
+  "rollback": [
+    "Revert the queue update commit.",
+    "Revert this evidence commit.",
+    "Revert commit 06db84b7e7e2c99029ebdc2df40398135d6a4965.",
+    "Revert commit c2241f585e2dc9d3885136c5f6eb58f5538b05c2."
+  ],
+  "falsification_route": "Supply mismatched blob SHAs, paths, target commits, mutable lookup methods, malformed timestamps, or unsafe paths; reconciliation must fail closed."
+}
