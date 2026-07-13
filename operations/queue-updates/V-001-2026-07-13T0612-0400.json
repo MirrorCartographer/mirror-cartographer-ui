@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T06:12:40-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound the retained-evidence pipeline receipt and verifier-chain lock into one fail-closed exact-commit composite receipt.",
+  "evidence": [
+    "operations/tools/vercel-retained-evidence-chain-receipt.mjs",
+    "operations/tools/vercel-retained-evidence-chain-receipt.test.mjs",
+    "operations/evidence/vercel-retained-evidence-chain-receipt-2026-07-13.json"
+  ],
+  "verification": {
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "application_deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Invoke the composite receipt from the retained-evidence CLI output path.",
+    "Execute both authenticated exhaustive workflow enumerators for one exact commit and retain raw outputs.",
+    "Observe operations-only Vercel build suppression after provider capacity returns.",
+    "Inspect the exact-commit audio-routing artifact.",
+    "Bind one tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Integrate bindRetainedEvidenceChainReceipt into the retained-evidence CLI so every emitted receipt includes the exact commit, manifest digest, pipeline source bindings, verifier source bindings, and operations-only authority; keep deployment acceptance fail-closed."
+}
