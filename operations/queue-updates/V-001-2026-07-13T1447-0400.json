@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:47:22-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The retained-evidence preflight now rejects substring-only filename identity and requires one exact canonical basename per commit and artifact role, preventing misleading prefixes, suffixes, and overlapping role-token reuse.",
+  "evidence": {
+    "source_commit": "8ae1821bdc5b275c74bfe069d067c632558016af",
+    "focused_test_commit": "1af2469c392cbf0022f77130cc3c7bd485e03c1e",
+    "existing_suite_alignment_commit": "c6eab403e8a8acdcda3a2fedb9bf6b71833cd21d",
+    "evidence_commit": "b205588cabd9b8b39c51af86af9bcb04373b856e",
+    "evidence_path": "operations/evidence/vercel-canonical-output-basename-2026-07-13T1447-0400.json",
+    "local_focused_tests_passed": 5,
+    "local_focused_tests_failed": 0,
+    "exact_commit_readback": true,
+    "deployment_attempted": false
+  },
+  "acceptance_remaining": [
+    "Execute the committed full preflight test suite in an authenticated checkout.",
+    "Execute authenticated all-event pagination for one exact commit with both clients and retain canonical commit-bound, role-bound outputs, headers, command text, derived proof, and final bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run both committed preflight test files in an authenticated checkout, then execute the dual-client retained-evidence workflow using the exact canonical basename contract. Do not request an application deployment until provider capacity and immutable deployment identity are available.",
+  "canonical_mutation_performed": false,
+  "preservation": {
+    "other_team_records_overwritten": false,
+    "files_deleted": false,
+    "git_history_deleted": false,
+    "payments_or_conversion_added": false
+  }
+}
