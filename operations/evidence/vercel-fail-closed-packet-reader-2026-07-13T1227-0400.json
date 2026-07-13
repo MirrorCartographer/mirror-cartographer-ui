@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T16:27:00Z",
+  "slice": "Require complete-packet verification before downstream consumers can read retained receipt or manifest content.",
+  "source_commits": [
+    "a58116dc61061cfe42c5d8e1c166c0d92db85417",
+    "2a574d6b41e5b34be80dfd85012e2831876ebc0e"
+  ],
+  "files": [
+    "operations/tools/read-vercel-evidence-packet.mjs",
+    "operations/tools/read-vercel-evidence-packet.test.mjs"
+  ],
+  "verification": {
+    "method": "Node test runner against the exact committed module logic reproduced in an isolated runtime",
+    "command": "node --test read-vercel-evidence-packet.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "valid complete-packet read",
+      "tampered receipt rejection",
+      "tampered manifest rejection",
+      "incomplete marker rejection"
+    ],
+    "github_actions_runs_observed_for_test_commit": 0
+  },
+  "claim_ceiling": "Source, deterministic local test execution, and repository persistence only. No Vercel deployment, browser runtime, audio audibility, physical-device observation, or peer execution is claimed.",
+  "application_deployment_attempted": false,
+  "payments_or_conversion_added": false,
+  "files_or_history_deleted": false,
+  "rollback": {
+    "strategy": "Revert the test commit, then revert the implementation commit.",
+    "commits_in_reverse_order": [
+      "2a574d6b41e5b34be80dfd85012e2831876ebc0e",
+      "a58116dc61061cfe42c5d8e1c166c0d92db85417"
+    ]
+  }
+}
