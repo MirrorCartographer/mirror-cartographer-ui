@@ -24,13 +24,28 @@ const base = () => ({
   reproduction: { steps: ['repeat repository search'], expected_evidence: ['connector result'] }
 });
 
+const makeComplete = () => {
+  const item = base();
+  item.coverage_result = 'complete';
+  item.known_exclusions = [];
+  item.ref_inventory.complete = true;
+  item.history_traversal.complete = true;
+  return item;
+};
+
 test('incomplete coverage preserves unresolved claims', () => assert.equal(validateCoverageReceipt(base()).valid, true));
 test('incomplete coverage cannot become unlocated', () => { const item = base(); item.claim_transitions[0].next_status = 'unlocated'; assert.equal(validateCoverageReceipt(item).valid, false); });
-test('complete coverage can classify unlocated', () => { const item = base(); item.coverage_result = 'complete'; item.known_exclusions = []; item.ref_inventory.complete = true; item.history_traversal.complete = true; item.claim_transitions = item.claim_transitions.map(entry => ({ ...entry, next_status: 'unlocated' })); assert.equal(validateCoverageReceipt(item).valid, true); });
-test('located claims require immutable locators', () => { const item = base(); item.coverage_result = 'complete_with_declared_exclusions'; item.claim_transitions[1].next_status = 'located'; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('complete coverage can classify unlocated', () => { const item = makeComplete(); item.claim_transitions = item.claim_transitions.map(entry => ({ ...entry, next_status: 'unlocated' })); assert.equal(validateCoverageReceipt(item).valid, true); });
+test('located claims require immutable locators', () => { const item = base(); item.coverage_result = 'complete_with_declared_exclusions'; item.ref_inventory.complete = true; item.history_traversal.complete = true; item.claim_transitions[1].next_status = 'located'; assert.equal(validateCoverageReceipt(item).valid, false); });
 test('malformed target identifiers are rejected', () => { const item = base(); item.target_identifiers = ['M-4']; assert.equal(validateCoverageReceipt(item).valid, false); });
 test('duplicate target identifiers are rejected', () => { const item = base(); item.target_identifiers = ['M-004', 'M-004']; item.claim_transitions = [item.claim_transitions[0]]; assert.equal(validateCoverageReceipt(item).valid, false); });
 test('duplicate claim transitions are rejected', () => { const item = base(); item.claim_transitions.push({ ...item.claim_transitions[0] }); assert.equal(validateCoverageReceipt(item).valid, false); });
 test('missing target transitions are rejected', () => { const item = base(); item.claim_transitions = item.claim_transitions.slice(0, 2); const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.some(error => error.includes('missing targets: M-006'))); });
 test('undeclared target transitions are rejected', () => { const item = base(); item.claim_transitions.push({ ...item.claim_transitions[0], identifier: 'M-007' }); const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.some(error => error.includes('undeclared targets: M-007'))); });
 test('invalid generated_at timestamps are rejected', () => { const item = base(); item.generated_at = 'not-a-timestamp'; assert.equal(validateCoverageReceipt(item).valid, false); });
+test('complete coverage rejects incomplete ref inventory', () => { const item = makeComplete(); item.ref_inventory.complete = false; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('complete coverage requires complete ref inventory')); });
+test('complete coverage rejects incomplete history traversal', () => { const item = makeComplete(); item.history_traversal.complete = false; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('complete coverage requires complete history traversal')); });
+test('complete coverage rejects declared exclusions', () => { const item = makeComplete(); item.known_exclusions = ['private ref unavailable']; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('complete coverage forbids known exclusions')); });
+test('complete-with-exclusions requires complete structural traversal', () => { const item = base(); item.coverage_result = 'complete_with_declared_exclusions'; item.ref_inventory.complete = true; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('complete_with_declared_exclusions requires complete history traversal')); });
+test('complete-with-exclusions requires a declared exclusion', () => { const item = makeComplete(); item.coverage_result = 'complete_with_declared_exclusions'; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('complete_with_declared_exclusions requires at least one known exclusion')); });
+test('incomplete label rejects a contradiction with fully complete evidence', () => { const item = makeComplete(); item.coverage_result = 'incomplete'; const result = validateCoverageReceipt(item); assert.equal(result.valid, false); assert(result.errors.includes('incomplete coverage contradicts complete ref and history traversal without exclusions')); });
