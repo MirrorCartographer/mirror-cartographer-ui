@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T13:49:00-04:00",
+  "slice": "Require retained rate-limit proof from both exhaustive workflow-run clients before evidence promotion.",
+  "source_handoff": {
+    "team": "frontier_research",
+    "implementation": "operations/research/github-workflow-run-rate-limit-envelope.mjs",
+    "commit": "862394c9b73274e24b99327b39bec53121993aa3",
+    "status": "integrated_by_adapter"
+  },
+  "implementation": {
+    "file": "operations/tools/assess-vercel-retained-rate-limit-proof.mjs",
+    "commit": "52ba002625e63303bfa48002b4dd36bc91436225",
+    "test_file": "operations/tools/assess-vercel-retained-rate-limit-proof.test.mjs",
+    "test_commit": "ec76b432d07f1c1d9e1ec000eb4e6f5e79c37481"
+  },
+  "verification": {
+    "method": "immutable GitHub source readback plus committed deterministic Node test contract",
+    "test_execution_observed": false,
+    "deployment_attempted": false,
+    "runtime_claimed": false
+  },
+  "accepted_state": "dual_client_rate_limit_proof_accepted",
+  "fail_closed_conditions": [
+    "primary client rate-limit proof fails",
+    "independent client rate-limit proof fails",
+    "client rate-limit resource buckets differ",
+    "terminal-page proof is absent or ambiguous",
+    "HTTP 403 or 429 is retained",
+    "retry-after is present",
+    "required rate-limit headers are absent or incoherent",
+    "pagination budget reaches zero before the terminal page"
+  ],
+  "claim_boundary": [
+    "This slice proves only composition of the retained response-header rate-limit contract into a Vercel-owned promotion gate.",
+    "It does not prove authenticated execution, pagination completeness, provider-ceiling absence, record reconciliation, workflow existence, Vercel deployment identity, browser behavior, audio audibility, or physical iPhone Safari observation.",
+    "No payment or conversion functionality was added and no deployment was requested."
+  ],
+  "rollback": [
+    "Revert the queue projection commit.",
+    "Revert this evidence record commit.",
+    "Revert ec76b432d07f1c1d9e1ec000eb4e6f5e79c37481.",
+    "Revert 52ba002625e63303bfa48002b4dd36bc91436225."
+  ]
+}
