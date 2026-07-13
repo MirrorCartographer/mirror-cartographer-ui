@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "ICW-001",
+  "title": "Afterimage Arcade — Echo Room",
+  "source_commit": "a64a7eed3f5c8fd513fbcd399289ef69e09ae876",
+  "artifact": "operations/previews/independent/afterimage-arcade-echo-room.html",
+  "creative_premise": "A drawn gesture is replayed as seven expanding chromatic memories, each returning with controlled spatial error.",
+  "verification": {
+    "source_fetch": "passed",
+    "contract_checks": {
+      "self_contained_html": true,
+      "pointer_gesture_capture": true,
+      "keyboard_echo": true,
+      "keyboard_clear": true,
+      "live_status_region": true,
+      "accessible_canvas_name": true,
+      "reduced_motion_branch": true,
+      "mobile_safe_area": true,
+      "device_pixel_ratio_cap": true
+    },
+    "deployment_status": "not_attempted",
+    "deployment_reason": "Current project state requires operations-only changes while provider build capacity is exhausted."
+  },
+  "independence_boundary": {
+    "mirror_cartographer_explanation": false,
+    "research_portal": false,
+    "worker_dashboard": false,
+    "product_funnel": false,
+    "payments_or_conversion_logic": false
+  },
+  "limits": [
+    "Source inspection verifies implementation features, not rendered visual quality.",
+    "No public hosting or browser runtime is claimed.",
+    "No physical mobile Safari test was performed."
+  ],
+  "rollback": "Revert source commit a64a7eed3f5c8fd513fbcd399289ef69e09ae876 and this append-only evidence commit; do not delete history."
+}
