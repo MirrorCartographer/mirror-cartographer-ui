@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T13:54:00-04:00",
+  "evidence_type": "vercel_rate_limit_bound_workflow_bundle_slice",
+  "claim": "The final workflow evidence bundle now requires an accepted dual-client retained response-header proof before construction, sanitizes and binds the accepted proof with SHA-256, and retains an explicit raw-header retention contract.",
+  "source_commits": {
+    "implementation": "0f3c6107e5a1f3da2b820c1c4e100ec24fcfa7d2",
+    "tests": "000343133f003cd7fee264971d74e301caa315d8"
+  },
+  "verification": {
+    "route": "Node 22-compatible local execution of the committed module and deterministic test contract",
+    "command": "node tools/vercel-studio/workflow-evidence-bundle.test.mjs",
+    "observed_result": "9 passed, 0 failed",
+    "deployment_attempted": false,
+    "reason_no_deployment": "CURRENT_STATE forbids application deployment attempts while Vercel build capacity is exhausted."
+  },
+  "tested_conditions": [
+    "accepted matching enumerations plus accepted rate-limit proof produce a schema v2 strong bundle",
+    "canonical object-key ordering preserves enumeration digests",
+    "enumeration divergence fails closed while preserving accepted proof metadata",
+    "provider-ceiling ambiguity fails closed",
+    "unapproved source methods are rejected",
+    "missing rate-limit proof is rejected",
+    "upstream rejected rate-limit proof is rejected",
+    "malformed per-client counters are rejected",
+    "rate-limit proof digest changes when retained proof changes"
+  ],
+  "claim_boundary": [
+    "This proves source behavior under deterministic fixtures, not authenticated GitHub collection.",
+    "This does not prove Vercel deployment identity, browser behavior, audio audibility, physical-device behavior, or peer execution.",
+    "No credentials, payment logic, conversion logic, private user data, or deployment request were added."
+  ],
+  "rollback": [
+    "Revert this evidence record.",
+    "Revert commit 000343133f003cd7fee264971d74e301caa315d8.",
+    "Revert commit 0f3c6107e5a1f3da2b820c1c4e100ec24fcfa7d2."
+  ]
+}
