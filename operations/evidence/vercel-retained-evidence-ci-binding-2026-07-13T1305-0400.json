@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T17:05:59Z",
+  "slice": "Bind the verified retained-packet read and status-assessment boundaries into the existing read-only commit-bound CI evidence gate.",
+  "source_commit": "34283b88442efc61e72c42e0794a072419678fb5",
+  "changed_file": ".github/workflows/vercel-retained-evidence-contract.yml",
+  "verified_contract": {
+    "permissions": "contents: read",
+    "exact_checkout_identity_check": true,
+    "immutable_action_references": true,
+    "new_tests": [
+      "operations/tools/read-vercel-evidence-packet.test.mjs",
+      "operations/tools/assess-verified-vercel-evidence-packet.test.mjs"
+    ],
+    "new_source_digest_members": [
+      "operations/tools/vercel-evidence-packet-commit.mjs",
+      "operations/tools/read-vercel-evidence-packet.mjs",
+      "operations/tools/read-vercel-evidence-packet.test.mjs",
+      "operations/tools/vercel-commit-status-assessment.mjs",
+      "operations/tools/assess-verified-vercel-evidence-packet.mjs",
+      "operations/tools/assess-verified-vercel-evidence-packet.test.mjs"
+    ],
+    "expected_source_digest_count": 17,
+    "expected_test_transcript_count": 7,
+    "artifact_retention_days": 30
+  },
+  "provider_observation": {
+    "commit": "34283b88442efc61e72c42e0794a072419678fb5",
+    "context": "Vercel",
+    "state": "failure",
+    "target_url": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit",
+    "interpretation": "The known Vercel build-rate-limit blocker remains. This operations-only workflow change does not establish a successful deployment."
+  },
+  "claim_boundary": [
+    "The committed workflow structure is verified by repository readback.",
+    "A successful GitHub Actions run was not observed in this run.",
+    "No Vercel deployment, immutable deployment identity, browser audio, or physical-device behavior is claimed."
+  ],
+  "rollback": "Revert commit 34283b88442efc61e72c42e0794a072419678fb5."
+}
