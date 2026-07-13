@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { lstat, readFile, realpath, writeFile } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { open, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { buildWorkflowEvidenceBundleFromGhPages } from './gh-envelope-bundle-adapter.mjs';
 
@@ -27,34 +28,52 @@ function requireIsoTimestamp(value, label) {
   return value;
 }
 
-async function requireRetainedRegularFile(path, label) {
-  let stats;
+async function openRetainedRegularFile(path, label) {
+  let handle;
   try {
-    stats = await lstat(path);
+    handle = await open(path, constants.O_RDONLY | constants.O_NOFOLLOW);
   } catch (error) {
-    throw new Error(`${label}_read_failed:${error.code || error.message}`);
+    if (error.code === 'ELOOP') throw new Error(`${label}_symlink_rejected`);
+    throw new Error(`${label}_open_failed:${error.code || error.message}`);
   }
-  if (stats.isSymbolicLink()) throw new Error(`${label}_symlink_rejected`);
-  if (!stats.isFile()) throw new Error(`${label}_not_regular_file`);
-  return realpath(path).catch(error => {
-    throw new Error(`${label}_realpath_failed:${error.code || error.message}`);
-  });
+
+  try {
+    const stats = await handle.stat();
+    if (!stats.isFile()) throw new Error(`${label}_not_regular_file`);
+    return {
+      handle,
+      identity: `${stats.dev}:${stats.ino}`
+    };
+  } catch (error) {
+    await handle.close().catch(() => {});
+    throw error;
+  }
 }
 
-async function validateRetainedSources({ primaryPath, ghPagesPath, ghCommandPath }) {
+async function openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath }) {
   const entries = [
     ['primary', primaryPath],
     ['gh_pages', ghPagesPath],
     ['gh_command', ghCommandPath]
   ];
-  const resolved = await Promise.all(entries.map(([label, path]) => requireRetainedRegularFile(path, label)));
-  if (new Set(resolved).size !== resolved.length) throw new Error('retained_source_paths_not_distinct');
+  const opened = [];
+  try {
+    for (const [label, path] of entries) {
+      opened.push([label, await openRetainedRegularFile(path, label)]);
+    }
+    const identities = opened.map(([, source]) => source.identity);
+    if (new Set(identities).size !== identities.length) throw new Error('retained_source_files_not_distinct');
+    return new Map(opened);
+  } catch (error) {
+    await Promise.all(opened.map(([, source]) => source.handle.close().catch(() => {})));
+    throw error;
+  }
 }
 
-async function readJson(path, label) {
+async function readJsonHandle(handle, label) {
   let text;
   try {
-    text = await readFile(path, 'utf8');
+    text = await handle.readFile('utf8');
   } catch (error) {
     throw new Error(`${label}_read_failed:${error.code || error.message}`);
   }
@@ -82,30 +101,34 @@ export async function buildRetainedWorkflowEvidence({
     throw new TypeError('generated_at_precedes_source_retrieval');
   }
 
-  await validateRetainedSources({ primaryPath, ghPagesPath, ghCommandPath });
-  const [primary, ghPages, ghCommandText] = await Promise.all([
-    readJson(primaryPath, 'primary'),
-    readJson(ghPagesPath, 'gh_pages'),
-    readFile(ghCommandPath, 'utf8').catch(error => {
-      throw new Error(`gh_command_read_failed:${error.code || error.message}`);
-    })
-  ]);
-  const ghCommand = ghCommandText.trim();
-  if (!ghCommand) throw new Error('gh_command_empty');
+  const sources = await openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath });
+  try {
+    const [primary, ghPages, ghCommandText] = await Promise.all([
+      readJsonHandle(sources.get('primary').handle, 'primary'),
+      readJsonHandle(sources.get('gh_pages').handle, 'gh_pages'),
+      sources.get('gh_command').handle.readFile('utf8').catch(error => {
+        throw new Error(`gh_command_read_failed:${error.code || error.message}`);
+      })
+    ]);
+    const ghCommand = ghCommandText.trim();
+    if (!ghCommand) throw new Error('gh_command_empty');
 
-  return buildWorkflowEvidenceBundleFromGhPages({
-    commitSha,
-    primary,
-    primarySource: {
-      method: 'repository_api_link_pagination',
-      retrieved_at: validatedPrimaryRetrievedAt,
-      pages_fetched: primary.pagesFetched ?? null
-    },
-    ghPages,
-    ghCommand,
-    ghRetrievedAt: validatedGhRetrievedAt,
-    generatedAt: validatedGeneratedAt
-  });
+    return buildWorkflowEvidenceBundleFromGhPages({
+      commitSha,
+      primary,
+      primarySource: {
+        method: 'repository_api_link_pagination',
+        retrieved_at: validatedPrimaryRetrievedAt,
+        pages_fetched: primary.pagesFetched ?? null
+      },
+      ghPages,
+      ghCommand,
+      ghRetrievedAt: validatedGhRetrievedAt,
+      generatedAt: validatedGeneratedAt
+    });
+  } finally {
+    await Promise.all([...sources.values()].map(source => source.handle.close().catch(() => {})));
+  }
 }
 
 export async function main(argv = process.argv.slice(2)) {
