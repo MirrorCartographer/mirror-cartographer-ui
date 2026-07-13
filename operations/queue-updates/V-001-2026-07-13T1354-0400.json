@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T13:54:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "The tamper-evident exact-commit workflow evidence bundle now requires an accepted dual-client retained response-header proof, sanitizes the accepted proof, binds it with SHA-256, and requires raw response-header retention before a reconciled bundle can be promoted.",
+  "files": [
+    "tools/vercel-studio/workflow-evidence-bundle.mjs",
+    "tools/vercel-studio/workflow-evidence-bundle.test.mjs",
+    "operations/evidence/vercel-rate-limit-bound-bundle-2026-07-13T1354-0400.json",
+    "operations/queue-updates/V-001-2026-07-13T1354-0400.json"
+  ],
+  "commits": [
+    "0f3c6107e5a1f3da2b820c1c4e100ec24fcfa7d2",
+    "000343133f003cd7fee264971d74e301caa315d8",
+    "a9dbef0a06a180f63374362e0a031bbd9721f93e"
+  ],
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "registry_change": null,
+  "verification": {
+    "strongest_feasible_route": "deterministic Node execution plus immutable GitHub source commits",
+    "test_execution_observed": true,
+    "observed_result": "9 passed, 0 failed",
+    "deployment_attempted": false,
+    "reason_no_deployment": "Vercel build capacity remains blocked and CURRENT_STATE restricts this run to operations-safe changes."
+  },
+  "acceptance_remaining": [
+    "Execute authenticated primary and independent exact-commit workflow enumeration and retain raw bodies plus response headers.",
+    "Construct the schema v2 bundle from those retained inputs and preserve it as a workflow artifact.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel capacity returns.",
+    "Observe the exact-commit audio-routing artifact, bind the tested application commit to an immutable successful Vercel deployment, and perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Wire the retained-evidence CLI to construct the schema v2 bundle with the accepted dual-client rate-limit proof, then execute the full authenticated collection path in GitHub Actions without requesting a Vercel application deployment.",
+  "non_overwrite_statement": "Canonical operations/ACTIVE_QUEUE.json and other teams' projections were not overwritten.",
+  "rollback": [
+    "Revert this queue projection commit.",
+    "Revert a9dbef0a06a180f63374362e0a031bbd9721f93e.",
+    "Revert 000343133f003cd7fee264971d74e301caa315d8.",
+    "Revert 0f3c6107e5a1f3da2b820c1c4e100ec24fcfa7d2."
+  ]
+}
