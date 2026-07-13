@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "canonical_queue_mutated": false,
+  "reason": "operations/ACTIVE_QUEUE.json contains no item owned by independent_creative_web; another team's queue state was not overwritten.",
+  "proposed_item": {
+    "id": "I-BOOTSTRAP-001",
+    "owner": "independent_creative_web",
+    "priority": "highest",
+    "state": "prototype_verified_operations_only",
+    "objective": "Establish a deliberately independent creative identity and one accessible, reversible, self-contained interactive transmission.",
+    "completed_slices": [
+      "Established The Night Office for Lost Weather identity and separation boundary.",
+      "Implemented a responsive instrument-like weather transmission preview.",
+      "Kept sound opt-in, motion reduced-motion-safe, and the artifact free of accounts, payments, analytics, remote assets, conversion logic, and private source material.",
+      "Verified committed file presence through a GitHub contents round trip."
+    ],
+    "acceptance_remaining": [
+      "Run deterministic DOM interaction tests in a browser harness.",
+      "Run keyboard-only and screen-reader checks.",
+      "Run mobile Safari and performance checks.",
+      "Publish only to an independent hosting target after an explicit hosting decision; do not attach it to the Mirror Cartographer Vercel surface."
+    ],
+    "safe_next_action": "Add a dependency-free browser test harness that checks all 12 deterministic transmissions, keyboard-operable controls, aria state changes, reduced-motion behavior, and opt-in audio initialization without deploying the preview."
+  },
+  "specialist_registry_change": null,
+  "specialist_registry_reason": "No queue-backed durable capability gap was established; the registry remains unchanged."
+}
