@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T06:33:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained evidence source bindings now fail closed on unsafe or non-normalized repository paths, malformed blob SHAs, duplicate paths, and unverified extra fields.",
+  "evidence": "operations/evidence/vercel-source-binding-validation-2026-07-13T0633-0400.json",
+  "source_commits": [
+    "7ef4bd6c8d4ff0d4417b8228608d8f1deafb0843",
+    "a060cc6ce8b27cdae7fc6d568dd5ce611ea8fcbe",
+    "e34f1fa232b35dae51dd351f79075e9999c97432"
+  ],
+  "canonical_queue_overwritten": false,
+  "application_deployment_attempted": false,
+  "deployment_claim_permitted": false,
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled raw evidence.",
+    "Observe an operations-only sentinel as skipped or ignored after provider capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Add the full committed source-binding test file to the repository test gate, then execute authenticated retained-evidence generation for one exact commit without creating an application deployment while provider capacity is unavailable."
+}
