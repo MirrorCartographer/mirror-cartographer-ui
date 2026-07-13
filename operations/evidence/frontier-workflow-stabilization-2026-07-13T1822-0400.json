@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-13T22:22:17Z",
+  "finding": "Agreement between independently exhaustive exact-commit enumerations is necessary but not sufficient while the workflow-run set or run statuses may still change. Promotion requires two complete snapshots for the same commit, separated by a declared quiet period, with identical normalized run records and terminal statuses.",
+  "source_status": {
+    "repository_state": "observed",
+    "github_api_behavior": "primary-source-informed",
+    "temporal_closure_requirement": "inferred_and_tested"
+  },
+  "evidence_strength": "deterministic_local_test",
+  "implementation": "operations/tools/validate-workflow-stabilization.mjs",
+  "test": "operations/tools/validate-workflow-stabilization.test.mjs",
+  "test_result": {
+    "passed": 7,
+    "failed": 0,
+    "runtime": "node"
+  },
+  "covered_failures": [
+    "insufficient quiet period",
+    "workflow set changed between snapshots",
+    "nonterminal workflow run",
+    "incomplete snapshot",
+    "commit mismatch",
+    "duplicate run identifier"
+  ],
+  "falsification_route": "Demonstrate that GitHub provides an immutable, final exact-commit workflow-run set at first exhaustive retrieval, or produce two accepted snapshots for which a later run for the same commit appears despite the declared stabilization contract.",
+  "limits": [
+    "No authenticated private-repository workflow enumeration was executed in this slice.",
+    "The default 60-second quiet period is a policy parameter, not a GitHub-guaranteed finality interval.",
+    "The validator proves snapshot agreement and terminality, not deployment identity or artifact correctness."
+  ],
+  "privacy_boundary": "Repository operational metadata only; no credentials, private chat, health material, contacts, or personal identifiers retained."
+}
