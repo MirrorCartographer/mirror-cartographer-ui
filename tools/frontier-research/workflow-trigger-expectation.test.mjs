@@ -22,6 +22,16 @@ test('expects a run when a configured push path matches', () => {
   assert.deepEqual(result.matched_paths, ['.github/workflows/vercel-retained-evidence-contract.yml']);
 });
 
+test('expects a run when the retained trigger gate or its dependency changes', () => {
+  const changedPaths = [
+    'tools/vercel-studio/retained-workflow-trigger-gate.mjs',
+    'tools/frontier-research/workflow-trigger-expectation.mjs'
+  ];
+  const result = assessRetainedEvidenceTrigger({ ...base, changed_paths: changedPaths });
+  assert.equal(result.classification, 'run_expected');
+  assert.deepEqual(result.matched_paths, [...changedPaths].sort());
+});
+
 test('does not expect a run when complete path evidence does not match', () => {
   const result = assessRetainedEvidenceTrigger({ ...base, changed_paths: ['operations/README.md'] });
   assert.equal(result.classification, 'run_not_expected');
