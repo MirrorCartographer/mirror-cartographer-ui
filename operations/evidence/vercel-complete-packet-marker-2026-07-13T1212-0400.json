@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T16:12:00Z",
+  "finding": "Receipt and manifest byte verification alone did not provide a durable publication boundary: downstream readers could observe one or both files before the writer returned success. A packet-complete marker written last now binds both retained files by SHA-256 and exact source commit; consumers can fail closed unless that marker verifies.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "implementation": [
+    {
+      "path": "operations/tools/vercel-evidence-packet-commit.mjs",
+      "commit": "bc2d1c323c7457415e2a6e667b329ccd0209fb3b"
+    },
+    {
+      "path": "operations/tools/vercel-evidence-packet-commit.test.mjs",
+      "commit": "89e9cd975f24df5ac7688408ab14dcf1654e5b4d"
+    },
+    {
+      "path": "operations/tools/write-vercel-evidence-packet.mjs",
+      "commit": "77ac7b6f340d74de8f53c39e4549ed283a29160e"
+    },
+    {
+      "path": "operations/tools/write-vercel-evidence-packet.test.mjs",
+      "commit": "62e2e040dbfa4618a2f335c041c1c03f71909790"
+    }
+  ],
+  "verification": {
+    "exact_helper_logic_executed_with_node_test": true,
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "valid complete packet acceptance",
+      "post-commit receipt tamper rejection",
+      "post-commit manifest tamper rejection",
+      "incomplete marker rejection"
+    ],
+    "full_repository_integration_test_executed": false,
+    "deployment_attempted": false,
+    "deployment_verified": false
+  },
+  "reversibility": "Revert commits 62e2e040dbfa4618a2f335c041c1c03f71909790, 77ac7b6f340d74de8f53c39e4549ed283a29160e, 89e9cd975f24df5ac7688408ab14dcf1654e5b4d, and bc2d1c323c7457415e2a6e667b329ccd0209fb3b in reverse order. No historical file deletion is required.",
+  "claim_ceiling": "source behavior and isolated deterministic helper verification only; no authenticated workflow, Vercel deployment, browser runtime, audio audibility, or peer execution claim",
+  "privacy_and_product_boundary": "No credentials, private interaction data, payment logic, or conversion logic were added."
+}
