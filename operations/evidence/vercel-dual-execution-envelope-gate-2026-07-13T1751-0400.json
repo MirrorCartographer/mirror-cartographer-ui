@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T21:51:00Z",
+  "slice": "dual_workflow_execution_envelope_gate",
+  "implementation": {
+    "path": "tools/vercel-studio/verify-dual-workflow-execution-envelopes.mjs",
+    "commit": "a73619b0e6bd4895398f9f4e0c7cb87e57e17441",
+    "test_path": "tools/vercel-studio/verify-dual-workflow-execution-envelopes.test.mjs",
+    "test_commit": "caabb36e1c26f1073110676b04246be582b542e6"
+  },
+  "verified_behavior": [
+    "Accepts two independently valid execution envelopes only when repository, exact commit, pinned API version, record digest, and total count agree.",
+    "Rejects cross-commit evidence.",
+    "Rejects API-version divergence.",
+    "Rejects record-digest divergence.",
+    "Rejects missing authentication evidence through the underlying Frontier validator."
+  ],
+  "runtime_evidence": {
+    "route": "local Node test reconstruction using the committed source and dependency logic",
+    "command": "node --test tools/vercel-studio/verify-dual-workflow-execution-envelopes.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "limitations": [
+      "The private repository could not be cloned from the execution container because outbound DNS resolution was unavailable.",
+      "GitHub Actions execution is not claimed.",
+      "No authenticated repository enumeration or Vercel deployment was performed."
+    ]
+  },
+  "claim_boundary": [
+    "This slice validates execution-envelope agreement only.",
+    "Raw retained-file byte binding remains a separate required gate.",
+    "No deployment identity, browser behavior, audio audibility, or physical-device acceptance is claimed."
+  ],
+  "rollback": {
+    "route": "Revert commit a73619b0e6bd4895398f9f4e0c7cb87e57e17441; the additive test and evidence records may remain as provenance.",
+    "destructive_history_change_required": false
+  }
+}
