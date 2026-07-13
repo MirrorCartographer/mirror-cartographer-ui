@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T01:09:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained workflow evidence inputs are now required to be three distinct regular files; symbolic links, non-file objects, and canonical path aliases fail closed before parsing or bundle construction.",
+  "files": [
+    "tools/vercel-studio/retained-workflow-evidence-cli.mjs",
+    "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+    "operations/evidence/vercel-retained-source-identity-2026-07-13T0109Z.json"
+  ],
+  "commits": [
+    "58e6073ff5b069855e4876348d7c9282a4833d90",
+    "aeb91d9d38183fd23ff1eb7f7ff43380db511c20",
+    "ae64ae2131e65ddcd5d084264bdd341ba225706d"
+  ],
+  "verification": {
+    "syntax_check": "passed",
+    "isolated_guard_checks": {
+      "verified_bundle_fixture": "passed",
+      "canonical_alias_rejection": "passed",
+      "symbolic_link_rejection": "passed"
+    },
+    "github_actions_runs_observed_for_test_commit": 0
+  },
+  "acceptance_remaining": [
+    "Run the full committed retained-evidence CLI test file in an authenticated checkout or GitHub Actions.",
+    "Execute both exhaustive authenticated workflow enumerators against one exact commit and retain raw outputs plus the bundle.",
+    "Observe operations-only Vercel suppression after provider capacity returns.",
+    "Bind an exact application commit to an immutable successful deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "canonical_queue_overwritten": false,
+  "other_team_state_overwritten": false,
+  "deployment_requested": false,
+  "safe_next_action": "Execute node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs in an authenticated repository environment, then run both exhaustive clients against one exact commit without requesting an application deployment until provider capacity and immutable identity are verified."
+}
