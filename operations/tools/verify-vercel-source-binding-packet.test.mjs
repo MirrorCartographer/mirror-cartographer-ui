@@ -6,6 +6,13 @@ import { verifyReconciledSourceBindingPacket } from './verify-vercel-source-bind
 const COMMIT = 'a'.repeat(40);
 const BLOB = 'b'.repeat(40);
 
+function refreshDigest(value) {
+  value.canonical_digest_sha256 = createHash('sha256')
+    .update(JSON.stringify({ target_commit: COMMIT, bindings: value.bindings }))
+    .digest('hex');
+  return value;
+}
+
 function packet() {
   const bindings = [{
     path: 'a.json',
@@ -49,7 +56,7 @@ test('rejects noncanonical binding order', () => {
   const later = { ...value.bindings[0], path: 'z.json', blob_sha: 'c'.repeat(40) };
   value.bindings = [later, value.bindings[0]];
   value.binding_count = 2;
-  value.canonical_digest_sha256 = createHash('sha256').update(JSON.stringify({ target_commit: COMMIT, bindings: value.bindings })).digest('hex');
+  refreshDigest(value);
   assert.throws(() => verifyReconciledSourceBindingPacket(value), /not canonically sorted/);
 });
 
@@ -59,9 +66,41 @@ test('rejects deployment claim escalation', () => {
   assert.throws(() => verifyReconciledSourceBindingPacket(value), /deployment_claim_permitted/);
 });
 
-test('rejects duplicate verification methods', () => {
+test('rejects unapproved verification methods even when distinct', () => {
   const value = packet();
-  value.bindings[0].independent_methods = ['same', 'same'];
-  value.canonical_digest_sha256 = createHash('sha256').update(JSON.stringify({ target_commit: COMMIT, bindings: value.bindings })).digest('hex');
-  assert.throws(() => verifyReconciledSourceBindingPacket(value), /distinct/);
+  value.bindings[0].independent_methods = ['connector-first-page', 'manual-inspection'];
+  refreshDigest(value);
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /approved canonical methods/);
+});
+
+test('rejects reversed approved methods because method order is canonical', () => {
+  const value = packet();
+  value.bindings[0].independent_methods.reverse();
+  refreshDigest(value);
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /approved canonical methods/);
+});
+
+test('rejects malformed packet timestamps', () => {
+  const value = packet();
+  value.generated_at = 'not-a-time';
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /UTC ISO-8601 timestamp/);
+});
+
+test('rejects binding verification after packet generation', () => {
+  const value = packet();
+  value.bindings[0].verified_at = '2026-07-13T12:00:01Z';
+  refreshDigest(value);
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /occurs after generated_at/);
+});
+
+test('rejects altered canonicalization metadata', () => {
+  const value = packet();
+  value.canonicalization = 'different-contract';
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /canonicalization contract mismatch/);
+});
+
+test('rejects altered top-level verification method', () => {
+  const value = packet();
+  value.verification_method = 'manual-review';
+  assert.throws(() => verifyReconciledSourceBindingPacket(value), /packet verification_method mismatch/);
 });
