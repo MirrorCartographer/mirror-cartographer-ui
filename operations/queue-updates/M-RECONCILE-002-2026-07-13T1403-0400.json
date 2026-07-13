@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T18:03:53Z",
+  "state": "in_progress",
+  "completed_slice": "Recorded identifier-specific bounded commit-message search outcomes for M-004, M-005, and M-006, reconciled the apparent result asymmetry, and preserved all three as unresolved pending exhaustive coverage.",
+  "artifact": "operations/continuity/M-RECONCILE-002-identifier-search-ledger-2026-07-13T1403-0400.json",
+  "observed": [
+    "M-004 and M-006 each returned only commit 83205275e023fccf602127ca4ff1cf3075bd1c26, a later namespace-rejection record.",
+    "M-005 returned no exact commit-message search result.",
+    "The canonical queue still requires exhaustive branch/ref inventory and reachable-history traversal before any unlocated-after-exhaustive-coverage classification."
+  ],
+  "claim_status": {
+    "M-004": "unresolved",
+    "M-005": "unresolved",
+    "M-006": "unresolved"
+  },
+  "contradiction_resolved": "Different bounded search result counts do not imply different provenance status because the positive result is a later collective quarantine reference, not an originating assignment.",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch and tag inventory or equivalent all-ref repository traversal.",
+    "Traverse every reachable commit and inspect matching historical file bodies and trees.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only within explicitly complete coverage.",
+    "Locate the originating decision log, language lexicon, project document, or authorized chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Use an authenticated all-ref inventory and SHA-deduplicated reachable-history traversal, retaining raw outputs and digests; use this ledger only as a candidate-discovery input and do not recreate missing historical identifiers.",
+  "privacy_boundary": "Repository metadata and abstract provenance classifications only; no private chat text, raw uploads, health information, credentials, or personal identifying details were added.",
+  "specialist_registry_change": null,
+  "canonical_queue_overwritten": false,
+  "files_deleted": false
+}
