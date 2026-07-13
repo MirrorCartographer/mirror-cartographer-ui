@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T14:47:22-04:00",
+  "slice": "canonical retained-evidence output basenames",
+  "finding": "The prior filename identity check used substring containment, so a path could include the correct commit and role token while still carrying misleading extra prefixes, suffixes, or an overlapping role token. The gate now requires the exact basename <commit_sha>-<role_token><typed_suffix> for every retained artifact.",
+  "source": {
+    "path": "operations/tools/validate-vercel-evidence-execution-plan.mjs",
+    "commit": "8ae1821bdc5b275c74bfe069d067c632558016af",
+    "exact_commit_readback": true
+  },
+  "tests": {
+    "focused_test_path": "operations/tools/validate-vercel-evidence-canonical-basename.test.mjs",
+    "focused_test_commit": "1af2469c392cbf0022f77130cc3c7bd485e03c1e",
+    "existing_suite_alignment_commit": "c6eab403e8a8acdcda3a2fedb9bf6b71833cd21d",
+    "local_focused_tests_passed": 5,
+    "local_focused_tests_failed": 0,
+    "cases": [
+      "accept exact canonical basenames",
+      "reject primary role token overlap with primary-headers",
+      "reject prefixes before the exact commit identity",
+      "reject suffixes after the exact role identity",
+      "preserve fail-closed deployment and shell-control rejection"
+    ]
+  },
+  "evidence_class": "deterministic_source_and_focused_test_evidence",
+  "deployment": {
+    "attempted": false,
+    "reason": "Current operating state forbids application deployment attempts while provider build capacity is exhausted."
+  },
+  "claim_boundary": [
+    "Proves exact source behavior in a local Node test for canonical retained-evidence filenames.",
+    "Does not prove authenticated repository execution, workflow-run completeness, Vercel deployment identity, browser behavior, audio audibility, or physical iPhone Safari behavior."
+  ],
+  "preservation": {
+    "other_team_records_overwritten": false,
+    "files_deleted": false,
+    "git_history_deleted": false,
+    "payments_or_conversion_added": false
+  }
+}
