@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T21:07:00Z",
+  "improvement": "Bound provenance candidate resolution to validated repository coverage before allowing located, collision_rejected, unlocated, or unresolved status transitions.",
+  "claim_states": {
+    "observed": [
+      "ACTIVE_QUEUE.json identifies M-RECONCILE-002 as the highest-priority active continuity_mining item.",
+      "A unique namespace-owner-role-temporal-immutable match may be classified located.",
+      "Multiple valid immutable matches are classified collision_rejected."
+    ],
+    "inferred": [
+      "Unlocated is supportable only after a valid complete manifest proves exhaustive branch enumeration, every branch traversal, and no provider-ceiling ambiguity."
+    ],
+    "proposed": [
+      "Use decide-provenance-status.mjs as the sole status-transition gate for M-004, M-005, and M-006."
+    ],
+    "superseded": [
+      "Candidate absence by itself is sufficient to classify an identifier unlocated."
+    ],
+    "unresolved": [
+      "No exhaustive branch inventory or immutable source object for M-004, M-005, or M-006 was produced in this run."
+    ]
+  },
+  "verification": {
+    "method": "node --test against byte-equivalent local copies of the committed module and dependencies",
+    "tests": 4,
+    "passed": 4,
+    "cases": ["unique match", "complete-coverage absence", "bounded-coverage absence", "multiple-match collision"]
+  },
+  "privacy_boundary": "Repository metadata and synthetic fixtures only; no raw chat, health, pet-health, credential, contact, account, or unreviewed upload content.",
+  "authoritative": false
+}
