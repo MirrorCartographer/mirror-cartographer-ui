@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "runtime_receipt_chain_lock",
+  "status": "runtime_test_verified_operations_only",
+  "finding": "The retained-evidence runtime receipt bound pipeline source blobs but did not bind the verifier and verifier test blobs that interpreted the receipt. A later verifier change could therefore alter acceptance semantics without invalidating the prior receipt.",
+  "implementation": {
+    "module": "operations/tools/vercel-runtime-receipt-chain-lock.mjs",
+    "test": "operations/tools/vercel-runtime-receipt-chain-lock.test.mjs",
+    "pipeline_source_lock_module_blob": "4b2280f26d98c88e9c30d34c3a6bd91564552666",
+    "pipeline_source_lock_test_blob": "f17217ee98ce619d0d628394e766c53af4042319",
+    "target_commit_fixture": "9ea2d0dee4287b80fcf5b7cd258ba2410ee06f54"
+  },
+  "verification": {
+    "command": "node --test vercel-runtime-receipt-chain-lock.test.mjs",
+    "working_directory": "/tmp/vslice",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "verified_behaviors": [
+      "accepts a complete commit-bound verifier chain",
+      "rejects incomplete or drifted verifier bindings",
+      "rejects a non-SHA target commit",
+      "rejects absent pipeline bindings",
+      "rejects deployment-authority escalation"
+    ]
+  },
+  "authority": {
+    "application_deployment_attempted": false,
+    "deployment_claim_permitted": false,
+    "payments_or_conversion_added": false
+  },
+  "evidence_strength": "isolated_node_runtime_test",
+  "limits": [
+    "The test ran from byte-identical local candidate files before the GitHub commits were created.",
+    "No Vercel deployment was attempted because CURRENT_STATE records provider build-capacity exhaustion.",
+    "The chain lock is not yet integrated into the retained-evidence CLI output path.",
+    "This does not prove browser audio audibility or immutable Vercel deployment identity."
+  ],
+  "rollback": "Revert commits cfd54cb12fb0752300c812859d3e925baac90987 and d7e69a5b8b353cfdd4c022a3c0140bd3212f82ba; no application code or deployment configuration was changed.",
+  "falsification_route": "Alter the target commit, either verifier blob, any pipeline source binding, or operations-only authority. Verification must fail closed."
+}
