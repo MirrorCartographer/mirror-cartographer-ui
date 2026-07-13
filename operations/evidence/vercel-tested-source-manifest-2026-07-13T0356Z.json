@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T03:56:26Z",
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "change_commit": "02424942b4440840180ca9904b24803913d4ff87",
+  "slice": "Bind retained-evidence CI artifacts to the exact tested source files and checkout commit.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "observed": {
+    "workflow_file_updated": true,
+    "checkout_identity_check_added": true,
+    "sha256_manifest_file_count": 7,
+    "artifact_retention_days": 30,
+    "workflow_runs_for_change_commit": 0,
+    "vercel_deployment_attempted": false,
+    "canonical_queue_overwritten": false
+  },
+  "verification": {
+    "source_review": "The workflow now verifies git rev-parse HEAD equals GITHUB_SHA, hashes the workflow and six retained-evidence implementation/test files, verifies the seven-entry manifest, and uploads both the commit record and SHA-256 manifest.",
+    "runtime_status": "unobserved",
+    "deployment_status": "not_attempted",
+    "claim_boundary": "No CI success, artifact availability, browser behavior, physical-device audibility, or Vercel deployment is claimed until an observed workflow run supplies evidence."
+  },
+  "rollback": {
+    "method": "Revert commit 02424942b4440840180ca9904b24803913d4ff87.",
+    "effect": "Removes only the workflow evidence-integrity hardening; it does not rewrite history or alter the Vercel application runtime."
+  },
+  "next_action": "Observe the first workflow run for commit 02424942b4440840180ca9904b24803913d4ff87, inspect its jobs, download the artifact, verify the recorded commit and seven SHA-256 entries, then proceed with authenticated dual workflow enumeration for one exact commit."
+}
