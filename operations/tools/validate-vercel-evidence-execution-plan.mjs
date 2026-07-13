@@ -2,6 +2,8 @@ import path from 'node:path';
 
 const SHA_RE = /^[0-9a-f]{40}$/;
 const FORBIDDEN_SECRET_RE = /(authorization:|bearer\s+[a-z0-9._-]+|ghp_[a-z0-9]+|github_token|api[_-]?token|access[_-]?token)/i;
+const FORBIDDEN_SHELL_CONTROL_RE = /(?:^|\s)(?:&&|\|\||;|\||>|>>|<|`|\$\()/;
+const EXPECTED_REPOSITORY = 'MirrorCartographer/mirror-cartographer-ui';
 
 function fail(reason, extra = {}) {
   return {
@@ -24,10 +26,15 @@ function unique(values) {
   return new Set(values).size === values.length;
 }
 
+function hasExpectedRepositoryEndpoint(command) {
+  const endpoint = `/repos/${EXPECTED_REPOSITORY}/actions/runs`;
+  return command.includes(endpoint);
+}
+
 /**
  * Validate an execution plan for the authenticated dual-client Vercel evidence run.
  * This does not execute GitHub or Vercel operations. It only proves that the plan is
- * bounded, non-secret-bearing, no-overwrite, and exact-commit scoped.
+ * bounded, non-secret-bearing, no-overwrite, repository-bound, and exact-commit scoped.
  */
 export function validateVercelEvidenceExecutionPlan(plan) {
   if (!plan || typeof plan !== 'object' || Array.isArray(plan)) {
@@ -63,8 +70,14 @@ export function validateVercelEvidenceExecutionPlan(plan) {
   if (FORBIDDEN_SECRET_RE.test(command)) {
     return fail('secret_bearing_command_rejected', { commitSha });
   }
+  if (FORBIDDEN_SHELL_CONTROL_RE.test(command)) {
+    return fail('shell_control_operator_rejected', { commitSha });
+  }
   if (!command.includes('gh api') || !command.includes('--paginate') || !command.includes('--slurp')) {
     return fail('non_exhaustive_independent_command', { commitSha });
+  }
+  if (!hasExpectedRepositoryEndpoint(command)) {
+    return fail('repository_endpoint_mismatch', { commitSha, expectedRepository: EXPECTED_REPOSITORY });
   }
   if (!command.includes(`head_sha=${commitSha}`)) {
     return fail('command_commit_mismatch', { commitSha });
@@ -79,6 +92,7 @@ export function validateVercelEvidenceExecutionPlan(plan) {
     execution_permitted: true,
     evidence_class: 'bounded_execution_plan',
     commitSha,
+    repository: EXPECTED_REPOSITORY,
     outputs: {
       primary: primaryOutput,
       independent: independentOutput,
@@ -86,7 +100,7 @@ export function validateVercelEvidenceExecutionPlan(plan) {
       bundle: bundleOutput,
     },
     claim_boundary: [
-      'Proves only that the retained-evidence execution plan is exact-commit scoped, bounded, no-overwrite, and free of obvious secret-bearing command text.',
+      'Proves only that the retained-evidence execution plan is exact-commit scoped, repository-bound, bounded, no-overwrite, and free of obvious secret-bearing or shell-control command text.',
       'Does not prove authentication, workflow-run completeness, dual-client agreement, deployment identity, browser behavior, audio audibility, or physical-device observation.',
     ],
   };
