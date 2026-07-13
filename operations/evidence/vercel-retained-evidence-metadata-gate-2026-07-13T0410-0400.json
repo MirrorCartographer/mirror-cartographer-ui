@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T04:10:00-04:00",
+  "slice": "retained_evidence_metadata_gate",
+  "source_commit": "04a4d4b0a6166662311f7725de89640e638e0201",
+  "test_commit": "a92034316d603d62ca50537dd31a14e5e3502c85",
+  "controls_added": {
+    "maximum_evidence_age_ms": 900000,
+    "maximum_future_clock_skew_ms": 60000,
+    "approved_methods": {
+      "primary_raw": "github-rest-link-pagination",
+      "independent_raw": "gh-api-paginate-slurp",
+      "independent_command": "retained-command-text",
+      "reconciliation": "deterministic-reconciliation"
+    },
+    "retained_path_namespace": "operations/evidence/",
+    "deployment_claim_permitted": false
+  },
+  "verification": {
+    "repository_source_refetched": true,
+    "deterministic_tests_added": 4,
+    "new_rejection_cases": [
+      "stale retained evidence",
+      "future-dated retained evidence",
+      "acquisition-method substitution",
+      "path escape outside operations/evidence"
+    ],
+    "github_combined_status": "failure",
+    "github_status_context": "Vercel",
+    "provider_evidence": "https://vercel.com/mirror-cartographers-projects?upgradeToPro=build-rate-limit",
+    "runtime_test_execution_observed": false,
+    "application_deployment_attempted": false
+  },
+  "limits": [
+    "The connected GitHub surface confirmed committed source and status but did not provide an authenticated shell execution for node --test.",
+    "Vercel remained blocked by the provider build-rate limit; no deployment success is claimed.",
+    "Clock freshness validates collection timing, not the semantic correctness of provider responses."
+  ],
+  "rollback": "Revert test commit a92034316d603d62ca50537dd31a14e5e3502c85 and source commit 04a4d4b0a6166662311f7725de89640e638e0201. No production application path was changed."
+}
