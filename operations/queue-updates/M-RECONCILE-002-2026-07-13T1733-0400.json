@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "event_id": "M-RECONCILE-002-2026-07-13T1733-0400",
+  "event_order": "2026-07-13T21:33:01Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "priority": "highest",
+  "completed_slice": "Recorded that zero-result GitHub connector branch search contradicts known repository default-branch metadata and therefore cannot serve as exhaustive branch inventory evidence.",
+  "evidence": [
+    "operations/continuity/records/CM-1008.json",
+    "repository metadata default_branch=main",
+    "search_branches(query='') returned []",
+    "search_branches(query='main') returned []"
+  ],
+  "claims": {
+    "observed": "The repository default branch is main while the branch-search connector returned no results.",
+    "inferred": "The observed branch-search path is non-exhaustive or unavailable for this private repository.",
+    "proposed": "Use retained authenticated refs or Git traversal as the branch-coverage authority.",
+    "superseded": "Zero-result branch search may be treated as proof of no branches.",
+    "unresolved": "Complete branch and history coverage, M-004/M-005/M-006 immutable provenance, and identifier-origin sources remain unresolved."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal through a route that returns the known default branch.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Run and retain an authenticated refs enumeration or git-for-each-ref traversal, verify that main is present, prove traversal completeness, then feed candidate sets and the coverage manifest into the complete-set provenance adjudicator.",
+  "canonical_files_overwritten": [],
+  "peer_files_overwritten": [],
+  "history_deleted": false,
+  "authoritative": false,
+  "rollback": "Revert the additive record and queue-update commits; do not rewrite canonical queue history."
+}
