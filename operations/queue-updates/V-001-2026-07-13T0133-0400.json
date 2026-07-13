@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T01:33:35-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound retained evidence assessment and deployment authorization into a single fail-closed exact-commit decision surface. Caller-supplied exhaustive_workflow_evidence can no longer bypass the retained-evidence handoff.",
+  "files": [
+    "operations/tools/vercel-deployment-evidence-decision.mjs",
+    "operations/tools/vercel-deployment-evidence-decision.test.mjs",
+    "operations/evidence/vercel-deployment-evidence-binding-2026-07-13T0133-0400.json"
+  ],
+  "commits": [
+    "8ef2c2f39c089877912a2c6fbc35c4fe9e031511",
+    "d5c8faf5aed6258e2843c40f7d1d1733656c131c",
+    "67838ea5e045f36f5351a9b51ce1d63c4086b3e9"
+  ],
+  "verification": {
+    "tests": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute authenticated primary and independent exact-commit workflow enumerations and retain the complete evidence chain.",
+    "Run the integrated decision using independently reverified retained bytes and reconciliation output.",
+    "Observe an operations-only sentinel as skipped or ignored after provider capacity returns.",
+    "Observe the exact-commit audio-routing workflow artifact.",
+    "Bind an application commit to immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add an integration test or workflow step that feeds the retained-evidence manifest and revalidation results directly into decideVercelDeploymentWithRetainedEvidence; do not attempt an application deployment while provider capacity remains exhausted."
+}
