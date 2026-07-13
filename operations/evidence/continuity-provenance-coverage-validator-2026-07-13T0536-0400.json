@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "artifact_id": "continuity-provenance-coverage-validator-2026-07-13T0536-0400",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-13T05:36:00-04:00",
+  "durable_memory": {
+    "title": "Coverage closure must be executable, not rhetorical",
+    "rule": "A continuity identifier may be classified as coverage-relative unlocated only through a retained event that proves complete ref inventory, complete reachable-history traversal, complete pagination, no unresolved permission error, no provider-ceiling ambiguity, and a digest-bound resolution for every target identifier.",
+    "effect": "The prior provenance closure lattice is now enforceable by code rather than dependent on prose interpretation."
+  },
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json blob 894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json blob 7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "operations/SPECIALIST_REGISTRY.json blob 0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json blob 35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+    "provenance closure lattice commit b07a04b1c4b5a9fdfc340305a870911f608780c3",
+    "recent commit index through eabfdccf27ae3d0ad397e7c0fe49a170a8ed7cd9"
+  ],
+  "claims": {
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved in the canonical queue.",
+      "The prior lattice defines closure requirements but does not mechanically reject malformed or incomplete coverage events.",
+      "The connected repository search surface did not produce exhaustive all-ref and all-reachable-commit evidence in this run."
+    ],
+    "inferred": [
+      "Without an executable gate, future automation prose could accidentally promote an unresolved identifier to unlocated despite incomplete coverage."
+    ],
+    "proposed": [
+      "Use tools/continuity/validate-provenance-coverage-event.mjs as the acceptance gate for future coverage events.",
+      "Generate the first production coverage event only from an authenticated exhaustive ref and reachable-history enumerator."
+    ],
+    "superseded": [
+      "Treating a human-readable coverage statement as sufficient closure evidence.",
+      "Allowing a located source whose assigning commit is outside the retained reachable-commit set.",
+      "Allowing unlocated status while provider ceilings, permissions, pagination, or reachable-history completeness remain ambiguous."
+    ],
+    "unresolved": [
+      "Immutable assigning sources for M-004, M-005, and M-006.",
+      "A production exhaustive coverage event over all accessible refs and reachable commits."
+    ]
+  },
+  "implementation": {
+    "validator": "tools/continuity/validate-provenance-coverage-event.mjs",
+    "tests": "tools/continuity/validate-provenance-coverage-event.test.mjs",
+    "validator_commit": "4cc4e776511800f001688230ab8bc69e920a4ee8",
+    "test_commit": "e9a732abd6c5da5d58e0c7ca9202d92436bc2d36"
+  },
+  "verification": {
+    "command": "node --test validate-provenance-coverage-event.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "verified_behaviors": [
+      "accept complete coverage-relative resolution event",
+      "reject incomplete reachable history",
+      "reject provider-ceiling ambiguity",
+      "reject located source outside retained graph",
+      "reject coverage digest drift"
+    ],
+    "evidence_strength": "test_verified_source_behavior"
+  },
+  "privacy_boundary": "Only opaque continuity identifiers, repository metadata, coverage semantics, and validator behavior are persisted. No private dialogue, personal history, health information, credentials, or account data are included.",
+  "limitations": [
+    "This run did not execute an authenticated exhaustive branch, tag, and reachable-commit traversal.",
+    "The validator proves event integrity and closure preconditions; it does not itself enumerate Git objects.",
+    "M-004, M-005, and M-006 therefore remain unresolved."
+  ]
+}
