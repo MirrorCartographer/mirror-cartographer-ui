@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel-studio-implementation-evidence",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T10:33:00-04:00",
+  "finding": "Freshness and reconciliation results require a retained, source-bound handoff artifact before the commit-bound workflow outcome assessor can consume them safely.",
+  "implemented_slice": "Added a no-overwrite CLI that reads retained reconciliation and independent observation files, hashes their exact bytes, applies the existing fail-closed freshness adapter, and emits a deployment-ineligible receipt for the next assessment gate.",
+  "source_files": [
+    "operations/tools/frontier-observation-freshness-gate.mjs",
+    "operations/tools/vercel-fresh-evidence-adapter.mjs"
+  ],
+  "created_files": [
+    "operations/tools/vercel-fresh-evidence-receipt.mjs",
+    "operations/tools/vercel-fresh-evidence-receipt.test.mjs"
+  ],
+  "commits": [
+    "2f55f4e215248da44511db63a59ae37b3e4de2e5",
+    "f78f119b115da607a9d9e056a53dd28808881500"
+  ],
+  "verification": {
+    "command": "node --test vercel-fresh-evidence-receipt.test.mjs",
+    "environment": "isolated local reconstruction using exact fetched dependency contents",
+    "passed": 4,
+    "failed": 0,
+    "covered_boundaries": [
+      "accepted fresh reconciled receipt retains deployment claim ceiling",
+      "unverified reconciliation fails closed",
+      "stale observation fails closed",
+      "existing retained evidence path cannot be overwritten"
+    ]
+  },
+  "runtime_or_deployment_evidence": {
+    "application_deployment_attempted": false,
+    "vercel_runtime_observed": false,
+    "reason": "Provider capacity remains blocked and the selected slice is operations-only."
+  },
+  "rollback": "Revert commits 2f55f4e215248da44511db63a59ae37b3e4de2e5 and f78f119b115da607a9d9e056a53dd28808881500; no destructive migration or deployment occurred.",
+  "limits": [
+    "The tests were not run from a full authenticated repository checkout.",
+    "No real exact-commit GitHub workflow enumeration was captured in this slice.",
+    "A receipt marked accepted still cannot establish workflow success, deployment identity, browser audibility, or physical-device performance."
+  ],
+  "deployment_claim_permitted": false
+}
