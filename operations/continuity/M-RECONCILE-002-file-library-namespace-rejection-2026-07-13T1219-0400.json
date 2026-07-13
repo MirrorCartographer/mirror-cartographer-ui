@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T16:19:55Z",
+  "record_type": "provenance_reconciliation_slice",
+  "scope": {
+    "identifiers": ["M-004", "M-005", "M-006"],
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "external_source_class": "file_library_search",
+    "coverage": "bounded_semantic_and_exact_identifier_search"
+  },
+  "observed": [
+    {
+      "claim": "The canonical queue assigns M-004, M-005, and M-006 to unresolved continuity provenance gaps under M-RECONCILE-002.",
+      "source": "operations/ACTIVE_QUEUE.json",
+      "confidence": "high"
+    },
+    {
+      "claim": "File Library searches for the exact continuity identifiers returned proof-machine records whose identifiers are V8-004 through V8-006 or V9-004 through V9-006, not continuity-owned M identifiers.",
+      "source": "file_library search results inspected during this slice",
+      "confidence": "high"
+    },
+    {
+      "claim": "No returned File Library result supplied an immutable locator, continuity owner, originating decision log, language lexicon, or project document for M-004, M-005, or M-006.",
+      "source": "file_library search results inspected during this slice",
+      "confidence": "high"
+    }
+  ],
+  "inferred": [
+    {
+      "claim": "Numeric suffix agreement alone is insufficient identity evidence across namespaces.",
+      "confidence": "high",
+      "basis": "The returned V8/V9 proof-machine objects have different namespace prefixes, semantic roles, and source families."
+    }
+  ],
+  "proposed": [
+    {
+      "claim": "Future resolution must require agreement on namespace, owner, semantic role, temporal precedence, and immutable locator before any candidate can resolve a continuity identifier.",
+      "status": "adopted_as_fail_closed_rule"
+    }
+  ],
+  "superseded": [
+    {
+      "claim": "A matching numeric suffix can identify the missing continuity artifact.",
+      "reason": "Rejected by namespace and semantic-role mismatch."
+    }
+  ],
+  "unresolved": [
+    {
+      "claim": "The originating immutable objects for M-004, M-005, and M-006 remain unlocated.",
+      "next_evidence_required": "Exhaustive accessible branch and commit traversal plus source-document recovery."
+    }
+  ],
+  "privacy_boundary": {
+    "included": ["repository operational metadata", "non-personal File Library filenames and identifier classes"],
+    "excluded": ["private chat content", "health information", "credentials", "personal identifying details", "raw uploaded file contents beyond the minimum identifier evidence"],
+    "publication_rule": "Store only the classification result and source class; do not reproduce private source material."
+  },
+  "claim_ceiling": "This slice rejects observed namespace collisions; it does not prove exhaustive absence of the continuity artifacts.",
+  "next_action": "Enumerate all accessible repository branches and commits, then test candidates against namespace, owner, semantic role, temporal precedence, and immutable locator agreement."
+}
