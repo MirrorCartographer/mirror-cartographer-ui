@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Bind retained exact-commit workflow evidence into a deterministic chain-of-custody manifest before downstream deployment assessment.",
+  "derived_from": ["R-020", "R-021"],
+  "completed_slices": [
+    "Implemented a deterministic SHA-256 manifest over primary raw enumeration, independent raw enumeration, retained command text, and reconciliation output.",
+    "Required distinct enumeration methods, one exact commit, unique retained paths and byte digests, and a bounded capture window.",
+    "Rejected secret-bearing fields, unsafe paths, duplicate roles, duplicate bytes, malformed commit identities, and incomplete evidence sets.",
+    "Kept deployment_claim_permitted false because chain-of-custody completeness does not prove deployment identity or provider authenticity.",
+    "Verified six deterministic Node tests."
+  ],
+  "acceptance_remaining": [
+    "Integrate the manifest builder into the authenticated retained-evidence CLI after both exhaustive clients and reconciliation complete.",
+    "Generate a manifest from one real exact-commit collection and independently recompute all retained-byte digests.",
+    "Retain the manifest beside the raw outputs without credentials or authorization material.",
+    "Feed manifest completeness as a prerequisite, never as standalone deployment proof."
+  ],
+  "safe_next_action": "Wire tools/frontier-research/retained-evidence-manifest.mjs into the existing retained-evidence CLI, execute both authenticated enumerators for one exact commit, retain the four required artifacts, create the manifest within the bounded window, and independently verify every digest before Vercel assessment.",
+  "files": [
+    "tools/frontier-research/retained-evidence-manifest.mjs",
+    "tools/frontier-research/retained-evidence-manifest.test.mjs",
+    "operations/evidence/frontier-retained-evidence-manifest-2026-07-13T0124-0400.json"
+  ],
+  "commits": [
+    "d26b03a09de149646cfbed1d9cee0a1072c54cc1",
+    "34895b00fe1c090f5bc54c814a49cf005dd2a612",
+    "87bdc0b847428c5cd377db70b0c2ef8965356f2d"
+  ],
+  "canonical_queue_modified": false
+}
