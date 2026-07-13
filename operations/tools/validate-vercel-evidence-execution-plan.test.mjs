@@ -20,11 +20,12 @@ function validPlan(overrides = {}) {
   };
 }
 
-test('accepts a bounded exact-commit no-overwrite plan', () => {
+test('accepts a bounded exact-commit repository-bound no-overwrite plan', () => {
   const result = validateVercelEvidenceExecutionPlan(validPlan());
   assert.equal(result.ok, true);
   assert.equal(result.execution_permitted, true);
   assert.equal(result.commitSha, sha);
+  assert.equal(result.repository, 'MirrorCartographer/mirror-cartographer-ui');
 });
 
 test('rejects unsafe or duplicate output paths', () => {
@@ -53,8 +54,19 @@ test('rejects secret-bearing or non-exhaustive command text', () => {
     'secret_bearing_command_rejected',
   );
   assert.equal(
-    validateVercelEvidenceExecutionPlan(validPlan({ command: `gh api "/actions/runs?head_sha=${sha}&per_page=100"` })).reason,
+    validateVercelEvidenceExecutionPlan(validPlan({ command: `gh api "/repos/MirrorCartographer/mirror-cartographer-ui/actions/runs?head_sha=${sha}&per_page=100"` })).reason,
     'non_exhaustive_independent_command',
+  );
+});
+
+test('rejects shell-control operators and repository endpoint mismatch', () => {
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ command: `${command} > /tmp/output.json` })).reason,
+    'shell_control_operator_rejected',
+  );
+  assert.equal(
+    validateVercelEvidenceExecutionPlan(validPlan({ command: command.replace('MirrorCartographer/mirror-cartographer-ui', 'Other/repository') })).reason,
+    'repository_endpoint_mismatch',
   );
 });
 
