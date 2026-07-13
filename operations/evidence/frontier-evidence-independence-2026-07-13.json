@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T11:17:00Z",
+  "finding": "Agreement between GitHub Contents at an exact commit and git ls-tree at the same exact commit demonstrates method diversity over a shared Git object authority; it does not by itself demonstrate independent-source agreement.",
+  "source_status": {
+    "operations_state": "observed",
+    "active_queue": "observed",
+    "recent_vercel_source_reconciler": "observed",
+    "independence_interpretation": "inferred_from_system_topology"
+  },
+  "evidence_strength": "committed executable contract; runtime result not retained",
+  "artifacts": [
+    {
+      "path": "operations/tools/frontier-evidence-independence-classifier.mjs",
+      "commit": "01da2fb2a5bd80ecc34294a9805bd80f513db899"
+    },
+    {
+      "path": "tools/frontier-research/evidence-independence-classifier.test.mjs",
+      "commit": "ec4be778fcbe094a9aa448beefcaf3f49859ac07"
+    }
+  ],
+  "design_implication": "Evidence bundles must model method, transport, operator, and underlying authority separately. Claim wording is capped by authority independence, not merely by differing commands or APIs.",
+  "falsification_route": [
+    "Run node --test tools/frontier-research/evidence-independence-classifier.test.mjs.",
+    "Provide a topology showing that the compared lookups derive from independently administered authoritative stores rather than the same Git object database.",
+    "Fail the classifier if incomplete channel metadata is accepted or if shared-authority channels receive independent-source wording."
+  ],
+  "uncertainty": [
+    "The classifier evaluates declared topology and cannot independently prove that authority labels are truthful.",
+    "No clean-runner Node result is retained in this evidence packet.",
+    "This artifact does not verify deployment, browser behavior, or provider execution."
+  ],
+  "application_deployment_attempted": false,
+  "deployment_claim_permitted": false
+}
