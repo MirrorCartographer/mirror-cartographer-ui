@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T17:05:59Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The verified retained-packet read boundary and packet-bound Vercel status assessment are now included in the existing read-only, exact-commit, transcript-retaining CI contract. Source digests cover the complete imported boundary chain and the uploaded artifact retains seven TAP transcripts for 30 days.",
+  "evidence": [
+    "commit:34283b88442efc61e72c42e0794a072419678fb5",
+    "operations/evidence/vercel-retained-evidence-ci-binding-2026-07-13T1305-0400.json"
+  ],
+  "acceptance_remaining": [
+    "Observe the retained-evidence GitHub Actions workflow complete successfully for an exact commit and preserve its artifact.",
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain their reconciled packet.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Inspect the GitHub Actions run for commit 34283b88442efc61e72c42e0794a072419678fb5 and retain the commit-bound artifact if successful. Do not attempt an application deployment while the Vercel build-rate-limit status remains active.",
+  "rollback": "Revert b9235f4261f03824824b804fbcbddb498f839ff8, then revert 34283b88442efc61e72c42e0794a072419678fb5."
+}
