@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T17:32:00-04:00",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed exact retained-output manifest-set verifier that binds both reconciliation and final bundle records to the approved execution-plan SHA-256 digest after path and byte verification.",
+  "files": [
+    "operations/tools/verify-retained-evidence-manifest-set.mjs",
+    "operations/tools/verify-retained-evidence-manifest-set.test.mjs",
+    "operations/evidence/vercel-retained-manifest-plan-binding-2026-07-13T1732-0400.json"
+  ],
+  "commits": [
+    "667020c4062f8b9beed0d7882f1bb463f6d7e0f6",
+    "a5197b72357e2d5122b195c80789ba8744c08bbb",
+    "2a328bb9017d5ece8323ef3bafb814ce8e519b36"
+  ],
+  "verification": {
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "route": "deterministic local Node execution against byte-compatible committed source and dependency copies"
+  },
+  "acceptance_remaining": [
+    "Execute the committed test file in an authenticated repository checkout or GitHub Actions runner.",
+    "Execute both exhaustive exact-commit enumeration clients and retain the exact required five-file set.",
+    "Pass the retained set through the new manifest binding gate and preserve its result.",
+    "Observe provider build suppression after capacity returns, verify immutable deployment identity, inspect audio-route artifact, and complete bounded physical iPhone Safari audibility acceptance."
+  ],
+  "safe_next_action": "Wire verifyRetainedEvidenceManifestSet into the no-overwrite retained-evidence CLI so a bundle cannot be reported promotable unless the exact output set, current bytes, and plan-binding digest all verify; do not request an application deployment while provider capacity remains exhausted.",
+  "rollback": "Revert 667020c4062f8b9beed0d7882f1bb463f6d7e0f6. No destructive rollback or history rewrite is required."
+}
