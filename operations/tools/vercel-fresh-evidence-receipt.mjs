@@ -60,6 +60,11 @@ export async function buildFreshEvidenceReceipt({
     artifact_type: 'vercel-fresh-evidence-receipt',
     generated_at: evaluated_at,
     target_commit_sha,
+    evaluation_parameters: Object.freeze({
+      target_commit_time,
+      max_observation_age_ms,
+      max_channel_skew_ms
+    }),
     source_bindings: Object.freeze({
       reconciliation: Object.freeze({ path: reconciliation_path, sha256: sha256(reconciliationText) }),
       primary_observation: Object.freeze({ path: primary_observation_path, sha256: sha256(primaryText) }),
