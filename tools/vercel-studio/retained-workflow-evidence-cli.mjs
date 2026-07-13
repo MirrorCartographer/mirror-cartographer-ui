@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile, writeFile } from 'node:fs/promises';
+import { lstat, readFile, realpath, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { buildWorkflowEvidenceBundleFromGhPages } from './gh-envelope-bundle-adapter.mjs';
 
@@ -25,6 +25,30 @@ function requireIsoTimestamp(value, label) {
     throw new TypeError(`${label}_timestamp_invalid`);
   }
   return value;
+}
+
+async function requireRetainedRegularFile(path, label) {
+  let stats;
+  try {
+    stats = await lstat(path);
+  } catch (error) {
+    throw new Error(`${label}_read_failed:${error.code || error.message}`);
+  }
+  if (stats.isSymbolicLink()) throw new Error(`${label}_symlink_rejected`);
+  if (!stats.isFile()) throw new Error(`${label}_not_regular_file`);
+  return realpath(path).catch(error => {
+    throw new Error(`${label}_realpath_failed:${error.code || error.message}`);
+  });
+}
+
+async function validateRetainedSources({ primaryPath, ghPagesPath, ghCommandPath }) {
+  const entries = [
+    ['primary', primaryPath],
+    ['gh_pages', ghPagesPath],
+    ['gh_command', ghCommandPath]
+  ];
+  const resolved = await Promise.all(entries.map(([label, path]) => requireRetainedRegularFile(path, label)));
+  if (new Set(resolved).size !== resolved.length) throw new Error('retained_source_paths_not_distinct');
 }
 
 async function readJson(path, label) {
@@ -58,6 +82,7 @@ export async function buildRetainedWorkflowEvidence({
     throw new TypeError('generated_at_precedes_source_retrieval');
   }
 
+  await validateRetainedSources({ primaryPath, ghPagesPath, ghCommandPath });
   const [primary, ghPages, ghCommandText] = await Promise.all([
     readJson(primaryPath, 'primary'),
     readJson(ghPagesPath, 'gh_pages'),
