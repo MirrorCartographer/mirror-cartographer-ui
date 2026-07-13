@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "artifact": "operations/independent-creative-web/previews/night-office/index.html",
+  "identity": "The Night Office for Lost Weather",
+  "verification": {
+    "method": "GitHub contents round-trip inspection",
+    "result": "verified_present",
+    "blob_sha": "fa96d534e093d64abaa48cf7590db899b614aebf",
+    "observed_invariants": [
+      "responsive viewport and 620px single-column layout",
+      "semantic labelled range control and native buttons",
+      "aria-live transmission region",
+      "aria-pressed audio state",
+      "sound disabled by default and created only after explicit button gesture",
+      "prefers-reduced-motion disables scan animation",
+      "no account, payment, conversion, analytics, remote assets, private source material, or Mirror Cartographer identity"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "claimed": false,
+    "reason": "Current state prohibits application deployment attempts while provider build capacity is exhausted; preview remains under operations-only paths."
+  },
+  "limits": [
+    "No browser execution was available in this run.",
+    "No screen-reader, physical mobile device, audio-output, Lighthouse, or hosting verification is claimed.",
+    "The canonical active queue contains no independent_creative_web-owned item, so this slice is recorded as an additive bootstrap proposal rather than a queue completion."
+  ],
+  "rollback": [
+    "Revert commit 8effdbbf2dd96bc2a6da751ec3e71868d37b5ba8",
+    "Revert commit 3a6f909dabc46ce3a590c00f6f01f5964534556f"
+  ]
+}
