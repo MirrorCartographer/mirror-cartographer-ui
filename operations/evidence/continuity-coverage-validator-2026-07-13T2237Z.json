@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CM-EVIDENCE-1016",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T22:37:00Z",
+  "finding": "The continuity coverage schema required an executable fail-closed validator so connector-limited or otherwise incomplete coverage could not silently transition M-004, M-005, or M-006 to unlocated.",
+  "source_status": {
+    "canonical_queue": "observed",
+    "schema_commit": "observed",
+    "repository_search_for_target_identifiers": "connector_limited_zero_results",
+    "exhaustive_ref_inventory": "not_obtained",
+    "exhaustive_history_traversal": "not_obtained"
+  },
+  "claim_states": {
+    "observed": "M-RECONCILE-002 remains highest priority and requires exhaustive branch and history coverage before an unlocated classification.",
+    "inferred": "A deterministic validator reduces narrative drift between the schema and future receipts.",
+    "proposed": "Require validator success before accepting any provenance coverage receipt.",
+    "superseded": "Schema presence alone is sufficient operational enforcement.",
+    "unresolved": "The immutable origins of M-004, M-005, and M-006 remain unresolved because exhaustive coverage was not obtained."
+  },
+  "files": [
+    "operations/continuity/tools/validate-provenance-coverage-receipt.mjs",
+    "operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs"
+  ],
+  "commits": [
+    "ca73fbfae2000fd86c1a3a078c230e972ea87ffe",
+    "09509c70696d6a9257acc0b2b41b624a8cac2299"
+  ],
+  "verification": {
+    "runtime": "Node.js local isolated execution",
+    "command": "node --test validate.test.mjs",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "covered_cases": [
+      "incomplete coverage preserves unresolved status",
+      "incomplete coverage cannot classify unlocated",
+      "complete coverage with complete refs and history and no exclusions may classify unlocated",
+      "located status requires immutable locator",
+      "malformed target identifiers are rejected"
+    ]
+  },
+  "privacy_boundary": {
+    "included": ["repository metadata", "queue identifiers", "commit identifiers", "claim-state classifications"],
+    "excluded": ["private chat content", "credentials", "personal identifiers", "unreviewed file-library content"]
+  },
+  "limits": [
+    "The GitHub connector did not provide an exhaustive all-ref inventory in this run.",
+    "The GitHub connector did not provide a complete reachable-object traversal in this run.",
+    "Zero repository-search results do not prove absence."
+  ],
+  "falsification_route": "Execute an authenticated all-ref inventory and git rev-list --all --objects equivalent, validate a completed receipt, and locate an immutable object for any target identifier or preserve unresolved/unlocated according to the validated coverage result."
+}
