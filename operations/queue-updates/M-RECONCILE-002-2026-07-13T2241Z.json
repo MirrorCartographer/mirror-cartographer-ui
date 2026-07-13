@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:41:00Z",
+  "state": "in_progress",
+  "completed_slice": "Strengthened the provenance coverage receipt validator so declared targets and claim transitions must form an exact one-to-one set, with duplicate, missing, undeclared, and invalid-timestamp receipts rejected fail-closed.",
+  "memory_classification": {
+    "observed": "The prior validator accepted any non-empty claim_transitions array without proving complete target coverage.",
+    "inferred": "Receipt-level identity drift could produce an apparently valid but incomplete continuity decision record.",
+    "proposed": "Require a target-transition bijection for every provenance coverage receipt.",
+    "superseded": "Non-empty transitions imply all target identifiers were evaluated.",
+    "unresolved": "M-004, M-005, and M-006 provenance remains unresolved pending exhaustive repository coverage."
+  },
+  "artifacts": [
+    {
+      "path": "operations/continuity/tools/validate-provenance-coverage-receipt.mjs",
+      "commit": "b580481a6e1f37681f4d4474db1835d7e27bc614"
+    },
+    {
+      "path": "operations/continuity/tools/validate-provenance-coverage-receipt.test.mjs",
+      "commit": "13b82c0777505d50f54e04d8cbdddd4f47157cd3"
+    },
+    {
+      "path": "operations/evidence/continuity-receipt-referential-integrity-2026-07-13T2241Z.json",
+      "commit": "700f57da054cd4a395e5f0941fe5ea7e0671fe44"
+    }
+  ],
+  "verification": {
+    "command": "node --test validator.test.mjs",
+    "passed": 10,
+    "failed": 0
+  },
+  "privacy_boundary": "Repository metadata and continuity identifiers only; no credentials, personal identifiers, private chat text, or unreviewed File Library content retained.",
+  "specialist_registry_change": null,
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after complete coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "next_action": "Generate an authenticated provenance coverage receipt from exhaustive refs and reachable-object history, then require the committed validator to pass before changing any M-004, M-005, or M-006 status."
+}
