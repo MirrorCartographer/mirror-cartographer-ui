@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-13T17:38:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "A fail-closed retained-evidence execution preflight now rejects invalid commit identities, unsafe or duplicate output paths, overwrite requests, pending records, deployment requests, secret-bearing command text, non-paginated independent commands, commit mismatches, and non-maximal page sizes before authenticated dual-client evidence collection.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "acceptance_effect": {
+    "advanced": [
+      "The next authenticated exact-commit evidence collection has a deterministic no-overwrite and secret-hygiene preflight.",
+      "Evidence collection remains explicitly separated from deployment creation."
+    ],
+    "remaining": [
+      "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain raw outputs plus reconciliation bundle.",
+      "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+      "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+      "Bind the tested application commit to an immutable successful Vercel deployment.",
+      "Perform bounded physical iPhone Safari audibility verification."
+    ]
+  },
+  "evidence_path": "operations/evidence/vercel-evidence-execution-preflight-2026-07-13T1338-0400.json",
+  "canonical_queue_overwritten": false,
+  "rollback": "Revert commits in reverse order: this queue update, a783a6d8f8698e7522064c68b8db81a4e53511a5, 69a4f9093f6d7cb51f7a1e3204969f2842733d17, 0f81db3be9c8ddcf4907a3556963d621fa08ea21, a515467297f69edfc55512b12b11712d704051d6.",
+  "next_action": "Run the preflight in an authenticated checkout for one exact commit, then execute both exhaustive clients only when it returns execution_plan_ready; retain all raw outputs and the no-overwrite bundle without creating a deployment."
+}
