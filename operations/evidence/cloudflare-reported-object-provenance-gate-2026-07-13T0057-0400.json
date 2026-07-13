@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": "C-PROV-001",
+  "recorded_at": "2026-07-13T04:57:37Z",
+  "finding": "Previously reported Cloudflare and Frontier commits and the claimed atomic replay-store path were not found through the authenticated GitHub connector. The research surface must fail closed on completion prose until repository objects are independently observed.",
+  "reported_objects_checked": [
+    {
+      "repository": "MirrorCartographer/mirror-cartographer-ui",
+      "commit_sha": "8150425e2de1691159b28c33215ed36ccdc35630",
+      "path": "tools/frontier-research/atomic-oidc-replay-store.mjs",
+      "commit_status": "not_found",
+      "path_status": "not_found",
+      "classification": "reported_object_unverified"
+    },
+    {
+      "repository": "MirrorCartographer/mirror-cartographer-ui",
+      "commit_sha": "97c1cf7f99eec05b253e32756f5e3b8a07906a68",
+      "path": "operations/evidence/cloudflare-oidc-replay-integration-2026-07-13T0048-0400.json",
+      "commit_status": "not_found",
+      "path_status": "not_checked_after_commit_failure",
+      "classification": "reported_object_unverified"
+    }
+  ],
+  "implemented": {
+    "path": "cloudflare-static/verify-reported-github-object.mjs",
+    "test_path": "cloudflare-static/verify-reported-github-object.test.mjs",
+    "policy": "Require exact repository, 40-character commit SHA, observed commit existence, and observed path existence before accepting a reported artifact as evidence."
+  },
+  "verification": {
+    "method": "node --test against an exact local copy of the committed source and test contract",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "exact observed object accepted",
+      "missing commit rejected",
+      "missing path rejected",
+      "malformed SHA rejected",
+      "cross-repository substitution rejected"
+    ]
+  },
+  "evidence_strength": "tested_source_contract_with_authenticated_repository_observation",
+  "limits": [
+    "The committed test file was not executed by GitHub Actions in this run.",
+    "No Cloudflare deployment was attempted.",
+    "This gate verifies repository object existence, not semantic correctness, deployment success, or scientific truth."
+  ],
+  "privacy": "No credentials, JWTs, medical records, or private user content are stored."
+}
