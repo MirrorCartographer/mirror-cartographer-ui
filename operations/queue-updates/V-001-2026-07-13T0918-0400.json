@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T09:18:00-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Integrated Frontier Research observation freshness and replay resistance into a fail-closed Vercel evidence adapter before commit-bound workflow outcome assessment.",
+  "files": [
+    "operations/tools/vercel-fresh-evidence-adapter.mjs",
+    "operations/tools/vercel-fresh-evidence-adapter.test.mjs",
+    "operations/evidence/vercel-fresh-evidence-adapter-2026-07-13T0918-0400.json"
+  ],
+  "commits": [
+    "d595400b1af9e909a12c201df1a0e87cb37791f6",
+    "31877ffa030f1f26f1b2f774619c6c5e33b347d8",
+    "37b4cc07ea3b28abbb0c4deb9f6202b42c7088c4"
+  ],
+  "verification": {
+    "command": "node --test operations/tools/vercel-fresh-evidence-adapter.test.mjs",
+    "passed": 5,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both independent clients and retain raw outputs plus reconciliation and freshness artifacts.",
+    "Observe an operations-only sentinel skipped or ignored after Vercel capacity returns.",
+    "Observe and inspect the exact-commit six-outcome audio-routing artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Wire assessFreshReconciledVercelEvidence immediately after reconciliation and before the existing commit-bound workflow outcome assessor, then execute the retained-evidence path in an authenticated clean checkout. Do not attempt an application deployment until provider capacity and immutable deployment identity are available.",
+  "rollback": "Revert the listed commits; no destructive operation is required.",
+  "canonical_queue_overwritten": false,
+  "application_deployment_attempted": false,
+  "deployment_claim_permitted": false
+}
