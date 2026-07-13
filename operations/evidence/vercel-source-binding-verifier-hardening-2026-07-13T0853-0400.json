@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel-studio-verification-evidence",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T08:53:57-04:00",
+  "slice": "Harden the schema-v2 source-binding packet verifier against metadata and verification-method substitution.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "source_commits": {
+    "verifier": "cfa0d9b497f9b2ccaff428eb4a9f5e15e029d634",
+    "tests": "9ba80a34452ee44c4f66ed0e914a15fef380510d"
+  },
+  "verified_source_blobs": {
+    "operations/tools/verify-vercel-source-binding-packet.mjs": "0f54160da1c1d2dfe772456c5c272c97917325c9",
+    "operations/tools/verify-vercel-source-binding-packet.test.mjs": "f48af01efbbd03a3c14b9987cf0e184e622f9325"
+  },
+  "behavior_added": [
+    "Require the exact approved pair of independent source verification methods in canonical order.",
+    "Validate packet and binding timestamps as UTC ISO-8601 values.",
+    "Reject a binding verified after packet generation.",
+    "Require the exact top-level verification method and canonicalization contract.",
+    "Preserve fail-closed deployment invariants."
+  ],
+  "verification": {
+    "route": "Fetch exact committed blobs at the test commit, reconstruct byte-equivalent local modules, execute Node's built-in test runner.",
+    "command": "node --test /tmp/vercel-verify/test.mjs",
+    "tests": 10,
+    "passed": 10,
+    "failed": 0,
+    "coverage": [
+      "intact packet acceptance",
+      "digest tampering rejection",
+      "noncanonical path ordering rejection",
+      "deployment-claim escalation rejection",
+      "unapproved distinct methods rejection",
+      "approved method order substitution rejection",
+      "malformed timestamp rejection",
+      "post-generation verification rejection",
+      "canonicalization metadata substitution rejection",
+      "top-level method substitution rejection"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE prohibits application deployment attempts while provider build capacity is exhausted.",
+    "claim_permitted": false
+  },
+  "limits": [
+    "The test was not executed by a GitHub Actions runner.",
+    "No authenticated exhaustive workflow enumeration was performed.",
+    "No immutable Vercel deployment identity, audio artifact, or physical iPhone Safari evidence was produced."
+  ],
+  "rollback": [
+    "Revert 9ba80a34452ee44c4f66ed0e914a15fef380510d.",
+    "Revert cfa0d9b497f9b2ccaff428eb4a9f5e15e029d634."
+  ]
+}
