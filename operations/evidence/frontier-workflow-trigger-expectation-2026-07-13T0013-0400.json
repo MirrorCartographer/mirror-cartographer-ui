@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T00:13:00-04:00",
+  "research_question": "How should commit-bound evidence distinguish a workflow run that was not expected from an expected run that is absent, without treating incomplete enumeration as proof?",
+  "sources": [
+    {
+      "type": "primary_documentation",
+      "title": "GitHub Actions workflow syntax",
+      "locator": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "status": "current_checked_2026-07-13",
+      "supports": [
+        "Multiple configured events independently trigger workflows.",
+        "Push and pull request path filters restrict execution to matching changed paths.",
+        "workflow_dispatch is a distinct manual trigger."
+      ]
+    },
+    {
+      "type": "primary_documentation",
+      "title": "GitHub REST API endpoints for workflow runs",
+      "locator": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+      "status": "current_checked_2026-07-13",
+      "supports": [
+        "Workflow-run observations are API results whose completeness depends on endpoint, filters, and pagination."
+      ]
+    },
+    {
+      "type": "repository_source",
+      "path": ".github/workflows/vercel-retained-evidence-contract.yml",
+      "blob_sha": "00ed1d7de0f881a0ab845c78026f8869fc96ab5a",
+      "supports": [
+        "The retained-evidence workflow configures workflow_dispatch, push, and pull_request.",
+        "Push and pull_request use seven exact path filters."
+      ]
+    },
+    {
+      "type": "repository_observation",
+      "commit_sha": "f61bb515c59dd6e77ec9eded1b2be8c8a38e6163",
+      "observation": "The available connector returned zero workflow runs.",
+      "coverage_class": "limited_first_page_pull_request_filtered",
+      "claim_status": "absence_unproven"
+    }
+  ],
+  "finding": "Trigger expectation and run observation are separate evidence layers. A zero-result observation is only expected_run_absent when path/event expectation is proven and workflow-run enumeration is independently complete. Otherwise the result must remain expectation_unproven or observation_unproven.",
+  "artifact": {
+    "implementation": "tools/frontier-research/workflow-trigger-expectation.mjs",
+    "tests": "tools/frontier-research/workflow-trigger-expectation.test.mjs",
+    "classifications": [
+      "run_expected",
+      "run_not_expected",
+      "expectation_unproven",
+      "expected_run_absent",
+      "unexpected_run_present",
+      "observation_unproven",
+      "consistent"
+    ]
+  },
+  "verification": {
+    "runtime": "Node.js",
+    "tests_run": 7,
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "fixture_type": "deterministic synthetic inputs"
+  },
+  "uncertainty": [
+    "No exhaustive authenticated workflow-run enumeration was available in this run.",
+    "No live workflow dispatch was performed.",
+    "The path contract is intentionally exact to the current retained-evidence workflow and must be updated when that workflow changes."
+  ],
+  "falsification_route": [
+    "Provide complete changed-path evidence for a commit and show that the classifier disagrees with GitHub's documented trigger semantics.",
+    "Provide exhaustive all-event workflow-run enumeration proving a run exists where the classifier says run_not_expected, or proving no run exists where it says run_expected.",
+    "Modify the workflow path filters without updating the contract and demonstrate stale classification."
+  ]
+}
