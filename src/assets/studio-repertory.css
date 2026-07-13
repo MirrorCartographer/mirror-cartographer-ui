@@ -1,0 +1,76 @@
+:root {
+  --studio-hour-phase: 0;
+  --studio-black: #050510;
+  --studio-glow: rgba(255, 226, 191, 0.18);
+  --studio-filter: none;
+  --studio-grain-opacity: 0.035;
+}
+
+html[data-studio-production] body::before,
+html[data-studio-production] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+html[data-studio-production] body::before {
+  opacity: var(--studio-grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+html[data-studio-production] body::after {
+  box-shadow: inset 0 0 18vmax rgba(0, 0, 0, 0.34);
+  background: radial-gradient(circle at calc(18% + var(--studio-hour-phase) * 64%) 28%, var(--studio-glow), transparent 38%);
+}
+
+html[data-studio-production] .wordless {
+  filter: var(--studio-filter);
+  transition: filter 900ms ease, background 900ms ease;
+}
+
+html[data-studio-production='weather-room'] {
+  --studio-glow: rgba(145, 216, 255, 0.17);
+}
+
+html[data-studio-production='archive-lantern'] {
+  --studio-glow: rgba(255, 184, 104, 0.22);
+  --studio-filter: sepia(.22) contrast(1.06) saturate(.82);
+  --studio-grain-opacity: .07;
+}
+
+html[data-studio-production='comet-garden'] {
+  --studio-glow: rgba(167, 243, 208, 0.2);
+  --studio-filter: hue-rotate(18deg) saturate(1.14);
+}
+
+html[data-studio-production='blueprint-dream'] {
+  --studio-glow: rgba(111, 168, 255, 0.2);
+  --studio-filter: hue-rotate(168deg) contrast(1.12) saturate(.76);
+}
+
+html[data-studio-production='machine-tide'] {
+  --studio-glow: rgba(196, 181, 253, 0.2);
+  --studio-filter: contrast(1.18) saturate(.72);
+}
+
+html[data-studio-production='velvet-observatory'] {
+  --studio-glow: rgba(221, 174, 255, 0.22);
+  --studio-filter: hue-rotate(302deg) saturate(1.08);
+}
+
+html[data-studio-production='storm-edit'] {
+  --studio-glow: rgba(239, 251, 255, 0.25);
+  --studio-filter: contrast(1.24) saturate(.58);
+}
+
+html[data-studio-production='afterimage-theater'] {
+  --studio-glow: rgba(255, 126, 170, 0.2);
+  --studio-filter: sepia(.12) hue-rotate(318deg) saturate(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-studio-production] .wordless { transition: none; }
+}
