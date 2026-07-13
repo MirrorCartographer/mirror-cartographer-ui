@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T10:55:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Independent exact-commit source proof reconciliation now fails closed unless GitHub contents-at-commit and git ls-tree-at-commit agree on path, blob SHA, and target commit.",
+  "evidence": "operations/evidence/vercel-independent-source-proof-reconciliation-2026-07-13T0655-0400.json",
+  "commits": [
+    "c2241f585e2dc9d3885136c5f6eb58f5538b05c2",
+    "06db84b7e7e2c99029ebdc2df40398135d6a4965",
+    "bb96062f415eb2e098002a021abb16dd286f6a88"
+  ],
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for one exact commit with both exhaustive clients and retain reconciled outputs.",
+    "Execute authenticated GitHub contents and git ls-tree source lookups for every receipt-bound path and pass only reconciled bindings downstream.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add an operations-only CLI adapter that executes or ingests both authenticated exact-commit source lookup methods for every required path, reconciles them with the new module, and passes only agreement-verified bindings into the retained evidence receipt path."
+}
