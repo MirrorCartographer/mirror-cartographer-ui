@@ -38,6 +38,19 @@ async function fixture() {
   return paths;
 }
 
+function validArgs(paths) {
+  return [
+    '--commit', commitSha,
+    '--primary', paths.primary,
+    '--gh-pages', paths.ghPages,
+    '--gh-command', paths.ghCommand,
+    '--primary-retrieved-at', '2026-07-13T00:00:00Z',
+    '--gh-retrieved-at', '2026-07-13T00:01:00Z',
+    '--generated-at', '2026-07-13T00:02:00Z',
+    '--output', paths.output
+  ];
+}
+
 test('builds a verified retained bundle from matching exhaustive outputs', async () => {
   const paths = await fixture();
   const bundle = await buildRetainedWorkflowEvidence({
@@ -73,18 +86,52 @@ test('fails closed when the retained gh command is not exhaustive', async () => 
 
 test('CLI writes once and refuses to overwrite retained evidence', async () => {
   const paths = await fixture();
-  const args = [
-    '--commit', commitSha,
-    '--primary', paths.primary,
-    '--gh-pages', paths.ghPages,
-    '--gh-command', paths.ghCommand,
-    '--primary-retrieved-at', '2026-07-13T00:00:00Z',
-    '--gh-retrieved-at', '2026-07-13T00:01:00Z',
-    '--generated-at', '2026-07-13T00:02:00Z',
-    '--output', paths.output
-  ];
+  const args = validArgs(paths);
   await main(args);
   const written = JSON.parse(await readFile(paths.output, 'utf8'));
   assert.equal(written.verified, true);
   await assert.rejects(() => main(args), /EEXIST/);
+});
+
+test('CLI rejects duplicate flags instead of silently taking the last value', async () => {
+  const paths = await fixture();
+  const args = validArgs(paths);
+  args.push('--commit', 'b'.repeat(40));
+  await assert.rejects(() => main(args), /duplicate_argument:commit/);
+});
+
+test('rejects malformed and impossible source timestamps', async () => {
+  const paths = await fixture();
+  const base = {
+    commitSha,
+    primaryPath: paths.primary,
+    ghPagesPath: paths.ghPages,
+    ghCommandPath: paths.ghCommand,
+    ghRetrievedAt: '2026-07-13T00:01:00Z',
+    generatedAt: '2026-07-13T00:02:00Z'
+  };
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({ ...base, primaryRetrievedAt: 'yesterday' }),
+    /primary_retrieved_at_timestamp_invalid/
+  );
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({ ...base, primaryRetrievedAt: '2026-02-30T00:00:00Z' }),
+    /primary_retrieved_at_timestamp_invalid/
+  );
+});
+
+test('rejects a bundle generation time that precedes either retained source', async () => {
+  const paths = await fixture();
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({
+      commitSha,
+      primaryPath: paths.primary,
+      ghPagesPath: paths.ghPages,
+      ghCommandPath: paths.ghCommand,
+      primaryRetrievedAt: '2026-07-13T00:00:00Z',
+      ghRetrievedAt: '2026-07-13T00:03:00Z',
+      generatedAt: '2026-07-13T00:02:00Z'
+    }),
+    /generated_at_precedes_source_retrieval/
+  );
 });
