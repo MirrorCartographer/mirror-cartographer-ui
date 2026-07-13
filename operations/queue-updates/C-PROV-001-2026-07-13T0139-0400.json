@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "queue_item": {
+    "id": "C-PROV-001",
+    "owner": "cloudflare_research",
+    "priority": "highest",
+    "state": "in_progress_handoff_ready",
+    "objective": "Prevent unobserved completion prose from entering Cloudflare research evidence as if repository objects existed.",
+    "completed_slices": [
+      "Implemented a fail-closed verifier requiring exact repository, commit, and path observations.",
+      "Bound reported-object verification ahead of the existing Cloudflare Pages evidence verifier.",
+      "Blocked promotion and deployment claims whenever any reported object is unverified or Pages evidence is rejected.",
+      "Preserved scientific_truth_established=false even for accepted operational evidence.",
+      "Verified five deterministic source-behavior cases against exact copies of the committed modules."
+    ],
+    "acceptance_remaining": [
+      "Run cloudflare-static/ingest-research-evidence.test.mjs in GitHub Actions.",
+      "Wire the ingestion function into the production evidence-packet entrypoint rather than calling lower-level verifiers directly.",
+      "Acquire authenticated repository observations for every reported commit and path referenced by a real evidence packet.",
+      "Verify one commit-bound Cloudflare Pages evidence packet through the integrated path without publishing medical, diagnosis, or treatment claims.",
+      "Resolve the origin of previously reported but unobserved objects without reconstructing unsupported history."
+    ],
+    "safe_next_action": "Add a CI job that runs the integrated ingestion tests, then route the Cloudflare evidence-packet entrypoint exclusively through ingestResearchEvidence and retain the resulting decision artifact for one exact commit."
+  },
+  "does_not_overwrite": [
+    "operations/ACTIVE_QUEUE.json",
+    "V-001",
+    "M-RECONCILE-002",
+    "R-020",
+    "R-021"
+  ],
+  "specialist_registry_change": null,
+  "evidence": "operations/evidence/cloudflare-provenance-bound-ingestion-2026-07-13T0139-0400.json"
+}
