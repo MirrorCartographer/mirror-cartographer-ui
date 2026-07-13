@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { verifyEvidencePacketCoherence } from '../research/evidence-packet-coherence.mjs';
 import { verifyCommittedPacket } from './vercel-evidence-packet-commit.mjs';
 
 function freezeJson(value) {
@@ -13,6 +14,12 @@ function freezeJson(value) {
 
 export async function readVerifiedVercelEvidencePacket({ marker_path }) {
   const verification = await verifyCommittedPacket({ marker_path });
+  const coherence = await verifyEvidencePacketCoherence({ marker_path });
+  if (!coherence.verified) throw new Error(`packet_coherence_${coherence.reason}`);
+  if (coherence.packet_id !== verification.packet_id || coherence.source_commit_sha !== verification.source_commit_sha) {
+    throw new Error('packet_coherence_identity_mismatch');
+  }
+
   const marker = JSON.parse(await readFile(marker_path, 'utf8'));
   const subjects = new Map(marker.subjects.map((subject) => [subject.role, subject]));
   const receipt = JSON.parse(await readFile(subjects.get('receipt').path, 'utf8'));
@@ -20,11 +27,13 @@ export async function readVerifiedVercelEvidencePacket({ marker_path }) {
 
   return Object.freeze({
     verified: true,
+    coherence_verified: true,
     packet_id: verification.packet_id,
+    repository: coherence.repository,
     source_commit_sha: verification.source_commit_sha,
     receipt: freezeJson(receipt),
     manifest: freezeJson(manifest),
-    claim_ceiling: 'verified complete-packet identity and exact retained bytes only; workflow outcome, deployment, audio audibility, and human observation remain unproven',
+    claim_ceiling: 'verified complete-packet identity, exact retained bytes, and cross-artifact coherence only; workflow outcome, deployment, audio audibility, and human observation remain unproven',
     deployment_claim_permitted: false
   });
 }
