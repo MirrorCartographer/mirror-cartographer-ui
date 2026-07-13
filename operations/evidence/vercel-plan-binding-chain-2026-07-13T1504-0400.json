@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T15:04:44-04:00",
+  "slice": "Require the validated execution plan, retained raw-output manifest, and reconciliation bundle to carry one identical SHA-256 plan binding before evidence promotion.",
+  "files": [
+    "operations/tools/verify-vercel-evidence-plan-binding-chain.mjs",
+    "operations/tools/verify-vercel-evidence-plan-binding-chain.test.mjs"
+  ],
+  "commits": [
+    "1fe8554ee4809b6a82c8d3647113598f977e2ebb",
+    "805368b2deff0dc8ca24d574cc060bb9344bfa13"
+  ],
+  "verification": {
+    "route": "deterministic Node test execution against byte-equivalent local source before repository commit",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "covered": [
+      "matching chain accepted",
+      "missing raw-manifest binding rejected",
+      "raw-manifest mismatch rejected",
+      "reconciliation-bundle mismatch rejected",
+      "malformed validated-plan digest rejected"
+    ]
+  },
+  "claim_boundary": [
+    "This proves deterministic source behavior for plan-binding agreement only.",
+    "It does not prove authenticated execution, retained raw-byte authenticity, exhaustive workflow enumeration, Vercel deployment identity, browser behavior, audio audibility, or physical-device observation.",
+    "No application deployment was attempted because CURRENT_STATE.json prohibits deployment attempts while provider build capacity is exhausted."
+  ],
+  "rollback": {
+    "primary_commit": "1fe8554ee4809b6a82c8d3647113598f977e2ebb",
+    "route": "Revert the primary implementation commit; retain test and evidence records as historical provenance."
+  }
+}
