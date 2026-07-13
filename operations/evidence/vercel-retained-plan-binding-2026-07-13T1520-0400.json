@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:20:00-04:00",
+  "slice": "Require three-way SHA-256 execution-plan binding agreement before retained evidence promotion.",
+  "files": [
+    "operations/tools/verify-vercel-retained-plan-binding.mjs",
+    "operations/tools/verify-vercel-retained-plan-binding.test.mjs"
+  ],
+  "verification": {
+    "route": "node --test against byte-equivalent local copies of committed source and test",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "cases": [
+      "accepts exact three-way agreement",
+      "fails closed when retained manifest digest is missing",
+      "rejects retained manifest mismatch and inter-record disagreement",
+      "rejects an unbound approved plan"
+    ]
+  },
+  "behavior": {
+    "promotion_allowed_only_when": "approved plan, retained manifest, and reconciliation bundle all carry valid sha256 bindings with identical digests",
+    "fail_closed_reasons_include": [
+      "approved_plan_not_bound",
+      "approved_plan_digest_invalid",
+      "retained_manifest_digest_invalid",
+      "reconciliation_bundle_digest_invalid",
+      "retained_manifest_digest_mismatch",
+      "reconciliation_bundle_digest_mismatch",
+      "retained_records_disagree"
+    ]
+  },
+  "claim_boundary": [
+    "This verifies digest agreement only.",
+    "It does not prove command execution, output authenticity, exhaustive provider coverage, deployment identity, browser behavior, audio audibility, or physical-device acceptance.",
+    "No Vercel deployment was requested or attempted.",
+    "No payment or conversion functionality was introduced."
+  ],
+  "rollback": "Revert commit de6a2e81c3dfee3a3ccad414274c423bb9fd1eea; the test and evidence records may remain as historical provenance."
+}
