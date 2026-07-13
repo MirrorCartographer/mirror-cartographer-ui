@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "recorded_at": "2026-07-13T12:26:00-04:00",
+  "queue_condition": {
+    "owned_item_present": false,
+    "handling": "bootstrap_projection_only",
+    "canonical_queue_overwritten": false
+  },
+  "creative_premise": "A self-contained browser instrument where pointer and keyboard gestures conduct a flock of ink marks and release optional synthesized tones.",
+  "identity_boundary": {
+    "independent_from_mirror_cartographer": true,
+    "prohibited_roles": [
+      "Mirror Cartographer explanation page",
+      "research portal",
+      "worker dashboard",
+      "product funnel",
+      "personal reflection collector"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "independent-web/IDENTITY.md",
+      "commit": "820b98f303a323c6516e7b8d80fc4aa763d62368"
+    },
+    {
+      "path": "independent-web/murmuration-desk.html",
+      "commit": "77515f02f81e4606e186e687e4a97d3f6399dd82"
+    },
+    {
+      "path": "independent-web/murmuration-desk.contract.test.mjs",
+      "commit": "6f6ad4b216bee0b275f344782a5a365683c9415e"
+    }
+  ],
+  "verification": {
+    "source_readback": true,
+    "readback_ref": "6f6ad4b216bee0b275f344782a5a365683c9415e",
+    "contract_test_committed": true,
+    "contract_test_executed": false,
+    "browser_execution": false,
+    "public_deployment": false
+  },
+  "accessibility": [
+    "keyboard conduction and pulse controls",
+    "explicit sound activation",
+    "persistent visual feedback when muted",
+    "reduced-motion stepped rendering",
+    "live status text",
+    "focus-visible control outline"
+  ],
+  "performance_controls": [
+    "devicePixelRatio capped at 2",
+    "reduced-motion flock size reduction",
+    "delta-time clamp",
+    "no network or media dependencies"
+  ],
+  "rollback": {
+    "method": "revert_commits_in_reverse_order",
+    "commits": [
+      "6f6ad4b216bee0b275f344782a5a365683c9415e",
+      "77515f02f81e4606e186e687e4a97d3f6399dd82",
+      "820b98f303a323c6516e7b8d80fc4aa763d62368"
+    ]
+  },
+  "limits": [
+    "No runtime test was executed in this connector-only run.",
+    "Repository presence is not evidence of public hosting.",
+    "Audio behavior remains unverified in Safari and on physical devices.",
+    "The canonical queue currently contains no independent_creative_web-owned item."
+  ]
+}
