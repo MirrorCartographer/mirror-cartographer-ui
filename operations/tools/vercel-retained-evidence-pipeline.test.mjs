@@ -47,7 +47,11 @@ function deployment(overrides = {}) {
   };
 }
 
-test('builds a manifest from retained bytes and authorizes only the deployment attempt', () => {
+function mutateArtifact(role, patch) {
+  return artifacts().map((artifact) => artifact.role === role ? { ...artifact, ...patch } : artifact);
+}
+
+test('builds a manifest from fresh retained bytes and authorizes only the deployment attempt', () => {
   const result = evaluateRetainedEvidenceDeploymentPipeline({ artifacts: artifacts(), deployment: deployment() });
   assert.equal(result.manifest.evidence_complete, true);
   assert.equal(result.reconciliation_verified, true);
@@ -55,6 +59,7 @@ test('builds a manifest from retained bytes and authorizes only the deployment a
   assert.equal(result.decision.application_build_allowed, true);
   assert.equal(result.deployment_claim_permitted, false);
   assert.equal(result.decision.deployment_claim_permitted, false);
+  assert.equal(result.evidence_freshness_window_ms, 15 * 60 * 1000);
 });
 
 test('recomputes digests from bytes rather than accepting caller-supplied digest claims', () => {
@@ -108,4 +113,32 @@ test('rejects malformed reconciliation bytes', () => {
     artifacts: artifacts({ reconciliation: '{bad' }),
     deployment: deployment()
   }), /reconciliation bytes must contain valid JSON/);
+});
+
+test('rejects stale retained evidence', () => {
+  assert.throws(() => evaluateRetainedEvidenceDeploymentPipeline({
+    artifacts: mutateArtifact('primary_raw', { captured_at: '2026-07-13T06:00:00.000Z' }),
+    deployment: deployment()
+  }), /primary_raw\.captured_at is stale/);
+});
+
+test('rejects future-dated retained evidence', () => {
+  assert.throws(() => evaluateRetainedEvidenceDeploymentPipeline({
+    artifacts: mutateArtifact('independent_raw', { captured_at: '2026-07-13T06:48:00.000Z' }),
+    deployment: deployment()
+  }), /independent_raw\.captured_at is future-dated/);
+});
+
+test('rejects method substitution', () => {
+  assert.throws(() => evaluateRetainedEvidenceDeploymentPipeline({
+    artifacts: mutateArtifact('independent_command', { method: 'copied-from-log' }),
+    deployment: deployment()
+  }), /independent_command\.method is not the approved acquisition method/);
+});
+
+test('rejects evidence paths outside the retained evidence namespace', () => {
+  assert.throws(() => evaluateRetainedEvidenceDeploymentPipeline({
+    artifacts: mutateArtifact('reconciliation', { path: '../reconciliation.json' }),
+    deployment: deployment()
+  }), /reconciliation\.path must remain under operations\/evidence/);
 });
