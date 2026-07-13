@@ -1,9 +1,20 @@
 #!/usr/bin/env node
 import { constants } from 'node:fs';
-import { open, unlink } from 'node:fs/promises';
+import { open, readFile, unlink } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { basename, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildRetainedWorkflowEvidence } from './retained-workflow-evidence-cli.mjs';
 import { verifyVercelRetainedPlanBinding } from '../../operations/tools/verify-vercel-retained-plan-binding.mjs';
+import { verifyRetainedEvidenceManifestSet } from '../../operations/tools/verify-retained-evidence-manifest-set.mjs';
+
+const CANONICAL_PATHS = Object.freeze({
+  primary: 'primary-enumeration.json',
+  'gh-pages': 'independent-pages.json',
+  'gh-command': 'independent-command.txt',
+  'bundle-output': 'reconciliation.json',
+  'manifest-output': 'evidence-bundle.json'
+});
 
 function parseArgs(argv) {
   const values = new Map();
@@ -49,6 +60,18 @@ function requirePlanBinding(approvedPlan) {
   return { algorithm, digest };
 }
 
+function requireCanonicalRetainedPaths(args) {
+  const root = resolve(args.get('retention-root'));
+  for (const [key, expectedName] of Object.entries(CANONICAL_PATHS)) {
+    const observed = resolve(args.get(key));
+    const expected = resolve(root, expectedName);
+    if (observed !== expected || basename(observed) !== expectedName) {
+      throw new Error(`retained_path_not_canonical:${key}`);
+    }
+  }
+  return root;
+}
+
 async function writePairNoOverwrite(entries) {
   const opened = [];
   try {
@@ -65,6 +88,25 @@ async function writePairNoOverwrite(entries) {
   await Promise.all(opened.map(([, handle]) => handle.close()));
 }
 
+async function sha256(path) {
+  const bytes = await readFile(path);
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+export async function verifyPersistedRetainedEvidenceSet({ retentionRoot, planBindingDigest }) {
+  const retainedOutputs = await Promise.all(
+    Object.values(CANONICAL_PATHS).map(async name => ({
+      path: resolve(retentionRoot, name),
+      sha256: await sha256(resolve(retentionRoot, name))
+    }))
+  );
+  return verifyRetainedEvidenceManifestSet({
+    retention_root: retentionRoot,
+    plan_binding_digest: planBindingDigest,
+    retained_outputs: retainedOutputs
+  });
+}
+
 export async function buildBoundRetainedEvidence({ approvedPlanPath, ...evidenceInputs }) {
   const approvedPlan = await readRegularJson(approvedPlanPath, 'approved_plan');
   const planBinding = requirePlanBinding(approvedPlan);
@@ -77,13 +119,14 @@ export async function buildBoundRetainedEvidence({ approvedPlanPath, ...evidence
     commit_sha: evidenceInputs.commitSha,
     generated_at: evidenceInputs.generatedAt,
     verified: reconciliationBundle.verified === true,
-    promotion_candidate: reconciliationBundle.verified === true,
+    promotion_candidate: false,
     plan_binding: planBinding,
     records: {
-      reconciliation_bundle: 'retained_workflow_evidence_bundle'
+      reconciliation_bundle: 'reconciliation.json'
     },
     claim_boundary: [
       'This manifest records a bound retained-evidence package only.',
+      'Promotion remains false until the complete canonical retained set passes path, regular-file, byte-digest, and plan-binding verification.',
       'It does not prove deployment identity, browser behavior, audio audibility, or physical-device acceptance.'
     ]
   };
@@ -94,18 +137,19 @@ export async function buildBoundRetainedEvidence({ approvedPlanPath, ...evidence
   }
   retainedManifest.binding_verification = bindingVerification;
   reconciliationBundle.binding_verification = bindingVerification;
-  return { retainedManifest, reconciliationBundle, bindingVerification };
+  return { retainedManifest, reconciliationBundle, bindingVerification, planBinding };
 }
 
 export async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   const required = [
-    'approved-plan', 'commit', 'primary', 'gh-pages', 'gh-command',
+    'approved-plan', 'retention-root', 'commit', 'primary', 'gh-pages', 'gh-command',
     'primary-retrieved-at', 'gh-retrieved-at', 'generated-at',
     'bundle-output', 'manifest-output'
   ];
   for (const key of required) if (!args.get(key)) throw new Error(`missing_argument:${key}`);
   if (args.get('bundle-output') === args.get('manifest-output')) throw new Error('output_paths_must_be_distinct');
+  const retentionRoot = requireCanonicalRetainedPaths(args);
 
   const result = await buildBoundRetainedEvidence({
     approvedPlanPath: args.get('approved-plan'),
@@ -118,10 +162,26 @@ export async function main(argv = process.argv.slice(2)) {
     generatedAt: args.get('generated-at')
   });
 
-  await writePairNoOverwrite([
-    [args.get('bundle-output'), result.reconciliationBundle],
-    [args.get('manifest-output'), result.retainedManifest]
-  ]);
+  const outputPaths = [args.get('bundle-output'), args.get('manifest-output')];
+  try {
+    await writePairNoOverwrite([
+      [outputPaths[0], result.reconciliationBundle],
+      [outputPaths[1], result.retainedManifest]
+    ]);
+    const manifestSetVerification = await verifyPersistedRetainedEvidenceSet({
+      retentionRoot,
+      planBindingDigest: result.planBinding.digest
+    });
+    if (manifestSetVerification.verified !== true) {
+      throw new Error(`retained_manifest_set_rejected:${manifestSetVerification.reason}`);
+    }
+    result.retainedManifest.promotion_candidate = result.reconciliationBundle.verified === true;
+    result.manifestSetVerification = manifestSetVerification;
+  } catch (error) {
+    await Promise.all(outputPaths.map(path => unlink(path).catch(() => {})));
+    throw error;
+  }
+
   if (result.reconciliationBundle.verified !== true) process.exitCode = 2;
   return result;
 }
