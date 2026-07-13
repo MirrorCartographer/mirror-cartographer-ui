@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-13T10:20:55Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "slice_state": "completed",
+  "summary": "Recorded the GitHub connector search-index boundary so zero-result searches cannot be misclassified as exhaustive absence evidence for M-004, M-005, or M-006.",
+  "completed": [
+    "Inspected canonical operating state, active queue, specialist registry, trigger ledger, and recent commits.",
+    "Confirmed that repository code search indexing is unavailable.",
+    "Executed bounded code, commit-message, and branch probes for M-004, M-005, and M-006.",
+    "Preserved observed, inferred, proposed, superseded, and unresolved claim states in CM-0023.",
+    "Maintained unresolved status and did not reconstruct or rename historical identifiers."
+  ],
+  "evidence": [
+    {
+      "path": "operations/continuity/records/CM-0023.json",
+      "commit": "02880e91f223c136fb6b38b2617eb6507719de33"
+    }
+  ],
+  "canonical_queue_mutated": false,
+  "acceptance_criteria_changed": false,
+  "specialist_registry_changed": false,
+  "privacy_boundary": "No private chat text, health data, pet-health data, credentials, or personal contact information persisted.",
+  "next_action": "Perform a retained exhaustive refs/tags/reachable-tree traversal and content grep, then bind coverage and results to immutable evidence before classifying any unresolved identifier as unlocated."
+}
