@@ -15,6 +15,12 @@ on:
       - 'tools/vercel-studio/retained-workflow-trigger-gate.test.mjs'
       - 'tools/frontier-research/workflow-trigger-expectation.mjs'
       - 'tools/frontier-research/workflow-trigger-expectation.test.mjs'
+      - 'operations/tools/vercel-evidence-packet-commit.mjs'
+      - 'operations/tools/read-vercel-evidence-packet.mjs'
+      - 'operations/tools/read-vercel-evidence-packet.test.mjs'
+      - 'operations/tools/vercel-commit-status-assessment.mjs'
+      - 'operations/tools/assess-verified-vercel-evidence-packet.mjs'
+      - 'operations/tools/assess-verified-vercel-evidence-packet.test.mjs'
   pull_request:
     paths:
       - '.github/workflows/vercel-retained-evidence-contract.yml'
@@ -28,6 +34,12 @@ on:
       - 'tools/vercel-studio/retained-workflow-trigger-gate.test.mjs'
       - 'tools/frontier-research/workflow-trigger-expectation.mjs'
       - 'tools/frontier-research/workflow-trigger-expectation.test.mjs'
+      - 'operations/tools/vercel-evidence-packet-commit.mjs'
+      - 'operations/tools/read-vercel-evidence-packet.mjs'
+      - 'operations/tools/read-vercel-evidence-packet.test.mjs'
+      - 'operations/tools/vercel-commit-status-assessment.mjs'
+      - 'operations/tools/assess-verified-vercel-evidence-packet.mjs'
+      - 'operations/tools/assess-verified-vercel-evidence-packet.test.mjs'
 
 permissions:
   contents: read
@@ -110,6 +122,20 @@ jobs:
           node --test tools/vercel-studio/retained-workflow-trigger-gate.test.mjs \
             2>&1 | tee "${TEST_LOG_DIR}/retained-workflow-trigger-gate.tap"
 
+      - name: Verify retained packet read boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test operations/tools/read-vercel-evidence-packet.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/read-vercel-evidence-packet.tap"
+
+      - name: Verify packet-bound status assessment
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test operations/tools/assess-verified-vercel-evidence-packet.test.mjs \
+            2>&1 | tee "${TEST_LOG_DIR}/assess-verified-vercel-evidence-packet.tap"
+
       - name: Record exact tested sources
         run: |
           printf '%s\n' "${GITHUB_SHA}" > vercel-retained-evidence-tested-commit.txt
@@ -126,15 +152,21 @@ jobs:
             tools/vercel-studio/retained-workflow-trigger-gate.test.mjs \
             tools/frontier-research/workflow-trigger-expectation.mjs \
             tools/frontier-research/workflow-trigger-expectation.test.mjs \
+            operations/tools/vercel-evidence-packet-commit.mjs \
+            operations/tools/read-vercel-evidence-packet.mjs \
+            operations/tools/read-vercel-evidence-packet.test.mjs \
+            operations/tools/vercel-commit-status-assessment.mjs \
+            operations/tools/assess-verified-vercel-evidence-packet.mjs \
+            operations/tools/assess-verified-vercel-evidence-packet.test.mjs \
             > vercel-retained-evidence-tested-sources.sha256
-          test "$(wc -l < vercel-retained-evidence-tested-sources.sha256)" -eq 11
+          test "$(wc -l < vercel-retained-evidence-tested-sources.sha256)" -eq 17
           sha256sum --check vercel-retained-evidence-tested-sources.sha256
 
       - name: Record retained test transcript digests
         run: |
-          test "$(find "${TEST_LOG_DIR}" -maxdepth 1 -type f -name '*.tap' | wc -l)" -eq 5
+          test "$(find "${TEST_LOG_DIR}" -maxdepth 1 -type f -name '*.tap' | wc -l)" -eq 7
           sha256sum "${TEST_LOG_DIR}"/*.tap > vercel-retained-evidence-test-transcripts.sha256
-          test "$(wc -l < vercel-retained-evidence-test-transcripts.sha256)" -eq 5
+          test "$(wc -l < vercel-retained-evidence-test-transcripts.sha256)" -eq 7
           sha256sum --check vercel-retained-evidence-test-transcripts.sha256
 
       - name: Upload commit-bound test record
