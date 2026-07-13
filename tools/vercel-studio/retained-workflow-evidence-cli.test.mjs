@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildRetainedWorkflowEvidence, main } from './retained-workflow-evidence-cli.mjs';
@@ -133,5 +133,39 @@ test('rejects a bundle generation time that precedes either retained source', as
       generatedAt: '2026-07-13T00:02:00Z'
     }),
     /generated_at_precedes_source_retrieval/
+  );
+});
+
+test('rejects retained source aliases that resolve to the same file', async () => {
+  const paths = await fixture();
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({
+      commitSha,
+      primaryPath: paths.primary,
+      ghPagesPath: paths.primary,
+      ghCommandPath: paths.ghCommand,
+      primaryRetrievedAt: '2026-07-13T00:00:00Z',
+      ghRetrievedAt: '2026-07-13T00:01:00Z',
+      generatedAt: '2026-07-13T00:02:00Z'
+    }),
+    /retained_source_paths_not_distinct/
+  );
+});
+
+test('rejects symbolic links as retained evidence sources', async () => {
+  const paths = await fixture();
+  const linkedPrimary = `${paths.primary}.link`;
+  await symlink(paths.primary, linkedPrimary);
+  await assert.rejects(
+    () => buildRetainedWorkflowEvidence({
+      commitSha,
+      primaryPath: linkedPrimary,
+      ghPagesPath: paths.ghPages,
+      ghCommandPath: paths.ghCommand,
+      primaryRetrievedAt: '2026-07-13T00:00:00Z',
+      ghRetrievedAt: '2026-07-13T00:01:00Z',
+      generatedAt: '2026-07-13T00:02:00Z'
+    }),
+    /primary_symlink_rejected/
   );
 });
