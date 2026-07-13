@@ -19,8 +19,8 @@ const base = {
     queue_item: 'V-001',
     target_commit: commit,
     receipt_chain_locked: true,
-    pipeline_source_bindings: [{ path: 'pipeline.mjs', blob_sha: 'd'.repeat(40) }],
-    verifier_source_bindings: [{ path: 'verifier.mjs', blob_sha: 'e'.repeat(40) }],
+    pipeline_source_bindings: [{ path: 'operations/tools/pipeline.mjs', blob_sha: 'd'.repeat(40) }],
+    verifier_source_bindings: [{ path: 'operations/tools/verifier.mjs', blob_sha: 'e'.repeat(40) }],
     application_deployment_attempted: false,
     deployment_claim_permitted: false
   }
@@ -31,6 +31,7 @@ test('creates a composite receipt bound to one exact commit', () => {
   assert.equal(result.retained_evidence_chain_verified, true);
   assert.equal(result.target_commit, commit);
   assert.equal(result.deployment_claim_permitted, false);
+  assert.deepEqual(result.pipeline_source_bindings, base.chain_lock.pipeline_source_bindings);
 });
 
 test('rejects commit divergence', () => {
@@ -60,4 +61,55 @@ test('rejects missing bindings and authority escalation', () => {
     ...base,
     pipeline_receipt: { ...base.pipeline_receipt, deployment_claim_permitted: true }
   }), /deployment claim authority exceeded/);
+});
+
+test('rejects unsafe or non-normalized repository paths', () => {
+  for (const path of ['/absolute.mjs', '../escape.mjs', 'ops//tool.mjs', 'ops\\tool.mjs']) {
+    assert.throws(() => bindRetainedEvidenceChainReceipt({
+      ...base,
+      chain_lock: {
+        ...base.chain_lock,
+        pipeline_source_bindings: [{ path, blob_sha: 'd'.repeat(40) }]
+      }
+    }), /repository-relative|normalized/);
+  }
+});
+
+test('rejects invalid blob shas and duplicate source paths', () => {
+  assert.throws(() => bindRetainedEvidenceChainReceipt({
+    ...base,
+    chain_lock: {
+      ...base.chain_lock,
+      verifier_source_bindings: [{ path: 'operations/tools/verifier.mjs', blob_sha: 'not-a-sha' }]
+    }
+  }), /invalid verifier source bindings\[0\] blob sha/);
+
+  assert.throws(() => bindRetainedEvidenceChainReceipt({
+    ...base,
+    chain_lock: {
+      ...base.chain_lock,
+      pipeline_source_bindings: [
+        { path: 'operations/tools/pipeline.mjs', blob_sha: 'd'.repeat(40) },
+        { path: 'operations/tools/pipeline.mjs', blob_sha: 'f'.repeat(40) }
+      ]
+    }
+  }), /duplicate path/);
+});
+
+test('drops unverified source-binding fields from the composite receipt', () => {
+  const result = bindRetainedEvidenceChainReceipt({
+    ...base,
+    chain_lock: {
+      ...base.chain_lock,
+      pipeline_source_bindings: [{
+        path: 'operations/tools/pipeline.mjs',
+        blob_sha: 'd'.repeat(40),
+        claimed_role: 'trusted-without-proof'
+      }]
+    }
+  });
+  assert.deepEqual(result.pipeline_source_bindings, [{
+    path: 'operations/tools/pipeline.mjs',
+    blob_sha: 'd'.repeat(40)
+  }]);
 });
