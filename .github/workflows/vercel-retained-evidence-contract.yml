@@ -1,0 +1,70 @@
+name: Vercel retained evidence contract
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/vercel-retained-evidence-contract.yml'
+      - 'tools/vercel-studio/retained-workflow-evidence-cli.mjs'
+      - 'tools/vercel-studio/retained-workflow-evidence-cli.test.mjs'
+      - 'tools/vercel-studio/gh-envelope-bundle-adapter.mjs'
+      - 'tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs'
+      - 'tools/vercel-studio/workflow-evidence-bundle.mjs'
+      - 'tools/vercel-studio/workflow-evidence-bundle.test.mjs'
+  pull_request:
+    paths:
+      - '.github/workflows/vercel-retained-evidence-contract.yml'
+      - 'tools/vercel-studio/retained-workflow-evidence-cli.mjs'
+      - 'tools/vercel-studio/retained-workflow-evidence-cli.test.mjs'
+      - 'tools/vercel-studio/gh-envelope-bundle-adapter.mjs'
+      - 'tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs'
+      - 'tools/vercel-studio/workflow-evidence-bundle.mjs'
+      - 'tools/vercel-studio/workflow-evidence-bundle.test.mjs'
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  retained-evidence-contract:
+    name: Retained evidence contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact workflow commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify retained evidence CLI and provenance boundaries
+        run: node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs
+
+      - name: Verify gh envelope adapter
+        run: node --test tools/vercel-studio/gh-envelope-bundle-adapter.test.mjs
+
+      - name: Verify tamper-evident workflow bundle
+        run: node --test tools/vercel-studio/workflow-evidence-bundle.test.mjs
+
+      - name: Record tested commit
+        run: |
+          printf '%s\n' "${GITHUB_SHA}" > vercel-retained-evidence-tested-commit.txt
+          test "$(cat vercel-retained-evidence-tested-commit.txt)" = "${GITHUB_SHA}"
+
+      - name: Upload commit-bound test record
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-retained-evidence-contract-${{ github.sha }}
+          path: vercel-retained-evidence-tested-commit.txt
+          if-no-files-found: error
+          retention-days: 30
