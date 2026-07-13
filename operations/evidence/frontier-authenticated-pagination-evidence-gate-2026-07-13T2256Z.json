@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-024",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T22:56:00Z",
+  "finding": "Authenticated transport binding must be preceded by page-link continuity verification for both enumeration methods; terminality and count agreement alone do not prove that retained pages form the traversed chain.",
+  "source_status": {
+    "repository_sources": [
+      "tools/frontier-research/pagination-chain-integrity.mjs",
+      "tools/frontier-research/authenticated-evidence-transport-binding.mjs",
+      "operations/ACTIVE_QUEUE.json"
+    ],
+    "external_primary_source": "GitHub REST pagination semantics previously retained by R-022",
+    "fresh_web_research_required": false
+  },
+  "implementation": {
+    "module": "tools/frontier-research/authenticated-pagination-evidence-gate.mjs",
+    "test": "tools/frontier-research/authenticated-pagination-evidence-gate.test.mjs",
+    "execution": "node --test authenticated-pagination-evidence-gate.test.mjs",
+    "result": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    }
+  },
+  "evidence_strength": "deterministic_unit_verified",
+  "uncertainty": [
+    "No authenticated private-repository enumeration was executed.",
+    "No response-body authenticity or semantic completeness is established.",
+    "No provider-wide absence, deployment identity, browser, or device behavior is established."
+  ],
+  "falsification_route": [
+    "Disconnect a retained next_url from the following request_url.",
+    "Replay a prior request_url.",
+    "Insert a credential-bearing pagination URL.",
+    "Alter a receipt raw-output digest after chain validation."
+  ],
+  "claim_boundary": {
+    "proves_page_link_continuity": true,
+    "proves_transport_provenance_when_binding_passes": true,
+    "proves_semantic_completeness": false,
+    "proves_provider_absence": false,
+    "proves_deployment_identity": false
+  },
+  "commits": {
+    "module": "c19153c1cc63a0e734b7515d4b013502e36094dd",
+    "test": "eb6e43b65ca827bb304857083d4aacfeee22ee76"
+  },
+  "privacy": "No credentials, private response bodies, chat content, or personal identifiers retained.",
+  "history_deleted": false,
+  "canonical_queue_overwritten": false
+}
