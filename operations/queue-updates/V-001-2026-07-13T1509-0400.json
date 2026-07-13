@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T15:09:59-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed retained-output digest gate that requires raw manifests and reconciliation bundles to declare the same non-empty path-bound SHA-256 set before evidence promotion.",
+  "evidence": "operations/evidence/vercel-retained-output-digest-gate-2026-07-13T1509-0400.json",
+  "commits": [
+    "abe007e33635b028ac6784f67807414896254647",
+    "bc530eefd20500bef7b7813f77ffe1ca2872b599",
+    "fbf6b9d34d253dfa2d2b8dc99b2d0a3eeacfe46d"
+  ],
+  "acceptance_remaining": [
+    "Hash the retained raw files at execution time and populate the manifest from those bytes rather than caller declarations.",
+    "Execute authenticated all-event pagination for an exact commit with both clients and retain raw outputs plus reconciliation.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Integrate execution-time SHA-256 calculation into the no-overwrite retained-evidence CLI, then require this gate after hashing and before reconciliation promotion; do not create an application deployment while capacity remains exhausted."
+}
