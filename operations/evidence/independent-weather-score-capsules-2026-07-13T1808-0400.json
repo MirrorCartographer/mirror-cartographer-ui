@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "ICW-003",
+  "creative_premise": "Weather compositions become portable capsules carried entirely in the URL fragment, with no account, analytics, server storage, or product funnel.",
+  "specialists_used": [
+    "Creative Direction",
+    "Experimental Interaction Design",
+    "Typography",
+    "Accessibility Review",
+    "Performance Architecture",
+    "Privacy Boundary Review"
+  ],
+  "artifact_commit": "3f62f0682a04f85c390879a81ed8c8977064f336",
+  "codec_commit": "6ffaf36cc186da5b98624197fb88157140c449f6",
+  "contract_commit": "083a7aaf88d2cbd058bdce98231f91cae9426ec4",
+  "verification": {
+    "local_node_contract": "6 passed, 0 failed",
+    "committed_contract_refetched": true,
+    "browser_runtime_claimed": false,
+    "public_deployment_claimed": false
+  },
+  "independence_boundary": [
+    "No Mirror Cartographer concepts or workflows",
+    "No research or dashboard surface",
+    "No authentication, analytics, conversion, or payment logic",
+    "No personal data leaves the browser"
+  ],
+  "rollback": "Revert commits 3f62f0682a04f85c390879a81ed8c8977064f336, 083a7aaf88d2cbd058bdce98231f91cae9426ec4, and 6ffaf36cc186da5b98624197fb88157140c449f6.",
+  "limits": [
+    "No retained browser screenshot was produced in this run.",
+    "Clipboard behavior and URL restoration were not verified in a real browser.",
+    "No hosting or deployment claim is made."
+  ]
+}
