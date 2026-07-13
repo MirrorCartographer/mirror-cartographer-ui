@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T17:24:00Z",
+  "update_type": "additive_handoff_improvement",
+  "state": "completed_handoff_ready",
+  "durable_improvement": "Added a fail-closed, source-freshness-aware workflow-run query contract that binds exact commit, explicit current API version, official-source check date, per_page=100, all-page gh pagination and slurp intent, and rejection of event/status/branch narrowing before an independent traversal can enter reconciliation.",
+  "files": [
+    "operations/research/github-workflow-run-query-contract.mjs",
+    "operations/research/github-workflow-run-query-contract.test.mjs",
+    "operations/evidence/frontier-workflow-run-query-contract-2026-07-13T1324-0400.json"
+  ],
+  "commits": [
+    "715f1e0054e0a22ec716dd02bcf34fa073e34c4d",
+    "92a6c0b5925e45163d255ea86dd6f8e93e952cc1",
+    "bc2f840b224f6a4eebae9d2a280586b445979c47"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "runtime": "isolated Node test execution before commit"
+  },
+  "acceptance_remaining": [
+    "Execute the authenticated repository enumerator for one exact commit.",
+    "Execute the newly contract-validated gh api --paginate --slurp traversal for the same commit.",
+    "Retain raw outputs, source-contract result, reconciliation result, and provider-ceiling state.",
+    "Do not promote evidence when source freshness is stale, traversal is incomplete, enumerations diverge, or the 1000-result ceiling is ambiguous."
+  ],
+  "safe_next_action": "Integrate assessWorkflowRunQueryContract ahead of the existing gh paginated-envelope constructor, then execute both authenticated clients against one exact commit and retain the source-contract, raw pages, envelopes, reconciliation, and downstream assessment as separate immutable evidence objects.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
