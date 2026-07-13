@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/R-021-retained-evidence-manifest.schema.json",
+  "title": "R-021 Retained Evidence Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "queue_item",
+    "commit_sha",
+    "execution_status",
+    "provider_ceiling_ambiguous",
+    "primary",
+    "independent",
+    "reconciliation",
+    "outputs"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "queue_item": { "const": "R-021" },
+    "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "execution_status": { "const": "complete" },
+    "provider_ceiling_ambiguous": { "const": false },
+    "primary": { "$ref": "#/$defs/enumeration" },
+    "independent": { "$ref": "#/$defs/enumeration" },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verified", "commit_sha"],
+      "properties": {
+        "verified": { "const": true },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "independent", "command", "reconciliation"],
+      "properties": {
+        "primary": { "$ref": "#/$defs/output" },
+        "independent": { "$ref": "#/$defs/output" },
+        "command": { "$ref": "#/$defs/output" },
+        "reconciliation": { "$ref": "#/$defs/output" }
+      }
+    }
+  },
+  "$defs": {
+    "enumeration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["complete", "commit_sha"],
+      "properties": {
+        "complete": { "const": true },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes", "overwrite_allowed"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^operations/evidence/raw/[A-Za-z0-9._/-]+$"
+        },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "overwrite_allowed": { "const": false }
+      }
+    }
+  }
+}
