@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T00:33:00-04:00",
+  "finding": "The immutable-action pinning commit f61bb515c59dd6e77ec9eded1b2be8c8a38e6163 has no connector-observed workflow runs, so retained-evidence promotion remains fail-closed.",
+  "implementation": {
+    "module": "tools/vercel-studio/retained-workflow-trigger-gate.mjs",
+    "test": "tools/vercel-studio/retained-workflow-trigger-gate.test.mjs",
+    "source_contract": "tools/frontier-research/workflow-trigger-expectation.mjs",
+    "module_commit": "c63d4600b690fdb8bdf1101022645cd9701d0e78",
+    "test_commit": "f556440d98725d0e1f47c325214c6901d56f3395"
+  },
+  "verification": {
+    "runtime": "node --test tools/vercel-studio/retained-workflow-trigger-gate.test.mjs",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "coverage": [
+      "expected exact-commit run accepted only with complete enumeration",
+      "expected run absence fails closed",
+      "incomplete enumeration fails closed",
+      "cross-commit run rejected",
+      "duplicate run identifier rejected"
+    ],
+    "workflow_run_observation": {
+      "commit_sha": "f61bb515c59dd6e77ec9eded1b2be8c8a38e6163",
+      "connector_result_count": 0,
+      "claim": "No run was observed through the available connector call; exhaustive absence is not claimed."
+    }
+  },
+  "deployment_claim": false,
+  "physical_device_claim": false,
+  "payments_added_to_vercel": false,
+  "files_deleted": false,
+  "rollback": "Revert commits f556440d98725d0e1f47c325214c6901d56f3395 and c63d4600b690fdb8bdf1101022645cd9701d0e78 without deleting history.",
+  "limits": [
+    "The connector workflow-run query returned zero records but is not treated as exhaustive enumeration.",
+    "The gate is implemented and locally tested but not yet wired into the retained-evidence workflow.",
+    "No immutable Vercel deployment identity or physical iPhone Safari audibility evidence was produced."
+  ]
+}
