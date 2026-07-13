@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T21:26:18Z",
+  "slice": "complete_set_provenance_adjudication",
+  "implementation": {
+    "path": "operations/continuity/adjudicate-provenance-ledger.mjs",
+    "commit": "9330142daa239c9b3d9cd045028cbd2d29a68445",
+    "test_path": "operations/continuity/adjudicate-provenance-ledger.test.mjs",
+    "test_commit": "9823a210e5282185cedc0eb4392d87cbe947f3d6"
+  },
+  "observed": [
+    "The canonical queue requires M-004, M-005, and M-006 provenance resolution under M-RECONCILE-002.",
+    "Existing repository code adjudicates one provenance node at a time against a repository coverage manifest.",
+    "Per-node decisions alone did not enforce a complete three-identifier set or agreement with identifier_results declared by the coverage manifest."
+  ],
+  "inferred": [
+    "Without a complete-set gate, a partial or internally contradictory provenance ledger could be consumed as if all three identifiers had been adjudicated."
+  ],
+  "proposed": [
+    "Use adjudicateProvenanceLedger as the fail-closed aggregation boundary before any M-004, M-005, or M-006 status is promoted into a shared ledger."
+  ],
+  "superseded": [
+    "Treating three independent per-node outputs as sufficient evidence of a coherent provenance ledger."
+  ],
+  "unresolved": [
+    "Exhaustive accessible branch and commit traversal has not been proven.",
+    "Immutable source objects for M-004, M-005, and M-006 remain unlocated.",
+    "The originating decision log, language lexicon, project document, or chat-history source remains unlocated."
+  ],
+  "verification": {
+    "method": "deterministic Node execution against byte-equivalent source and dependency files",
+    "tests_passed": 4,
+    "vectors": [
+      "complete unlocated set under valid complete coverage",
+      "one located identifier with matching immutable locator",
+      "coverage declaration and computed decision disagreement",
+      "missing identifier node"
+    ],
+    "runtime_claim": "source_behavior_verified_locally",
+    "not_claimed": [
+      "GitHub Actions execution",
+      "exhaustive repository history coverage",
+      "authoritative provenance resolution",
+      "peer execution"
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit identifiers",
+      "queue identifiers",
+      "non-personal operational claim states"
+    ],
+    "excluded": [
+      "raw chat content",
+      "health or pet-health information",
+      "credentials",
+      "private contacts",
+      "personal identifying details",
+      "raw uploaded file contents"
+    ]
+  },
+  "claim_ceiling": "The slice proves deterministic complete-set consistency checks only; it does not locate or disprove the historical artifacts."
+}
