@@ -2,6 +2,10 @@ import { access, readFile, unlink, writeFile } from 'node:fs/promises';
 import { constants as fsConstants } from 'node:fs';
 import { buildFreshEvidenceReceipt } from './vercel-fresh-evidence-receipt.mjs';
 import { buildEvidenceSubjectManifest } from '../research/evidence-subject-manifest.mjs';
+import {
+  buildPacketCommitMarker,
+  verifyCommittedPacket
+} from './vercel-evidence-packet-commit.mjs';
 
 async function assertMissing(path, reason) {
   try {
@@ -37,6 +41,7 @@ export async function writeVercelEvidencePacket({
   receipt_request,
   receipt_output_path,
   manifest_output_path,
+  packet_commit_output_path,
   subject_names
 }) {
   assertNonEmptyString(repository, 'repository');
@@ -44,6 +49,7 @@ export async function writeVercelEvidencePacket({
   assertNonEmptyString(generated_at, 'generated_at');
   assertNonEmptyString(receipt_output_path, 'receipt_output_path');
   assertNonEmptyString(manifest_output_path, 'manifest_output_path');
+  assertNonEmptyString(packet_commit_output_path, 'packet_commit_output_path');
   if (!receipt_request || typeof receipt_request !== 'object' || Array.isArray(receipt_request)) {
     throw new Error('receipt_request_missing');
   }
@@ -53,12 +59,14 @@ export async function writeVercelEvidencePacket({
 
   await Promise.all([
     assertMissing(receipt_output_path, 'receipt_output_exists'),
-    assertMissing(manifest_output_path, 'manifest_output_exists')
+    assertMissing(manifest_output_path, 'manifest_output_exists'),
+    assertMissing(packet_commit_output_path, 'packet_commit_output_exists')
   ]);
 
   const receipt = await buildFreshEvidenceReceipt(receipt_request);
   const receiptText = `${JSON.stringify(receipt, null, 2)}\n`;
   let receiptWritten = false;
+  let manifestWritten = false;
 
   try {
     await writeFile(receipt_output_path, receiptText, {
@@ -90,26 +98,54 @@ export async function writeVercelEvidencePacket({
       encoding: 'utf8',
       flag: fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_WRONLY
     });
+    manifestWritten = true;
     const retainedManifest = await verifyRetainedText(
       manifest_output_path,
       manifestText,
       'manifest_retained_bytes_mismatch'
     );
 
+    const packetCommit = buildPacketCommitMarker({
+      repository,
+      source_commit_sha,
+      committed_at: generated_at,
+      receipt_path: receipt_output_path,
+      receipt_text: receiptText,
+      manifest_path: manifest_output_path,
+      manifest_text: manifestText
+    });
+    const packetCommitText = `${JSON.stringify(packetCommit, null, 2)}\n`;
+    await writeFile(packet_commit_output_path, packetCommitText, {
+      encoding: 'utf8',
+      flag: fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_WRONLY
+    });
+    const retainedPacketCommit = await verifyRetainedText(
+      packet_commit_output_path,
+      packetCommitText,
+      'packet_commit_retained_bytes_mismatch'
+    );
+    const committedPacketVerification = await verifyCommittedPacket({
+      marker_path: packet_commit_output_path
+    });
+
     return Object.freeze({
       receipt,
       manifest,
+      packet_commit: packetCommit,
       retained_verification: Object.freeze({
         receipt: retainedReceipt,
-        manifest: retainedManifest
+        manifest: retainedManifest,
+        packet_commit: retainedPacketCommit
       }),
-      claim_ceiling: 'artifact identity and byte integrity only; workflow outcome, runtime, deployment, audio audibility, and human observation remain unproven',
+      committed_packet_verification: committedPacketVerification,
+      claim_ceiling: 'artifact identity, exact-byte integrity, and complete-packet publication only; workflow outcome, runtime, deployment, audio audibility, and human observation remain unproven',
       deployment_claim_permitted: false,
       application_deployment_attempted: false
     });
   } catch (error) {
+    await removeIfPresent(packet_commit_output_path);
+    if (manifestWritten) await removeIfPresent(manifest_output_path);
     if (receiptWritten) await removeIfPresent(receipt_output_path);
-    await removeIfPresent(manifest_output_path);
     throw error;
   }
 }
