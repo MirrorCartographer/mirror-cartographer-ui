@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-13T00:00:00-04:00",
+  "change_commit": "f61bb515c59dd6e77ec9eded1b2be8c8a38e6163",
+  "slice": "Pin all external actions in the retained-evidence workflow to full commit SHAs and fail closed when a mutable action reference is introduced.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "workflow": ".github/workflows/vercel-retained-evidence-contract.yml",
+  "pinned_actions": [
+    {
+      "action": "actions/checkout",
+      "commit": "11bd71901bbe5b1630ceea73d27597364c9af683",
+      "annotated_release": "v4.2.2"
+    },
+    {
+      "action": "actions/setup-node",
+      "commit": "49933ea5288caeca8642d1e84afbd3f7d6820020",
+      "annotated_release": "v4.4.0"
+    },
+    {
+      "action": "actions/upload-artifact",
+      "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "annotated_release": "v4.6.2"
+    }
+  ],
+  "verification": {
+    "source_fetch": "The workflow was fetched from the exact change commit and all three uses references were observed as 40-character lowercase hexadecimal SHAs.",
+    "regression_gate": "The workflow now scans every uses reference in itself and exits nonzero unless the reference is a full 40-character lowercase hexadecimal commit SHA.",
+    "workflow_runs_observed": 0,
+    "runtime_claim": "not_observed"
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "Operations-only provenance hardening while Vercel build capacity and immutable deployment identity remain unresolved."
+  },
+  "limits": [
+    "No GitHub Actions run was observed for the change commit, so successful workflow execution is not claimed.",
+    "A pinned action commit narrows supply-chain mutability but does not independently prove the upstream commit is benign.",
+    "No Vercel deployment or physical iPhone Safari audio verification occurred."
+  ],
+  "rollback": "Revert commit f61bb515c59dd6e77ec9eded1b2be8c8a38e6163 without rewriting history."
+}
