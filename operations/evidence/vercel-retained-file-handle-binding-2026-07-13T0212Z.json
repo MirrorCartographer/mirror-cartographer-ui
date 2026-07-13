@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T02:12:00Z",
+  "slice": "Bind retained workflow evidence inputs to open file descriptors before reading.",
+  "finding": "Path validation followed by later path-based reads left a time-of-check/time-of-use gap. A retained source could theoretically be replaced after validation but before parsing.",
+  "implementation": {
+    "source_commit": "ba5c45a25de393428a0b375bb76063fc9fee64e4",
+    "test_commit": "483ce0d959308f8cb18d3ac122b25e76a1dfa050",
+    "behavior": [
+      "Open each retained input with O_RDONLY | O_NOFOLLOW.",
+      "Reject symbolic links at open time.",
+      "Require each opened descriptor to reference a regular file.",
+      "Compare device and inode identities and reject duplicate or hard-linked source files.",
+      "Read JSON and command text from the already-open descriptors.",
+      "Close all descriptors on success and failure."
+    ]
+  },
+  "verification": {
+    "committed_tests": [
+      "verified matching exhaustive outputs",
+      "non-exhaustive command failure",
+      "no-overwrite output behavior",
+      "duplicate argument rejection",
+      "timestamp validation",
+      "same-file argument rejection",
+      "hard-link alias rejection",
+      "symbolic-link rejection"
+    ],
+    "github_actions_runs_for_test_commit": 0,
+    "local_checkout_attempt": {
+      "result": "not_executed",
+      "reason": "runtime could not resolve github.com, so an authenticated or public clone was unavailable"
+    },
+    "evidence_level": "committed implementation and deterministic test specification; CI execution unobserved"
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "Vercel provider capacity remains recorded as exhausted and this slice is operations-only provenance hardening"
+  },
+  "rollback": {
+    "method": "revert commits without rewriting history",
+    "commits": [
+      "483ce0d959308f8cb18d3ac122b25e76a1dfa050",
+      "ba5c45a25de393428a0b375bb76063fc9fee64e4"
+    ]
+  },
+  "limits": [
+    "No GitHub Actions execution was observed for the test commit.",
+    "No Vercel deployment or physical-device verification was attempted.",
+    "Device and inode identity is process-local filesystem evidence, not cryptographic content identity."
+  ]
+}
