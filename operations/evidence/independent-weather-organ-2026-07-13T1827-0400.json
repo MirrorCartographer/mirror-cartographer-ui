@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "ICW-001",
+  "recorded_at": "2026-07-13T18:27:00-04:00",
+  "creative_premise": "A solitary browser instrument that behaves like a small climate: pointer and keyboard movement alter pressure, wind, light, and an explicitly activated procedural tone.",
+  "commits": {
+    "identity": "4d4a19326958baabad29f7ace2e1d315d26c4566",
+    "artwork": "e09f801a05f550517355aab84d3a5ff11f974115",
+    "contract_test": "e6ac6e4e64df9bd1e92a3fa6530a8637968ebcfa"
+  },
+  "verification": {
+    "committed_source_fetch": {
+      "ref": "e6ac6e4e64df9bd1e92a3fa6530a8637968ebcfa",
+      "blob_sha": "38b9cd47e3df92721ef1d36a70f814066ab9f037",
+      "observed_contracts": [
+        "single self-contained HTML document",
+        "no external script or stylesheet dependency",
+        "pointer and arrow-key interaction",
+        "audio starts only after button activation",
+        "aria-live reading and aria-pressed state",
+        "reduced-motion and reduced-transparency fallbacks",
+        "no storage, analytics, account, payment, or conversion surface"
+      ]
+    },
+    "local_contract_harness": {
+      "result": "4 passed, 0 failed",
+      "scope": "contract-equivalent reconstruction because the automation container could not resolve github.com",
+      "limitation": "not an execution of the exact committed file checkout"
+    }
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "Current project state prohibits application deployment attempts while Vercel build capacity is exhausted.",
+    "public_url_claimed": false
+  },
+  "independence": {
+    "mirror_cartographer_reference": false,
+    "research_portal": false,
+    "worker_dashboard": false,
+    "product_funnel": false
+  },
+  "rollback": [
+    "Revert the evidence and queue-update commits first.",
+    "Revert e6ac6e4e64df9bd1e92a3fa6530a8637968ebcfa.",
+    "Revert e09f801a05f550517355aab84d3a5ff11f974115.",
+    "Revert 4d4a19326958baabad29f7ace2e1d315d26c4566."
+  ]
+}
