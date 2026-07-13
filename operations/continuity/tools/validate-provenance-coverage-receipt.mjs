@@ -9,7 +9,14 @@ export function validateCoverageReceipt(receipt) {
   if (receipt.schema_version !== 1) errors.push('schema_version must equal 1');
   if (!/^CM-COVERAGE-[0-9]{4,}$/.test(receipt.receipt_id ?? '')) errors.push('receipt_id is invalid');
   if (receipt.repository !== 'MirrorCartographer/mirror-cartographer-ui') errors.push('repository is invalid');
-  if (!Array.isArray(receipt.target_identifiers) || receipt.target_identifiers.length === 0 || receipt.target_identifiers.some(id => !/^M-[0-9]{3}$/.test(id))) errors.push('target_identifiers are invalid');
+  if (typeof receipt.generated_at !== 'string' || Number.isNaN(Date.parse(receipt.generated_at))) errors.push('generated_at must be an ISO-8601 timestamp');
+
+  const targets = receipt.target_identifiers;
+  if (!Array.isArray(targets) || targets.length === 0 || targets.some(id => !/^M-[0-9]{3}$/.test(id))) {
+    errors.push('target_identifiers are invalid');
+  } else if (new Set(targets).size !== targets.length) {
+    errors.push('target_identifiers must be unique');
+  }
 
   const coverage = receipt.coverage_result;
   if (!['complete','incomplete','complete_with_declared_exclusions'].includes(coverage)) errors.push('coverage_result is invalid');
@@ -18,8 +25,10 @@ export function validateCoverageReceipt(receipt) {
   if (!Array.isArray(receipt.known_exclusions)) errors.push('known_exclusions must be an array');
   if (!Array.isArray(receipt.claim_transitions) || receipt.claim_transitions.length === 0) errors.push('claim_transitions must be a non-empty array');
 
+  const transitionIds = [];
   for (const transition of receipt.claim_transitions ?? []) {
     if (!/^M-[0-9]{3}$/.test(transition.identifier ?? '')) errors.push('claim transition identifier is invalid');
+    else transitionIds.push(transition.identifier);
     if (!['unresolved','located','unlocated'].includes(transition.next_status)) errors.push(`invalid next_status for ${transition.identifier ?? 'unknown'}`);
     if (coverage === 'incomplete' && transition.next_status !== 'unresolved') errors.push(`incomplete coverage requires unresolved status for ${transition.identifier}`);
     if (transition.next_status === 'located' && !transition.immutable_locator) errors.push(`located transition requires immutable_locator for ${transition.identifier}`);
@@ -28,6 +37,18 @@ export function validateCoverageReceipt(receipt) {
       if (receipt.ref_inventory?.complete !== true) errors.push(`unlocated transition requires complete ref inventory for ${transition.identifier}`);
       if (receipt.history_traversal?.complete !== true) errors.push(`unlocated transition requires complete history traversal for ${transition.identifier}`);
       if ((receipt.known_exclusions ?? []).length !== 0) errors.push(`unlocated transition forbids known exclusions for ${transition.identifier}`);
+    }
+  }
+
+  if (transitionIds.length > 0) {
+    if (new Set(transitionIds).size !== transitionIds.length) errors.push('claim transition identifiers must be unique');
+    if (Array.isArray(targets) && targets.every(id => /^M-[0-9]{3}$/.test(id))) {
+      const targetSet = new Set(targets);
+      const transitionSet = new Set(transitionIds);
+      const missing = [...targetSet].filter(id => !transitionSet.has(id));
+      const extraneous = [...transitionSet].filter(id => !targetSet.has(id));
+      if (missing.length > 0) errors.push(`claim transitions missing targets: ${missing.sort().join(', ')}`);
+      if (extraneous.length > 0) errors.push(`claim transitions include undeclared targets: ${extraneous.sort().join(', ')}`);
     }
   }
 
