@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T17:19:07Z",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Prevent unsupported or unverifiable producer-attestation rollout by enforcing the documented GitHub repository-visibility and account-plan boundary.",
+  "completed_slice": "Added a fail-closed artifact-attestation eligibility preflight and six deterministic boundary tests. The target repository is private, so unknown account-plan status is blocked rather than inferred eligible.",
+  "specialists_used": [
+    "Primary-source Scout",
+    "Technical Synthesis Engineer",
+    "Experiment Designer",
+    "Tool Evaluator",
+    "Cross-domain Translator",
+    "Falsification Planner",
+    "Implementation Handoff Engineer"
+  ],
+  "registry_change": null,
+  "files": [
+    "operations/research/github-attestation-eligibility.mjs",
+    "operations/research/github-attestation-eligibility.test.mjs",
+    "operations/evidence/frontier-attestation-eligibility-2026-07-13T1319-0400.json"
+  ],
+  "commits": [
+    "e2e9e08b8c8e465a89cec70657cd1f1d040773ca",
+    "e09a0ad5feb3395da79e30021ab5830e52fdf389",
+    "4148d3f497e1054419cc2a99133e542d003d9477"
+  ],
+  "verification": {
+    "command": "node --test github-attestation-eligibility.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "scope": "isolated Node execution against exact contract logic"
+  },
+  "design_implication": "Do not add actions/attest or claim producer authentication until private-repository eligibility is independently established. Keep cryptographic producer authentication as a separate layer from packet byte coherence and workflow/deployment outcome.",
+  "acceptance_remaining": [
+    "Obtain authoritative account-plan evidence from GitHub billing or enterprise settings.",
+    "Rerun the preflight with a timestamped source locator.",
+    "If eligible, add a SHA-pinned attestation generation and verification path for the retained packet artifact.",
+    "Bind verified attestation subject digest and workflow identity into the existing packet coherence gate without expanding its claim ceiling.",
+    "Execute both authenticated exact-commit enumerators and retain their raw outputs."
+  ],
+  "claim_ceiling": "Feature eligibility only. No attestation, producer identity, workflow result, deployment identity, runtime behavior, audibility, or human observation is proven.",
+  "safe_next_action": "Verify the GitHub account plan through an authoritative settings surface. If Enterprise Cloud eligibility is confirmed, implement a SHA-pinned actions/attest step and gh attestation verify gate for the exact retained evidence packet; otherwise retain the blocked state and use digest/coherence evidence without calling it producer-authenticated."
+}
