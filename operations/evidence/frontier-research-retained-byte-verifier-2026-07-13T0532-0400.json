@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "team": "frontier_research",
+  "finding": "The retained evidence manifest validates caller-supplied metadata but does not independently read retained artifact bytes. A manifest can therefore be internally well-formed while its declared SHA-256 digest or byte length no longer matches repository content.",
+  "implemented_artifact": "tools/frontier-research/verify-retained-evidence-bytes.mjs",
+  "test_artifact": "tools/frontier-research/verify-retained-evidence-bytes.test.mjs",
+  "verification": {
+    "command": "node --test tools/frontier-research/verify-retained-evidence-bytes.test.mjs",
+    "result": "6 passed, 0 failed",
+    "environment": "isolated Node test runtime against byte-identical candidate source before commit",
+    "evidence_strength": "test_verified"
+  },
+  "source_status": {
+    "repository_observation": "The existing retained-evidence-manifest implementation constructs its manifest from supplied path, sha256, and byte_length fields and does not read the referenced files.",
+    "primary_specification": "FIPS 180-4 defines SHA-256 as a digest over the message bytes; integrity verification therefore requires recomputing the digest from the retained bytes rather than trusting a declared digest.",
+    "uncertainty": "No authenticated end-to-end retained evidence capture was executed in this run. Runtime integration remains unverified."
+  },
+  "falsification_route": "Change any retained byte, declared digest, declared byte length, role, or evidence path and rerun the verifier. Downstream acceptance must fail before reconciliation or deployment assessment.",
+  "privacy_boundary": "No credentials, private chat content, personal data, or raw provider payloads are retained in this artifact.",
+  "deployment_claimed": false,
+  "peer_execution_claimed": false
+}
