@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_evidence",
+  "queue_item": "R-023",
+  "recorded_at": "2026-07-13T22:42:45Z",
+  "finding": "The existing authenticated evidence manifest validates whole-output hashes but does not bind those hashes to independently verified per-page transport receipts. A manifest could therefore pass whole-output checks without proving the retained bytes came from the documented successful, version-selected, request-identified Link-header page chain.",
+  "source_status": {
+    "repository": "observed",
+    "github_primary_documentation": "current_docs_consulted_but_search_endpoint_returned_no_results_in_this_run",
+    "prior_research": "observed"
+  },
+  "evidence_strength": "implementation_verified_with_deterministic_local_tests",
+  "design_implication": "Require two independently digested transport receipts to match the exact commit, page count, record count, and raw-output SHA-256 values of the primary and independent enumeration methods before authenticated evidence promotion.",
+  "artifact": "tools/frontier-research/authenticated-evidence-transport-binding.mjs",
+  "test_artifact": "tools/frontier-research/authenticated-evidence-transport-binding.test.mjs",
+  "verification": {
+    "runtime": "node",
+    "result": "5 tests passed",
+    "covered_falsifiers": [
+      "raw-output digest mismatch",
+      "API-version mismatch",
+      "non-independent receipt digests",
+      "nonterminal Link chain",
+      "valid binding"
+    ]
+  },
+  "uncertainty": [
+    "No authenticated private-repository page capture was performed in this run.",
+    "The binding verifies transport provenance relationships, not provider completeness above documented search ceilings.",
+    "The current Vercel manifest writer has not yet imported this validator."
+  ],
+  "falsification_route": "Construct a manifest whose enumeration raw_output_sha256 differs from its transport receipt, whose selected API version differs from the requested version, whose final page retains a next URL, or whose two receipt digests are identical; the validator must reject it.",
+  "claim_boundary": {
+    "proves_transport_binding_contract": true,
+    "proves_authenticated_repository_execution": false,
+    "proves_semantic_completeness": false,
+    "proves_deployment_identity": false,
+    "proves_browser_or_device_behavior": false
+  }
+}
