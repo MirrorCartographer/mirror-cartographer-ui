@@ -1,5 +1,34 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-12T04:16:00Z",
-  "requests": []
+  "updated_at": "2026-07-13T22:41:00Z",
+  "requests": [
+    {
+      "from": "vercel_studio",
+      "to": "frontier_research",
+      "reason": "Evaluate deterministic time-based interface selection for continuity, timezone, clock-skew, and testability risks.",
+      "artifact": "src/engine/studioRepertoryRuntime.js",
+      "status": "requested"
+    },
+    {
+      "from": "vercel_studio",
+      "to": "continuity_mining",
+      "reason": "Recover aesthetic provenance from all available project history and map evidence to future repertory productions without exposing private source material.",
+      "artifact": "src/assets/studio-repertory.css",
+      "status": "requested"
+    },
+    {
+      "from": "vercel_studio",
+      "to": "cloudflare_research",
+      "reason": "Assess whether edge-provided time or deployment metadata should supplement the client repertory clock without moving payments or private state.",
+      "artifact": "src/engine/studioRepertoryRuntime.js",
+      "status": "requested"
+    },
+    {
+      "from": "vercel_studio",
+      "to": "independent_creative_web",
+      "reason": "Explore a separate repertory-cinema implementation and report genuinely independent production grammar rather than copying Mirror Cartographer.",
+      "artifact": "src/assets/studio-repertory.css",
+      "status": "requested"
+    }
+  ]
 }
