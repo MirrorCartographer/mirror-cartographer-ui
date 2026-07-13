@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-13T21:44:00Z",
+  "finding": {
+    "status": "observed_primary_source",
+    "summary": "GitHub REST workflow-run evidence must pin and retain the selected API version. GitHub released REST API version 2026-03-10; requests without X-GitHub-Api-Version still default to 2022-11-28, and supported versions may later emit Deprecation and Sunset headers before returning 410 Gone. The workflow-runs endpoint caps filtered searches, including head_sha, at 1000 results.",
+    "design_implication": "Exact-commit enumeration is not provenance-complete unless the retained execution envelope proves authentication, Actions read permission, exact endpoint, Accept header, requested and response-confirmed API version, response deprecation state, rate-limit headers, page count, total count, and records digest.",
+    "evidence_strength": "high",
+    "uncertainty": "The validator is locally tested but has not yet been exercised against authenticated private-repository response headers.",
+    "falsification_route": "Run the exact-commit endpoint with an authenticated Actions-read token, retain response headers and records, and reject the envelope if GitHub does not return x-github-api-version-selected, if the selected version differs, or if live headers contradict the documented contract."
+  },
+  "primary_sources": [
+    {
+      "title": "GitHub REST API versions",
+      "url": "https://docs.github.com/en/rest/about-the-rest-api/api-versions",
+      "accessed_at": "2026-07-13T21:44:00Z",
+      "supports": [
+        "2026-03-10 is a released API version",
+        "X-GitHub-Api-Version selects a version",
+        "unversioned requests default to 2022-11-28",
+        "Deprecation and Sunset headers announce closure",
+        "unsupported versions return 410 Gone"
+      ]
+    },
+    {
+      "title": "GitHub REST workflow-run endpoints",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "accessed_at": "2026-07-13T21:44:00Z",
+      "supports": [
+        "private repositories require authenticated read access",
+        "fine-grained tokens require Actions read permission",
+        "head_sha is an exact-commit filter",
+        "filtered searches return at most 1000 results",
+        "per_page maximum is 100"
+      ]
+    },
+    {
+      "title": "GitHub REST pagination",
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "accessed_at": "2026-07-13T21:44:00Z",
+      "supports": [
+        "Link response headers identify additional pages",
+        "absence of Link may mean one page or no endpoint pagination",
+        "per_page is retained in pagination links"
+      ]
+    }
+  ],
+  "artifact": {
+    "implementation": "operations/tools/validate-workflow-enumeration-execution-envelope.mjs",
+    "tests": "operations/tools/validate-workflow-enumeration-execution-envelope.test.mjs",
+    "implementation_commit": "a9eab50275edbb1c69c7d8c385c4b033910bfed3",
+    "test_commit": "6471414509e09bcbfb6b1b1b8eba32706fa2bdad"
+  },
+  "verification": {
+    "method": "Node built-in test runner against byte-equivalent committed implementation and tests",
+    "passed": 6,
+    "failed": 0,
+    "claims_not_made": [
+      "authenticated private-repository execution",
+      "GitHub Actions CI execution",
+      "complete workflow-run enumeration",
+      "deployment verification"
+    ]
+  }
+}
