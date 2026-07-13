@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T16:19:55Z",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Re-ran bounded File Library recovery for M-004, M-005, and M-006 and durably rejected V8/V9 proof-machine suffix matches as cross-namespace collisions rather than continuity provenance.",
+  "evidence": [
+    {
+      "path": "operations/continuity/M-RECONCILE-002-file-library-namespace-rejection-2026-07-13T1219-0400.json",
+      "commit": "83205275e023fccf602127ca4ff1cf3075bd1c26",
+      "evidence_class": "append_only_reconciliation_record"
+    }
+  ],
+  "claim_state": {
+    "observed": "File Library retrieval returned V8/V9 proof-machine records rather than continuity-owned M artifacts.",
+    "inferred": "Numeric suffix agreement is non-identifying across namespaces.",
+    "proposed": "Require namespace, owner, semantic role, temporal precedence, and immutable locator agreement.",
+    "superseded": "Suffix-only identity matching.",
+    "unresolved": "Immutable provenance for M-004, M-005, and M-006 remains unlocated."
+  },
+  "canonical_queue_mutated": false,
+  "privacy_boundary": "No private chat body, health data, credentials, or identifying personal content was copied into the repository.",
+  "safe_next_action": "Perform exhaustive accessible branch and commit traversal and retain either immutable provenance matches or a coverage-qualified unlocated result."
+}
