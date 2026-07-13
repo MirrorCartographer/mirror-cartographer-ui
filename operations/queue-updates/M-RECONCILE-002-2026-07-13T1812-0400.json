@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-13T22:12:27Z",
+  "state": "in_progress",
+  "completed_slice": "Added and verified a deterministic read-only canonical queue projection validator that classifies additive records as duplicated, conflicting, or safely promotable without overwriting the canonical queue.",
+  "evidence": [
+    "operations/continuity/records/CM-1012.json",
+    "tools/continuity/validate-queue-projection.mjs",
+    "tools/continuity/validate-queue-projection.test.mjs",
+    "commit:083237bed9655735f29821c2da5fef5ae122525c",
+    "commit:e5726533427437409c057b65a341a465448c8c51",
+    "commit:7ee9c4182c757c9d6f726dc401b270505ab44123"
+  ],
+  "claim_status": {
+    "observed": "The validator and deterministic test contract are committed, and local Node execution passed eight assertions.",
+    "inferred": "Projection eligibility must require more than timestamp precedence; owner, queue identity, duplication, state direction, and minimum-content checks are also necessary.",
+    "proposed": "Run this read-only classifier before any explicit canonical queue reconciliation.",
+    "superseded": "Every additive update newer than the canonical queue snapshot is automatically safe to promote.",
+    "unresolved": "Exhaustive additive-file discovery and immutable provenance for M-004, M-005, and M-006 remain unresolved."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch and refs inventory or equivalent repository-history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Run the validator over an exhaustively discovered additive update set before any canonical projection mutation."
+  ],
+  "safe_next_action": "Perform authenticated all-refs and reachable-object traversal for M-004, M-005, and M-006, then run the projection validator over the complete discovered continuity update set without mutating operations/ACTIVE_QUEUE.json.",
+  "privacy_boundary": "Repository provenance and queue-governance metadata only; no private chat, health, credentials, contacts, or raw uploaded-file content was stored.",
+  "canonical_queue_overwritten": false,
+  "reversible": true
+}
