@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { basename, resolve } from 'node:path';
+import { basename, isAbsolute, normalize, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const SHA_PATTERN = /^[0-9a-f]{40}$/;
@@ -9,6 +9,12 @@ const DIGEST_PATTERN = /^[0-9a-f]{64}$/;
 async function sha256(path) {
   const content = await readFile(path);
   return createHash('sha256').update(content).digest('hex');
+}
+
+function isSafeRelativePath(file) {
+  if (!file || isAbsolute(file) || file.includes('\\')) return false;
+  const normalized = normalize(file).replaceAll('\\', '/');
+  return normalized !== '.' && normalized !== '..' && !normalized.startsWith('../') && normalized === file;
 }
 
 function parseDigestManifest(text) {
@@ -20,9 +26,7 @@ function parseDigestManifest(text) {
     if (!match) throw new Error(`Invalid SHA-256 manifest line: ${rawLine}`);
     const [, digest, file] = match;
     if (!DIGEST_PATTERN.test(digest)) throw new Error(`Invalid digest for ${file}`);
-    if (file.includes('/') || file.includes('\\') || file === '.' || file === '..') {
-      throw new Error(`Unsafe digest manifest path: ${file}`);
-    }
+    if (!isSafeRelativePath(file)) throw new Error(`Unsafe digest manifest path: ${file}`);
     if (entries.has(file)) throw new Error(`Duplicate digest manifest entry: ${file}`);
     entries.set(file, digest);
   }
