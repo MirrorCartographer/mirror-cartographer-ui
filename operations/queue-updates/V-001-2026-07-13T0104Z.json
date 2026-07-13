@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "updated_at": "2026-07-13T01:04:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained workflow evidence CLI now rejects duplicate arguments, malformed or impossible UTC timestamps, and generation chronology that predates source retrieval.",
+  "artifacts": [
+    {
+      "path": "tools/vercel-studio/retained-workflow-evidence-cli.mjs",
+      "commit": "181caed2919b821dd7f11f44d80b642ff5a31fec"
+    },
+    {
+      "path": "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+      "commit": "1e609a2240a6261f6f85ba0bf4f0ccdefdda0012"
+    },
+    {
+      "path": "operations/evidence/vercel-retained-evidence-provenance-hardening-2026-07-13T0104Z.json",
+      "commit": "97e2454e0dbcf383d95a71d00c25d79838e62440"
+    }
+  ],
+  "verification": {
+    "source_syntax_check": "passed",
+    "isolated_guard_checks_passed": 4,
+    "github_actions": "no_run_observed",
+    "deployment": "not_attempted"
+  },
+  "acceptance_remaining": [
+    "Run the full committed CLI tests in an authenticated checkout or GitHub Actions.",
+    "Execute both exhaustive workflow enumerators against one exact commit and retain source outputs plus the reconciliation bundle.",
+    "Observe operations-only build suppression after Vercel capacity returns.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs in an authenticated repository environment, then use the hardened CLI on retained exact-commit enumerator outputs without requesting an application deployment.",
+  "canonical_queue_overwritten": false,
+  "peer_execution_claimed": false
+}
