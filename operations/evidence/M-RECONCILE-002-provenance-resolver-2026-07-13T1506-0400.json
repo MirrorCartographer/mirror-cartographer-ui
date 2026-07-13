@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-13T19:06:33Z",
+  "record_type": "continuity_provenance_resolution_gate",
+  "repository": "MirrorCartographer/mirror-cartographer-ui",
+  "durable_improvement": "Added a fail-closed resolver that permits historical identifier resolution only when namespace, owner, semantic role, temporal precedence, and immutable locator agree; ambiguous qualifying candidates remain collisions and no candidate remains unresolved.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "commit cc0b78d409eb5c2a0e3369d4072d56cc22aeed5a",
+    "prior M-RECONCILE-002 continuity outputs visible through immutable commits"
+  ],
+  "claim_states": {
+    "observed": [
+      "M-RECONCILE-002 remains the highest-priority active continuity_mining queue item.",
+      "The queue safe-next-action requires agreement across namespace, owner, semantic role, temporal precedence, and immutable locator.",
+      "Repository code search is not exhaustive for this private repository and cannot prove historical absence."
+    ],
+    "inferred": [
+      "A machine-enforced resolution boundary reduces the risk that later runs convert collisions or weak leads into reconstructed history."
+    ],
+    "proposed": [
+      "Feed only immutable candidates discovered through coverage-qualified branch and reachable-history traversal into this resolver."
+    ],
+    "superseded": [
+      "Resolving M-004, M-005, or M-006 from identifier similarity, suffix matches, prose-only completion reports, or a single mutable path."
+    ],
+    "unresolved": [
+      "The originating immutable objects and assigning contexts for M-004, M-005, and M-006.",
+      "Complete accessible ref inventory and reachable commit/tree coverage."
+    ]
+  },
+  "verification": {
+    "route": "local Node execution of byte-equivalent committed source and tests",
+    "tests_passed": 5,
+    "cases": [
+      "single fully agreeing immutable candidate resolves",
+      "namespace mismatch remains unresolved",
+      "failed temporal precedence remains unresolved",
+      "multiple distinct qualifying immutable locators remain collision",
+      "duplicate identical immutable locator deduplicates"
+    ],
+    "claims_not_proven": [
+      "exhaustive repository history coverage",
+      "resolution of M-004, M-005, or M-006",
+      "peer-team execution"
+    ]
+  },
+  "privacy_boundary": {
+    "included": ["repository paths", "queue metadata", "commit identifiers", "abstract provenance fields", "test outcomes"],
+    "excluded": ["private chat text", "raw uploaded-file content", "health or pet-health information", "credentials", "personal identifying details"]
+  },
+  "files": [
+    "operations/tools/resolve-provenance-candidate.mjs",
+    "operations/tools/resolve-provenance-candidate.test.mjs"
+  ],
+  "commits": [
+    "c4a93e5118ad6e0d04376b0377160b4bf34abbf6",
+    "1332b2eb4b7b7703d9c5044a26f2b0e4a4d1d2df"
+  ],
+  "claim_ceiling": "This slice enforces candidate acceptance semantics. It does not discover missing provenance or establish exhaustive coverage.",
+  "next_action": "Produce a complete accessible-ref and reachable-history candidate set, then run each M-004 through M-006 node through this resolver and retain unresolved or collision states unless exactly one immutable candidate satisfies every field."
+}
