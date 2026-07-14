@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T12:18:00Z",
+  "finding": "The committed GitHub REST API version evidence gate executes deterministically and fails closed for unsupported, retired, or lifecycle-warned API versions.",
+  "source_status": {
+    "implementation": {
+      "path": "tools/frontier-research/github-api-version-evidence.mjs",
+      "github_blob_sha": "4539dfd7ef3a65fa79256205fe00f23935dd2e09",
+      "status": "committed_source_fetched"
+    },
+    "test": {
+      "path": "tools/frontier-research/github-api-version-evidence.test.mjs",
+      "github_blob_sha": "188b5b5b96481b3dcfe4be71b609e65b0420ecd0",
+      "status": "committed_source_fetched"
+    }
+  },
+  "execution": {
+    "runtime": "node v22.16.0",
+    "command": "node --test github-api-version-evidence.test.mjs",
+    "exit_status": 0,
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "duration_ms": 247.834604,
+    "cases": [
+      "supported pinned version without lifecycle warning is accepted",
+      "410 Gone fails closed",
+      "Deprecation or Sunset headers fail closed",
+      "unsupported version fails closed despite HTTP success"
+    ]
+  },
+  "evidence_strength": "exact_github_blob_content_executed_in_observed_node_runtime",
+  "uncertainty": [
+    "Execution occurred outside an authenticated repository checkout.",
+    "No live authenticated GitHub API response was captured.",
+    "No workflow enumeration or reconciliation was performed."
+  ],
+  "falsification_route": [
+    "Execute the same test at the recorded repository commit and compare TAP output.",
+    "Capture a live authenticated response and bind requested API version, status, Deprecation, and Sunset headers into the evidence envelope.",
+    "Fail promotion if live behavior differs from the four deterministic cases."
+  ],
+  "privacy": {
+    "credentials_retained": false,
+    "private_source_material_retained": false,
+    "secret_bearing_logs_retained": false
+  }
+}
