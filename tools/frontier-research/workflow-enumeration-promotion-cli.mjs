@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { assessWorkflowEnumerationPromotion } from './workflow-enumeration-promotion-gate.mjs';
@@ -17,21 +18,37 @@ function parseArgs(argv) {
   return values;
 }
 
+function sha256Utf8(value) {
+  return createHash('sha256').update(value, 'utf8').digest('hex');
+}
+
 export async function runPromotionCli(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   const inputPath = resolve(args.input);
   const outputPath = resolve(args.output);
   if (inputPath === outputPath) throw new Error('input_output_path_collision');
-  const input = JSON.parse(await readFile(inputPath, 'utf8'));
+  const inputText = await readFile(inputPath, 'utf8');
+  const input = JSON.parse(inputText);
   const assessment = assessWorkflowEnumerationPromotion(input);
   const artifact = {
-    schema_version: 1,
+    schema_version: 2,
     artifact_type: 'workflow_enumeration_promotion_assessment',
     generated_at: new Date().toISOString(),
+    source: {
+      media_type: 'application/json',
+      byte_length: Buffer.byteLength(inputText, 'utf8'),
+      sha256: sha256Utf8(inputText)
+    },
     assessment
   };
-  await writeFile(outputPath, `${JSON.stringify(artifact, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
-  process.stdout.write(`${JSON.stringify({ output: outputPath, promotable: assessment.promotable, reason: assessment.reason })}\n`);
+  const artifactText = `${JSON.stringify(artifact, null, 2)}\n`;
+  await writeFile(outputPath, artifactText, { encoding: 'utf8', flag: 'wx' });
+  process.stdout.write(`${JSON.stringify({
+    output: outputPath,
+    promotable: assessment.promotable,
+    reason: assessment.reason,
+    source_sha256: artifact.source.sha256
+  })}\n`);
   return artifact;
 }
 
