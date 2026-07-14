@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound stabilization and reconciliation digests to a locally recomputed canonical SHA-256 of both retained normalized record sets; added fail-closed rejection for forged equal digests and metadata-level cross-client divergence.",
+  "evidence": "operations/evidence/frontier-canonical-record-digest-binding-2026-07-14T0109Z.json",
+  "commits": [
+    "654fad3c2e96193121239f1fb475e9eefec54fa4",
+    "fd32ce43bea2b7811d77eda9f0c35f47db7d9a69",
+    "da836ce89f8cac8e778c2a4f08ebfad79ad04d0a"
+  ],
+  "acceptance_remaining": [
+    "Execute the complete 26-assertion manifest test suite in an authenticated checkout or CI runner.",
+    "Execute both exhaustive authenticated clients against one exact commit and retain raw outputs plus transport receipts.",
+    "Observe two quiet-interval snapshots whose canonical record-set digests agree.",
+    "Run reconciliation and write a no-overwrite schema-v4 manifest.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Run the committed integration suite, then execute both exhaustive authenticated enumerators against one exact commit and promote only when the recomputed canonical digest agrees across both clients, stabilization snapshots, and reconciliation.",
+  "specialist_registry_change": null
+}
