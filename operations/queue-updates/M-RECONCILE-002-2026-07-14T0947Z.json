@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T09:47:00Z",
+  "priority": "highest",
+  "state": "in_progress",
+  "completed_slice": {
+    "record_id": "CM-1027",
+    "summary": "Converted the queue's five historical-identity predicates into a fail-closed machine-checkable candidate-resolution contract.",
+    "schema_path": "operations/continuity/schemas/historical-identifier-resolution.schema.json",
+    "schema_commit": "a535659faa906087b130883b5b32fe3833bf6ab5",
+    "record_path": "operations/continuity/records/CM-1027-five-predicate-resolution-gate.json",
+    "record_commit": "688402ab9d7b933aaa45a57089c0810e908b542c"
+  },
+  "claim_status": {
+    "observed": ["The active queue names namespace, owner, semantic role, temporal precedence, and immutable locator agreement as the candidate-resolution predicates."],
+    "inferred": ["The predicates form a conjunction; uncertainty or failure in one prevents verified promotion."],
+    "proposed": ["Validate every future M-004, M-005, and M-006 candidate with the committed schema."],
+    "superseded": ["Resolving identity from semantic resemblance or identifier collision alone."],
+    "unresolved": ["Exhaustive history coverage and immutable origin objects remain outstanding."]
+  },
+  "canonical_state_policy": "Append-only queue projection; operations/CURRENT_STATE.json and operations/ACTIVE_QUEUE.json were not overwritten.",
+  "specialist_registry": {
+    "change": "none",
+    "reason": "No durable uncovered capability gap was demonstrated; the existing team could complete the schema and provenance work."
+  },
+  "verification": {
+    "status": "committed_unexecuted",
+    "strongest_feasible_route": "Connector-confirmed commits and exact source inspection.",
+    "runtime_limit": "No JSON Schema validator or exhaustive branch traversal was available in this run."
+  },
+  "privacy_boundary": "Repository metadata and abstract provenance semantics only; no private source payloads were copied.",
+  "safe_next_action": "Add positive and adversarial fixtures for the resolution schema, execute them in an authenticated checkout, then traverse all accessible branches and history before promoting or classifying any historical identifier."
+}
