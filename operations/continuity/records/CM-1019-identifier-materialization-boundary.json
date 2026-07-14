@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1019",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T05:00:00Z",
+  "title": "First repository materialization is not historical origin",
+  "claims": {
+    "observed": [
+      "Commit 0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a created operations/continuity/records/M-004-origin-status.json and explicitly classified M-004 as unresolved and unlocated.",
+      "Commit 4c9814eacf20dd62949b97045ef2cf6cf68ab9e9 is the earliest commit returned by authenticated commit search for M-005 and materialized its unresolved origin-status record.",
+      "Commit 94778c45072bad84a0c63077ac23492a1a756a8c is the earliest commit returned by authenticated commit search for M-006 and materialized its unresolved origin-status record.",
+      "Commit 83205275e023fccf602127ca4ff1cf3075bd1c26 records a later namespace-collision rejection spanning M-004 through M-006."
+    ],
+    "inferred": [
+      "These immutable commits establish repository materialization anchors for the unresolved-status artifacts, not the originating assignment of the identifiers.",
+      "Any later artifact citing these commits as the origin of M-004, M-005, or M-006 would collapse two distinct events: identifier assignment and unresolved-status materialization."
+    ],
+    "proposed": [
+      "Track origin_event and repository_materialization_event as separate provenance edges for every disputed identifier.",
+      "Permit a repository materialization commit to bound temporal search without allowing it to satisfy accepted-origin predicates."
+    ],
+    "superseded": [
+      "Treating the first searchable repository commit containing an identifier as proof that the commit assigned the identifier.",
+      "Using unresolved-status records as self-authenticating evidence of earlier identifier history."
+    ],
+    "unresolved": [
+      "The immutable origin_event for M-004 remains unlocated.",
+      "The immutable origin_event for M-005 remains unlocated.",
+      "The immutable origin_event for M-006 remains unlocated.",
+      "Authenticated commit search does not by itself prove exhaustive coverage of every repository ref and reachable commit."
+    ]
+  },
+  "provenance_edges": [
+    {
+      "identifier": "M-004",
+      "event_type": "repository_materialization_event",
+      "locator": "commit:0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+      "status": "verified_immutable",
+      "origin_status": "unresolved"
+    },
+    {
+      "identifier": "M-005",
+      "event_type": "repository_materialization_event",
+      "locator": "commit:4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+      "status": "verified_immutable",
+      "origin_status": "unresolved"
+    },
+    {
+      "identifier": "M-006",
+      "event_type": "repository_materialization_event",
+      "locator": "commit:94778c45072bad84a0c63077ac23492a1a756a8c",
+      "status": "verified_immutable",
+      "origin_status": "unresolved"
+    }
+  ],
+  "decision_rule": "A repository_materialization_event may establish a lower-bound search anchor and artifact lineage, but it cannot resolve origin_event unless the immutable object explicitly assigns the identifier and satisfies namespace, owner, semantic-role, temporal-precedence, and ambiguity checks.",
+  "privacy_boundary": {
+    "included": [
+      "public repository paths",
+      "commit identifiers",
+      "claim classifications",
+      "abstract provenance relations"
+    ],
+    "excluded": [
+      "private source material",
+      "chat contents",
+      "credentials",
+      "unapproved quotations"
+    ]
+  },
+  "falsification_routes": [
+    "Produce an earlier immutable repository object that explicitly assigns one of the identifiers and satisfies every accepted-origin predicate.",
+    "Demonstrate that one of the listed commits did not create the named unresolved-status artifact.",
+    "Complete exhaustive ref and reachable-commit traversal and locate an earlier repository materialization event, replacing only the affected materialization edge while preserving origin unresolved unless assignment predicates are satisfied."
+  ]
+}
