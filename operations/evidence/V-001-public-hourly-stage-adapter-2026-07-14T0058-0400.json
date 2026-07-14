@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T00:58:31-04:00",
+  "slice": "Public hourly stage payload adapter",
+  "objective": "Expose only allowlisted production data to a future application boundary while preserving deterministic hourly selection, continuity channel identity, provenance classes, accessibility, mobile safety, non-autoplay, and reversibility.",
+  "inputs_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/repertory/hourly-productions.json",
+    "operations/tools/hourly-stage-manifest.mjs",
+    "recent repository commits"
+  ],
+  "files": {
+    "adapter": {
+      "path": "operations/tools/public-hourly-stage-adapter.mjs",
+      "commit": "4eaa9ce9f5b8f58e78fc7cfa8ddcb5eec86b9a4c"
+    },
+    "test": {
+      "path": "operations/tests/public-hourly-stage-adapter.test.mjs",
+      "commit": "ae97361c369660e546200c99d699a53809ed2e19"
+    }
+  },
+  "verification": {
+    "route": "isolated Node test execution",
+    "command": "node --test operations/tests/public-hourly-stage-adapter.test.mjs",
+    "result": "4 tests passed; 0 failed",
+    "coverage": [
+      "allowlisted public payload",
+      "continuity channel retained while internal revision omitted",
+      "deterministic serialization",
+      "autoplay regression rejected",
+      "mobile safety regression rejected",
+      "prohibited language rejected",
+      "invalid hourly selection rejected"
+    ]
+  },
+  "privacy": {
+    "private_source_material_exposed": false,
+    "internal_continuity_revision_exposed": false,
+    "payment_or_conversion_logic_added": false
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE directs operations-only changes while Vercel build capacity is exhausted.",
+    "claimed": false
+  },
+  "rollback": [
+    "Revert the queue-update commit created after this evidence record.",
+    "Revert this evidence commit.",
+    "Revert ae97361c369660e546200c99d699a53809ed2e19.",
+    "Revert 4eaa9ce9f5b8f58e78fc7cfa8ddcb5eec86b9a4c."
+  ],
+  "limits": [
+    "Adapter is not yet wired into the Vite application runtime.",
+    "No browser, Mobile Safari, audio-device, or Vercel deployment evidence was produced.",
+    "The isolated test reproduced the committed source contract but did not execute from an authenticated repository checkout."
+  ]
+}
