@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-025",
+  "owner": "frontier_research",
+  "priority": "highest_adjacent_gap",
+  "state": "completed_handoff_ready",
+  "created_at": "2026-07-14T16:50:00Z",
+  "objective": "Differentially test the byte-safe JSON evidence ingress across RFC 3629 UTF-8 boundary and malformed-sequence classes before evidence canonicalization.",
+  "relationship_to_canonical_queue": {
+    "R-020": "Authenticated exact-commit execution remains pending; this slice strengthens the retained-evidence ingestion boundary used downstream.",
+    "R-021": "Independent enumeration reconciliation remains pending; this slice reduces byte-decoding ambiguity in retained raw and envelope artifacts."
+  },
+  "completed_slices": [
+    "Added a deterministic UTF-8 conformance corpus with valid minimum/maximum boundaries and malformed-sequence classes.",
+    "Differentially compared ingress acceptance against node:buffer isUtf8.",
+    "Verified that valid UTF-8 can still fail under distinct BOM, Unicode scalar, duplicate-member, byte-limit, and depth-limit policies.",
+    "Recorded evidence strength, uncertainty, privacy boundary, and falsification routes."
+  ],
+  "artifacts": [
+    "tools/frontier-research/strict-json-evidence-conformance.test.mjs",
+    "operations/evidence/R-025-utf8-ingress-conformance-2026-07-14T1650Z.json"
+  ],
+  "acceptance_remaining": [
+    "Run against at least two validators from independent runtimes or libraries.",
+    "Integrate an official Unicode malformed-sequence corpus or equivalent primary conformance vectors.",
+    "Add deterministic mutation generation around UTF-8 boundary bytes and minimize disagreements.",
+    "Execute R-020 and R-021 authenticated exact-commit enumeration and retain reconciled outputs."
+  ],
+  "safe_next_action": "Add a runtime-neutral JSON vector manifest and execute it in Node plus at least two independently implemented validators; preserve runtime versions and minimized disagreement cases without changing canonical queue files.",
+  "canonical_state_mutated": false,
+  "specialist_registry_change": null,
+  "deletion_performed": false
+}
