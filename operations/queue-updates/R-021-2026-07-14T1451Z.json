@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T14:51:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added fail-closed revalidation for retained schema-v2 promotion artifacts, requiring exact source byte identity and equality with a fresh promotion-gate assessment.",
+  "commits": [
+    "b9c22b548232e4db7ab451a304515fe1b57d63e2",
+    "49a74c94660bb4c6557b956b665b9bd5ad4d8c69",
+    "33998284a6e5b5911e8cc8bbb2d72b23dccef53d",
+    "5700844fe6a29213f04ddefc44684c379a01eb5c"
+  ],
+  "verification": {
+    "passed": 5,
+    "failed": 0,
+    "scope": "deterministic core contract"
+  },
+  "acceptance_remaining": [
+    "Run both complete clients for one exact commit.",
+    "Create the source-bound schema-v2 promotion artifact from retained evidence.",
+    "Run the verifier CLI against the exact retained source and artifact.",
+    "Retain the successful revalidation result with the reconciliation bundle.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Run the dual-client R-021 observation workflow, generate the schema-v2 promotion artifact, and verify it against the exact retained source before handoff to the Vercel assessor.",
+  "canonical_queue_overwritten": false
+}
