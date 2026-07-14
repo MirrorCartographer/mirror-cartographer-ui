@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "contract_id": "CM-1031",
+  "queue_item": "M-RECONCILE-002",
+  "purpose": "Define the minimum fail-closed evidence envelope required before M-004, M-005, or M-006 may be classified as located or unlocated.",
+  "coverage_requirements": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "branch_inventory": {
+      "required": true,
+      "must_include": [
+        "branch_name",
+        "head_commit_sha",
+        "retrieved_at",
+        "retrieval_method"
+      ],
+      "completeness_rule": "All accessible branch pages must be traversed. A first page or search result set cannot establish exhaustive coverage."
+    },
+    "commit_history": {
+      "required": true,
+      "per_branch_traversal": true,
+      "must_include": [
+        "branch_name",
+        "commit_sha",
+        "parent_shas",
+        "committed_at",
+        "message",
+        "retrieved_at"
+      ],
+      "deduplication_key": "commit_sha",
+      "completeness_rule": "Traversal must continue until every reachable root is encountered or the provider returns a documented hard boundary."
+    },
+    "artifact_search": {
+      "identifiers": ["M-004", "M-005", "M-006"],
+      "required_source_classes": [
+        "decision_log",
+        "language_lexicon",
+        "project_document",
+        "chat_history_reference",
+        "repository_artifact"
+      ],
+      "identity_agreement_fields": [
+        "namespace",
+        "owner",
+        "semantic_role",
+        "temporal_precedence",
+        "immutable_locator"
+      ]
+    }
+  },
+  "resolution_states": {
+    "located": "An immutable source object is found and all identity agreement fields match.",
+    "unlocated_after_exhaustive_coverage": "The complete coverage envelope passes and no matching immutable source object exists.",
+    "unresolved_incomplete_coverage": "Coverage is partial, ambiguous, provider-limited, or missing any required field.",
+    "collision_rejected": "A suffix, semantic, or cross-namespace match exists but identity agreement fails."
+  },
+  "fail_closed_conditions": [
+    "missing branch pagination evidence",
+    "missing commit parent data",
+    "provider result ceiling or truncation ambiguity",
+    "search-only evidence without history traversal",
+    "cross-namespace identifier collision",
+    "automation completion prose used as immutable provenance",
+    "reconstructed historical identifier without source object",
+    "missing retrieval timestamps or methods"
+  ],
+  "claims": {
+    "observed": [
+      "M-RECONCILE-002 remains the highest-priority continuity_mining queue item.",
+      "M-004, M-005, and M-006 remain unresolved under the current queue state.",
+      "Current acceptance requires exhaustive branch inventory or equivalent repository history traversal."
+    ],
+    "inferred": [
+      "A normalized coverage envelope is necessary to distinguish genuine absence from incomplete retrieval."
+    ],
+    "proposed": [
+      "Implement an authenticated collector and validator that emit this contract without overwriting canonical shared state."
+    ],
+    "superseded": [
+      "Treating code search, recent commits, or first-page branch results as exhaustive repository history evidence."
+    ],
+    "unresolved": [
+      "Immutable originating sources for M-004, M-005, and M-006.",
+      "Authenticated exhaustive branch and commit traversal has not been observed in this run."
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "abstract artifact identifiers",
+      "immutable commit and object locators",
+      "source-class labels",
+      "coverage and resolution states"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal data",
+      "health information",
+      "credentials",
+      "secret-bearing logs",
+      "unapproved source quotations"
+    ]
+  },
+  "falsification_route": "The contract is falsified if a documented repository mechanism proves exhaustive absence with weaker evidence, or if a retained exhaustive traversal demonstrates that any required field is unnecessary for resolving identity without false positives.",
+  "reversible": true
+}
