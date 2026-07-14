@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T06:12:22Z",
+  "slice": "operations-only hourly stage runtime candidate",
+  "production_currently_on_stage": "one-eye-constellation",
+  "finding": "The public adapter contract could be converted into an installable runtime without exposing raw operations data, but application-path installation must remain deferred while the provider-capacity constraint prohibits application deployment attempts.",
+  "implementation": {
+    "runtime": "operations/prototypes/hourly-stage-runtime-candidate.mjs",
+    "test": "operations/tests/hourly-stage-runtime-candidate.test.mjs",
+    "feature_default": "disabled",
+    "selection": "deterministic local hour from exactly 24 validated public payloads",
+    "continuity": "one public continuity channel retained across productions",
+    "sound": "requires user action; no autoplay",
+    "reduced_motion": "captured through prefers-reduced-motion",
+    "rollback": "runtime installation returns a rollback function that removes all document data attributes"
+  },
+  "verification": {
+    "command": "node --test operations/tests/hourly-stage-runtime-candidate.test.mjs",
+    "environment": "isolated Node reconstruction from committed source text",
+    "passed": 4,
+    "failed": 0,
+    "claims_excluded": [
+      "browser rendering",
+      "Mobile Safari behavior",
+      "physical audio audibility",
+      "CI execution",
+      "Vercel deployment"
+    ]
+  },
+  "safety": {
+    "application_files_changed": false,
+    "deployment_requested": false,
+    "payments_or_conversion_added": false,
+    "private_source_material_added": false,
+    "github_history_deleted": false
+  },
+  "falsification_routes": [
+    "Provide fewer or more than 24 payloads.",
+    "Mismatch a payload resolved_hour from its array position.",
+    "Enable autoplay or remove user-action sound gating.",
+    "Mark conversion logic or private source material present.",
+    "Install with the feature flag disabled and observe any mutation."
+  ]
+}
