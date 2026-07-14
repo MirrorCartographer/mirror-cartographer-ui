@@ -9,22 +9,32 @@ function fail(reason, details = {}) {
   return { verified: false, reason, ...details };
 }
 
-export async function writeBoundAuthenticatedEvidenceManifest({ input_path, output_path, evidence_root = process.cwd() }) {
+export async function writeBoundAuthenticatedEvidenceManifest({
+  input_path,
+  output_path,
+  evidence_root = process.cwd(),
+  dependencies = {}
+}) {
   if (!input_path || !output_path) return fail('input_and_output_paths_required');
+
+  const readInput = dependencies.read_input ?? (path => readFile(path, 'utf8'));
+  const validatePromotion = dependencies.validate_promotion ?? validateEvidencePromotion;
+  const bindInputSnapshot = dependencies.bind_input_snapshot ?? withBoundInputSnapshot;
+  const writeManifest = dependencies.write_manifest ?? writeAuthenticatedEvidenceManifest;
 
   let input;
   try {
-    input = JSON.parse(await readFile(input_path, 'utf8'));
+    input = JSON.parse(await readInput(input_path));
   } catch (error) {
     return fail(error instanceof SyntaxError ? 'input_invalid_json' : 'input_read_failed', { code: error?.code ?? 'unknown' });
   }
 
-  const promotion = await validateEvidencePromotion(input, { cwd: evidence_root });
+  const promotion = await validatePromotion(input, { cwd: evidence_root });
   if (!promotion.verified) return promotion;
 
-  const result = await withBoundInputSnapshot(
+  const result = await bindInputSnapshot(
     input,
-    snapshotPath => writeAuthenticatedEvidenceManifest({ input_path: snapshotPath, output_path }),
+    snapshotPath => writeManifest({ input_path: snapshotPath, output_path }),
     { temporary_root: evidence_root }
   );
   if (!result.verified) return result;
