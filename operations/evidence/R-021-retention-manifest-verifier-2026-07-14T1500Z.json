@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "artifact_type": "frontier_research_verification_evidence",
+  "created_at": "2026-07-14T15:00:50Z",
+  "finding": "Independent enumeration agreement is insufficient unless the complete raw-to-promotion evidence set is retained, byte-bound, role-complete, and bound to one exact commit.",
+  "design_implication": "Require a seven-role retention manifest covering both raw enumerations, the independent command, both normalized envelopes, reconciliation result, and promotion assessment before evidence promotion.",
+  "implementation": {
+    "core": "tools/frontier-research/workflow-evidence-retention-manifest-core.mjs",
+    "test": "tools/frontier-research/workflow-evidence-retention-manifest-core.test.mjs",
+    "required_roles": [
+      "primary_raw_enumeration",
+      "independent_raw_pages",
+      "independent_command",
+      "primary_envelope",
+      "independent_envelope",
+      "reconciliation_result",
+      "promotion_assessment"
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-evidence-retention-manifest-core.test.mjs",
+    "environment": "isolated Node runtime against the exact committed source text before publication",
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "complete exact-commit retention set accepted",
+      "missing required role rejected",
+      "cross-commit evidence rejected",
+      "same-length retained artifact mutation rejected by SHA-256",
+      "duplicate semantic role rejected"
+    ]
+  },
+  "source_status": {
+    "canonical_queue": "connector-observed",
+    "prior_artifacts": "connector-observed",
+    "implementation": "committed",
+    "runtime_test": "locally executed"
+  },
+  "evidence_strength": "committed_core_plus_deterministic_runtime_tests",
+  "uncertainty": "The verifier has not yet been run on a real authenticated exact-commit evidence set.",
+  "falsification_route": "Construct a complete retained evidence set from both authenticated enumeration clients, mutate or omit each role in turn, and confirm fail-closed results before promotion.",
+  "privacy_boundary": "No credentials, private workflow payloads, or deployment secrets are included."
+}
