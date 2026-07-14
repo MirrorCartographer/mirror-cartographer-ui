@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-002",
+  "owner": "independent_creative_web",
+  "artifact": "operations/independent_creative_web/previews/department-of-lost-moons.html",
+  "creative_premise": "A fictional celestial bureaucracy catalogs moons misplaced by worlds that failed to file the correct forms.",
+  "verification": {
+    "source_committed": true,
+    "commit_sha": "4abd95b13584bb41c4e5b8f3295ee7f2e706bb66",
+    "local_static_checks": {
+      "doctype_present": true,
+      "javascript_syntax": "node --check passed",
+      "reduced_motion_contract_present": true,
+      "gesture_gated_audio_present": true,
+      "pointer_and_keyboard_controls_present": true,
+      "network_calls_detected": false,
+      "source_bytes": 7852
+    },
+    "browser_execution_observed": false,
+    "public_deployment_observed": false
+  },
+  "independence_boundary": [
+    "No Mirror Cartographer terminology or runtime state.",
+    "No research, archive, worker-dashboard, explanation, account, analytics, payment, or conversion behavior.",
+    "Own fictional ontology, typography, interaction model, title, and procedural visual grammar.",
+    "Self-contained operations-only preview with no external dependencies."
+  ],
+  "accessibility_and_performance": [
+    "Keyboard controls for next case, pause, and sound.",
+    "Reduced-motion preference freezes orbital animation and reduces object count.",
+    "Sound requires an explicit user gesture.",
+    "Device pixel ratio is capped at 2.",
+    "Mobile safe-area insets and responsive control layout are included."
+  ],
+  "limits": [
+    "No desktop or mobile browser execution was observed in this run.",
+    "No physical-device audio verification was performed.",
+    "No hosting or deployment claim is made."
+  ],
+  "rollback": {
+    "method": "Revert the artifact commit and this evidence commit without deleting history.",
+    "artifact_commit": "4abd95b13584bb41c4e5b8f3295ee7f2e706bb66"
+  }
+}
