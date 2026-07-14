@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T05:03:19Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and verified a fail-closed runtime integration boundary that permits a future hourly stage runtime only through the public payload adapter while rejecting raw operations data, raw repertory access, internal continuity revisions, private source fields, autoplay, and payment or conversion logic.",
+  "production_currently_on_stage": "one-eye-constellation",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "registry_change": "none",
+  "files": [
+    "operations/tools/hourly-runtime-boundary-contract.mjs",
+    "operations/tests/hourly-runtime-boundary-contract.test.mjs",
+    "operations/evidence/V-001-hourly-runtime-boundary-2026-07-14T0103-0400.json"
+  ],
+  "commits": [
+    "eadb526f513d65ed2f623733b19777833191dd22",
+    "f14c20f38ddfcea8774f8f6c61cfb3037309eb6f",
+    "b9f4d09291a039da8828f3ec366f05bc43a71853"
+  ],
+  "verification": "4 deterministic Node tests passed in an isolated reconstruction from the exact committed source text; no browser, device, CI, or deployment claim.",
+  "deployment_effect": "operations-only; no Vercel deployment requested while build capacity remains blocked",
+  "acceptance_remaining": [
+    "Run the contract test in an authenticated repository checkout or CI environment.",
+    "Implement the application-side hourly runtime behind the new boundary.",
+    "Verify keyboard, reduced-motion, mobile Safari, and user-initiated audio behavior.",
+    "Complete exact-commit workflow enumeration, immutable Vercel deployment identity, and bounded physical iPhone audibility evidence after provider capacity returns."
+  ],
+  "rollback_route": [
+    "revert this queue-update commit",
+    "revert b9f4d09291a039da8828f3ec366f05bc43a71853",
+    "revert f14c20f38ddfcea8774f8f6c61cfb3037309eb6f",
+    "revert eadb526f513d65ed2f623733b19777833191dd22"
+  ],
+  "safe_next_action": "Create a minimal application runtime module that receives only a prevalidated public stage payload, install it behind a reversible feature flag, and run the boundary contract plus browser-level accessibility and reduced-motion checks without requesting a Vercel deployment until capacity returns."
+}
