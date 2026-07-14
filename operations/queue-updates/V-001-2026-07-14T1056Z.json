@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T10:56:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Committed a deterministic hourly repertory selector and contract test that rotate distinct productions by canonical UTC hour while preserving one continuity channel and fail-closed public-surface capability metadata.",
+  "artifacts": [
+    "operations/studio/hourly-repertory.mjs",
+    "operations/tests/hourly-repertory.test.mjs",
+    "operations/evidence/V-001-hourly-repertory-2026-07-14T1056Z.json"
+  ],
+  "commits": [
+    "4c31fc0723e2b8990e20987c3ca9bed98337b78f",
+    "944828c62a5b718298ead2de086cf8335ec201d4",
+    "0347a96b5135fb08acfb1683d79f2156c4938ffb"
+  ],
+  "acceptance_effect": {
+    "satisfied": [
+      "A deterministic, testable hourly repertory contract now exists.",
+      "Each production declares the same continuity channel and reversible accessibility, mobile, and autoplay constraints.",
+      "Aesthetic provenance distinguishes observed preference, inference, experiment, and current decision."
+    ],
+    "remaining": [
+      "Execute the committed Node test in an authenticated checkout.",
+      "Wire the selector into the public runtime only after a reviewed application slice is ready.",
+      "Do not deploy until provider capacity returns and immutable deployment verification is available.",
+      "Complete the pre-existing V-001 deployment and physical iPhone Safari evidence requirements."
+    ]
+  },
+  "safe_next_action": "Run node --test operations/tests/hourly-repertory.test.mjs, then prepare a reversible runtime adapter behind a single import boundary; keep deployment fail-closed until Vercel capacity and immutable identity verification return."
+}
