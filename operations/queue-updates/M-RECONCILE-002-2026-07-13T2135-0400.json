@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-14T01:35:20Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Materialized separate fail-closed provenance-status records for M-004, M-005, and M-006 using the committed identifier-origin evidence contract; each remains unresolved and unlocated without reconstructing history.",
+  "durable_memory": {
+    "observed": "The canonical queue reports M-004, M-005, and M-006 as provenance gaps requiring immutable origin resolution.",
+    "inferred": "A collective ledger is insufficient for deterministic downstream processing because each identifier can acquire different candidates, dispositions, and eventual resolution states.",
+    "proposed": "Maintain one contract-conforming origin-status record per reported identifier and mutate status only through additive evidence updates tied to immutable locators.",
+    "superseded": "Treating the three identifiers as one undifferentiated unresolved prose claim.",
+    "unresolved": "No immutable origin candidate has yet been located for M-004, M-005, or M-006; exhaustive branch and reachable-history coverage remains outstanding."
+  },
+  "files": [
+    "operations/continuity/records/M-004-origin-status.json",
+    "operations/continuity/records/M-005-origin-status.json",
+    "operations/continuity/records/M-006-origin-status.json"
+  ],
+  "commits": [
+    "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+    "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+    "94778c45072bad84a0c63077ac23492a1a756a8c"
+  ],
+  "verification": {
+    "level": "connector_fetch_and_contract_review",
+    "runtime_test": "not_executed",
+    "reason": "No authenticated repository checkout or direct Node execution surface was available in this run."
+  },
+  "privacy_boundary": "Only public repository identifiers, abstract provenance rules, immutable commit hashes, and falsification routes are retained. No private chat text, File Library contents, personal data, credentials, or reconstructed source prose is included.",
+  "specialist_registry_change": "none",
+  "next_action": "Execute the committed validator against all three records, then perform exhaustive accessible-ref and reachable-commit traversal; append candidate evidence to each record only through provenance-preserving updates and retain unresolved status until every accepted-origin predicate is satisfied."
+}
