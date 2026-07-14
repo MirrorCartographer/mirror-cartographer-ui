@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "fixture_id": "CM-1029",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Machine-checkable claim conflict resolution cases",
+  "created_at": "2026-07-14T11:00:00Z",
+  "status": "proposed_test_fixture",
+  "purpose": "Convert the claim-state precedence rule into deterministic cases without resolving M-004, M-005, or M-006 by reconstruction.",
+  "axes": {
+    "evidentiary": ["observed", "inferred", "proposed"],
+    "temporal": ["current", "superseded"],
+    "resolution": ["resolved", "unresolved"]
+  },
+  "cases": [
+    {
+      "case_id": "observed_over_inferred",
+      "left": {"evidentiary": "observed", "temporal": "current", "resolution": "resolved", "immutable_locator": true},
+      "right": {"evidentiary": "inferred", "temporal": "current", "resolution": "resolved", "immutable_locator": false},
+      "expected": {"winner": "left", "action": "retain_both_and_prefer_observed", "may_rewrite_historical_observation": false}
+    },
+    {
+      "case_id": "later_decision_supersedes_decision_not_observation",
+      "left": {"kind": "observation", "evidentiary": "observed", "temporal": "current", "resolution": "resolved", "immutable_locator": true},
+      "right": {"kind": "decision", "evidentiary": "observed", "temporal": "current", "resolution": "resolved", "immutable_locator": true, "adopted_later": true},
+      "expected": {"winner": "none", "action": "supersede_prior_decision_only", "may_rewrite_historical_observation": false}
+    },
+    {
+      "case_id": "unresolved_repetition_does_not_promote",
+      "left": {"evidentiary": "inferred", "temporal": "current", "resolution": "unresolved", "immutable_locator": false, "repeat_count": 12},
+      "right": null,
+      "expected": {"winner": "none", "action": "remain_unresolved", "promotion_allowed": false}
+    },
+    {
+      "case_id": "automation_prose_is_lead_only",
+      "left": {"source_class": "automation_completion_prose", "evidentiary": "proposed", "temporal": "current", "resolution": "unresolved", "immutable_locator": false},
+      "right": null,
+      "expected": {"winner": "none", "action": "record_as_lead_only", "promotion_allowed": false}
+    },
+    {
+      "case_id": "semantic_similarity_is_not_identity",
+      "left": {"identifier": "M-004", "namespace": "continuity_mining", "immutable_locator": false},
+      "right": {"identifier_suffix": "004", "namespace": "unrelated_artifact", "semantic_similarity": 0.98, "immutable_locator": true},
+      "expected": {"winner": "none", "action": "reject_collision_candidate", "resolution": "unresolved"}
+    },
+    {
+      "case_id": "reconstructed_historical_identifier_rejected",
+      "left": {"identifier": "M-005", "created_after_gap_discovery": true, "immutable_locator": true, "originating_source": false},
+      "right": null,
+      "expected": {"winner": "none", "action": "quarantine_reconstruction", "resolution": "unresolved"}
+    },
+    {
+      "case_id": "immutable_origin_resolves_single_identifier",
+      "left": {"identifier": "M-006", "originating_source": true, "immutable_locator": true, "namespace_match": true, "owner_match": true, "semantic_role_match": true, "temporal_precedence_match": true},
+      "right": null,
+      "expected": {"winner": "left", "action": "resolve_only_M-006", "other_identifiers_unchanged": ["M-004", "M-005"]}
+    },
+    {
+      "case_id": "incomplete_history_cannot_prove_unlocated",
+      "left": {"identifier": "M-004", "history_coverage": "partial", "matches_found": 0},
+      "right": null,
+      "expected": {"winner": "none", "action": "remain_unresolved", "classification": "absence_unproven"}
+    }
+  ],
+  "global_invariants": [
+    "never delete or mutate earlier immutable observations",
+    "never collapse evidentiary, temporal, and resolution axes into one score",
+    "never resolve a historical identifier from suffix or semantic similarity alone",
+    "never promote automation prose without immutable corroboration",
+    "resolve identifiers independently",
+    "partial coverage cannot prove absence"
+  ],
+  "application": {
+    "M-004": "unresolved",
+    "M-005": "unresolved",
+    "M-006": "unresolved"
+  },
+  "source_status": {
+    "observed": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/continuity/records/CM-1028-claim-state-precedence.json"
+    ],
+    "inferred": ["Deterministic fixtures are required before the prose rule can be safely automated."],
+    "proposed": ["A future validator should execute every case and fail closed on unknown enum values or missing immutable locator fields."],
+    "superseded": [],
+    "unresolved": ["The originating sources for M-004, M-005, and M-006 remain unlocated."]
+  },
+  "privacy_boundary": {
+    "included": ["abstract claim metadata", "repository paths", "queue and fixture identifiers"],
+    "excluded": ["private chat text", "personal data", "health information", "credentials", "secret-bearing logs", "unapproved quotations"]
+  },
+  "falsification_route": "A fixture is falsified if an adopted continuity policy with immutable provenance permits the opposite expected outcome. M-004, M-005, or M-006 may change state only through an immutable originating source or exhaustive-history evidence."
+}
