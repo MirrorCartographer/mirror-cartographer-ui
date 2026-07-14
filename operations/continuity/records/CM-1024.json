@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1024",
+  "created_at": "2026-07-14T16:47:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Seed incorporation ledger for retained continuity queue slices",
+  "source_status": "repository_observed_bounded",
+  "sources": [
+    {"path":"operations/ACTIVE_QUEUE.json","blob_sha":"7ce65492e6c84e7afa6dafa8567d49f323dd0769","role":"canonical queue snapshot"},
+    {"commit_sha":"15fe8cd3d893c0775a4d25850983f9c1f7c34a36","path":"operations/queue-updates/M-RECONCILE-002-2026-07-14T1638Z.json","role":"incorporation-lag queue slice"},
+    {"commit_sha":"de147e1f9242280d96dc204587d92b84b9c5c308","role":"exhaustive-history collector queue slice"},
+    {"commit_sha":"c15c0e2023604602f1e5bb04376887366826f846","role":"repository coverage validator queue slice"},
+    {"commit_sha":"c62f2b82be12d71d31799f602f51fd050f99c602","role":"repository coverage contract queue slice"},
+    {"commit_sha":"d461a9c80b00aed86efd62fdb68e30b03b9c330a","role":"claim conflict fixture queue slice"},
+    {"commit_sha":"675875c38eebee1573491f65791faba0e63af509","role":"claim-state precedence queue slice"}
+  ],
+  "claims": {
+    "observed": [
+      "The canonical M-RECONCILE-002 projection contains seven completed slices.",
+      "Repository commit search returned multiple later continuity-owned queue-update commits whose commit identities are not represented in the canonical completed_slices array.",
+      "The latest incorporation-lag queue update explicitly requires a commit-keyed incorporation ledger before canonical promotion."
+    ],
+    "inferred": [
+      "The canonical queue is a current projection, not a complete event ledger.",
+      "Commit identity must be preserved independently of normalized semantic similarity because several retained slices can address adjacent provenance concerns without being interchangeable."
+    ],
+    "proposed": [
+      "Use commit SHA as the primary ledger key and record path, normalized completed_slice, canonical match, classification, evidence strength, and supersession target.",
+      "Treat search-derived entries as bounded candidates until each commit diff and changed path are fetched directly."
+    ],
+    "superseded": [
+      "The assumption that a semantic match to one canonical bullet is sufficient to prove incorporation of every related queue-update commit."
+    ],
+    "unresolved": [
+      "The exhaustive count of continuity queue-update commits across all branches and history.",
+      "The exact incorporation classification of each search-derived candidate beyond the directly inspected incorporation-lag and collector slices.",
+      "The immutable provenance of M-004, M-005, and M-006."
+    ]
+  },
+  "ledger_seed": [
+    {"commit_sha":"15fe8cd3d893c0775a4d25850983f9c1f7c34a36","classification":"additive_only","verification":"direct_commit_diff"},
+    {"commit_sha":"de147e1f9242280d96dc204587d92b84b9c5c308","classification":"additive_only","verification":"prior_direct_comparison"},
+    {"commit_sha":"c15c0e2023604602f1e5bb04376887366826f846","classification":"unresolved","verification":"commit_search_only"},
+    {"commit_sha":"c62f2b82be12d71d31799f602f51fd050f99c602","classification":"unresolved","verification":"commit_search_only"},
+    {"commit_sha":"d461a9c80b00aed86efd62fdb68e30b03b9c330a","classification":"unresolved","verification":"commit_search_only"},
+    {"commit_sha":"675875c38eebee1573491f65791faba0e63af509","classification":"unresolved","verification":"commit_search_only"}
+  ],
+  "memory_recovered": "A provenance-preserving incorporation ledger must be event-keyed by immutable commit identity; semantic queue bullets are projections and cannot substitute for the retained event history.",
+  "evidence_strength": "direct canonical snapshot plus one directly fetched queue-update diff, prior direct collector comparison, and bounded repository commit-search candidates",
+  "privacy_boundary": {
+    "included": ["repository governance metadata","commit identifiers","abstract queue classifications"],
+    "excluded": ["private chat text","personal records","credentials","secret-bearing logs","unreviewed file-library content"]
+  },
+  "falsification_route": [
+    "Fetch every candidate commit and changed path directly.",
+    "Normalize each completed_slice and compare it to the exact canonical queue blob.",
+    "Replace unresolved classifications only when immutable path and semantic evidence agree."
+  ],
+  "reversibility": "Additive record only; revert this commit without altering source history."
+}
