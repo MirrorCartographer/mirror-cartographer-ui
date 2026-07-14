@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "team": "frontier_research",
+  "captured_at": "2026-07-14T09:51:00Z",
+  "artifact_type": "implementation_test_evidence",
+  "finding": {
+    "status": "implemented_unexecuted",
+    "statement": "A retained evidence writer must reject a pre-positioned hard-link output and preserve the shared inode bytes; no-overwrite evidence must cover aliasing by hard links as well as symbolic links and ordinary existing files.",
+    "evidence_strength": "primary_documentation_plus_committed_test",
+    "uncertainty": "The fixture is committed but has not been observed in an authenticated checkout or GitHub Actions run through the available connector. Cross-platform hard-link creation permissions and filesystem behavior remain environment-specific."
+  },
+  "primary_sources": [
+    {
+      "title": "Node.js File system documentation",
+      "url": "https://nodejs.org/api/fs.html",
+      "relevance": "Documents fsPromises.link, fsPromises.writeFile, and exclusive creation flags used by the fixture."
+    },
+    {
+      "title": "Linux open(2) manual page",
+      "url": "https://man7.org/linux/man-pages/man2/open.2.html",
+      "relevance": "Defines O_CREAT with O_EXCL failure when the named path already exists, which includes an existing hard-link directory entry."
+    }
+  ],
+  "implementation": {
+    "commit_sha": "721b90076a3e3d008699d20d6b02df51b57ad255",
+    "path": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "test": "exclusive manifest creation rejects a pre-positioned hard-link output without altering the shared inode",
+    "expected_result": {
+      "verified": false,
+      "reason": "output_exists",
+      "code": "EEXIST",
+      "protected_target_unchanged": true,
+      "hard_link_alias_unchanged": true
+    }
+  },
+  "verification": {
+    "source_inspected": true,
+    "commit_created": true,
+    "runtime_execution_verified": false,
+    "claim_boundary": "The commit proves the adversarial fixture exists. It does not prove the fixture passed on Linux, macOS, Windows, GitHub Actions, or a production host."
+  },
+  "falsification_routes": [
+    "Run node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs in an authenticated checkout and retain stdout, exit status, Node version, operating system, filesystem type, and exact commit SHA.",
+    "Replace the exclusive-create flag with a nonexclusive write in a controlled branch; the hard-link fixture should detect mutation through both path aliases.",
+    "Execute on each supported platform and classify unsupported hard-link creation separately from a passed no-overwrite assertion."
+  ],
+  "design_implication": "Treat filesystem path identity as potentially aliased. Retained evidence outputs must use exclusive creation and adversarial fixtures for ordinary files, symbolic links, and hard links before no-overwrite claims are promoted."
+}
