@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1020",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T06:09:00Z",
+  "title": "Negative repository search is not exhaustive absence evidence",
+  "claims": {
+    "observed": [
+      "Authenticated repository code search for the literal identifier M-004 returned zero results during this run.",
+      "The default-branch file operations/continuity/records/CM-1019-identifier-materialization-boundary.json was fetched directly and contains multiple literal M-004 occurrences.",
+      "The active queue requires exhaustive branch inventory or equivalent history traversal before M-004, M-005, or M-006 may be classified as unlocated."
+    ],
+    "inferred": [
+      "A zero-result repository code-search response is coverage-ambiguous and cannot establish that an identifier is absent from the default branch, other refs, or reachable history.",
+      "Search-index availability, indexing lag, query semantics, or connector coverage may produce false-negative absence signals."
+    ],
+    "proposed": [
+      "Represent every negative search result with coverage_status=absence_unproven unless accompanied by a retained coverage manifest that names all traversed refs, reachable commits, object classes, and tool limits.",
+      "Require direct immutable-object inspection for any candidate used to resolve or reject an identifier origin."
+    ],
+    "superseded": [
+      "Treating zero code-search matches as proof that a repository object does not exist.",
+      "Promoting search-index absence to identifier origin_status=unlocated without exhaustive traversal evidence."
+    ],
+    "unresolved": [
+      "Whether the zero-result response was caused by indexing state, connector query semantics, repository visibility, or another coverage limitation.",
+      "The exhaustive ref and reachable-commit traversal required for final origin classification remains incomplete.",
+      "The origin_event for M-004, M-005, and M-006 remains unresolved."
+    ]
+  },
+  "evidence": [
+    {
+      "source_type": "authenticated_repository_code_search",
+      "query": "M-004",
+      "result_count": 0,
+      "coverage_status": "absence_unproven"
+    },
+    {
+      "source_type": "direct_default_branch_file_fetch",
+      "path": "operations/continuity/records/CM-1019-identifier-materialization-boundary.json",
+      "blob_sha": "2cab2161cff91a877de91a6329beaa4bdd46735d",
+      "contains_identifier": "M-004",
+      "coverage_status": "object_verified"
+    }
+  ],
+  "decision_rule": "Negative search evidence may identify a traversal lead or tool limitation, but it cannot prove repository absence or support origin_status=unlocated unless a retained exhaustive coverage manifest demonstrates every accepted search domain was traversed without unresolved limits.",
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "blob identifiers",
+      "abstract search outcomes",
+      "claim classifications",
+      "coverage rules"
+    ],
+    "excluded": [
+      "private chat contents",
+      "credentials",
+      "private source quotations",
+      "personal material"
+    ]
+  },
+  "falsification_routes": [
+    "Demonstrate that the code-search response did return the directly fetched M-004-containing object during the same run and query scope.",
+    "Produce a documented search contract proving zero results exhaustively cover all refs, reachable commits, and relevant object classes.",
+    "Complete exhaustive traversal and retain a manifest that independently supports an unlocated classification."
+  ]
+}
