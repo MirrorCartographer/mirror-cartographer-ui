@@ -47,6 +47,7 @@ test('final manifest is derived from promoted bytes when the original path chang
   assert.deepEqual(sourceAfterPromotion, mutated);
   assert.deepEqual(retainedManifest.observed, promoted);
   assert.match(result.bound_input_snapshot.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(result.output_boundary.reason, 'output_parent_within_evidence_root');
 });
 
 test('exclusive manifest creation rejects a pre-positioned symbolic-link output without altering its target', async () => {
@@ -158,6 +159,35 @@ test('exclusive manifest creation rejects using the promoted input path as its o
   assert.equal(result.reason, 'output_exists');
   assert.equal(result.code, 'EEXIST');
   assert.equal(await readFile(inputPath, 'utf8'), promotedBytes);
+});
+
+test('canonical output-parent containment rejects a symlinked directory that escapes the evidence root', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bound-manifest-root-test-'));
+  const outsideRoot = await mkdtemp(join(tmpdir(), 'bound-manifest-outside-test-'));
+  const inputPath = join(root, 'input.json');
+  const redirectedParent = join(root, 'redirected');
+  const outputPath = join(redirectedParent, 'manifest.json');
+  const escapedPath = join(outsideRoot, 'manifest.json');
+
+  await writeFile(inputPath, '{"synthetic":true}\n');
+  await symlink(outsideRoot, redirectedParent, process.platform === 'win32' ? 'junction' : 'dir');
+
+  const result = await writeBoundAuthenticatedEvidenceManifest({
+    input_path: inputPath,
+    output_path: outputPath,
+    evidence_root: root,
+    dependencies: {
+      validate_promotion: async () => ({ verified: true, reason: 'synthetic_promotion_verified' }),
+      write_manifest: async ({ output_path }) => {
+        await writeFile(output_path, '{"state":"should-not-escape"}\n', { flag: 'wx' });
+        return { verified: true, reason: 'synthetic_manifest_written' };
+      }
+    }
+  });
+
+  assert.equal(result.verified, false);
+  assert.equal(result.reason, 'output_parent_outside_evidence_root');
+  await assert.rejects(readFile(escapedPath, 'utf8'), error => error.code === 'ENOENT');
 });
 
 test('production dependencies remain optional and invalid paths still fail closed', async () => {
