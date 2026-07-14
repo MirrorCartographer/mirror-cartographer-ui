@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "record_id": "R-021-self-overwrite-exclusivity-2026-07-14T1052Z",
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "created_at": "2026-07-14T10:52:00Z",
+  "finding": "A retained evidence writer must reject an output path that is identical to its promoted input path; exclusive creation must preserve the original promoted bytes and fail closed with EEXIST.",
+  "source_status": {
+    "primary_documentation": "Node.js v26.5.0 filesystem documentation inspected on 2026-07-14",
+    "repository_implementation": "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs inspected at blob 90ff2096c7c86de2538e55190e64f2c43418bd48",
+    "prior_tests": "symbolic-link and hard-link output alias tests already existed; exact same-path self-overwrite was not covered"
+  },
+  "artifact": {
+    "path": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "commit": "5497be60ed0bd850b0d5a12ee85c70905a350e41",
+    "test_name": "exclusive manifest creation rejects using the promoted input path as its own output without altering source bytes"
+  },
+  "evidence_strength": "committed_unexecuted",
+  "verification": {
+    "source_inspection": true,
+    "test_committed": true,
+    "runtime_execution_observed": false,
+    "authenticated_exact_commit_execution": false
+  },
+  "uncertainty": [
+    "The connector cannot execute the Node test suite in this run.",
+    "Cross-platform behavior remains unverified until the test runs on supported CI operating systems."
+  ],
+  "falsification_route": "Run node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs at commit 5497be60ed0bd850b0d5a12ee85c70905a350e41 and retain Node version, operating system, filesystem type, stdout, and exit status. The finding is falsified if the write succeeds, the failure is not EEXIST, or the original input bytes change.",
+  "privacy_boundary": "Contains repository paths, immutable Git object identifiers, abstract test data, and public documentation references only; no credentials, private chat content, personal data, or secret-bearing logs are retained."
+}
