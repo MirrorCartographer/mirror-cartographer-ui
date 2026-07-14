@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "team": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-13T21:30:00-04:00",
+  "slice": "Bound free-text public metadata before stage descriptor publication.",
+  "production_fixture": {
+    "selected_hour": 21,
+    "production_id": "hour-21",
+    "title": "Production 21",
+    "activation": "operations-only-default-off"
+  },
+  "finding": "Recursive forbidden-key checks do not prevent private, credential-like, contact, or commerce material from being embedded inside otherwise permitted string values.",
+  "implementation": {
+    "file": "operations/vercel-studio/repertory/build-stage-descriptor.mjs",
+    "commit": "bbcef5061dcdf3496946bc3a38f22a1ee494fde6",
+    "controls": [
+      "280-character maximum per public metadata string",
+      "control-character rejection except tab, line feed, and carriage return",
+      "email-address rejection",
+      "credential-assignment rejection",
+      "bearer-token rejection",
+      "private-source marker rejection",
+      "commerce-route rejection"
+    ]
+  },
+  "verification": {
+    "method": "isolated Node test execution against the committed implementation and test fixtures",
+    "test_file": "operations/vercel-studio/repertory/build-stage-descriptor.test.mjs",
+    "test_commit": "0192202d6bac50de6c00c9f4b609b4ee4e84ed24",
+    "tests": 24,
+    "passed": 24,
+    "output": "{\"tests\":24,\"passed\":24,\"production\":\"Production 21\",\"activation\":\"operations-only-default-off\",\"privacy_boundary\":\"recursive-keys-and-bounded-strings\"}"
+  },
+  "evidence_strength": "deterministic_unit_verification",
+  "limits": [
+    "Pattern rejection is bounded and cannot prove semantic privacy for all natural-language strings.",
+    "No browser, deployment, or physical-device behavior was exercised.",
+    "The descriptor remains operations-only and default-off."
+  ],
+  "falsification_routes": [
+    "Provide a disallowed string that bypasses every current rule.",
+    "Demonstrate a permitted public phrase that is incorrectly rejected.",
+    "Run the repository-native test suite and compare results with the isolated execution."
+  ],
+  "rollback": {
+    "commits": [
+      "0192202d6bac50de6c00c9f4b609b4ee4e84ed24",
+      "bbcef5061dcdf3496946bc3a38f22a1ee494fde6"
+    ],
+    "deployment_reversal_required": false
+  }
+}
