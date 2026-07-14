@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-027",
+  "owner": "frontier_research",
+  "priority_basis": "R-020 and R-021 are implementation-complete but await authenticated execution. Current GitHub primary documentation exposed an adjacent reproducibility gap: unversioned REST requests default to an older API version, so retained enumeration commands must bind API-version semantics explicitly.",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added and verified a fail-closed retained-command contract requiring an explicit matching X-GitHub-Api-Version header, exhaustive gh pagination flags, an exact head_sha filter, and per_page=100.",
+  "design_implication": "R-020/R-021 evidence bundles should assess both response lifecycle evidence and the retained command itself before accepting enumeration coverage; retrieval timestamps alone cannot establish API semantics.",
+  "verification": {
+    "node_tests": "5 passed, 0 failed",
+    "committed_module": "bf22d8775c27309f4e21a198d69ca7244505b255",
+    "committed_test": "48d83a2fb4b472038911efe481b4f0addcdd4699",
+    "evidence_commit": "527ea4600c0dcb4fc6ca2c75b43357be84362623"
+  },
+  "files": [
+    "tools/frontier-research/github-api-command-contract.mjs",
+    "tools/frontier-research/github-api-command-contract.test.mjs",
+    "operations/evidence/R-027-github-api-command-contract-2026-07-14T1706Z.json"
+  ],
+  "limits": [
+    "Does not prove that the retained command was executed.",
+    "Does not authenticate or hash raw response pages.",
+    "Does not complete the authenticated R-020/R-021 handoff."
+  ],
+  "safe_next_action": "Integrate the command contract immediately ahead of the existing API-version lifecycle assessor and retained-evidence bundle writer, then execute both authenticated enumerators against one exact commit with the explicit 2026-03-10 version pin and preserve raw pages, command text, response lifecycle headers, and reconciliation output.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "deletions": []
+}
