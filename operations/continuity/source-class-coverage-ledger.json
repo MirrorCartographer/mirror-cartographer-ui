@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "ledger_id": "continuity-source-class-coverage-v1",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-14T18:28:00Z",
+  "purpose": "Distinguish inspected evidence, indexed search results, and exhaustive source-class coverage while resolving M-004, M-005, and M-006.",
+  "identifiers": ["M-004", "M-005", "M-006"],
+  "source_classes": [
+    {
+      "source_class": "default_branch_repository_files",
+      "coverage_status": "partial_observed",
+      "evidence": ["Canonical operations files, a continuity contract, and recent commit summaries were inspected through repository paths or commit identifiers."],
+      "limits": ["No complete tree inventory was retained for every reachable commit.", "An empty indexed search result is not exhaustive provenance evidence."],
+      "claim_effect": "Cannot support unlocated_after_exhaustive_coverage."
+    },
+    {
+      "source_class": "all_branches_and_reachable_history",
+      "coverage_status": "unresolved",
+      "evidence": ["A branch-search attempt did not return a usable branch inventory."],
+      "limits": ["No retained paginated branch inventory.", "No retained traversal of all reachable commits and trees."],
+      "claim_effect": "M-004, M-005, and M-006 remain unresolved."
+    },
+    {
+      "source_class": "decision_logs_language_lexicons_and_project_documents",
+      "coverage_status": "unresolved",
+      "evidence": [],
+      "limits": ["No exhaustive immutable-object inventory was retained in this run."],
+      "claim_effect": "Cannot confirm or deny originating identifier assignment."
+    },
+    {
+      "source_class": "privacy_reviewed_external_sources",
+      "coverage_status": "not_traversed",
+      "evidence": [],
+      "limits": ["No external source text was copied into the repository.", "No immutable source object assigning the identifiers was located."],
+      "claim_effect": "Source absence is unproven."
+    }
+  ],
+  "classification_rules": {
+    "observed": "Directly supported by an inspected immutable object or retained tool result.",
+    "inferred": "A bounded conclusion derived from observed evidence and marked non-exhaustive.",
+    "proposed": "A future search or reconciliation action not yet executed.",
+    "superseded": "A prior claim displaced by stronger immutable evidence.",
+    "unresolved": "Any claim requiring source-class coverage or provenance predicates not yet established."
+  },
+  "current_resolution": {"M-004": "unresolved", "M-005": "unresolved", "M-006": "unresolved"},
+  "privacy_class": "public_repository_metadata",
+  "reversibility": "Additive ledger; revert this commit without altering canonical queue or historical artifacts."
+}
