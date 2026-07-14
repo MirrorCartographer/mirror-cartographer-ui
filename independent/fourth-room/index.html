@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#11100e" />
+  <title>The Fourth Room</title>
+  <style>
+    :root { color-scheme: dark; --ink:#e9e1d2; --dim:#9d968a; --wall:#11100e; --line:#6e675c; --glow:#c9b27d; }
+    * { box-sizing:border-box; }
+    html, body { margin:0; min-height:100%; background:var(--wall); color:var(--ink); font-family:Georgia, 'Times New Roman', serif; }
+    body { min-height:100svh; overflow:hidden; }
+    button { font:inherit; color:inherit; }
+    .room { position:relative; min-height:100svh; display:grid; place-items:center; isolation:isolate; }
+    canvas { position:absolute; inset:0; width:100%; height:100%; z-index:-2; }
+    .grain { position:absolute; inset:0; z-index:-1; opacity:.13; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); }
+    main { width:min(92vw, 760px); padding:clamp(1.25rem,4vw,3rem); text-align:center; }
+    h1 { margin:0; font-size:clamp(2.8rem,10vw,7.5rem); font-weight:400; letter-spacing:-.055em; line-height:.82; text-wrap:balance; }
+    .subtitle { margin:1.25rem auto 0; max-width:34rem; color:var(--dim); font-size:clamp(.95rem,2.2vw,1.15rem); line-height:1.55; }
+    .door { margin:clamp(2rem,7vh,5rem) auto 0; width:min(58vw,240px); aspect-ratio:2/3; border:1px solid var(--line); background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(0,0,0,.2)); position:relative; display:grid; place-items:center; cursor:pointer; touch-action:manipulation; box-shadow:inset 0 0 0 7px rgba(255,255,255,.015),0 25px 70px rgba(0,0,0,.45); transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s; }
+    .door::before { content:""; position:absolute; inset:8%; border:1px solid rgba(233,225,210,.16); }
+    .door::after { content:""; width:.48rem; height:.48rem; border-radius:50%; background:var(--glow); position:absolute; right:12%; box-shadow:0 0 18px rgba(201,178,125,.65); }
+    .door:hover, .door:focus-visible { transform:perspective(700px) rotateY(-4deg) translateY(-3px); border-color:var(--ink); box-shadow:inset 0 0 0 7px rgba(255,255,255,.02),0 30px 90px rgba(0,0,0,.6); outline:none; }
+    .door span { max-width:70%; font-size:.85rem; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+    .message { min-height:3.5rem; margin:1.4rem auto 0; max-width:32rem; font-size:clamp(1rem,2.6vw,1.25rem); line-height:1.5; }
+    .controls { position:fixed; inset:auto max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) auto; display:flex; gap:.6rem; }
+    .control { border:1px solid var(--line); background:rgba(17,16,14,.72); padding:.55rem .75rem; min-height:44px; cursor:pointer; backdrop-filter:blur(10px); }
+    .control:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+    .count { position:fixed; left:max(1rem,env(safe-area-inset-left)); bottom:max(1rem,env(safe-area-inset-bottom)); color:var(--dim); font:12px/1.2 ui-monospace,monospace; }
+    @media (prefers-reduced-motion: reduce) { .door { transition:none; } }
+  </style>
+</head>
+<body>
+  <div class="room">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <main>
+      <h1>The Fourth<br />Room</h1>
+      <p class="subtitle">Three rooms remember what they were built for. The fourth only appears when someone enters without asking it to explain itself.</p>
+      <button class="door" id="door" type="button" aria-describedby="message"><span>Enter without proof</span></button>
+      <p class="message" id="message" role="status" aria-live="polite">The room is listening for a shape, not a name.</p>
+    </main>
+    <div class="count" id="count" aria-hidden="true">00</div>
+    <div class="controls">
+      <button class="control" id="sound" type="button" aria-pressed="false">Sound: off</button>
+      <button class="control" id="reset" type="button">Reset</button>
+    </div>
+  </div>
+<script>
+(() => {
+  'use strict';
+  const lines = [
+    'A small light moves behind the wall, keeping pace with your breathing.',
+    'Nothing opens. The room becomes deeper anyway.',
+    'A chair remembers the weight of someone who has not arrived.',
+    'The ceiling lowers by one thought, then changes its mind.',
+    'You hear a door close in a building with no second floor.',
+    'The room gives back the silence, but warmer.',
+    'A line appears where the horizon would be if this were outside.',
+    'For one second, every object agrees on where the center is.'
+  ];
+  const canvas = document.querySelector('#field');
+  const ctx = canvas.getContext('2d', { alpha:false });
+  const door = document.querySelector('#door');
+  const message = document.querySelector('#message');
+  const count = document.querySelector('#count');
+  const sound = document.querySelector('#sound');
+  const reset = document.querySelector('#reset');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let visits = Number(sessionStorage.getItem('fourth-room-visits') || 0);
+  let audio = null;
+  let tone = null;
+  let raf = 0;
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(innerWidth * dpr);
+    canvas.height = Math.round(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw(performance.now());
+  }
+
+  function draw(t) {
+    const w = innerWidth, h = innerHeight;
+    ctx.fillStyle = '#11100e'; ctx.fillRect(0,0,w,h);
+    const phase = reduced ? visits * .55 : t * .00008;
+    const x = w * (.5 + Math.sin(phase + visits * .31) * .16);
+    const y = h * (.48 + Math.cos(phase * 1.3 + visits * .21) * .12);
+    const r = Math.max(w,h) * (.48 + Math.min(visits,12) * .012);
+    const g = ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,'rgba(116,101,74,.24)');
+    g.addColorStop(.35,'rgba(49,45,38,.18)');
+    g.addColorStop(1,'rgba(17,16,14,0)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle = 'rgba(233,225,210,.055)'; ctx.lineWidth = 1;
+    for (let i=0;i<7;i++) {
+      const q = (i+1)/8; const bend = Math.sin(phase*3+i+visits)*12;
+      ctx.beginPath(); ctx.moveTo(w*q+bend,0); ctx.lineTo(w*(1-q)-bend,h); ctx.stroke();
+    }
+    if (!reduced) raf = requestAnimationFrame(draw);
+  }
+
+  function ping() {
+    if (!audio) return;
+    const now = audio.currentTime;
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(73 + (visits % 5) * 11, now);
+    osc.frequency.exponentialRampToValueAtTime(42, now + 1.8);
+    gain.gain.setValueAtTime(.0001, now);
+    gain.gain.exponentialRampToValueAtTime(.035, now + .08);
+    gain.gain.exponentialRampToValueAtTime(.0001, now + 2.1);
+    osc.connect(gain).connect(audio.destination); osc.start(now); osc.stop(now + 2.2);
+  }
+
+  function enter() {
+    visits += 1;
+    sessionStorage.setItem('fourth-room-visits', String(visits));
+    message.textContent = lines[(visits - 1) % lines.length];
+    count.textContent = String(visits).padStart(2,'0');
+    door.querySelector('span').textContent = visits % 4 === 0 ? 'The room entered you' : 'Enter again';
+    ping();
+    if (reduced) draw(performance.now());
+  }
+
+  sound.addEventListener('click', async () => {
+    if (!audio) { audio = new (window.AudioContext || window.webkitAudioContext)(); }
+    if (audio.state === 'suspended') await audio.resume();
+    const enabled = sound.getAttribute('aria-pressed') !== 'true';
+    sound.setAttribute('aria-pressed', String(enabled));
+    sound.textContent = `Sound: ${enabled ? 'on' : 'off'}`;
+    if (enabled) { tone = audio; ping(); } else { tone = null; audio.close(); audio = null; }
+  });
+  door.addEventListener('click', enter);
+  reset.addEventListener('click', () => {
+    visits = 0; sessionStorage.removeItem('fourth-room-visits');
+    message.textContent = 'The room is listening for a shape, not a name.';
+    count.textContent = '00'; door.querySelector('span').textContent = 'Enter without proof';
+    if (reduced) draw(performance.now());
+  });
+  addEventListener('resize', resize, { passive:true });
+  resize(); count.textContent = String(visits).padStart(2,'0');
+  if (!reduced) raf = requestAnimationFrame(draw);
+  addEventListener('pagehide', () => cancelAnimationFrame(raf), { once:true });
+})();
+</script>
+</body>
+</html>
