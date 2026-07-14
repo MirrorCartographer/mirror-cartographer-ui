@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { writeBoundAuthenticatedEvidenceManifest } from '../tools/write-bound-vercel-authenticated-evidence-manifest.mjs';
@@ -47,6 +47,44 @@ test('final manifest is derived from promoted bytes when the original path chang
   assert.deepEqual(sourceAfterPromotion, mutated);
   assert.deepEqual(retainedManifest.observed, promoted);
   assert.match(result.bound_input_snapshot.sha256, /^[0-9a-f]{64}$/);
+});
+
+test('exclusive manifest creation rejects a pre-positioned symbolic-link output without altering its target', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bound-manifest-symlink-test-'));
+  const inputPath = join(root, 'input.json');
+  const protectedPath = join(root, 'protected.json');
+  const outputPath = join(root, 'manifest.json');
+  const protectedBytes = '{"state":"must-remain-unchanged"}\n';
+
+  await writeFile(inputPath, '{"synthetic":true}\n');
+  await writeFile(protectedPath, protectedBytes);
+  await symlink(protectedPath, outputPath);
+
+  const result = await writeBoundAuthenticatedEvidenceManifest({
+    input_path: inputPath,
+    output_path: outputPath,
+    evidence_root: root,
+    dependencies: {
+      validate_promotion: async () => ({ verified: true, reason: 'synthetic_promotion_verified' }),
+      write_manifest: async ({ output_path }) => {
+        try {
+          await writeFile(output_path, '{"state":"should-not-write"}\n', { flag: 'wx' });
+        } catch (error) {
+          return {
+            verified: false,
+            reason: error.code === 'EEXIST' ? 'output_exists' : 'output_write_failed',
+            code: error.code ?? 'unknown'
+          };
+        }
+        return { verified: true, reason: 'synthetic_manifest_written' };
+      }
+    }
+  });
+
+  assert.equal(result.verified, false);
+  assert.equal(result.reason, 'output_exists');
+  assert.equal(result.code, 'EEXIST');
+  assert.equal(await readFile(protectedPath, 'utf8'), protectedBytes);
 });
 
 test('production dependencies remain optional and invalid paths still fail closed', async () => {
