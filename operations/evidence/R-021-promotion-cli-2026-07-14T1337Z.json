@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T13:37:00Z",
+  "finding": "The reconciliation and temporal-stability gates now have one no-overwrite retained-artifact CLI boundary.",
+  "implementation": {
+    "cli_path": "tools/frontier-research/workflow-enumeration-promotion-cli.mjs",
+    "cli_commit": "992d88faa01a957f2c02618717c24f54be99a972",
+    "test_path": "tools/frontier-research/workflow-enumeration-promotion-cli.test.mjs",
+    "test_commit": "b3637d8a0fd3e00691084b2046b7ce7b82f34da1"
+  },
+  "verification": {
+    "command": "node --test workflow-enumeration-promotion-cli.test.mjs",
+    "passed": 3,
+    "failed": 0,
+    "cases": [
+      "writes a new retained assessment",
+      "refuses output overwrite",
+      "rejects input and output path collision"
+    ]
+  },
+  "evidence_strength": "committed_and_locally_runtime_verified",
+  "limits": [
+    "No authenticated repository enumeration was executed.",
+    "The CLI is not yet wired into the Vercel assessor.",
+    "The quiet-period threshold remains configurable."
+  ],
+  "falsification_route": "Run the CLI against two non-overlapping exact-commit observations. Any client divergence, digest drift, nonterminal run, ceiling ambiguity, cross-commit record, overwrite, or insufficient quiet period must prevent promotion."
+}
