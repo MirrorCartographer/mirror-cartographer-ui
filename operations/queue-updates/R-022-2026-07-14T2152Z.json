@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "created_at": "2026-07-14T21:52:59Z",
+  "objective": "Preserve the current GitHub filtered workflow-run enumeration contract and its provider-ceiling ambiguity as an implementation-ready, falsifiable artifact.",
+  "completed_slices": [
+    "Verified current primary GitHub documentation for head_sha filtering, per-page maximum, private-repository permissions, and the 1000-result filtered-search ceiling.",
+    "Converted the finding into a machine-readable fail-closed evidence contract with required retained fields.",
+    "Defined a falsification route using a fixture repository with independently known cardinality greater than 1000."
+  ],
+  "acceptance_remaining": [
+    "Integrate the R-022 evidence fields into the retained-evidence CLI envelope if any are absent.",
+    "Execute both authenticated exhaustive clients for one exact commit and retain raw page digests plus request API version.",
+    "Treat returned_count greater than or equal to 1000 as provider_ceiling_ambiguous unless an independently bounded exhaustive method exists."
+  ],
+  "safe_next_action": "Diff R-022's required evidence fields against the existing retained-evidence CLI schema, add only missing fields and tests, then execute the authenticated dual-client reconciliation without creating an application deployment.",
+  "artifact": "operations/frontier-research/artifacts/R-022-filtered-workflow-run-provider-contract.json",
+  "source_status": "primary_documentation",
+  "uncertainty": "The documented ceiling is authoritative, but GitHub does not document an explicit truncation indicator for filtered results at the ceiling.",
+  "canonical_queue_mutated": false,
+  "specialist_registry_mutated": false,
+  "files_deleted": false
+}
