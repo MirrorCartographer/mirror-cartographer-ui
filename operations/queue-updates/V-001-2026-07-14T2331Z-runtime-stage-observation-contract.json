@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T23:31:25Z",
+  "slice": "commit_bound_runtime_stage_observation_contract",
+  "status": "completed_operations_only",
+  "production_scheduled_for_observation_hour": {
+    "utc_hour": 23,
+    "production_id": "archive-afterimage",
+    "runtime_activation_claimed": false
+  },
+  "problem_closed": "Static repertory status markers can no longer qualify as current-stage runtime evidence under this contract.",
+  "files": [
+    "operations/vercel-studio/repertory/verifyRuntimeStageObservation.v1.cjs",
+    "operations/vercel-studio/repertory/verifyRuntimeStageObservation.v1.test.cjs"
+  ],
+  "commits": [
+    "8c353e049c3c2b257a88942871d792c83a5d902e",
+    "969d4e38849e6868798ac836bea8e79dda8d4a60"
+  ],
+  "acceptance_contract": [
+    "exact 40-character commit SHA agreement",
+    "immutable deployment identity and HTTPS URL",
+    "active repertory contract agreement",
+    "runtime_dom_probe source",
+    "deterministic UTC-hour production agreement",
+    "deployment identity independently marked verified",
+    "no autoplay audio detected",
+    "no private source material detected"
+  ],
+  "verification": {
+    "repository_write": "verified",
+    "fetch_back": "verified",
+    "deterministic_test_cases_committed": 6,
+    "runtime_test_execution": "not_available_in_connector_run",
+    "deployment_attempted": false,
+    "deployment_claimed": false
+  },
+  "constraints_preserved": [
+    "operations-only change",
+    "application runtime unchanged",
+    "no payment or conversion logic",
+    "no private source material",
+    "no autoplay activation",
+    "mobile runtime unaffected",
+    "fail-closed deployment posture"
+  ],
+  "rollback": "Revert this queue-update commit, then revert 969d4e38849e6868798ac836bea8e79dda8d4a60 and 8c353e049c3c2b257a88942871d792c83a5d902e.",
+  "next_action": "Run the committed Node tests in an authenticated checkout. After Vercel capacity returns and an immutable successful deployment is available, produce a runtime_dom_probe observation for the exact deployed commit and validate it before replacing any static observed-current-stage marker."
+}
