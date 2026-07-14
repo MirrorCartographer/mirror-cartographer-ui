@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T22:19:00Z",
+  "state": "completed_handoff_ready",
+  "finding": {
+    "status": "observed_gap",
+    "summary": "The evidence bundle checked summarized page counts and a single resource label but did not itself establish that retained response headers formed one complete, ordered, successful, resource-consistent sequence for each client.",
+    "evidence_strength": "strong_static_analysis",
+    "uncertainty": "Runtime behavior remains unverified until the Node tests and authenticated traversals execute."
+  },
+  "completed_slice": {
+    "artifact": "tools/frontier-research/response-header-proof-validator.mjs",
+    "tests": "tools/frontier-research/response-header-proof-validator.test.mjs",
+    "capabilities": [
+      "Requires one ordered page record per client starting at page one with no skipped indexes.",
+      "Requires successful HTTP status and integer x-ratelimit-limit, remaining, used, reset, and non-empty resource headers for every page.",
+      "Rejects impossible rate-limit arithmetic, regressing reset epochs, within-client resource changes, and cross-client resource disagreement.",
+      "Produces the existing dual_client_retained_response_header_contract shape and fails promotion closed when either client observes zero remaining capacity."
+    ]
+  },
+  "source_status": {
+    "primary": "GitHub REST rate-limit documentation describes x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-used, x-ratelimit-reset, and x-ratelimit-resource as response-header evidence.",
+    "repository": "Compared against the existing workflow evidence bundle and prior R-021 rate-limit page-count binding to avoid duplication."
+  },
+  "design_implication": "Construct the accepted summary proof only from validated retained per-page response records, then pass that proof into the existing evidence bundle. Do not accept a manually authored summary as equivalent evidence.",
+  "falsification_route": [
+    "Run the committed Node test file in an authenticated checkout.",
+    "Capture every response page from both exhaustive clients and validate the records before bundle generation.",
+    "Reject this design if GitHub documents that relevant pagination responses legitimately change x-ratelimit-resource or regress reset epochs during one uninterrupted traversal; update the validator with a documented transition model rather than weakening it silently."
+  ],
+  "verification": {
+    "repository_fetch_back": "pending_after_commit",
+    "node_tests": "not_run_connector_runtime_has_no_checkout",
+    "authenticated_api_execution": "not_run"
+  },
+  "registry_change": null,
+  "deletions": []
+}
