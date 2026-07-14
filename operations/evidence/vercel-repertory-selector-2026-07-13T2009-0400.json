@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T20:09:30-04:00",
+  "artifact": "operations/vercel-studio/repertory/select-production.mjs",
+  "test_artifact": "operations/vercel-studio/repertory/select-production.test.mjs",
+  "schedule_artifact": "operations/vercel-studio/repertory/schedule.json",
+  "production_on_stage": {
+    "hour": 20,
+    "id": "hour-20",
+    "title": "House Lights",
+    "grammar": "public screening foyer"
+  },
+  "verification": {
+    "method": "github-contents-round-trip-and-static-contract-review",
+    "result": "passed",
+    "artifact_blob_sha": "3837a4020f675960123d572ad03815260c3b7a93",
+    "runtime_test_executed": false,
+    "reason_runtime_not_executed": "The automation runtime had no network route for a local checkout; no GitHub Actions run was triggered and no deployment was attempted.",
+    "verified_invariants": [
+      "exactly one production is selected for each integer hour from 0 through 23",
+      "selection uses the schedule timezone rather than host-local time",
+      "randomness remains disabled",
+      "autoplay remains disabled for every production",
+      "all productions retain the shared continuity channel",
+      "invalid hours, invalid timezones, incomplete schedules, duplicate hours, duplicate identifiers, autoplay drift, and continuity forks fail closed"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "claimed": false,
+    "reason": "CURRENT_STATE prohibits application deployment attempts while provider build capacity is exhausted."
+  },
+  "privacy": {
+    "private_source_material_included": false,
+    "personal_identifiers_included": false
+  },
+  "limits": [
+    "The committed Node test suite was specified but not executed in this run.",
+    "No browser, mobile Safari, audio, performance, deployment, or physical-device claim is made.",
+    "The selector remains operations-only until a feature-flagged application adapter is implemented and commit-bound deployment evidence exists."
+  ]
+}
