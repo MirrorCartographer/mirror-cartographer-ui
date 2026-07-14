@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-14T06:09:00Z",
+  "finding": "Zero-result repository code search contradicted direct object inspection and is therefore classified as absence_unproven rather than exhaustive absence evidence.",
+  "observations": {
+    "search_query": "M-004",
+    "search_result_count": 0,
+    "direct_fetch_path": "operations/continuity/records/CM-1019-identifier-materialization-boundary.json",
+    "direct_fetch_blob_sha": "2cab2161cff91a877de91a6329beaa4bdd46735d",
+    "direct_fetch_contains_identifier": true
+  },
+  "claim_status": {
+    "observed": "Search returned no matches while the directly fetched object contained M-004.",
+    "inferred": "Negative code-search results have incomplete or ambiguous coverage.",
+    "proposed": "Require retained exhaustive coverage manifests before any unlocated classification.",
+    "superseded": "Zero search matches prove repository absence.",
+    "unresolved": "Underlying false-negative cause and exhaustive origin traversal."
+  },
+  "verification": {
+    "method": "Cross-check authenticated repository search against direct default-branch file fetch.",
+    "result": "contradiction_confirmed",
+    "scope": "One literal identifier query and one directly fetched repository object; not an exhaustive repository audit."
+  },
+  "privacy_boundary": "Repository metadata and abstract tool outcomes only; no private source contents or credentials retained.",
+  "related_record": "operations/continuity/records/CM-1020-negative-search-evidence-boundary.json"
+}
