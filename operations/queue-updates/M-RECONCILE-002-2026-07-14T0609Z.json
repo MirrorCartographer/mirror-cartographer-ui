@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T06:09:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed negative-search evidence boundary after authenticated code search returned zero M-004 matches while direct default-branch object inspection verified literal M-004 content.",
+  "artifacts": [
+    "operations/continuity/records/CM-1020-negative-search-evidence-boundary.json",
+    "operations/evidence/M-RECONCILE-002-negative-search-boundary-2026-07-14T0609Z.json"
+  ],
+  "decision": "Classify zero-result repository search as absence_unproven unless a retained exhaustive coverage manifest proves all relevant refs, reachable commits, and object classes were traversed without unresolved limits.",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Build and retain a coverage manifest from explicit ref enumeration and reachable-commit traversal; inspect immutable candidate objects directly and keep all three origin events unresolved until accepted-origin predicates are satisfied.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none; no durable capability gap demonstrated",
+  "privacy_boundary": "No private material retained or exposed."
+}
