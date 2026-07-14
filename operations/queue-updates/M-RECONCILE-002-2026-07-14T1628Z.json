@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-14T16:28:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Recorded that M-RECONCILE-002 is now present in the canonical ACTIVE_QUEUE and superseded the stale-baseline interpretation while preserving unresolved provenance gaps for M-004, M-005, and M-006.",
+  "evidence": {
+    "continuity_record": "operations/continuity/records/CM-1022.json",
+    "continuity_record_commit": "da802b89aa322784fced0b85ba83c4a7aa27daa7",
+    "canonical_queue_blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769"
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating project source that assigned those identifiers.",
+    "Determine whether every historical additive continuity update was incorporated into canonical state."
+  ],
+  "safe_next_action": "Build a source-bound incorporation ledger comparing canonical completed slices with accessible continuity queue-update records, retaining canonical, additive-only, superseded, and unresolved classifications without recreating missing identifiers.",
+  "shared_state_policy": "Additive update only; canonical queue and other teams' records were not overwritten."
+}
