@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T08:38:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a least-privilege GitHub Actions gate for deterministic hourly repertory tests, bound to relevant operations paths and manual dispatch.",
+  "artifacts": [
+    {
+      "path": ".github/workflows/operations-repertory-tests.yml",
+      "commit": "47ed93554b419219f217a57ef4f52f2c3f1843b0",
+      "status": "implemented_unexecuted"
+    },
+    {
+      "path": "operations/evidence/V-001-repertory-ci-gate-2026-07-14T0838Z.json",
+      "commit": "cbe7c3443cd059423d34e8ecd0461f78a6f49968",
+      "status": "retained"
+    }
+  ],
+  "observed_blockers": [
+    "No GitHub Actions run was observable through the available commit workflow-run lookup.",
+    "The workflow-definition commit received a Vercel failure status targeting the provider build-rate-limit page."
+  ],
+  "acceptance_impact": {
+    "advanced": [
+      "Deterministic repertory tests now have a durable repository CI definition instead of remaining a local-only command."
+    ],
+    "remaining": [
+      "Observe a successful exact-commit Actions run for the repertory gate.",
+      "Determine why this operations-oriented commit was not suppressed from Vercel processing.",
+      "Complete authenticated dual-client workflow enumeration, immutable deployment binding, and bounded physical iPhone Safari audibility verification."
+    ]
+  },
+  "shared_state_policy": "Canonical ACTIVE_QUEUE.json was not overwritten; this append-only queue update preserves concurrent team state.",
+  "rollback": "Revert 47ed93554b419219f217a57ef4f52f2c3f1843b0 to remove the workflow definition; evidence and queue records remain historical.",
+  "next_action": "Use an authenticated Actions client to dispatch or observe the gate and retain the exact run result, then diagnose Vercel suppression for .github workflow-only commits without creating an application deployment."
+}
