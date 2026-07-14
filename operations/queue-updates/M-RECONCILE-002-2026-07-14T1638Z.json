@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T16:38:00Z",
+  "state": "in_progress",
+  "completed_slice": "Compared the canonical queue projection with the retained exhaustive-history collector slice and established that canonical item presence does not prove full incorporation of later additive continuity work.",
+  "memory_recovered": "Canonical queue membership and complete historical incorporation are distinct claims; at least the retained collector slice remains additive-only in the inspected canonical blob.",
+  "evidence_path": "operations/continuity/records/CM-1023.json",
+  "acceptance_remaining": [
+    "Enumerate all accessible continuity queue-update commits and bind each to an immutable commit and path.",
+    "Classify every retained slice as canonical, additive_only, superseded, or unresolved.",
+    "Execute the authenticated exhaustive history collector and five-source-class validation before changing M-004, M-005, or M-006 from unresolved."
+  ],
+  "safe_next_action": "Build the complete incorporation ledger from immutable continuity queue-update commits, compare each normalized completed_slice against the canonical queue, and preserve additive-only status until an explicit canonical update is observed.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false,
+  "reversible": true
+}
