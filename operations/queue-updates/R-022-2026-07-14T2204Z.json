@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T22:04:46Z",
+  "status": "completed_handoff_ready",
+  "finding": "The retained-evidence CLI had been upgraded to require a fourth retained dual-client rate-limit proof, but its test suite still encoded the obsolete three-source contract.",
+  "implemented_slice": {
+    "artifact": "tools/vercel-studio/retained-workflow-evidence-cli.test.mjs",
+    "commit": "297f7316a5fbc0d442e6f2d7b1a31cbc358f0be2",
+    "coverage": [
+      "accepted retained proof produces a verified schema-v2 bundle",
+      "CLI requires --rate-limit-proof",
+      "proof source must be inode-distinct from all other retained inputs",
+      "proof symlinks are rejected",
+      "malformed proof JSON is rejected",
+      "proofs that do not permit promotion are rejected",
+      "existing no-overwrite, exhaustive-command, timestamp, duplicate-flag, hard-link, and symlink safeguards remain covered"
+    ]
+  },
+  "evidence_strength": "repository_fetch_back_verified_static_contract",
+  "verification": {
+    "fetch_back": true,
+    "runtime_test_execution": false,
+    "reason_runtime_not_executed": "No authenticated local checkout or repository execution environment was available to this run."
+  },
+  "uncertainty": [
+    "The Node test suite has not yet been executed against the committed repository state.",
+    "No authenticated exact-commit workflow enumeration or retained response-header proof was generated."
+  ],
+  "falsification_route": [
+    "Run node --test tools/vercel-studio/retained-workflow-evidence-cli.test.mjs in an authenticated checkout.",
+    "Treat any failing assertion as evidence that the retained proof contract or fixture shape diverges from the implementation.",
+    "Execute both exhaustive clients against one exact commit and retain the four independent source files plus the generated bundle."
+  ],
+  "registry_change": null,
+  "deletion_performed": false,
+  "next_action": "Execute the committed test file, then run the authenticated four-source retained-evidence path for one exact commit without creating an application deployment."
+}
