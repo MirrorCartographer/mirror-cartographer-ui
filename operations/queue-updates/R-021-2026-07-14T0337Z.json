@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T03:37:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed temporal-coherence prototype and falsification test plan binding both client executions and stabilization snapshots to captured_at.",
+  "finding": "Current acceptance can parse a future-dated execution or second snapshot without proving it preceded evidence capture.",
+  "design_implication": "Vercel Studio should invoke the temporal gate before validateAuthenticatedEvidenceManifest and before any output write.",
+  "files": [
+    "tools/frontier-research/evidence-temporal-coherence.mjs",
+    "tools/frontier-research/evidence-temporal-coherence.test.mjs",
+    "operations/evidence/frontier-evidence-temporal-coherence-2026-07-14T0337Z.json"
+  ],
+  "commits": [
+    "01d8a5aed8be8093add0b7018caf110a9acd3e18",
+    "234cf211969f4e3c000066dc6c3ea34db0db10b1",
+    "b40077da52593ed17a13e8fbcdf14501588a803a"
+  ],
+  "verification": {
+    "level": "repository_round_trip_and_static_contract_review",
+    "tests_executed": false,
+    "planned_assertions": 9
+  },
+  "limits": [
+    "The prototype proves ordering only, not authenticity or synchronization of clocks.",
+    "The module is not yet integrated into the manifest writer.",
+    "The committed test has not yet been executed in this run."
+  ],
+  "safe_next_action": "Execute the test in an authenticated checkout, integrate validateEvidenceTemporalCoherence before manifest acceptance, and add writer-level rejection tests proving no output file is created for future-dated execution or stabilization evidence."
+}
