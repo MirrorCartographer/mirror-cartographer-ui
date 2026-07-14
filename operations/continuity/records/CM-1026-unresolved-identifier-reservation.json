@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1026",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T09:43:38Z",
+  "title": "Unresolved historical identifiers must remain reserved until immutable provenance resolves them",
+  "claims": {
+    "observed": [
+      "operations/ACTIVE_QUEUE.json requires M-004, M-005, and M-006 to remain unresolved until exhaustive repository coverage and immutable provenance are obtained.",
+      "The queue's safe next action explicitly forbids recreating historical identifiers while coverage is incomplete.",
+      "CM-1025 preserves the rule that descriptive claims must not be treated as executable or evidentiary enforcement."
+    ],
+    "inferred": [
+      "Reusing M-004, M-005, or M-006 for newly created artifacts would collapse two distinct identities: the unresolved historical claim and the new artifact.",
+      "A newly created artifact carrying one of those identifiers could be mistaken for recovered provenance even when no immutable origin object had been located.",
+      "Identifier reservation is therefore a provenance-preservation control, not merely a naming convention."
+    ],
+    "proposed": [
+      "Treat M-004, M-005, and M-006 as reserved unresolved identifiers across continuity records, queue updates, tests, generated fixtures, and migration scripts.",
+      "Permit references to those identifiers only when claim_status remains unresolved or when an immutable locator is supplied and independently verified.",
+      "Assign fresh identifiers to all newly created artifacts rather than backfilling unresolved historical IDs.",
+      "Add a future machine-checkable identifier-reservation test once the authoritative artifact index or namespace registry is located."
+    ],
+    "superseded": [
+      "Treating an unresolved identifier as available for reuse because its originating artifact is not currently located.",
+      "Treating semantic similarity or matching prose as sufficient to backfill an unresolved historical identifier."
+    ],
+    "unresolved": [
+      "The authoritative namespace registry or originating decision source for M-004, M-005, and M-006 remains unlocated.",
+      "Exhaustive branch and commit-history coverage has not yet been demonstrated.",
+      "No machine-checkable repository-wide reservation test exists yet."
+    ]
+  },
+  "source_provenance": [
+    {
+      "source_class": "repository",
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "supports": "The unresolved provenance objective, acceptance criteria, and explicit prohibition on recreating historical identifiers under incomplete coverage."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/continuity/records/CM-1025-monotonicity-gap.json",
+      "blob": "9183d360ca27f1b843730e45d6fdb4d9f68d16ea",
+      "supports": "The distinction between descriptive assertions and enforceable provenance controls."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/SPECIALIST_REGISTRY.json",
+      "blob": "0249aea064eda2cc5c7bc86713201e1cd26354ff",
+      "supports": "The evidence-gated rule for changing operational roles; no registry change is justified by this slice."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "repository blob identifiers",
+      "abstract identifier and provenance rules",
+      "claim classifications",
+      "falsification routes"
+    ],
+    "excluded": [
+      "private chat text",
+      "private file-library payloads",
+      "personal or health information",
+      "credentials",
+      "secret-bearing logs",
+      "unapproved quotations"
+    ]
+  },
+  "verification": {
+    "method": "Compared the exact current ACTIVE_QUEUE, SPECIALIST_REGISTRY, and CM-1025 blobs and derived the minimal fail-closed identifier rule consistent with their explicit constraints.",
+    "limitations": [
+      "This record does not establish the original meaning of M-004, M-005, or M-006.",
+      "This record does not claim exhaustive repository coverage.",
+      "The reservation rule is recorded as a durable continuity decision but is not yet enforced by a repository-wide validator."
+    ]
+  },
+  "falsification_routes": [
+    "Produce an immutable pre-existing artifact or decision source that assigns one of the identifiers and satisfies namespace, owner, semantic-role, temporal-precedence, and locator agreement.",
+    "Demonstrate an authoritative namespace policy explicitly allowing unresolved historical identifiers to be reused without provenance ambiguity.",
+    "Show a repository-wide validator that already prevents unresolved identifier reuse, making the proposed enforcement work redundant."
+  ]
+}
