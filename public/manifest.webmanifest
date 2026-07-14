@@ -1,0 +1,15 @@
+{
+  "name": "Mirror Cartographer",
+  "short_name": "Cartographer",
+  "description": "A private continuity atlas for conversations, symbols, bodies, animals, evidence, and projects.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050510",
+  "theme_color": "#10162b",
+  "orientation": "any",
+  "categories": ["productivity", "medical", "lifestyle"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
