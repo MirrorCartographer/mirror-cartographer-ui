@@ -5,12 +5,39 @@ const FORBIDDEN_PUBLIC_KEYS = Object.freeze([
   'payment', 'payments', 'checkout', 'conversion', 'conversion_logic', 'autoplay_url'
 ]);
 
+const MAX_PUBLIC_STRING_LENGTH = 280;
+const FORBIDDEN_PUBLIC_STRING_PATTERNS = Object.freeze([
+  Object.freeze({ id: 'email-address', pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i }),
+  Object.freeze({ id: 'credential-assignment', pattern: /\b(?:api[_-]?key|access[_-]?token|secret|password)\s*[:=]/i }),
+  Object.freeze({ id: 'bearer-token', pattern: /\bbearer\s+[A-Z0-9._~+\/-]{12,}/i }),
+  Object.freeze({ id: 'private-source-marker', pattern: /\b(?:private source|private chat|medical record|health record)\b/i }),
+  Object.freeze({ id: 'commerce-route', pattern: /(?:https?:\/\/[^\s]+)?\/(?:checkout|pay|payment|subscribe)(?:[/?#]|\b)/i }),
+]);
+
 function assertPlainObject(value, label) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${label} must be an object`);
 }
 
+function assertPublicString(value, path) {
+  if (value.length > MAX_PUBLIC_STRING_LENGTH) {
+    throw new Error(`public metadata string exceeds ${MAX_PUBLIC_STRING_LENGTH} characters at ${path}`);
+  }
+  if (/[^\P{Cc}\t\n\r]/u.test(value)) {
+    throw new Error(`public metadata string contains disallowed control characters at ${path}`);
+  }
+  for (const rule of FORBIDDEN_PUBLIC_STRING_PATTERNS) {
+    if (rule.pattern.test(value)) {
+      throw new Error(`forbidden public metadata string pattern ${rule.id} at ${path}`);
+    }
+  }
+}
+
 function assertPublicValue(value, path = 'public metadata') {
-  if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) return;
+  if (typeof value === 'string') {
+    assertPublicString(value, path);
+    return;
+  }
+  if (value === null || ['number', 'boolean'].includes(typeof value)) return;
 
   if (Array.isArray(value)) {
     for (let index = 0; index < value.length; index += 1) {
