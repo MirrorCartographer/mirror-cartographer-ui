@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T07:26:27Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic exclusive-create CLI that compiles the canonical 24-hour repertory into a retained digest-bound public payload artifact without overwriting prior evidence or requesting deployment.",
+  "evidence": "operations/evidence/V-001-public-hourly-artifact-writer-2026-07-14T0726Z.json",
+  "files": [
+    "operations/tools/write-public-hourly-stage-payloads.mjs",
+    "operations/tests/write-public-hourly-stage-payloads.test.mjs"
+  ],
+  "acceptance_remaining": [
+    "Execute the committed writer tests in an authenticated checkout or CI runner.",
+    "Generalize representative-hour generation across daylight-saving transitions.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/tests/write-public-hourly-stage-payloads.test.mjs, then add timezone-transition fixtures before using the writer for dates near daylight-saving changes; do not request an application deployment while provider capacity remains blocked."
+}
