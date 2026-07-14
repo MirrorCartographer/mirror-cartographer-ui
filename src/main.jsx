@@ -1,30 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import RoomWorldValid from './components/RoomWorldValid';
-import ErrorBoundary from './components/ErrorBoundary';
-import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
-import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
-import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
-import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
-import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
-import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
-import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
-import './assets/styles.css';
-import './assets/failsafe.css';
-import './assets/comet-garden.css';
 
-installRuntimeInfrastructure();
-installDeploymentIdentityRuntime();
-installAudioDeviceEvidenceRuntime({ window, navigator, document });
-installAudioObservabilityRuntime();
-installAudioRoutingEvidenceRuntime();
-installAudibilityOutcomeRuntime();
-installAudioEvidenceExportRuntime();
+function Offline() {
+  return <main aria-label="offline" style={{ minHeight: '100vh', background: '#000' }} />;
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <RoomWorldValid />
-    </ErrorBoundary>
+    <Offline />
   </React.StrictMode>,
 );
