@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T06:07:41Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added and deterministically verified a fail-closed evidence-promotion gate that enforces retained-byte binding, independent execution provenance, temporal coherence, and bounded observation-window validation in a fixed order.",
+  "files": [
+    "tools/frontier-research/evidence-promotion-gate.mjs",
+    "tools/frontier-research/evidence-promotion-gate.test.mjs",
+    "operations/evidence/R-021-evidence-promotion-gate-2026-07-14T0607Z.json"
+  ],
+  "acceptance_remaining": [
+    "Wire validateEvidencePromotion into the authenticated manifest writer before any output write.",
+    "Execute both authenticated exhaustive clients against one exact commit and retain raw outputs.",
+    "Run the integrated gate and reconciliation path against the retained evidence.",
+    "Preserve provider-ceiling ambiguity as a separate fail-closed condition."
+  ],
+  "safe_next_action": "Update operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs to require validateEvidencePromotion before manifest writing, then run the full test chain in an authenticated checkout without creating a deployment."
+}
