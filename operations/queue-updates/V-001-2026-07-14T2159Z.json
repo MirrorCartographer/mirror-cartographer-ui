@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T21:59:44Z",
+  "slice": "operations-only deterministic hourly repertory selector reference implementation and contract tests",
+  "state": "completed_slice_deployment_still_blocked",
+  "production_currently_on_stage": {
+    "utc_hour": 21,
+    "production_id": "wordless-room-game",
+    "basis": "HOURLY_REPERTORY.v1 deterministic modulo schedule",
+    "claim_boundary": "schedule selection only; no new runtime or deployment activation claimed"
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "completed": [
+    "Added a pure operations-only selector for the canonical 24-hour repertory.",
+    "Added fail-closed validation for invalid hours, duplicate production identifiers, missing or duplicate hour slots, unknown production references, and modulo-sequence drift.",
+    "Added Node contract tests covering all 24 UTC hours, UTC-only selection, current-stage selection at hour 21, malformed inputs, schedule drift, and prohibited activation side effects.",
+    "Kept the reference implementation outside the application runtime and performed no Vercel deployment attempt."
+  ],
+  "evidence": {
+    "selector_path": "operations/vercel-studio/repertory/selectHourlyProduction.v1.cjs",
+    "selector_commit": "806019720adc33c52d680466d2b7b26e44602b82",
+    "test_path": "operations/vercel-studio/repertory/selectHourlyProduction.v1.test.cjs",
+    "test_commit": "63cb2e161e7b98eb9ca30ea1ad351f4e6c8f9389",
+    "verification_performed": [
+      "GitHub fetch-back of the selector at the test commit",
+      "Static inspection of fail-closed validation and side-effect-free export surface"
+    ],
+    "verification_not_performed": [
+      "Authenticated checkout execution of node --test",
+      "Application bundle integration",
+      "Vercel deployment",
+      "Physical iPhone Safari verification"
+    ]
+  },
+  "constraints_preserved": [
+    "No payments or conversion logic added.",
+    "No private source material exposed.",
+    "No GitHub file or history deleted.",
+    "No deployment or peer execution claimed without evidence.",
+    "No application deployment attempted while provider capacity remains blocked."
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert 63cb2e161e7b98eb9ca30ea1ad351f4e6c8f9389.",
+    "Revert 806019720adc33c52d680466d2b7b26e44602b82."
+  ],
+  "acceptance_remaining": [
+    "Run node --test operations/vercel-studio/repertory/selectHourlyProduction.v1.test.cjs in an authenticated checkout.",
+    "Execute both exhaustive exact-commit workflow-run enumeration clients and retain reconciled evidence.",
+    "Observe an operations-only sentinel as skipped or ignored after provider capacity returns.",
+    "Integrate the selector behind a reversible runtime flag only after the sentinel and tests pass.",
+    "Bind the exact application commit to an immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Execute the selector contract tests in an authenticated checkout, then preserve their output as operations evidence; do not activate the selector in the application until the operations-only sentinel is observed as skipped or ignored and immutable deployment verification is available."
+}
