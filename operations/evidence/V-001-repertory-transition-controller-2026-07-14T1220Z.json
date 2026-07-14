@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "observed_at": "2026-07-14T12:20:18Z",
+  "slice": "visibility-aware hourly repertory transition controller",
+  "production_on_stage": {
+    "id": "silent-switchboard",
+    "title": "Silent Switchboard",
+    "selection_basis": "canonical_utc_hour"
+  },
+  "files": {
+    "implementation": "operations/studio/repertory-transition-controller.mjs",
+    "test": "operations/tests/repertory-transition-controller.test.mjs"
+  },
+  "commits": {
+    "implementation": "84a028786685f064b59822a5dc6abbc324ec15b3",
+    "test": "66715c88b29f1a9265de83f7ecdddfeaaa602bfa"
+  },
+  "verification": {
+    "route": "local Node exact-content execution followed by repository retention fetch",
+    "runtime": "node --test operations/tests/repertory-transition-controller.test.mjs",
+    "result": "passed",
+    "tests": 5,
+    "failures": 0,
+    "verified_behaviors": [
+      "exact next UTC-hour scheduling",
+      "continuity preservation across productions",
+      "timer suspension while the document is hidden",
+      "direct canonical-hour resynchronization after missed boundaries",
+      "no replay of intermediate productions",
+      "reduced-motion instant transition behavior",
+      "non-autoplay and user-gesture audio gating",
+      "invalid input rejection"
+    ],
+    "evidence_strength": "executed exact file contents locally and confirmed committed implementation retention",
+    "not_verified": [
+      "browser DOM integration",
+      "Mobile Safari lifecycle behavior on physical hardware",
+      "Vercel build or deployment identity",
+      "physical audio audibility"
+    ]
+  },
+  "constraints": {
+    "payments_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "autoplay_added": false,
+    "github_history_deleted": false,
+    "application_deployment_attempted": false
+  },
+  "rollback": {
+    "reversible": true,
+    "route": "revert test commit 66715c88b29f1a9265de83f7ecdddfeaaa602bfa, then implementation commit 84a028786685f064b59822a5dc6abbc324ec15b3"
+  }
+}
