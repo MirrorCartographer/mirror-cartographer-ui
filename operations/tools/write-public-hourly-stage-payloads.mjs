@@ -26,11 +26,66 @@ async function assertDestinationAbsent(path) {
   }
 }
 
+function localParts(formatter, instant) {
+  return Object.fromEntries(
+    formatter.formatToParts(instant)
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value]),
+  );
+}
+
+export function representativeHourInstants({ date, timeZone }) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('date must be YYYY-MM-DD');
+  if (typeof timeZone !== 'string' || !timeZone.trim()) throw new Error('timeZone is required');
+
+  const [year, month, day] = date.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (
+    parsed.getUTCFullYear() !== year
+    || parsed.getUTCMonth() !== month - 1
+    || parsed.getUTCDate() !== day
+  ) throw new Error('date must identify a real calendar day');
+
+  let formatter;
+  try {
+    formatter = new Intl.DateTimeFormat('en-CA-u-hc-h23', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    });
+  } catch {
+    throw new Error(`invalid IANA time zone: ${timeZone}`);
+  }
+
+  const candidates = new Map(Array.from({ length: 24 }, (_, hour) => [hour, []]));
+  const searchStart = Date.UTC(year, month - 1, day) - (18 * 60 * 60 * 1000);
+  const searchEnd = Date.UTC(year, month - 1, day + 1) + (18 * 60 * 60 * 1000);
+
+  for (let timestamp = searchStart; timestamp <= searchEnd; timestamp += 60 * 60 * 1000) {
+    const instant = new Date(timestamp);
+    const parts = localParts(formatter, instant);
+    const localDate = `${parts.year}-${parts.month}-${parts.day}`;
+    if (localDate !== date) continue;
+    candidates.get(Number(parts.hour))?.push(instant);
+  }
+
+  const nonBijective = [...candidates.entries()]
+    .filter(([, instants]) => instants.length !== 1)
+    .map(([hour, instants]) => `${String(hour).padStart(2, '0')}:00=${instants.length}`);
+  if (nonBijective.length) {
+    throw new Error(`representative date is not a 24-hour bijection in ${timeZone}: ${nonBijective.join(', ')}`);
+  }
+
+  return Object.freeze([...candidates.values()].map(([instant]) => instant));
+}
+
 export async function writePublicHourlyStageArtifact({ schedulePath, outputPath, continuityRevision, date = '2026-07-14' }) {
   if (typeof continuityRevision !== 'string' || !continuityRevision.trim()) {
     throw new Error('continuityRevision is required');
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('date must be YYYY-MM-DD');
 
   const resolvedSchedulePath = resolve(schedulePath);
   const resolvedOutputPath = resolve(outputPath);
@@ -39,8 +94,7 @@ export async function writePublicHourlyStageArtifact({ schedulePath, outputPath,
   const scheduleText = await readFile(resolvedSchedulePath, 'utf8');
   const schedule = JSON.parse(scheduleText);
   const continuityState = Object.freeze({ channel: schedule.continuity_channel, revision: continuityRevision.trim() });
-  const [year, month, day] = date.split('-').map(Number);
-  const hourInstants = Array.from({ length: 24 }, (_, hour) => new Date(Date.UTC(year, month - 1, day, hour + 4)));
+  const hourInstants = representativeHourInstants({ date, timeZone: schedule.time_zone });
   const payloads = compilePublicHourlyStagePayloads({ schedule, continuityState, hourInstants });
 
   const payloadCanonical = canonicalJson(payloads);
@@ -52,7 +106,8 @@ export async function writePublicHourlyStageArtifact({ schedulePath, outputPath,
     continuity_channel: schedule.continuity_channel,
     continuity_revision: continuityState.revision,
     representative_date: date,
-    time_zone: payloads[0].time_zone,
+    representative_hour_policy: 'exactly_one_instant_per_local_hour_fail_closed',
+    time_zone: schedule.time_zone,
     payload_count: payloads.length,
     payloads_sha256: sha256(payloadCanonical),
     payloads,
