@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T14:54:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and runtime-verified a removable DOM adapter that applies deterministic repertory mount plans in place while preserving the focused node and failing closed on external side effects or unsafe media behavior.",
+  "evidence_path": "operations/evidence/V-001-repertory-dom-adapter-2026-07-14T1454Z.json",
+  "commits": [
+    "717364997c5e158e2cf00a1fd5292ea7f8ae00bd",
+    "2a8eb1b653cee5901c39993f9984dcfc029e0050",
+    "33fc04988f1eaac8db74090362d9224560aed918"
+  ],
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain reconciled raw evidence.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Verify the DOM adapter in Chromium, WebKit, and bounded physical iPhone Safari testing."
+  ],
+  "safe_next_action": "Wire the adapter behind one removable application call site only after provider capacity is independently available; verify focus, hidden-page suspension, reduced motion, safe-area layout, and gesture-gated audio in Chromium and WebKit before any immutable deployment check.",
+  "canonical_queue_overwritten": false
+}
