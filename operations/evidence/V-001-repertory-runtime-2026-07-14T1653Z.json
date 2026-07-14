@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T16:53:00Z",
+  "slice": "Compose the public repertory catalog, deterministic controller, and sole DOM stage adapter into one reversible browser runtime without scheduling or deploying it.",
+  "files": [
+    "operations/studio/repertory-runtime.mjs",
+    "operations/studio/repertory-runtime.test.mjs"
+  ],
+  "commits": [
+    "0da1e5580c823407b2bedd4da37d372f1fa73ba4",
+    "8f699cd5625b6f62d8cda76e0429ee8a837f0a03"
+  ],
+  "verification": {
+    "command": "node --test repertory-runtime.test.mjs",
+    "environment": "deterministic local Node fixture using repository-compatible catalog, controller, receipt, and DOM stage contracts",
+    "passed": 3,
+    "failed": 0,
+    "verified_behaviors": [
+      "deterministic hour-to-production selection",
+      "continuity identity preservation",
+      "no self-scheduling or autoplay",
+      "prefers-reduced-motion policy propagation",
+      "explicit motion override for essential-motion production",
+      "reversible rollback selector propagation"
+    ]
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE prohibits application deployment attempts while provider build capacity remains exhausted.",
+    "claim": "No public runtime or immutable deployment identity is claimed."
+  },
+  "privacy": {
+    "public_source_only": true,
+    "private_source_material_included": false
+  },
+  "rollback": {
+    "strategy": "Stop importing createPublicRepertoryRuntime or revert the two additive implementation commits.",
+    "destructive": false
+  }
+}
