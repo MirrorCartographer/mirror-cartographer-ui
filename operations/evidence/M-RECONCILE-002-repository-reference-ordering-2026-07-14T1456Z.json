@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "captured_at": "2026-07-14T14:56:00Z",
+  "artifact_type": "repository_reference_ordering_ledger",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "retrieval_method": "GitHub commit search over the repository default accessible index",
+    "coverage_class": "connector_index_bounded_not_exhaustive",
+    "queries": ["M-004", "M-005", "M-006"]
+  },
+  "observations": [
+    {
+      "identifier": "M-004",
+      "matching_commits": [
+        {
+          "sha": "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+          "message": "continuity: materialize unresolved M-004 origin status",
+          "role": "later_provenance_gap_bookkeeping"
+        },
+        {
+          "sha": "83205275e023fccf602127ca4ff1cf3075bd1c26",
+          "message": "continuity: record file-library namespace rejection for M-004 through M-006",
+          "role": "later_collision_rejection_bookkeeping"
+        }
+      ]
+    },
+    {
+      "identifier": "M-005",
+      "matching_commits": [
+        {
+          "sha": "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+          "message": "continuity: materialize unresolved M-005 origin status",
+          "role": "later_provenance_gap_bookkeeping"
+        }
+      ]
+    },
+    {
+      "identifier": "M-006",
+      "matching_commits": [
+        {
+          "sha": "94778c45072bad84a0c63077ac23492a1a756a8c",
+          "message": "continuity: materialize unresolved M-006 origin status",
+          "role": "later_provenance_gap_bookkeeping"
+        },
+        {
+          "sha": "83205275e023fccf602127ca4ff1cf3075bd1c26",
+          "message": "continuity: record file-library namespace rejection for M-004 through M-006",
+          "role": "later_collision_rejection_bookkeeping"
+        }
+      ]
+    }
+  ],
+  "memory_recovered": "Every exact-identifier commit match currently returned by the accessible repository commit index is a later continuity-control artifact that records uncertainty or rejects a false candidate; none is an originating identifier-assignment event.",
+  "claim_classification": {
+    "observed": [
+      "Exact-token commit searches returned only continuity bookkeeping commits for M-004, M-005, and M-006.",
+      "The M-004 origin-status artifact explicitly requires temporal precedence and an explicit identifier assignment before resolution."
+    ],
+    "inferred": [
+      "The currently indexed exact-token matches cannot serve as origins because their semantic role is retrospective provenance control."
+    ],
+    "proposed": [
+      "Treat first indexed reference and originating assignment as separate graph edge types: referenced_at versus assigned_at."
+    ],
+    "superseded": [
+      "The earliest exact-token match returned by repository search is automatically the artifact origin."
+    ],
+    "unresolved": [
+      "Whether an earlier assignment exists on an unindexed branch, unreachable commit, external decision log, language lexicon, project document, or privacy-reviewed chat-history source."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "Repository search finds M-004, M-005, and M-006 while their source status remains unlocated.",
+    "resolution": "Finding retrospective bookkeeping references proves later mention, not origin. Origin requires an earlier immutable object with explicit assignment and namespace, owner, semantic-role, and temporal agreement."
+  },
+  "privacy_boundary": {
+    "included": ["public repository commit identifiers", "commit messages", "abstract provenance rules"],
+    "excluded": ["private chat text", "personal data", "credentials", "secret-bearing logs", "unpublished source material"]
+  },
+  "falsification_route": [
+    "Enumerate every accessible branch and reachable commit through an authenticated exhaustive traversal.",
+    "Locate an immutable object predating the bookkeeping commits that explicitly assigns one of the identifiers.",
+    "Reject this ledger's inference if such an object satisfies namespace, owner, semantic-role, temporal-precedence, and locator agreement."
+  ],
+  "specialist_registry_change": null
+}
