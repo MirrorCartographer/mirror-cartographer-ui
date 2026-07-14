@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateEvidencePromotion } from '../../tools/frontier-research/evidence-promotion-gate.mjs';
+import { withBoundInputSnapshot } from './bound-input-snapshot.mjs';
 import { writeAuthenticatedEvidenceManifest } from './write-vercel-authenticated-evidence-manifest.mjs';
 
 function fail(reason, details = {}) {
@@ -21,7 +22,11 @@ export async function writeBoundAuthenticatedEvidenceManifest({ input_path, outp
   const promotion = await validateEvidencePromotion(input, { cwd: evidence_root });
   if (!promotion.verified) return promotion;
 
-  const result = await writeAuthenticatedEvidenceManifest({ input_path, output_path });
+  const result = await withBoundInputSnapshot(
+    input,
+    snapshotPath => writeAuthenticatedEvidenceManifest({ input_path: snapshotPath, output_path }),
+    { temporary_root: evidence_root }
+  );
   if (!result.verified) return result;
 
   return {
