@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T22:07:37Z",
+  "state": "in_progress_blocked",
+  "completed_slice": {
+    "title": "Fail-closed continuity-state transition contract for deterministic hourly repertory changes",
+    "summary": "Added an operations-only transition adapter and deterministic tests that preserve one immutable public-safe continuity state while the selected production changes by UTC hour.",
+    "artifacts": [
+      "operations/vercel-studio/repertory/transitionHourlyProduction.v1.cjs",
+      "operations/vercel-studio/repertory/transitionHourlyProduction.v1.test.cjs"
+    ],
+    "evidence_status": "github_commit_and_fetchback_pending_runtime_test",
+    "deployment_claimed": false,
+    "runtime_integration_performed": false
+  },
+  "claim_classes": {
+    "observed": [
+      "The canonical repertory requires continuity_state_preserved_across_productions=true.",
+      "The prior selector selected productions but did not define a state transition envelope.",
+      "The Vercel application deployment path remains blocked by provider build capacity."
+    ],
+    "inferred": [
+      "A separate public-safe immutable transition envelope reduces accidental state loss and private-data leakage when runtime integration becomes permissible."
+    ],
+    "proposed": [
+      "Run both repertory test files in an authenticated checkout and retain the Node test output as operations evidence."
+    ],
+    "superseded": [],
+    "unresolved": [
+      "No authenticated Node test execution was available in this connector-only run.",
+      "No application integration, Vercel deployment, or physical-device verification was performed."
+    ]
+  },
+  "privacy_boundary": {
+    "allowed_state": "JSON-safe abstract public continuity values only",
+    "forbidden_examples": [
+      "credentials",
+      "tokens",
+      "private source material",
+      "direct contact fields",
+      "payment or checkout state"
+    ]
+  },
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert the transition test commit.",
+    "Revert the transition implementation commit."
+  ],
+  "safe_next_action": "Execute node --test for both repertory test files in an authenticated checkout; keep runtime integration disabled until the operations-only sentinel is observed as skipped or ignored and immutable successful Vercel deployment identity is available."
+}
