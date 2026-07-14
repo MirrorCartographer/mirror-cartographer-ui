@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T19:40:00Z",
+  "artifact": "operations/frontier/github-actions-auth-readiness-contract.json",
+  "finding": "Authorization, repository identity, Actions read permission, and rate-limit readiness must be proven before zero workflow runs or exhaustive coverage can be admitted as evidence.",
+  "evidence_strength": "primary_documentation_plus_implementation_ready_contract",
+  "source_status": "current_official_github_documentation",
+  "uncertainty": "Effective fine-grained permission is inferred from successful endpoint behavior because no direct universal permission-attestation field was identified.",
+  "falsification_route": "Use tokens with intentionally different repository and Actions permissions, plus constrained rate-limit fixtures, and require fail-closed classifications.",
+  "privacy": "No credential, private workflow payload, actor identity, run name, or authorization header retained.",
+  "runtime_execution_claimed": false
+}
