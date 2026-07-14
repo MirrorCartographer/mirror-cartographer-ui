@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "queue_item": "I-BOOTSTRAP-001",
+  "recorded_at": "2026-07-14T06:09:00Z",
+  "creative_premise": "The Night Office for Lost Weather is a municipal after-hours receiver for impossible atmospheric reports: an instrument and fictional place, not an explanation page, research portal, dashboard, or funnel.",
+  "slice": "Dependency-free interaction and boundary contract for the Night Office preview.",
+  "source_paths": [
+    "operations/independent-creative-web/previews/night-office/index.html",
+    "operations/independent-creative-web/tests/night-office.contract.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test operations/independent-creative-web/tests/night-office.contract.test.mjs",
+    "execution_route": "isolated Node reconstruction from fetched committed preview logic and committed test source",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "verified_claims": [
+      "All twelve transmissions produce distinct deterministic text and stable readouts.",
+      "The receive control advances and wraps from frequency 11 to 0 without randomness.",
+      "AudioContext construction occurs only after the explicit audio button gesture.",
+      "Audio state is exposed through aria-pressed and the visible status text.",
+      "The preview contains an accessible live region, an associated range label, a narrow-screen layout rule, and a reduced-motion override.",
+      "The preview contains no remote fetch, analytics, payment, checkout, subscription, or account-creation path."
+    ]
+  },
+  "limits": [
+    "This is a deterministic Node DOM-contract harness, not a real browser engine.",
+    "No screen-reader session, physical keyboard session, Mobile Safari session, audio audibility test, Lighthouse run, independent hosting decision, or deployment occurred.",
+    "The public Mirror Cartographer application and Vercel configuration were not modified."
+  ],
+  "privacy_boundary": "Only public fictional copy and repository-local implementation contracts were inspected; no private source material or credentials were included.",
+  "reversible": true
+}
