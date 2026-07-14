@@ -57,6 +57,14 @@ test('unapproved source method is rejected', () => {
   assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, primarySource: { ...sourceA, method: 'connector_snapshot' } }), /repository_api_link_pagination_source_required/);
 });
 
+test('missing source page count is rejected', () => {
+  assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, primarySource: { ...sourceA, pages_fetched: null } }), /repository_api_link_pagination_pages_fetched_invalid/);
+});
+
+test('generated time cannot precede either source retrieval', () => {
+  assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, generatedAt: '2026-07-12T22:19:01Z' }), /generated_at_precedes_source_retrieval/);
+});
+
 test('missing rate-limit proof is rejected before bundle construction', () => {
   assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, rateLimitProof: undefined }), /dual_client_rate_limit_proof_required/);
 });
@@ -69,6 +77,18 @@ test('malformed client counters are rejected', () => {
   const malformed = structuredClone(rateLimitProof);
   malformed.clients.independent.page_count = 0;
   assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, rateLimitProof: malformed }), /independent_rate_limit_page_count_invalid/);
+});
+
+test('primary header-proof page count must cover every enumerated page', () => {
+  const proof = structuredClone(rateLimitProof);
+  const primarySource = { ...sourceA, pages_fetched: 2 };
+  assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, primarySource, rateLimitProof: proof }), /primary_rate_limit_page_count_mismatch/);
+});
+
+test('independent header-proof page count must cover every enumerated page', () => {
+  const proof = structuredClone(rateLimitProof);
+  const independentSource = { ...sourceB, pages_fetched: 2 };
+  assert.throws(() => buildWorkflowEvidenceBundle({ ...baseInput, independentSource, rateLimitProof: proof }), /independent_rate_limit_page_count_mismatch/);
 });
 
 test('rate-limit proof digest changes when retained proof changes', () => {
