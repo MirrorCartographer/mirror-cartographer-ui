@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-13T20:09:30-04:00",
+  "update_type": "completed_reversible_slice",
+  "canonical_queue_overwritten": false,
+  "completed_slice": "Added a deterministic, timezone-explicit, fail-closed hourly repertory selector and a five-case Node test specification covering complete 24-hour selection, timezone independence, repeatability, invalid inputs, autoplay drift, continuity forks, and incomplete schedules.",
+  "production_on_stage": "hour-20 / House Lights",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "specialist_registry_change": null,
+  "files": [
+    "operations/vercel-studio/repertory/select-production.mjs",
+    "operations/vercel-studio/repertory/select-production.test.mjs",
+    "operations/evidence/vercel-repertory-selector-2026-07-13T2009-0400.json"
+  ],
+  "verification": {
+    "status": "static_verified_runtime_pending",
+    "evidence": "operations/evidence/vercel-repertory-selector-2026-07-13T2009-0400.json"
+  },
+  "acceptance_effect": {
+    "satisfied": [],
+    "advanced": [
+      "deterministic hourly repertory selection is now implementation-ready and fails closed on schedule drift"
+    ],
+    "preserved": [
+      "authenticated exact-commit workflow enumeration",
+      "operations-only build suppression observation",
+      "exact-commit audio-routing artifact inspection",
+      "immutable successful Vercel deployment binding",
+      "physical iPhone Safari audibility verification"
+    ]
+  },
+  "rollback": "Revert the additive selector, test specification, evidence, and queue-update commits; no application or deployment configuration was changed.",
+  "next_action": "Execute the committed Node test in an authenticated checkout or CI-capable environment, then integrate the selector behind a default-off application feature flag only after Vercel capacity returns and immutable deployment verification is available."
+}
