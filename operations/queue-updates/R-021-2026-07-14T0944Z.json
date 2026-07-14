@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T09:44:00Z",
+  "state": "completed_handoff_ready",
+  "slice": {
+    "title": "Adversarial symbolic-link output exclusivity fixture",
+    "completed": [
+      "Compared the latest frontier manifest-binding work against the active queue to avoid duplicating the existing source-mutation race fixture.",
+      "Recovered the exclusive-create symbolic-link boundary from primary Node.js and Linux open(2) documentation.",
+      "Added a deterministic test that pre-positions the manifest output as a symbolic link, expects EEXIST/output_exists, and verifies the protected target remains byte-identical.",
+      "Retained an evidence record with source status, uncertainty, claim boundary, and falsification routes."
+    ],
+    "files": [
+      "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+      "operations/evidence/R-021-symlink-output-exclusivity-2026-07-14T0944Z.json"
+    ],
+    "commits": [
+      "99d84e8ecc159e6fda35d9091b6af73baa9bd4d4",
+      "02c103da14ef7a14856c4bdd46b4a9cd44e1a1d5"
+    ],
+    "verification": {
+      "structural_commit_verification": true,
+      "runtime_test_execution": "unresolved",
+      "workflow_runs_observed": 0,
+      "promotion_policy": "fail_closed"
+    },
+    "limits": [
+      "No authenticated test execution was observable through the available commit workflow lookup.",
+      "The fixture targets exclusive-create behavior on the execution platform and does not establish identical symlink semantics across every supported operating system.",
+      "No deployment, browser, Vercel, audio, or physical-device claim is made."
+    ],
+    "safe_next_action": "Run the exact-commit Node test suite in an authenticated Linux checkout, retain run evidence, then add bounded platform fixtures only where supported and necessary."
+  }
+}
