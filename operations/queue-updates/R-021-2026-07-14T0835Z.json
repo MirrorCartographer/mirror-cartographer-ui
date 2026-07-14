@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T08:35:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a deterministic integration seam and adversarial test proving that post-promotion mutation of the original input path cannot change the bytes used by the final authenticated evidence manifest.",
+  "files": [
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "operations/evidence/R-021-bound-manifest-source-mutation-test-2026-07-14T0835Z.json"
+  ],
+  "verification": {
+    "exact_commit_fetch": true,
+    "command": "node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "execution_state": "not_executed_in_connector_only_run"
+  },
+  "acceptance_remaining": [
+    "Execute the committed adversarial test in an authenticated checkout or CI runner.",
+    "Execute the authenticated repository enumerator for one exact commit.",
+    "Execute the independent gh api --paginate --slurp traversal for the same commit.",
+    "Retain both raw outputs, declarations, stabilization evidence, reconciliation result, promotion result, and final manifest."
+  ],
+  "safe_next_action": "Run the bound-manifest test, then execute both authenticated exhaustive clients against one exact commit and retain the complete evidence chain without deployment claims.",
+  "canonical_state_overwrite": false,
+  "specialist_registry_change": "none"
+}
