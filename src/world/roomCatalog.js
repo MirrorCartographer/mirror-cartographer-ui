@@ -21,7 +21,7 @@ function hash(input) {
 function pick(list, seed, offset = 0) { return list[(seed + offset * 2654435761) % list.length]; }
 function frac(seed, offset = 0) { return ((hash(`${seed}:${offset}`) % 10000) / 10000); }
 
-export const ROOM_COUNT = 101;
+export const ROOM_COUNT = 79;
 export const LAYERS_PER_ROOM = 20;
 
 export const ROOMS = Array.from({ length: ROOM_COUNT }, (_, index) => {
