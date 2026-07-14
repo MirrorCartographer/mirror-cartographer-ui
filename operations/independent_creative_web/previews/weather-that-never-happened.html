@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101014">
+<title>The Museum of Weather That Never Happened</title>
+<style>
+:root{color-scheme:dark;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#101014;color:#f4efe5}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overflow:hidden}body{background:radial-gradient(circle at 50% 30%,#252536,#101014 68%)}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+main{position:relative;z-index:2;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));pointer-events:none}
+header,footer{display:flex;gap:.75rem;align-items:flex-start;justify-content:space-between}.title{max-width:38rem;text-shadow:0 2px 20px #000}.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7}.title h1{font-size:clamp(1.45rem,5vw,3.8rem);line-height:.92;margin:.4rem 0}.title p{max-width:31rem;line-height:1.45;margin:.7rem 0;opacity:.82}
+.controls{display:flex;flex-wrap:wrap;gap:.55rem;pointer-events:auto;justify-content:flex-end}button{appearance:none;border:1px solid rgba(255,255,255,.45);background:rgba(16,16,20,.66);color:inherit;padding:.68rem .78rem;border-radius:999px;font:inherit;backdrop-filter:blur(10px);cursor:pointer}button:hover,button:focus-visible{background:#f4efe5;color:#101014;outline:2px solid transparent}button[aria-pressed=true]{background:#f4efe5;color:#101014}
+.caption{align-self:end;max-width:34rem;padding:.8rem 1rem;background:rgba(16,16,20,.56);border-left:2px solid currentColor;backdrop-filter:blur(8px);font-size:.83rem;line-height:1.45}.caption strong{display:block;font-size:1rem;margin-bottom:.25rem}.seed{opacity:.65}.hint{opacity:.58;text-align:right;font-size:.72rem;max-width:18rem}
+@media(max-width:700px){header{display:block}.controls{justify-content:flex-start;margin-top:.75rem}.hint{display:none}.caption{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.motion-note{display:inline}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main>
+<header>
+<div class="title"><div class="eyebrow">Gallery 01 · Atmospheric Counterfactuals</div><h1>The Museum of Weather That Never Happened</h1><p>Each seed opens an impossible forecast. Nothing is fetched, tracked, sold, or remembered beyond this page.</p></div>
+<div class="controls" aria-label="Exhibit controls">
+<button id="newWeather" type="button">New weather</button>
+<button id="pause" type="button" aria-pressed="false">Pause</button>
+<button id="sound" type="button" aria-pressed="false">Sound off</button>
+</div>
+</header>
+<div></div>
+<footer>
+<div class="caption" aria-live="polite"><strong id="name">Glass Rain at Low Tide</strong><span id="description">Transparent drops rise from the floor and ring softly against an invisible ceiling.</span> <span class="seed" id="seed"></span></div>
+<div class="hint">Space: new weather · P: pause · S: sound<br><span class="motion-note">Reduced-motion preference is honored.</span></div>
+</footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const canvas=document.querySelector('#sky'),ctx=canvas.getContext('2d',{alpha:true});
+const nameEl=document.querySelector('#name'),descEl=document.querySelector('#description'),seedEl=document.querySelector('#seed');
+const newBtn=document.querySelector('#newWeather'),pauseBtn=document.querySelector('#pause'),soundBtn=document.querySelector('#sound');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const exhibits=[
+['Glass Rain at Low Tide','Transparent drops rise from the floor and ring softly against an invisible ceiling.'],
+['The Fog That Remembers Doors','Pale corridors appear wherever someone almost left.'],
+['Silent Lightning Orchard','Branches of light grow slowly, fruit, and vanish without thunder.'],
+['Blue Heat After Midnight','Cold shadows emit warmth while every bright surface freezes.'],
+['A Small Indoor Horizon','A distant sunset circles the room but never comes closer.'],
+['Reverse Snow for Departing Birds','Flakes return to the clouds in the shapes of forgotten routes.']
+];
+let seed=(Date.now()>>>0),particles=[],paused=false,audio=null,oscillators=[];
+function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.floor(innerWidth*d);canvas.height=Math.floor(innerHeight*d);ctx.setTransform(d,0,0,d,0,0);build()}
+function build(){particles=Array.from({length:reduced?28:96},(_,i)=>({x:random()*innerWidth,y:random()*innerHeight,r:1+random()*5,v:.12+random()*.7,a:.15+random()*.65,w:random()*6.28,kind:i%3}));const item=exhibits[Math.floor(random()*exhibits.length)];nameEl.textContent=item[0];descEl.textContent=item[1];seedEl.textContent=' Seed '+seed.toString(16).padStart(8,'0').toUpperCase()+'.'}
+function draw(t){ctx.clearRect(0,0,innerWidth,innerHeight);const hue=190+(seed%110);const g=ctx.createRadialGradient(innerWidth*.5,innerHeight*.45,0,innerWidth*.5,innerHeight*.45,Math.max(innerWidth,innerHeight)*.75);g.addColorStop(0,`hsla(${hue},55%,45%,.18)`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,innerWidth,innerHeight);
+for(const p of particles){if(!paused&&!reduced){p.y-=p.v;p.x+=Math.sin(t*.0003+p.w)*.18;if(p.y<-12){p.y=innerHeight+12;p.x=random()*innerWidth}}ctx.beginPath();if(p.kind===0){ctx.moveTo(p.x,p.y-p.r*3);ctx.lineTo(p.x,p.y+p.r*3)}else if(p.kind===1){ctx.arc(p.x,p.y,p.r,0,Math.PI*2)}else{ctx.rect(p.x-p.r,p.y-p.r,p.r*2,p.r*2)}ctx.strokeStyle=`hsla(${hue+p.kind*34},80%,88%,${p.a})`;ctx.lineWidth=.65;ctx.stroke()}
+requestAnimationFrame(draw)}
+function next(){seed=(crypto.getRandomValues(new Uint32Array(1))[0]>>>0);build();chime()}
+function setPaused(value){paused=value;pauseBtn.setAttribute('aria-pressed',String(value));pauseBtn.textContent=value?'Resume':'Pause'}
+function chime(){if(!audio)return;const now=audio.currentTime;[0,4,9].forEach((step,i)=>{const o=audio.createOscillator(),gain=audio.createGain();o.type='sine';o.frequency.value=110*Math.pow(2,step/12);gain.gain.setValueAtTime(0,now+i*.08);gain.gain.linearRampToValueAtTime(.025,now+i*.08+.03);gain.gain.exponentialRampToValueAtTime(.0001,now+i*.08+.9);o.connect(gain).connect(audio.destination);o.start(now+i*.08);o.stop(now+i*.08+1)})}
+async function toggleSound(){if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();await audio.resume();soundBtn.setAttribute('aria-pressed','true');soundBtn.textContent='Sound on';chime();return}await audio.close();audio=null;soundBtn.setAttribute('aria-pressed','false');soundBtn.textContent='Sound off'}
+newBtn.addEventListener('click',next);pauseBtn.addEventListener('click',()=>setPaused(!paused));soundBtn.addEventListener('click',toggleSound);addEventListener('keydown',e=>{if(e.target instanceof HTMLButtonElement)return;if(e.code==='Space'){e.preventDefault();next()}if(e.key.toLowerCase()==='p')setPaused(!paused);if(e.key.toLowerCase()==='s')toggleSound()});addEventListener('resize',resize,{passive:true});resize();requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
