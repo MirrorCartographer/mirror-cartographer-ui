@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "artifact_type": "frontier_research_verification_evidence",
+  "created_at": "2026-07-14T15:10:00Z",
+  "finding": "Byte-complete retention and SHA-256 agreement do not prove that each retained payload is semantically the artifact role named by the manifest; a validly hashed payload can be substituted into the wrong role or contain a hidden cross-commit claim.",
+  "design_implication": "Require semantic binding after byte verification and before promotion: parse every JSON role, validate its minimum role shape, require internal exact-commit claims, reject any nested cross-commit claim, and independently validate the retained gh command contains gh api, --paginate, --slurp, and the target commit.",
+  "implementation": {
+    "core": "tools/frontier-research/workflow-evidence-semantic-binding-core.mjs",
+    "test": "tools/frontier-research/workflow-evidence-semantic-binding-core.test.mjs",
+    "ordering": [
+      "workflow_evidence_retention_manifest_byte_verification",
+      "workflow_evidence_semantic_binding_verification",
+      "promotion_artifact_revalidation"
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-evidence-semantic-binding-core.test.mjs",
+    "environment": "isolated Node runtime using the exact source and test text before publication",
+    "passed": 6,
+    "failed": 0,
+    "cases": [
+      "complete byte-verified role-bound evidence accepted",
+      "missing prior byte verification rejected",
+      "role-substituted reconciliation payload rejected",
+      "nested cross-commit claim rejected",
+      "non-paginated independent command rejected",
+      "JSON payload without internal commit claim rejected"
+    ]
+  },
+  "source_status": {
+    "canonical_queue": "connector-observed",
+    "prior_retention_verifier": "connector-observed",
+    "implementation": "committed",
+    "runtime_test": "executed_in_isolated_node_runtime"
+  },
+  "evidence_strength": "committed_core_plus_six_deterministic_runtime_tests",
+  "uncertainty": "Role-shape predicates are deliberately minimal and have not yet been validated against a real authenticated retained evidence set; integration may expose schema aliases that require explicit, tested adapters rather than permissive fallback.",
+  "falsification_route": "Run the verifier on a real seven-role exact-commit retention set, then substitute each role with another validly hashed role, add a nested conflicting head_sha, and remove each required gh command token in turn; every mutation must fail closed.",
+  "privacy_boundary": "No credentials, private workflow payloads, deployment secrets, or user source material are included."
+}
