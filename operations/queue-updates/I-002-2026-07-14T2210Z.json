@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "I-002",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "completed_preview_ready",
+  "objective": "Create a second self-contained independent work that tests narrative space, session-scoped memory, and optional sound without coupling to Mirror Cartographer or external services.",
+  "selection_basis": "I-001 was already completed_preview_ready. No newer canonical independent_creative_web item existed in ACTIVE_QUEUE.json, so this additive record advances the independent studio without overwriting another team's queue state.",
+  "completed_slices": [
+    "Implemented The Fourth Room as a single-file narrative web environment with authored interaction states.",
+    "Added opt-in Web Audio, session-only visit memory, reduced-motion behavior, keyboard semantics, live status, safe-area layout, and bounded canvas rendering.",
+    "Added static contract tests for independence, accessibility, network isolation, non-autoplay audio, and ephemeral storage.",
+    "Extended the independent identity notes with explicit provenance and creative-grammar boundaries.",
+    "Detected and corrected a double-animation-loop defect during source fetch-back.",
+    "Retained source-level verification evidence without claiming runtime execution, browser rendering, hosting, or deployment."
+  ],
+  "acceptance_remaining": [
+    "Run node --test independent/fourth-room/contract.test.cjs in an authenticated checkout.",
+    "Render in desktop and mobile browsers and inspect keyboard, touch, reduced-motion, viewport, session reset, and opt-in audio behavior.",
+    "Capture an accessibility-tree inspection and a representative mobile performance trace.",
+    "Publish only to an isolated independent preview after hosting provenance and rollback are verified."
+  ],
+  "safe_next_action": "Execute the committed contract tests and a browser-level interaction harness for both independent works, then produce a small independent index only after each work has verified preview evidence.",
+  "evidence_path": "operations/evidence/I-002-fourth-room-2026-07-14T2210Z.json"
+}
