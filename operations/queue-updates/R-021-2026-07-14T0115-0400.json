@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T01:15:46-04:00",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound declared raw-output SHA-256 values to the actual retained bytes before manifest writing and rejected primary/independent evidence that resolves to the same retained file.",
+  "artifacts": [
+    "tools/frontier-research/retained-raw-output-binding.mjs",
+    "tools/frontier-research/retained-raw-output-binding.test.mjs",
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/evidence/frontier-retained-raw-output-binding-2026-07-14T0115-0400.json"
+  ],
+  "verification": {
+    "status": "passed",
+    "assertions": 10,
+    "scope": "isolated deterministic Node test"
+  },
+  "acceptance_remaining": [
+    "Run the complete repository test suite in an authenticated checkout.",
+    "Execute both exhaustive authenticated enumeration clients against one exact commit.",
+    "Retain distinct raw outputs and process them through the bound manifest writer.",
+    "Demonstrate operational client independence beyond distinct canonical file identity.",
+    "Retain reconciliation and downstream Vercel assessment artifacts without making a deployment claim."
+  ],
+  "safe_next_action": "Execute the bound writer against real retained primary and independent enumeration outputs for one exact commit, then add an execution-provenance contract that distinguishes separate files from genuinely independent clients.",
+  "specialist_registry_change": null
+}
