@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260714T2218Z-independent-identity-boundary",
+  "queue_item": "M-RECONCILE-002",
+  "recovered_memory": {
+    "title": "Independent Creative Web is separated from Mirror Cartographer by a durable identity and data boundary",
+    "summary": "The independent creative surface is not a Mirror Cartographer subsystem, explanation surface, continuity interface, research portal, dashboard, or product funnel. Its separation is structural, linguistic, privacy-preserving, and reversible; it may use local session-scoped state for a self-contained work, but it must not ingest private project material or become an identity system.",
+    "durability": "project_operating_rule",
+    "scope": [
+      "independent creative web artifacts",
+      "cross-team handoffs",
+      "privacy review",
+      "knowledge graph classification"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "ICW-BOUNDARY-OBS-001",
+      "status": "observed",
+      "text": "The repository explicitly defines the independent surface as distinct from Mirror Cartographer explanation, research, worker, continuity, and product-funnel surfaces.",
+      "evidence": [
+        {
+          "type": "repository_file",
+          "path": "independent/IDENTITY.md",
+          "blob_sha": "16e6d639b345e2be80989ef0e990d1ee199f7394",
+          "lines": "3-11"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ICW-BOUNDARY-OBS-002",
+      "status": "observed",
+      "text": "The current repository decision requires structural and linguistic separation, additive directories, independent reversibility, no commerce or behavioral profiling, and only visit-scoped memory unless separately justified.",
+      "evidence": [
+        {
+          "type": "repository_file",
+          "path": "independent/IDENTITY.md",
+          "blob_sha": "16e6d639b345e2be80989ef0e990d1ee199f7394",
+          "lines": "13-29"
+        },
+        {
+          "type": "commit",
+          "sha": "2308552cce260bb33e9e90141db8911abcf44455",
+          "message": "independent: extend identity notes for The Fourth Room"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ICW-BOUNDARY-INF-001",
+      "status": "inferred",
+      "text": "Cross-team continuity should preserve this rule as a namespace and privacy boundary rather than merge independent artifacts into the Mirror Cartographer concept, symbol, project, or identity graphs by default.",
+      "evidence": [
+        {
+          "type": "repository_file",
+          "path": "independent/IDENTITY.md",
+          "blob_sha": "16e6d639b345e2be80989ef0e990d1ee199f7394",
+          "lines": "5-19"
+        }
+      ],
+      "confidence": "medium_high"
+    },
+    {
+      "claim_id": "ICW-BOUNDARY-PROP-001",
+      "status": "proposed",
+      "text": "Knowledge-graph edges from independent works to Mirror Cartographer should default to provenance_reference or boundary_relation, never identity_equivalence or subsystem_of, unless a later explicit decision supersedes this rule.",
+      "confidence": "medium",
+      "acceptance_condition": "A dedicated queue item and immutable decision artifact explicitly authorize a changed relationship."
+    },
+    {
+      "claim_id": "ICW-BOUNDARY-SUP-001",
+      "status": "superseded",
+      "text": "Treating every creative web artifact in this repository as a Mirror Cartographer production or public explanation surface.",
+      "superseded_by": [
+        "ICW-BOUNDARY-OBS-001",
+        "ICW-BOUNDARY-OBS-002"
+      ]
+    },
+    {
+      "claim_id": "ICW-BOUNDARY-UNR-001",
+      "status": "unresolved",
+      "text": "Whether a future independent work may intentionally establish a documented relationship to Mirror Cartographer without losing independent identity.",
+      "resolution_route": "Require an explicit queue item, privacy review, namespace mapping, and reversible decision artifact."
+    }
+  ],
+  "contradiction_resolution": {
+    "apparent_conflict": "The Fourth Room uses repeated local interaction and session-scoped memory while the independent surface is required not to become an identity or continuity system.",
+    "resolution": "Session-scoped state that serves one self-contained visit is compatible with the boundary. Durable cross-session identity, private-source ingestion, project-memory reuse, analytics, profiling, or continuity-graph enrollment are not compatible without a new explicit decision.",
+    "status": "resolved"
+  },
+  "knowledge_graph_update": {
+    "nodes": [
+      {
+        "id": "surface:independent_creative_web",
+        "type": "creative_surface"
+      },
+      {
+        "id": "system:mirror_cartographer",
+        "type": "project_system"
+      },
+      {
+        "id": "work:fourth_room",
+        "type": "independent_work"
+      }
+    ],
+    "edges": [
+      {
+        "from": "work:fourth_room",
+        "relation": "belongs_to",
+        "to": "surface:independent_creative_web",
+        "status": "observed"
+      },
+      {
+        "from": "surface:independent_creative_web",
+        "relation": "identity_boundary_from",
+        "to": "system:mirror_cartographer",
+        "status": "observed"
+      },
+      {
+        "from": "surface:independent_creative_web",
+        "relation": "not_subsystem_of",
+        "to": "system:mirror_cartographer",
+        "status": "inferred"
+      }
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "public repository identity rules",
+      "commit metadata",
+      "abstract provenance classifications"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed file-library material",
+      "behavioral profiles"
+    ]
+  },
+  "falsification_route": [
+    "Locate a later immutable decision artifact that explicitly merges the independent surface into Mirror Cartographer.",
+    "Verify that the artifact names the changed namespace, privacy, storage, and rollback rules.",
+    "Until then, reject identity-equivalence and subsystem claims as unsupported."
+  ]
+}
