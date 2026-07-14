@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T10:52:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added an adversarial retained-evidence test proving that an output path identical to the promoted input path must fail closed under exclusive creation and preserve the original source bytes.",
+  "design_implication": "No-overwrite evidence integrity must cover direct path identity in addition to symbolic-link and hard-link aliases; an evidence manifest may never replace the promoted artifact from which it is derived.",
+  "files": [
+    {
+      "path": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+      "commit": "5497be60ed0bd850b0d5a12ee85c70905a350e41"
+    },
+    {
+      "path": "operations/evidence/R-021-self-overwrite-exclusivity-2026-07-14T1052Z.json",
+      "commit": "04eda4fffb7d3d5f2fa0b088ad303e79a49e2c5d"
+    }
+  ],
+  "verification": "committed_unexecuted",
+  "acceptance_remaining": [
+    "Execute the retained-evidence test suite in an authenticated checkout and retain exact-commit runtime evidence.",
+    "Execute both exhaustive workflow-run clients against one exact commit and retain their raw outputs and reconciliation result.",
+    "Keep provider-ceiling ambiguity fail closed."
+  ],
+  "safe_next_action": "Run node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs at the exact test commit, retain environment and output evidence, then perform the authenticated dual enumeration required by R-021."
+}
