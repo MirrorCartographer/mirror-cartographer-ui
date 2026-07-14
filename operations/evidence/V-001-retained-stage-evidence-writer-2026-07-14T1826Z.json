@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "slice": "retained-stage-evidence-writer",
+  "observed_at": "2026-07-14T18:26:18.000Z",
+  "timezone": "America/New_York",
+  "civil_hour": 14,
+  "production": {
+    "id": "signal-garden",
+    "title": "Signal Garden"
+  },
+  "verification": {
+    "route": "focused Node.js replay of committed writer semantics",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "assertions": [
+      "receipt and coherence are retained as one SHA-256-bound unit",
+      "unverified or non-promotable evidence fails closed",
+      "existing output paths are never overwritten"
+    ]
+  },
+  "limits": [
+    "No Vercel deployment was attempted.",
+    "No browser or physical iPhone Safari behavior is claimed.",
+    "The focused replay verified the writer boundary; the committed integration test remains for authenticated checkout execution."
+  ],
+  "privacy": {
+    "private_source_material_included": false,
+    "credentials_persisted": false
+  },
+  "reversible": true
+}
