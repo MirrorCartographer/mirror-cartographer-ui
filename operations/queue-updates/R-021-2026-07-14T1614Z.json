@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T16:14:17Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed retained-evidence verification CLI that safely loads the seven manifest-bound artifacts, rejects path escape and symlink substitution, executes the existing byte-plus-semantic verification chain, and writes a no-overwrite result.",
+  "files": [
+    "tools/frontier-research/workflow-evidence-verification-cli.mjs",
+    "tools/frontier-research/workflow-evidence-verification-cli.test.mjs",
+    "operations/evidence/R-021-retained-evidence-verification-cli-2026-07-14T1614Z.json"
+  ],
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-evidence-verification-cli.test.mjs",
+    "passed": 4,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute the authenticated repository enumerator for an exact commit.",
+    "Execute the independent gh api --paginate --slurp traversal for the same commit.",
+    "Retain all seven role artifacts and a byte-bound manifest in one directory.",
+    "Run workflow-evidence-verification-cli.mjs and preserve its exclusive-create result.",
+    "Keep provider-ceiling ambiguity as a separate fail-closed condition."
+  ],
+  "safe_next_action": "In an authenticated checkout, produce one exact-commit seven-role retention set, invoke node tools/frontier-research/workflow-evidence-verification-cli.mjs --manifest <manifest> --output <new-result>, and hand only verified=true output to the promotion path."
+}
