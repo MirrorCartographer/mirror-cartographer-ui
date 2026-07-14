@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/historical-identifier-resolution.schema.json",
+  "title": "Historical Identifier Resolution Candidate",
+  "description": "Fail-closed candidate-resolution contract for M-004, M-005, and M-006 under M-RECONCILE-002. A candidate may be promoted only when exhaustive coverage and all identity predicates agree.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "queue_item",
+    "identifier",
+    "candidate_locator",
+    "coverage_state",
+    "predicates",
+    "resolution_status",
+    "claim_status",
+    "privacy_class",
+    "recorded_at",
+    "falsification_route"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "queue_item": {"const": "M-RECONCILE-002"},
+    "identifier": {"enum": ["M-004", "M-005", "M-006"]},
+    "candidate_locator": {"$ref": "#/$defs/locator"},
+    "coverage_state": {"enum": ["unknown", "partial", "complete_single_client", "exhaustive_reproduced"]},
+    "predicates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace_agreement", "owner_agreement", "semantic_role_agreement", "temporal_precedence", "immutable_locator_agreement"],
+      "properties": {
+        "namespace_agreement": {"$ref": "#/$defs/predicate"},
+        "owner_agreement": {"$ref": "#/$defs/predicate"},
+        "semantic_role_agreement": {"$ref": "#/$defs/predicate"},
+        "temporal_precedence": {"$ref": "#/$defs/predicate"},
+        "immutable_locator_agreement": {"$ref": "#/$defs/predicate"}
+      }
+    },
+    "resolution_status": {"enum": ["unresolved", "candidate_rejected", "verified", "unlocated_after_exhaustive_coverage"]},
+    "claim_status": {"enum": ["observed", "inferred", "proposed", "superseded", "unresolved"]},
+    "privacy_class": {"enum": ["public", "internal_abstracted", "restricted_locator_only"]},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "falsification_route": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["commit", "blob", "repository_path", "content_sha256", "approved_private_source_handle"]},
+        "value": {"type": "string", "minLength": 1}
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result", "evidence_locators", "reason"],
+      "properties": {
+        "result": {"enum": ["pass", "fail", "unknown"]},
+        "evidence_locators": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/locator"},
+          "uniqueItems": true
+        },
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"resolution_status": {"const": "verified"}}},
+      "then": {
+        "properties": {
+          "coverage_state": {"const": "exhaustive_reproduced"},
+          "predicates": {
+            "properties": {
+              "namespace_agreement": {"properties": {"result": {"const": "pass"}, "evidence_locators": {"minItems": 1}}},
+              "owner_agreement": {"properties": {"result": {"const": "pass"}, "evidence_locators": {"minItems": 1}}},
+              "semantic_role_agreement": {"properties": {"result": {"const": "pass"}, "evidence_locators": {"minItems": 1}}},
+              "temporal_precedence": {"properties": {"result": {"const": "pass"}, "evidence_locators": {"minItems": 1}}},
+              "immutable_locator_agreement": {"properties": {"result": {"const": "pass"}, "evidence_locators": {"minItems": 1}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"resolution_status": {"const": "unlocated_after_exhaustive_coverage"}}},
+      "then": {"properties": {"coverage_state": {"const": "exhaustive_reproduced"}}}
+    }
+  ]
+}
