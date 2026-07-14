@@ -4,7 +4,7 @@ import { createRoomAudio } from '../world/roomAudio';
 import './RoomWorld.css';
 
 const TAU = Math.PI * 2;
-const KEY = 'mc-room-world-valid-v1';
+const KEY = 'mc-room-world-valid-v2';
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
 const rgba = (hex, alpha) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${alpha})`; };
@@ -42,12 +42,12 @@ function drawLayer(ctx, room, layer, width, height, time, point, pulse) {
 }
 
 function PortalMap({ progress, onEnter, onClose }) {
-  return <div className="portal-map">
-    <button className="map-close" onClick={onClose}>×</button>
+  return <div className="portal-map" role="dialog" aria-label="Room constellation">
+    <button className="map-close" aria-label="Close constellation" onClick={onClose}>×</button>
     <div className="portal-grid">{ROOMS.map((room) => {
       const open = progress.unlocked.includes(room.id);
       const seen = progress.visited.includes(room.id);
-      return <button key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i>{open ? '◇' : '·'}</i></button>;
+      return <button aria-label={open ? `Enter room ${room.id}` : `Room ${room.id} closed`} key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
     })}</div>
   </div>;
 }
@@ -69,6 +69,14 @@ export default function RoomWorldValid() {
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId })); }, [progress, roomId]);
   useEffect(() => { const timer = setInterval(() => setPulse((value) => Math.max(0.06, value * 0.96)), 100); return () => clearInterval(timer); }, []);
+
+  useEffect(() => {
+    const charge = clamp((depth / LAYERS_PER_ROOM) * 0.72 + pulse * 0.28, 0.1, 1);
+    document.documentElement.style.setProperty('--comet-core', room.palette[2]);
+    document.documentElement.style.setProperty('--comet-wing', room.palette[3]);
+    document.documentElement.style.setProperty('--comet-deep', room.palette[1]);
+    window.dispatchEvent(new CustomEvent('mc:comet-state', { detail: { palette: room.palette, charge, depth, complete: depth === LAYERS_PER_ROOM } }));
+  }, [room, depth, pulse]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -101,10 +109,23 @@ export default function RoomWorldValid() {
     return { ...current, energy, unlocked: [...unlocked].sort((a, b) => a - b), visited: [...new Set([...current.visited, roomId])], depth: { ...current.depth, [roomId]: nextDepth }, gestures: { ...current.gestures, [roomId]: [...new Set([...(current.gestures?.[roomId] || []), gesture])] } };
   });
 
+  const signalComet = (event, boost, complete = false) => {
+    window.dispatchEvent(new CustomEvent('mc:comet-state', { detail: {
+      palette: room.palette,
+      charge: clamp((depth / LAYERS_PER_ROOM) * 0.72 + pulse * 0.28 + boost * 0.2, 0.1, 1),
+      x: event.clientX,
+      y: event.clientY,
+      complete,
+    } }));
+  };
+
   const interact = (event, type) => {
+    if (type === 'down') event.currentTarget.setPointerCapture?.(event.pointerId);
     const rect = event.currentTarget.getBoundingClientRect();
     const x = clamp((event.clientX - rect.left) / rect.width);
     const y = clamp((event.clientY - rect.top) / rect.height);
+    event.currentTarget.style.setProperty('--px', `${x * 100}%`);
+    event.currentTarget.style.setProperty('--py', `${y * 100}%`);
     const previous = pointRef.current;
     const now = performance.now();
     const speed = Math.hypot(x - previous.x, y - previous.y);
@@ -115,20 +136,24 @@ export default function RoomWorldValid() {
     const boost = type === 'move' && previous.down ? 0.06 : type === 'down' ? 0.72 : type === 'up' ? 0.4 : 0.01;
     record(boost, gesture);
     setPulse((value) => Math.min(1, value + boost * 0.3));
+    signalComet(event, boost, depth === LAYERS_PER_ROOM);
     if (!muted) { audioRef.current?.wake(); gesture === 'hold' ? audioRef.current?.chord(room, room.layers[Math.max(0, depth - 1)], pulse) : audioRef.current?.voice(room, room.layers[Math.max(0, depth - 1)], pulse, x, y); }
     for (let i = 0; i < (type === 'down' ? 15 : 2); i += 1) particlesRef.current.push({ x, y, vx: (Math.random() - 0.5) * 0.006, vy: (Math.random() - 0.5) * 0.006, life: 0.4 + Math.random() * 0.6 });
   };
 
   const enter = (nextId) => { setRoomId(nextId); setDepth(progress.depth?.[nextId] || 1); setShowMap(false); setProgress((current) => ({ ...current, visited: [...new Set([...current.visited, nextId])] })); };
-  const nextRoom = () => enter(progress.unlocked.find((candidate) => !progress.visited.includes(candidate)) || progress.unlocked[(progress.unlocked.indexOf(roomId) + 1) % progress.unlocked.length] || 1);
+  const nextRoom = (event) => {
+    signalComet(event, 1, true);
+    enter(progress.unlocked.find((candidate) => !progress.visited.includes(candidate)) || progress.unlocked[(progress.unlocked.indexOf(roomId) + 1) % progress.unlocked.length] || 1);
+  };
 
   return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
-    <button className="world-surface" onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
-    <div className="depth-spine">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
-    <button className="world-map-button" onClick={() => setShowMap(true)}><span>✣</span><b>{progress.unlocked.length}</b></button>
-    <button className={`sound-orb ${muted ? 'muted' : ''}`} onClick={() => setMuted((value) => { const next = !value; next ? audioRef.current?.silence() : audioRef.current?.wake(); return next; })}><i /><i /><i /></button>
-    <div className="room-sigil"><i /><span>{Array.from({ length: Math.min(9, Math.ceil(roomId / 12)) }, (_, index) => <b key={index} />)}</span></div>
-    {depth === LAYERS_PER_ROOM && <button className="completion-portal" onClick={nextRoom}><i /></button>}
+    <button aria-label="Explore" className="world-surface" onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
+    <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
+    <button aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>
+    <button aria-label={muted ? 'Turn sound on' : 'Turn sound off'} className={`sound-orb ${muted ? 'muted' : ''}`} onClick={() => setMuted((value) => { const next = !value; next ? audioRef.current?.silence() : audioRef.current?.wake(); return next; })}><i /><i /><i /></button>
+    <div className="room-sigil" aria-hidden="true"><i /><span>{Array.from({ length: Math.min(9, Math.ceil(roomId / 12)) }, (_, index) => <b key={index} />)}</span></div>
+    {depth === LAYERS_PER_ROOM && <button aria-label="Enter the next room" className="completion-portal" onClick={nextRoom}><i /></button>}
     {showMap && <PortalMap progress={progress} onEnter={enter} onClose={() => setShowMap(false)} />}
   </main>;
 }
