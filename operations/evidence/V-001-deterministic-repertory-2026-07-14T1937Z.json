@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T19:37:27Z",
+  "slice": "deterministic-hourly-repertory-selector",
+  "production_on_stage": {
+    "id": "creative-sky",
+    "title": "Creative Sky",
+    "surface": "creative",
+    "motion": "opt-in",
+    "audio": "opt-in",
+    "rollback": "atlas",
+    "hour_key": "2026-07-14T19",
+    "repertory_index": 5,
+    "selection_algorithm": "sha256-hour-v1"
+  },
+  "verification": {
+    "command": "node --test operations/studio/deterministic-repertory.test.mjs",
+    "environment": "isolated Node.js reproduction before repository write",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "assertions": [
+      "same UTC hour is deterministic",
+      "hour boundary changes the hour key",
+      "all repertory entries satisfy motion, audio, surface, and rollback policy",
+      "invalid repertories fail closed",
+      "audio autoplay is rejected"
+    ]
+  },
+  "source_status": {
+    "observed": [
+      "V-001 remains blocked on provider capacity and immutable deployment identity.",
+      "The primary interface is currently OperatingAtlas.",
+      "The current operating constraint permits operations-only changes while deployment capacity is exhausted."
+    ],
+    "inferred": [
+      "A deterministic selector can become the scheduling boundary without changing application runtime during the provider block."
+    ],
+    "proposed": [
+      "After provider capacity returns, wire the selector to an accessible stage shell behind a reversible feature flag."
+    ],
+    "superseded": [],
+    "unresolved": [
+      "No immutable Vercel deployment is bound to this slice.",
+      "No physical iPhone Safari audibility result exists for Creative Sky."
+    ]
+  },
+  "privacy_boundary": "No private source material, credentials, personal archive content, payment logic, or conversion logic was retained.",
+  "rollback": "Do not import the selector into application code; remove future wiring or select the atlas fallback. Existing application runtime is unchanged."
+}
