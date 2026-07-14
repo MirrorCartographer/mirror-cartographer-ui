@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1027",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T09:47:00Z",
+  "title": "Historical identifier resolution requires conjunctive agreement across five identity predicates",
+  "claims": {
+    "observed": [
+      "The active queue requires M-004, M-005, and M-006 candidates to be resolved using namespace, owner, semantic role, temporal precedence, and immutable locator agreement.",
+      "The queue requires exhaustive branch or equivalent repository-history coverage before an identifier may be classified as unlocated.",
+      "CM-1026 reserves unresolved identifiers and prohibits treating them as available names.",
+      "Before this slice, the five identity predicates were not represented by a dedicated fail-closed JSON Schema contract."
+    ],
+    "inferred": [
+      "The five predicates form a conjunction rather than a weighted score: failure or uncertainty in any one predicate leaves the historical identity unresolved or rejects the candidate.",
+      "Semantic similarity alone cannot compensate for namespace, ownership, chronology, or immutable-locator disagreement.",
+      "A verified result without exhaustive reproduced coverage would overstate the repository evidence."
+    ],
+    "proposed": [
+      "Use operations/continuity/schemas/historical-identifier-resolution.schema.json for every future M-004, M-005, or M-006 candidate assessment.",
+      "Promote a candidate to verified only when coverage_state is exhaustive_reproduced and every predicate passes with at least one immutable evidence locator.",
+      "Retain unresolved or candidate_rejected status when any predicate is unknown or fails, and preserve the falsification route."
+    ],
+    "superseded": [
+      "Resolving a historical identifier from name resemblance, suffix collision, automation prose, or semantic similarity alone.",
+      "Treating the five identity predicates as optional corroboration rather than a conjunctive identity boundary."
+    ],
+    "unresolved": [
+      "No candidate for M-004, M-005, or M-006 has yet satisfied the new contract.",
+      "Exhaustive branch and history traversal remains outstanding.",
+      "The originating decision log, language lexicon, project document, or approved chat-history source remains unlocated."
+    ]
+  },
+  "source_provenance": [
+    {
+      "source_class": "repository",
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "supports": "Queue ownership, priority, acceptance criteria, exhaustive-coverage requirement, and the five named identity predicates."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/continuity/records/CM-1026-unresolved-identifier-reservation.json",
+      "commit": "2c522427fa543bc6484332d365b43a36ab7bc41c",
+      "supports": "The reservation rule for unresolved historical identifiers."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/continuity/schemas/historical-identifier-resolution.schema.json",
+      "commit": "a535659faa906087b130883b5b32fe3833bf6ab5",
+      "supports": "The new machine-checkable conjunctive resolution gate."
+    }
+  ],
+  "verification": {
+    "method": "Inspected the exact active-queue blob and recent continuity commits, compared the new contract against prior reservation and provenance-transition work, and confirmed this slice adds the previously missing five-predicate candidate-resolution structure rather than duplicating the monotonic coverage-state record.",
+    "status": "schema_committed_runtime_validation_unresolved",
+    "limitations": [
+      "No JSON Schema validator was executed in this connector-only run.",
+      "No exhaustive branch inventory was available through the current connector path.",
+      "The schema defines promotion conditions but does not assert that any historical candidate is genuine."
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository paths and immutable commit or blob identifiers",
+      "abstract provenance predicates",
+      "claim-status classifications",
+      "falsification routes"
+    ],
+    "excluded": [
+      "private chat text",
+      "private file-library payloads",
+      "personal or health information",
+      "credentials and secret-bearing logs",
+      "unapproved quotations"
+    ]
+  },
+  "falsification_routes": [
+    "Produce an authoritative source showing that fewer than all five predicates are sufficient for identity resolution.",
+    "Validate a verified candidate with a failed or unknown predicate against the committed schema and demonstrate acceptance.",
+    "Locate an earlier authoritative executable contract that already enforced the same five-predicate conjunction."
+  ]
+}
