@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "created_at": "2026-07-14T05:00:00Z",
+  "state": "in_progress",
+  "completed_slice": "Separated verified repository materialization events for M-004, M-005, and M-006 from their still-unlocated historical origin events.",
+  "durable_artifact": {
+    "path": "operations/continuity/records/CM-1019-identifier-materialization-boundary.json",
+    "commit": "712bc62ef1f68c4413e99cadf618397767a7714d"
+  },
+  "evidence": {
+    "path": "operations/evidence/M-RECONCILE-002-materialization-boundary-2026-07-14T0500Z.json",
+    "commit": "3a80e0a82bd167fa9a28ce0a170ecef18eb1e9aa"
+  },
+  "acceptance_effect": {
+    "advanced": [
+      "Established immutable repository materialization anchors for each disputed identifier.",
+      "Prevented unresolved-status artifacts from being misclassified as accepted origins."
+    ],
+    "remaining": [
+      "Obtain exhaustive branch inventory or equivalent history traversal.",
+      "Locate an immutable accepted origin or classify each identifier as unlocated after declared exhaustive coverage.",
+      "Inspect permitted non-repository source classes using privacy-preserving attestations where required."
+    ]
+  },
+  "specialist_registry_change": "none_no_durable_capability_gap_demonstrated",
+  "shared_state_policy": "additive_queue_projection_only_no_canonical_overwrite",
+  "next_action": "Execute the committed exhaustive provenance traversal contract against all accessible refs, then compare any earlier identifier-bearing object against the accepted-origin predicates without promoting mere materialization records."
+}
