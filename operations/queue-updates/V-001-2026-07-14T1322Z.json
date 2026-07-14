@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T13:22:59Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a reversible browser lifecycle adapter that binds the deterministic repertory controller to visibilitychange and boundary timers, cancels work while hidden, resynchronizes without replay after missed hours, preserves shared continuity, respects reduced motion, and keeps audio non-autoplaying and gesture-gated.",
+  "evidence": "operations/evidence/V-001-repertory-browser-adapter-2026-07-14T1322Z.json",
+  "commits": [
+    "d5f076692946ab2cf0254790ddb942fe7e21a7c4",
+    "135709cc2f9ac20ff813691a777a5024c7252ee0",
+    "ed74d7305ad593d546737d161bee342107818886"
+  ],
+  "acceptance_impact": {
+    "advanced": [
+      "browser lifecycle integration boundary",
+      "deterministic hidden-to-visible resynchronization",
+      "single continuity state preservation",
+      "reduced-motion and non-autoplay guarantees"
+    ],
+    "still_blocked": [
+      "exact repository checkout execution",
+      "real browser and Mobile Safari lifecycle verification",
+      "provider-capacity-dependent Vercel deployment verification",
+      "immutable deployment identity",
+      "exact-commit audio workflow artifact inspection",
+      "physical iPhone Safari audibility verification"
+    ]
+  },
+  "safe_next_action": "Execute the committed adapter tests from an authenticated exact-commit checkout, then mount the adapter behind one application import boundary and run browser visibility lifecycle tests; do not deploy until provider capacity and immutable deployment identity are verifiable.",
+  "canonical_queue_overwritten": false
+}
