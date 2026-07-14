@@ -10,6 +10,7 @@ import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRunti
 import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
 import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
+import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/autobiography.css';
@@ -18,6 +19,7 @@ import './assets/mobile-enter.css';
 import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
+installRuntimeInfrastructure();
 installDeploymentIdentityRuntime();
 installAudioDeviceEvidenceRuntime({ window, navigator, document });
 installAudioObservabilityRuntime();
