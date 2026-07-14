@@ -3,6 +3,12 @@ const required = (name, value) => {
   return value;
 };
 
+function normalizeOrigin(env) {
+  if (env.APP_ORIGIN) return String(env.APP_ORIGIN).replace(/\/$/, '');
+  if (env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${String(env.VERCEL_PROJECT_PRODUCTION_URL).replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+  return 'http://localhost:5173';
+}
+
 export function infrastructureConfig(env = process.env) {
   const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL || '';
   const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -11,9 +17,7 @@ export function infrastructureConfig(env = process.env) {
 
   return Object.freeze({
     production,
-    appOrigin: env.APP_ORIGIN || env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${env.APP_ORIGIN || env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:5173',
+    appOrigin: normalizeOrigin(env),
     sessionSecret: env.SESSION_SECRET || (production ? '' : 'mirror-cartographer-local-development-secret'),
     supabase: {
       enabled: Boolean(supabaseUrl && serviceRoleKey),
