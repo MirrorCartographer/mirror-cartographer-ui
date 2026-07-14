@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T00:58:31-04:00",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and tested a fail-closed public hourly stage adapter that allowlists repertory presentation fields, preserves the continuity channel and provenance classes, omits the internal continuity revision, requires user-initiated sound, and rejects unsafe or prohibited values.",
+  "commits": [
+    "4eaa9ce9f5b8f58e78fc7cfa8ddcb5eec86b9a4c",
+    "ae97361c369660e546200c99d699a53809ed2e19",
+    "c31984c68f57e7757922a951c23766ba979ede14"
+  ],
+  "verification": "Isolated Node execution: 4 tests passed, 0 failed.",
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Locate the Vite runtime entrypoint and wire this adapter behind a reversible feature boundary without deploying; add a static contract test proving the application consumes only the public payload. Preserve fail-closed deployment rules until provider capacity and immutable deployment identity are available.",
+  "shared_state_overwritten": false,
+  "specialist_registry_change": null
+}
