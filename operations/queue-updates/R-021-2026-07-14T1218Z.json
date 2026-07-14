@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T12:18:00Z",
+  "change_type": "completed_reversible_slice",
+  "completed_slice": "Executed the committed GitHub REST API version evidence gate under Node v22.16.0; all four deterministic fail-closed cases passed and the runtime envelope was retained.",
+  "evidence_path": "operations/evidence/R-021-api-version-runtime-execution-2026-07-14T1218Z.json",
+  "evidence_commit": "bcde71be5a6c7a8060906ddc192e04288934855e",
+  "state_effect": "R-021 remains completed_handoff_ready because authenticated live enumeration and independent reconciliation are still outstanding.",
+  "acceptance_remaining": [
+    "Execute the authenticated repository enumerator for one exact commit.",
+    "Execute the independent gh api --paginate --slurp traversal for the same commit.",
+    "Capture live requested API version, response status, Deprecation, and Sunset headers.",
+    "Validate both outputs, reconcile them, and retain raw outputs plus the result.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "rollback": "Revert this queue projection commit and evidence commit; no application or canonical shared-state file was changed.",
+  "specialist_registry_change": null
+}
