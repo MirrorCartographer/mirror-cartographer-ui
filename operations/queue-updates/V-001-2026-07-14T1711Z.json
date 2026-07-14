@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T17:11:02.000Z",
+  "change_type": "completed_reversible_slice",
+  "completed_slice": "Added a public-safe deterministic current-stage receipt with canonical SHA-256 binding and a 24-hour repertory cycle contract.",
+  "production_on_stage": {
+    "civil_hour": 13,
+    "timezone": "America/New_York",
+    "id": "paper-weather",
+    "title": "Paper Weather"
+  },
+  "files": [
+    "operations/studio/current-stage-receipt.mjs",
+    "operations/studio/current-stage-receipt.test.mjs",
+    "operations/evidence/V-001-current-stage-receipt-2026-07-14T1711Z.json"
+  ],
+  "verification_status": "source_verified_not_executed",
+  "deployment_status": "not_attempted_provider_capacity_blocked",
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false,
+  "next_action": "Execute the stage receipt test in an authenticated checkout, then attach its output to the next exact-commit evidence bundle; continue to avoid application deployment until provider capacity and immutable deployment identity are available."
+}
