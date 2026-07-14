@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T08:43:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Made the deterministic repertory CI gate self-auditing with an explicit exact-SHA checkout and a no-dependency contract test covering permissions, timeout, credential persistence, runtime, triggers, watched paths, and executed test surfaces.",
+  "evidence": "operations/evidence/V-001-self-auditing-repertory-workflow-2026-07-14T0843Z.json",
+  "files": [
+    "operations/tests/operations-repertory-workflow-contract.test.mjs",
+    ".github/workflows/operations-repertory-tests.yml"
+  ],
+  "commits": [
+    "8ed7ac06c1c83f3b3ea30b0b3a46eca1dce6d849",
+    "ec5269054d8b198a87536c20a2f8e9fc78fed71b",
+    "060f7f87c468d40e43e3cde3d2b89693cba26687"
+  ],
+  "acceptance_remaining": [
+    "Observe and retain a successful exact-commit Actions run for both repertory test surfaces.",
+    "Execute authenticated dual-client workflow enumeration and retain reconciliation evidence.",
+    "Observe operations-only Vercel build suppression after provider capacity returns.",
+    "Bind an exact application commit to immutable Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Use an authenticated Actions client to dispatch or observe the committed Operations Repertory Tests workflow, retain run/job/step evidence, and keep production acceptance fail-closed until it passes."
+}
