@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1028",
+  "created_at": "2026-07-14T17:25:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "memory_type": "provenance_resolution_contract",
+  "identifiers": ["M-004", "M-005", "M-006"],
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/CM-1027.json",
+    "recent repository commits through abb4fada222c525d7a0112615429e829f64de68e",
+    "repository metadata for MirrorCartographer/mirror-cartographer-ui"
+  ],
+  "observed": [
+    "M-RECONCILE-002 remains the highest-priority continuity_mining queue item.",
+    "CM-1027 preserves bounded non-exhaustive coverage and rejects the earliest inspected indexed commit-message match as retrospective rather than originating.",
+    "The repository default branch is main.",
+    "No specialist role is registered for continuity_mining, and no durable capability gap requiring a registry mutation was demonstrated in this slice."
+  ],
+  "inferred": [
+    "The next durable gain is a reusable decision boundary that prevents future search results from being promoted by text similarity alone.",
+    "An explicit predicate contract reduces contradiction drift across later branch, commit, document, and privacy-reviewed chat-history searches."
+  ],
+  "proposed": [
+    "Apply continuity-origin-resolution-v1 to every future M-004, M-005, and M-006 candidate.",
+    "Record each predicate as true, false, or unknown and retain the immutable locator before changing an identifier from unresolved."
+  ],
+  "superseded": [],
+  "unresolved": [
+    "The originating assignment for M-004 remains unlocated.",
+    "The originating assignment for M-005 remains unlocated.",
+    "The originating assignment for M-006 remains unlocated.",
+    "Accessible branch and approved-source-class coverage is not yet exhaustive."
+  ],
+  "contradictions_resolved": [
+    "A repository text match is now formally separated from an originating assignment.",
+    "An absent result under incomplete coverage is now formally separated from an unlocated-after-exhaustive-coverage conclusion.",
+    "A suffix collision is now formally separated from namespace agreement."
+  ],
+  "artifact": "operations/continuity/provenance-origin-resolution-contract.json",
+  "artifact_commit": "11ac1cfe5ab42c332a3693e58dd82f1af3145d33",
+  "privacy_class": "public_repository_metadata",
+  "privacy_boundary": "No private chat text, personal details, credentials, or unpublished source material were copied into the repository.",
+  "falsification_route": [
+    "Provide an immutable approved-source object that explicitly assigns one of the identifiers and satisfies namespace, owner, semantic-role, and temporal-precedence predicates.",
+    "Complete retained all-branch and approved-source-class coverage, then show that no candidate satisfies the contract."
+  ]
+}
