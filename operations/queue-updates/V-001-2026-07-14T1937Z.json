@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T19:37:27Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and verified an operations-only deterministic hourly repertory selector with six distinct productions, stable UTC-hour selection, fail-closed repertory validation, explicit motion/audio policies, and atlas rollback.",
+  "canonical_queue_overwrite": false,
+  "acceptance_effect": {
+    "satisfied": [],
+    "advanced": [
+      "Hourly repertory programming now has a deterministic, testable selection contract.",
+      "Accessibility, non-autoplay, and rollback constraints are machine-checkable before runtime wiring."
+    ],
+    "remaining": [
+      "Run authenticated exhaustive workflow evidence for an exact commit.",
+      "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+      "Observe an exact-commit audio-routing workflow and inspect its artifact.",
+      "Bind an application commit to an immutable successful Vercel deployment.",
+      "Perform bounded physical iPhone Safari audibility verification.",
+      "Wire the repertory selector into a reversible stage shell only after provider capacity returns."
+    ]
+  },
+  "next_action": "Keep the selector operations-only while deployment capacity is blocked. When capacity returns, add a feature-flagged stage shell that selects the hourly production, preserves atlas continuity state, and defaults to atlas on any contract failure."
+}
