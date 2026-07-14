@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Reject ambiguous JSON evidence before semantic canonicalization or attestation.",
+  "completed_slices": [
+    "Implemented a strict JSON evidence parser that rejects duplicate member names before ordinary parser collapse.",
+    "Detected escaped member-name equivalence such as a and \\u0061 as duplicate identity.",
+    "Bound accepted input to a raw UTF-8 SHA-256 digest while keeping raw-byte identity distinct from semantic canonicalization.",
+    "Verified five deterministic acceptance and fail-closed cases."
+  ],
+  "acceptance_remaining": [
+    "Integrate this boundary before the canonical JSON digest and evidence-envelope attestation path.",
+    "Differential-test against independent strict JSON parsers and a duplicate-key adversarial corpus.",
+    "Add a byte-level UTF-8 decoder boundary so malformed byte sequences fail before string parsing.",
+    "Add bounded depth and input-size limits for hostile or accidental resource exhaustion."
+  ],
+  "safe_next_action": "Compose raw-byte retention, strict duplicate-aware parsing, RFC 8785 canonicalization, and dual-digest attestation in that order; preserve failure codes and never canonicalize already-collapsed JSON.parse output as primary evidence.",
+  "source_evidence": "operations/evidence/R-023-strict-json-evidence-2026-07-14T1631Z.json",
+  "created_at": "2026-07-14T16:31:45Z"
+}
