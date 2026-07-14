@@ -1,6 +1,24 @@
+const REQUIRED_ACCESSIBILITY = Object.freeze([
+  'keyboard-complete',
+  'screen-reader-labelled',
+  'reduced-motion-safe',
+]);
+
 function assertIntegerHour(hour) {
   if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
     throw new Error('hour must be an integer from 0 through 23');
+  }
+}
+
+function assertAccessibility(production) {
+  if (!Array.isArray(production.accessibility)) {
+    throw new Error(`accessibility guarantees missing for ${production.id}`);
+  }
+  const guarantees = new Set(production.accessibility);
+  for (const requirement of REQUIRED_ACCESSIBILITY) {
+    if (!guarantees.has(requirement)) {
+      throw new Error(`accessibility requirement ${requirement} missing for ${production.id}`);
+    }
   }
 }
 
@@ -13,6 +31,9 @@ function assertSchedule(schedule) {
   }
   if (schedule.selection?.randomness !== false) {
     throw new Error('schedule randomness must remain disabled');
+  }
+  if (typeof schedule.selection?.fallback !== 'string' || schedule.selection.fallback.trim() === '') {
+    throw new Error('schedule fallback must be a non-empty production id');
   }
   if (!Array.isArray(schedule.productions) || schedule.productions.length !== 24) {
     throw new Error('schedule must contain exactly 24 productions');
@@ -29,12 +50,16 @@ function assertSchedule(schedule) {
     if (production.continuity_channel !== schedule.continuity?.state_channel) {
       throw new Error(`continuity channel mismatch for ${production.id}`);
     }
+    assertAccessibility(production);
     hours.add(production.hour);
     ids.add(production.id);
   }
 
   for (let hour = 0; hour < 24; hour += 1) {
     if (!hours.has(hour)) throw new Error(`missing production hour: ${hour}`);
+  }
+  if (!ids.has(schedule.selection.fallback)) {
+    throw new Error(`schedule fallback does not resolve: ${schedule.selection.fallback}`);
   }
 }
 
@@ -43,7 +68,7 @@ export function selectProductionForHour(schedule, hour) {
   assertIntegerHour(hour);
   const production = schedule.productions.find((candidate) => candidate.hour === hour);
   if (!production) throw new Error(`no production found for hour ${hour}`);
-  return Object.freeze({ ...production });
+  return Object.freeze({ ...production, accessibility: Object.freeze([...production.accessibility]) });
 }
 
 export function selectProductionForDate(schedule, date, timeZone = schedule?.selection?.timezone) {
