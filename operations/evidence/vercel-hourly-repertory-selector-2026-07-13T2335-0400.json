@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T03:35:12Z",
+  "slice": "deterministic_hourly_repertory_selector",
+  "source_status": {
+    "current_state": "repository_default_branch",
+    "active_queue": "repository_default_branch",
+    "specialist_registry": "repository_default_branch",
+    "trigger_requests": "repository_default_branch",
+    "recent_commits": "authenticated_connector_listing"
+  },
+  "finding": "The hourly repertory requires an explicit timezone and a fail-closed 24-slot contract; otherwise production selection can vary with host timezone or silently accept unsafe and incomplete stages.",
+  "implementation": {
+    "module": "operations/tools/hourly-repertory-selector.mjs",
+    "module_commit": "c8d42086504fec97a70335afa95a6dd1fc5dafe9",
+    "test": "operations/tools/hourly-repertory-selector.test.mjs",
+    "test_commit": "7f63414f09cebf6e9ac5137f37da4998cc56607f",
+    "invariants": [
+      "exactly 24 unique hourly slots",
+      "explicit IANA timezone selection",
+      "deterministic selection for identical instant and timezone",
+      "single continuity channel across all productions",
+      "autoplay explicitly disabled",
+      "payment and conversion logic explicitly excluded",
+      "mobile safety, accessibility, and reversibility explicitly required"
+    ]
+  },
+  "verification": {
+    "level": "exact-commit connector fetch and structural review",
+    "runtime_executed": false,
+    "runtime_limit": "No authenticated repository checkout or direct Node execution surface was available in this run.",
+    "falsification_cases_declared": 5
+  },
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE records exhausted Vercel build capacity and requires operations-only work until capacity returns."
+  },
+  "privacy_boundary": "Only public repository operations metadata and abstract production invariants are retained; no private source material or personal data is included.",
+  "rollback": [
+    "7f63414f09cebf6e9ac5137f37da4998cc56607f",
+    "c8d42086504fec97a70335afa95a6dd1fc5dafe9"
+  ]
+}
