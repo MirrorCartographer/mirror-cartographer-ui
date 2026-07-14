@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-13T21:32:00-04:00",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added an implementation-ready JSON Schema that requires each enumeration method to retain and SHA-256-bind its execution declaration separately from raw enumeration output.",
+  "finding": "Inline execution provenance remains substitutable unless the declaration itself is retained as immutable bytes and compared with the inline object before reconciliation and manifest writing.",
+  "artifact": {
+    "path": "operations/schemas/frontier-retained-execution-declaration.schema.json",
+    "commit": "d5f1384fab65a3b9236399cb37f8636ad3ecd1fb"
+  },
+  "evidence": {
+    "path": "operations/evidence/frontier-retained-execution-declaration-schema-2026-07-13T2132-0400.json",
+    "commit": "5476d1765f3ba553db33c41cdf317dd74a3e283a"
+  },
+  "acceptance_remaining": [
+    "Implement runtime retained-declaration byte and digest verification.",
+    "Require parsed retained declaration JSON to deep-equal the corresponding inline execution object.",
+    "Reject primary and independent declarations that resolve to the same canonical file.",
+    "Integrate this gate before the existing independent-execution provenance and manifest-write gates.",
+    "Execute both authenticated enumeration clients against one exact commit and retain raw outputs, declarations, reconciliation, and final bundle."
+  ],
+  "safe_next_action": "Implement the runtime verifier described by the schema, add falsification tests for digest mismatch, content mismatch, invalid JSON, unreadable paths, and canonical-file reuse, then wire it before verifyIndependentExecutionProvenance in the bound manifest writer.",
+  "specialist_registry_change": "none",
+  "deletion_performed": false
+}
