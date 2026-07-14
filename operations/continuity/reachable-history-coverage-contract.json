@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "contract_id": "continuity-reachable-history-coverage-v1",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-14T18:36:30Z",
+  "purpose": "Define the minimum retained evidence required before M-004, M-005, or M-006 may be classified as located or unlocated after exhaustive repository coverage.",
+  "inputs": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "identifiers": ["M-004", "M-005", "M-006"],
+    "required_source_classes": [
+      "all_accessible_branch_refs",
+      "all_commits_reachable_from_retained_branch_heads",
+      "all_trees_and_text_blobs_reachable_from_retained_commits",
+      "decision_logs_language_lexicons_and_project_documents"
+    ]
+  },
+  "coverage_predicates": [
+    {
+      "id": "branch_inventory_retained",
+      "requirement": "Retain every accessible branch name and immutable head commit SHA, including pagination metadata and retrieval time.",
+      "fail_closed_when": ["branch listing is empty without independent repository evidence", "pagination is incomplete", "a branch head lacks an immutable SHA"]
+    },
+    {
+      "id": "reachable_commit_set_closed",
+      "requirement": "Traverse parent links from every retained branch head until each lineage reaches an already-retained commit or a root commit; retain commit SHAs and parent SHAs.",
+      "fail_closed_when": ["a retained commit has an untraversed parent", "a branch head is absent from the reachable set", "history is sampled rather than closed"]
+    },
+    {
+      "id": "reachable_tree_set_closed",
+      "requirement": "Retain each reachable commit tree SHA and an inventory of paths and blob SHAs needed to search identifier assignments and provenance records.",
+      "fail_closed_when": ["a reachable commit lacks a tree inventory", "path enumeration is partial", "blob identity is not immutable"]
+    },
+    {
+      "id": "identifier_search_reproducible",
+      "requirement": "Search immutable retained text objects for exact identifiers and semantically linked assignment language; retain query grammar, candidate locators, and rejected candidates.",
+      "fail_closed_when": ["only indexed code search is used", "search terms or scope are not retained", "namespace collisions are accepted without owner and semantic-role agreement"]
+    },
+    {
+      "id": "origin_resolution_predicates_satisfied",
+      "requirement": "A located result must agree on namespace, owner, semantic role, temporal precedence, and immutable locator; otherwise remain unresolved.",
+      "fail_closed_when": ["a candidate is reconstructed from prose", "identifier suffix alone is treated as identity", "the originating assignment object is missing"]
+    }
+  ],
+  "allowed_claims": {
+    "located": "Allowed only when one immutable originating object satisfies every origin-resolution predicate.",
+    "unlocated_after_exhaustive_coverage": "Allowed only when every coverage predicate is verified and no qualifying immutable originating object exists.",
+    "unresolved": "Required whenever any coverage predicate or origin-resolution predicate remains unverified."
+  },
+  "epistemic_status": {
+    "observed": [
+      "Canonical queue requires exhaustive branch inventory or equivalent repository-history traversal.",
+      "The retained source-class ledger records all-branches-and-reachable-history coverage as unresolved.",
+      "An empty branch-search response was observed but does not include a retained branch inventory or coverage proof."
+    ],
+    "inferred": [
+      "The empty branch-search response is interface-bounded and cannot establish that the repository has no accessible branches."
+    ],
+    "proposed": [
+      "Implement two independent branch/ref enumerators and reconcile their branch-name and head-SHA sets before commit traversal."
+    ],
+    "superseded": [],
+    "unresolved": [
+      "Complete accessible branch set",
+      "Complete reachable commit and tree sets",
+      "Immutable originating objects for M-004, M-005, and M-006"
+    ]
+  },
+  "test_vectors": [
+    {
+      "name": "empty_interface_result",
+      "input": {"branch_search_results": [], "independent_ref_inventory": null},
+      "expected": {"coverage_verified": false, "classification": "unresolved", "reason": "absence_unproven"}
+    },
+    {
+      "name": "partial_history",
+      "input": {"all_branch_heads_retained": true, "all_parent_edges_closed": false},
+      "expected": {"coverage_verified": false, "classification": "unresolved", "reason": "reachable_commit_set_open"}
+    },
+    {
+      "name": "collision_without_origin",
+      "input": {"exact_identifier_match": true, "namespace_agreement": false, "originating_assignment_object": false},
+      "expected": {"located": false, "classification": "unresolved", "reason": "identity_collision"}
+    },
+    {
+      "name": "exhaustive_absence",
+      "input": {"all_coverage_predicates_verified": true, "qualifying_origin_objects": []},
+      "expected": {"classification": "unlocated_after_exhaustive_coverage"}
+    }
+  ],
+  "privacy_boundary": "Retain repository paths, object SHAs, classification metadata, and bounded excerpts only when public-repository-safe. Do not copy private chat or personal source text into repository artifacts.",
+  "reversibility": "Additive contract. Revert its creating commit without altering canonical state, queue, registry, trigger ledger, or prior history."
+}
