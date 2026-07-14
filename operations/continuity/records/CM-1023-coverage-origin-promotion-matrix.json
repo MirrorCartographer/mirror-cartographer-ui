@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1023",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T07:24:00Z",
+  "title": "Coverage and origin status must advance through a monotonic promotion matrix",
+  "purpose": "Prevent M-004, M-005, and M-006 from being promoted, demoted, or classified absent through prose drift when coverage evidence and candidate predicates evolve independently.",
+  "claims": {
+    "observed": [
+      "CM-1021 defines the predicates required to verify an identifier origin and preserves unresolved status when any predicate fails or is unknown.",
+      "CM-1022 defines the evidence required for exhaustive coverage and forbids absence promotion when any coverage domain is incomplete.",
+      "The active queue still lists exhaustive history coverage and immutable origin provenance as unresolved acceptance criteria for M-004, M-005, and M-006.",
+      "No inspected continuity record defines the allowed joint transitions between coverage_status and origin_status."
+    ],
+    "inferred": [
+      "Coverage completeness and candidate validity are independent axes; combining them into a single prose conclusion permits accidental status drift.",
+      "A monotonic transition matrix allows new evidence to refine a claim without erasing prior rejection reasons, coverage limits, or provenance edges."
+    ],
+    "proposed": [
+      "Represent each disputed identifier as the product of coverage_state and origin_state.",
+      "Permit origin_status=verified only from a candidate that passes every CM-1021 predicate, regardless of whether global coverage is exhaustive.",
+      "Permit origin_status=unlocated_after_exhaustive_coverage only when CM-1022 coverage_status=exhaustive and every retained candidate is rejected with immutable reasons.",
+      "Require every transition to cite the prior state, triggering evidence, retained artifact locator, and falsification route."
+    ],
+    "superseded": [
+      "Treating unresolved and unlocated as interchangeable labels.",
+      "Allowing a negative search result to move an identifier directly from unresolved to unlocated.",
+      "Overwriting a prior candidate rejection when later evidence changes only one predicate or coverage domain."
+    ],
+    "unresolved": [
+      "No exhaustive ref-and-history manifest has been retained.",
+      "No origin candidate for M-004, M-005, or M-006 has passed every CM-1021 predicate.",
+      "The originating decision log, language lexicon, project document, or approved chat-history assignment source remains unlocated."
+    ]
+  },
+  "state_axes": {
+    "coverage_state": [
+      "unknown",
+      "partial",
+      "complete_single_client",
+      "exhaustive_reproduced"
+    ],
+    "origin_state": [
+      "unresolved",
+      "lead_only",
+      "candidate_rejected",
+      "verified",
+      "unlocated_after_exhaustive_coverage"
+    ]
+  },
+  "allowed_promotions": [
+    {
+      "from": {"coverage_state": "unknown", "origin_state": "unresolved"},
+      "to": {"coverage_state": "partial", "origin_state": "unresolved"},
+      "requires": ["retained search-domain evidence", "recorded provider and permission limits"]
+    },
+    {
+      "from": {"coverage_state": "partial", "origin_state": "unresolved"},
+      "to": {"coverage_state": "partial", "origin_state": "lead_only"},
+      "requires": ["candidate locator", "source class", "privacy classification", "no origin claim"]
+    },
+    {
+      "from": {"coverage_state": "partial", "origin_state": "lead_only"},
+      "to": {"coverage_state": "partial", "origin_state": "candidate_rejected"},
+      "requires": ["CM-1021 predicate evaluation", "candidate-specific rejection reasons"]
+    },
+    {
+      "from": {"coverage_state": "partial", "origin_state": "lead_only"},
+      "to": {"coverage_state": "partial", "origin_state": "verified"},
+      "requires": ["all CM-1021 predicates pass", "immutable assignment locator", "independent corroboration or approved self-authentication"]
+    },
+    {
+      "from": {"coverage_state": "partial", "origin_state": "candidate_rejected"},
+      "to": {"coverage_state": "exhaustive_reproduced", "origin_state": "candidate_rejected"},
+      "requires": ["CM-1022 manifest complete", "independent reproduction", "all limits closed or non-material"]
+    },
+    {
+      "from": {"coverage_state": "exhaustive_reproduced", "origin_state": "candidate_rejected"},
+      "to": {"coverage_state": "exhaustive_reproduced", "origin_state": "unlocated_after_exhaustive_coverage"},
+      "requires": ["every retained candidate rejected", "no unresolved collision", "no inaccessible approved source class"]
+    }
+  ],
+  "forbidden_transitions": [
+    "Any transition to unlocated_after_exhaustive_coverage from unknown, partial, or complete_single_client coverage.",
+    "Any transition to verified without all CM-1021 predicates passing.",
+    "Any transition that deletes prior candidate evaluations, coverage limits, or immutable locators.",
+    "Any transition from verified to unlocated; contradictory evidence must create a disputed_verified state in a new revision rather than erase history.",
+    "Any retroactive creation, reassignment, or renumbering of M-004, M-005, or M-006."
+  ],
+  "transition_record_contract": [
+    "identifier",
+    "prior_state",
+    "new_state",
+    "triggering_evidence",
+    "immutable_artifact_locators",
+    "predicate_delta",
+    "coverage_domain_delta",
+    "retained_rejection_reasons",
+    "privacy_class",
+    "recorded_at",
+    "falsification_route"
+  ],
+  "current_projection": {
+    "M-004": {"coverage_state": "partial", "origin_state": "unresolved"},
+    "M-005": {"coverage_state": "partial", "origin_state": "unresolved"},
+    "M-006": {"coverage_state": "partial", "origin_state": "unresolved"}
+  },
+  "privacy_boundary": {
+    "included": ["identifier labels", "abstract states", "commit and blob locators", "predicate outcomes", "coverage-domain status", "rejection reasons without source text"],
+    "excluded": ["private chat text", "personal source contents", "credentials", "secret-bearing output", "unapproved quotations", "private-source payloads"]
+  },
+  "falsification_routes": [
+    "Produce a valid origin that CM-1021 accepts but this matrix forbids from reaching verified.",
+    "Produce an exhaustive CM-1022 manifest for which the matrix still incorrectly blocks an unlocated classification after every candidate is rejected.",
+    "Demonstrate a permitted transition that loses a prior immutable locator, rejection reason, or coverage limitation.",
+    "Show that one current projection is inconsistent with retained repository evidence."
+  ]
+}
