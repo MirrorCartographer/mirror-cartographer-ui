@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T02:36:00Z",
+  "state": "in_progress",
+  "completed_slice": "Retained a provenance-preserving, coverage-bounded indexed-search observation for M-004, M-005, and M-006 that separates later bookkeeping references from originating assignments and explicitly rejects zero search results as exhaustive absence proof.",
+  "evidence": [
+    {
+      "path": "operations/continuity/evidence/M-RECONCILE-002-indexed-search-observation-2026-07-13T2236-0400.json",
+      "commit": "b222c1a3039716584fca718619cc7cfbe395a3b8",
+      "verification": "GitHub create-file commit acknowledgement"
+    }
+  ],
+  "claim_state": {
+    "observed": "Indexed code search returned no matching file and commit search surfaced only later continuity bookkeeping for M-004.",
+    "inferred": "No accepted immutable origin is present in the bounded evidence examined during this slice.",
+    "proposed": "Proceed to exhaustive accessible-ref and reachable-commit traversal.",
+    "superseded": "Search mention equals origin; zero indexed results equal repository-wide absence.",
+    "unresolved": "Immutable originating assignment for M-004, M-005, and M-006."
+  },
+  "privacy_boundary": "Only public repository metadata, commit identifiers, abstract provenance classifications, and falsification routes were retained. No private chat, File Library content, personal data, health data, or credentials were included.",
+  "registry_change": null,
+  "registry_reason": "No durable specialist capability gap was demonstrated; the existing registry rule therefore prohibits adding or retiring roles.",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for each identifier or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned each identifier."
+  ],
+  "safe_next_action": "Run an authenticated all-ref inventory and reachable-commit tree traversal, retain the raw ref and commit inventories, and evaluate every exact identifier occurrence against the accepted-origin predicates without reconstructing missing history."
+}
