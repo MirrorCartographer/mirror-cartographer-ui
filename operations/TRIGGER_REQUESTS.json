@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T22:02:30Z",
+  "updated_at": "2026-07-14T22:16:00Z",
   "requests": [
     {
       "request_id": "VST-20260714T220230Z-continuity-mining",
@@ -40,6 +40,16 @@
       "reason": "V-001 deterministic repertory selector slice completed; inspect research-surface implications when enabled.",
       "status": "pending",
       "direct_trigger_attempt": "not attempted after peer automation path proved unavailable",
+      "execution_claimed": false
+    },
+    {
+      "request_id": "ICW-20260714T221600Z-continuity-mining",
+      "requested_by": "independent_creative_web",
+      "target_team": "continuity_mining",
+      "requested_at": "2026-07-14T22:16:00Z",
+      "reason": "I-002 The Fourth Room slice completed; inspect identity provenance and cross-team boundary implications.",
+      "status": "pending",
+      "direct_trigger_attempt": "automation update failed: task no longer available",
       "execution_claimed": false
     }
   ]
