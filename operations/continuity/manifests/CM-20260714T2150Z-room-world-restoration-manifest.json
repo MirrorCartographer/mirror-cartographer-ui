@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-20260714T2150Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T21:50:00Z",
+  "purpose": "Preserve an additive, provenance-bound restoration plan for three deleted room-world drafts without restoring, deleting, or rewriting repository history.",
+  "governance": {
+    "observed": "operations/CURRENT_STATE.json prohibits deleting GitHub files or history.",
+    "inferred": "A collision-free archive restoration can preserve addressability without reactivating superseded runtime code.",
+    "proposed": "If canonical approval is later recorded, restore each artifact only to its proposed archive path and mark it inactive and non-importable.",
+    "superseded": null,
+    "unresolved": [
+      "Whether the no-deletion rule applies to working-tree paths, Git history, or both.",
+      "Whether canonical maintainers want the deleted drafts restored as source archives.",
+      "Whether dependency snapshots should also be archived to make the drafts independently reproducible."
+    ]
+  },
+  "artifacts": [
+    {
+      "original_path": "src/components/RoomWorld.jsx",
+      "deletion_commit": "3db4fdc3eb8e59038176774e7c3ebbe2930abfdc",
+      "immutable_content_locator": "deletion diff in commit 3db4fdc3eb8e59038176774e7c3ebbe2930abfdc",
+      "proposed_archive_path": "operations/continuity/archives/room-world/RoomWorld.v1.jsx.txt",
+      "lifecycle_status": "deleted_superseded_draft",
+      "dependency_status": {
+        "imports": [
+          "react",
+          "src/world/roomCatalog",
+          "src/world/roomAudio",
+          "src/components/RoomWorld.css"
+        ],
+        "independent_reproducibility": "unverified",
+        "runtime_activation": "must_remain_disabled"
+      },
+      "restoration_risks": [
+        "Restoring to the original path could shadow or conflict with the active room-world implementation.",
+        "The historical imports may have changed since deletion.",
+        "Treating archived source as executable could reactivate obsolete accessibility, audio, persistence, or performance behavior."
+      ]
+    },
+    {
+      "original_path": "src/components/RoomWorldClean.jsx",
+      "deletion_commit": "a505f89eeee5e6515d565e1d31fe46dfd57c9984",
+      "immutable_content_locator": "deletion diff in commit a505f89eeee5e6515d565e1d31fe46dfd57c9984",
+      "proposed_archive_path": "operations/continuity/archives/room-world/RoomWorldClean.v2.jsx.txt",
+      "lifecycle_status": "deleted_superseded_draft",
+      "dependency_status": {
+        "imports": [
+          "react",
+          "src/world/roomCatalog",
+          "src/world/roomAudio",
+          "src/components/RoomWorld.css"
+        ],
+        "independent_reproducibility": "unverified",
+        "runtime_activation": "must_remain_disabled"
+      },
+      "restoration_risks": [
+        "Restoring to the original path could create an ambiguous component choice.",
+        "Compressed historical logic is harder to audit and may conceal behavior drift.",
+        "The historical localStorage namespace and audio behavior may conflict with the active runtime."
+      ]
+    },
+    {
+      "original_path": "src/components/RoomWorldRuntime.jsx",
+      "deletion_commit": "f0d563b4e12577aa36d05fbb09fed3849b6d1681",
+      "immutable_content_locator": "deletion diff in commit f0d563b4e12577aa36d05fbb09fed3849b6d1681",
+      "proposed_archive_path": "operations/continuity/archives/room-world/RoomWorldRuntime.v3.jsx.txt",
+      "lifecycle_status": "deleted_superseded_draft",
+      "dependency_status": {
+        "imports": [
+          "react",
+          "src/world/roomCatalog",
+          "src/world/roomAudio",
+          "src/components/RoomWorld.css"
+        ],
+        "independent_reproducibility": "unverified",
+        "runtime_activation": "must_remain_disabled"
+      },
+      "restoration_risks": [
+        "Restoring to the original path could conflict with the currently staged wordless-room runtime.",
+        "The draft contains direct browser storage, canvas, pointer, and audio behavior that requires renewed accessibility and mobile verification.",
+        "Its dependency graph may no longer match current source contracts."
+      ]
+    }
+  ],
+  "restoration_preconditions": [
+    "A canonical decision explicitly defines the scope of the no-deletion rule.",
+    "A canonical decision authorizes additive archive restoration.",
+    "The restored files use only collision-free archive paths and cannot be imported by the application build.",
+    "Each restored file records its deletion commit, original path, inactive status, and verification limits.",
+    "No existing file is overwritten or deleted."
+  ],
+  "verification": {
+    "method": "Matched each deletion commit message and deletion diff to one unique original path; no historical identifier was reconstructed beyond immutable commit evidence.",
+    "coverage": "three known deletion commits named as superseded room-world drafts",
+    "limitations": "This is not an exhaustive branch inventory and does not prove that no additional deleted room-world artifacts exist."
+  },
+  "privacy_boundary": "Repository paths, commit identifiers, abstract dependency names, and lifecycle semantics only; no private chats, credentials, personal records, or unreviewed file-library content retained.",
+  "specialist_registry_change": null
+}
