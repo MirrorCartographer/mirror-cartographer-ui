@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "studio": "independent_creative_web",
+  "identity": "A self-contained experimental web studio for fictional worlds, sensory systems, and playable atmospheres.",
+  "must_not_become": [
+    "Mirror Cartographer explanation surface",
+    "research portal",
+    "worker dashboard",
+    "product funnel"
+  ],
+  "production_rules": [
+    "Each production must stand on its own without project exposition.",
+    "Deterministic systems are preferred over decorative randomness.",
+    "Sound must require an explicit user gesture and remain optional.",
+    "Reduced-motion, keyboard use, mobile safety, and reversible implementation are mandatory.",
+    "No payments, conversion logic, private source material, or diagnosis/treatment claims."
+  ],
+  "current_production": {
+    "title": "The Observatory of Lost Weather",
+    "path": "operations/independent-creative-web/productions/observatory-of-lost-weather/index.html",
+    "status": "implemented_not_deployed",
+    "creative_premise": "A fictional observatory measures weather systems that violate ordinary time, direction, and causality.",
+    "independence_basis": "The work contains no Mirror Cartographer terminology, project explanation, account flow, research interface, analytics, or conversion path."
+  }
+}
