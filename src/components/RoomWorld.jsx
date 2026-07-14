@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ROOMS, ROOM_COUNT, LAYERS_PER_ROOM, roomById } from '../world/roomCatalog';
+import { ROOMS, LAYERS_PER_ROOM, roomById } from '../world/roomCatalog';
 import { createRoomAudio } from '../world/roomAudio';
 import './RoomWorld.css';
 
@@ -79,10 +79,13 @@ export default function RoomWorld(){
     const dx=x-(old.x??x),dy=y-(old.y??y),speed=Math.hypot(dx,dy); let gesture='tap';
     if(type==='move'&&old.down){gesture=speed>.06?'rapid':Math.abs(dx)>Math.abs(dy)?'trace':'fold';}
     if(type==='up'){const distance=Math.hypot(x-old.startX,y-old.startY);gesture=distance>.28?'sweep':now-old.last>700?'hold':'tap';}
-    const boost=type==='move'&&old.down?.08:type==='down'?.65:type==='up'?.35:.01;const next=Math.min(LAYERS_PER_ROOM,Math.max(depth,1+Math.floor((progress.energy+boost)/Math.max(2,room.layers[Math.min(depth-1,19)].threshold))));
-    if(next>depth)setDepth(next);setPulse(v=>Math.min(1,v+boost*.28));commit(next,boost,gesture);
+    const boost=type==='move'&&old.down?.08:0;
+    const energyBoost=type==='move'&&old.down?.08:type==='down'?.65:type==='up'?.35:.01;
+    const next=Math.min(LAYERS_PER_ROOM,Math.max(depth,1+Math.floor((progress.energy+energyBoost)/Math.max(2,room.layers[Math.min(depth-1,19)].threshold))));
+    if(next>depth)setDepth(next);setPulse(v=>Math.min(1,v+energyBoost*.28));commit(next,energyBoost,gesture);
     if(!muted){audioRef.current?.wake(); if(type==='up'&&gesture==='hold')audioRef.current?.chord(room,room.layers[next-1],pulse);else audioRef.current?.voice(room,room.layers[next-1],pulse,x,y);}
     for(let i=0;i<(type==='down'?18:3);i++)particlesRef.current.push({x,y,vx:(Math.random()-.5)*.006,vy:(Math.random()-.5)*.006,life:.4+Math.random()*.6});
+    void boost;
   };
 
   const enter=(id)=>{setRoomId(id);const d=progress.depth?.[id]||1;setDepth(d);setMap(false);setProgress(p=>({...p,visited:[...new Set([...p.visited,id])]}));};
