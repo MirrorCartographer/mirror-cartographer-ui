@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>The Observatory of Lost Weather</title>
+<style>
+:root{--ink:#f6f0df;--night:#090b12;--mist:rgba(246,240,223,.12);--accent:#c9d7ff;--speed:18s}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--night);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}body{overflow:hidden}.sky{position:fixed;inset:0;background:radial-gradient(circle at 50% 78%,rgba(80,100,140,.22),transparent 42%),linear-gradient(#080a11,#101522 72%,#080a11)}.horizon{position:absolute;left:-10vw;right:-10vw;bottom:13vh;height:1px;background:var(--mist);box-shadow:0 0 40px rgba(201,215,255,.25)}.station{position:absolute;inset:0;display:grid;place-items:center;padding:24px}.instrument{width:min(88vw,780px);aspect-ratio:1.55;border:1px solid var(--mist);border-radius:50%;position:relative;display:grid;place-items:center;box-shadow:inset 0 0 80px rgba(201,215,255,.04),0 0 80px rgba(0,0,0,.35)}.ring{position:absolute;border:1px solid var(--mist);border-radius:50%;inset:10%;animation:turn var(--speed) linear infinite}.ring:nth-child(2){inset:23%;animation-direction:reverse;animation-duration:calc(var(--speed)*1.7)}.needle{width:1px;height:38%;background:linear-gradient(transparent,var(--accent));transform-origin:50% 100%;position:absolute;bottom:50%;filter:drop-shadow(0 0 8px var(--accent));animation:sweep calc(var(--speed)*.7) ease-in-out infinite alternate}.weather{position:absolute;inset:0;pointer-events:none}.drop{position:absolute;width:1px;height:34px;background:linear-gradient(var(--accent),transparent);opacity:.45;animation:rise var(--d) linear infinite;animation-delay:var(--delay)}.caption{position:relative;text-align:center;max-width:42ch;padding:1rem}.caption h1{font-size:clamp(1rem,3vw,1.5rem);letter-spacing:.18em;font-weight:500;text-transform:uppercase}.caption p{line-height:1.6;color:rgba(246,240,223,.72);min-height:3.2em}.controls{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:10px}.controls button{font:inherit;color:var(--ink);background:rgba(9,11,18,.72);border:1px solid var(--mist);padding:.7rem 1rem;border-radius:999px;cursor:pointer}.controls button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.stamp{position:fixed;top:max(16px,env(safe-area-inset-top));left:18px;font-size:.72rem;letter-spacing:.12em;color:rgba(246,240,223,.52)}@keyframes turn{to{transform:rotate(360deg)}}@keyframes sweep{from{transform:rotate(-68deg)}to{transform:rotate(68deg)}}@keyframes rise{from{transform:translateY(110vh)}to{transform:translateY(-30vh)}}@media(prefers-reduced-motion:reduce){.ring,.needle,.drop{animation:none}.drop{display:none}}@media(max-width:560px){.instrument{aspect-ratio:1}.caption p{font-size:.88rem}.controls{width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"><div class="weather" id="weather"></div><div class="horizon"></div></div>
+<main class="station">
+<section class="instrument" aria-labelledby="title" aria-describedby="reading">
+<div class="ring"></div><div class="ring"></div><div class="needle"></div>
+<div class="caption"><h1 id="title">The Observatory of Lost Weather</h1><p id="reading" aria-live="polite"></p></div>
+</section>
+</main>
+<div class="stamp" id="stamp"></div>
+<nav class="controls" aria-label="Observatory controls"><button id="shift" type="button">Shift weather</button><button id="sound" type="button" aria-pressed="false">Sound: off</button></nav>
+<script>
+const reports=[
+'Rain is rising through an empty town. Every roof remembers a different storm.',
+'The wind has misplaced north. Curtains move in houses that have never been built.',
+'A warm front approaches from yesterday. Its shadow arrives forty minutes early.',
+'Snow is falling beneath the soil. Roots turn slowly toward the buried light.',
+'Thunder has become visible at the horizon, but no sound has agreed to follow.',
+'The barometer records a pressure system shaped like a door left open at sea.'
+];
+const now=new Date();let step=0;const seed=Number(`${now.getUTCFullYear()}${now.getUTCMonth()+1}${now.getUTCDate()}${now.getUTCHours()}`);const pick=()=>reports[(seed+step)%reports.length];
+const reading=document.querySelector('#reading'),stamp=document.querySelector('#stamp');
+function render(){reading.textContent=pick();stamp.textContent=`OBSERVATION ${String((seed+step)%10000).padStart(4,'0')} · ${now.toISOString().slice(0,13)}:00Z`;document.documentElement.style.setProperty('--speed',`${14+((seed+step)%11)}s`)}
+const weather=document.querySelector('#weather');for(let i=0;i<42;i++){const d=document.createElement('i');d.className='drop';d.style.left=`${(i*37+seed)%101}%`;d.style.setProperty('--d',`${8+((i*13+seed)%17)}s`);d.style.setProperty('--delay',`${-((i*7+seed)%19)}s`);weather.append(d)}
+document.querySelector('#shift').addEventListener('click',()=>{step++;render()});document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();step++;render()}});
+let ctx,osc,gain;const sound=document.querySelector('#sound');sound.addEventListener('click',()=>{if(!ctx){ctx=new AudioContext();osc=ctx.createOscillator();gain=ctx.createGain();osc.type='sine';osc.frequency.value=56+seed%28;gain.gain.value=.025;osc.connect(gain).connect(ctx.destination);osc.start();sound.textContent='Sound: on';sound.setAttribute('aria-pressed','true')}else{const on=sound.getAttribute('aria-pressed')==='true';gain.gain.setTargetAtTime(on?0:.025,ctx.currentTime,.08);sound.setAttribute('aria-pressed',String(!on));sound.textContent=`Sound: ${on?'off':'on'}`}});render();
+</script>
+</body>
+</html>
