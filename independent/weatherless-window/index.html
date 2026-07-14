@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Weatherless Window</title>
+<style>
+:root{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#f4efe3;background:#090a0c}*{box-sizing:border-box}body{margin:0;min-height:100svh;overflow:hidden;background:radial-gradient(circle at 50% 40%,#20252d 0,#090a0c 66%)}main{position:relative;min-height:100svh;display:grid;place-items:center;padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left))}canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}.panel{position:relative;z-index:1;width:min(34rem,92vw);padding:1.1rem;border:1px solid #ffffff30;background:#090a0cb8;backdrop-filter:blur(12px);box-shadow:0 2rem 6rem #0008}.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7}h1{font:500 clamp(1.8rem,7vw,4.5rem)/.92 Georgia,serif;margin:.65rem 0}p{max-width:42ch;line-height:1.55;margin:.7rem 0}.controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}button{font:inherit;color:inherit;background:#11151a;border:1px solid #ffffff38;padding:.7rem .9rem;cursor:pointer}button:focus-visible{outline:3px solid currentColor;outline-offset:3px}.status{min-height:1.4em;font-size:.78rem;opacity:.72}@media(prefers-reduced-motion:reduce){canvas{display:none}.panel{backdrop-filter:none}}
+</style>
+</head>
+<body>
+<main>
+<canvas id="sky" aria-hidden="true"></canvas>
+<section class="panel" aria-labelledby="title">
+<div class="eyebrow">An instrument for invented atmospheres</div>
+<h1 id="title">Weatherless Window</h1>
+<p>Touch or move across the glass. The air remembers only direction, never identity. Every field is generated locally and disappears when the page closes.</p>
+<div class="controls">
+<button id="shift" type="button">Shift the air</button>
+<button id="still" type="button" aria-pressed="false">Hold still</button>
+</div>
+<p class="status" id="status" role="status" aria-live="polite">Air field ready.</p>
+</section>
+</main>
+<script>
+(()=>{const c=document.querySelector('#sky'),x=c.getContext('2d'),shift=document.querySelector('#shift'),still=document.querySelector('#still'),status=document.querySelector('#status'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let w=0,h=0,t=0,held=false,seed=17,px=.5,py=.5,raf=0;const resize=()=>{const d=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=Math.floor(w*d);c.height=Math.floor(h*d);x.setTransform(d,0,0,d,0,0)};const rand=n=>{const v=Math.sin(n*12.9898+seed*78.233)*43758.5453;return v-Math.floor(v)};function draw(){x.clearRect(0,0,w,h);x.globalCompositeOperation='lighter';for(let i=0;i<72;i++){const a=rand(i)*Math.PI*2+t*(.02+rand(i+9)*.05);const r=(.08+rand(i+3)*.6)*Math.min(w,h);const cx=w*(.5+(px-.5)*.18)+Math.cos(a)*r;const cy=h*(.5+(py-.5)*.18)+Math.sin(a*.7)*r*.6;const s=8+rand(i+6)*42;const g=x.createRadialGradient(cx,cy,0,cx,cy,s);g.addColorStop(0,`hsla(${190+rand(i+4)*90},70%,70%,${.05+rand(i+5)*.1})`);g.addColorStop(1,'transparent');x.fillStyle=g;x.beginPath();x.arc(cx,cy,s,0,Math.PI*2);x.fill()}x.globalCompositeOperation='source-over';if(!held){t++;raf=requestAnimationFrame(draw)}}const move=e=>{const p=e.touches?e.touches[0]:e;px=p.clientX/w;py=p.clientY/h;if(held)draw()};shift.onclick=()=>{seed=(seed*31+7)%997;t=0;status.textContent='The atmosphere changed.';if(held)draw()};still.onclick=()=>{held=!held;still.setAttribute('aria-pressed',String(held));still.textContent=held?'Release the air':'Hold still';status.textContent=held?'The atmosphere is held.':'The atmosphere is moving.';cancelAnimationFrame(raf);draw()};addEventListener('resize',resize,{passive:true});addEventListener('pointermove',move,{passive:true});addEventListener('touchmove',move,{passive:true});resize();if(reduce){held=true;still.setAttribute('aria-pressed','true');still.textContent='Release the air';status.textContent='Reduced motion: atmosphere held.'}draw()})();
+</script>
+</body>
+</html>
