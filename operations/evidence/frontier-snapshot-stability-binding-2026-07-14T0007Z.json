@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_verification",
+  "queue_item": "R-021",
+  "finding": "The authenticated evidence manifest accepted snapshot stability from a boolean plus elapsed time without requiring cryptographic equality between the two normalized snapshots.",
+  "implementation": {
+    "manifest_schema_version": 3,
+    "required_fields": [
+      "stabilization.first_normalized_record_set_sha256",
+      "stabilization.second_normalized_record_set_sha256"
+    ],
+    "fail_closed_reasons": [
+      "snapshot_digest_invalid",
+      "snapshot_digest_divergence",
+      "stabilization_reconciliation_digest_mismatch"
+    ],
+    "binding": "Both snapshot digests must be valid SHA-256 values, equal to each other, and equal to reconciliation.normalized_record_set_sha256."
+  },
+  "verification": {
+    "github_contents_round_trip": true,
+    "implementation_blob_sha": "01a52b4a6f3c19e3b72ab581e69901e7695afc57",
+    "test_blob_sha": "e0a599d7c487186cbfa6b3d370fb95fc69673010",
+    "test_cases_added": 3,
+    "expected_assertion_count": 22,
+    "runtime_execution": false,
+    "runtime_blocker": "The isolated execution environment could not resolve github.com to clone the private repository. No passing runtime result is claimed."
+  },
+  "evidence_strength": "implementation_committed_static_verification_runtime_pending",
+  "uncertainty": "The new branches are syntactically consistent by inspection and committed round-trip, but the full Node test file still requires execution in an authenticated checkout or CI runner.",
+  "falsification_route": "Run node operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs. Any nonzero exit, assertion count other than 22, or acceptance of missing, divergent, or reconciliation-mismatched snapshot digests falsifies this slice.",
+  "claim_boundary": {
+    "proves_digest_bound_stabilization_design": true,
+    "proves_runtime_test_pass": false,
+    "proves_authenticated_enumeration": false,
+    "proves_provider_completeness": false,
+    "proves_deployment_identity": false
+  }
+}
