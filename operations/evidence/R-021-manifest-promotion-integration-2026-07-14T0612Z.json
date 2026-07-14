@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T06:12:00Z",
+  "finding": "The bound authenticated evidence manifest writer enforced only retained-byte binding and execution provenance, bypassing the already-committed temporal-coherence and observation-window stages.",
+  "change": "Replaced the partial inline gate sequence with validateEvidencePromotion before any manifest write and retained the complete promotion result in successful output.",
+  "source_status": {
+    "repository_files": "primary",
+    "external_sources_required": false
+  },
+  "evidence_strength": "implementation plus deterministic source-contract test",
+  "verification": {
+    "command": "node --test operations/tests/bound-manifest-promotion-contract.test.mjs",
+    "result": {
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "execution_environment": "isolated reconstruction of committed file bytes before GitHub write"
+  },
+  "claim_boundary": {
+    "proves_gate_ordering_in_writer_source": true,
+    "proves_authenticated_repository_execution": false,
+    "proves_valid_real_evidence_input": false,
+    "proves_provider_completeness": false,
+    "proves_clock_authenticity": false
+  },
+  "falsification_route": [
+    "Run the committed contract test in an authenticated checkout.",
+    "Execute the writer with a fixture that passes byte binding and provenance but fails temporal coherence; no output manifest may be written.",
+    "Execute the writer with a fixture that passes temporal coherence but fails the observation window; no output manifest may be written.",
+    "Execute both authenticated exhaustive clients against one exact commit and retain all raw evidence."
+  ],
+  "files": [
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/tests/bound-manifest-promotion-contract.test.mjs"
+  ]
+}
