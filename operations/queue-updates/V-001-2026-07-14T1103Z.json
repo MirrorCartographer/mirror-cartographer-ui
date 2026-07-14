@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T11:03:44Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Committed a reversible public runtime adapter for the deterministic hourly repertory, preserving one versioned continuity state while excluding private provenance internals and explicitly disabling autoplay and payment behavior.",
+  "production_currently_on_stage": "silent-switchboard",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Accessibility Engineer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "artifacts": [
+    "operations/studio/repertory-runtime-adapter.mjs",
+    "operations/tests/repertory-runtime-adapter.test.mjs",
+    "operations/evidence/V-001-repertory-runtime-adapter-2026-07-14T1103Z.json"
+  ],
+  "commits": [
+    "33c4f1dcb664f4bd5113802d73643ff01ff12caf",
+    "7e5c3738b6ffdf17ee100fbb4add0e771daffb1c",
+    "fbbc1850e4d2cb85a8d7483909b1a486433a2893"
+  ],
+  "acceptance_effect": {
+    "satisfied": [
+      "A single reversible runtime import boundary now exists for hourly production selection.",
+      "One normalized continuity state is preserved across distinct hourly productions.",
+      "Public runtime output excludes internal provenance and capability records.",
+      "The runtime contract explicitly excludes autoplay, payment logic, and private source material."
+    ],
+    "remaining": [
+      "Execute the existing and new repertory Node tests at the exact commit and retain output.",
+      "Review and wire the adapter into the public application only after provider capacity returns.",
+      "Observe commit-bound workflow and immutable Vercel deployment evidence.",
+      "Complete bounded physical iPhone Safari audibility verification."
+    ]
+  },
+  "registry_change": "none_no_durable_capability_gap_observed",
+  "safe_next_action": "Execute both repertory test files at the exact resulting commit, retain test evidence, and prepare an application integration behind the adapter without deployment until provider capacity and immutable identity verification return."
+}
