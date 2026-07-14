@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "R-022",
+  "created_at": "2026-07-14T21:52:59Z",
+  "owner": "frontier_research",
+  "title": "Filtered GitHub Actions workflow-run provider contract",
+  "status": "implementation_ready",
+  "finding": {
+    "observed": [
+      "GitHub's repository workflow-runs endpoint accepts head_sha and returns only runs associated with that commit.",
+      "The endpoint permits at most 100 records per page.",
+      "When actor, branch, check_suite_id, created, event, head_sha, or status filters are used, GitHub documents a maximum of 1000 results per search.",
+      "Private-repository use requires authenticated read access to Actions."
+    ],
+    "inferred": [
+      "Following every pagination link is necessary but insufficient to prove provider-complete coverage for filtered searches.",
+      "A ten-page result at per_page=100 is ambiguous unless an independently bounded query proves that the true result set is below the provider ceiling."
+    ],
+    "proposed": [
+      "Treat any filtered traversal returning 1000 records as provider_ceiling_ambiguous and fail closed.",
+      "Retain request parameters, API-version header, page count, per-page value, total_count, returned count, retrieval timestamps, and raw page digests.",
+      "Require independent reconciliation before promoting exact-commit workflow evidence."
+    ],
+    "superseded": [],
+    "unresolved": [
+      "GitHub does not document a response field that proves a filtered result set exceeded the 1000-result ceiling.",
+      "The operational API version used by the authenticated client must be recorded because documentation examples may change over time."
+    ]
+  },
+  "implementation_contract": {
+    "endpoint": "GET /repos/{owner}/{repo}/actions/runs",
+    "required_filter": "head_sha",
+    "per_page": 100,
+    "provider_filtered_result_ceiling": 1000,
+    "fail_closed_conditions": [
+      "returned_count >= 1000",
+      "cross_commit_record_present",
+      "duplicate_run_id_present",
+      "pagination_link_unfollowed",
+      "page_or_count_mismatch",
+      "request_parameters_or_api_version_unretained",
+      "independent_enumeration_disagrees"
+    ],
+    "evidence_fields": [
+      "repository",
+      "commit_sha",
+      "endpoint",
+      "query_parameters",
+      "api_version",
+      "retrieved_at",
+      "page_count",
+      "per_page",
+      "reported_total_count",
+      "returned_count",
+      "raw_page_sha256",
+      "provider_ceiling_ambiguous",
+      "reconciliation_status"
+    ]
+  },
+  "evidence_strength": "primary_documentation",
+  "sources": [
+    {
+      "type": "primary",
+      "publisher": "GitHub Docs",
+      "title": "REST API endpoints for workflow runs",
+      "locator": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "observed_on": "2026-07-14",
+      "supports": ["head_sha semantics", "100-record page maximum", "1000-result filtered-search ceiling", "private repository permission requirement"]
+    },
+    {
+      "type": "primary",
+      "publisher": "GitHub CLI",
+      "title": "gh api manual",
+      "locator": "https://cli.github.com/manual/gh_api",
+      "observed_on": "2026-07-14",
+      "supports": ["independent paginated CLI traversal design"]
+    }
+  ],
+  "falsification_route": [
+    "Run an authenticated fixture repository with more than 1000 matching workflow runs for one supported filter and record actual pagination behavior.",
+    "Compare REST traversal, gh api --paginate --slurp output, reported total_count, and independently known fixture cardinality.",
+    "Revise this contract if GitHub introduces a documented exhaustive endpoint, cursor, or explicit truncation indicator."
+  ],
+  "privacy_boundary": "Contains only public provider documentation and abstract evidence-contract fields; no credentials, repository secrets, private workflow data, or user content."
+}
