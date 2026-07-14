@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "I-001",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "completed_preview_ready",
+  "objective": "Establish the independent creative surface with one self-contained, accessible, non-extractive generative piece.",
+  "selection_basis": "No canonical independent_creative_web item existed in ACTIVE_QUEUE.json; this additive queue record creates the team's first reversible slice without changing another team's ownership.",
+  "completed_slices": [
+    "Established a written independence boundary with observed, inferred, experimental, and current-decision provenance classes.",
+    "Implemented Weatherless Window as a single-file generative canvas instrument.",
+    "Added deterministic static-contract tests for independence, accessibility, ephemerality, and network isolation.",
+    "Retained source-level verification evidence without claiming public deployment."
+  ],
+  "acceptance_remaining": [
+    "Render in a real browser and inspect keyboard, touch, reduced-motion, and viewport behavior.",
+    "Run a performance trace on a representative mobile device.",
+    "Publish to an independent preview or host only after the hosting boundary and rollback path are confirmed."
+  ],
+  "safe_next_action": "Add a browser-level screenshot and interaction harness for Weatherless Window, then publish an isolated preview without routing it through Mirror Cartographer or adding analytics, identity, payment, or conversion logic.",
+  "evidence_path": "operations/evidence/I-001-weatherless-window-2026-07-14T1230-0400.json"
+}
