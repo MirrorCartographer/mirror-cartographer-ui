@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T01:26:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Closed a fail-open privacy and commerce boundary in the default-off stage descriptor by recursively rejecting forbidden public metadata keys inside nested objects and arrays and recursively freezing accepted metadata.",
+  "production_currently_on_stage": {
+    "selection_basis": "deterministic local-hour repertory",
+    "local_hour": 21,
+    "test_fixture_production": "Production 21",
+    "public_activation": "operations-only-default-off"
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "specialist_registry_change": null,
+  "files": [
+    "operations/vercel-studio/repertory/build-stage-descriptor.mjs",
+    "operations/vercel-studio/repertory/build-stage-descriptor.test.mjs",
+    "operations/evidence/vercel-stage-descriptor-recursive-privacy-boundary-2026-07-14T0126Z.json",
+    "operations/queue-updates/V-001-2026-07-14T0126Z.json"
+  ],
+  "commits": [
+    "d81c3cb2148c052ebe913759f1f10864556e843d",
+    "efce06c1cc9ecfaeec0ba18f3211fdf45af48e2d",
+    "c7ec4372f5e7cd336a7a17da98c080a94ce9d338"
+  ],
+  "verification": {
+    "isolated_node_tests": { "passed": 17, "failed": 0 },
+    "deployment_attempted": false,
+    "reason": "Provider capacity remains blocked and the descriptor is operations-only, default-off."
+  },
+  "rollback": "Revert the two implementation/test commits; no deployment or public activation occurred.",
+  "remaining_acceptance": [
+    "Execute authenticated all-event pagination for an exact commit with both independent clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after build capacity returns.",
+    "Observe the exact-commit audio-routing workflow artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add content-classification fixtures for free-text metadata and integrate the descriptor behind a default-off application feature flag only after provider capacity returns and commit-bound deployment evidence can be retained."
+}
