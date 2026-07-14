@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "captured_at": "2026-07-14T06:07:41Z",
+  "finding": "Independent evidence validators existed, but no single fail-closed contract enforced retained-byte binding, execution independence, temporal coherence, and bounded observation-window validation in a fixed order before promotion.",
+  "artifact": "tools/frontier-research/evidence-promotion-gate.mjs",
+  "test": "tools/frontier-research/evidence-promotion-gate.test.mjs",
+  "verification": {
+    "command": "node tools/frontier-research/evidence-promotion-gate.test.mjs",
+    "result": "5 promotion-gate assertions passed",
+    "environment": "isolated Node reconstruction using byte-equivalent inspected dependencies"
+  },
+  "gate_order": [
+    "retained_raw_output_binding",
+    "independent_execution_provenance",
+    "temporal_coherence",
+    "observation_window"
+  ],
+  "evidence_strength": "deterministic_unit_verified",
+  "uncertainty": [
+    "Not executed in an authenticated repository checkout.",
+    "Does not prove clock authenticity, process isolation, repository quiescence, or provider consistency.",
+    "Not yet wired into the manifest writer."
+  ],
+  "falsification_route": "Provide a manifest that passes the integrated gate while failing any earlier constituent gate, or demonstrate that the gate permits promotion after a constituent rejection.",
+  "source_status": {
+    "repository_state": "observed",
+    "composition_gap": "observed",
+    "promotion_order": "proposed_and_tested",
+    "authenticated_execution": "unresolved"
+  }
+}
