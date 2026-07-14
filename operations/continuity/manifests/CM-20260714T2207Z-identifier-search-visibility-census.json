@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "artifact_type": "identifier_search_visibility_census",
+  "created_at": "2026-07-14T22:07:37Z",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "method": "GitHub commit search by exact identifier token, topn 100, ascending commit date",
+    "coverage_class": "provider_search_visible_non_exhaustive",
+    "exhaustive": false
+  },
+  "memory_recovered": "Within the commit-search-visible set available to this run, no result preceding the existing unresolved-origin records explicitly assigns M-004, M-005, or M-006. Search-visible later references are status, collision-rejection, or temporal-boundary records and therefore cannot establish origin.",
+  "claims": {
+    "observed": [
+      {
+        "identifier": "M-004",
+        "visible_commits": [
+          "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+          "83205275e023fccf602127ca4ff1cf3075bd1c26",
+          "114d63cb2723fcf7dfc879819de31d44e076899e"
+        ],
+        "pre_boundary_assignment_visible": false
+      },
+      {
+        "identifier": "M-005",
+        "visible_commits": [
+          "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9"
+        ],
+        "pre_boundary_assignment_visible": false
+      },
+      {
+        "identifier": "M-006",
+        "visible_commits": [
+          "94778c45072bad84a0c63077ac23492a1a756a8c",
+          "83205275e023fccf602127ca4ff1cf3075bd1c26",
+          "114d63cb2723fcf7dfc879819de31d44e076899e"
+        ],
+        "pre_boundary_assignment_visible": false
+      }
+    ],
+    "inferred": [
+      "The searchable commit-message surface currently provides no positive provenance evidence for the identifiers.",
+      "The asymmetry in visible result counts is an indexing or message-content property and not evidence that M-005 has stronger or weaker historical validity."
+    ],
+    "proposed": [
+      "Use exact-token commit search only as a candidate-discovery layer before branch and tree traversal.",
+      "Require file-content inspection and immutable object agreement before promoting any origin candidate."
+    ],
+    "superseded": [
+      "Interpreting absence from provider commit search as exhaustive proof that an earlier assignment never existed."
+    ],
+    "unresolved": [
+      "Whether an earlier assignment exists in file content, a non-default branch, renamed paths, unreachable history, or a privacy-reviewed non-repository source.",
+      "Whether provider search omitted commits whose messages do not contain the exact identifier token."
+    ]
+  },
+  "candidate_classification": {
+    "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a": "unresolved_origin_status_record",
+    "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9": "unresolved_origin_status_record",
+    "94778c45072bad84a0c63077ac23492a1a756a8c": "unresolved_origin_status_record",
+    "83205275e023fccf602127ca4ff1cf3075bd1c26": "namespace_collision_rejection_record",
+    "114d63cb2723fcf7dfc879819de31d44e076899e": "temporal_provenance_boundary_record"
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository name",
+      "commit identifiers",
+      "commit-message classifications",
+      "abstract provenance status"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed File Library contents"
+    ]
+  },
+  "falsification_route": [
+    "Enumerate all accessible branches and reachable commits rather than relying on provider commit search.",
+    "Inspect trees and historical file contents for exact identifier assignment before each temporal boundary.",
+    "Promote an origin only when explicit assignment, namespace, owner, semantic role, temporal precedence, and immutable locator all agree."
+  ]
+}
