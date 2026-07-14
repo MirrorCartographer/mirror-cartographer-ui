@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T08:30:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Replaced the retained hourly repertory writer's fixed July UTC offset with IANA-time-zone-derived representative instants and a fail-closed 24-hour bijection contract; added winter, summer, spring-forward, fall-back, invalid-date, invalid-zone, determinism, and no-overwrite tests.",
+  "evidence": "operations/evidence/V-001-timezone-safe-repertory-writer-2026-07-14T0830Z.json",
+  "files": [
+    "operations/tools/write-public-hourly-stage-payloads.mjs",
+    "operations/tests/write-public-hourly-stage-payloads.test.mjs"
+  ],
+  "commits": [
+    "6c806b96df5de7500b7290007de302e67a507733",
+    "0e2a741b0e9fa49e9d1de2b8ca9f936ec18f9a04",
+    "71ccff7415c6eee5320633df88ffab730e4e1ab3"
+  ],
+  "acceptance_remaining": [
+    "Execute the committed writer tests in an authenticated checkout or CI runner and retain exact output.",
+    "Execute authenticated dual-client workflow enumeration for one exact commit and retain reconciliation evidence.",
+    "Observe operations-only build suppression after provider capacity returns.",
+    "Bind an exact application commit to immutable Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/tests/write-public-hourly-stage-payloads.test.mjs without creating an application deployment; if green, retain the output as exact-commit evidence."
+}
