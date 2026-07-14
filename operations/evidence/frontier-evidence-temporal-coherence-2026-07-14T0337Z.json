@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_evidence",
+  "queue_item": "R-021",
+  "captured_at": "2026-07-14T03:37:00Z",
+  "finding": "The accepted manifest validates timestamp parseability and snapshot ordering but does not require either client execution or the second stabilization snapshot to complete before captured_at.",
+  "design_implication": "Insert validateEvidenceTemporalCoherence before evidence-manifest acceptance so future-dated or inverted event sequences fail closed.",
+  "implementation": {
+    "module": "tools/frontier-research/evidence-temporal-coherence.mjs",
+    "test": "tools/frontier-research/evidence-temporal-coherence.test.mjs",
+    "module_commit": "01d8a5aed8be8093add0b7018caf110a9acd3e18",
+    "test_commit": "234cf211969f4e3c000066dc6c3ea34db0db10b1"
+  },
+  "verification": {
+    "level": "repository_round_trip_and_static_contract_review",
+    "test_execution": false,
+    "reason_not_executed": "No authenticated repository checkout or direct Node execution surface was available in this run.",
+    "planned_assertions": 9
+  },
+  "source_status": {
+    "current_manifest_writer": "primary_repository_source",
+    "queue": "primary_repository_source",
+    "recent_commits": "primary_repository_metadata"
+  },
+  "evidence_strength": "committed_prototype_unexecuted_test",
+  "uncertainty": "Timestamp ordering does not prove clock authenticity or synchronization.",
+  "falsification_route": [
+    "Run node tools/frontier-research/evidence-temporal-coherence.test.mjs in an authenticated checkout.",
+    "Add an integration test proving the manifest writer rejects execution_completed_after_capture and snapshot_completed_after_capture.",
+    "Attempt acceptance with deliberately future-dated retained declarations and confirm no manifest is written."
+  ],
+  "privacy_boundary": "Public repository code, queue metadata, commit identifiers, and abstract evidence semantics only; no credentials, private source material, or personal data retained."
+}
