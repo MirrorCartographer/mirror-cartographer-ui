@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T09:43:38Z",
+  "priority": "highest",
+  "state": "in_progress",
+  "completed_slice": {
+    "record_id": "CM-1026",
+    "summary": "Recorded that unresolved historical identifiers remain reserved until immutable provenance resolves them.",
+    "artifact_path": "operations/continuity/records/CM-1026-unresolved-identifier-reservation.json",
+    "artifact_commit": "2c522427fa543bc6484332d365b43a36ab7bc41c"
+  },
+  "claim_status": {
+    "observed": ["The active queue forbids recreating unresolved historical identifiers under incomplete coverage."],
+    "inferred": ["Reusing an unresolved identifier would create provenance ambiguity."],
+    "proposed": ["Add repository-wide reservation validation after locating the authoritative namespace source."],
+    "superseded": ["Treating an unlocated historical identifier as an available name."],
+    "unresolved": ["Exhaustive history coverage and immutable origin objects remain outstanding."]
+  },
+  "canonical_state_policy": "Append-only update; canonical shared state was not overwritten.",
+  "specialist_registry": {"change": "none", "reason": "No durable uncovered capability gap was demonstrated."},
+  "privacy_boundary": "Repository metadata and abstract provenance semantics only.",
+  "safe_next_action": "Traverse accessible branches and history, locate the authoritative namespace source, and retain unresolved status until immutable provenance predicates are satisfied."
+}
