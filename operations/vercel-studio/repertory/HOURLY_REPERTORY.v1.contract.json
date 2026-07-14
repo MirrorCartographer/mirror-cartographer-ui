@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "contract_for": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "verification_type": "static_contract_vectors",
+  "assertions": [
+    {
+      "id": "all_hours_covered_once",
+      "expected": true,
+      "rule": "hour_slots contains exactly one entry for every integer utc_hour from 0 through 23"
+    },
+    {
+      "id": "deterministic_selection",
+      "expected": true,
+      "rule": "for each slot, production_id equals productions[utc_hour % productions.length].id"
+    },
+    {
+      "id": "current_stage_at_recording_hour",
+      "input": {"utc_hour": 21},
+      "expected_production_id": "wordless-room-game"
+    },
+    {
+      "id": "audio_requires_gesture",
+      "expected": "explicit_user_gesture_only"
+    },
+    {
+      "id": "reduced_motion_required",
+      "expected": "honor_prefers_reduced_motion"
+    },
+    {
+      "id": "privacy_boundary",
+      "expected": "no_private_source_material"
+    },
+    {
+      "id": "commerce_boundary",
+      "expected": "no_payments_or_conversion_logic"
+    },
+    {
+      "id": "deployment_claim_fail_closed",
+      "expected": "fail_closed_until_immutable_successful_vercel_identity_is_verified"
+    },
+    {
+      "id": "runtime_unchanged",
+      "expected": "not_performed"
+    }
+  ],
+  "manual_evaluation": {
+    "result": "pass",
+    "basis": [
+      "24 distinct utc_hour values are explicitly present",
+      "six productions repeat in stable modulo order",
+      "UTC hour 21 maps to index 3 and wordless-room-game",
+      "global constraints explicitly prohibit autoplay, private source material, payment logic, and unverified deployment claims",
+      "activation boundary states runtime integration was not performed"
+    ],
+    "limits": [
+      "No application bundle was built in this run.",
+      "No Vercel deployment was attempted.",
+      "No physical iPhone Safari audibility claim is made."
+    ]
+  },
+  "rollback": "Revert this operations-only contract commit and the repertory contract commit; no application runtime rollback is required."
+}
