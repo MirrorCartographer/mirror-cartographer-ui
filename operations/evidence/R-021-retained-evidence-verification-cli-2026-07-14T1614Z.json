@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_evidence",
+  "queue_item": "R-021",
+  "created_at": "2026-07-14T16:14:17Z",
+  "finding": "The committed byte-retention and semantic-binding verification chain lacked a filesystem boundary that safely loaded all seven manifest-declared artifacts and emitted a no-overwrite verification result.",
+  "implementation": {
+    "source": "tools/frontier-research/workflow-evidence-verification-cli.mjs",
+    "test": "tools/frontier-research/workflow-evidence-verification-cli.test.mjs",
+    "behavior": [
+      "Loads only the seven required roles declared by the retention manifest.",
+      "Resolves artifact paths relative to the manifest's real directory.",
+      "Rejects absolute paths and directory traversal outside the manifest directory.",
+      "Rejects symlink substitution and non-regular retained artifacts.",
+      "Runs the existing byte-retention then semantic-binding verification chain.",
+      "Writes the result with exclusive-create no-overwrite semantics.",
+      "Returns exit code 2 for a completed but unverified evidence chain and exit code 1 for operational errors."
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-evidence-verification-cli.test.mjs",
+    "result": "4 passed, 0 failed",
+    "cases": [
+      "complete seven-role evidence set accepted",
+      "manifest path escape rejected",
+      "retained artifact symlink substitution rejected",
+      "verification output cannot overwrite an existing file"
+    ]
+  },
+  "source_status": {
+    "repository_state": "connector-observed",
+    "implementation": "committed",
+    "tests": "deterministic local Node execution",
+    "authenticated_real_evidence_run": "not_performed"
+  },
+  "evidence_strength": "committed_implementation_plus_deterministic_boundary_tests",
+  "uncertainty": [
+    "The CLI has not yet processed an authenticated private-repository seven-artifact evidence set.",
+    "Filesystem O_NOFOLLOW behavior is platform-dependent; the tested Linux runtime rejects symlink substitution as intended.",
+    "The CLI does not create or modify deployment state."
+  ],
+  "falsification_route": "Run the CLI against an authenticated exact-commit evidence directory, mutate each manifest path and artifact independently, and require fail-closed output without overwriting any prior result."
+}
