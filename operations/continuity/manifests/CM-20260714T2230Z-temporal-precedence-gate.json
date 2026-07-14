@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260714T2230Z-temporal-precedence-gate",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T22:30:22Z",
+  "recovered_memory": {
+    "title": "Identifier provenance requires temporal precedence, not label reuse",
+    "summary": "A repository artifact cannot be accepted as the originating assignment of M-004, M-005, or M-006 merely because it contains the same identifier. The candidate must predate or be contemporaneous with the earliest verified report of that identifier, unless it points to an older immutable source whose assignment can be independently verified.",
+    "durability": "continuity_provenance_rule",
+    "scope": [
+      "M-004",
+      "M-005",
+      "M-006",
+      "future unresolved identifier reconciliation"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "TEMP-PRECEDENCE-OBS-001",
+      "status": "observed",
+      "text": "The canonical queue requires locating the originating decision log, language lexicon, project document, or chat-history source that assigned M-004, M-005, and M-006; later mentions are therefore insufficient by themselves.",
+      "evidence": [
+        {
+          "type": "repository_file",
+          "path": "operations/ACTIVE_QUEUE.json",
+          "blob_sha": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+          "lines": "38-57"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "TEMP-PRECEDENCE-OBS-002",
+      "status": "observed",
+      "text": "Prior continuity work classifies M-004, M-005, and M-006 as reported identifiers rather than verified artifacts and separates identifier mention from accepted assignment.",
+      "evidence": [
+        {
+          "type": "commit",
+          "sha": "33da09aeb2ae36c7f2d2ea98396cc21c24d8a808",
+          "message": "ops: record unresolved identifier ontology slice"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "TEMP-PRECEDENCE-INF-001",
+      "status": "inferred",
+      "text": "A candidate created after the earliest verified identifier report is more likely a downstream reference, reconstruction, collision, or retrospective normalization than the original assignment.",
+      "confidence": "medium_high"
+    },
+    {
+      "claim_id": "TEMP-PRECEDENCE-PROP-001",
+      "status": "proposed",
+      "text": "Candidate assignments should pass a temporal-precedence gate before semantic or namespace matching can promote them.",
+      "acceptance_condition": "The gate remains fail-closed unless candidate_created_at is earlier than or equal to earliest_verified_report_at, or the candidate contains a verifiable immutable back-reference to an older source.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "TEMP-PRECEDENCE-SUP-001",
+      "status": "superseded",
+      "text": "Any later artifact using the exact identifier can be treated as its provenance origin.",
+      "superseded_by": [
+        "TEMP-PRECEDENCE-OBS-001",
+        "TEMP-PRECEDENCE-OBS-002",
+        "TEMP-PRECEDENCE-PROP-001"
+      ]
+    },
+    {
+      "claim_id": "TEMP-PRECEDENCE-UNR-001",
+      "status": "unresolved",
+      "text": "The earliest verified report timestamps for M-004, M-005, and M-006 have not yet been established across all eligible source classes.",
+      "resolution_route": "Traverse exhaustive repository history and privacy-reviewed continuity sources, retaining immutable timestamps and locators for the earliest qualifying mention and assignment."
+    }
+  ],
+  "gate": {
+    "name": "identifier_temporal_precedence_v1",
+    "inputs": [
+      "identifier",
+      "candidate_locator",
+      "candidate_created_at",
+      "earliest_verified_report_at",
+      "immutable_back_reference"
+    ],
+    "accept_when": [
+      "candidate_created_at <= earliest_verified_report_at",
+      "or immutable_back_reference resolves to a source created at or before earliest_verified_report_at and that source explicitly assigns the identifier"
+    ],
+    "reject_or_quarantine_when": [
+      "candidate_created_at > earliest_verified_report_at and no qualifying immutable back-reference exists",
+      "timestamps are missing, mutable, contradictory, or coverage-bounded",
+      "the candidate only repeats the identifier without assigning a referent"
+    ],
+    "output_states": [
+      "temporally_eligible_candidate",
+      "downstream_reference",
+      "timestamp_unresolved",
+      "rejected_collision"
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "A later repository artifact may be the first currently discoverable object containing an unresolved identifier.",
+    "resolution": "First discoverable is not equivalent to first assigned. Discovery order is an operational property; provenance order is a historical property. The later artifact remains useful as a lead but cannot become the origin without an older immutable back-reference.",
+    "status": "resolved"
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository file metadata",
+      "commit metadata",
+      "abstract identifier and provenance rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed File Library content"
+    ]
+  },
+  "falsification_route": [
+    "Locate an immutable artifact created after the earliest report that contains a cryptographically or repository-verifiable reference to an older assignment source.",
+    "Verify that the older source explicitly assigns the identifier to the same referent and namespace.",
+    "If verified, classify the later artifact as a provenance carrier, not the originating assignment."
+  ],
+  "specialist_registry_change": "none",
+  "history_deleted": false
+}
