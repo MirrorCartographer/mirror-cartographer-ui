@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T17:01:00Z",
+  "slice": "opt_in_public_repertory_application_bridge",
+  "production_for_local_hour_13": "paper-weather",
+  "source_status": {
+    "canonical_state": "observed",
+    "canonical_queue": "observed",
+    "runtime_contract": "observed",
+    "application_bridge": "committed",
+    "contract_test": "committed_not_executed"
+  },
+  "commits": {
+    "bridge": "10c07f33b9822b10aad28d49ecb985adf307e74f",
+    "contract_test": "1b088cb21a45015136f15ac6d9cd00bc555ec3ff"
+  },
+  "verified_properties": [
+    "The bridge is opt-in through a dedicated data-repertory-stage element.",
+    "The existing React root and current production surface are not replaced by the installer.",
+    "All six deterministic catalog renderer names are represented.",
+    "Renderers return autoplay false and contain no play invocation.",
+    "Continuity identity is stable across productions.",
+    "Rollback targets only the mount selected by the runtime receipt."
+  ],
+  "verification_method": "connector-backed immutable commit inspection plus committed Node contract test",
+  "verification_limits": [
+    "The Node contract test was not executed in this connector-only run.",
+    "No browser, WebKit, physical iPhone, audio, Vite build, or deployment execution occurred.",
+    "The installer is not imported by src/main.jsx and therefore does not alter the live application.",
+    "Vercel deployment remains blocked by the canonical provider-capacity constraint."
+  ],
+  "privacy_boundary": "Only public-safe catalog language and abstract continuity identifiers are present; no private source material is embedded.",
+  "rollback": {
+    "runtime": "Call the installer result rollback method to remove only the staged mount.",
+    "repository": [
+      "Revert 1b088cb21a45015136f15ac6d9cd00bc555ec3ff",
+      "Revert 10c07f33b9822b10aad28d49ecb985adf307e74f"
+    ]
+  }
+}
