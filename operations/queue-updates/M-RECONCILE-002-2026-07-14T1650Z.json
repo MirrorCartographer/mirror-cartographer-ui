@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T16:50:00Z",
+  "state": "in_progress",
+  "completed_slice": "Directly fetched and classified four previously search-only continuity queue events as additive_only, preserving their immutable commit identities and recovering their temporal implementation chain from claim-state semantics through repository-history validation.",
+  "evidence": {
+    "record_path": "operations/continuity/records/CM-1025.json",
+    "record_commit": "6054876dbf6bd7f6497c2d3edb2308ef39dabc30",
+    "classified_commits": [
+      "675875c38eebee1573491f65791faba0e63af509",
+      "d461a9c80b00aed86efd62fdb68e30b03b9c330a",
+      "c62f2b82be12d71d31799f602f51fd050f99c602",
+      "c15c0e2023604602f1e5bb04376887366826f846"
+    ],
+    "verification": "direct_commit_diff"
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Complete the commit-keyed incorporation ledger for all accessible continuity queue events.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or approved chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Enumerate all accessible continuity-owned queue-update commits in bounded batches, fetch every candidate directly, extend the event-keyed ledger, then run the authenticated exhaustive repository-history collector before changing any M-004, M-005, or M-006 resolution state.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_change": null,
+  "privacy_boundary": "Repository metadata and abstract project-memory structure only; no private source material retained.",
+  "reversible": true
+}
