@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-14T01:17:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "finding": "Identifier provenance resolution requires executable semantic enforcement in addition to structural JSON Schema validation.",
+  "durable_memory": {
+    "observed": "The existing identifier-origin schema defines the accepted-origin predicates and fail-closed resolved/unlocated relationships.",
+    "inferred": "A schema consumer could still mis-handle disposition semantics or accept ambiguous multiple origins unless a dedicated validator enforces cross-field invariants.",
+    "current_decision": "Use a dependency-free validator that fails closed on predicate mismatch, semantic-only evidence, namespace collisions, late references, mutable evidence, and multiple accepted origins.",
+    "superseded": "Treating JSON shape conformance alone as sufficient proof of historical identifier origin.",
+    "unresolved": "M-004, M-005, and M-006 remain unlocated pending exhaustive branch and reachable-history coverage."
+  },
+  "files": [
+    "operations/continuity/contracts/identifier-origin-evidence.schema.json",
+    "operations/continuity/tools/validate-identifier-origin-evidence.mjs",
+    "operations/continuity/tools/validate-identifier-origin-evidence.test.mjs"
+  ],
+  "commits": [
+    "86adb7d021c366ab9155a55c70b8c442536187db",
+    "22abbecf8842161c017feec264c9368f99296e26"
+  ],
+  "verification": {
+    "level": "committed_test_not_executed",
+    "assertion_count": 12,
+    "covered_falsifications": [
+      "semantic-only match",
+      "suffix collision",
+      "late reference",
+      "mutable source",
+      "missing explicit assignment",
+      "accepted-origin predicate mismatch",
+      "unlocated resolved claim",
+      "verified but unresolved claim",
+      "ambiguous multiple origins",
+      "collision disposition contradicting explicit assignment",
+      "late-reference disposition contradicting temporal precedence"
+    ]
+  },
+  "privacy_boundary": "Only public repository metadata, abstract provenance rules, synthetic locators, and synthetic test fixtures are retained. No private chat text, File Library content, credentials, or personal source material is included.",
+  "specialist_registry_change": "none",
+  "limits": [
+    "The committed Node test was not executed in a repository checkout during this run.",
+    "No exhaustive branch inventory or reachable-history traversal was completed.",
+    "No originating immutable object for M-004, M-005, or M-006 was located."
+  ],
+  "next_action": "Execute the committed validator test, then enumerate all accessible refs and reachable commits and evaluate any candidate origin object through the validator before changing unresolved status."
+}
