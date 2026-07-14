@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T13:36:18Z",
+  "production_on_stage": {
+    "id": "archive-afterimage",
+    "title": "Archive Afterimage",
+    "form": "film",
+    "selection_basis": "canonical_utc_hour",
+    "hour_key": 495565,
+    "repertory_index": 1
+  },
+  "slice": "Public repertory DOM projection boundary",
+  "source_commits": {
+    "implementation": "1c0f9a8efb243639afaa5eb7bd9a7d0759bb09da",
+    "test": "0173b894a8d7781a9d4b9b8df01795ab40b08693"
+  },
+  "verification": {
+    "command": "node --test operations/tests/repertory-dom-projection.test.mjs",
+    "runtime": "local isolated Node runtime",
+    "result": "pass",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "verified_behaviors": [
+      "public accessible projection excludes raw continuity marks",
+      "missed-boundary resynchronization uses polite announcement and never replays intermediate productions",
+      "hidden-page suspension never enables autoplay or gesture-free audio",
+      "unknown actions, forms, and continuity versions fail closed"
+    ]
+  },
+  "provenance": {
+    "observed": [
+      "V-001 remains blocked on provider deployment capacity and immutable deployment identity",
+      "the committed browser lifecycle adapter emits production and continuity instructions",
+      "the hourly repertory selects Archive Afterimage for UTC hour key 495565"
+    ],
+    "inferred": [
+      "a privacy-filtering DOM projection is the next safe application-mount prerequisite while deployment attempts remain prohibited"
+    ],
+    "experiment": [
+      "project controller instructions into a frozen public view model and test privacy, accessibility, lifecycle, media, and fail-closed behavior"
+    ],
+    "current_decision": "retain the projection as an operations-only reversible import boundary until provider capacity returns and application mounting can be browser-verified"
+  },
+  "constraints": {
+    "application_files_changed": false,
+    "deployment_attempted": false,
+    "payment_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "git_history_deleted": false,
+    "canonical_shared_state_overwritten": false
+  },
+  "limits": [
+    "not mounted into the application",
+    "not executed in Chromium, WebKit, Mobile Safari, or a screen reader",
+    "no Vercel deployment or immutable deployment identity verified",
+    "no physical audio audibility evidence"
+  ],
+  "rollback": {
+    "reversible": true,
+    "route": "Remove the single future import/call site; the current slice is isolated under operations/studio and operations/tests."
+  }
+}
