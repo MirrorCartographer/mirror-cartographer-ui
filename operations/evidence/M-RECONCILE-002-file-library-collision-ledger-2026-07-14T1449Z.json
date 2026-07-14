@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "slice_id": "CM-1034",
+  "observed_at": "2026-07-14T14:49:58Z",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/evidence/M-RECONCILE-002-exhaustive-history-collector-2026-07-14T1342Z.json",
+    "File Library search for exact tokens M-004, M-005, and M-006",
+    "File Library results containing V8-004, V8-005, and V8-006 proof-machine records",
+    "File Library chat-log result describing Mirror Compass and Symbolic Resonance Map without assigning M-004, M-005, or M-006"
+  ],
+  "memory_recovered": {
+    "statement": "A suffix match is not an identity match. Historical continuity identifiers require namespace, owner, semantic-role, temporal-precedence, and immutable-locator agreement; records such as V8-004, V8-005, and V8-006 are proof-machine identifiers and cannot resolve M-004, M-005, or M-006.",
+    "status": "observed_and_durably_encoded",
+    "provenance": [
+      "operations/ACTIVE_QUEUE.json completed_slices and acceptance_remaining",
+      "File Library exact-token search results observed 2026-07-14T14:49:58Z",
+      "operations/evidence/M-RECONCILE-002-exhaustive-history-collector-2026-07-14T1342Z.json"
+    ]
+  },
+  "claims": {
+    "observed": [
+      "M-RECONCILE-002 remains the highest-priority continuity_mining queue item.",
+      "The File Library search returned multiple proof-machine records whose identifiers are V8-004, V8-005, and V8-006.",
+      "Those records concern mathematical proof-machine tasks, not continuity-memory artifacts.",
+      "A chat-log result referenced Mirror Compass and Symbolic Resonance Map but did not assign the identifiers M-004, M-005, or M-006.",
+      "No immutable originating source for M-004, M-005, or M-006 was established in this run."
+    ],
+    "inferred": [
+      "Exact-token retrieval can surface lexical suffix collisions even when the requested namespace is absent.",
+      "Promoting a suffix collision would corrupt the continuity graph by merging unrelated artifact families."
+    ],
+    "proposed": [
+      "Retain a source-class search ledger with query, returned namespace, semantic role, locator, and rejection reason for every collision candidate.",
+      "Continue exhaustive repository-history traversal and search decision logs, language lexicons, project documents, and chat-history sources for an originating assignment event."
+    ],
+    "superseded": [
+      "Treating numeric suffix agreement alone as evidence that two artifact identifiers denote the same object.",
+      "Treating a semantically adjacent chat artifact name as proof of a missing continuity identifier assignment."
+    ],
+    "unresolved": [
+      "Immutable provenance for M-004, M-005, and M-006.",
+      "The originating event that assigned the M namespace identifiers.",
+      "Authenticated exhaustive execution of the repository-history collector."
+    ]
+  },
+  "collision_records": [
+    {
+      "requested_identifier": "M-004",
+      "observed_identifier": "V8-004",
+      "observed_semantic_role": "proof-machine mathematical task",
+      "classification": "rejected_namespace_collision",
+      "reason": "namespace and semantic role disagree"
+    },
+    {
+      "requested_identifier": "M-005",
+      "observed_identifier": "V8-005",
+      "observed_semantic_role": "proof-machine mathematical task",
+      "classification": "rejected_namespace_collision",
+      "reason": "namespace and semantic role disagree"
+    },
+    {
+      "requested_identifier": "M-006",
+      "observed_identifier": "V8-006",
+      "observed_semantic_role": "proof-machine mathematical task",
+      "classification": "rejected_namespace_collision",
+      "reason": "namespace and semantic role disagree"
+    }
+  ],
+  "contradictions_resolved": [
+    {
+      "conflict": "File Library returned records with the same numeric suffixes as the unresolved continuity identifiers.",
+      "resolution": "The records are rejected as namespace collisions because their prefixes, owners, semantic roles, and source families do not agree with the continuity-memory claims."
+    },
+    {
+      "conflict": "A historical chat log contains concept names that could appear semantically related to continuity artifacts.",
+      "resolution": "Semantic adjacency without an explicit identifier assignment and immutable locator remains a lead, not provenance."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "abstract artifact identifiers",
+      "source-family names",
+      "semantic-role classifications",
+      "collision rejection reasons",
+      "coverage and provenance rules"
+    ],
+    "excluded": [
+      "private chat quotations",
+      "personal data",
+      "health information",
+      "credentials",
+      "secret-bearing logs",
+      "full File Library document contents"
+    ]
+  },
+  "verification": {
+    "strength": "connector_observed_and_committed",
+    "runtime_observed": false,
+    "notes": [
+      "The File Library results were inspected through exact-token and semantic queries.",
+      "Only abstract classifications were retained; private source text was not copied into the repository.",
+      "No identifier status was promoted from unresolved."
+    ]
+  },
+  "falsification_route": "This classification is falsified if an immutable source demonstrates that the V8 proof-machine identifiers were explicitly aliased to the M continuity namespace by an authorized decision event, or if an originating source independently assigns M-004, M-005, or M-006 with matching owner, semantic role, temporal precedence, and locator.",
+  "reversible": true
+}
