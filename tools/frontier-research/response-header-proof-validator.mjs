@@ -66,7 +66,7 @@ function validateClientPages(client, pages) {
     page_count: normalized.length,
     minimum_remaining: minimumRemaining,
     resource,
-    classification: minimumRemaining === 0 ? 'primary_limit_exhausted' : 'primary_limit_observed_available',
+    classification: minimumRemaining === 0 ? `${client}_limit_exhausted` : `${client}_limit_observed_available`,
     pages: normalized
   };
 }
