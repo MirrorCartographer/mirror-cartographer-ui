@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1025",
+  "created_at": "2026-07-14T16:50:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Direct classification of retained continuity queue events",
+  "source_status": "repository_observed_bounded",
+  "predecessor": {
+    "record_id": "CM-1024",
+    "path": "operations/continuity/records/CM-1024.json",
+    "role": "seed ledger containing four commit-search-only candidates"
+  },
+  "sources": [
+    {
+      "commit_sha": "c15c0e2023604602f1e5bb04376887366826f846",
+      "path": "operations/queue-updates/M-RECONCILE-002-2026-07-14T1332Z.json",
+      "completed_slice": "Added a fail-closed executable validator and deterministic tests for the CM-1031 exhaustive repository-history coverage contract."
+    },
+    {
+      "commit_sha": "c62f2b82be12d71d31799f602f51fd050f99c602",
+      "path": "operations/queue-updates/M-RECONCILE-002-2026-07-14T1223Z.json",
+      "completed_slice": "Defined a reversible fail-closed repository-history coverage contract that separates located, collision-rejected, unresolved-incomplete, and unlocated-after-exhaustive-coverage states for M-004, M-005, and M-006."
+    },
+    {
+      "commit_sha": "d461a9c80b00aed86efd62fdb68e30b03b9c330a",
+      "path": "operations/queue-updates/M-RECONCILE-002-2026-07-14T1100Z.json",
+      "completed_slice": "Converted the three-axis claim-state precedence rule into eight deterministic contradiction fixtures covering evidence rank, temporal supersession, unresolved repetition, automation prose, namespace collisions, reconstructed identifiers, single-identifier resolution, and incomplete-history absence claims."
+    },
+    {
+      "commit_sha": "675875c38eebee1573491f65791faba0e63af509",
+      "path": "operations/queue-updates/M-RECONCILE-002-2026-07-14T1053Z.json",
+      "completed_slice": "Recovered a three-axis claim model separating evidentiary state, temporal status, and resolution state; recorded a fail-closed conflict rule; retained M-004, M-005, and M-006 as unresolved."
+    }
+  ],
+  "claims": {
+    "observed": [
+      "Each of the four CM-1024 search-only candidates resolves to a directly fetched immutable commit and one continuity-owned queue-update path.",
+      "None of the four exact completed slices appears verbatim in the seven canonical completed_slices for M-RECONCILE-002.",
+      "The events form a temporal implementation chain: claim-state model, contradiction fixtures, repository-history coverage contract, then executable coverage validator."
+    ],
+    "inferred": [
+      "The four events are adjacent but non-interchangeable historical stages and must remain separately addressable by commit identity.",
+      "The canonical queue currently compresses their effects into broader provenance and knowledge-graph bullets rather than preserving event-level incorporation."
+    ],
+    "proposed": [
+      "Classify all four events as additive_only until a canonical projection explicitly incorporates their immutable event identities or exact normalized claims.",
+      "Use the temporal implementation chain as a dependency edge set in the continuity knowledge graph."
+    ],
+    "superseded": [
+      "The CM-1024 commit_search_only verification state for these four candidates."
+    ],
+    "unresolved": [
+      "Whether another branch contains a canonical projection that explicitly incorporates any of these events.",
+      "The exhaustive inventory of all continuity queue-update events.",
+      "The immutable originating sources for M-004, M-005, and M-006."
+    ]
+  },
+  "classifications": [
+    {
+      "commit_sha": "675875c38eebee1573491f65791faba0e63af509",
+      "classification": "additive_only",
+      "verification": "direct_commit_diff",
+      "semantic_role": "claim_state_model",
+      "precedes": "d461a9c80b00aed86efd62fdb68e30b03b9c330a"
+    },
+    {
+      "commit_sha": "d461a9c80b00aed86efd62fdb68e30b03b9c330a",
+      "classification": "additive_only",
+      "verification": "direct_commit_diff",
+      "semantic_role": "contradiction_fixture",
+      "precedes": "c62f2b82be12d71d31799f602f51fd050f99c602"
+    },
+    {
+      "commit_sha": "c62f2b82be12d71d31799f602f51fd050f99c602",
+      "classification": "additive_only",
+      "verification": "direct_commit_diff",
+      "semantic_role": "repository_history_coverage_contract",
+      "precedes": "c15c0e2023604602f1e5bb04376887366826f846"
+    },
+    {
+      "commit_sha": "c15c0e2023604602f1e5bb04376887366826f846",
+      "classification": "additive_only",
+      "verification": "direct_commit_diff",
+      "semantic_role": "repository_history_coverage_validator"
+    }
+  ],
+  "memory_recovered": "Continuity reconciliation evolved through a four-stage implementation chain—claim-state semantics, executable contradiction fixtures, a fail-closed repository-history coverage contract, and its validator. Canonical semantic compression must not erase those event identities or dependency order.",
+  "evidence_strength": "four directly fetched immutable commit diffs plus exact queue-update paths compared against the canonical queue snapshot",
+  "privacy_boundary": {
+    "included": [
+      "repository governance metadata",
+      "commit identifiers",
+      "abstract continuity claims",
+      "artifact paths and dependency roles"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "secret-bearing logs",
+      "unreviewed file-library content"
+    ]
+  },
+  "falsification_route": [
+    "Traverse every accessible branch and commit history.",
+    "Locate any canonical queue blob containing an exact or explicitly event-keyed incorporation of these commits.",
+    "Promote additive_only to canonical or superseded only when immutable branch, path, and temporal evidence agree."
+  ],
+  "specialist_registry_change": null,
+  "reversibility": "Additive record only; revert this commit without altering source history or canonical state."
+}
