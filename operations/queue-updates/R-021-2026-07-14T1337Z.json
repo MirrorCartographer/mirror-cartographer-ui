@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T13:37:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added and verified a no-overwrite CLI for final workflow-enumeration promotion assessment.",
+  "commits": [
+    "992d88faa01a957f2c02618717c24f54be99a972",
+    "b3637d8a0fd3e00691084b2046b7ce7b82f34da1",
+    "8b00fb53084d4f12e03919d2f71b2b4851750a82"
+  ],
+  "remaining": [
+    "Run both enumeration clients for one exact commit in two separate observation windows.",
+    "Retain the raw outputs, reconciliation results, and final CLI output.",
+    "Connect the final assessment to the Vercel evidence assessor."
+  ],
+  "next_action": "Integrate the CLI with the retained-evidence assessor and execute it against retained exact-commit observations."
+}
