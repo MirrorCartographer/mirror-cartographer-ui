@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "contract_id": "continuity-origin-resolution-v1",
+  "queue_item": "M-RECONCILE-002",
+  "purpose": "Prevent retrospective references, namespace collisions, semantic lookalikes, and incomplete searches from being promoted to originating assignments for continuity identifiers.",
+  "claim_states": [
+    "observed",
+    "inferred",
+    "proposed",
+    "superseded",
+    "unresolved"
+  ],
+  "required_origin_predicates": {
+    "immutable_locator": "A stable commit, blob, archived document revision, or retained source object identifies the candidate.",
+    "explicit_assignment": "The source explicitly assigns the identifier rather than merely mentioning, rejecting, migrating, or auditing it.",
+    "namespace_agreement": "The identifier belongs to the continuity namespace and is not a suffix or label collision from another system.",
+    "owner_agreement": "The source assigns the identifier under continuity_mining or an approved predecessor authority.",
+    "semantic_role_agreement": "The assigned object has the same durable memory role claimed by the identifier.",
+    "temporal_precedence": "The candidate predates known retrospective controls and later unresolved-status records.",
+    "source_class_allowed": "The source is an approved repository, decision-log, language-lexicon, project-document, or privacy-reviewed chat-history object.",
+    "coverage_sufficient": "The search coverage is exhaustive for the source class being used to declare an identifier unlocated."
+  },
+  "resolution_rules": {
+    "located": "All predicates except coverage_sufficient must be true, with no contradictory immutable candidate of equal or stronger authority.",
+    "unlocated_after_exhaustive_coverage": "No candidate satisfies the origin predicates and coverage_sufficient is true for every approved source class in scope.",
+    "unresolved": "Any required predicate is false, unknown, contradictory, or coverage remains incomplete.",
+    "rejected_collision": "namespace_agreement is false even if text similarity or identifier suffix matches.",
+    "retrospective_reference": "explicit_assignment or temporal_precedence is false because the source audits, rejects, migrates, or discusses an already-existing identifier."
+  },
+  "fail_closed": [
+    "A text match alone cannot resolve provenance.",
+    "Automation completion prose is a lead, not an immutable origin object.",
+    "File Library suffix matches cannot cross namespace boundaries.",
+    "Incomplete branch or source-class coverage cannot support an unlocated-final classification.",
+    "Conflicting immutable candidates remain unresolved until authority and chronology are reconciled."
+  ],
+  "test_vectors": [
+    {
+      "case": "retrospective namespace-control commit",
+      "predicates": {
+        "immutable_locator": true,
+        "explicit_assignment": false,
+        "namespace_agreement": true,
+        "owner_agreement": true,
+        "semantic_role_agreement": false,
+        "temporal_precedence": false,
+        "source_class_allowed": true,
+        "coverage_sufficient": false
+      },
+      "expected": "retrospective_reference"
+    },
+    {
+      "case": "proof-machine suffix collision",
+      "predicates": {
+        "immutable_locator": true,
+        "explicit_assignment": true,
+        "namespace_agreement": false,
+        "owner_agreement": false,
+        "semantic_role_agreement": false,
+        "temporal_precedence": true,
+        "source_class_allowed": true,
+        "coverage_sufficient": false
+      },
+      "expected": "rejected_collision"
+    },
+    {
+      "case": "explicit approved origin",
+      "predicates": {
+        "immutable_locator": true,
+        "explicit_assignment": true,
+        "namespace_agreement": true,
+        "owner_agreement": true,
+        "semantic_role_agreement": true,
+        "temporal_precedence": true,
+        "source_class_allowed": true,
+        "coverage_sufficient": false
+      },
+      "expected": "located"
+    },
+    {
+      "case": "no candidate under incomplete coverage",
+      "predicates": {
+        "immutable_locator": false,
+        "explicit_assignment": false,
+        "namespace_agreement": null,
+        "owner_agreement": null,
+        "semantic_role_agreement": null,
+        "temporal_precedence": null,
+        "source_class_allowed": null,
+        "coverage_sufficient": false
+      },
+      "expected": "unresolved"
+    }
+  ],
+  "privacy_class": "public_repository_metadata",
+  "reversibility": "Additive contract; revert this commit without changing canonical queue or historical artifacts."
+}
