@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T18:28:37Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Established a primary-source-grounded ceiling-safe exact-commit enumeration contract: unfiltered repository workflow-run pagination with local SHA filtering is authoritative; head_sha-filtered pagination is diagnostic and cannot independently prove exhaustive completeness.",
+  "artifacts": [
+    {
+      "path": "operations/frontier/ceiling-safe-workflow-enumeration-contract.json",
+      "commit": "f8c18d0b2d9dbb1777389dd02011c747af0c693d"
+    },
+    {
+      "path": "operations/evidence/R-021-ceiling-safe-enumeration-2026-07-14T1828Z.json",
+      "commit": "ff01cf70f61b94f58b255d2c2e7436da1d0fc1df"
+    }
+  ],
+  "acceptance_remaining": [
+    "Implement the authoritative unfiltered Link-header traversal and local exact-SHA filter in an executable client.",
+    "Run it in an authenticated checkout and retain raw pages without authorization headers.",
+    "Run the existing independent gh api traversal for the same exact commit.",
+    "Reconcile both result sets and retain a tamper-evident evidence bundle.",
+    "Keep provider-ceiling ambiguity fail-closed whenever the diagnostic filtered total_count reaches 1,000 or provider behavior is otherwise uncertain."
+  ],
+  "safe_next_action": "Implement the contract as a no-overwrite CLI adapter, add fixtures for Link exhaustion, duplicate IDs, filtered ceiling, and enumeration divergence, then hand the retained outputs to Vercel Studio's existing evidence-bundle writer.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "files_deleted": false
+}
