@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T12:08:48Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed GitHub REST API version evidence gate and deterministic test contract for exact-commit workflow enumeration.",
+  "files": [
+    "tools/frontier-research/github-api-version-evidence.mjs",
+    "tools/frontier-research/github-api-version-evidence.test.mjs",
+    "operations/evidence/R-021-github-api-version-contract-2026-07-14T1208Z.json"
+  ],
+  "commits": [
+    "640c77b54da58e59eb389ff3318a37120cd4f5b0",
+    "7dee6d81db378569b9735217f1be7c40193f1b3d",
+    "cadfe75d63a1fc6b4f4a486fc92fd6d2e952d463"
+  ],
+  "verification": {
+    "primary_sources_inspected": true,
+    "implementation_committed": true,
+    "tests_committed": true,
+    "tests_executed": false,
+    "authenticated_api_execution_observed": false,
+    "deployment_claimed": false
+  },
+  "acceptance_remaining": [
+    "Execute the API-version evidence tests at the exact commit and retain runtime evidence.",
+    "Integrate the version evidence envelope into the authenticated retained-evidence CLI.",
+    "Execute both exhaustive clients for one exact commit while retaining requested API version and lifecycle headers.",
+    "Keep provider-ceiling and API-version lifecycle ambiguity fail-closed."
+  ],
+  "safe_next_action": "Run tools/frontier-research/github-api-version-evidence.test.mjs, integrate its result into the retained enumeration manifest, then perform authenticated exact-commit enumeration without creating a deployment."
+}
