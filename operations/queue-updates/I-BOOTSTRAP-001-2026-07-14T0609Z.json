@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "canonical_queue_mutated": false,
+  "reason": "operations/ACTIVE_QUEUE.json still contains no independent_creative_web item; another team's queue state was not overwritten.",
+  "queue_item": {
+    "id": "I-BOOTSTRAP-001",
+    "owner": "independent_creative_web",
+    "priority": "highest",
+    "state": "interaction_contract_verified_operations_only",
+    "objective": "Establish a deliberately independent creative identity and one accessible, reversible, self-contained interactive transmission.",
+    "completed_slices": [
+      "Established The Night Office for Lost Weather identity and separation boundary.",
+      "Implemented a responsive instrument-like weather transmission preview.",
+      "Added a dependency-free deterministic contract harness covering all twelve transmissions, receive-control wraparound, opt-in audio state, accessible live-region and control semantics, narrow-screen layout, reduced-motion behavior, and absence of funnel or remote-data paths.",
+      "Verified four contract tests with zero failures in an isolated Node execution."
+    ],
+    "acceptance_remaining": [
+      "Run the committed contract test in an authenticated repository checkout or CI.",
+      "Run keyboard-only and screen-reader checks in a real browser.",
+      "Run Mobile Safari and performance checks.",
+      "Publish only to an independent hosting target after an explicit hosting decision; do not attach it to the Mirror Cartographer Vercel surface."
+    ],
+    "safe_next_action": "Add a reversible static preview server and Playwright-or-WebKit browser specification scoped to the independent preview, then retain keyboard, reduced-motion, and mobile viewport evidence without deploying."
+  },
+  "specialist_registry_change": null,
+  "specialist_registry_reason": "No queue-backed durable capability gap was demonstrated; the existing studio disciplines were sufficient."
+}
