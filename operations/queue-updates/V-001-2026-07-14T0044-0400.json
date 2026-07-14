@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T04:44:26Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Committed a deterministic, testable 24-hour production repertory with one continuity channel, explicit provenance classes, no autoplay, no payments or conversion logic, and declared mobile-safe, accessible, reversible behavior.",
+  "files": [
+    "operations/repertory/hourly-productions.json",
+    "operations/tests/hourly-productions.test.mjs",
+    "operations/evidence/V-001-hourly-repertory-2026-07-14T0044-0400.json"
+  ],
+  "commits": [
+    "0a013742ec46c7a0c13e4f6baa3269ae8848a15c",
+    "82c8edbf0cbb554daa43f652d4cdc6d25647c9c3",
+    "f8ae71fe9190de7ba4d8e155c370f3357f0373b2"
+  ],
+  "verification_level": "repository commit plus connector round-trip inspection",
+  "current_stage": "midnight-coordinate-room",
+  "deployment_effect": "operations-only; no Vercel build or deployment requested",
+  "acceptance_remaining": [
+    "Execute the committed Node test harness in an authenticated checkout.",
+    "Integrate the repertory into the application runtime behind a reversible feature boundary.",
+    "Verify browser rendering, keyboard behavior, reduced-motion behavior, mobile Safari safety, and user-initiated audio routing.",
+    "Complete the existing exact-commit Vercel evidence and immutable deployment identity requirements after provider capacity returns."
+  ],
+  "safe_next_action": "Run node --test operations/tests/hourly-productions.test.mjs, retain the output, then wire the schedule into the runtime without requesting a deployment while provider capacity remains blocked."
+}
