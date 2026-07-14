@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T21:41:37Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Recorded an operations-only, commit-bound stage evidence artifact for the current Wordless Room Game production, preserving runtime continuity and provider failure truth without triggering another application deployment.",
+  "evidence_artifact": "operations/vercel-studio/runs/V-001-2026-07-14T2141Z.json",
+  "evidence_commit": "d69449346f30c8f01ae857674201348531c6b408",
+  "observed": [
+    "The latest application commit renders RoomWorldValid and installs deployment/audio/runtime evidence infrastructure.",
+    "Both observed Vercel status contexts failed with the provider build-rate-limit target.",
+    "No immutable successful deployment is verified for the tested application commit."
+  ],
+  "inferred": [
+    "An operations-only evidence commit is the strongest safe slice while provider build capacity remains exhausted."
+  ],
+  "proposed": [
+    "Observe an operations-only sentinel as skipped or ignored after capacity returns before attempting one exact-commit application verification."
+  ],
+  "superseded": [],
+  "unresolved": [
+    "Canonical hourly repertory schedule location.",
+    "Immutable successful Vercel deployment identity for the tested application commit.",
+    "Bounded physical iPhone Safari audibility verification."
+  ],
+  "canonical_queue_overwritten": false,
+  "registry_change": null,
+  "application_runtime_changed": false,
+  "rollback": "Revert this queue-projection commit and d69449346f30c8f01ae857674201348531c6b408; no runtime rollback is required."
+}
