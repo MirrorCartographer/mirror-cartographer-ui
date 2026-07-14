@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T21:50:00Z",
+  "state": "in_progress",
+  "completed_slice": "Constructed an additive restoration manifest for the three known deleted room-world drafts using immutable deletion commits, original paths, collision-free archive paths, dependency status, restoration risks, and fail-closed preconditions.",
+  "artifact": {
+    "path": "operations/continuity/manifests/CM-20260714T2150Z-room-world-restoration-manifest.json",
+    "commit_sha": "cab23c0a2347fecc6bde37a9a986835c3bee2381"
+  },
+  "claims": {
+    "observed": "Three commits uniquely identify deletion of src/components/RoomWorld.jsx, src/components/RoomWorldClean.jsx, and src/components/RoomWorldRuntime.jsx as superseded drafts.",
+    "inferred": "Collision-free inactive archive paths would preserve provenance without reactivating obsolete runtime code.",
+    "proposed": "Restore only after canonical authorization, only to non-importable archive paths, and only with original-path and deletion-commit metadata.",
+    "superseded": null,
+    "unresolved": [
+      "Canonical scope of the no-deletion rule.",
+      "Whether archive restoration is desired.",
+      "Whether dependency snapshots are required for reproducibility.",
+      "Whether additional deleted room-world artifacts exist outside the inspected commit set."
+    ]
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Record a canonical no-deletion scope decision before restoring or removing any source path."
+  ],
+  "safe_next_action": "Perform an exhaustive accessible branch and commit inventory, then test M-004, M-005, and M-006 candidates against namespace, owner, semantic role, temporal precedence, and immutable locator agreement; do not recreate identifiers or restore source files while coverage or governance remains unresolved.",
+  "privacy_boundary": "Repository metadata and abstract software lifecycle information only; no private source material retained.",
+  "specialist_registry_change": null
+}
