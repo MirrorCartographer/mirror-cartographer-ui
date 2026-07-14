@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "observed_at": "2026-07-14T17:11:02.000Z",
+  "civil_hour": 13,
+  "timezone": "America/New_York",
+  "production": {
+    "id": "paper-weather",
+    "title": "Paper Weather",
+    "renderer": "paperWeather"
+  },
+  "slice": "deterministic_current_stage_receipt",
+  "verification": {
+    "status": "source_verified_not_executed",
+    "evidence": [
+      "Catalog maps civil hour modulo six and hour 13 to paper-weather.",
+      "Receipt module was fetched back from the default branch after creation.",
+      "Test file covers deterministic selection, digest stability, the complete 24-hour cycle, and invalid input rejection."
+    ],
+    "execution_limit": "The automation environment could not resolve github.com for a local checkout, and no application deployment was attempted while provider build capacity remains blocked."
+  },
+  "safety": {
+    "application_deployment_attempted": false,
+    "autoplay": false,
+    "private_source_material_included": false,
+    "payments_or_conversion_added": false,
+    "canonical_queue_overwritten": false
+  },
+  "rollback": {
+    "method": "Revert the two additive commits that introduce operations/studio/current-stage-receipt.mjs and its test.",
+    "data_migration_required": false
+  }
+}
