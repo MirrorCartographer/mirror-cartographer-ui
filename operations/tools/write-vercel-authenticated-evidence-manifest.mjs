@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, realpath, writeFile } from 'node:fs/promises';
 import { validateAuthenticatedPaginationEvidence } from '../../tools/frontier-research/authenticated-pagination-evidence-gate.mjs';
 
 const REPOSITORY = 'MirrorCartographer/mirror-cartographer-ui';
@@ -13,7 +13,10 @@ function validMethod(method, commitSha) {
   if (!Number.isInteger(method.record_count) || method.record_count < 0) return 'invalid_record_count';
   if (typeof method.raw_output_path !== 'string' || method.raw_output_path.length === 0) return 'raw_output_path_missing';
   if (!SHA256.test(method.raw_output_sha256 ?? '')) return 'raw_output_hash_invalid';
-  if (method.commit_sha !== commitSha) return 'commit_mismatch';
+  if (typeof method.execution_declaration_path !== 'string' || method.execution_declaration_path.length === 0) return 'execution_declaration_path_missing';
+  if (!SHA256.test(method.execution_declaration_sha256 ?? '')) return 'execution_declaration_hash_invalid';
+  if (!method.execution || typeof method.execution !== 'object' || Array.isArray(method.execution)) return 'execution_declaration_missing';
+  if (method.commit_sha !== commitSha || method.execution.commit_sha !== commitSha) return 'commit_mismatch';
   if (!Array.isArray(method.records)) return 'records_missing';
   if (method.records.length !== method.record_count) return 'record_count_mismatch';
   const ids = new Set();
@@ -35,12 +38,59 @@ function canonicalize(value) {
   return value;
 }
 
+function deepEqualJson(left, right) {
+  return JSON.stringify(canonicalize(left)) === JSON.stringify(canonicalize(right));
+}
+
 export function computeNormalizedRecordSetSha256(records) {
   if (!Array.isArray(records)) throw new TypeError('records must be an array');
   const normalized = records
     .map((record) => canonicalize(record))
     .sort((left, right) => String(left.id).localeCompare(String(right.id), 'en', { numeric: true }));
   return createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+}
+
+export async function verifyRetainedExecutionDeclarations(input) {
+  if (!input || typeof input !== 'object') return fail('manifest_invalid');
+  const methods = ['primary', 'independent'];
+  const retained = {};
+  for (const methodName of methods) {
+    const method = input[methodName];
+    if (!method || typeof method.execution_declaration_path !== 'string' || method.execution_declaration_path.length === 0) {
+      return fail('execution_declaration_path_missing', { method: methodName });
+    }
+    if (!SHA256.test(method.execution_declaration_sha256 ?? '')) {
+      return fail('execution_declaration_hash_invalid', { method: methodName });
+    }
+    let canonicalPath;
+    let bytes;
+    try {
+      canonicalPath = await realpath(method.execution_declaration_path);
+      bytes = await readFile(canonicalPath);
+    } catch (error) {
+      return fail('execution_declaration_read_failed', { method: methodName, code: error.code ?? 'unknown' });
+    }
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    if (digest !== method.execution_declaration_sha256) {
+      return fail('execution_declaration_digest_mismatch', { method: methodName, computed_sha256: digest });
+    }
+    let parsed;
+    try { parsed = JSON.parse(bytes.toString('utf8')); }
+    catch { return fail('execution_declaration_invalid_json', { method: methodName }); }
+    if (!deepEqualJson(parsed, method.execution)) {
+      return fail('execution_declaration_content_mismatch', { method: methodName });
+    }
+    retained[methodName] = { canonical_path: canonicalPath, sha256: digest };
+  }
+  if (retained.primary.canonical_path === retained.independent.canonical_path) {
+    return fail('execution_declaration_file_reused');
+  }
+  return {
+    verified: true,
+    reason: 'retained_execution_declarations_verified',
+    primary_execution_declaration_sha256: retained.primary.sha256,
+    independent_execution_declaration_sha256: retained.independent.sha256
+  };
 }
 
 export function validateAuthenticatedEvidenceManifest(input) {
@@ -106,21 +156,24 @@ export async function writeAuthenticatedEvidenceManifest({ input_path, output_pa
   let input;
   try { input = JSON.parse(await readFile(input_path, 'utf8')); }
   catch (error) { return fail(error instanceof SyntaxError ? 'input_invalid_json' : 'input_read_failed', { code: error.code ?? 'unknown' }); }
+  const retainedDeclarations = await verifyRetainedExecutionDeclarations(input);
+  if (!retainedDeclarations.verified) return retainedDeclarations;
   const validation = validateAuthenticatedEvidenceManifest(input);
   if (!validation.verified) return validation;
   const manifest = {
-    schema_version: 4,
+    schema_version: 5,
     artifact_type: 'vercel_authenticated_workflow_evidence_manifest',
     ...input,
+    retained_execution_declarations: retainedDeclarations,
     validation,
     limitations: [
-      'This manifest proves only the retained authenticated workflow enumeration, page-link continuity, transport provenance, and canonical-record-bound snapshot stability described by its inputs.',
+      'This manifest proves only the retained authenticated workflow enumeration, retained execution declarations, page-link continuity, transport provenance, and canonical-record-bound snapshot stability described by its inputs.',
       'It does not prove provider-wide semantic completeness, Vercel deployment identity, browser audibility, or physical-device behavior.'
     ]
   };
   try { await writeFile(output_path, `${JSON.stringify(manifest, null, 2)}\n`, { flag: 'wx' }); }
   catch (error) { return fail(error.code === 'EEXIST' ? 'output_exists' : 'output_write_failed', { code: error.code ?? 'unknown' }); }
-  return { verified: true, reason: 'authenticated_evidence_manifest_written', output_path, validation };
+  return { verified: true, reason: 'authenticated_evidence_manifest_written', output_path, retained_execution_declarations: retainedDeclarations, validation };
 }
 async function main() { const [input_path, output_path] = process.argv.slice(2); const result = await writeAuthenticatedEvidenceManifest({ input_path, output_path }); process.stdout.write(`${JSON.stringify(result, null, 2)}\n`); process.exitCode = result.verified ? 0 : 1; }
 if (import.meta.url === `file://${process.argv[1]}`) main();
