@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T21:43:00Z",
+  "state": "in_progress",
+  "completed_slice": "Recovered and recorded the append-only supersession boundary after repository execution deleted files under a standing no-file-deletion constraint.",
+  "artifact": {
+    "path": "operations/continuity/records/CM-20260714T2143Z-append-only-supersession.json",
+    "commit_sha": "e976aa5c61454a48fe514c4a522933289a2cc290"
+  },
+  "claims": {
+    "observed": "A direct commit diff verifies deletion of src/components/RoomWorldRuntime.jsx, while CURRENT_STATE.json prohibits deleting GitHub files or history.",
+    "inferred": "Superseded was treated as deletion rather than a lifecycle transition.",
+    "proposed": "Require append-only supersession and an explicit canonical scope decision before future file removal.",
+    "superseded": null,
+    "unresolved": [
+      "Whether deleted room-world artifacts should be restored into archive paths.",
+      "Whether the canonical no-deletion rule distinguishes working-tree paths from Git history."
+    ]
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Resolve the no-deletion scope contradiction canonically before any future file removal."
+  ],
+  "safe_next_action": "Construct an additive restoration manifest for the three deleted room-world artifacts using exact source commits and collision-free archive paths, but do not restore or remove anything until a canonical scope decision is recorded.",
+  "privacy_boundary": "Repository metadata and abstract governance only; no private source material retained.",
+  "specialist_registry_change": null
+}
