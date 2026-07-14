@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T03:38:26Z",
+  "state": "in_progress",
+  "completed_slice": "Defined and committed a fail-closed, machine-checkable exhaustive provenance traversal manifest for M-004, M-005, and M-006.",
+  "artifacts": [
+    {
+      "path": "operations/continuity/schemas/exhaustive-provenance-traversal.schema.json",
+      "commit": "116d18d43edbaf54add38463fbbd4d5a9521fdff"
+    },
+    {
+      "path": "operations/continuity/evidence/M-RECONCILE-002-exhaustive-traversal-contract-2026-07-13T2338-0400.json",
+      "commit": "ff3035939292f8144d1ccc02d5991afbbc1c4740"
+    }
+  ],
+  "observed": "Prior indexed searches remain bounded and do not satisfy the queue's exhaustive-coverage acceptance condition.",
+  "decision": "An identifier may be marked unlocated_after_exhaustive_coverage only from a conforming manifest with retained complete ref and reachable-commit inventories; otherwise coverage remains incomplete.",
+  "acceptance_remaining": [
+    "Capture all accessible refs in an authenticated full clone and retain the exact raw inventory and digest.",
+    "Capture every commit reachable from all retained refs and retain the exact raw inventory and digest.",
+    "Inspect historical trees for exact M-004, M-005, and M-006 assignments and classify immutable candidates.",
+    "Validate the generated manifest against the committed schema."
+  ],
+  "safe_next_action": "Implement a no-overwrite manifest generator and validator in an authenticated checkout, run it against all refs, and retain raw inventories plus candidate-object evidence without copying private source material.",
+  "privacy_boundary": "Public repository metadata and abstract provenance rules only; no private chat, health, credential, or File Library content retained.",
+  "specialist_registry_change": "none",
+  "rollback": [
+    "Revert ff3035939292f8144d1ccc02d5991afbbc1c4740",
+    "Revert 116d18d43edbaf54add38463fbbd4d5a9521fdff"
+  ]
+}
