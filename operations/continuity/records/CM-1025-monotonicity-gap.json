@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1025",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T08:36:38Z",
+  "title": "A monotonic provenance contract must reject coverage regression, not merely describe monotonicity",
+  "claims": {
+    "observed": [
+      "operations/continuity/schemas/provenance-state-transition.schema.json describes itself as a contract for monotonic provenance and coverage-state transitions.",
+      "The schema enumerates coverage_state values unknown, partial, complete_single_client, and exhaustive_reproduced.",
+      "The schema currently validates prior_state and new_state independently and contains no rule that rejects a lower new coverage_state after a higher prior coverage_state.",
+      "The schema's existing conditional rules constrain verified and unlocated_after_exhaustive_coverage outcomes but do not constrain general coverage regression."
+    ],
+    "inferred": [
+      "A structurally valid record can currently claim exhaustive_reproduced coverage in prior_state and unknown coverage in new_state while still satisfying the schema.",
+      "Without an explicit transition relation, prose describing the contract as monotonic is stronger than the executable contract."
+    ],
+    "proposed": [
+      "Define the admissible coverage transition relation explicitly before changing the schema.",
+      "At minimum, reject exhaustive_reproduced to complete_single_client, partial, or unknown; complete_single_client to partial or unknown; and partial to unknown unless a separately named evidence-revocation process is adopted.",
+      "Represent evidence revocation, if needed, as a distinct disputed or invalidated state rather than erasing previously attained coverage.",
+      "Add positive and adversarial validator fixtures before promoting any monotonicity amendment to authoritative use."
+    ],
+    "superseded": [
+      "Treating the word monotonic in a schema description as sufficient machine-checkable enforcement.",
+      "Assuming independent validation of prior_state and new_state establishes a valid transition relation."
+    ],
+    "unresolved": [
+      "The authoritative ordering and branching rules for origin_state have not been recovered in this run.",
+      "No validator fixture currently demonstrates acceptance or rejection of coverage regressions.",
+      "The schema has not been amended because the evidence-revocation semantics and complete origin-state transition graph require an authoritative decision source."
+    ]
+  },
+  "source_provenance": [
+    {
+      "source_class": "repository",
+      "path": "operations/continuity/schemas/provenance-state-transition.schema.json",
+      "blob": "cb6523d6c2cecde8eefcdb5744439a4fcafb72bb",
+      "supports": "The executable contract's description, coverage-state vocabulary, independent prior/new state validation, and existing conditional constraints."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/continuity/records/CM-1024-provenance-transition-contract.json",
+      "blob": "f40d2900ad5a305a01247686fd8f80920d1b6eef",
+      "supports": "The prior continuity record's claim that machine-checkable transition records should prevent structurally incomplete provenance changes, plus its explicit unresolved validator gap."
+    },
+    {
+      "source_class": "repository",
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "supports": "M-RECONCILE-002 remains the highest-priority continuity_mining item and requires provenance resolution without reconstructing unverified history."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "public repository paths",
+      "repository blob identifiers",
+      "abstract state vocabulary",
+      "machine-checkable contract analysis",
+      "proposed falsifiable transition rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "health or personal records",
+      "credentials",
+      "secret-bearing logs",
+      "private file-library contents",
+      "unapproved quotations"
+    ]
+  },
+  "verification": {
+    "method": "Inspected the exact current blobs for the transition schema, CM-1024, and ACTIVE_QUEUE; compared the schema description and enum vocabulary against its executable allOf constraints.",
+    "limitations": [
+      "No JSON Schema validator was executed.",
+      "No authoritative origin-state ordering source was located.",
+      "This record identifies an enforcement gap; it does not assert that any historical transition actually regressed."
+    ]
+  },
+  "falsification_routes": [
+    "Show an existing schema clause that rejects every descending coverage_state transition.",
+    "Validate an exhaustive_reproduced-to-unknown fixture against the current schema and demonstrate rejection by the schema itself.",
+    "Produce an authoritative decision source defining non-monotonic coverage semantics that supersedes the schema description."
+  ]
+}
