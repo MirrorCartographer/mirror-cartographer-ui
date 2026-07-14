@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T22:14:00Z",
+  "slice": "Bind retained dual-client rate-limit response-header proof to the exact page counts declared by both exhaustive enumeration sources.",
+  "source_status": {
+    "github_rate_limit_documentation": "primary_current",
+    "repository_implementation": "primary_repository_evidence",
+    "runtime_test_execution": "not_observed"
+  },
+  "finding": "GitHub documents rate-limit status as response headers sent with each response. Therefore a retained proof whose page_count is lower than the corresponding enumeration source pages_fetched does not establish header coverage for the complete traversal.",
+  "evidence_strength": "strong_design_inference_static_verification",
+  "uncertainty": "The exact x-ratelimit-resource value for the workflow-runs endpoint was not asserted; the change only requires non-empty resource identity and exact page-count coverage.",
+  "implementation": [
+    "Require positive integer pages_fetched for both approved source envelopes.",
+    "Reject primary or independent rate-limit proof page_count that differs from its source pages_fetched.",
+    "Reject evidence bundles generated before either source retrieval timestamp.",
+    "Add deterministic tests for missing page counts, temporal inversion, and partial header-proof coverage."
+  ],
+  "files": [
+    "tools/vercel-studio/workflow-evidence-bundle.mjs",
+    "tools/vercel-studio/workflow-evidence-bundle.test.mjs"
+  ],
+  "commits": [
+    "be094becb580b83e2c9e75b97b8b401f7b4e39ea",
+    "bcca44ecacbf4d0304f2d2bd3ce80219eb6829d6"
+  ],
+  "verification": {
+    "static_fetch_back": "pending_at_record_creation",
+    "node_test_execution": "not_available_in_connector_runtime"
+  },
+  "falsification_route": "Provide a GitHub primary source showing that one retained response header can validly attest rate-limit state for multiple separately fetched pagination responses, or demonstrate that the enumerator's pages_fetched count includes requests for which no response-header retention is required.",
+  "handoff": "Run workflow-evidence-bundle.test.mjs in an authenticated checkout, then execute both exhaustive clients and confirm retained header records cover every fetched page before promotion."
+}
