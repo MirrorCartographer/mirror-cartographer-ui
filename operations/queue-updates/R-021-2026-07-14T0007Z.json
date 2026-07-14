@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T00:07:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound snapshot stabilization to two equal normalized record-set SHA-256 digests and required that digest to match the reconciled record-set digest before manifest promotion.",
+  "files": [
+    "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+    "operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+    "operations/evidence/frontier-snapshot-stability-binding-2026-07-14T0007Z.json"
+  ],
+  "commits": [
+    "d92855de8e01b4dcca6779c0a04cc8ba22d252e2",
+    "a2f1082574cbef17060ccae520205c7743e21b1b",
+    "3d87143f48207f991a3329ad4d36e821564f5e6d"
+  ],
+  "verification_status": "committed_static_verification_runtime_pending",
+  "acceptance_remaining": [
+    "Run the 22-assertion Node test in an authenticated checkout or CI runner.",
+    "Execute both authenticated exhaustive clients against one exact commit.",
+    "Retain two quiet-interval snapshots and compute normalized record-set digests for both.",
+    "Write the schema-v3 no-overwrite manifest and retain the reconciliation result."
+  ],
+  "safe_next_action": "Execute node operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs in an authenticated checkout, then capture two digest-bound snapshots for the same exact commit and promote only if both digests and reconciliation agree."
+}
