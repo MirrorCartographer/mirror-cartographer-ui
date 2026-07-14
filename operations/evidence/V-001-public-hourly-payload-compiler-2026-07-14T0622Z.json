@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T06:22:49Z",
+  "slice": "public_hourly_stage_payload_compiler",
+  "finding": "The reversible hourly runtime candidate required a canonical adapter boundary that compiles the existing repertory and hourly manifest into exactly 24 runtime-ready public payloads while preserving provenance and one continuity channel.",
+  "implementation": {
+    "compiler": "operations/tools/public-hourly-stage-payloads.mjs",
+    "test_contract": "operations/tests/public-hourly-stage-payloads.test.mjs",
+    "source_schedule": "operations/repertory/hourly-productions.json",
+    "source_manifest_adapter": "operations/tools/hourly-stage-manifest.mjs",
+    "runtime_validator": "operations/prototypes/hourly-stage-runtime-candidate.mjs"
+  },
+  "verified_invariants": [
+    "compiler source was fetched back from the committed default branch",
+    "exactly 24 representative instants are required",
+    "each representative instant must resolve to its ordered hour",
+    "all 24 stage identifiers must be distinct",
+    "all payloads must preserve one continuity channel",
+    "observed, inferred, experiment, and current_decision provenance classes are retained",
+    "autoplay remains false and sound requires user action",
+    "mobile-safe, accessible, reversible, reduced-motion, no-payment, and no-private-source flags are explicit",
+    "prohibited private, clinical, payment, purchase, checkout, credential, and secret language fails closed"
+  ],
+  "verification": {
+    "method": "committed-source fetch-back and structural inspection",
+    "runtime_test_executed": false,
+    "falsification_command": "node --test operations/tests/public-hourly-stage-payloads.test.mjs",
+    "claims_not_made": [
+      "browser execution",
+      "Mobile Safari behavior",
+      "physical-device audio audibility",
+      "CI pass",
+      "Vercel deployment",
+      "immutable production identity"
+    ]
+  },
+  "deployment_effect": "operations-only; no application path changed and no Vercel deployment requested",
+  "privacy_boundary": "Public production grammar and abstract provenance categories only; no private source text, personal health material, credentials, or conversion logic were added.",
+  "rollback": [
+    "revert this evidence commit",
+    "revert a687ca4ee3286cac9197ba88935bab3381a54ba1",
+    "revert 6a9036c36d6badfc32c9cab370ee07f7d0ffce2d"
+  ]
+}
