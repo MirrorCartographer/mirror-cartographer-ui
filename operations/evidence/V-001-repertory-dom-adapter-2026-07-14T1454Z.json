@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T14:54:00Z",
+  "slice": "Focus-preserving repertory DOM adapter",
+  "production_on_stage": {
+    "id": "coordinate-carnival",
+    "title": "Coordinate Carnival",
+    "status": "test_fixture_only",
+    "claim_boundary": "No public or Vercel deployment was attempted or claimed."
+  },
+  "implementation": {
+    "source_path": "operations/studio/repertory-dom-adapter.mjs",
+    "source_commit": "717364997c5e158e2cf00a1fd5292ea7f8ae00bd",
+    "test_path": "operations/tests/repertory-dom-adapter.test.mjs",
+    "test_commit": "2a8eb1b653cee5901c39993f9984dcfc029e0050"
+  },
+  "verified_behaviors": [
+    "Applies repertory content by textContent and attribute mutation without HTML parsing.",
+    "Does not replace the repertory root or an already-focused descendant.",
+    "Suspends hidden productions in place and retains their existing content.",
+    "Fails closed when network, persistence, autoplay, or gesture-free audio behavior is requested.",
+    "Returns a bounded target_missing result when the application mount is absent."
+  ],
+  "verification": {
+    "command": "node --test operations/tests/repertory-dom-adapter.test.mjs",
+    "environment": "isolated Node runtime with a deterministic DOM-compatible test double",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "evidence_strength": "runtime_verified_isolated",
+    "not_verified": [
+      "Chromium",
+      "WebKit",
+      "Mobile Safari",
+      "screen reader behavior",
+      "physical audio audibility",
+      "Vercel deployment identity"
+    ]
+  },
+  "constraints_preserved": {
+    "payments_or_conversion_logic": false,
+    "private_source_material_exposed": false,
+    "application_deployment_attempted": false,
+    "canonical_shared_state_overwritten": false,
+    "git_history_deleted": false
+  },
+  "rollback": {
+    "method": "Create ordinary revert commits for the additive source, test, evidence, and queue-update commits.",
+    "source_commit": "717364997c5e158e2cf00a1fd5292ea7f8ae00bd",
+    "test_commit": "2a8eb1b653cee5901c39993f9984dcfc029e0050"
+  }
+}
