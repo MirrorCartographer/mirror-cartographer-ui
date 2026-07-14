@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "slice": "hourly-stage-manifest",
+  "recorded_at": "2026-07-14T04:49:20Z",
+  "production_on_stage": "midnight-coordinate-room",
+  "implementation_commit": "f68d358856a735e4ec12e200658f8564c11c4c54",
+  "test_commit": "776e8b609751c4d4608b3a126151000f54037ed8",
+  "verification": {
+    "command": "node --test operations/tests/hourly-stage-manifest.test.mjs",
+    "result": "4 tests passed; 0 failed",
+    "scope": "isolated deterministic Node execution against fetched selector and committed manifest/test contents",
+    "deployment_claim": false,
+    "browser_claim": false,
+    "physical_audio_claim": false
+  },
+  "guarantees": [
+    "deterministic hourly production resolution in the schedule time zone",
+    "one continuity channel and explicit continuity revision",
+    "complete observed, inferred, experiment, and current_decision provenance",
+    "autoplay disabled",
+    "mobile-safe, accessible, and reversible production declaration",
+    "fail-closed rejection of continuity mismatch, incomplete provenance, and prohibited private or conversion language"
+  ],
+  "limits": [
+    "not yet integrated into the application runtime",
+    "no Vercel deployment requested while provider capacity remains blocked",
+    "no browser, mobile Safari, or physical audio verification performed"
+  ],
+  "rollback": [
+    "revert 776e8b609751c4d4608b3a126151000f54037ed8",
+    "revert f68d358856a735e4ec12e200658f8564c11c4c54"
+  ]
+}
