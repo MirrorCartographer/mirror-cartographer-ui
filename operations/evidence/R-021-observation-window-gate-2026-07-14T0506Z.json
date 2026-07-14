@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "captured_at": "2026-07-14T05:06:00Z",
+  "finding": {
+    "status": "observed_design_gap",
+    "summary": "Timestamp ordering alone does not prove that both independent enumerations completed before stabilization snapshots began, or that the two client executions and snapshots occurred within bounded windows.",
+    "evidence_strength": "primary_documentation_plus_deterministic_test",
+    "uncertainty": "The gate proves only declared timestamp relationships; it does not authenticate clocks, prove repository quiescence, or prove provider consistency."
+  },
+  "primary_sources": [
+    {
+      "title": "GitHub REST API endpoints for workflow runs",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "observed": [
+        "head_sha filters workflow runs to the specified commit",
+        "per_page is capped at 100",
+        "filtered searches can return at most 1000 results",
+        "private-repository access requires authenticated Actions read permission"
+      ]
+    },
+    {
+      "title": "GitHub CLI gh api manual",
+      "url": "https://cli.github.com/manual/gh_api",
+      "observed": [
+        "--paginate requests additional pages",
+        "--slurp combines paginated JSON responses into an outer array"
+      ]
+    }
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/evidence-observation-window.mjs",
+    "test": "tests/frontier-research/evidence-observation-window.test.mjs",
+    "implementation_commit": "dcb87d74517cd9af6dbbe9ecf20ca74190929a65",
+    "test_commit": "45420863d276682d6dcc634c2e3ccd4961570b74"
+  },
+  "verification": {
+    "command": "node --test evidence-observation-window.test.mjs",
+    "environment": "isolated Node runtime using byte-identical implementation and test content before commit",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "verified_cases": [
+      "bounded post-execution stabilization window accepted",
+      "stabilization before both executions complete rejected",
+      "excessive independent-client completion skew rejected",
+      "excessive stabilization gap rejected",
+      "invalid or unbounded policy window rejected"
+    ]
+  },
+  "falsification_route": [
+    "Provide a case where both executions and snapshots satisfy the gate but retained bytes prove they came from different repository or commit identities.",
+    "Demonstrate that declared timestamps were produced by unsynchronized or manipulated clocks.",
+    "Show repository mutation between snapshots despite a passing bounded observation window."
+  ],
+  "design_implication": "Run the observation-window gate after execution identity, retained-byte binding, and temporal-coherence validation, but before reconciliation evidence is promoted. A passing result must remain a bounded ordering claim, not a quiescence or authenticity claim."
+}
