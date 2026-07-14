@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<title>The Department of Lost Moons</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#08090d;color:#f5f0df;--glass:rgba(8,9,13,.66)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overflow:hidden}body{background:radial-gradient(circle at 50% 40%,#24283a,#08090d 68%)}
+canvas{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+main{position:relative;z-index:2;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));pointer-events:none}
+header,footer{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}.label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;opacity:.62}.title{max-width:42rem;text-shadow:0 2px 24px #000}.title h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(2rem,7vw,5.6rem);line-height:.82;margin:.55rem 0}.title p{max-width:33rem;line-height:1.45;margin:.75rem 0;opacity:.78}
+.controls{pointer-events:auto;display:flex;gap:.55rem;flex-wrap:wrap;justify-content:flex-end}button{appearance:none;border:1px solid rgba(255,255,255,.4);background:var(--glass);color:inherit;border-radius:999px;padding:.7rem .85rem;font:inherit;cursor:pointer;backdrop-filter:blur(12px)}button:hover,button:focus-visible,button[aria-pressed=true]{background:#f5f0df;color:#08090d;outline:2px solid transparent}
+.record{align-self:end;max-width:35rem;background:var(--glass);border:1px solid rgba(255,255,255,.18);padding:1rem 1.1rem;backdrop-filter:blur(12px);line-height:1.45}.record strong{display:block;font-family:Georgia,serif;font-size:1.4rem;font-weight:400;margin:.25rem 0}.record small{opacity:.62}.hint{align-self:end;text-align:right;font-size:.72rem;opacity:.55;max-width:18rem}
+@media(max-width:720px){header{display:block}.controls{justify-content:flex-start;margin-top:.8rem}.hint{display:none}.record{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.motion-note{display:inline}}
+</style>
+</head>
+<body>
+<canvas id="field" aria-hidden="true"></canvas>
+<main>
+<header>
+<div class="title"><div class="label">Celestial Misplacement Office · Intake Window 04</div><h1>The Department of Lost Moons</h1><p>Touch the sky to alter an orbit. Every moon here belongs to a world that misplaced it and never filed the correct form.</p></div>
+<div class="controls" aria-label="Department controls"><button id="next" type="button">Next case</button><button id="pause" type="button" aria-pressed="false">Pause</button><button id="sound" type="button" aria-pressed="false">Sound off</button></div>
+</header><div></div>
+<footer><div class="record" aria-live="polite"><div class="label">Open case</div><strong id="caseName">Moon 14-B: The Pale Receiver</strong><span id="caseNote">Found listening beneath a planet with no oceans.</span><br><small id="caseId"></small></div><div class="hint">Space: next case · P: pause · S: sound<br><span class="motion-note">Reduced-motion preference is honored.</span></div></footer>
+</main>
+<script>
+(()=>{'use strict';
+const canvas=document.querySelector('#field'),ctx=canvas.getContext('2d');
+const nextButton=document.querySelector('#next'),pauseButton=document.querySelector('#pause'),soundButton=document.querySelector('#sound');
+const nameNode=document.querySelector('#caseName'),noteNode=document.querySelector('#caseNote'),idNode=document.querySelector('#caseId');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cases=[
+['Moon 14-B: The Pale Receiver','Found listening beneath a planet with no oceans.'],
+['Moon 03-F: Orchard Satellite','Its craters produce fruit during eclipses.'],
+['Moon 88-A: The Returning Room','Every orbit briefly recreates a room someone left.'],
+['Moon 21-C: Velvet Emergency','Removed after making all nearby gravity feel soft.'],
+['Moon 55-D: Choir Without Air','Sings only through the instruments used to observe it.'],
+['Moon 09-K: The Smallest Night','Contains twelve minutes of darkness no star can enter.']];
+let seed=crypto.getRandomValues(new Uint32Array(1))[0]>>>0,moons=[],paused=false,audio=null,pointer={x:.5,y:.5};
+function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+function rebuild(){const count=reduced?7:18;moons=Array.from({length:count},(_,i)=>({radius:28+random()*Math.min(innerWidth,innerHeight)*.35,size:1.5+random()*7,speed:(.00004+random()*.00016)*(i%2?1:-1),phase:random()*Math.PI*2,tint:180+random()*120}));const item=cases[Math.floor(random()*cases.length)];nameNode.textContent=item[0];noteNode.textContent=item[1];idNode.textContent='Archive '+seed.toString(16).padStart(8,'0').toUpperCase();}
+function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.floor(innerWidth*d);canvas.height=Math.floor(innerHeight*d);ctx.setTransform(d,0,0,d,0,0);rebuild()}
+function draw(time){ctx.clearRect(0,0,innerWidth,innerHeight);const cx=innerWidth*(.35+pointer.x*.3),cy=innerHeight*(.35+pointer.y*.3);const halo=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(innerWidth,innerHeight)*.6);halo.addColorStop(0,'rgba(120,130,190,.16)');halo.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=halo;ctx.fillRect(0,0,innerWidth,innerHeight);
+for(const moon of moons){const angle=moon.phase+(paused||reduced?0:time*moon.speed),x=cx+Math.cos(angle)*moon.radius,y=cy+Math.sin(angle)*moon.radius*.42;ctx.beginPath();ctx.ellipse(cx,cy,moon.radius,moon.radius*.42,0,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.055)';ctx.lineWidth=.6;ctx.stroke();const g=ctx.createRadialGradient(x-moon.size*.3,y-moon.size*.35,0,x,y,moon.size);g.addColorStop(0,`hsla(${moon.tint},55%,94%,.95)`);g.addColorStop(1,`hsla(${moon.tint},35%,42%,.12)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,moon.size,0,Math.PI*2);ctx.fill()}requestAnimationFrame(draw)}
+function chime(){if(!audio)return;const now=audio.currentTime;[0,7,12].forEach((step,i)=>{const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=82.41*Math.pow(2,step/12);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.022,now+.04+i*.06);g.gain.exponentialRampToValueAtTime(.0001,now+1.2+i*.08);o.connect(g).connect(audio.destination);o.start(now);o.stop(now+1.4)})}
+function next(){seed=crypto.getRandomValues(new Uint32Array(1))[0]>>>0;rebuild();chime()}
+function setPaused(value){paused=value;pauseButton.setAttribute('aria-pressed',String(value));pauseButton.textContent=value?'Resume':'Pause'}
+async function toggleSound(){if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();await audio.resume();soundButton.setAttribute('aria-pressed','true');soundButton.textContent='Sound on';chime()}else{await audio.close();audio=null;soundButton.setAttribute('aria-pressed','false');soundButton.textContent='Sound off'}}
+canvas.addEventListener('pointermove',event=>{pointer.x=event.clientX/innerWidth;pointer.y=event.clientY/innerHeight},{passive:true});canvas.addEventListener('pointerdown',event=>{pointer.x=event.clientX/innerWidth;pointer.y=event.clientY/innerHeight;next()},{passive:true});
+nextButton.addEventListener('click',next);pauseButton.addEventListener('click',()=>setPaused(!paused));soundButton.addEventListener('click',toggleSound);addEventListener('keydown',event=>{if(event.target instanceof HTMLButtonElement)return;if(event.code==='Space'){event.preventDefault();next()}if(event.key.toLowerCase()==='p')setPaused(!paused);if(event.key.toLowerCase()==='s')toggleSound()});addEventListener('resize',resize,{passive:true});resize();requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
