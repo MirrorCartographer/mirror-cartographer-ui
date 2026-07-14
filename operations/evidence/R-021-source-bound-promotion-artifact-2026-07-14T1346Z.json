@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "artifact_type": "frontier_research_verification",
+  "created_at": "2026-07-14T13:46:00Z",
+  "finding": "A retained promotion assessment must bind the exact source bytes used to produce it; otherwise semantically equivalent or later-mutated JSON cannot be distinguished from the original evidentiary input.",
+  "implementation": {
+    "file": "tools/frontier-research/workflow-enumeration-promotion-cli.mjs",
+    "artifact_schema_version": 2,
+    "source_binding": {
+      "media_type": "application/json",
+      "byte_length": "exact UTF-8 byte count",
+      "sha256": "SHA-256 over exact retained input bytes"
+    },
+    "stdout_includes_source_sha256": true,
+    "no_overwrite_semantics_preserved": true
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-enumeration-promotion-cli.test.mjs",
+    "result": "4 passed, 0 failed",
+    "cases": [
+      "retained artifact binds exact input byte length and SHA-256",
+      "different source formatting produces a different digest while assessment remains equivalent",
+      "existing output cannot be overwritten",
+      "input/output path collision fails closed"
+    ],
+    "environment": "isolated local Node runtime reconstructed from committed module contents"
+  },
+  "evidence_strength": "committed_and_locally_runtime_verified",
+  "uncertainty": [
+    "No authenticated private-repository enumeration was executed.",
+    "The source digest proves byte identity, not semantic truth or credential-free provenance by itself.",
+    "The CLI is not yet wired into the Vercel retained-evidence assessor."
+  ],
+  "falsification_route": "Mutate any byte of a retained input and require a digest mismatch; then reproduce the assessment only from a source whose byte length and SHA-256 match the retained artifact."
+}
