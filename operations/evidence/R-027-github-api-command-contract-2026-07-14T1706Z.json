@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-027",
+  "owner": "frontier_research",
+  "finding": "GitHub REST requests without X-GitHub-Api-Version still default to 2022-11-28, while current examples use 2026-03-10; retained exact-commit evidence must therefore bind the explicit API version in the command rather than infer it from retrieval time.",
+  "source_status": {
+    "github_api_versions": "primary_current",
+    "github_workflow_runs_endpoint": "primary_current",
+    "github_cli_gh_api_manual": "primary_current"
+  },
+  "evidence_strength": "primary_source_plus_executable_contract",
+  "implementation": {
+    "module": "tools/frontier-research/github-api-command-contract.mjs",
+    "test": "tools/frontier-research/github-api-command-contract.test.mjs",
+    "required_command_properties": [
+      "explicit X-GitHub-Api-Version header matching the retained requested version",
+      "--paginate",
+      "--slurp",
+      "head_sha filter",
+      "per_page=100"
+    ]
+  },
+  "verification": {
+    "runtime": "Node.js local contract replay",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "cases": [
+      "valid explicit current-version command accepted",
+      "unversioned command rejected",
+      "mismatched version header rejected",
+      "incomplete pagination and exact-commit command rejected",
+      "missing retained command rejected"
+    ]
+  },
+  "uncertainty": [
+    "The contract validates retained command semantics, not the authenticity of execution or response bytes.",
+    "Supported-version lifecycle remains separately assessed by github-api-version-evidence.mjs.",
+    "Authenticated exact-commit enumeration for R-020 and R-021 remains outstanding."
+  ],
+  "falsification_route": "Supply a retained gh api command that the contract accepts but that omits or mismatches the version, pagination, exact-commit filter, or maximum page size; any such counterexample invalidates the parser and requires a minimized regression test.",
+  "deletions": []
+}
