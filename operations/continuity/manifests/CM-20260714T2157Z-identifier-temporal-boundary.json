@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "artifact_type": "temporal_provenance_boundary",
+  "created_at": "2026-07-14T21:57:00Z",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "coverage": "GitHub commit-search results accessible to this run plus immutable commit inspection",
+    "exhaustive": false
+  },
+  "memory_recovered": "The first immutable repository objects presently located for M-004, M-005, and M-006 do not assign historical meanings; they materialize unresolved-origin records. Therefore they are temporal upper bounds on repository awareness, not accepted origins.",
+  "claims": {
+    "observed": [
+      {
+        "identifier": "M-004",
+        "first_located_object": "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+        "timestamp": "2026-07-14T01:36:43Z",
+        "role": "unresolved_origin_status_record",
+        "accepted_origin": false
+      },
+      {
+        "identifier": "M-005",
+        "first_located_object": "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+        "timestamp": "2026-07-14T01:37:07Z",
+        "role": "unresolved_origin_status_record",
+        "accepted_origin": false
+      },
+      {
+        "identifier": "M-006",
+        "first_located_object": "94778c45072bad84a0c63077ac23492a1a756a8c",
+        "timestamp": "2026-07-14T01:37:20Z",
+        "role": "unresolved_origin_status_record",
+        "accepted_origin": false
+      }
+    ],
+    "inferred": [
+      "Any accepted repository origin must temporally precede its unresolved-origin status record and explicitly assign the identifier in the continuity_mining namespace.",
+      "A later reference, status record, collision rejection, or automation completion cannot establish origin by itself."
+    ],
+    "proposed": [
+      "Use these three timestamps as exclusive upper bounds during exhaustive branch and reachable-history traversal.",
+      "Reject candidates created at or after the corresponding boundary unless they cite a verifiable earlier immutable assignment."
+    ],
+    "superseded": [
+      "Treating the earliest currently searchable identifier mention as the historical origin."
+    ],
+    "unresolved": [
+      "Whether an earlier assignment exists on another accessible branch, in unreachable repository history, or in a privacy-reviewed non-repository source.",
+      "Whether the three identifiers were ever validly assigned before the unresolved records were created."
+    ]
+  },
+  "resolution_predicates": [
+    "explicit_identifier_assignment",
+    "namespace_agreement",
+    "owner_agreement",
+    "semantic_role_agreement",
+    "temporal_precedence",
+    "immutable_locator"
+  ],
+  "privacy_boundary": {
+    "included": ["repository paths", "commit identifiers", "commit timestamps", "abstract provenance classifications"],
+    "excluded": ["private chat text", "personal records", "credentials", "unreviewed File Library contents"]
+  },
+  "falsification_route": [
+    "Enumerate all accessible branches and reachable commits, limited first to objects preceding each temporal boundary.",
+    "Search decision logs, language lexicons, project documents, and privacy-reviewed chat locators for explicit identifier assignment.",
+    "Promote an identifier only when every resolution predicate is satisfied; otherwise retain unresolved or classify unlocated only after exhaustive coverage."
+  ]
+}
