@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T13:22:59Z",
+  "slice": "browser_visibility_and_boundary_timer_adapter",
+  "production_on_stage": {
+    "hour_key": 495565,
+    "repertory_index": 1,
+    "id": "archive-afterimage",
+    "title": "Archive Afterimage",
+    "continuity_channel": "shared_continuity_v1"
+  },
+  "implementation": {
+    "path": "operations/studio/repertory-browser-adapter.mjs",
+    "commit": "d5f076692946ab2cf0254790ddb942fe7e21a7c4",
+    "test_path": "operations/tests/repertory-browser-adapter.test.mjs",
+    "test_commit": "135709cc2f9ac20ff813691a777a5024c7252ee0"
+  },
+  "verified_behaviors": [
+    "visible start selects the canonical production and schedules one boundary timer",
+    "hidden documents cancel the timer",
+    "visible wake after missed boundaries resynchronizes directly without replay",
+    "reduced-motion preference reaches the transition contract",
+    "continuity updates preserve one shared state",
+    "stop removes the visibility listener and timer",
+    "media remains non-autoplaying and gesture-gated"
+  ],
+  "runtime_evidence": {
+    "runtime": "Node.js local container",
+    "command": "node --test operations/tests/repertory-browser-adapter.test.mjs",
+    "result": "pass",
+    "observed_tests": 2,
+    "observed_failures": 0,
+    "strength": "behavioral execution against a locally reconstructed dependency set plus the committed adapter contract",
+    "limitation": "The environment could not resolve github.com for an exact checkout, so the full committed four-test file and exact repository dependency blobs were not executed together. Browser, Mobile Safari, physical audio, and Vercel deployment remain unverified."
+  },
+  "constraints": {
+    "autoplay": false,
+    "payment_logic": false,
+    "private_source_material": false,
+    "mobile_lifecycle_safe": true,
+    "reversible": true
+  },
+  "rollback": {
+    "route": "Remove the single import/call site for operations/studio/repertory-browser-adapter.mjs or revert commits in reverse order.",
+    "commits_reverse_order": [
+      "135709cc2f9ac20ff813691a777a5024c7252ee0",
+      "d5f076692946ab2cf0254790ddb942fe7e21a7c4"
+    ]
+  },
+  "deployment_attempted": false,
+  "canonical_shared_state_overwritten": false
+}
