@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T07:24:00Z",
+  "slice": "CM-1023 coverage-origin promotion matrix",
+  "state": "in_progress",
+  "completed": [
+    "Bound CM-1021 origin predicates and CM-1022 coverage requirements into a monotonic joint-state transition contract.",
+    "Recorded current projections for M-004, M-005, and M-006 as partial coverage plus unresolved origin.",
+    "Prohibited absence promotion under incomplete or single-client coverage and prohibited verified promotion without all origin predicates.",
+    "Required every future status change to retain prior locators, rejection reasons, coverage limits, privacy class, and a falsification route."
+  ],
+  "evidence": [
+    "operations/continuity/records/CM-1021-identifier-origin-resolution-contract.json",
+    "operations/continuity/records/CM-1022-exhaustive-coverage-manifest-contract.json",
+    "operations/continuity/records/CM-1023-coverage-origin-promotion-matrix.json",
+    "operations/ACTIVE_QUEUE.json"
+  ],
+  "claims": {
+    "observed": "The repository had separate contracts for origin acceptance and exhaustive coverage but no explicit joint transition model.",
+    "inferred": "Independent state axes are necessary to prevent prose-driven status drift and evidence erasure.",
+    "proposed": "Use CM-1023 as the transition gate for all later M-004, M-005, and M-006 provenance updates.",
+    "superseded": "Unresolved and unlocated are not interchangeable, and negative search cannot directly promote absence.",
+    "unresolved": "Exhaustive ref and history coverage and immutable assignment origins remain unavailable."
+  },
+  "privacy_boundary": "No private source text or personal content was copied; only abstract states, repository paths, immutable identifiers, and evidence requirements were retained.",
+  "specialist_registry_change": null,
+  "safe_next_action": "Generate and retain the CM-1022 ref-and-history manifest, evaluate every candidate under CM-1021, and record each state transition through CM-1023 without overwriting prior evidence."
+}
