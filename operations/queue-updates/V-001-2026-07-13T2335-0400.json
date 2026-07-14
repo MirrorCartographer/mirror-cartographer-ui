@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T03:35:12Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic, explicit-timezone hourly repertory selector with a fail-closed 24-slot production contract and declared falsification tests.",
+  "production_currently_on_stage": {
+    "selector": "hour-23",
+    "selection_basis": "2026-07-14T03:35:12Z resolved in America/New_York",
+    "activation": "operations-only contract; not wired to public runtime",
+    "continuity_channel": "shared-runtime-state"
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Accessibility Engineer",
+    "Test Harness Engineer",
+    "Rollback Engineer"
+  ],
+  "artifacts": [
+    {
+      "path": "operations/tools/hourly-repertory-selector.mjs",
+      "commit": "c8d42086504fec97a70335afa95a6dd1fc5dafe9"
+    },
+    {
+      "path": "operations/tools/hourly-repertory-selector.test.mjs",
+      "commit": "7f63414f09cebf6e9ac5137f37da4998cc56607f"
+    },
+    {
+      "path": "operations/evidence/vercel-hourly-repertory-selector-2026-07-13T2335-0400.json",
+      "commit": "76d2acded01b875a08d0621640c2d916cf821b97"
+    }
+  ],
+  "verification": {
+    "level": "exact-commit connector fetch and structural review",
+    "runtime_executed": false,
+    "deployment_attempted": false
+  },
+  "rollback": [
+    "7f63414f09cebf6e9ac5137f37da4998cc56607f",
+    "c8d42086504fec97a70335afa95a6dd1fc5dafe9"
+  ],
+  "acceptance_remaining": [
+    "Execute the selector test suite in an authenticated checkout.",
+    "Bind the validated selector to the canonical 24-production repertory data.",
+    "Wire the selector into the public runtime only after application deployment capacity returns and existing V-001 evidence gates remain satisfied.",
+    "Complete the existing authenticated enumeration, immutable deployment identity, audio artifact, and bounded physical iPhone Safari acceptance items."
+  ],
+  "privacy_boundary": "No private source material, credentials, personal data, payment logic, or conversion logic was introduced.",
+  "next_action": "Run node --test operations/tools/hourly-repertory-selector.test.mjs in an authenticated checkout, then add or bind canonical repertory data without deploying while provider capacity remains blocked."
+}
