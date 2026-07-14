@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T06:17:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed identifier-origin resolution contract that separates immutable object verification from explicit assignment and requires namespace, owner, semantic-role, temporal-precedence, corroboration, and ambiguity-closure predicates before origin promotion.",
+  "evidence": [
+    {
+      "path": "operations/continuity/records/CM-1021-identifier-origin-resolution-contract.json",
+      "commit": "0fe5142b3f0bb63f065120d1ac2d547e247e7b1d",
+      "status": "committed"
+    }
+  ],
+  "claims": {
+    "observed": "Existing durable records distinguish repository materialization from historical origin and reject negative search as exhaustive absence evidence.",
+    "inferred": "The remaining reconciliation requires convergent predicate satisfaction, not additional unstructured search prose.",
+    "proposed": "Apply CM-1021 candidate states and predicates during exhaustive ref and history traversal.",
+    "superseded": "Single-hit, first-appearance, suffix-match, and zero-result resolution heuristics.",
+    "unresolved": "M-004, M-005, and M-006 origin events and exhaustive repository coverage remain unresolved."
+  },
+  "specialist_registry_change": null,
+  "privacy_boundary": "No private chat text, personal material, credentials, or unapproved quotations were committed.",
+  "safe_next_action": "Build and retain an exhaustive branch/ref/reachable-commit coverage manifest, then score each immutable candidate against CM-1021 without promoting unresolved identifiers when any predicate or coverage domain remains unknown."
+}
