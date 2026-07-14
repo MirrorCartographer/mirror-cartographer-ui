@@ -27,7 +27,10 @@ const base = {
   schedule,
   continuityState: { channel: 'shared-runtime-state', revision: 'r7' },
   hour: 21,
-  publicMetadata: { provenance_class: 'current_decision' },
+  publicMetadata: {
+    provenance_class: 'current_decision',
+    nested: { tags: ['public', { status: 'observed' }] },
+  },
 };
 
 const descriptor = buildStageDescriptor(base);
@@ -39,9 +42,26 @@ assert.equal(descriptor.controls.conversion_logic, false);
 assert(Object.isFrozen(descriptor));
 assert(Object.isFrozen(descriptor.production));
 assert(Object.isFrozen(descriptor.production.accessibility));
+assert(Object.isFrozen(descriptor.public_metadata.nested));
+assert(Object.isFrozen(descriptor.public_metadata.nested.tags));
+assert(Object.isFrozen(descriptor.public_metadata.nested.tags[1]));
 assert.throws(() => buildStageDescriptor({ ...base, continuityState: { channel: 'fork' } }), /must match/);
 assert.throws(() => buildStageDescriptor({ ...base, publicMetadata: { private_source: 'x' } }), /forbidden/);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { provenance: { private_sources: ['x'] } } }),
+  /public metadata\.provenance\.private_sources/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { layers: [{ checkout: '/pay' }] } }),
+  /public metadata\.layers\[0\]\.checkout/,
+);
 assert.throws(() => buildStageDescriptor({ ...base, date: new Date() }), /exactly one/);
 assert.throws(() => buildStageDescriptor({ schedule, continuityState: { channel: 'shared-runtime-state' }, publicMetadata: {} }), /exactly one/);
 
-console.log(JSON.stringify({ tests: 11, passed: 11, production: descriptor.production.title, activation: descriptor.activation }));
+console.log(JSON.stringify({
+  tests: 17,
+  passed: 17,
+  production: descriptor.production.title,
+  activation: descriptor.activation,
+  privacy_boundary: 'recursive',
+}));
