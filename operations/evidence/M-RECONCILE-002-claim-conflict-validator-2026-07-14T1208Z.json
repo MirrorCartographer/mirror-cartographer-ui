@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CM-1030",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T12:08:00Z",
+  "slice": "Fail-closed executable validator for CM-1029 claim conflict fixtures",
+  "source_status": {
+    "observed": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/continuity/fixtures/CM-1029-claim-conflict-cases.json",
+      "recent repository commits"
+    ],
+    "inferred": [
+      "The prose and fixture policy required an executable boundary before it could safely govern future provenance changes."
+    ],
+    "proposed": [
+      "Execute the committed Node test in an authenticated checkout and retain stdout, exit status, Node version, operating system, and exact commit."
+    ],
+    "superseded": [
+      "Treating CM-1029 as machine-enforced before an executable validator existed."
+    ],
+    "unresolved": [
+      "The originating immutable sources for M-004, M-005, and M-006 remain unlocated.",
+      "The new validator test has not been observed executing in this run."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "operations/continuity/validate-claim-conflict-fixture.mjs",
+      "commit": "ef383c01279e7708886dee8259d8e46f538f3186",
+      "status": "committed"
+    },
+    {
+      "path": "operations/tests/claim-conflict-fixture.test.mjs",
+      "commit": "8f0c3d5a686efe7afe7e8041f5b7fb049a21308c",
+      "status": "committed_unexecuted"
+    }
+  ],
+  "verified_contracts": [
+    "unknown evidentiary, temporal, resolution, and case states fail closed",
+    "automation completion prose remains lead-only",
+    "semantic similarity and suffix collision do not establish identity",
+    "reconstructed identifiers remain quarantined",
+    "immutable provenance agreement resolves only the named identifier",
+    "partial history cannot prove absence",
+    "M-004, M-005, and M-006 remain unresolved in the current fixture"
+  ],
+  "privacy_boundary": {
+    "included": [
+      "abstract claim metadata",
+      "repository paths",
+      "fixture and queue identifiers",
+      "commit identifiers",
+      "validation rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal data",
+      "health information",
+      "credentials",
+      "secret-bearing logs",
+      "unapproved quotations"
+    ]
+  },
+  "verification_strength": "committed_and_statically_reviewed_not_executed",
+  "falsification_route": "The slice is falsified by an adopted continuity policy with immutable provenance that permits an opposite outcome, or by a deterministic test failure against the retained fixture."
+}
