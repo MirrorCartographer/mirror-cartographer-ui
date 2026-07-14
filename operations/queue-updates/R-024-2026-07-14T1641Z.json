@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": {
+    "id": "R-024",
+    "owner": "frontier_research",
+    "priority": "highest",
+    "state": "completed_handoff_ready",
+    "objective": "Establish a fail-closed byte-to-JSON evidence ingress boundary before canonicalization and attestation.",
+    "completed_slices": [
+      "Added fatal UTF-8 decoding from retained bytes.",
+      "Rejected UTF-8 BOM serialization ambiguity.",
+      "Added pre-decode byte ceilings and string-aware structural depth ceilings.",
+      "Rejected lone Unicode surrogates in parsed values and object member names.",
+      "Bound SHA-256 to original bytes rather than a re-encoded JavaScript string.",
+      "Preserved duplicate-member rejection from the prior strict JSON parser.",
+      "Verified seven deterministic boundary cases."
+    ],
+    "acceptance_remaining": [
+      "Differential-test malformed UTF-8 and Unicode edge cases against independent validators.",
+      "Add a standards-derived conformance corpus, including Web Platform Test and Unicode vectors.",
+      "Compose the ingress result with RFC 8785 canonicalization and a typed evidence envelope.",
+      "Establish repository-wide policy for maximum evidence byte length and nesting depth."
+    ],
+    "safe_next_action": "Build a differential conformance corpus for malformed UTF-8, Unicode scalar validity, duplicate names, and nesting limits; then connect accepted parsed values to RFC 8785 canonicalization while retaining both raw-byte and semantic digests."
+  },
+  "evidence": "operations/evidence/R-024-byte-safe-json-ingress-2026-07-14T1641Z.json",
+  "changes_to_canonical_queue": "none_additive_only",
+  "registry_change": "none_no_durable_capability_gap_demonstrated",
+  "rollback": "Remove only the R-024 implementation, test, evidence, and queue-update paths; no canonical state or prior artifact was modified."
+}
