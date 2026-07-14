@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T19:40:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed authentication and rate-limit readiness contract that prevents authorization failures, missing Actions read permission, repository identity mismatch, insufficient traversal capacity, or retained secret material from being normalized into empty or exhaustive workflow-run evidence.",
+  "artifact": "operations/frontier/github-actions-auth-readiness-contract.json",
+  "commit": "9c23c5eae9d317260074cbf9c5fa79963b8a4da4",
+  "acceptance_remaining": [
+    "Implement the preflight in the authenticated retained-evidence CLI.",
+    "Execute the preflight and both exhaustive clients for the same exact commit.",
+    "Retain sanitized preflight metadata, raw enumerations in approved restricted storage, and the reconciliation bundle.",
+    "Do not promote zero results or completeness when ready is not true."
+  ],
+  "safe_next_action": "Implement github-actions-auth-readiness-v1 ahead of both exhaustive clients, run permission-negative and rate-limit-negative fixtures, then execute one authenticated exact-commit evidence capture without retaining credential material."
+}
