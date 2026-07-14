@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T09:47:00Z",
+  "slice": "Deterministic public stage envelope with previous/current/next productions and preserved continuity state.",
+  "production_on_stage": {
+    "resolved_hour": 5,
+    "id": "first-light-proof",
+    "title": "First Light Proof",
+    "time_zone": "America/New_York"
+  },
+  "implementation": {
+    "module": "operations/tools/hourly-stage-envelope.mjs",
+    "module_commit": "f347a0652f454a217d53329ebe850bf8aafaec08",
+    "test": "operations/tests/hourly-stage-envelope.test.mjs",
+    "test_commit": "a104998327beca09a82a51739f658983d5e08e5d",
+    "contracts": [
+      "The current production is selected deterministically from an explicit instant and IANA time zone.",
+      "Previous and next productions wrap across midnight without changing the continuity channel.",
+      "The repeated daylight-saving hour maps to one production while retaining distinct source instants.",
+      "The repertory input is not mutated.",
+      "The returned stage envelope is frozen and contains no private source material, autoplay, payment, or deployment behavior."
+    ]
+  },
+  "provenance": {
+    "observed": [
+      "The repertory already defines 24 hourly productions and one continuity channel.",
+      "The selector already resolves a production from an instant and time zone.",
+      "The public screening grammar names neighboring-hour context as part of Repertory Cinema."
+    ],
+    "inferred": [
+      "A stage-facing envelope should expose neighboring productions without introducing random state or duplicating the selector.",
+      "Daylight-saving repetition must preserve one production identity while retaining the exact instant for auditability."
+    ],
+    "experiment": [
+      "Resolve First Light Proof at 2026-07-14T09:47:09Z, midnight wraparound, and both occurrences of the 2026 New York fall-back hour."
+    ],
+    "current_decision": "Use a pure, frozen previous/current/next envelope as the reversible boundary between the hourly selector and future public rendering."
+  },
+  "verification": {
+    "source_inspection": "complete",
+    "test_execution": "unobserved",
+    "deployment": "not_claimed",
+    "commit_status": {
+      "context": "Vercel",
+      "state": "failure",
+      "reason": "provider build-rate-limit upgrade target"
+    },
+    "evidence_strength": "implementation_committed_runtime_unresolved",
+    "fail_closed": true
+  },
+  "privacy_boundary": "Public production metadata and abstract provenance only; no private source text, health material, credentials, payment, or conversion logic.",
+  "rollback": [
+    "Revert a104998327beca09a82a51739f658983d5e08e5d",
+    "Revert f347a0652f454a217d53329ebe850bf8aafaec08"
+  ]
+}
