@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-14T16:57:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "state": "in_progress",
+  "completed_slice": "Recovered the public pointer companion as one continuous interaction system whose presentation evolved from an abstract comet-face to a cat head, preserving immutable lineage, accessibility behavior, and unresolved author-intent boundaries.",
+  "artifact": {
+    "record_id": "CM-1026",
+    "path": "operations/continuity/records/CM-1026.json",
+    "commit_sha": "ec2c8f9f376ffe9b985a389817f50a3fababa9af"
+  },
+  "source_commits": [
+    "b413f31ead27bb65ac30b853cd66ecd163cf6ca3",
+    "fb9a31e2ce4a240f7e4e9a673122c5fe2e999d64"
+  ],
+  "claim_state": {
+    "observed": "The later commit directly changes the companion silhouette to a cat head while retaining the existing comet-prefixed interaction and accessibility system.",
+    "inferred": "This is a presentation-state evolution inside one persistent interaction grammar, not a second unrelated feature.",
+    "proposed": "Track both states on one continuity entity and treat the cat-head state as current unless superseded by later immutable evidence.",
+    "superseded": "The earlier abstract round comet-face silhouette.",
+    "unresolved": "The originating human decision source and whether the retained comet namespace is semantically intentional."
+  },
+  "acceptance_remaining_unchanged": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "privacy_boundary": "Repository-public design lineage only; no private conversation, personal identity mapping, credentials, or unreviewed file-library content included.",
+  "specialist_registry_change": null,
+  "safe_next_action": "Continue bounded exhaustive enumeration of continuity-owned queue and decision artifacts, prioritizing immutable originating sources for M-004, M-005, and M-006; retain unresolved status until namespace, owner, semantic role, temporal precedence, and locator agreement converge.",
+  "reversibility": "Additive queue-update record only; canonical queue remains unchanged."
+}
