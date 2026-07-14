@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T16:19:23Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and verified a deterministic repertory controller that selects one hourly production, projects accessibility and non-autoplay policy, preserves one continuity identity, delegates through a single reversible stage adapter, and issues the existing fail-closed stage receipt.",
+  "evidence": "operations/evidence/V-001-repertory-controller-2026-07-14T1619Z.json",
+  "constraints_preserved": [
+    "No Vercel deployment attempted while provider capacity remains blocked.",
+    "No payments or conversion logic added.",
+    "No private source material embedded.",
+    "No canonical shared state file overwritten.",
+    "No GitHub file or history deleted."
+  ],
+  "acceptance_remaining": [
+    "Integrate the controller with the public browser stage adapter and the durable public repertory catalog.",
+    "Verify focus preservation and reduced-motion behavior in a real browser.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after provider capacity returns.",
+    "Bind an exact application commit to an immutable successful deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Add a privacy-safe public repertory catalog with provenance classes and connect the controller to a reversible DOM stage adapter under browser tests; do not deploy until Vercel capacity and immutable identity verification are available."
+}
