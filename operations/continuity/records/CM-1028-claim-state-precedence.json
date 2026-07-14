@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1028",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Claim-state precedence for continuity reconciliation",
+  "created_at": "2026-07-14T10:53:00Z",
+  "status": "proposed_operating_rule",
+  "memory_recovered": {
+    "statement": "Continuity claims must be classified by both evidentiary state and temporal status. A later interpretation does not erase an earlier observation; it supersedes only the operational decision derived from that observation. Unresolved provenance cannot be promoted by repetition, semantic resemblance, or automation completion prose.",
+    "durable_rule": [
+      "observed is reserved for directly inspectable source objects or runtime evidence",
+      "inferred is derived from observed evidence and must retain its reasoning and falsification route",
+      "proposed is an unadopted candidate rule, design, or interpretation",
+      "superseded marks a formerly operative claim or decision replaced by a later evidenced decision without deleting the historical claim",
+      "unresolved marks claims whose identity, provenance, or contradiction cannot yet be settled",
+      "when two claims conflict, directly observed immutable evidence outranks inference; adopted later decisions may supersede earlier decisions but cannot rewrite earlier observations",
+      "automation completion prose is lead-only unless bound to immutable repository or runtime evidence"
+    ]
+  },
+  "precedence": {
+    "evidentiary_axis": ["observed", "inferred", "proposed"],
+    "temporal_axis": ["current", "superseded"],
+    "resolution_axis": ["resolved", "unresolved"],
+    "conflict_rule": "Do not collapse these axes into one score. Preserve all three independently and retain every immutable source locator."
+  },
+  "application_to_M_RECONCILE_002": {
+    "M-004": "unresolved",
+    "M-005": "unresolved",
+    "M-006": "unresolved",
+    "reason": "No immutable originating source or exhaustive-history conclusion has yet been recorded for these identifiers.",
+    "prohibited_promotion_routes": [
+      "suffix collision",
+      "semantic similarity alone",
+      "repeated automation prose",
+      "newly reconstructed artifact using the historical identifier"
+    ]
+  },
+  "sources": [
+    {
+      "path": "operations/CURRENT_STATE.json",
+      "source_status": "observed",
+      "relevance": "Establishes fail-closed operating constraints and prohibits unsupported claims."
+    },
+    {
+      "path": "operations/ACTIVE_QUEUE.json",
+      "source_status": "observed",
+      "relevance": "Defines M-RECONCILE-002, prior completed slices, and unresolved acceptance criteria."
+    },
+    {
+      "path": "operations/SPECIALIST_REGISTRY.json",
+      "source_status": "observed",
+      "relevance": "Confirms no registry change is justified without a durable evidenced capability gap."
+    },
+    {
+      "commit": "a535659faa906087b130883b5b32fe3833bf6ab5",
+      "source_status": "observed",
+      "relevance": "Introduced the five-predicate historical identifier resolution gate."
+    },
+    {
+      "commit": "688402ab9d7b933aaa45a57089c0810e908b542c",
+      "source_status": "observed",
+      "relevance": "Recorded the conjunctive resolution rule."
+    },
+    {
+      "commit": "2c522427fa543bc6484332d365b43a36ab7bc41c",
+      "source_status": "observed",
+      "relevance": "Reserved unresolved historical identifiers against accidental reuse."
+    }
+  ],
+  "privacy_boundary": {
+    "included": ["repository paths", "commit identifiers", "abstract claim-state rules", "queue identifiers"],
+    "excluded": ["private chat text", "personal data", "health information", "credentials", "secret-bearing logs", "unapproved quotations"]
+  },
+  "falsification_route": "Produce an immutable originating source for M-004, M-005, or M-006, or an exhaustive repository-history traversal proving one is unlocated; then update only that identifier's resolution state while retaining this historical record."
+}
