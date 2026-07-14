@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T13:30:17Z",
+  "production_on_stage": {
+    "hour_key": 495565,
+    "repertory_index": 1,
+    "id": "archive-afterimage",
+    "title": "Archive Afterimage",
+    "continuity_channel": "shared_continuity_v1"
+  },
+  "verification": {
+    "command": "node --test operations/tests/repertory-browser-adapter.test.mjs",
+    "node_version": "v22.16.0",
+    "result": "pass",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "duration_ms": 100.906842,
+    "asserted_behaviors": [
+      "deterministic canonical-hour selection and one boundary timer",
+      "hidden-document timer suspension and current-hour resynchronization without replay",
+      "reduced-motion instant transition and reversible stop cleanup",
+      "single shared continuity preservation across production updates",
+      "non-autoplaying media and user-gesture audio requirement"
+    ]
+  },
+  "source_binding": {
+    "method": "GitHub connector fetch_file blobs reconstructed in an isolated runtime because direct network checkout was unavailable",
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "blob_shas": {
+      "operations/studio/hourly-repertory.mjs": "5f366c871663c658f7b6c8d712b34faa236ad48d",
+      "operations/studio/repertory-runtime-adapter.mjs": "c57cfed2c287b118298065f937231e40f825984b",
+      "operations/studio/repertory-transition-contract.mjs": "599d91a89ce322c156a0d86ca2559430788d7dfe",
+      "operations/studio/repertory-transition-controller.mjs": "40c88dd75c1e1ba12e38280fa6dba07ddfa42f29",
+      "operations/studio/repertory-browser-adapter.mjs": "source introduced by commit d5f076692946ab2cf0254790ddb942fe7e21a7c4",
+      "operations/tests/repertory-browser-adapter.test.mjs": "0da5d76ba7e8487e3cac9e6368bb77d72fe1e718"
+    },
+    "evidence_strength": "connector-blob-bound isolated Node execution",
+    "not_claimed": [
+      "authenticated exact-commit checkout execution",
+      "real browser or Mobile Safari execution",
+      "Vercel deployment verification",
+      "physical audio audibility"
+    ]
+  },
+  "constraints_preserved": {
+    "application_files_changed": false,
+    "deployment_attempted": false,
+    "payment_logic_added": false,
+    "private_source_material_exposed": false,
+    "github_history_deleted": false
+  },
+  "rollback": {
+    "reversible": true,
+    "route": "revert this evidence commit only; runtime implementation remains unchanged"
+  }
+}
