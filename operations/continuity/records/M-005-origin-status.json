@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "reported_identifier": "M-005",
+  "claim_status": "unresolved",
+  "source_status": "unlocated",
+  "candidate_sources": [],
+  "resolution_rule": "resolved requires at least one immutable candidate with explicit_identifier_assignment=true, namespace_agreement=true, owner_agreement=true, semantic_role_agreement=true, temporal_precedence=true, and disposition=accepted_origin",
+  "falsification_route": [
+    "Enumerate every accessible repository branch and reachable commit, then locate an immutable object that explicitly assigns M-005 before any later reference.",
+    "Inspect originating decision logs, language lexicons, project documents, and privacy-reviewed chat-history locators for an explicit M-005 assignment.",
+    "Reject suffix-only, semantic-similarity, automation-prose, and File Library namespace-collision candidates.",
+    "Change claim_status to resolved only after one candidate satisfies every accepted-origin predicate and no second accepted origin creates ambiguity."
+  ],
+  "privacy_class": "public_repository_metadata"
+}
