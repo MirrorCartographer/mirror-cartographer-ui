@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T04:49:20Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound the deterministic hourly repertory to a public-safe stage manifest that preserves one continuity channel and explicit provenance while failing closed on private, conversion, provenance, or continuity violations.",
+  "files": [
+    "operations/tools/hourly-stage-manifest.mjs",
+    "operations/tests/hourly-stage-manifest.test.mjs",
+    "operations/evidence/V-001-hourly-stage-manifest-2026-07-14T0049-0400.json"
+  ],
+  "commits": [
+    "f68d358856a735e4ec12e200658f8564c11c4c54",
+    "776e8b609751c4d4608b3a126151000f54037ed8",
+    "834393be2357642ecf3a3e58bafc03015ed765d6"
+  ],
+  "verification": "Four deterministic Node tests passed locally against the fetched selector and committed slice contents.",
+  "acceptance_remaining": [
+    "integrate the manifest behind a reversible application runtime boundary",
+    "execute authenticated exact-commit workflow enumeration and retain reconciled evidence",
+    "observe an operations-only Vercel skip after provider capacity returns",
+    "bind a tested application commit to an immutable successful Vercel deployment",
+    "perform bounded physical iPhone Safari audibility verification"
+  ],
+  "safe_next_action": "Add an application-side adapter that consumes only the public-safe manifest, guarded by a reversible feature boundary; do not request deployment while provider capacity remains blocked."
+}
