@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_finding",
+  "queue_item": "R-021",
+  "captured_at": "2026-07-14T10:58:00Z",
+  "finding": "Exclusive creation at the final filename does not by itself bind retained evidence to the declared evidence root. A symlinked output parent can redirect a new manifest to a canonical directory outside that root.",
+  "source_status": {
+    "primary": [
+      "Node.js v26.5.0 fsPromises.realpath documentation",
+      "Node.js v26.5.0 path.relative documentation"
+    ],
+    "repository": [
+      "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+      "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+      "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs"
+    ]
+  },
+  "implementation": {
+    "boundary": "Resolve the declared evidence root and the output parent to canonical paths before reading or promoting evidence. Accept only the root itself or a canonical descendant.",
+    "fail_closed_reasons": [
+      "output_boundary_resolution_failed",
+      "output_parent_outside_evidence_root"
+    ],
+    "commits": [
+      "be5eb994bfe9ae5427050b88c72591195ae6959f",
+      "1af75fdf910740849f067a16953a8be4f00f24a8"
+    ]
+  },
+  "evidence_strength": "committed_unexecuted",
+  "uncertainty": [
+    "The connector could not execute the Node test suite in this run.",
+    "Directory symlink and junction behavior remains to be observed on Linux, macOS, Windows, and CI runners.",
+    "Canonical-parent validation narrows but does not eliminate all filesystem race conditions between validation and creation."
+  ],
+  "falsification_route": {
+    "command": "node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "failure_conditions": [
+      "The symlinked-parent fixture writes operations/evidence outside the declared root.",
+      "A valid in-root output is rejected.",
+      "Existing symbolic-link, hard-link, self-overwrite, or bound-snapshot tests regress."
+    ],
+    "retain": [
+      "exact commit SHA",
+      "Node version",
+      "operating system",
+      "filesystem type",
+      "stdout",
+      "exit status"
+    ]
+  },
+  "claim_boundary": {
+    "runtime_test_passed": false,
+    "authenticated_enumeration_completed": false,
+    "deployment_verified": false
+  }
+}
