@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-ci-gate-2026-07-14T0838Z",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T08:38:00Z",
+  "slice": "repository_enforced_repertory_test_gate",
+  "commit": "47ed93554b419219f217a57ef4f52f2c3f1843b0",
+  "workflow_path": ".github/workflows/operations-repertory-tests.yml",
+  "observed": [
+    "A least-privilege GitHub Actions workflow was committed to run the deterministic hourly repertory test file on relevant operations changes and manual dispatch.",
+    "The workflow checks out the exact commit, disables persisted checkout credentials, pins Node.js 22, uses a five-minute timeout, and runs the single committed Node test file.",
+    "The connector's pull-request workflow-run lookup returned no workflow runs for the commit.",
+    "The commit combined status contained a Vercel failure whose target indicated the provider build-rate limit."
+  ],
+  "not_observed": [
+    "No successful GitHub Actions execution was observed.",
+    "No application deployment was created or verified.",
+    "No browser, Mobile Safari, audio-routing, or physical-device result was observed."
+  ],
+  "classification": {
+    "workflow_definition": "implemented_unexecuted",
+    "test_result": "unresolved",
+    "vercel_delivery": "blocked_provider_rate_limit",
+    "production_acceptance": "fail_closed"
+  },
+  "privacy": {
+    "classification": "public_repository_operational_metadata",
+    "credentials_retained": false,
+    "private_source_material_retained": false
+  },
+  "rollback": {
+    "method": "revert_commit",
+    "commit": "47ed93554b419219f217a57ef4f52f2c3f1843b0"
+  },
+  "next_action": "Observe or manually dispatch the committed workflow through an authenticated GitHub Actions client, retain the exact run and job result, and inspect why the operations-only workflow commit still received a Vercel build-rate-limit status before attempting another deployment-related change."
+}
