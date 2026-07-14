@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-14T15:07:20Z",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Established a cross-library source-admissibility rule: token matches are collision or lead evidence until explicit continuity-namespace assignment, immutable location, owner, semantic role, and temporal precedence are verified.",
+  "evidence": [
+    {
+      "path": "operations/evidence/M-RECONCILE-002-cross-library-source-admissibility-2026-07-14T1507Z.json",
+      "commit": "5648bcf21cf86d52e6aeaf53a2165273d4809d26"
+    }
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate an originating decision log, language lexicon, project document, or privacy-reviewed chat source that explicitly assigned those identifiers."
+  ],
+  "safe_next_action": "Search for assignment-language variants and continuity namespace declarations across authenticated exhaustive repository history and privacy-reviewed project sources; treat every token-only match as lead_only until the origin requirements pass.",
+  "canonical_files_overwritten": false,
+  "specialist_registry_change": null,
+  "deletions": []
+}
