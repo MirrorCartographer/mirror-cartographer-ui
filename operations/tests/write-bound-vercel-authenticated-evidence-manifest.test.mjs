@@ -1,0 +1,61 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { writeBoundAuthenticatedEvidenceManifest } from '../tools/write-bound-vercel-authenticated-evidence-manifest.mjs';
+
+test('final manifest is derived from promoted bytes when the original path changes after promotion', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bound-manifest-race-test-'));
+  const inputPath = join(root, 'input.json');
+  const outputPath = join(root, 'manifest.json');
+  const promoted = {
+    repository: 'MirrorCartographer/mirror-cartographer-ui',
+    commit_sha: 'a'.repeat(40),
+    nested: { state: 'promoted' }
+  };
+  const mutated = {
+    repository: 'MirrorCartographer/mirror-cartographer-ui',
+    commit_sha: 'b'.repeat(40),
+    nested: { state: 'mutated-after-promotion' }
+  };
+  await writeFile(inputPath, `${JSON.stringify(promoted, null, 2)}\n`);
+
+  const result = await writeBoundAuthenticatedEvidenceManifest({
+    input_path: inputPath,
+    output_path: outputPath,
+    evidence_root: root,
+    dependencies: {
+      validate_promotion: async input => {
+        assert.deepEqual(input, promoted);
+        await writeFile(inputPath, `${JSON.stringify(mutated, null, 2)}\n`);
+        return { verified: true, reason: 'synthetic_promotion_verified' };
+      },
+      write_manifest: async ({ input_path, output_path }) => {
+        const observed = JSON.parse(await readFile(input_path, 'utf8'));
+        await writeFile(output_path, `${JSON.stringify({ observed }, null, 2)}\n`, { flag: 'wx' });
+        return { verified: true, reason: 'synthetic_manifest_written' };
+      }
+    }
+  });
+
+  const sourceAfterPromotion = JSON.parse(await readFile(inputPath, 'utf8'));
+  const retainedManifest = JSON.parse(await readFile(outputPath, 'utf8'));
+
+  assert.equal(result.verified, true);
+  assert.equal(result.reason, 'promoted_authenticated_evidence_manifest_written');
+  assert.deepEqual(sourceAfterPromotion, mutated);
+  assert.deepEqual(retainedManifest.observed, promoted);
+  assert.match(result.bound_input_snapshot.sha256, /^[0-9a-f]{64}$/);
+});
+
+test('production dependencies remain optional and invalid paths still fail closed', async () => {
+  const result = await writeBoundAuthenticatedEvidenceManifest({
+    input_path: '',
+    output_path: ''
+  });
+  assert.deepEqual(result, {
+    verified: false,
+    reason: 'input_and_output_paths_required'
+  });
+});
