@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260714T2223Z-negative-evidence-coverage-rule",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T22:23:18Z",
+  "memory": {
+    "title": "Negative search evidence is coverage-scoped, not repository-global",
+    "durable_rule": "A zero-result code, branch, file-library, chat-history, or commit search may disqualify candidates inside the explicitly observed search scope, but it cannot classify M-004, M-005, or M-006 as unlocated repository-wide until branch inventory, reachable history, query semantics, pagination, indexing status, and privacy-eligible source classes are independently bounded.",
+    "operational_consequence": "Preserve unresolved status when any coverage dimension is unknown. Record the exact search surface, query, result count, pagination state, ref set, index status, and source class before using negative evidence.",
+    "promotion_rule": "The terminal claim unlocated_after_exhaustive_coverage requires affirmative evidence for every required coverage dimension; absence of evidence is not evidence of exhaustive absence."
+  },
+  "claims": [
+    {
+      "claim": "The canonical queue explicitly requires exhaustive branch inventory or equivalent history traversal before M-004, M-005, or M-006 can be classified as unlocated.",
+      "status": "observed",
+      "source": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002.acceptance_remaining"
+    },
+    {
+      "claim": "The repository default branch is main and the connected principal has administrative repository access.",
+      "status": "observed",
+      "source": "GitHub repository metadata retrieved 2026-07-14T22:23Z"
+    },
+    {
+      "claim": "A connector branch search with an empty query returned zero results, while repository metadata still identified main as the default branch.",
+      "status": "observed",
+      "source": "GitHub search_branches and get_repo calls retrieved 2026-07-14T22:23Z"
+    },
+    {
+      "claim": "Therefore a zero-result connector search can reflect search-interface semantics or indexing limits rather than true repository absence.",
+      "status": "inferred",
+      "evidence_strength": "strong",
+      "falsification_route": "Demonstrate documented complete branch enumeration from the same connector call, including main, with pagination and coverage guarantees."
+    },
+    {
+      "claim": "M-004, M-005, and M-006 remain unresolved reported identifiers.",
+      "status": "current_decision",
+      "supersedes": "Any prose implying they are verified artifacts or conclusively absent."
+    },
+    {
+      "claim": "Future exhaustive traversal may locate immutable assignments or justify unlocated_after_exhaustive_coverage.",
+      "status": "unresolved"
+    }
+  ],
+  "coverage_schema": {
+    "required_dimensions": [
+      "repository_identity",
+      "ref_inventory",
+      "reachable_commit_history",
+      "path_and_content_query_semantics",
+      "pagination_completion",
+      "indexing_status",
+      "time_boundary",
+      "source_class",
+      "privacy_eligibility"
+    ],
+    "allowed_negative_classifications": [
+      "not_observed_in_bounded_scope",
+      "candidate_rejected_in_bounded_scope",
+      "unlocated_after_exhaustive_coverage"
+    ],
+    "default_when_incomplete": "unresolved"
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "A search returned zero results while a known default branch exists.",
+    "resolution": "The search result is evidence about that invocation, not a complete branch inventory. Repository metadata and search output describe different coverage surfaces and must not be conflated."
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "canonical queue requirements",
+      "abstract search-coverage rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed file-library contents"
+    ]
+  },
+  "specialist_registry_change": "none",
+  "history_deleted": false,
+  "canonical_queue_overwritten": false
+}
