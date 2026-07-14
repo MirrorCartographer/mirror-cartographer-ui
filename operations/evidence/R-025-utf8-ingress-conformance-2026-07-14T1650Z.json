@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "record_id": "R-025-utf8-ingress-conformance-2026-07-14T1650Z",
+  "team": "frontier_research",
+  "created_at": "2026-07-14T16:50:00Z",
+  "queue_context": ["R-020", "R-021"],
+  "finding": "The byte-safe JSON evidence ingress agrees with Node's independent node:buffer isUtf8 validator across RFC 3629 boundary classes while preserving distinct fail-closed error classes for BOM, lone JSON surrogate escapes, duplicate members, and resource ceilings.",
+  "source_status": {
+    "rfc_3629": "primary_normative",
+    "node_buffer_isUtf8": "primary_implementation_documentation_and_runtime",
+    "existing_ingress_module": "repository_implementation"
+  },
+  "evidence_strength": "deterministic_local_differential_test",
+  "verification": {
+    "command": "node --test strict-json-evidence-conformance.test.mjs",
+    "working_directory": "tools/frontier-research",
+    "result": {
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "covered_utf8_classes": [
+      "ASCII",
+      "minimum valid 2-byte sequence",
+      "minimum valid 3-byte sequence",
+      "valid BMP boundaries surrounding surrogate range",
+      "minimum valid 4-byte sequence",
+      "U+10FFFF",
+      "unexpected continuation byte",
+      "truncated multibyte sequences",
+      "2-byte and 3-byte overlong encodings",
+      "UTF-8 encoded surrogate code point",
+      "code point above U+10FFFF",
+      "obsolete 5-byte lead"
+    ],
+    "covered_post_decode_classes": [
+      "UTF-8 BOM",
+      "leading lone surrogate escape",
+      "trailing lone surrogate escape",
+      "escaped-equivalent duplicate member",
+      "byte ceiling",
+      "nesting ceiling"
+    ]
+  },
+  "uncertainty": [
+    "The corpus is representative rather than exhaustive over all malformed byte strings.",
+    "node:buffer isUtf8 and TextDecoder may share lower-level implementation components in some Node builds, so agreement is not proof of algorithmic independence.",
+    "No browser, ICU, Rust, Python, or dedicated Unicode conformance validator was executed in this slice.",
+    "Authenticated exact-commit workflow enumeration for R-020 and R-021 remains unexecuted."
+  ],
+  "falsification_route": [
+    "Run the same vectors against at least two validators from independent runtimes or libraries.",
+    "Import an official Unicode malformed-sequence corpus and require identical validity classification.",
+    "Add mutation generation around every UTF-8 boundary and minimize any disagreement.",
+    "Retain runtime version and implementation identity with each differential result."
+  ],
+  "privacy": "No private user content, credentials, or deployment secrets are included."
+}
