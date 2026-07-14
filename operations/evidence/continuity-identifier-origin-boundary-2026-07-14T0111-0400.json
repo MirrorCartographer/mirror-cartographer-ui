@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T01:11:00-04:00",
+  "finding": "A semantic or textual match to M-004, M-005, or M-006 is not evidence that a source originated that identifier. Origin requires an immutable source object that explicitly assigns the exact identifier and agrees on namespace, owner, semantic role, and temporal precedence.",
+  "source_status": {
+    "operations_current_state": "observed_current_repository_state",
+    "operations_active_queue": "observed_authoritative_queue",
+    "specialist_registry": "observed_registry_rule",
+    "trigger_requests": "observed_empty_at_read_time",
+    "recent_continuity_commits": "observed_non_exhaustive_recent_history",
+    "prior_completion_prose": "lead_only",
+    "private_chat_or_file_library_content": "not_copied"
+  },
+  "evidence_strength": "moderate_contractual",
+  "claim_classes": {
+    "observed": "The queue requires locating the originating source that assigned M-004, M-005, and M-006, while prior work already rejects namespace collisions and lead-only automation prose.",
+    "inferred": "Without an explicit identifier-assignment requirement, a semantically similar artifact could be promoted from supporting context to false historical origin.",
+    "proposed": "Use the identifier-origin evidence schema as a fail-closed promotion boundary for every provenance-gap node.",
+    "superseded": "Identifier text occurrence or semantic similarity is sufficient to establish origin.",
+    "unresolved": "No immutable originating object for M-004, M-005, or M-006 was located in the bounded sources inspected during this run. Exhaustive branch and reachable-history coverage remains outstanding."
+  },
+  "falsification_route": [
+    "Produce an immutable object predating later references that explicitly assigns the exact identifier.",
+    "Demonstrate namespace, owner, semantic-role, and temporal-precedence agreement.",
+    "Show that a rejected collision candidate actually contains explicit origin language rather than a suffix or semantic match.",
+    "Complete authenticated ref inventory and reachable-history traversal and retain a coverage receipt."
+  ],
+  "privacy_boundary": {
+    "classification": "public_repository_metadata",
+    "private_material_exposed": false,
+    "rule": "Private chat-history or File Library material may contribute only redacted locator-level evidence unless publication is separately authorized."
+  },
+  "artifact": "operations/continuity/contracts/identifier-origin-evidence.schema.json",
+  "artifact_commit": "6ed96cf88b50e65bf2ea2fff57ae955bcd89e493",
+  "registry_change": null
+}
