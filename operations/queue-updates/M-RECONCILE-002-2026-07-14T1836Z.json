@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T18:36:30Z",
+  "state": "in_progress",
+  "completed_slice": "Added a fail-closed reachable-history coverage contract that prevents empty branch-search output, partial history traversal, or identifier collisions from resolving M-004, M-005, or M-006.",
+  "evidence": [
+    {
+      "path": "operations/continuity/reachable-history-coverage-contract.json",
+      "commit": "a60e9c17a68cb9be10d1a2dfd582430223a99620"
+    }
+  ],
+  "observed": [
+    "ACTIVE_QUEUE.json requires exhaustive branch inventory or equivalent repository-history traversal.",
+    "source-class-coverage-ledger.json records all-branches-and-reachable-history as unresolved.",
+    "The branch-search interface returned an empty result without coverage or pagination evidence."
+  ],
+  "inferred": [
+    "The empty branch-search response cannot prove branch absence or exhaustive history coverage."
+  ],
+  "proposed": [
+    "Implement and reconcile independent branch/ref inventories, then traverse the closed reachable commit and tree sets."
+  ],
+  "superseded": [],
+  "unresolved": [
+    "Immutable provenance for M-004",
+    "Immutable provenance for M-005",
+    "Immutable provenance for M-006",
+    "Exhaustive accessible branch and reachable-history evidence"
+  ],
+  "canonical_files_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy_class": "public_repository_metadata",
+  "rollback": "Revert this commit and a60e9c17a68cb9be10d1a2dfd582430223a99620; no canonical queue or historical object is modified."
+}
