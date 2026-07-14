@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T20:41:42Z",
+  "state": "in_progress",
+  "completed_slice": "Added a machine-readable continuity claim-transition schema that preserves immutable claim nodes, separates epistemic class from lifecycle transition, requires source locators for observed claims, restricts supersession and resolution authority, and keeps M-004, M-005, and M-006 unresolved without immutable source agreement.",
+  "artifact": {
+    "path": "operations/continuity/schemas/claim-transition.schema.json",
+    "commit_sha": "f5cf68a47ca0297aee5ae0cc1ea36859fa8b5c99",
+    "verification": "fetched_from_default_branch_after_commit"
+  },
+  "claims": {
+    "observed": [
+      "The canonical queue continues to own M-RECONCILE-002 to continuity_mining at highest priority.",
+      "The canonical acceptance criteria still require immutable provenance for M-004, M-005, and M-006 or an exhaustive-coverage unlocated classification.",
+      "CM-1024 preserves repository queue events by immutable commit identity and keeps the three identifiers unresolved."
+    ],
+    "inferred": [
+      "A graph representation without structural validation can accidentally convert bounded prose into broader provenance claims."
+    ],
+    "proposed": [
+      "Implement a graph validator that enforces unique identifiers, referential integrity, acyclicity, no self-transitions, source-to-transition authority, and non-expanding scope."
+    ],
+    "superseded": [
+      "The assumption that one mutable claim status can safely encode both evidence class and later lifecycle change."
+    ],
+    "unresolved": [
+      "Immutable originating objects for M-004, M-005, and M-006.",
+      "Exhaustive all-branch and reachable-history coverage.",
+      "Cross-record validation of all retained continuity claim and transition artifacts."
+    ]
+  },
+  "privacy_boundary": {
+    "included": ["repository governance metadata", "abstract provenance semantics", "immutable repository locators"],
+    "excluded": ["private chat text", "personal records", "credentials", "secret-bearing logs", "unreviewed file-library content"]
+  },
+  "canonical_queue_update": "not_overwritten; additive projection retained for later reconciliation",
+  "specialist_registry_change": "none",
+  "next_action": "Add and test a validator for the schema, then apply it to retained M-RECONCILE-002 records before any provenance claim is promoted."
+}
