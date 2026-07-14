@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/identifier-origin-evidence.schema.json",
+  "title": "Continuity Identifier Origin Evidence",
+  "description": "Fail-closed evidence contract for resolving a reported continuity artifact identifier to an immutable source object. Semantic similarity, suffix collision, automation prose, or reconstructed history cannot establish identifier origin.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reported_identifier",
+    "claim_status",
+    "source_status",
+    "candidate_sources",
+    "resolution_rule",
+    "falsification_route",
+    "privacy_class"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "reported_identifier": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9-]*-[0-9]{3,}$"
+    },
+    "claim_status": {
+      "enum": ["observed", "inferred", "proposed", "superseded", "unresolved", "resolved"]
+    },
+    "source_status": {
+      "enum": ["immutable_verified", "mutable_lead", "lead_only", "collision_rejected", "unlocated"]
+    },
+    "candidate_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "locator",
+          "source_class",
+          "immutable",
+          "explicit_identifier_assignment",
+          "namespace_agreement",
+          "owner_agreement",
+          "semantic_role_agreement",
+          "temporal_precedence",
+          "disposition"
+        ],
+        "properties": {
+          "locator": { "type": "string", "minLength": 1 },
+          "source_class": {
+            "enum": ["git_object", "decision_log", "language_lexicon", "project_document", "chat_history", "automation_output", "file_library", "other"]
+          },
+          "immutable": { "type": "boolean" },
+          "explicit_identifier_assignment": { "type": "boolean" },
+          "namespace_agreement": { "type": "boolean" },
+          "owner_agreement": { "type": "boolean" },
+          "semantic_role_agreement": { "type": "boolean" },
+          "temporal_precedence": { "type": "boolean" },
+          "disposition": {
+            "enum": ["accepted_origin", "supporting_context_only", "lead_only", "rejected_collision", "rejected_late_reference"]
+          }
+        }
+      }
+    },
+    "resolution_rule": {
+      "const": "resolved requires at least one immutable candidate with explicit_identifier_assignment=true, namespace_agreement=true, owner_agreement=true, semantic_role_agreement=true, temporal_precedence=true, and disposition=accepted_origin"
+    },
+    "falsification_route": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "privacy_class": {
+      "enum": ["public_repository_metadata", "private_source_redacted", "private_source_locator_only"]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "claim_status": { "const": "resolved" } } },
+      "then": {
+        "properties": {
+          "source_status": { "const": "immutable_verified" },
+          "candidate_sources": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "immutable": { "const": true },
+                "explicit_identifier_assignment": { "const": true },
+                "namespace_agreement": { "const": true },
+                "owner_agreement": { "const": true },
+                "semantic_role_agreement": { "const": true },
+                "temporal_precedence": { "const": true },
+                "disposition": { "const": "accepted_origin" }
+              },
+              "required": [
+                "immutable",
+                "explicit_identifier_assignment",
+                "namespace_agreement",
+                "owner_agreement",
+                "semantic_role_agreement",
+                "temporal_precedence",
+                "disposition"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "source_status": { "const": "unlocated" } } },
+      "then": {
+        "properties": { "claim_status": { "const": "unresolved" } }
+      }
+    }
+  ]
+}
