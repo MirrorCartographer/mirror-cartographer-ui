@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "artifact_type": "identifier_ontology_normalization",
+  "created_at": "2026-07-14T22:14:41Z",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "source_objects": [
+      "operations/ACTIVE_QUEUE.json@7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "operations/continuity/records/M-004-origin-status.json@0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+      "operations/continuity/records/M-005-origin-status.json@4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+      "operations/continuity/records/M-006-origin-status.json@94778c45072bad84a0c63077ac23492a1a756a8c",
+      "operations/continuity/manifests/CM-20260714T2157Z-identifier-temporal-boundary.json@114d63cb2723fcf7dfc879819de31d44e076899e",
+      "operations/continuity/manifests/CM-20260714T2207Z-identifier-search-visibility-census.json@c0f77c7aaa8f1de423fc31584171033ac2a549b7"
+    ],
+    "exhaustive": false
+  },
+  "memory_recovered": "M-004, M-005, and M-006 are currently reported identifiers with unresolved origin, not verified continuity artifacts. Their existence as identifiers is observed; their historical assignment, semantic role, and artifact referents remain unresolved.",
+  "claims": {
+    "observed": [
+      "The active queue describes M-004, M-005, and M-006 as reported continuity artifacts while requiring their provenance and location to be resolved.",
+      "Each first located repository record labels its value as reported_identifier, sets claim_status to unresolved, sets source_status to unlocated, and contains no accepted candidate source.",
+      "The temporal-boundary and search-visibility records explicitly refuse to treat later mentions as originating assignments."
+    ],
+    "inferred": [
+      "Calling these identifiers artifacts without a qualifier can collapse an unresolved reference into an asserted historical object.",
+      "The stable ontology must separate identifier existence, assignment provenance, semantic meaning, and artifact referent."
+    ],
+    "proposed": [
+      "Use reported_identifier for M-004, M-005, and M-006 until an immutable source explicitly assigns each identifier.",
+      "Use candidate_artifact only after a source names or contains a concrete referent, and accepted_artifact only after every resolution predicate passes.",
+      "Treat queue prose that says reported continuity artifacts as shorthand, not as provenance evidence."
+    ],
+    "superseded": [
+      "Unqualified statements that M-004, M-005, and M-006 are known historical artifacts.",
+      "Using identifier mention, suffix similarity, semantic resemblance, or automation completion prose as proof of an artifact referent."
+    ],
+    "unresolved": [
+      "Whether any of the three identifiers received a valid assignment before their unresolved-origin records.",
+      "Whether an assigned identifier, if found, refers to a file, decision, lexicon entry, project document, chat-derived memory, or another continuity object."
+    ]
+  },
+  "state_model": {
+    "reported_identifier": "The token is present in a source but origin and referent are not established.",
+    "candidate_assignment": "An immutable source explicitly assigns the token, pending predicate evaluation.",
+    "candidate_artifact": "A candidate assignment points to a concrete continuity object, pending predicate evaluation.",
+    "accepted_artifact": "The assignment and referent satisfy explicit assignment, namespace, owner, semantic role, temporal precedence, immutable locator, and non-ambiguity requirements.",
+    "unlocated": "No qualifying source has been found within declared non-exhaustive coverage.",
+    "not_found_after_exhaustive_coverage": "All declared source classes and reachable repository history have been exhaustively traversed without a qualifying source."
+  },
+  "resolution_predicates": [
+    "explicit_identifier_assignment",
+    "namespace_agreement",
+    "owner_agreement",
+    "semantic_role_agreement",
+    "temporal_precedence",
+    "immutable_locator",
+    "referent_exists",
+    "no_competing_accepted_origin"
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit identifiers",
+      "abstract provenance classifications",
+      "queue terminology"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed File Library contents"
+    ]
+  },
+  "falsification_route": [
+    "Locate a pre-boundary immutable object that explicitly assigns one of the identifiers and names a concrete referent.",
+    "Evaluate that object against every resolution predicate and search for competing accepted origins.",
+    "If all predicates pass, promote only that identifier through candidate_assignment and candidate_artifact to accepted_artifact; otherwise retain reported_identifier and unresolved status."
+  ]
+}
