@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T01:09:49Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The deterministic hourly repertory selector now fails closed when any production loses keyboard, screen-reader, or reduced-motion guarantees, when the configured fallback does not resolve, or when selected accessibility metadata could be mutated after selection.",
+  "evidence": [
+    "operations/evidence/vercel-repertory-accessibility-gate-2026-07-14T0109Z.json",
+    "operations/vercel-studio/repertory/select-production.mjs",
+    "operations/vercel-studio/repertory/select-production.test.mjs"
+  ],
+  "specialist_registry_change": null,
+  "registry_rule_assessment": "No durable capability gap was demonstrated; existing Accessibility Engineer and Test Harness Engineer roles cover the slice.",
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both enumerators and retain reconciliation evidence.",
+    "Observe operations-only build suppression after provider capacity returns.",
+    "Observe the exact-commit six-outcome audio-routing artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the complete committed repertory selector suite in a repository checkout, then add an operations-only stage descriptor that consumes the selector without activating application deployment."
+}
