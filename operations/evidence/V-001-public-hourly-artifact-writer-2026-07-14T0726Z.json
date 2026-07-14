@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T07:26:27Z",
+  "slice": "no-overwrite deterministic public hourly repertory artifact writer",
+  "status": "implemented_unexecuted",
+  "production_on_stage": "Sleeping Engine",
+  "files": {
+    "writer": "operations/tools/write-public-hourly-stage-payloads.mjs",
+    "test": "operations/tests/write-public-hourly-stage-payloads.test.mjs",
+    "schedule": "operations/repertory/hourly-productions.json"
+  },
+  "properties": [
+    "24 ordered hourly payloads",
+    "24 distinct stage identifiers",
+    "one continuity channel",
+    "deterministic payload digest for identical inputs",
+    "source schedule digest retention",
+    "exclusive-create no-overwrite behavior",
+    "existing destination preservation on rejection",
+    "no deployment request",
+    "no payment or conversion logic"
+  ],
+  "verification": {
+    "performed": "connector-backed file creation and source fetchback",
+    "not_performed": [
+      "Node test execution",
+      "CI execution",
+      "browser verification",
+      "Mobile Safari verification",
+      "physical audio verification",
+      "Vercel deployment"
+    ],
+    "falsification_command": "node --test operations/tests/write-public-hourly-stage-payloads.test.mjs"
+  },
+  "commits": {
+    "writer": "81be389d0c5a392c167af6e596e1f4c22e47bc1c",
+    "test": "c755caf8fccd66682fe643851c1fa01b0d1944ba"
+  },
+  "limits": [
+    "No runtime pass is claimed.",
+    "No immutable Vercel deployment identity is claimed.",
+    "Representative-hour construction currently uses the July America/New_York daylight offset; generalized daylight-transition handling remains future work."
+  ]
+}
