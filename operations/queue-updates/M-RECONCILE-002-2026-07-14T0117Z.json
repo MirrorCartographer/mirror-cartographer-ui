@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-14T01:17:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Added a dependency-free fail-closed validator and a 12-assertion falsification suite for identifier-origin evidence, separating structural shape from historical identity proof.",
+  "memory_recovered": "Artifact semantic similarity and artifact identifier origin are distinct claims; a resolved identity requires exactly one accepted immutable origin satisfying explicit assignment, namespace, owner, semantic-role, and temporal-precedence agreement.",
+  "claim_status": {
+    "observed": [
+      "The repository contains a schema for identifier-origin evidence.",
+      "The schema encodes accepted-origin predicates and unresolved handling for unlocated sources."
+    ],
+    "inferred": [
+      "Cross-field disposition contradictions and multiple-origin ambiguity require executable checks beyond basic document shape."
+    ],
+    "proposed": [],
+    "superseded": [
+      "Schema conformance alone is sufficient to establish identifier origin."
+    ],
+    "unresolved": [
+      "The immutable origins of M-004, M-005, and M-006 remain unlocated.",
+      "Exhaustive accessible-ref and reachable-history coverage remains incomplete."
+    ]
+  },
+  "files": [
+    "operations/continuity/tools/validate-identifier-origin-evidence.mjs",
+    "operations/continuity/tools/validate-identifier-origin-evidence.test.mjs",
+    "operations/evidence/continuity-identifier-origin-validator-2026-07-14T0117Z.json"
+  ],
+  "commits": [
+    "86adb7d021c366ab9155a55c70b8c442536187db",
+    "22abbecf8842161c017feec264c9368f99296e26",
+    "34fa59e9283cd23531a65b82072fc3749ac6b4d7"
+  ],
+  "verification": "Committed test suite with 12 assertions; runtime execution remains outstanding.",
+  "privacy_boundary": "Public repository metadata and synthetic fixtures only; no private source text retained.",
+  "registry_change": "none",
+  "safe_next_action": "Run node operations/continuity/tools/validate-identifier-origin-evidence.test.mjs in a checkout, then perform exhaustive ref and reachable-history traversal and validate any candidate origin before resolving M-004, M-005, or M-006."
+}
