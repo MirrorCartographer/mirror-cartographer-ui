@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T13:42:00Z",
+  "state": "in_progress",
+  "completed_slice": "Added an authenticated, fully paginated branch and per-branch commit collector that emits the CM-1031 repository-history envelope and fails closed before any unlocated classification can be promoted.",
+  "memory_recovered": "Repository absence is a coverage-qualified classification, not a search result; M-004, M-005, and M-006 remain unresolved until exhaustive history and source-class coverage pass the existing validator.",
+  "evidence_path": "operations/evidence/M-RECONCILE-002-exhaustive-history-collector-2026-07-14T1342Z.json",
+  "acceptance_remaining": [
+    "Execute the collector in an authenticated exact-commit checkout and retain its raw output.",
+    "Complete and retain the five-source-class artifact-search input without private source text.",
+    "Pass the collected envelope through operations/continuity/validate-repository-history-coverage.mjs.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after the validator accepts exhaustive coverage."
+  ],
+  "safe_next_action": "Prepare a privacy-preserving artifact-search record for all five required source classes, execute collect-repository-history-coverage.mjs with gh authentication, retain the no-overwrite output, and validate it with CM-1031; do not change any identifier from unresolved unless the validator accepts the evidence.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false,
+  "reversible": true
+}
