@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-13T21:32:00-04:00",
+  "finding": "Retained raw enumeration bytes and inline execution provenance do not together prevent later substitution of the provenance declaration itself. The declaration must also be retained as exact bytes and hash-bound before manifest acceptance.",
+  "source_status": {
+    "current_state": "repository_authoritative",
+    "active_queue": "repository_authoritative",
+    "prior_raw_output_binding": "implemented_and_committed",
+    "prior_execution_provenance_gate": "implemented_and_committed",
+    "new_schema": "implemented_and_committed"
+  },
+  "artifact": {
+    "path": "operations/schemas/frontier-retained-execution-declaration.schema.json",
+    "commit": "d5f1384fab65a3b9236399cb37f8636ad3ecd1fb",
+    "blob_sha": "783edeaf8fd50d69e642849b4672de907ee960a6",
+    "kind": "implementation_ready_json_schema"
+  },
+  "design_implication": {
+    "required_fields_per_method": [
+      "execution",
+      "execution_declaration_path",
+      "execution_declaration_sha256",
+      "raw_output_path",
+      "raw_output_sha256"
+    ],
+    "runtime_handoff": [
+      "Resolve and read each retained declaration file.",
+      "Verify the declared SHA-256 against exact file bytes.",
+      "Parse the retained JSON.",
+      "Require deep equality with the corresponding inline execution object.",
+      "Reject reuse of one canonical declaration file by both methods.",
+      "Run the existing independent-execution provenance gate only after byte binding succeeds."
+    ]
+  },
+  "verification": {
+    "method": "GitHub round-trip retrieval of committed schema",
+    "result": "passed",
+    "checks": [
+      "valid JSON returned by repository contents API",
+      "draft 2020-12 schema identifier present",
+      "both primary and independent method declarations required",
+      "SHA-256 pattern constrained to 64 lowercase hexadecimal characters",
+      "execution object closes undeclared fields",
+      "runtime deep-equality and distinct-file requirements explicitly documented"
+    ]
+  },
+  "evidence_strength": "committed_schema_with_repository_round_trip",
+  "uncertainty": "The schema alone cannot enforce canonical-path inequality, byte digest verification, JSON parsing, temporal ordering, or deep equality; those remain runtime obligations.",
+  "falsification_routes": [
+    "Supply a declaration file whose bytes do not match execution_declaration_sha256.",
+    "Supply retained declaration JSON that differs from the inline execution object.",
+    "Point primary and independent methods to the same canonical declaration file.",
+    "Demonstrate a validator that accepts missing retained declaration fields under this schema."
+  ],
+  "privacy_boundary": "Only repository paths, hashes, schema constraints, and abstract provenance controls are recorded. No credentials, raw authenticated outputs, private source material, or personal data are included."
+}
