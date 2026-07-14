@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T05:03:19Z",
+  "slice": "hourly-runtime-boundary-contract",
+  "production_on_stage": {
+    "hour": 1,
+    "id": "one-eye-constellation",
+    "title": "One-Eye Constellation",
+    "continuity_channel": "mirror-cartographer-continuity-v1"
+  },
+  "source_inspection": {
+    "application_entrypoint": "src/main.jsx",
+    "public_adapter": "operations/tools/public-hourly-stage-adapter.mjs",
+    "repertory": "operations/repertory/hourly-productions.json",
+    "observed_runtime_state": "hourly stage runtime not installed in the application entrypoint"
+  },
+  "implemented": [
+    "Fail-closed static assessment for raw operations imports and raw repertory access.",
+    "Rejection of internal continuity revision, private-source fields, payment or conversion terms, and autoplay enablement.",
+    "Installed hourly runtime must call createPublicHourlyStagePayload.",
+    "Installed hourly runtime must preserve user-action sound and reduced-motion contracts."
+  ],
+  "verification": {
+    "command": "node --test operations/tests/hourly-runtime-boundary-contract.test.mjs",
+    "environment": "isolated Node reconstruction from exact committed source text",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "claims_excluded": [
+      "GitHub Actions execution",
+      "Vercel deployment",
+      "browser rendering",
+      "Mobile Safari behavior",
+      "physical audio audibility"
+    ]
+  },
+  "commits": {
+    "contract": "eadb526f513d65ed2f623733b19777833191dd22",
+    "test": "f14c20f38ddfcea8774f8f6c61cfb3037309eb6f"
+  },
+  "privacy_boundary": "No private source text, credentials, health material, payment data, or conversion logic was added or exposed.",
+  "deployment_effect": "operations-only; no application build or Vercel deployment requested",
+  "rollback": [
+    "revert the evidence commit",
+    "revert f14c20f38ddfcea8774f8f6c61cfb3037309eb6f",
+    "revert eadb526f513d65ed2f623733b19777833191dd22"
+  ]
+}
