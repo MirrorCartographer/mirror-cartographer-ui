@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "team": "continuity_mining",
+  "recorded_at": "2026-07-14T06:23:00Z",
+  "slice": "Defined a fail-closed exhaustive provenance coverage manifest contract for disputed continuity identifiers.",
+  "status": "completed_slice_queue_remains_in_progress",
+  "evidence": {
+    "record": "operations/continuity/records/CM-1022-exhaustive-coverage-manifest-contract.json",
+    "commit": "2e1bd66dfefd719daca16f30774939e3928fa1e4",
+    "search_result": "No indexed repository matches for the combined M-004/M-005/M-006 query; classified lead-only because indexed search is not exhaustive history traversal."
+  },
+  "claims": {
+    "observed": "The queue and CM-1021 require retained exhaustive coverage before absence promotion.",
+    "inferred": "Exhaustiveness must be represented as a multi-domain evidence envelope rather than a search outcome.",
+    "proposed": "Use CM-1022 for the next authenticated all-ref and reachable-commit traversal.",
+    "superseded": "Zero indexed matches as proof of absence.",
+    "unresolved": "Immutable origin provenance for M-004, M-005, and M-006 remains unlocated under incomplete coverage."
+  },
+  "canonical_state_mutation": "none",
+  "files_deleted": [],
+  "specialist_registry_change": "none; no durable capability gap established",
+  "next_action": "Generate and retain an authenticated complete ref inventory and reachable-commit set, then evaluate all candidates under CM-1021 and CM-1022 without reconstructing identifiers."
+}
