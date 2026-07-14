@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T10:53:00Z",
+  "slice": "CM-1028 claim-state precedence",
+  "state": "in_progress",
+  "completed_this_slice": [
+    "Recovered a three-axis claim model separating evidentiary state, temporal status, and resolution state.",
+    "Recorded a fail-closed conflict rule preventing later interpretations from rewriting earlier observations.",
+    "Applied the rule to keep M-004, M-005, and M-006 unresolved without reconstructing missing history."
+  ],
+  "artifacts": [
+    {
+      "path": "operations/continuity/records/CM-1028-claim-state-precedence.json",
+      "commit": "79f7b210c42691fe936cf04de168847f0f5a5e3d"
+    }
+  ],
+  "acceptance_remaining": [
+    "Obtain exhaustive branch and commit-history coverage.",
+    "Resolve M-004, M-005, and M-006 against immutable originating sources or classify them unlocated after exhaustive coverage.",
+    "Locate the decision log, lexicon, project document, or approved chat-history source that assigned each identifier."
+  ],
+  "next_action": "Create machine-checkable fixtures for conflicting observed, inferred, proposed, superseded, and unresolved claims, then run them against the historical identifier resolution gate before changing any provenance-gap node.",
+  "specialist_registry_change": null,
+  "privacy_boundary": "No private source text or personal material was copied into repository artifacts."
+}
