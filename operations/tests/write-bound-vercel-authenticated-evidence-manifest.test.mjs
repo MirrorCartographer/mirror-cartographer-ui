@@ -126,6 +126,40 @@ test('exclusive manifest creation rejects a pre-positioned hard-link output with
   assert.equal(await readFile(outputPath, 'utf8'), protectedBytes);
 });
 
+test('exclusive manifest creation rejects using the promoted input path as its own output without altering source bytes', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bound-manifest-self-overwrite-test-'));
+  const inputPath = join(root, 'promoted.json');
+  const promotedBytes = '{"state":"promoted-source-must-remain-unchanged"}\n';
+
+  await writeFile(inputPath, promotedBytes);
+
+  const result = await writeBoundAuthenticatedEvidenceManifest({
+    input_path: inputPath,
+    output_path: inputPath,
+    evidence_root: root,
+    dependencies: {
+      validate_promotion: async () => ({ verified: true, reason: 'synthetic_promotion_verified' }),
+      write_manifest: async ({ output_path }) => {
+        try {
+          await writeFile(output_path, '{"state":"should-not-write"}\n', { flag: 'wx' });
+        } catch (error) {
+          return {
+            verified: false,
+            reason: error.code === 'EEXIST' ? 'output_exists' : 'output_write_failed',
+            code: error.code ?? 'unknown'
+          };
+        }
+        return { verified: true, reason: 'synthetic_manifest_written' };
+      }
+    }
+  });
+
+  assert.equal(result.verified, false);
+  assert.equal(result.reason, 'output_exists');
+  assert.equal(result.code, 'EEXIST');
+  assert.equal(await readFile(inputPath, 'utf8'), promotedBytes);
+});
+
 test('production dependencies remain optional and invalid paths still fail closed', async () => {
   const result = await writeBoundAuthenticatedEvidenceManifest({
     input_path: '',
