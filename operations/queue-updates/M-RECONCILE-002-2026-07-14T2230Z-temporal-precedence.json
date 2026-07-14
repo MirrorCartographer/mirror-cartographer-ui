@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T22:30:22Z",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed temporal-precedence gate so later label reuse cannot be promoted as the originating assignment of M-004, M-005, or M-006 without a verified older immutable source.",
+  "evidence": {
+    "artifact_path": "operations/continuity/manifests/CM-20260714T2230Z-temporal-precedence-gate.json",
+    "artifact_commit": "e47f50938badf2c854f17eee649156a6272d3f6d",
+    "verification": "GitHub contents write returned an immutable commit SHA; fetch-back required and performed before final reporting."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Establish the earliest verified report and assignment timestamps for M-004, M-005, and M-006 across eligible source classes.",
+    "Locate immutable provenance for each identifier or classify it as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned each identifier."
+  ],
+  "safe_next_action": "Build an evidence table for each unresolved identifier containing earliest_verified_report_at, candidate_created_at, immutable locator, namespace, semantic referent, and temporal-gate result; do not promote any later candidate lacking a qualifying older back-reference.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "history_deleted": false
+}
