@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T13:32:00Z",
+  "state_projection": "completed_handoff_ready",
+  "completed_slice": "Composed independent-client reconciliation and temporal stabilization into one fail-closed promotion gate, so every observation must reconcile before repeated-observation stability can permit evidence promotion.",
+  "evidence": "operations/evidence/R-021-reconciled-stability-promotion-2026-07-14T1332Z.json",
+  "acceptance_remaining": [
+    "Integrate the promotion gate into the retained-evidence CLI and Vercel assessor.",
+    "Execute two non-overlapping authenticated observation windows for one exact private-repository commit.",
+    "Retain both raw client outputs for each window, per-window reconciliation, temporal stability output, and final promotion result.",
+    "Empirically calibrate and document the quiet-period policy."
+  ],
+  "safe_next_action": "Wire assessWorkflowEnumerationPromotion into the retained-evidence CLI, then execute both exhaustive clients twice for one exact commit after all associated runs are terminal; fail closed on any client divergence, provider-ceiling ambiguity, overlap, digest drift, or quiet-period failure.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_change": null
+}
