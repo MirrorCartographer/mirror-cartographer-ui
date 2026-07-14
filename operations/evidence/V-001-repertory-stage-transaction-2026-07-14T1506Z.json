@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T15:06:00Z",
+  "slice": "identity-bound repertory stage transaction",
+  "production_fixture": {
+    "id": "coordinate-carnival",
+    "title": "Coordinate Carnival",
+    "form": "stage",
+    "visual_grammar": "hand-drawn coordinates and orbital type",
+    "mount_key": "2026-07-14T11:00-04:00/coordinate-carnival",
+    "continuity_channel": "shared-state",
+    "continuity_revision": 10
+  },
+  "finding": "The deterministic mount-plan generator and focus-preserving DOM adapter existed independently, but no committed boundary required projection identity, mount-plan identity, and applied DOM identity to agree in one fail-closed operation.",
+  "implementation": {
+    "source": "operations/studio/repertory-stage-transaction.mjs",
+    "source_commit": "787b04fa9acd43b402291912e105cc270051dd95",
+    "test": "operations/tests/repertory-stage-transaction.test.mjs",
+    "test_commit": "32c9c6bdb0a69ae01b477b8c214b431d958490e6"
+  },
+  "verification": {
+    "route": "connector-fetched committed source reproduced in an isolated Node runtime",
+    "command": "node --test /tmp/mcverify/tests/repertory-stage-transaction.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "identity-bound production staging preserves focused descendants",
+      "hidden production suspension retains content and continuity surface",
+      "unsafe privacy or commerce policy fails before DOM mutation",
+      "missing mount target returns a bounded non-staged identity record"
+    ]
+  },
+  "safety": {
+    "application_call_site_added": false,
+    "deployment_attempted": false,
+    "autoplay": false,
+    "audio_requires_user_gesture": true,
+    "network_requests": false,
+    "persistence": false,
+    "payment_logic": false,
+    "conversion_logic": false,
+    "private_source_material_exposed": false,
+    "reversible": true
+  },
+  "evidence_strength": "committed source plus connector fetch-back plus deterministic isolated runtime tests",
+  "limits": [
+    "No browser, Mobile Safari, screen-reader, physical audio, or Vercel deployment verification was performed.",
+    "The local runtime lacked gh, so this was not an authenticated checkout-based test.",
+    "Provider capacity remains unresolved and no application deployment claim is made."
+  ],
+  "rollback": {
+    "method": "ordinary revert commits",
+    "commits": [
+      "787b04fa9acd43b402291912e105cc270051dd95",
+      "32c9c6bdb0a69ae01b477b8c214b431d958490e6"
+    ]
+  }
+}
