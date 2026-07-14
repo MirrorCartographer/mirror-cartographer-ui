@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/operations/continuity/schemas/claim-transition.schema.json",
+  "title": "Continuity claim and transition envelope",
+  "type": "object",
+  "required": ["schema_version", "claims", "transitions", "privacy_boundary"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "claims": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "transitions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/transition"}
+    },
+    "privacy_boundary": {"$ref": "#/$defs/privacyBoundary"}
+  },
+  "$defs": {
+    "immutableLocator": {
+      "type": "object",
+      "required": ["repository", "object_type", "object_id"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "object_type": {"enum": ["commit", "blob", "tree", "tag", "external_reviewed_source"]},
+        "object_id": {"type": "string", "minLength": 7},
+        "path": {"type": "string"},
+        "bounded_excerpt_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["namespace", "owner", "semantic_role"],
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {"type": "string", "minLength": 1},
+        "owner": {"type": "string", "minLength": 1},
+        "semantic_role": {"type": "string", "minLength": 1},
+        "coverage_class": {
+          "enum": ["direct_object", "reachable_history_complete", "default_branch_bounded", "search_index_bounded", "external_reviewed_bounded", "untraversed"]
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": ["claim_id", "epistemic_class", "statement", "scope", "source_locators", "verification_status", "privacy_class"],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]*$"},
+        "epistemic_class": {"enum": ["observed", "inferred", "proposed", "superseded", "unresolved"]},
+        "statement": {"type": "string", "minLength": 1},
+        "scope": {"$ref": "#/$defs/scope"},
+        "source_locators": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/immutableLocator"},
+          "uniqueItems": true
+        },
+        "verification_status": {"enum": ["verified", "bounded", "absence_unproven", "unverified"]},
+        "privacy_class": {"enum": ["public_repository", "private_abstracted", "restricted_not_retained"]},
+        "falsification_route": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "created_at": {"type": "string", "format": "date-time"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"epistemic_class": {"const": "observed"}}},
+          "then": {
+            "properties": {
+              "source_locators": {"minItems": 1},
+              "verification_status": {"enum": ["verified", "bounded"]}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"epistemic_class": {"const": "unresolved"}}},
+          "then": {
+            "properties": {
+              "verification_status": {"enum": ["absence_unproven", "unverified", "bounded"]}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"privacy_class": {"const": "restricted_not_retained"}}},
+          "then": {"properties": {"source_locators": {"maxItems": 0}}}
+        }
+      ]
+    },
+    "transition": {
+      "type": "object",
+      "required": ["transition_id", "from_claim_id", "to_claim_id", "transition_type", "authority", "source_locators", "created_at"],
+      "additionalProperties": false,
+      "properties": {
+        "transition_id": {"type": "string", "pattern": "^TR-[A-Z0-9_-]+$"},
+        "from_claim_id": {"type": "string"},
+        "to_claim_id": {"type": "string"},
+        "transition_type": {"enum": ["accepted", "challenged", "narrowed", "superseded", "resolved"]},
+        "authority": {"enum": ["direct_immutable_source", "canonical_governance", "bounded_repository_evidence", "inference_only"]},
+        "source_locators": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/immutableLocator"},
+          "uniqueItems": true
+        },
+        "created_at": {"type": "string", "format": "date-time"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {"not": {"properties": {"from_claim_id": {"const": {"$data": "1/to_claim_id"}}}}},
+        {
+          "if": {"properties": {"transition_type": {"enum": ["superseded", "resolved"]}}},
+          "then": {"properties": {"authority": {"enum": ["direct_immutable_source", "canonical_governance"]}}}
+        }
+      ]
+    },
+    "privacyBoundary": {
+      "type": "object",
+      "required": ["included", "excluded"],
+      "additionalProperties": false,
+      "properties": {
+        "included": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "excluded": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  },
+  "x-continuity-invariants": [
+    "Claim nodes are immutable; later interpretation is represented by transition edges.",
+    "A transition may not broaden namespace, owner, semantic role, or coverage beyond its source evidence.",
+    "Supersession preserves both source and replacement claim nodes.",
+    "Unresolved M-004, M-005, and M-006 identifiers may not become observed without immutable source agreement.",
+    "Graph validators must reject dangling references, cycles, self-transitions, and authority weaker than the transition type requires."
+  ]
+}
