@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1022",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T06:23:00Z",
+  "title": "Exhaustive provenance coverage requires a retained ref-and-history manifest",
+  "purpose": "Define the minimum evidence needed before M-004, M-005, or M-006 may be classified as unlocated, without promoting incomplete search results into absence claims.",
+  "claims": {
+    "observed": [
+      "The active queue requires exhaustive branch inventory or equivalent repository history traversal before any disputed identifier may be classified as unlocated.",
+      "CM-1021 permits origin_status=unlocated only after retained exhaustive coverage closes every accepted search domain.",
+      "Repository code search for M-004, M-005, and M-006 returned no indexed matches in this run, but indexed search is not equivalent to exhaustive history traversal.",
+      "No retained ref-and-history coverage manifest currently exists in the inspected continuity records."
+    ],
+    "inferred": [
+      "A reproducible absence conclusion requires both object coverage and traversal-accounting evidence.",
+      "Ref discovery, reachable-commit traversal, path inspection, and external approved-source review must remain separately auditable because failure in one domain cannot be repaired by success in another."
+    ],
+    "proposed": [
+      "Use coverage_manifest_contract as the required envelope for future exhaustive traversals.",
+      "Retain raw ref inventory, traversal command or API method, commit counts, deduplication rule, termination evidence, tool limits, and per-domain completion status.",
+      "Keep M-004, M-005, and M-006 unresolved until every required domain is complete and every candidate has been evaluated under CM-1021."
+    ],
+    "superseded": [
+      "Treating a repository-wide indexed search with zero matches as exhaustive absence.",
+      "Treating default-branch history as equivalent to all accessible refs.",
+      "Treating a traversal without retained termination and limit evidence as reproducibly exhaustive."
+    ],
+    "unresolved": [
+      "The complete accessible ref inventory has not been retained.",
+      "The set of all reachable commits has not been retained or independently reproduced.",
+      "Approved non-repository provenance domains have not been exhaustively inventoried.",
+      "The origin events for M-004, M-005, and M-006 remain unresolved."
+    ]
+  },
+  "coverage_manifest_contract": {
+    "required_domains": [
+      {
+        "id": "repository_refs",
+        "required_evidence": ["repository identity", "retrieval time", "all accessible branch and tag refs", "immutable target SHA per ref", "pagination or termination evidence", "provider and permission limits"]
+      },
+      {
+        "id": "reachable_commit_graph",
+        "required_evidence": ["starting ref set digest", "traversal method", "deduplication rule", "complete reachable commit SHA set or content-addressed artifact", "commit count", "termination evidence", "independent reproduction or explicit single-client limitation"]
+      },
+      {
+        "id": "repository_object_inspection",
+        "required_evidence": ["searched identifier forms", "case and token normalization rules", "blob or tree inspection method", "candidate list", "false-positive and namespace-collision log", "coverage gaps"]
+      },
+      {
+        "id": "approved_external_provenance",
+        "required_evidence": ["approved source classes", "privacy classification", "immutable or retained locator", "search interval", "candidate list", "explicit exclusions and access limits"]
+      }
+    ],
+    "completion_rule": "coverage_status may become exhaustive only when every required domain is complete, every provider or permission limit is recorded as non-material or resolved, traversal termination is retained, and the result is independently reproducible or explicitly marked single-client with no absence promotion.",
+    "absence_rule": "An identifier may become unlocated_after_exhaustive_coverage only when coverage_status=exhaustive and all inspected candidates fail CM-1021 with retained candidate-specific reasons.",
+    "fail_closed_rule": "Any unknown ref, truncated page, inaccessible source class, missing termination proof, unresolved namespace collision, or unreproduced traversal preserves coverage_status=incomplete and origin_status=unresolved.",
+    "no_reconstruction_rule": "Missing historical identifiers must not be recreated, renumbered, or assigned retroactively to satisfy continuity expectations."
+  },
+  "manifest_fields": [
+    "manifest_id",
+    "repository",
+    "exact_retrieval_times",
+    "ref_inventory_digest",
+    "reachable_commit_set_digest",
+    "methods",
+    "raw_artifact_locators",
+    "domain_statuses",
+    "provider_limits",
+    "permission_scope",
+    "candidate_evaluations",
+    "independent_reproduction_status",
+    "coverage_status",
+    "falsification_routes"
+  ],
+  "privacy_boundary": {
+    "included": ["repository identifiers", "commit and blob identifiers", "coverage counts and digests", "abstract candidate status", "tool and provider limits", "privacy class labels"],
+    "excluded": ["private chat text", "personal source content", "credentials", "secret-bearing command output", "unapproved quotations", "private-source payloads"]
+  },
+  "falsification_routes": [
+    "Produce an accessible ref omitted by a manifest classified exhaustive.",
+    "Produce a reachable commit absent from the retained reachable-commit set.",
+    "Show that a provider or permission ceiling was material but classified non-material.",
+    "Produce an immutable origin object that passes CM-1021 after an identifier was classified unlocated.",
+    "Demonstrate that the retained traversal cannot be independently reproduced from its recorded methods and artifacts."
+  ]
+}
