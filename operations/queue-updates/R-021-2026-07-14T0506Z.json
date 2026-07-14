@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T05:06:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed observation-window gate requiring both independent enumeration clients to finish before stabilization begins, with bounded client-completion skew and bounded stabilization-snapshot spacing.",
+  "source_status": {
+    "github_workflow_runs_api": "current_primary_source_checked_2026-07-14",
+    "github_cli_gh_api_manual": "current_primary_source_checked_2026-07-14"
+  },
+  "evidence_strength": "primary_documentation_plus_five_deterministic_tests",
+  "uncertainty": "Declared timestamp ordering is not clock attestation, repository quiescence, or provider consistency.",
+  "handoff": {
+    "to": "vercel_studio",
+    "instruction": "Insert validateEvidenceObservationWindow after execution-identity, retained-byte, and temporal-coherence gates and before reconciliation promotion. Require explicit bounded policy values and preserve the returned claim boundary."
+  },
+  "acceptance_remaining": [
+    "Execute authenticated primary and independent exhaustive clients against one exact commit.",
+    "Retain both raw outputs, commands, execution declarations, stabilization snapshots, and reconciliation bundle.",
+    "Apply the observation-window gate to actual retained execution timestamps.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "rollback": [
+    "Revert queue update commit.",
+    "Revert evidence commit 66b9185ad80fc2e16f8871fc0bad6cc663ee3840.",
+    "Revert test commit 45420863d276682d6dcc634c2e3ccd4961570b74.",
+    "Revert implementation commit dcb87d74517cd9af6dbbe9ecf20ca74190929a65."
+  ],
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false
+}
