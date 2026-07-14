@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T06:18:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a behavioral regression contract proving that temporal-coherence and observation-window promotion failures preserve an existing manifest destination byte-for-byte.",
+  "files": [
+    "operations/tests/bound-manifest-rejection-no-write.test.mjs",
+    "operations/evidence/R-021-bound-manifest-no-write-contract-2026-07-14T0618Z.json"
+  ],
+  "commits": [
+    "c0fb7762acecef01bcfaf6649f1d058cb0d6fc43",
+    "30f38f3d1762e3cbddefe6ec158411df26461ee7"
+  ],
+  "acceptance_remaining": [
+    "Execute the new test in an authenticated checkout or CI runner.",
+    "Execute both exhaustive clients against one exact commit.",
+    "Retain raw outputs, validated declarations, stabilization snapshots, reconciliation output, promotion result, and final manifest.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Run the no-write regression test, then perform one authenticated dual-client exact-commit enumeration and retain the complete evidence chain without creating a deployment.",
+  "shared_state_write_policy": "Canonical ACTIVE_QUEUE.json was not overwritten. This append-only projection records only Frontier Research work."
+}
