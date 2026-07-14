@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1018",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T04:42:32Z",
+  "title": "Provenance absence claims require source-class coverage",
+  "claims": {
+    "observed": [
+      "The queue requires locating an originating decision log, language lexicon, project document, or authorized history source for M-004, M-005, and M-006.",
+      "Repository connector search and recent-commit inspection provide bounded repository evidence, not exhaustive coverage of every ref or every source class."
+    ],
+    "inferred": [
+      "An undifferentiated not-found result can create a false global absence claim.",
+      "Exhausting repository history cannot establish absence from non-repository source classes."
+    ],
+    "proposed": [
+      "Track coverage independently for repository_refs, reachable_commits, decision_logs, language_lexicons, project_documents, authorized_history, and file_archive.",
+      "Permit unlocated_after_declared_coverage only when every required accessible source class has an explicit coverage disposition.",
+      "For restricted sources, retain a minimal attestation rather than source contents."
+    ],
+    "superseded": [
+      "Treating repository search silence as proof that an identifier never existed.",
+      "Treating source classes as if they have identical accessibility and publication boundaries."
+    ],
+    "unresolved": [
+      "No immutable accepted origin has been located for M-004, M-005, or M-006.",
+      "Exhaustive accessible-ref and reachable-commit traversal has not been demonstrated in this run.",
+      "Coverage of decision logs, language lexicons, project documents, authorized history, and file archives remains independently unproven."
+    ]
+  },
+  "source_coverage_contract": {
+    "source_classes": {
+      "repository_refs": {"publication_class": "repository_metadata", "coverage": "incomplete"},
+      "reachable_commits": {"publication_class": "repository_metadata", "coverage": "incomplete"},
+      "decision_logs": {"publication_class": "mixed", "coverage": "unproven"},
+      "language_lexicons": {"publication_class": "mixed", "coverage": "unproven"},
+      "project_documents": {"publication_class": "mixed", "coverage": "unproven"},
+      "authorized_history": {"publication_class": "restricted", "coverage": "not_publicly_auditable"},
+      "file_archive": {"publication_class": "restricted", "coverage": "not_publicly_auditable"}
+    },
+    "allowed_identifier_states": [
+      "coverage_incomplete",
+      "candidate_origin_found",
+      "resolved_by_public_immutable_source",
+      "resolved_by_restricted_attestation",
+      "unlocated_after_declared_coverage"
+    ],
+    "fail_closed_rule": "Every absence statement must name the source classes and coverage horizon it establishes; global absence claims are prohibited.",
+    "restricted_attestation_minimum": [
+      "identifier",
+      "source_class",
+      "verification_date",
+      "verifier_role",
+      "semantic_role_match",
+      "temporal_precedence_result",
+      "publication_class",
+      "disclosure_status"
+    ]
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "abstract source classes",
+      "coverage states",
+      "attestation requirements",
+      "falsification routes"
+    ],
+    "excluded": [
+      "restricted source contents",
+      "credentials",
+      "unapproved quotations"
+    ]
+  },
+  "falsification_routes": [
+    "Produce an immutable public source explicitly assigning a disputed identifier with matching namespace, owner, semantic role, and temporal precedence.",
+    "Produce an authorized minimal attestation satisfying the required fields for a restricted source assignment.",
+    "Demonstrate that a declared exhaustive source-class inventory omitted an accessible object, returning that class to incomplete coverage."
+  ]
+}
