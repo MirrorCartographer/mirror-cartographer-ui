@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T13:25:00Z",
+  "state_projection": "completed_handoff_ready",
+  "completed_slice": "Added and runtime-verified a fail-closed temporal stabilization gate requiring repeated non-overlapping exhaustive exact-commit observations, identical canonical digests, terminal run status, and a configurable quiet period before evidence promotion.",
+  "evidence": "operations/evidence/R-021-workflow-enumeration-stability-2026-07-14T1325Z.json",
+  "acceptance_remaining": [
+    "Integrate the stability gate after independent-client reconciliation and before Vercel evidence promotion.",
+    "Execute authenticated exhaustive enumerations for one exact private-repository commit at two non-overlapping observation windows.",
+    "Empirically calibrate and document the quiet-period policy.",
+    "Retain both raw observations, canonical digests, reconciliation output, and stability assessment."
+  ],
+  "safe_next_action": "Wire assessWorkflowEnumerationStability into the retained-evidence CLI after both clients reconcile, then execute two non-overlapping authenticated observations for one exact commit after all associated runs are terminal; do not claim stable evidence unless the canonical digests match and the quiet-period policy passes.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_change": null
+}
