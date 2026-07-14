@@ -47,11 +47,14 @@ export function validateAuthenticatedEvidenceManifest(input) {
   if (!Number.isFinite(first) || !Number.isFinite(second) || second < first) return fail('snapshot_timestamps_invalid');
   if (!Number.isInteger(stabilization.minimum_quiet_interval_seconds) || stabilization.minimum_quiet_interval_seconds < 0) return fail('quiet_interval_invalid');
   if ((second - first) / 1000 < stabilization.minimum_quiet_interval_seconds) return fail('quiet_interval_not_met');
+  if (!SHA256.test(stabilization.first_normalized_record_set_sha256 ?? '') || !SHA256.test(stabilization.second_normalized_record_set_sha256 ?? '')) return fail('snapshot_digest_invalid');
+  if (stabilization.first_normalized_record_set_sha256 !== stabilization.second_normalized_record_set_sha256) return fail('snapshot_digest_divergence');
 
   const reconciliation = input.reconciliation;
   if (!reconciliation || reconciliation.verified !== true) return fail('reconciliation_unverified');
   if (reconciliation.provider_ceiling_ambiguous !== false) return fail('provider_ceiling_ambiguous');
   if (!SHA256.test(reconciliation.normalized_record_set_sha256 ?? '')) return fail('normalized_digest_invalid');
+  if (stabilization.second_normalized_record_set_sha256 !== reconciliation.normalized_record_set_sha256) return fail('stabilization_reconciliation_digest_mismatch');
   if (input.primary.record_count >= 1000 || input.independent.record_count >= 1000) return fail('provider_ceiling_ambiguous');
 
   const primaryIds = input.primary.records.map((record) => String(record.id)).sort();
@@ -69,6 +72,7 @@ export function validateAuthenticatedEvidenceManifest(input) {
     commit_sha: input.commit_sha,
     record_count: primaryIds.length,
     normalized_record_set_sha256: reconciliation.normalized_record_set_sha256,
+    stabilization_snapshot_sha256: stabilization.second_normalized_record_set_sha256,
     primary_receipt_sha256: transport.primary_receipt_sha256,
     independent_receipt_sha256: transport.independent_receipt_sha256
   };
@@ -82,12 +86,12 @@ export async function writeAuthenticatedEvidenceManifest({ input_path, output_pa
   const validation = validateAuthenticatedEvidenceManifest(input);
   if (!validation.verified) return validation;
   const manifest = {
-    schema_version: 2,
+    schema_version: 3,
     artifact_type: 'vercel_authenticated_workflow_evidence_manifest',
     ...input,
     validation,
     limitations: [
-      'This manifest proves only the retained authenticated workflow enumeration, page-link continuity, and transport provenance described by its inputs.',
+      'This manifest proves only the retained authenticated workflow enumeration, page-link continuity, transport provenance, and digest-bound snapshot stability described by its inputs.',
       'It does not prove semantic completeness, provider-wide absence, Vercel deployment identity, browser audibility, or physical-device behavior.'
     ]
   };
