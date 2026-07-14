@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T12:06:00Z",
+  "verification_kind": "isolated_exact-source-node-execution",
+  "source": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "default_branch": "main",
+    "hourly_repertory_blob_sha": "5f366c871663c658f7b6c8d712b34faa236ad48d",
+    "runtime_adapter_blob_sha": "c57cfed2c287b118298065f937231e40f825984b",
+    "hourly_repertory_test_blob_sha": "428a20fe40cdacc3a8bc9cb247a8526bdfe09559",
+    "runtime_adapter_test_blob_sha": "acc3db4ce3985a460534f3a7de7867db1e81927e"
+  },
+  "environment": {
+    "node": "v22.16.0",
+    "network": "unavailable",
+    "checkout": false,
+    "execution_note": "The exact UTF-8 module contents fetched from GitHub were reconstructed in an isolated filesystem and executed with Node assertions. This verifies module behavior for the fetched blobs, not repository checkout integrity, GitHub Actions, browser integration, Mobile Safari, audio audibility, or Vercel deployment."
+  },
+  "result": {
+    "verified": true,
+    "assertions": 7,
+    "current_production": "silent-switchboard",
+    "next_production": "wordless-sky",
+    "hour_key": 495563,
+    "next_boundary": "2026-07-14T12:00:00.000Z",
+    "continuity_preserved": true,
+    "unsupported_version_failed_closed": true,
+    "missing_public_field_failed_closed": true,
+    "timezone_equivalence_preserved": true,
+    "autoplay": false,
+    "payment_logic": false,
+    "private_source_material": false
+  },
+  "evidence_strength": "executed_exact_fetched_blobs_not_commit_checkout",
+  "limits": [
+    "No authenticated repository checkout was possible because the execution environment could not resolve github.com.",
+    "No deployment was attempted because the canonical provider-capacity blocker remains active.",
+    "No browser, Mobile Safari, physical audio, or immutable Vercel deployment evidence was produced."
+  ],
+  "rollback": "Revert the commit that introduces this evidence file; no application code changed."
+}
