@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T08:28:32Z",
+  "slice": "Machine-checkable provenance-state transition contract",
+  "state": "in_progress",
+  "completed": [
+    "Added a JSON Schema contract for M-004, M-005, and M-006 provenance-state transitions.",
+    "Required prior and new state, triggering evidence, immutable locators, predicate and coverage deltas, retained rejection reasons, privacy classification, claim status, and falsification route.",
+    "Added conditional structural guards for verified and unlocated_after_exhaustive_coverage transitions.",
+    "Recorded CM-1024 with observed, inferred, proposed, superseded, and unresolved claims without exposing private source material."
+  ],
+  "evidence": [
+    {
+      "path": "operations/continuity/schemas/provenance-state-transition.schema.json",
+      "commit": "38d26cf6c847d9b65e3a07b9aeb6a03459e4f07e",
+      "blob": "cb6523d6c2cecde8eefcdb5744439a4fcafb72bb"
+    },
+    {
+      "path": "operations/continuity/records/CM-1024-provenance-transition-contract.json",
+      "commit": "0219572aa3265127d559093a48b0f9bb292c20a5"
+    }
+  ],
+  "acceptance_remaining": [
+    "Wire the transition schema into deterministic repository tests or CI.",
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive reproduced coverage.",
+    "Locate the originating decision log, language lexicon, project document, or approved chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Add positive and negative schema fixtures, execute them with a pinned JSON Schema validator, and then require validated transition records before any authoritative queue projection changes origin_state or coverage_state.",
+  "privacy_boundary": "Public repository metadata and abstract provenance states only; no private source payloads, credentials, health information, or personal identifiers were included.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false
+}
