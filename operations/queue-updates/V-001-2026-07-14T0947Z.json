@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T09:47:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a pure, frozen hourly stage envelope that deterministically exposes previous, current, and next productions, preserves the single continuity channel, wraps at midnight, and remains stable across the repeated daylight-saving hour.",
+  "files": [
+    "operations/tools/hourly-stage-envelope.mjs",
+    "operations/tests/hourly-stage-envelope.test.mjs",
+    "operations/evidence/V-001-hourly-stage-envelope-2026-07-14T0947Z.json"
+  ],
+  "commits": [
+    "f347a0652f454a217d53329ebe850bf8aafaec08",
+    "a104998327beca09a82a51739f658983d5e08e5d",
+    "b28d7f76fbcf52a003898f264bc13c463938acc1"
+  ],
+  "verification": {
+    "source_contract_reviewed": true,
+    "runtime_test_observed": false,
+    "deployment_claimed": false,
+    "provider_status": "Vercel failure: build-rate-limit",
+    "acceptance_effect": "No V-001 acceptance criterion is promoted; the implementation remains fail-closed until exact-commit test execution is retained."
+  },
+  "remaining_acceptance": [
+    "Execute authenticated all-event pagination for an exact commit with both approved enumeration routes and retain reconciliation evidence.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/tests/hourly-stage-envelope.test.mjs in an authenticated exact-commit checkout and retain stdout, exit status, Node version, operating system, workflow run, job, and step identities; do not claim deployment while the provider build-rate-limit remains active.",
+  "canonical_files_overwritten": false,
+  "specialist_registry_changed": false
+}
