@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1026",
+  "created_at": "2026-07-14T16:57:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Companion interaction evolved from abstract comet to cat-shaped continuity token",
+  "source_status": "repository_observed_bounded",
+  "sources": [
+    {
+      "commit_sha": "b413f31ead27bb65ac30b853cd66ecd163cf6ca3",
+      "path": "index.html",
+      "role": "introduced comet companion cursor, spark trail, and tap bloom"
+    },
+    {
+      "commit_sha": "fb9a31e2ce4a240f7e4e9a673122c5fe2e999d64",
+      "path": "index.html",
+      "role": "superseded only the companion silhouette with a cat-head form while retaining the comet interaction system"
+    }
+  ],
+  "claims": {
+    "observed": [
+      "The first commit added a fine-pointer companion, spark trail, tap bloom, coarse-pointer fallback, and reduced-motion handling under comet-prefixed selectors.",
+      "The second commit changed the companion geometry and facial treatment into a cat head, but retained the comet-prefixed selector namespace, spark trail, bloom behavior, pointer-mode branching, and reduced-motion controls.",
+      "The second commit temporally follows and directly edits the first commit's interaction surface."
+    ],
+    "inferred": [
+      "The durable design decision is not a full replacement of the comet interaction grammar; it is a concrete identity substitution inside that grammar.",
+      "The retained comet namespace records implementation lineage, while the visible cat form records the current presentation decision."
+    ],
+    "proposed": [
+      "Represent this in the continuity graph as one interaction system with two temporal presentation states rather than two unrelated features.",
+      "Use the visible cat-head form as current unless a later immutable commit supersedes it, while preserving the comet origin as provenance."
+    ],
+    "superseded": [
+      "The abstract round comet-face silhouette introduced by b413f31ead27bb65ac30b853cd66ecd163cf6ca3."
+    ],
+    "unresolved": [
+      "Whether the cat form was selected from an originating decision log, language lexicon, project document, or private conversation unavailable in repository evidence.",
+      "Whether the retained comet-prefixed namespace is intentional semantic continuity or only an unrenamed implementation detail."
+    ]
+  },
+  "memory_recovered": "Mirror Cartographer's pointer companion is a continuous interaction grammar whose visible identity evolved from an abstract comet-face to a cat head. The current form supersedes the earlier silhouette, but not the spark, bloom, accessibility, or pointer-mode behavior that define the underlying system.",
+  "knowledge_graph": {
+    "entity": "public_pointer_companion",
+    "continuity_relation": "same_system_new_presentation_state",
+    "states": [
+      {
+        "state": "abstract_comet_face",
+        "commit_sha": "b413f31ead27bb65ac30b853cd66ecd163cf6ca3",
+        "temporal_status": "superseded"
+      },
+      {
+        "state": "cat_head",
+        "commit_sha": "fb9a31e2ce4a240f7e4e9a673122c5fe2e999d64",
+        "temporal_status": "current_observed"
+      }
+    ],
+    "preserved_behaviors": [
+      "fine-pointer following",
+      "spark trail",
+      "tap bloom",
+      "coarse-pointer fallback",
+      "reduced-motion adaptation"
+    ]
+  },
+  "evidence_strength": "two directly fetched immutable sequential commit diffs affecting the same path and selectors",
+  "privacy_boundary": {
+    "included": [
+      "public repository commit metadata",
+      "abstract interaction behavior",
+      "visual-form lineage",
+      "accessibility behavior"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal pet identities",
+      "credentials",
+      "unreviewed file-library material",
+      "unverified author intent"
+    ]
+  },
+  "falsification_route": [
+    "Locate an earlier or later immutable commit that establishes a different current presentation state.",
+    "Locate an originating decision artifact that explicitly defines whether comet lineage or cat identity is canonical.",
+    "Reject the same-system inference if immutable evidence shows the second commit replaced rather than edited the original interaction implementation."
+  ],
+  "specialist_registry_change": null,
+  "reversibility": "Additive continuity record only; revert this commit without altering source history or canonical state."
+}
