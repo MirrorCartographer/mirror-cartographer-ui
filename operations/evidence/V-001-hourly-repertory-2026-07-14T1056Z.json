@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T10:56:00Z",
+  "slice": "deterministic_hourly_repertory_contract",
+  "implementation_commit": "4c31fc0723e2b8990e20987c3ca9bed98337b78f",
+  "test_commit": "944828c62a5b718298ead2de086cf8335ec201d4",
+  "production_on_stage": {
+    "hour_key": 495562,
+    "repertory_index": 2,
+    "id": "coordinate-carnival",
+    "title": "Coordinate Carnival"
+  },
+  "verification": {
+    "source_inspected": true,
+    "contract_test_committed": true,
+    "runtime_test_executed": false,
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "evidence_strength": "committed_unexecuted"
+  },
+  "constraints_preserved": [
+    "operations-only change while Vercel build capacity remains blocked",
+    "one shared continuity channel across productions",
+    "deterministic UTC-hour selection",
+    "accessible, mobile-safe, non-autoplaying, reversible production metadata",
+    "no payment or conversion logic",
+    "no private source material"
+  ],
+  "rollback": {
+    "route": "revert commits 944828c62a5b718298ead2de086cf8335ec201d4 and 4c31fc0723e2b8990e20987c3ca9bed98337b78f",
+    "data_migration_required": false
+  },
+  "limits": [
+    "The Node test was not executed in this connector-only run.",
+    "The selector is an operations contract and is not yet wired into the public runtime.",
+    "No deployment evidence was produced."
+  ]
+}
