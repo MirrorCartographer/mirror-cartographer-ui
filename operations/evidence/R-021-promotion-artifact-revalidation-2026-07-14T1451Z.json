@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "artifact_type": "frontier_research_verification_record",
+  "generated_at": "2026-07-14T14:51:00Z",
+  "finding": "A retained source-bound promotion artifact requires fresh semantic reassessment in addition to byte binding; otherwise exact source provenance can remain valid while gate behavior or retained assessment content drifts.",
+  "implementation": {
+    "core": "tools/frontier-research/workflow-enumeration-promotion-verifier-core.mjs",
+    "cli": "tools/frontier-research/workflow-enumeration-promotion-verifier-cli.mjs",
+    "test": "tools/frontier-research/workflow-enumeration-promotion-verifier-core.test.mjs"
+  },
+  "verification": {
+    "method": "node --test against an isolated reconstruction of the committed core contract",
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "accept exact source bytes and semantically identical reassessment",
+      "reject source byte-length drift",
+      "reject same-length source mutation by SHA-256",
+      "reject fresh assessment drift",
+      "reject unsupported retained artifact schema"
+    ],
+    "evidence_strength": "committed_core_and_deterministic_local_runtime_verification"
+  },
+  "source_status": {
+    "repository_state": "primary_project_source",
+    "prior_artifact_schema": "observed",
+    "revalidation_gap": "inferred_from_absent_checker_and_falsified_by_new_tests",
+    "authenticated_repository_execution": "not_performed"
+  },
+  "uncertainty": "The full CLI was not executed against authenticated retained workflow-enumeration evidence in this run.",
+  "falsification_route": "Run the CLI against a real schema-v2 promotion artifact and its exact retained source, then mutate either source bytes or the gate implementation and require verification to fail.",
+  "privacy_boundary": "Contains repository paths, abstract evidence classifications, and test outcomes only; no credentials, private workflow payloads, chat content, or personal data."
+}
