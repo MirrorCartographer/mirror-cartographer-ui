@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T13:25:00Z",
+  "finding": "Agreement between two exhaustive exact-commit clients is not sufficient when the repository state can change during or immediately after observation. Promotion should additionally require repeated non-overlapping exhaustive observations with an identical canonical digest, terminal workflow-run status, and a configured quiet period since the latest run update.",
+  "source_status": {
+    "primary": [
+      {
+        "title": "GitHub REST API endpoints for workflow runs",
+        "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+        "observed_claims": [
+          "The repository workflow-runs endpoint supports head_sha filtering.",
+          "Filtered searches return at most 1000 results.",
+          "The endpoint exposes workflow-run status and supports pagination with a maximum page size of 100."
+        ]
+      },
+      {
+        "title": "GitHub REST API pagination guidance",
+        "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+        "observed_claims": [
+          "REST collections may require Link-header traversal across multiple pages."
+        ]
+      }
+    ],
+    "inference": "Because workflow runs for a commit can remain nonterminal or be updated while evidence is collected, independently exhaustive clients can disagree without either client being defective. Temporal stabilization is therefore a separate evidence dimension from pagination completeness and client independence.",
+    "uncertainty": "GitHub does not document a universal snapshot-isolation guarantee for this endpoint. The quiet-period duration is a policy parameter, not a GitHub-specified constant."
+  },
+  "artifact": {
+    "implementation": "tools/frontier-research/workflow-enumeration-stability.mjs",
+    "test": "tools/frontier-research/workflow-enumeration-stability.test.mjs",
+    "implementation_commit": "f9dcdc813a968ef86077a11e62c979a4572478ad",
+    "test_commit": "dd09d0d117849326e396d7660b4421e009cacb27"
+  },
+  "verification": {
+    "route": "node --test workflow-enumeration-stability.test.mjs",
+    "runtime": "local Node runtime",
+    "result": "5 tests passed; 0 failed",
+    "verified_behaviors": [
+      "matching terminal observations after the quiet period promote",
+      "digest drift fails closed",
+      "nonterminal runs fail closed",
+      "insufficient quiet period fails closed",
+      "overlapping observations and cross-commit records are rejected"
+    ],
+    "evidence_strength": "primary-source-grounded, committed, locally runtime-verified"
+  },
+  "falsification_route": "Run two or more non-overlapping exhaustive enumerations for one exact commit after all runs are terminal and the chosen quiet period has elapsed. Any canonical digest change, nonterminal status, cross-commit record, incomplete traversal, or provider-ceiling ambiguity falsifies stability.",
+  "limits": [
+    "No authenticated private-repository workflow enumeration was performed in this slice.",
+    "The module is not yet integrated into the retained-evidence CLI or Vercel assessor.",
+    "The configured quiet period requires empirical calibration."
+  ],
+  "privacy": "No credentials, private workflow payloads, user data, or private source material are retained."
+}
