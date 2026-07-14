@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T17:01:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a reversible opt-in application bridge and complete public renderer registry for the deterministic repertory runtime without importing it into the live React entrypoint.",
+  "evidence": "operations/evidence/V-001-public-repertory-bridge-2026-07-14T1701Z.json",
+  "commits": [
+    "10c07f33b9822b10aad28d49ecb985adf307e74f",
+    "1b088cb21a45015136f15ac6d9cd00bc555ec3ff",
+    "eb3f3b4b275f7a19c24b7dd9427a9cb9f1109bca"
+  ],
+  "acceptance_effect": {
+    "advanced": [
+      "A production-safe opt-in boundary now exists between the operations repertory runtime and an application DOM stage.",
+      "All six catalog renderers have accessible text projections and decorative fields.",
+      "A narrow rollback removes only the staged repertory mount."
+    ],
+    "unchanged": [
+      "Authenticated dual workflow enumeration remains required.",
+      "An exact-commit audio workflow artifact remains required.",
+      "Immutable successful Vercel deployment identity remains required.",
+      "Physical iPhone Safari audibility verification remains required."
+    ]
+  },
+  "next_action": "Execute the committed bridge contract test and a Vite build in an authenticated checkout; then add one dedicated data-repertory-stage host behind a reversible application flag and verify it in WebKit without deploying while provider capacity remains blocked.",
+  "canonical_files_overwritten": false,
+  "specialist_registry_changed": false
+}
