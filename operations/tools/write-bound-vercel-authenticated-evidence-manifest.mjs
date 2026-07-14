@@ -1,5 +1,5 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { readFile, realpath } from 'node:fs/promises';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateEvidencePromotion } from '../../tools/frontier-research/evidence-promotion-gate.mjs';
 import { withBoundInputSnapshot } from './bound-input-snapshot.mjs';
@@ -9,6 +9,32 @@ function fail(reason, details = {}) {
   return { verified: false, reason, ...details };
 }
 
+async function validateOutputBoundary(outputPath, evidenceRoot) {
+  let canonicalRoot;
+  let canonicalParent;
+  try {
+    canonicalRoot = await realpath(evidenceRoot);
+    canonicalParent = await realpath(dirname(resolve(outputPath)));
+  } catch (error) {
+    return fail('output_boundary_resolution_failed', { code: error?.code ?? 'unknown' });
+  }
+
+  const displacement = relative(canonicalRoot, canonicalParent);
+  if (displacement === '' || (!displacement.startsWith('..') && !isAbsolute(displacement))) {
+    return {
+      verified: true,
+      reason: 'output_parent_within_evidence_root',
+      canonical_evidence_root: canonicalRoot,
+      canonical_output_parent: canonicalParent
+    };
+  }
+
+  return fail('output_parent_outside_evidence_root', {
+    canonical_evidence_root: canonicalRoot,
+    canonical_output_parent: canonicalParent
+  });
+}
+
 export async function writeBoundAuthenticatedEvidenceManifest({
   input_path,
   output_path,
@@ -16,6 +42,9 @@ export async function writeBoundAuthenticatedEvidenceManifest({
   dependencies = {}
 }) {
   if (!input_path || !output_path) return fail('input_and_output_paths_required');
+
+  const outputBoundary = await validateOutputBoundary(output_path, evidence_root);
+  if (!outputBoundary.verified) return outputBoundary;
 
   const readInput = dependencies.read_input ?? (path => readFile(path, 'utf8'));
   const validatePromotion = dependencies.validate_promotion ?? validateEvidencePromotion;
@@ -42,7 +71,8 @@ export async function writeBoundAuthenticatedEvidenceManifest({
   return {
     ...result,
     reason: 'promoted_authenticated_evidence_manifest_written',
-    evidence_promotion: promotion
+    evidence_promotion: promotion,
+    output_boundary: outputBoundary
   };
 }
 
