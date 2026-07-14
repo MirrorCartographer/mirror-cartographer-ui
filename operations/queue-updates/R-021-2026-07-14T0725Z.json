@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T07:25:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound the exact promoted input object to downstream manifest serialization through an exclusive, read-only, digest-verified ephemeral snapshot, eliminating reread of the caller-controlled input path after promotion.",
+  "files": [
+    "operations/tools/bound-input-snapshot.mjs",
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/tests/bound-input-snapshot.test.mjs",
+    "operations/evidence/R-021-bound-input-snapshot-2026-07-14T0725Z.json"
+  ],
+  "verification": {
+    "command": "node --test operations/tests/bound-input-snapshot.test.mjs",
+    "tests_passed": 3,
+    "tests_failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute the authenticated repository enumerator for one exact commit.",
+    "Execute the independent gh api --paginate --slurp traversal for the same commit.",
+    "Retain both raw outputs, execution declarations, stabilization evidence, reconciliation result, promotion result, and final manifest.",
+    "Run the complete bound-manifest integration suite in an authenticated checkout or CI runner."
+  ],
+  "safe_next_action": "Add a deterministic integration test that mutates the original input path immediately after promotion and confirms the final manifest is derived from the bound snapshot digest, then execute the full exact-commit evidence path with both authenticated clients.",
+  "canonical_state_overwrite": false,
+  "specialist_registry_change": "none"
+}
