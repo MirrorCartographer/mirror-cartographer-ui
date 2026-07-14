@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T16:37:14Z",
+  "slice": "privacy_safe_public_repertory_catalog",
+  "production_on_stage": {
+    "hour": 12,
+    "production_id": "coordinate-bloom",
+    "title": "Coordinate Bloom",
+    "selection_rule": "hour modulo six-production catalog length",
+    "status": "catalog_selected_not_publicly_deployed"
+  },
+  "artifacts": [
+    "operations/studio/public-repertory-catalog.mjs",
+    "operations/studio/public-repertory-catalog.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test public-repertory-catalog.test.mjs",
+    "working_directory": "operations/studio equivalent isolated test directory",
+    "result": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "coverage": [
+      "six unique productions rotate deterministically across 24 hours",
+      "controller projection excludes provenance payload while catalog retains it",
+      "all provenance claims use explicit observed_preference, inference, experiment, or current_decision classes",
+      "all provenance claims are marked public_safe",
+      "audio is silent or user_initiated and never autoplay-enabled",
+      "reducible motion is the default policy",
+      "catalog text excludes payment, account-login, diagnosis, patient, and private-source surfaces"
+    ],
+    "evidence_strength": "deterministic Node contract verification plus committed source retention",
+    "not_verified": [
+      "public browser rendering",
+      "focus preservation in a real browser",
+      "mobile Safari layout and interaction",
+      "Vercel deployment identity",
+      "physical-device audio audibility"
+    ]
+  },
+  "provenance_boundary": {
+    "source_material": "privacy-reviewed abstract project aesthetics only",
+    "private_material_embedded": false,
+    "classes_preserved": [
+      "observed_preference",
+      "inference",
+      "experiment",
+      "current_decision"
+    ]
+  },
+  "constraints_preserved": [
+    "No Vercel deployment attempted while provider capacity remains blocked.",
+    "No payments or conversion logic added.",
+    "No private source material embedded.",
+    "No canonical shared state file overwritten.",
+    "No GitHub file or history deleted."
+  ],
+  "rollback": {
+    "reversible": true,
+    "route": "Revert the two additive catalog commits or stop importing the catalog; no canonical state restoration is required."
+  },
+  "falsification_route": "Run the committed test file, inspect every catalog provenance statement, and compare getControllerProductions output against the repertory controller production contract."
+}
