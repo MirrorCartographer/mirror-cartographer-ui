@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T06:12:22Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Implemented and verified an operations-only, feature-disabled hourly stage runtime candidate that selects exactly one validated public production for each local hour, preserves one continuity channel, rejects autoplay, conversion logic, and private source material, respects reduced-motion preference, emits a public stage event, and provides an explicit rollback route.",
+  "production_currently_on_stage": "one-eye-constellation",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "registry_change": "none",
+  "files": [
+    "operations/prototypes/hourly-stage-runtime-candidate.mjs",
+    "operations/tests/hourly-stage-runtime-candidate.test.mjs",
+    "operations/evidence/V-001-hourly-runtime-candidate-2026-07-14T0612Z.json"
+  ],
+  "commits": [
+    "c6108bfbbb5b3c22d4f66aa6ac9b8b9773079f7f",
+    "36c067a099a0ab82515c291e5962a74495d08d2e",
+    "89b80d9784a21ad4a746d4d030661991396bd8c4"
+  ],
+  "verification": "4 deterministic Node tests passed in an isolated reconstruction from the exact committed source text; no browser, device, CI, or deployment claim.",
+  "deployment_effect": "operations-only; no application path changed and no Vercel deployment requested",
+  "acceptance_remaining": [
+    "Install the runtime candidate into the application behind a disabled-by-default build flag after provider capacity returns.",
+    "Generate and validate the exact 24-entry public repertory payload set from the existing manifest adapter.",
+    "Verify keyboard, reduced-motion, browser, Mobile Safari, and user-initiated audio behavior.",
+    "Complete exact-commit workflow enumeration, immutable Vercel deployment identity, and bounded physical iPhone audibility evidence."
+  ],
+  "rollback_route": [
+    "revert this queue-update commit",
+    "revert 89b80d9784a21ad4a746d4d030661991396bd8c4",
+    "revert 36c067a099a0ab82515c291e5962a74495d08d2e",
+    "revert c6108bfbbb5b3c22d4f66aa6ac9b8b9773079f7f"
+  ],
+  "safe_next_action": "Create an operations-only generator that converts the canonical repertory through createPublicHourlyStagePayload into an exact 24-entry application-ready public payload module, then verify stable IDs, hour coverage, provenance categories, and absence of prohibited fields without installing it into the application until provider capacity returns."
+}
