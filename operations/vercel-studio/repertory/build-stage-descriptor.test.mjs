@@ -55,13 +55,41 @@ assert.throws(
   () => buildStageDescriptor({ ...base, publicMetadata: { layers: [{ checkout: '/pay' }] } }),
   /public metadata\.layers\[0\]\.checkout/,
 );
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'contact mirrorcartographer@example.com' } }),
+  /email-address at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'api_key=not-public' } }),
+  /credential-assignment at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'Bearer abcdefghijklmnop' } }),
+  /bearer-token at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'derived from a private chat' } }),
+  /private-source-marker at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'visit /checkout now' } }),
+  /commerce-route at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: 'x'.repeat(281) } }),
+  /exceeds 280 characters at public metadata\.note/,
+);
+assert.throws(
+  () => buildStageDescriptor({ ...base, publicMetadata: { note: `visible\u0000hidden` } }),
+  /control characters at public metadata\.note/,
+);
 assert.throws(() => buildStageDescriptor({ ...base, date: new Date() }), /exactly one/);
 assert.throws(() => buildStageDescriptor({ schedule, continuityState: { channel: 'shared-runtime-state' }, publicMetadata: {} }), /exactly one/);
 
 console.log(JSON.stringify({
-  tests: 17,
-  passed: 17,
+  tests: 24,
+  passed: 24,
   production: descriptor.production.title,
   activation: descriptor.activation,
-  privacy_boundary: 'recursive',
+  privacy_boundary: 'recursive-keys-and-bounded-strings',
 }));
