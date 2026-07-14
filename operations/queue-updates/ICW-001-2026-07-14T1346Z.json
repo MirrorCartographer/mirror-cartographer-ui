@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "ICW-001",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "completed_preview_unpublished",
+  "objective": "Create one bold self-contained independent browser artwork while the application deployment surface remains frozen.",
+  "selection_note": "No canonical ACTIVE_QUEUE item was owned by independent_creative_web, so this file records a non-overwriting team-owned queue projection rather than modifying operations/ACTIVE_QUEUE.json.",
+  "completed_slices": [
+    "Implemented The Weather That Remembers No One as a self-contained deterministic canvas climate.",
+    "Added gesture-gated procedural wind audio, reduced-motion adaptation, hidden-page suspension, keyboard-operable controls, and polite live status.",
+    "Added a four-case static contract test covering independence, audio safety, lifecycle behavior, and accessibility.",
+    "Recorded a no-deployment evidence artifact with explicit verification limits and rollback route."
+  ],
+  "acceptance_remaining": [
+    "Execute node --test operations/tests/independent-weather-preview.test.mjs in an authenticated checkout or CI.",
+    "Perform a browser preview in Chromium and Mobile Safari without routing through the Mirror Cartographer production surface.",
+    "Select an independent hosting target only after identity and domain boundaries are approved."
+  ],
+  "safe_next_action": "Run the committed static contract tests, capture one independent preview artifact, then add an optional deterministic day-cycle without persistence, tracking, autoplay, or Mirror Cartographer framing."
+}
