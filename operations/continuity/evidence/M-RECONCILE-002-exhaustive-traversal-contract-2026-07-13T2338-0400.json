@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-14T03:38:26Z",
+  "artifact": "operations/continuity/schemas/exhaustive-provenance-traversal.schema.json",
+  "artifact_commit": "116d18d43edbaf54add38463fbbd4d5a9521fdff",
+  "coverage_class": "implementation_ready_contract",
+  "privacy_class": "public_repository_metadata",
+  "observed": [
+    "The active queue requires exhaustive accessible-ref and reachable-commit traversal before M-004, M-005, or M-006 may be classified as unlocated after exhaustive coverage.",
+    "Prior connector-backed indexed search is explicitly bounded and cannot prove repository-wide absence.",
+    "No existing machine-checkable artifact defined the exact retained ref inventory, commit inventory, identifier result states, and fail-closed coverage status required for acceptance."
+  ],
+  "inferred": [
+    "Without a retained traversal manifest, future runs can accidentally equate zero indexed results with exhaustive absence.",
+    "Binding commands, raw paths, hashes, counts, immutable candidate locators, and per-identifier state makes the coverage claim independently auditable."
+  ],
+  "proposed": [
+    "Generate a manifest conforming to the committed schema from an authenticated full clone.",
+    "Retain raw ref and commit inventories and their SHA-256 digests.",
+    "Inspect every reachable historical tree for exact identifier assignments and classify every candidate without reconstructing history."
+  ],
+  "superseded": [
+    "Treating connector code search or commit-message search as exhaustive repository traversal.",
+    "Using one collective prose conclusion for three independently resolvable identifiers."
+  ],
+  "unresolved": [
+    "Authenticated full-ref inventory has not yet been captured.",
+    "Reachable historical trees have not yet been exhaustively inspected.",
+    "Immutable accepted-origin objects for M-004, M-005, and M-006 remain unlocated."
+  ],
+  "verification": {
+    "level": "repository commit plus schema inspection",
+    "result": "committed",
+    "limits": [
+      "The schema has not yet been executed against a generated manifest.",
+      "The GitHub connector cannot establish that every server-side ref is present in a local clone.",
+      "No private chat or File Library material was searched or retained."
+    ]
+  },
+  "falsification_route": [
+    "Produce an accessible ref omitted by the retained ref inventory.",
+    "Produce a reachable commit omitted by git rev-list --all.",
+    "Produce a historical blob that explicitly assigns an identifier and predates later continuity bookkeeping.",
+    "Show that a manifest accepted as exhaustive violates the committed schema or digest bindings."
+  ]
+}
