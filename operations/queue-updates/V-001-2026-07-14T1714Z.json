@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T17:14:55Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and locally verified temporal coherence checks for stage receipts.",
+  "evidence_path": "operations/evidence/V-001-stage-time-coherence-2026-07-14T1714Z.json",
+  "canonical_files_unchanged": true,
+  "specialist_registry_change": null,
+  "next_action": "Wire the coherence assessment into the retained exact-commit evidence path before bundle promotion."
+}
