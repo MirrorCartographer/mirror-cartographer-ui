@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { validateAuthenticatedPaginationEvidence } from '../../tools/frontier-research/authenticated-pagination-evidence-gate.mjs';
 
@@ -26,6 +27,22 @@ function validMethod(method, commitSha) {
   return null;
 }
 
+function canonicalize(value) {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonicalize(value[key])]));
+  }
+  return value;
+}
+
+export function computeNormalizedRecordSetSha256(records) {
+  if (!Array.isArray(records)) throw new TypeError('records must be an array');
+  const normalized = records
+    .map((record) => canonicalize(record))
+    .sort((left, right) => String(left.id).localeCompare(String(right.id), 'en', { numeric: true }));
+  return createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+}
+
 export function validateAuthenticatedEvidenceManifest(input) {
   if (!input || typeof input !== 'object') return fail('manifest_invalid');
   if (input.repository !== REPOSITORY) return fail('repository_mismatch');
@@ -40,6 +57,10 @@ export function validateAuthenticatedEvidenceManifest(input) {
   const transport = validateAuthenticatedPaginationEvidence(input);
   if (!transport.verified) return transport;
 
+  const primaryRecordDigest = computeNormalizedRecordSetSha256(input.primary.records);
+  const independentRecordDigest = computeNormalizedRecordSetSha256(input.independent.records);
+  if (primaryRecordDigest !== independentRecordDigest) return fail('canonical_record_set_divergence', { primary_record_set_sha256: primaryRecordDigest, independent_record_set_sha256: independentRecordDigest });
+
   const stabilization = input.stabilization;
   if (!stabilization || stabilization.stable !== true) return fail('snapshots_unstable');
   const first = Date.parse(stabilization.first_snapshot_at);
@@ -49,12 +70,14 @@ export function validateAuthenticatedEvidenceManifest(input) {
   if ((second - first) / 1000 < stabilization.minimum_quiet_interval_seconds) return fail('quiet_interval_not_met');
   if (!SHA256.test(stabilization.first_normalized_record_set_sha256 ?? '') || !SHA256.test(stabilization.second_normalized_record_set_sha256 ?? '')) return fail('snapshot_digest_invalid');
   if (stabilization.first_normalized_record_set_sha256 !== stabilization.second_normalized_record_set_sha256) return fail('snapshot_digest_divergence');
+  if (stabilization.second_normalized_record_set_sha256 !== primaryRecordDigest) return fail('snapshot_digest_not_bound_to_records', { computed_record_set_sha256: primaryRecordDigest });
 
   const reconciliation = input.reconciliation;
   if (!reconciliation || reconciliation.verified !== true) return fail('reconciliation_unverified');
   if (reconciliation.provider_ceiling_ambiguous !== false) return fail('provider_ceiling_ambiguous');
   if (!SHA256.test(reconciliation.normalized_record_set_sha256 ?? '')) return fail('normalized_digest_invalid');
   if (stabilization.second_normalized_record_set_sha256 !== reconciliation.normalized_record_set_sha256) return fail('stabilization_reconciliation_digest_mismatch');
+  if (reconciliation.normalized_record_set_sha256 !== primaryRecordDigest) return fail('reconciliation_digest_not_bound_to_records', { computed_record_set_sha256: primaryRecordDigest });
   if (input.primary.record_count >= 1000 || input.independent.record_count >= 1000) return fail('provider_ceiling_ambiguous');
 
   const primaryIds = input.primary.records.map((record) => String(record.id)).sort();
@@ -71,7 +94,7 @@ export function validateAuthenticatedEvidenceManifest(input) {
     repository: input.repository,
     commit_sha: input.commit_sha,
     record_count: primaryIds.length,
-    normalized_record_set_sha256: reconciliation.normalized_record_set_sha256,
+    normalized_record_set_sha256: primaryRecordDigest,
     stabilization_snapshot_sha256: stabilization.second_normalized_record_set_sha256,
     primary_receipt_sha256: transport.primary_receipt_sha256,
     independent_receipt_sha256: transport.independent_receipt_sha256
@@ -86,13 +109,13 @@ export async function writeAuthenticatedEvidenceManifest({ input_path, output_pa
   const validation = validateAuthenticatedEvidenceManifest(input);
   if (!validation.verified) return validation;
   const manifest = {
-    schema_version: 3,
+    schema_version: 4,
     artifact_type: 'vercel_authenticated_workflow_evidence_manifest',
     ...input,
     validation,
     limitations: [
-      'This manifest proves only the retained authenticated workflow enumeration, page-link continuity, transport provenance, and digest-bound snapshot stability described by its inputs.',
-      'It does not prove semantic completeness, provider-wide absence, Vercel deployment identity, browser audibility, or physical-device behavior.'
+      'This manifest proves only the retained authenticated workflow enumeration, page-link continuity, transport provenance, and canonical-record-bound snapshot stability described by its inputs.',
+      'It does not prove provider-wide semantic completeness, Vercel deployment identity, browser audibility, or physical-device behavior.'
     ]
   };
   try { await writeFile(output_path, `${JSON.stringify(manifest, null, 2)}\n`, { flag: 'wx' }); }
