@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_verification",
+  "queue_item": "R-021",
+  "finding": "Manifest schema v3 compared three caller-supplied digests but did not recompute the normalized record-set digest from retained records, permitting a forged self-consistent digest to pass.",
+  "source_status": {
+    "type": "primary_repository_source",
+    "files": [
+      "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+      "operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+      "tools/frontier-research/authenticated-pagination-evidence-gate.mjs"
+    ]
+  },
+  "implementation": {
+    "schema_version_after": 4,
+    "canonicalization": "Recursively sort object keys, preserve array order within records, sort the record set by numeric-aware string workflow-run id, serialize as JSON, and hash with SHA-256.",
+    "new_fail_closed_reasons": [
+      "canonical_record_set_divergence",
+      "snapshot_digest_not_bound_to_records",
+      "reconciliation_digest_not_bound_to_records"
+    ],
+    "implementation_commit": "654fad3c2e96193121239f1fb475e9eefec54fa4",
+    "test_commit": "fd32ce43bea2b7811d77eda9f0c35f47db7d9a69"
+  },
+  "verification": {
+    "full_committed_suite_assertion_count": 26,
+    "full_committed_suite_executed_in_this_run": false,
+    "isolated_runtime_probe": {
+      "passed": true,
+      "assertions": 2,
+      "order_invariant_digest": "61f05d0af476cd0e228b7f093af70534bf5ace28e4abf9ce32dfa9914c4c15c1",
+      "metadata_mutation_digest": "35a730d1c4dc500864574cf6fc13962a6ef8ad7283db7a816116cfebb10b510e"
+    },
+    "source_round_trip": true
+  },
+  "evidence_strength": "implementation_committed_with_partial_runtime_verification",
+  "uncertainty": "The complete 26-assertion integration suite was committed but not executed in a repository checkout during this run.",
+  "falsification_route": [
+    "Run node operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs in an authenticated checkout.",
+    "Supply equal forged stabilization and reconciliation SHA-256 values that do not equal the canonical digest of retained records; validation must fail with snapshot_digest_not_bound_to_records.",
+    "Mutate metadata in one independently retained normalized record set while preserving workflow-run ids; validation must fail with canonical_record_set_divergence."
+  ],
+  "claim_boundary": {
+    "proves_canonical_digest_binding_design": true,
+    "proves_full_test_suite_execution": false,
+    "proves_authenticated_enumeration": false,
+    "proves_provider_completeness": false,
+    "proves_deployment_identity": false
+  }
+}
