@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "R-026",
+  "owner": "frontier_research",
+  "created_at": "2026-07-14T17:00:00Z",
+  "finding": "The retained-evidence UTF-8 boundary can be represented as a runtime-neutral hex manifest and replayed without embedding byte vectors in a single implementation-specific test.",
+  "source_status": [
+    {
+      "status": "normative",
+      "source": "RFC 3629",
+      "locator": "https://www.rfc-editor.org/rfc/rfc3629",
+      "supports": "UTF-8 scalar range, one-to-four-octet syntax, overlong exclusion, forbidden lead ranges, and malformed-sequence security relevance"
+    },
+    {
+      "status": "implementation_reference",
+      "source": "Node.js Buffer.isUtf8 documentation",
+      "locator": "https://nodejs.org/api/buffer.html#bufferisutf8input",
+      "supports": "Current Node byte-validity comparison interface"
+    },
+    {
+      "status": "project_policy",
+      "source": "tools/frontier-research/strict-json-evidence-bytes.mjs",
+      "supports": "BOM rejection, fatal UTF-8 decoding, scalar-value enforcement, and resource ceilings"
+    }
+  ],
+  "artifacts": [
+    "tools/frontier-research/utf8-evidence-vectors.json",
+    "tools/frontier-research/utf8-evidence-vectors.test.mjs",
+    "tools/frontier-research/utf8-evidence-vectors-python.py"
+  ],
+  "verification": {
+    "node_runtime": "v22.16.0",
+    "python_runtime": "3.13.5",
+    "node_test": {"tests": 3, "passed": 3, "failed": 0},
+    "python_replay": {"vectors": 20, "passed": 20, "failed": 0},
+    "validators": ["node:buffer.isUtf8", "WHATWG TextDecoder fatal mode", "Python strict UTF-8 decoder", "project strict evidence ingress"]
+  },
+  "evidence_strength": "moderate",
+  "uncertainty": [
+    "The corpus is boundary-focused rather than exhaustive over all malformed byte strings.",
+    "Node Buffer.isUtf8 and TextDecoder may share lower-level implementation components.",
+    "The Python replay verifies UTF-8 validity only; project-specific BOM, duplicate-member, scalar, and resource policies remain Node-ingress checks."
+  ],
+  "falsification_route": [
+    "Replay the manifest in an independently implemented Rust, ICU, or browser validator.",
+    "Add a published exhaustive malformed-sequence corpus and minimize any disagreement to a single vector.",
+    "Reject promotion if any runtime disagrees with the manifest or if the project ingress collapses distinct failure classes."
+  ],
+  "claim_status": "observed",
+  "privacy_class": "public_technical_metadata_only"
+}
