@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-026",
+  "owner": "frontier_research",
+  "priority_basis": "R-020 and R-021 are implementation-complete but blocked on authenticated execution; this slice closes the adjacent portability gap identified by R-025 without duplicating authenticated enumeration work.",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Extracted the strict UTF-8 ingress corpus into a runtime-neutral hex manifest, added Node replay against two byte validators plus project ingress, and added an independent Python strict-decoder replay.",
+  "design_implication": "Evidence-ingress conformance can now be replayed across runtimes from one immutable vector source while preserving separate invalid-UTF-8, BOM, lone-surrogate, and duplicate-member classifications.",
+  "verification": {
+    "node": "3 passed, 0 failed on Node v22.16.0",
+    "python": "20 vectors passed on Python 3.13.5"
+  },
+  "files": [
+    "tools/frontier-research/utf8-evidence-vectors.json",
+    "tools/frontier-research/utf8-evidence-vectors.test.mjs",
+    "tools/frontier-research/utf8-evidence-vectors-python.py",
+    "operations/evidence/R-026-runtime-neutral-utf8-corpus-2026-07-14T1700Z.json"
+  ],
+  "limits": [
+    "Not an exhaustive malformed-sequence corpus.",
+    "Does not satisfy authenticated exact-commit execution remaining for R-020 or R-021.",
+    "Does not prove provenance, authorization, freshness, deployment identity, or factual truth of an evidence payload."
+  ],
+  "safe_next_action": "Add one independently maintained exhaustive malformed-sequence source, replay the manifest in Rust or ICU, and retain minimized disagreement artifacts; separately execute R-020 and R-021 in an authenticated checkout when credentials and raw-output retention are available.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "deletions": []
+}
