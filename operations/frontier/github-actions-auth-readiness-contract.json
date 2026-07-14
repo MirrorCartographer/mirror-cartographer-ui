@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "contract_id": "github-actions-auth-readiness-v1",
+  "queue_items": ["R-020", "R-021"],
+  "status": "implementation_ready",
+  "finding": {
+    "observed": "GitHub documents that private-repository workflow-run listing requires repository read access and, for fine-grained tokens, Actions repository permission (read). The endpoint returns HTTP 200 on success and filtered searches can be capped at 1,000 results.",
+    "inference": "A zero-run response is admissible evidence only after authentication, repository identity, permission readiness, API-version, and rate-limit state are proven. Authorization or scope failures must never be normalized into an empty enumeration.",
+    "current_decision": "Run a no-secret readiness preflight before either exhaustive client. Bind the preflight to the repository and exact commit, retain only sanitized status and rate-limit metadata, and fail closed before enumeration when readiness is not proven.",
+    "uncertainty": "GitHub does not expose a universal response field that directly attests every effective token permission; readiness therefore combines successful authenticated repository access, a successful one-item Actions request, and explicit client-side credential-presence checks without retaining the credential."
+  },
+  "source_status": {
+    "source_class": "primary_official_documentation",
+    "documents": [
+      {
+        "title": "REST API endpoints for workflow runs",
+        "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+        "retrieved_at": "2026-07-14T19:40:00Z",
+        "relevant_claims": [
+          "Private repository access requires an authenticated token with suitable repository access.",
+          "Fine-grained tokens require Actions repository permission (read).",
+          "A successful list-workflow-runs response has HTTP status 200.",
+          "Filtered searches using head_sha and other named filters return at most 1,000 results."
+        ]
+      },
+      {
+        "title": "REST API endpoints for rate limits",
+        "url": "https://docs.github.com/en/rest/rate-limit/rate-limit?apiVersion=2022-11-28",
+        "retrieved_at": "2026-07-14T19:40:00Z",
+        "relevant_claims": [
+          "Authenticated clients can inspect current REST rate-limit state.",
+          "Rate-limit readiness is separate from authorization readiness."
+        ]
+      }
+    ]
+  },
+  "preflight": {
+    "inputs": [
+      "repository_owner",
+      "repository_name",
+      "exact_commit_sha",
+      "credential_environment_variable_name",
+      "api_version"
+    ],
+    "steps": [
+      "Validate the exact commit as 40 lowercase hexadecimal characters.",
+      "Require the configured credential environment variable to be present and non-empty without reading it into retained output.",
+      "Request GET /repos/{owner}/{repo} and require HTTP 200 plus exact owner/name identity agreement.",
+      "Request GET /repos/{owner}/{repo}/actions/runs?per_page=1 without search filters and require HTTP 200 plus a valid workflow_runs array.",
+      "Inspect rate-limit state or response headers and require remaining capacity above the configured traversal reserve.",
+      "Retain status codes, repository identity, API version, retrieval times, rate-limit category, remaining count, reset time, and a sanitized failure classification.",
+      "Never retain Authorization headers, tokens, cookies, command traces containing secrets, workflow names, actor identities, or run payloads during preflight.",
+      "Emit ready=true only when every readiness predicate passes."
+    ],
+    "ready_predicate": "credential_present && commit_valid && repository_http_200 && repository_identity_matches && actions_probe_http_200 && actions_payload_valid && rate_limit_known && rate_limit_remaining >= traversal_reserve && no_secret_material_retained",
+    "fail_closed_reasons": [
+      "credential_missing",
+      "commit_invalid",
+      "repository_not_found_or_unauthorized",
+      "repository_identity_mismatch",
+      "actions_permission_unproven",
+      "actions_probe_payload_invalid",
+      "rate_limit_unknown",
+      "rate_limit_below_reserve",
+      "secret_material_detected_in_retained_output"
+    ]
+  },
+  "output_envelope": {
+    "required": [
+      "repository",
+      "exact_commit_sha",
+      "api_version",
+      "retrieved_at_start",
+      "retrieved_at_end",
+      "repository_status_code",
+      "actions_probe_status_code",
+      "repository_identity_matches",
+      "actions_payload_valid",
+      "rate_limit_resource",
+      "rate_limit_remaining",
+      "rate_limit_reset_at",
+      "traversal_reserve",
+      "secret_scan_passed",
+      "ready",
+      "failure_reasons"
+    ],
+    "prohibited": [
+      "authorization_header",
+      "token",
+      "cookie",
+      "workflow_runs",
+      "actor",
+      "workflow_name",
+      "raw_command_with_credential"
+    ]
+  },
+  "test_vectors": [
+    {
+      "name": "private repository and Actions read access proven",
+      "input": {"credential_present": true, "repository_status": 200, "identity_matches": true, "actions_status": 200, "payload_valid": true, "remaining": 4200, "reserve": 200, "secret_scan_passed": true},
+      "expected": {"ready": true, "failure_reasons": []}
+    },
+    {
+      "name": "repository readable but Actions permission unproven",
+      "input": {"credential_present": true, "repository_status": 200, "identity_matches": true, "actions_status": 403, "payload_valid": false, "remaining": 4200, "reserve": 200, "secret_scan_passed": true},
+      "expected": {"ready": false, "failure_reasons": ["actions_permission_unproven"]}
+    },
+    {
+      "name": "authorization failure cannot become empty evidence",
+      "input": {"credential_present": true, "repository_status": 404, "identity_matches": false, "actions_status": null, "payload_valid": false, "remaining": null, "reserve": 200, "secret_scan_passed": true},
+      "expected": {"ready": false, "failure_reasons": ["repository_not_found_or_unauthorized"]}
+    },
+    {
+      "name": "capacity insufficient for exhaustive traversal",
+      "input": {"credential_present": true, "repository_status": 200, "identity_matches": true, "actions_status": 200, "payload_valid": true, "remaining": 40, "reserve": 200, "secret_scan_passed": true},
+      "expected": {"ready": false, "failure_reasons": ["rate_limit_below_reserve"]}
+    },
+    {
+      "name": "retained output contains secret-like material",
+      "input": {"credential_present": true, "repository_status": 200, "identity_matches": true, "actions_status": 200, "payload_valid": true, "remaining": 4200, "reserve": 200, "secret_scan_passed": false},
+      "expected": {"ready": false, "failure_reasons": ["secret_material_detected_in_retained_output"]}
+    }
+  ],
+  "handoff": {
+    "consumer": "vercel_studio",
+    "integration_point": "Run before github-actions-ceiling-safe-enumeration-v1 and before both R-021 reconciliation clients.",
+    "promotion_rule": "No enumerator output may be classified as exhaustive, empty, or promotable unless a matching ready=true preflight envelope is retained for the same repository, exact commit, API version, and execution window."
+  },
+  "falsification_route": [
+    "Run the preflight with a token that has repository metadata access but lacks Actions read permission and require rejection.",
+    "Run with an inaccessible repository and verify 404 is classified as authorization_or_visibility_unproven rather than zero runs.",
+    "Lower the rate-limit reserve above current remaining capacity and require pre-enumeration rejection.",
+    "Inject token-shaped strings into retained fixtures and require the secret scan to fail.",
+    "Revisit the contract if GitHub introduces a direct effective-permission attestation endpoint for the authenticated credential."
+  ],
+  "privacy": {
+    "classification": "public_safe_contract",
+    "retention_rule": "Retain only sanitized preflight metadata. Raw authenticated responses remain ephemeral unless separately approved for restricted evidence storage."
+  }
+}
