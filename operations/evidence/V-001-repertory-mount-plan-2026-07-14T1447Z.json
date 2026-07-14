@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T14:47:54Z",
+  "production_on_stage": {
+    "id": "coordinate-carnival",
+    "title": "Coordinate Carnival",
+    "form": "stage",
+    "selection_basis": "canonical_utc_hour",
+    "hour_key": 495566,
+    "repertory_index": 2
+  },
+  "slice": "Deterministic repertory mount-plan boundary",
+  "source_commits": {
+    "implementation": "41f8ff5b2fbd24ca76f450475fba3371a1ba0e6d",
+    "test": "335b4021677c07dae4bf4f1d787ab027772a753c"
+  },
+  "verification": {
+    "command": "node --test /tmp/studio/repertory-mount-plan.test.mjs",
+    "runtime": "isolated Node runtime",
+    "result": "pass",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "verified_behaviors": [
+      "deterministic focus-preserving declarative mount plan",
+      "hidden-page inert suspension without autoplay",
+      "fail-closed privacy, commerce, and media policy enforcement",
+      "rejection of executable or unsupported mount surfaces"
+    ]
+  },
+  "provenance": {
+    "observed": [
+      "V-001 remains blocked on provider build capacity and immutable deployment identity",
+      "the public DOM projection is committed and runtime-verified",
+      "hour key 495566 selects Coordinate Carnival from the four-production canonical repertory"
+    ],
+    "inferred": [
+      "a declarative mutation plan is the safest reversible prerequisite before a real application DOM mount"
+    ],
+    "experiment": [
+      "translate the public projection into a non-executable mount plan and test focus, lifecycle, media, privacy, commerce, network, persistence, safe-area, and reduced-motion constraints"
+    ],
+    "current_decision": "retain this operations-only mount boundary until provider capacity returns and Chromium, WebKit, Mobile Safari, and screen-reader execution can be performed"
+  },
+  "constraints": {
+    "application_files_changed": false,
+    "deployment_attempted": false,
+    "payment_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "git_history_deleted": false,
+    "canonical_shared_state_overwritten": false
+  },
+  "limits": [
+    "not mounted into the application",
+    "not executed in a browser DOM",
+    "not verified in Mobile Safari or a screen reader",
+    "no Vercel deployment or immutable deployment identity verified",
+    "no physical audio audibility evidence"
+  ],
+  "rollback": {
+    "reversible": true,
+    "route": "Revert the implementation, test, evidence, and queue-update commits; no application file or canonical shared-state file was modified."
+  }
+}
