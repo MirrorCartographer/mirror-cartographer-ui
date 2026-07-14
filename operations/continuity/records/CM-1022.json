@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1022",
+  "created_at": "2026-07-14T16:28:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Canonical queue convergence supersedes stale-baseline interpretation",
+  "source_status": "repository_observed",
+  "sources": [
+    {
+      "path": "operations/CURRENT_STATE.json",
+      "blob_sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "role": "project delivery state and operating constraints"
+    },
+    {
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob_sha": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "role": "canonical queue containing M-RECONCILE-002"
+    },
+    {
+      "path": "operations/SPECIALIST_REGISTRY.json",
+      "blob_sha": "0249aea064eda2cc5c7bc86713201e1cd26354ff",
+      "role": "specialist registry rule"
+    },
+    {
+      "path": "operations/TRIGGER_REQUESTS.json",
+      "blob_sha": "35ed5a647af50cc7e9888e00e21bfb13094f9d44",
+      "role": "peer trigger ledger"
+    }
+  ],
+  "claims": {
+    "observed": [
+      "operations/ACTIVE_QUEUE.json currently contains M-RECONCILE-002 as a highest-priority in-progress continuity_mining item.",
+      "The canonical queue records completed continuity slices for truth hierarchy recovery, authoritative queue projection, provenance-gap quarantine, namespace collision rejection, and a source-class-aware knowledge graph.",
+      "M-004, M-005, and M-006 remain unresolved pending exhaustive branch and history coverage plus immutable origin agreement.",
+      "operations/CURRENT_STATE.json still names V-001 as the active delivery item and preserves fail-closed deployment constraints; this does not negate continuity ownership recorded in the canonical queue."
+    ],
+    "inferred": [
+      "A prior interpretation in which M-RECONCILE-002 existed only in append-only queue updates is now stale because the item has been promoted into the canonical queue.",
+      "Current work selection should read the canonical queue first and treat later additive records as evidence supplements, not as a substitute for the canonical item now present."
+    ],
+    "proposed": [
+      "Future continuity records should include the canonical queue blob SHA used for selection so that queue convergence and later divergence are detectable without relying on prose summaries.",
+      "A reconciliation artifact should classify each queue claim as canonical, additive-only, superseded, or unresolved at the time of observation."
+    ],
+    "superseded": [
+      "The claim that operations/ACTIVE_QUEUE.json contains only an older completed continuity item and omits M-RECONCILE-002.",
+      "The operational rule that effective continuity state must always be reconstructed from a stale canonical baseline plus ordered queue updates."
+    ],
+    "unresolved": [
+      "Whether every historical append-only continuity update was incorporated into the current canonical queue.",
+      "The immutable provenance and originating decision source for M-004, M-005, and M-006.",
+      "Exhaustive branch and commit-history coverage across all accessible repository refs."
+    ]
+  },
+  "evidence_strength": "direct repository file observation with immutable blob identifiers; historical incorporation completeness unverified",
+  "privacy_boundary": {
+    "included": [
+      "repository governance state",
+      "queue identifiers and abstract provenance status",
+      "public commit and blob identity"
+    ],
+    "excluded": [
+      "private chat content",
+      "personal health or animal-care material",
+      "credentials and secret-bearing logs",
+      "unreviewed uploaded source text"
+    ]
+  },
+  "falsification_route": [
+    "Fetch operations/ACTIVE_QUEUE.json at blob 7ce65492e6c84e7afa6dafa8567d49f323dd0769 and verify that M-RECONCILE-002 is present.",
+    "Locate an earlier immutable canonical queue object that already contained the same item to revise the inferred transition timing.",
+    "Produce an exhaustive incorporation ledger proving that all additive continuity updates are represented canonically, which would resolve the incorporation-completeness uncertainty."
+  ],
+  "reversibility": "Additive record only; rollback by reverting this commit. No source record is overwritten."
+}
