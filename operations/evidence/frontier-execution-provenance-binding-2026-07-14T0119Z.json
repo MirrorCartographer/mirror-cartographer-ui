@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T01:19:00Z",
+  "finding": "Distinct retained files do not establish independent enumeration when both may originate from the same client execution.",
+  "artifact": "tools/frontier-research/execution-provenance-binding.mjs",
+  "verification": {
+    "method": "isolated_node_falsification_suite",
+    "result": "passed",
+    "assertions": 8,
+    "observed_output": "8 assertions passed"
+  },
+  "accepted_claim": "The gate verifies distinct declared client identifiers, invocation identifiers, and command vectors for the same exact commit.",
+  "limits": [
+    "Execution identifiers are attested input and do not independently prove process isolation, operator independence, or credential independence.",
+    "No authenticated repository enumeration was executed in this slice.",
+    "The full repository test suite was not executed."
+  ],
+  "falsification_routes": [
+    "Reuse the primary client_id for the independent method.",
+    "Reuse the primary invocation_id.",
+    "Reuse the same command_argv vector.",
+    "Bind either execution to a different commit.",
+    "Reverse execution timestamps or use an unauthenticated environment class."
+  ]
+}
