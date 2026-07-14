@@ -42,3 +42,39 @@ test('rejects schedule drift that could fork continuity or enable autoplay', () 
   incompleteSchedule.productions.pop();
   assert.throws(() => selectProductionForHour(incompleteSchedule, 20), /exactly 24 productions/);
 });
+
+test('rejects loss of required accessibility guarantees', () => {
+  for (const requirement of ['keyboard-complete', 'screen-reader-labelled', 'reduced-motion-safe']) {
+    const driftedSchedule = structuredClone(schedule);
+    driftedSchedule.productions[20].accessibility = driftedSchedule.productions[20].accessibility.filter(
+      (value) => value !== requirement,
+    );
+    assert.throws(
+      () => selectProductionForHour(driftedSchedule, 20),
+      new RegExp(`accessibility requirement ${requirement} missing`),
+    );
+  }
+
+  const missingAccessibilitySchedule = structuredClone(schedule);
+  delete missingAccessibilitySchedule.productions[20].accessibility;
+  assert.throws(
+    () => selectProductionForHour(missingAccessibilitySchedule, 20),
+    /accessibility guarantees missing/,
+  );
+});
+
+test('rejects a fallback that does not resolve to a scheduled production', () => {
+  const unresolvedFallbackSchedule = structuredClone(schedule);
+  unresolvedFallbackSchedule.selection.fallback = 'hour-99';
+  assert.throws(
+    () => selectProductionForHour(unresolvedFallbackSchedule, 20),
+    /schedule fallback does not resolve/,
+  );
+});
+
+test('freezes nested accessibility guarantees in the selected production', () => {
+  const selected = selectProductionForHour(schedule, 20);
+  assert.equal(Object.isFrozen(selected), true);
+  assert.equal(Object.isFrozen(selected.accessibility), true);
+  assert.throws(() => selected.accessibility.push('pointer-only'));
+});
