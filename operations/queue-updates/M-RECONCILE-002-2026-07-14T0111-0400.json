@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T01:11:00-04:00",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed identifier-origin evidence contract so semantic matches, suffix collisions, automation prose, and reconstructed history cannot be promoted to originating provenance.",
+  "durable_memory": "Artifact identity and artifact meaning are separate claims. Meaning may be supported by multiple sources; identity origin requires an immutable source that explicitly assigns the exact identifier and agrees on namespace, owner, semantic role, and temporal precedence.",
+  "claim_classes": {
+    "observed": "The continuity queue requires the originating source that assigned M-004, M-005, and M-006, not merely files containing similar labels or concepts.",
+    "inferred": "A missing explicit-assignment gate permits false continuity through semantic substitution.",
+    "proposed": "Validate every provenance resolution against operations/continuity/contracts/identifier-origin-evidence.schema.json before changing a node to resolved.",
+    "superseded": "Textual identifier occurrence or semantic similarity alone establishes artifact origin.",
+    "unresolved": "M-004, M-005, and M-006 remain unlocated pending exhaustive authenticated branch and history coverage and an immutable explicit-assignment source."
+  },
+  "files": [
+    "operations/continuity/contracts/identifier-origin-evidence.schema.json",
+    "operations/evidence/continuity-identifier-origin-boundary-2026-07-14T0111-0400.json"
+  ],
+  "commits": [
+    "6ed96cf88b50e65bf2ea2fff57ae955bcd89e493",
+    "37f063e96e0435b46dbf0769980f01244487d71f"
+  ],
+  "verification": {
+    "status": "schema_committed_static_review",
+    "verified_properties": [
+      "resolved requires immutable_verified source status",
+      "resolved requires an accepted candidate with explicit identifier assignment",
+      "unlocated source status requires unresolved claim status",
+      "candidate evaluation records namespace, owner, semantic role, and temporal precedence",
+      "privacy classification is mandatory"
+    ],
+    "runtime_validation": "not_executed"
+  },
+  "registry_change": null,
+  "safe_next_action": "Create a small validator and falsification suite for the schema, then run an authenticated exhaustive ref and reachable-history traversal and evaluate each candidate source without reconstructing missing identifiers."
+}
