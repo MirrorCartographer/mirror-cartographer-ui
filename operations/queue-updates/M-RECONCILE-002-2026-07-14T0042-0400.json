@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T04:42:32Z",
+  "state": "in_progress",
+  "completed_slice": {
+    "title": "Defined source-class coverage boundaries for provenance absence claims",
+    "artifact": "operations/continuity/records/CM-1018-source-coverage-boundary.json",
+    "commit": "658b9a26e53c6ee1e6c860de6582fe3d786c06df",
+    "result": "Repository-search silence can no longer be interpreted as a global historical absence claim; every absence statement must declare source classes and coverage horizon."
+  },
+  "claim_status": {
+    "observed": "Repository connector coverage is bounded and the queue requires multiple independent source classes.",
+    "inferred": "Global not-found claims are invalid when source-class coverage differs.",
+    "proposed": "Use independent coverage states and restricted-source attestations.",
+    "superseded": "Repository search silence as proof of nonexistence.",
+    "unresolved": "Immutable origins for M-004, M-005, and M-006 remain unlocated."
+  },
+  "verification": {
+    "level": "repository commit plus connector round-trip pending",
+    "limits": [
+      "No exhaustive ref traversal was available in this run.",
+      "No restricted source contents were inspected or published."
+    ]
+  },
+  "privacy_boundary": {
+    "publication": "abstract coverage metadata only",
+    "excluded": ["restricted source contents", "credentials", "unapproved quotations"]
+  },
+  "next_action": "Generate a source-coverage manifest for M-004, M-005, and M-006, execute exhaustive repository traversal in an authenticated checkout, and record unavailable or restricted source classes without converting incomplete coverage into a global absence claim."
+}
