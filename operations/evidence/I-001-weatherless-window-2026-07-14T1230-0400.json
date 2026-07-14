@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-001",
+  "owner": "independent_creative_web",
+  "title": "Weatherless Window",
+  "creative_premise": "A locally generated atmosphere that responds to direction without retaining identity.",
+  "files": [
+    "independent/weatherless-window/index.html",
+    "independent/weatherless-window/weatherless-window.test.mjs",
+    "independent/IDENTITY.md"
+  ],
+  "verification": {
+    "command": "node --test independent/weatherless-window/weatherless-window.test.mjs",
+    "result": {"passed": 4, "failed": 0},
+    "coverage": [
+      "single-file runtime with no external network dependencies",
+      "no Mirror Cartographer, dashboard, payment, subscription, or signup vocabulary",
+      "reduced-motion, focus-visible, live-status, pressed-state, and safe-area safeguards",
+      "no audio autoplay, cookies, localStorage, sessionStorage, or indexedDB"
+    ],
+    "runtime_claim": "source and deterministic static-contract tests only",
+    "not_verified": ["public hosting", "browser rendering", "physical mobile device behavior", "performance trace"]
+  },
+  "independence": {
+    "project_vocabulary_reused": false,
+    "private_source_material_used": false,
+    "conversion_logic_present": false,
+    "external_service_dependency": false
+  },
+  "rollback": "Remove the three additive files introduced by I-001; no existing application file, deployment, shared state file, or Git history was altered.",
+  "evidence_strength": "committed source plus local deterministic tests"
+}
