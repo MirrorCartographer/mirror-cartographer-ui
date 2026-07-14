@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T01:14:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added an operations-only, default-off stage descriptor that consumes the deterministic repertory selector and fails closed on continuity-channel mismatch, private-source metadata, payments, conversion logic, autoplay, and ambiguous hour/date selection.",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "specialist_registry_change": null,
+  "files": [
+    "operations/vercel-studio/repertory/build-stage-descriptor.mjs",
+    "operations/vercel-studio/repertory/build-stage-descriptor.test.mjs",
+    "operations/evidence/vercel-stage-descriptor-2026-07-14T0114Z.json",
+    "operations/queue-updates/V-001-2026-07-14T0114Z.json"
+  ],
+  "commits": [
+    "054bcfdabaf1d1810d7a9264c8450c1f5d4fc9f3",
+    "4245d423b7e79f0a1d20284826d77ff1e7f8a8c9",
+    "a320dc98fec60952031b32493f5f4f638252e484"
+  ],
+  "verification": {
+    "isolated_node_tests": { "passed": 11, "failed": 0 },
+    "github_blob_sha": "293a3748590349838ae93bab472c75611a7772bb",
+    "deployment_attempted": false
+  },
+  "remaining_acceptance": [
+    "Execute authenticated all-event pagination for an exact commit with both independent clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after build capacity returns.",
+    "Observe the exact-commit audio-routing workflow artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the committed repertory selector and stage-descriptor tests in an authenticated checkout, then integrate the descriptor behind a default-off application feature flag only after provider capacity returns and commit-bound deployment evidence can be retained."
+}
