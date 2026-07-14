@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.local/schemas/provenance-state-transition.schema.json",
+  "title": "Provenance State Transition Record",
+  "description": "Machine-checkable contract for monotonic provenance and coverage-state transitions under M-RECONCILE-002.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "queue_item",
+    "identifier",
+    "prior_state",
+    "new_state",
+    "triggering_evidence",
+    "immutable_artifact_locators",
+    "predicate_delta",
+    "coverage_domain_delta",
+    "retained_rejection_reasons",
+    "privacy_class",
+    "recorded_at",
+    "claim_status",
+    "falsification_route"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_id": {"type": "string", "pattern": "^CM-[0-9]{4,}$"},
+    "queue_item": {"const": "M-RECONCILE-002"},
+    "identifier": {"enum": ["M-004", "M-005", "M-006"]},
+    "prior_state": {"$ref": "#/$defs/state"},
+    "new_state": {"$ref": "#/$defs/state"},
+    "triggering_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "immutable_artifact_locators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/locator"}
+    },
+    "predicate_delta": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/delta"}
+    },
+    "coverage_domain_delta": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/delta"}
+    },
+    "retained_rejection_reasons": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "privacy_class": {"enum": ["public", "internal_abstracted", "restricted_locator_only"]},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "claim_status": {"enum": ["observed", "inferred", "proposed", "superseded", "unresolved"]},
+    "falsification_route": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_state", "origin_state"],
+      "properties": {
+        "coverage_state": {
+          "enum": ["unknown", "partial", "complete_single_client", "exhaustive_reproduced"]
+        },
+        "origin_state": {
+          "enum": ["unresolved", "lead_only", "candidate_rejected", "verified", "unlocated_after_exhaustive_coverage", "disputed_verified"]
+        }
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["commit", "blob", "repository_path", "content_sha256", "approved_private_source_handle"]},
+        "value": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_class", "locator", "supports"],
+      "properties": {
+        "source_class": {"enum": ["repository", "decision_log", "language_lexicon", "project_document", "approved_chat_history", "file_library", "automation_prose"]},
+        "locator": {"$ref": "#/$defs/locator"},
+        "supports": {"type": "string", "minLength": 1},
+        "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "before", "after", "reason"],
+      "properties": {
+        "field": {"type": "string", "minLength": 1},
+        "before": {},
+        "after": {},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"new_state": {"properties": {"origin_state": {"const": "verified"}}}}},
+      "then": {"properties": {"predicate_delta": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"new_state": {"properties": {"origin_state": {"const": "unlocated_after_exhaustive_coverage"}}}}},
+      "then": {
+        "properties": {
+          "new_state": {"properties": {"coverage_state": {"const": "exhaustive_reproduced"}}},
+          "retained_rejection_reasons": {"minItems": 1}
+        }
+      }
+    }
+  ]
+}
