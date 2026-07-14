@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T16:14:45Z",
+  "slice": "deterministic repertory stage receipt",
+  "finding": "The existing schedule-to-projection-to-DOM transaction lacked a bounded receipt that preserved exact runtime identity, rollback evidence, and explicit non-claims.",
+  "implementation": {
+    "source": "operations/studio/repertory-stage-receipt.mjs",
+    "test": "operations/studio/repertory-stage-receipt.test.mjs",
+    "source_commit": "41bd6326cff8020c9f7c10a9bd461a702a14aa51",
+    "test_commit": "07f6334e8a0c57ff711a7618f37afef8d3770c41"
+  },
+  "verification": {
+    "command": "node --test /tmp/studio/repertory-stage-receipt.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "identity-consistent reversible stage accepted",
+      "schedule/projection/stage production divergence rejected",
+      "projection/stage mount divergence rejected",
+      "unapplied stage rejected",
+      "missing rollback route rejected",
+      "invalid hourly slot rejected"
+    ]
+  },
+  "claims": {
+    "runtime_contract_verified": true,
+    "deployment_verified": false,
+    "physical_device_verified": false,
+    "audio_audibility_verified": false,
+    "peer_execution_verified": false
+  },
+  "privacy_boundary": "Receipt contains public production identity, deterministic slot metadata, runtime operation, and rollback selector only; it excludes private source material and raw continuity marks.",
+  "rollback": "Remove the two repertory-stage-receipt files; no application deployment or persistent runtime state was created."
+}
