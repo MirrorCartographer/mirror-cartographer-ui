@@ -1,7 +1,8 @@
 import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { verifyRetainedRawOutputBinding } from '../../tools/frontier-research/retained-raw-output-binding.mjs';
+import { verifyIndependentExecutionProvenance } from '../../tools/frontier-research/execution-provenance-binding.mjs';
 import { writeAuthenticatedEvidenceManifest } from './write-vercel-authenticated-evidence-manifest.mjs';
 
 function fail(reason, details = {}) {
@@ -21,13 +22,17 @@ export async function writeBoundAuthenticatedEvidenceManifest({ input_path, outp
   const binding = await verifyRetainedRawOutputBinding(input, { cwd: evidence_root });
   if (!binding.verified) return binding;
 
+  const provenance = verifyIndependentExecutionProvenance(input);
+  if (!provenance.verified) return provenance;
+
   const result = await writeAuthenticatedEvidenceManifest({ input_path, output_path });
   if (!result.verified) return result;
 
   return {
     ...result,
     reason: 'bound_authenticated_evidence_manifest_written',
-    retained_raw_output_binding: binding
+    retained_raw_output_binding: binding,
+    independent_execution_provenance: provenance
   };
 }
 
