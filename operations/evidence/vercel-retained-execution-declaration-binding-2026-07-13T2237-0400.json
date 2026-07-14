@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_type": "vercel_studio_slice_evidence",
+  "queue_item": "V-001",
+  "captured_at": "2026-07-13T22:37:00-04:00",
+  "production_on_stage": {
+    "name": "Production 22",
+    "selector": "hour-22",
+    "activation": "operations-only-default-off",
+    "continuity_channel": "shared-runtime-state"
+  },
+  "implemented_slice": "Integrated retained execution-declaration byte binding into the authenticated Vercel evidence-manifest writer before transport, reconciliation, and final manifest acceptance.",
+  "implementation": {
+    "path": "operations/tools/write-vercel-authenticated-evidence-manifest.mjs",
+    "commit": "27c5d3189d2008f52c74cbf79225b6374eaec397",
+    "blob_sha": "3834f71a6e7dcf5c92b3a52899aec2633a1d41c0"
+  },
+  "tests": {
+    "path": "operations/tools/write-vercel-authenticated-evidence-manifest.test.mjs",
+    "commit": "ea2ef073335bf35c0918d169826c82bfa0683b14",
+    "blob_sha": "d1adc31e645035c973c4e8c00daa77998cdf535c",
+    "declared_assertions": 35,
+    "new_falsification_cases": [
+      "declaration digest mismatch",
+      "invalid retained JSON",
+      "retained-versus-inline content mismatch",
+      "canonical declaration file reuse",
+      "unreadable declaration path"
+    ]
+  },
+  "verification": {
+    "level": "authenticated_connector_exact_commit_fetch_and_structural_review",
+    "runtime_executed": false,
+    "reason_runtime_not_executed": "The isolated runtime could not resolve the private GitHub repository; exact committed files were fetched through the authenticated connector instead.",
+    "verified_guards": [
+      "realpath canonicalization before read",
+      "SHA-256 verification over exact retained bytes",
+      "JSON parsing after digest verification",
+      "canonicalized deep equality with inline execution declaration",
+      "primary and independent canonical path inequality",
+      "retained declaration gate precedes existing manifest validation",
+      "schema version advanced from 4 to 5",
+      "no-overwrite output behavior retained"
+    ]
+  },
+  "claim_boundary": {
+    "deployment_attempted": false,
+    "deployment_identity_verified": false,
+    "browser_audibility_verified": false,
+    "physical_iphone_safari_verified": false,
+    "authenticated_enumeration_executed": false,
+    "private_source_material_published": false,
+    "payments_or_conversion_added": false
+  },
+  "rollback": [
+    "Revert commit ea2ef073335bf35c0918d169826c82bfa0683b14",
+    "Revert commit 27c5d3189d2008f52c74cbf79225b6374eaec397"
+  ]
+}
