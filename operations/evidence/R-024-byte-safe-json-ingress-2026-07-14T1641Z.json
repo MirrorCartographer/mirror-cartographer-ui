@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "R-024",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T16:41:46Z",
+  "finding": "Strict JSON evidence must retain and validate original bytes before semantic parsing. A string-only parser cannot detect malformed UTF-8 replacement, BOM serialization ambiguity, byte ceilings, or invalid Unicode scalar values produced by JSON escapes.",
+  "source_status": [
+    {
+      "source": "WHATWG Encoding Standard",
+      "url": "https://encoding.spec.whatwg.org/",
+      "status": "primary_living_standard",
+      "observed_version": "Last Updated 21 May 2026",
+      "relevance": "Defines UTF-8 decoding, fatal error mode, and encoding-security failure modes."
+    },
+    {
+      "source": "RFC 3629",
+      "url": "https://www.rfc-editor.org/rfc/rfc3629",
+      "status": "primary_internet_standard",
+      "relevance": "Constrains well-formed UTF-8 and excludes overlong encodings, surrogate code points, and values above U+10FFFF."
+    },
+    {
+      "source": "RFC 8785",
+      "url": "https://www.rfc-editor.org/rfc/rfc8785",
+      "status": "primary_rfc",
+      "relevance": "Requires canonicalization inputs to satisfy interoperable JSON constraints and rejects invalid Unicode data."
+    }
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/strict-json-evidence-bytes.mjs",
+    "test": "tools/frontier-research/strict-json-evidence-bytes.test.mjs",
+    "implementation_commit": "a7d2876f8aa339cf8a16bd3ca361baa7431ea68d",
+    "test_commit": "6a7508e8bc3ee91da3b5d2d9e1189e72e3c67024"
+  },
+  "verification": {
+    "command": "node --test strict-json-evidence-bytes.test.mjs",
+    "environment": "Node.js local deterministic test harness",
+    "passed": 7,
+    "failed": 0,
+    "cases": [
+      "well-formed multibyte UTF-8 and raw-byte SHA-256",
+      "malformed and overlong UTF-8 rejection",
+      "UTF-8 BOM rejection",
+      "pre-decode byte ceiling",
+      "string-aware structural depth ceiling",
+      "lone surrogate rejection in values and member names",
+      "retained duplicate-member rejection"
+    ]
+  },
+  "evidence_strength": "deterministic_unit_test_plus_primary_standards",
+  "uncertainty": [
+    "TextDecoder behavior was tested in the local Node runtime but not differential-tested across supported Node versions.",
+    "The default one-megabyte and depth-64 ceilings are policy defaults, not universal standards requirements.",
+    "The module does not perform RFC 8785 canonicalization or schema validation.",
+    "Authenticated exact-commit GitHub Actions enumeration for R-020 and R-021 remains incomplete."
+  ],
+  "falsification_route": [
+    "Run the byte corpus against independent UTF-8 validators and strict JSON implementations.",
+    "Add Web Platform Test malformed UTF-8 vectors and Unicode conformance vectors.",
+    "Demonstrate an accepted malformed byte sequence, accepted lone surrogate, depth bypass, or raw digest mismatch.",
+    "Benchmark adversarial nesting and large-string inputs under the configured ceilings."
+  ]
+}
