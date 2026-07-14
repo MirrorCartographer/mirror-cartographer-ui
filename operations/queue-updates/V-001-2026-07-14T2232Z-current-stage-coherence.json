@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T22:32:48Z",
+  "slice": "current_stage_schedule_coherence",
+  "status": "completed_operations_only",
+  "finding": "The deterministic UTC schedule selected body-constellation at hour 22 while wordless-room-game remained marked observed_current_stage from hour 21.",
+  "classification": "scheduled_observed_drift",
+  "files": [
+    "operations/vercel-studio/repertory/verifyCurrentStageCoherence.v1.cjs",
+    "operations/vercel-studio/repertory/verifyCurrentStageCoherence.v1.test.cjs"
+  ],
+  "commits": [
+    "bd2f69eed6ef8a8b5b13549c247c35cb1eccd248",
+    "7268620694128b714a0f86eac0077cc5a1a44cdb",
+    "990f0cb449ea515c40a5141e83b119b76f4bb09c"
+  ],
+  "verification": {
+    "repository_write": "verified",
+    "selector_contract_inspected": true,
+    "deterministic_expected_result": {
+      "utc_hour": 22,
+      "scheduled_production_id": "body-constellation",
+      "observed_production_id": "wordless-room-game",
+      "verified": false
+    },
+    "runtime_test_execution": "not_available_in_connector_run",
+    "deployment_attempted": false,
+    "deployment_claimed": false
+  },
+  "constraints_preserved": [
+    "operations-only change",
+    "no payment or conversion logic",
+    "no private source material",
+    "no autoplay or audio activation",
+    "application runtime unchanged",
+    "fail-closed deployment posture"
+  ],
+  "rollback": "Revert this queue-update commit and commits 990f0cb449ea515c40a5141e83b119b76f4bb09c, 7268620694128b714a0f86eac0077cc5a1a44cdb, and bd2f69eed6ef8a8b5b13549c247c35cb1eccd248.",
+  "next_action": "Run the committed Node test, then replace static observed_current_stage metadata with runtime-derived, commit-bound stage evidence before activation."
+}
