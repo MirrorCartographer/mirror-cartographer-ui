@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1016">
+<title>The Weather That Remembers No One</title>
+<style>
+:root{color-scheme:dark;--ink:#eef4f2;--muted:#a9b7b4;--glass:rgba(7,12,17,.58)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0b1016;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+main{position:relative;z-index:2;min-height:100dvh;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+header,footer{max-width:42rem;background:var(--glass);backdrop-filter:blur(10px);padding:14px 16px;border:1px solid rgba(255,255,255,.12);border-radius:2px;pointer-events:auto}
+h1{font-size:clamp(1rem,2.8vw,1.65rem);font-weight:500;letter-spacing:.08em;margin:0 0 .5rem;text-transform:uppercase}p{margin:.3rem 0;color:var(--muted);line-height:1.5;font-size:.84rem}
+.controls{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}button{appearance:none;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.22);color:var(--ink);padding:.58rem .72rem;font:inherit;cursor:pointer}button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+#status{min-height:1.2em}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){canvas{filter:none}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main>
+<header>
+<h1>The Weather That Remembers No One</h1>
+<p>A climate with no protagonist. Your stillness changes pressure; your movement changes wind. Nothing is saved.</p>
+<div class="controls">
+<button id="sound" type="button" aria-pressed="false">Enable wind</button>
+<button id="calm" type="button">Settle the air</button>
+</div>
+<p id="status" role="status" aria-live="polite">Sound is off. The atmosphere is awake.</p>
+</header>
+<footer><p>Move slowly, stop completely, leave, return. The world continues without keeping you.</p></footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const canvas=document.getElementById('sky'),ctx=canvas.getContext('2d',{alpha:false});
+const soundButton=document.getElementById('sound'),calmButton=document.getElementById('calm'),status=document.getElementById('status');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let w=0,h=0,dpr=1,last=performance.now(),hidden=false,energy=.22,target=.22,pointerStill=0,lastPointer=performance.now();
+let audio=null,noise=null,gain=null,filter=null;
+const seed=0x6d2b79f5;let s=seed;const rand=()=>((s=(s^s<<13)^(s>>>17)^(s<<5))>>>0)/4294967296;
+const motes=Array.from({length:reduced?28:90},()=>({x:rand(),y:rand(),z:.2+rand()*.8,phase:rand()*Math.PI*2}));
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+function draw(now){if(hidden)return;const dt=Math.min((now-last)/1000,.05);last=now;pointerStill=Math.min(12,(now-lastPointer)/1000);target=.14+Math.min(.75,pointerStill*.035);energy+= (target-energy)*dt*.45;
+const t=now*.00006;const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,`hsl(${205+energy*18} 28% ${10+energy*8}%)`);g.addColorStop(1,`hsl(${185-energy*22} 22% ${6+energy*5}%)`);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+ctx.globalCompositeOperation='screen';for(const m of motes){const drift=(.01+energy*.08)*m.z;const x=((m.x+t*drift*80)%1)*w;const y=((m.y+Math.sin(t*180+m.phase)*.03*m.z+1)%1)*h;const r=(18+110*m.z)*(1+energy*.7);const fog=ctx.createRadialGradient(x,y,0,x,y,r);fog.addColorStop(0,`rgba(180,215,220,${.012+.035*m.z})`);fog.addColorStop(1,'rgba(180,215,220,0)');ctx.fillStyle=fog;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}ctx.globalCompositeOperation='source-over';
+if(gain){gain.gain.setTargetAtTime(.018+energy*.055,audio.currentTime,.5);filter.frequency.setTargetAtTime(180+energy*880,audio.currentTime,.6)}requestAnimationFrame(draw)}
+function noteMovement(){lastPointer=performance.now();target=Math.min(.96,target+.18)}
+addEventListener('pointermove',noteMovement,{passive:true});addEventListener('scroll',noteMovement,{passive:true});addEventListener('resize',resize,{passive:true});
+document.addEventListener('visibilitychange',()=>{hidden=document.hidden;if(hidden){if(audio?.state==='running')audio.suspend();status.textContent='The atmosphere is suspended while hidden.'}else{last=performance.now();status.textContent='The atmosphere resumed without replaying what was missed.';if(audio&&soundButton.getAttribute('aria-pressed')==='true')audio.resume();requestAnimationFrame(draw)}});
+calmButton.addEventListener('click',()=>{target=.08;energy=.08;lastPointer=performance.now();status.textContent='The air is settling.'});
+soundButton.addEventListener('click',async()=>{if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();const length=audio.sampleRate*2;const buffer=audio.createBuffer(1,length,audio.sampleRate);const data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=Math.random()*2-1;noise=audio.createBufferSource();noise.buffer=buffer;noise.loop=true;filter=audio.createBiquadFilter();filter.type='lowpass';gain=audio.createGain();gain.gain.value=0;noise.connect(filter).connect(gain).connect(audio.destination);noise.start()}
+const on=soundButton.getAttribute('aria-pressed')!=='true';soundButton.setAttribute('aria-pressed',String(on));soundButton.textContent=on?'Disable wind':'Enable wind';if(on){await audio.resume();status.textContent='Wind enabled by your gesture.'}else{gain.gain.setTargetAtTime(0,audio.currentTime,.08);status.textContent='Wind disabled.'}});
+resize();requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
