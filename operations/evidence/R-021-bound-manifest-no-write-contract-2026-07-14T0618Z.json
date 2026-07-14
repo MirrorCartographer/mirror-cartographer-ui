@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T06:18:00Z",
+  "finding": "The bound authenticated evidence-manifest path had ordering coverage but lacked behavioral filesystem proof that temporal-coherence or observation-window rejection preserves the destination byte-for-byte.",
+  "artifact": {
+    "path": "operations/tests/bound-manifest-rejection-no-write.test.mjs",
+    "commit_sha": "c0fb7762acecef01bcfaf6649f1d058cb0d6fc43",
+    "coverage": [
+      "temporal_coherence rejection returns before downstream manifest writing",
+      "observation_window rejection returns before downstream manifest writing",
+      "a pre-existing destination remains byte-identical for both rejection classes"
+    ]
+  },
+  "source_status": {
+    "canonical_state": "repository_primary",
+    "promotion_gate": "repository_primary",
+    "bound_writer": "repository_primary",
+    "new_test": "committed_and_fetched_back"
+  },
+  "evidence_strength": "source-bound behavioral test committed; execution not observed in this run",
+  "uncertainty": [
+    "The test has not yet been executed in an authenticated checkout or CI runner.",
+    "The fixture reuses the already passing promotion-gate timing and retained-byte structure but does not exercise successful downstream manifest serialization."
+  ],
+  "falsification_route": "Run node --test operations/tests/bound-manifest-rejection-no-write.test.mjs. Any failed stage mismatch or changed destination bytes falsifies the claimed no-write boundary.",
+  "design_implication": "Manifest promotion is now guarded by an executable regression contract at the filesystem boundary rather than only source-order assertions.",
+  "prohibited_claims": [
+    "No authenticated enumeration was executed.",
+    "No deployment was created or verified.",
+    "No peer execution is claimed."
+  ]
+}
