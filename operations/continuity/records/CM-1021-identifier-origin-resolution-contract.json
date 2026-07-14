@@ -62,7 +62,7 @@
         "requirement": "The assignment predates all verified repository materialization anchors and later reconciliation records."
       },
       {
-        "id": "independent_corrobation",
+        "id": "independent_corroboration",
         "requirement": "At least one independent provenance edge agrees on identifier, event type, and semantic role, or the assigning object is self-authenticating under an approved decision-log rule."
       },
       {
