@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "observed_at": "2026-07-14T17:18:43Z",
+  "slice": "fail_closed_stage_evidence_promotion",
+  "production": {
+    "civil_hour": 13,
+    "timezone": "America/New_York",
+    "id": "paper-weather",
+    "title": "Paper Weather"
+  },
+  "implementation": {
+    "source": "operations/studio/stage-evidence-promotion.mjs",
+    "test": "operations/studio/stage-evidence-promotion.test.mjs",
+    "source_commit": "fc3d8cf88eb9cfcbc39b509e5b767acce0650442",
+    "test_commit": "98e18b439582366922e9f85eaa5b63e25dded6f5"
+  },
+  "verification": {
+    "route": "isolated Node test replay against repository source contracts",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "claims": [
+      "civil hour is derived from timestamp and IANA timezone before receipt creation",
+      "receipt and independently assessed repertory production must agree",
+      "unsupported timezones and invalid timestamps fail before promotion",
+      "promotable is emitted only when coherence.verified is true"
+    ]
+  },
+  "boundaries": {
+    "deployment_claimed": false,
+    "browser_execution_claimed": false,
+    "physical_device_claimed": false,
+    "audio_audibility_claimed": false,
+    "private_source_material_included": false,
+    "payments_or_conversion_added": false
+  },
+  "rollback": [
+    "revert queue update commit",
+    "revert this evidence commit",
+    "revert test commit 98e18b439582366922e9f85eaa5b63e25dded6f5",
+    "revert source commit fc3d8cf88eb9cfcbc39b509e5b767acce0650442"
+  ]
+}
