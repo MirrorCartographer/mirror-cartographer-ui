@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-20260714T2143Z",
+  "created_at": "2026-07-14T21:43:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Append-only supersession boundary for project artifacts",
+  "source_status": "repository_observed_bounded",
+  "claims": {
+    "observed": [
+      {
+        "claim": "The canonical operating constraints prohibit deleting GitHub files or history.",
+        "source_path": "operations/CURRENT_STATE.json",
+        "source_blob_sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+        "source_lines": [12, 16]
+      },
+      {
+        "claim": "Commit f0d563b4e12577aa36d05fbb09fed3849b6d1681 deleted src/components/RoomWorldRuntime.jsx under the message 'Remove superseded room-world runtime draft'.",
+        "verification": "direct_commit_diff"
+      },
+      {
+        "claim": "Adjacent commits a505f89eeee5e6515d565e1d31fe46dfd57c9984 and 3db4fdc3eb8e59038176774e7c3ebbe2930abfdc were also recorded as removals of superseded room-world drafts.",
+        "verification": "recent_commit_index"
+      }
+    ],
+    "inferred": [
+      "The term superseded was operationalized as physical file removal rather than an append-only lifecycle transition.",
+      "That execution conflicts with the plain-language no-file-deletion constraint even though deleted blobs remain recoverable from Git history."
+    ],
+    "proposed": [
+      "Future supersession should be append-only: stop active references, add a tombstone or replacement edge, and retain the prior artifact at an addressable repository path or additive archive path.",
+      "Before any future file removal, require an explicit canonical scope decision defining whether the no-deletion rule covers working-tree paths as well as Git object history."
+    ],
+    "superseded": [],
+    "unresolved": [
+      "Whether the three deleted room-world artifacts should be restored into collision-free historical archive paths.",
+      "Whether the existing no-deletion constraint intentionally distinguishes file deletion from history rewriting."
+    ]
+  },
+  "contradiction": {
+    "type": "governance_vs_execution",
+    "governance_claim": "Do not delete GitHub files or history.",
+    "execution_evidence": [
+      "f0d563b4e12577aa36d05fbb09fed3849b6d1681",
+      "a505f89eeee5e6515d565e1d31fe46dfd57c9984",
+      "3db4fdc3eb8e59038176774e7c3ebbe2930abfdc"
+    ],
+    "resolution_status": "unresolved_fail_closed",
+    "effective_rule": "No further file deletion is continuity-safe until canonical scope is clarified."
+  },
+  "memory_recovered": "Supersession is a semantic lifecycle transition, not permission to erase an artifact path. Active use may end while provenance remains addressable. When governance and execution conflict, continuity must preserve both claims and fail closed rather than silently treating deletion as normal supersession.",
+  "privacy_boundary": {
+    "included": ["repository paths", "commit identifiers", "governance semantics"],
+    "excluded": ["private chat text", "personal records", "credentials", "unreviewed file-library content"]
+  },
+  "specialist_registry_change": null,
+  "reversibility": "Additive record only; no source artifact or Git history was deleted or rewritten."
+}
