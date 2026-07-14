@@ -7,18 +7,18 @@ function verifyCurrentStageCoherence(repertory, timestamp) {
   const instant = timestamp instanceof Date ? timestamp : new Date(timestamp);
   if (Number.isNaN(instant.getTime())) throw new Error('timestamp must be a valid instant');
 
-  const scheduled = selectHourlyProduction(repertory, instant);
+  const scheduled = selectHourlyProduction(repertory, instant.getUTCHours());
   const observed = repertory.productions.filter((production) => production.status === 'observed_current_stage');
   if (observed.length !== 1) throw new Error('exactly one observed_current_stage is required');
 
-  const coherent = observed[0].id === scheduled.production.id;
+  const coherent = observed[0].id === scheduled.production_id;
   return Object.freeze({
     contract_id: 'vercel-studio-current-stage-coherence-v1',
     verified: coherent,
     classification: coherent ? 'scheduled_observed_agreement' : 'scheduled_observed_drift',
     evaluated_at: instant.toISOString(),
     utc_hour: instant.getUTCHours(),
-    scheduled_production_id: scheduled.production.id,
+    scheduled_production_id: scheduled.production_id,
     observed_production_id: observed[0].id,
     runtime_activation_claimed: false,
     deployment_claimed: false,
