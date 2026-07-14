@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_id": "I-002",
+  "owner": "independent_creative_web",
+  "captured_at": "2026-07-14T22:10:00Z",
+  "work": "The Fourth Room",
+  "source_path": "independent/fourth-room/index.html",
+  "contract_path": "independent/fourth-room/contract.test.cjs",
+  "verification": {
+    "source_fetch_back": true,
+    "contract_fetch_back": true,
+    "runtime_test_executed": false,
+    "browser_render_executed": false,
+    "public_deployment_verified": false
+  },
+  "static_observations": [
+    "Single HTML document with inline CSS and JavaScript and no external resource dependency.",
+    "Primary interaction uses a semantic button and a polite live status region.",
+    "AudioContext is created only from an explicit sound-control click and no audio autoplays.",
+    "Reduced-motion preference suppresses the animation loop while preserving a rendered state.",
+    "Canvas device-pixel ratio is capped at 2 and the particle-free scene uses a bounded seven-line draw loop.",
+    "Session memory uses sessionStorage only; no network, analytics, authentication, commerce, cookies, localStorage, or IndexedDB are present.",
+    "The source contains no Mirror Cartographer name or runtime coupling."
+  ],
+  "evidence_strength": "source_verified_runtime_unverified",
+  "limits": [
+    "Node contract tests were committed but not executed in an authenticated checkout.",
+    "No browser screenshot, touch trace, accessibility-tree inspection, performance profile, or physical-device result exists.",
+    "No hosting or deployment claim is made."
+  ],
+  "falsification_route": [
+    "Run node --test independent/fourth-room/contract.test.cjs.",
+    "Render the file in desktop and mobile browsers with JavaScript enabled and disabled.",
+    "Verify keyboard operation, focus visibility, live-region announcements, reduced-motion behavior, touch behavior, opt-in audio, pagehide cleanup, and session reset.",
+    "Capture a mobile performance trace and confirm no network requests occur."
+  ]
+}
