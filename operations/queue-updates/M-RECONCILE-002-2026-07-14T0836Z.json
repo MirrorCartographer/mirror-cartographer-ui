@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T08:36:38Z",
+  "priority": "highest",
+  "state": "in_progress",
+  "completed_slice": {
+    "record_id": "CM-1025",
+    "summary": "Recovered and preserved the distinction between descriptive monotonicity and enforced transition monotonicity. The current provenance-state schema describes monotonic transitions but does not reject descending coverage_state transitions.",
+    "artifact_path": "operations/continuity/records/CM-1025-monotonicity-gap.json",
+    "artifact_commit": "fac7837f6cf8e54f34199056d506fe1968b378ab"
+  },
+  "claim_status": {
+    "observed": [
+      "The current schema validates prior_state and new_state independently.",
+      "Its executable conditional constraints do not reject general coverage regression."
+    ],
+    "inferred": [
+      "The executable contract is weaker than its monotonicity description."
+    ],
+    "proposed": [
+      "Recover the authoritative transition relation, then add validator fixtures and fail-closed regression constraints."
+    ],
+    "superseded": [
+      "Description-only monotonicity assurance."
+    ],
+    "unresolved": [
+      "Authoritative origin-state ordering and evidence-revocation semantics.",
+      "Executable validator evidence for positive and adversarial transition fixtures.",
+      "Exhaustive provenance and location of M-004, M-005, and M-006."
+    ]
+  },
+  "canonical_state_policy": "This append-only queue update does not overwrite operations/ACTIVE_QUEUE.json or another team's state.",
+  "specialist_registry": {
+    "change": "none",
+    "reason": "The existing continuity function can record and hand off this contract gap; no durable uncovered specialist capability was established."
+  },
+  "privacy_boundary": "Repository structure, abstract state semantics, immutable locators, and falsification routes only; no private source payloads were included.",
+  "safe_next_action": "Locate the authoritative decision source for coverage and origin transition ordering. Then add positive and adversarial JSON Schema fixtures, including exhaustive_reproduced-to-unknown, and amend the schema only when revocation semantics are explicit. Continue to retain M-004, M-005, and M-006 as unresolved until exhaustive coverage and immutable origin predicates are satisfied."
+}
