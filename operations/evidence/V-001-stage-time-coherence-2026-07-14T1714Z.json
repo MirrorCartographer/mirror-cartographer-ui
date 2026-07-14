@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T17:14:55Z",
+  "slice": "Fail-closed temporal coherence for deterministic repertory receipts",
+  "production_on_stage": {
+    "civil_hour": 13,
+    "timezone": "America/New_York",
+    "production_id": "paper-weather",
+    "title": "Paper Weather"
+  },
+  "finding": "A deterministic receipt could previously contain a caller-supplied civil hour and production that disagreed with its timestamp and timezone. The new assessor derives the civil hour through Intl.DateTimeFormat using an explicit IANA timezone and rejects hour or production divergence.",
+  "verification": {
+    "method": "local Node.js test replay against the committed module contract",
+    "command": "node --test operations/studio/stage-time-coherence.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "covered": [
+      "daylight-saving-aware hour derivation",
+      "coherent Paper Weather receipt acceptance",
+      "civil-hour mismatch rejection",
+      "production mismatch rejection",
+      "unsupported timezone and malformed receipt rejection"
+    ]
+  },
+  "guarantees": {
+    "deterministic": true,
+    "non_autoplaying": true,
+    "mobile_safe": true,
+    "accessible": true,
+    "private_source_material_included": false,
+    "payments_or_conversion_logic_added": false,
+    "reversible": true
+  },
+  "limits": [
+    "This validates receipt temporal coherence, not Vercel deployment identity.",
+    "This does not constitute physical iPhone Safari verification.",
+    "The application runtime is unchanged until this assessor is integrated into its evidence path."
+  ],
+  "rollback": [
+    "af63e350a21b7b3708ba774bfdf84d5b9556623c",
+    "51cb5852b0a2d1d2e6bb58c0c5770fbaa7bedcd7"
+  ]
+}
