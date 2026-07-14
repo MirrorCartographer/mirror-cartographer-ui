@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T12:20:18Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and executed a visibility-aware deterministic repertory controller that suspends timers while hidden, resynchronizes directly to the canonical current-hour production after missed boundaries, preserves shared continuity, respects reduced motion, and keeps audio gesture-gated without autoplay.",
+  "evidence": "operations/evidence/V-001-repertory-transition-controller-2026-07-14T1220Z.json",
+  "commits": [
+    "84a028786685f064b59822a5dc6abbc324ec15b3",
+    "66715c88b29f1a9265de83f7ecdddfeaaa602bfa",
+    "ab7f0867394e7c2cfd963706bc00a575000491c4"
+  ],
+  "acceptance_impact": {
+    "advanced": [
+      "deterministic hourly repertory runtime safety",
+      "mobile lifecycle resynchronization contract",
+      "accessibility and non-autoplay transition guarantees"
+    ],
+    "still_blocked": [
+      "provider-capacity-dependent Vercel deployment verification",
+      "immutable deployment identity",
+      "exact-commit audio workflow artifact inspection",
+      "physical iPhone Safari audibility verification"
+    ]
+  },
+  "safe_next_action": "Wire the controller to a browser visibilitychange and boundary timer adapter behind a reversible import boundary, then run browser lifecycle tests; do not attempt Vercel deployment until provider capacity and immutable deployment identity can be verified.",
+  "canonical_queue_overwritten": false
+}
