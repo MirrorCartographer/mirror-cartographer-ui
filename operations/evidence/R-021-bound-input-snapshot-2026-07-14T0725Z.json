@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "artifact_type": "frontier_research_verification_record",
+  "finding": "The bound manifest path validated one parsed input object and then passed the original input path to a downstream writer that reread it, leaving a time-of-check/time-of-use window between promotion and serialization.",
+  "design_implication": "Downstream serialization must consume a read-only snapshot produced from the exact parsed object that passed the promotion gate, rather than rereading the caller-controlled input path.",
+  "implementation": {
+    "helper": "operations/tools/bound-input-snapshot.mjs",
+    "integration": "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "test": "operations/tests/bound-input-snapshot.test.mjs",
+    "snapshot_properties": [
+      "exclusive creation",
+      "read-only mode",
+      "sha256 verification before downstream use",
+      "ephemeral cleanup in finally",
+      "digest and byte length returned in result"
+    ]
+  },
+  "verification": {
+    "command": "node --test operations/tests/bound-input-snapshot.test.mjs",
+    "result": "passed",
+    "tests": 3,
+    "failures": 0,
+    "verified_behaviors": [
+      "mutation of the caller's source object after snapshot creation does not alter downstream bytes",
+      "temporary snapshot cleanup occurs after downstream failure",
+      "invalid input and missing operation fail before snapshot creation"
+    ]
+  },
+  "evidence_strength": "deterministic_local_unit_test_plus_committed_source",
+  "uncertainty": [
+    "The full bound manifest integration suite was not executed in an authenticated repository checkout.",
+    "Filesystem protection cannot defend against a privileged actor capable of rewriting read-only temporary files.",
+    "This change binds the manifest input object; retained raw evidence files and execution declarations remain governed by their existing digest checks."
+  ],
+  "falsification_route": "Run the committed test, then add a controlled integration harness that mutates the original input path after promotion and prove the emitted manifest retains the promoted object and reports its snapshot digest.",
+  "specialist_registry_change": "none",
+  "privacy_boundary": "No credentials, private source payloads, personal content, or raw authenticated enumeration output are retained in this record."
+}
