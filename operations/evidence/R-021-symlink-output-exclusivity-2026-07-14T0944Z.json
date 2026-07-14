@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "team": "frontier_research",
+  "captured_at": "2026-07-14T09:44:00Z",
+  "artifact_type": "implementation_test_evidence",
+  "finding": {
+    "status": "implemented_unexecuted",
+    "statement": "A retained evidence writer must reject a pre-positioned symbolic-link output and leave the link target unchanged; path-level no-overwrite claims require an adversarial symlink fixture, not only a conventional existing-file case.",
+    "evidence_strength": "primary_documentation_plus_committed_test",
+    "uncertainty": "The committed fixture has not yet been observed in an authenticated GitHub Actions or local Node test run through the available connector."
+  },
+  "primary_sources": [
+    {
+      "title": "Node.js File system documentation",
+      "url": "https://nodejs.org/api/fs.html",
+      "relevance": "Documents file-system write flags and exclusive creation semantics used by fsPromises.writeFile."
+    },
+    {
+      "title": "Linux open(2) manual page",
+      "url": "https://man7.org/linux/man-pages/man2/open.2.html",
+      "relevance": "Defines O_CREAT with O_EXCL behavior, including failure when the path names a symbolic link."
+    }
+  ],
+  "implementation": {
+    "commit_sha": "99d84e8ecc159e6fda35d9091b6af73baa9bd4d4",
+    "path": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "test": "exclusive manifest creation rejects a pre-positioned symbolic-link output without altering its target",
+    "expected_result": {
+      "verified": false,
+      "reason": "output_exists",
+      "code": "EEXIST",
+      "protected_target_unchanged": true
+    }
+  },
+  "verification": {
+    "commit_fetched": true,
+    "workflow_runs_returned": 0,
+    "runtime_execution_verified": false,
+    "claim_boundary": "The commit proves the fixture exists. It does not prove the fixture passed on GitHub Actions, macOS, Windows, or a production host."
+  },
+  "falsification_routes": [
+    "Run node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs in an authenticated checkout and retain stdout, exit status, Node version, OS, and exact commit SHA.",
+    "Replace the exclusive-create flag with a nonexclusive write in a controlled branch; the fixture should fail by observing mutation of the protected target.",
+    "Execute the fixture on supported non-Linux platforms and record platform-specific symlink behavior rather than generalizing the Linux result."
+  ],
+  "design_implication": "Keep retained evidence outputs append-only and exclusive-create. Treat symlink pre-positioning as a first-class adversarial no-overwrite case in the evidence pipeline."
+}
