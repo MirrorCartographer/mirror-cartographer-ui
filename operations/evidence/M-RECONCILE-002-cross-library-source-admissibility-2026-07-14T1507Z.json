@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "captured_at": "2026-07-14T15:07:20Z",
+  "artifact_type": "cross_library_source_admissibility_ledger",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "sources_inspected": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "recent repository commits",
+      "prior repository reference-ordering evidence",
+      "File Library exact-token and semantic searches for M-004, M-005, and M-006"
+    ],
+    "coverage_class": "repository_connector_plus_file_library_search_bounded_not_exhaustive"
+  },
+  "memory_recovered": "A cross-library token match is admissible as collision or lead evidence, but it is not admissible as identifier-origin evidence unless the source explicitly assigns the identifier in the Mirror Cartographer continuity namespace and has an immutable locator, matching owner, semantic role, and temporal precedence.",
+  "observations": [
+    {
+      "source_class": "file_library",
+      "result": "Searches returned V9-004, V9-005, V9-006 and other unrelated suffix-bearing records, but no inspected result explicitly assigned M-004, M-005, or M-006 in the continuity namespace.",
+      "status": "observed",
+      "admissibility": "collision_or_lead_only"
+    },
+    {
+      "source_class": "repository_commit_index",
+      "result": "Exact-token matches are retrospective provenance-gap or collision-rejection bookkeeping, not originating assignments.",
+      "status": "observed",
+      "admissibility": "reference_evidence_only"
+    }
+  ],
+  "claim_classification": {
+    "observed": [
+      "File Library search produced semantically unrelated suffix matches such as V9-004, V9-005, and V9-006.",
+      "No inspected File Library result explicitly assigned M-004, M-005, or M-006 in the Mirror Cartographer continuity namespace.",
+      "Repository exact-token matches remain later bookkeeping references."
+    ],
+    "inferred": [
+      "Identifier token equality across source classes is insufficient to establish identity or origin.",
+      "Negative File Library search results narrow the currently indexed candidate set but cannot prove nonexistence."
+    ],
+    "proposed": [
+      "Attach source_admissibility to every provenance candidate with values origin_candidate, reference_only, collision_only, lead_only, or rejected.",
+      "Require explicit_assignment=true before any candidate can transition to origin_candidate."
+    ],
+    "superseded": [
+      "A suffix or exact-token match in File Library can resolve a continuity identifier without namespace and semantic-role agreement.",
+      "No search result means the originating source never existed."
+    ],
+    "unresolved": [
+      "Whether an unindexed or differently phrased decision log, language lexicon, project document, chat source, branch, or commit explicitly assigned M-004, M-005, or M-006."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_contradiction": "File Library contains records ending in 004, 005, and 006 while continuity identifiers M-004, M-005, and M-006 remain unresolved.",
+    "resolution": "The records belong to different namespaces and semantic systems. Numeric suffix overlap is collision evidence, not identity evidence. Origin resolution requires explicit assignment in the continuity namespace plus immutable provenance agreement."
+  },
+  "source_admissibility_rule": {
+    "required_for_origin_candidate": [
+      "explicit_identifier_assignment",
+      "continuity_namespace_agreement",
+      "owner_agreement",
+      "semantic_role_agreement",
+      "temporal_precedence",
+      "immutable_locator"
+    ],
+    "search_absence_semantics": "coverage_bounded_absence_only",
+    "token_match_semantics": "lead_until_semantically_verified"
+  },
+  "privacy_boundary": {
+    "included": [
+      "file titles",
+      "abstract search-result classifications",
+      "repository commit identifiers and messages",
+      "provenance rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal data",
+      "credentials",
+      "secret-bearing logs",
+      "unpublished source contents not necessary to classify the collision"
+    ]
+  },
+  "falsification_route": [
+    "Produce an immutable source object that explicitly assigns M-004, M-005, or M-006 in the continuity namespace.",
+    "Verify owner, semantic role, temporal precedence, and locator agreement.",
+    "Reclassify the matching node from lead_only or unresolved to origin_candidate only after all requirements pass."
+  ],
+  "specialist_registry_change": null
+}
