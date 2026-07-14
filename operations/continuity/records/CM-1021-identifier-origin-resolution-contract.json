@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1021",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T06:17:00Z",
+  "title": "Identifier origin resolution requires convergent immutable evidence",
+  "purpose": "Prevent repository materialization, search hits, completion prose, or namespace collisions from being promoted into historical origin claims for M-004, M-005, or M-006.",
+  "claims": {
+    "observed": [
+      "The active queue requires exhaustive branch inventory or equivalent history traversal before M-004, M-005, or M-006 may be classified as unlocated.",
+      "CM-1019 separates repository_materialization_event from origin_event and records verified materialization anchors while retaining unresolved origin status.",
+      "CM-1020 demonstrates that negative repository code search is coverage-ambiguous and cannot prove absence.",
+      "The specialist registry contains no continuity-mining specialists and permits changes only after a durable evidenced capability gap is recorded."
+    ],
+    "inferred": [
+      "Origin resolution is a multi-predicate identity problem rather than a single-search retrieval problem.",
+      "A candidate can be immutable and temporally early yet still fail because it documents later materialization, references an existing identifier, belongs to another namespace, or lacks explicit assignment semantics."
+    ],
+    "proposed": [
+      "Evaluate every origin candidate through the required predicates in origin_acceptance_contract before changing origin_status.",
+      "Retain candidate-specific rejection reasons so later evidence can replace only the failed predicate rather than rewriting the entire provenance history.",
+      "Use origin_status=unlocated only after a retained exhaustive coverage manifest closes every accepted search domain without unresolved tool or provider limits."
+    ],
+    "superseded": [
+      "Treating first repository appearance as identifier assignment.",
+      "Treating zero search results as exhaustive absence.",
+      "Treating automation completion prose as an immutable provenance object.",
+      "Treating suffix or label similarity across unrelated namespaces as identity agreement."
+    ],
+    "unresolved": [
+      "The origin_event for M-004 remains unresolved.",
+      "The origin_event for M-005 remains unresolved.",
+      "The origin_event for M-006 remains unresolved.",
+      "An exhaustive inventory of accessible refs and reachable commits has not been retained.",
+      "The originating decision log, language lexicon, project document, or approved chat-history source that assigned the identifiers has not been located."
+    ]
+  },
+  "origin_acceptance_contract": {
+    "required_predicates": [
+      {
+        "id": "immutable_locator",
+        "requirement": "The candidate is addressable by an immutable commit, blob, retained file hash, or approved immutable source locator."
+      },
+      {
+        "id": "explicit_assignment",
+        "requirement": "The candidate explicitly assigns the disputed identifier rather than merely mentioning, importing, reconciling, or materializing it."
+      },
+      {
+        "id": "namespace_agreement",
+        "requirement": "The identifier belongs to the same continuity namespace; suffix or token equality alone is insufficient."
+      },
+      {
+        "id": "owner_agreement",
+        "requirement": "The assigning actor or artifact authority matches the continuity system responsible for the identifier."
+      },
+      {
+        "id": "semantic_role_agreement",
+        "requirement": "The candidate assigns the same semantic role later attributed to the identifier."
+      },
+      {
+        "id": "temporal_precedence",
+        "requirement": "The assignment predates all verified repository materialization anchors and later reconciliation records."
+      },
+      {
+        "id": "independent_corrobation",
+        "requirement": "At least one independent provenance edge agrees on identifier, event type, and semantic role, or the assigning object is self-authenticating under an approved decision-log rule."
+      },
+      {
+        "id": "ambiguity_closed",
+        "requirement": "No unresolved collision, competing assignment, source-coverage gap, or tool-limit ambiguity remains material to the conclusion."
+      }
+    ],
+    "promotion_rule": "origin_status may become verified only when every required predicate passes. A failed or unknown predicate preserves origin_status=unresolved.",
+    "unlocated_rule": "origin_status may become unlocated only when exhaustive coverage is retained and every inspected candidate fails with recorded reasons; incomplete coverage preserves unresolved.",
+    "materialization_rule": "A repository_materialization_event may bound the search interval but never satisfies explicit_assignment by itself."
+  },
+  "candidate_state_model": [
+    "lead_only",
+    "object_verified",
+    "predicate_incomplete",
+    "rejected_collision",
+    "rejected_materialization_only",
+    "accepted_origin",
+    "unlocated_after_exhaustive_coverage"
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit and blob identifiers",
+      "abstract provenance predicates",
+      "claim status",
+      "coverage status",
+      "rejection reasons"
+    ],
+    "excluded": [
+      "private chat contents",
+      "personal material",
+      "credentials",
+      "unapproved source quotations",
+      "private source text"
+    ]
+  },
+  "falsification_routes": [
+    "Produce an immutable object that explicitly assigns M-004, M-005, or M-006 and passes every required predicate.",
+    "Show that a required predicate rejects a known valid origin under the repository truth hierarchy, then revise only that predicate with retained counterevidence.",
+    "Complete an independently reproducible exhaustive traversal and demonstrate that the unlocated_rule is either too weak or too strong.",
+    "Demonstrate that CM-1019 or CM-1020 misstates the immutable objects or search outcomes on which this contract depends."
+  ]
+}
