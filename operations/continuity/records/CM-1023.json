@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1023",
+  "created_at": "2026-07-14T16:38:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Canonical queue incorporation lags retained continuity slices",
+  "source_status": "repository_observed",
+  "sources": [
+    {"path":"operations/ACTIVE_QUEUE.json","blob_sha":"7ce65492e6c84e7afa6dafa8567d49f323dd0769","role":"canonical queue snapshot"},
+    {"commit_sha":"de147e1f9242280d96dc204587d92b84b9c5c308","path":"operations/queue-updates/M-RECONCILE-002-2026-07-14T1342Z.json","role":"retained exhaustive-history collector queue slice"},
+    {"commit_sha":"da802b89aa322784fced0b85ba83c4a7aa27daa7","path":"operations/continuity/records/CM-1022.json","role":"prior canonical convergence record"}
+  ],
+  "claims": {
+    "observed": [
+      "The canonical M-RECONCILE-002 completed_slices list does not mention the authenticated exhaustive repository-history collector recorded in commit de147e1f9242280d96dc204587d92b84b9c5c308.",
+      "The retained collector slice keeps M-004, M-005, and M-006 unresolved until authenticated exhaustive execution and five-source-class coverage pass validation.",
+      "The canonical queue safe_next_action remains semantically compatible with that retained slice but is less specific about the already-implemented collector."
+    ],
+    "inferred": [
+      "Canonical convergence is partial: item identity and several earlier slices are incorporated, while at least one later retained continuity slice remains additive-only.",
+      "A canonical queue snapshot cannot be treated as a complete historical incorporation ledger unless each retained queue update is explicitly reconciled."
+    ],
+    "proposed": [
+      "Maintain an incorporation ledger keyed by queue-update commit SHA and classify each retained slice as canonical, additive_only, superseded, or unresolved.",
+      "Promote only verified additive slices into canonical state through a separate bounded update; never infer incorporation from semantic similarity alone."
+    ],
+    "superseded": [
+      "The broad interpretation that canonical presence of M-RECONCILE-002 proves all accessible continuity slices have converged into the canonical queue."
+    ],
+    "unresolved": [
+      "Whether other continuity queue-update commits are absent from the canonical completed_slices projection.",
+      "Whether the collector has been executed in an authenticated exact-commit checkout.",
+      "The immutable provenance of M-004, M-005, and M-006."
+    ]
+  },
+  "memory_recovered": "Canonicalization and historical incorporation are separate states: a queue item may be canonical while newer verified slices remain additive-only.",
+  "evidence_strength": "direct canonical blob comparison against one immutable additive queue-update commit; not an exhaustive incorporation audit",
+  "privacy_boundary": {
+    "included": ["repository governance metadata","queue and commit identities","abstract provenance classifications"],
+    "excluded": ["private chat text","personal health or animal-care material","credentials","unreviewed file-library content"]
+  },
+  "falsification_route": [
+    "Fetch ACTIVE_QUEUE blob 7ce65492e6c84e7afa6dafa8567d49f323dd0769 and inspect M-RECONCILE-002 completed_slices.",
+    "Fetch commit de147e1f9242280d96dc204587d92b84b9c5c308 and verify the collector slice.",
+    "Produce a later canonical queue blob explicitly incorporating the collector slice to supersede the current additive-only classification."
+  ],
+  "reversibility": "Additive record only; revert this commit without altering source history."
+}
