@@ -16,10 +16,11 @@ function digest(value) {
 function sanitizedSource(source, expectedMethod) {
   if (!source || source.method !== expectedMethod) throw new TypeError(`${expectedMethod}_source_required`);
   if (typeof source.retrieved_at !== 'string' || Number.isNaN(Date.parse(source.retrieved_at))) throw new TypeError(`${expectedMethod}_retrieved_at_invalid`);
-  return { method: source.method, retrieved_at: source.retrieved_at, pages_fetched: source.pages_fetched ?? null };
+  if (!Number.isInteger(source.pages_fetched) || source.pages_fetched <= 0) throw new TypeError(`${expectedMethod}_pages_fetched_invalid`);
+  return { method: source.method, retrieved_at: source.retrieved_at, pages_fetched: source.pages_fetched };
 }
 
-function sanitizedRateLimitProof(proof) {
+function sanitizedRateLimitProof(proof, sources) {
   if (!proof || typeof proof !== 'object' || Array.isArray(proof)) throw new TypeError('dual_client_rate_limit_proof_required');
   if (proof.ok !== true || proof.promotion_permitted !== true) throw new TypeError('dual_client_rate_limit_proof_not_accepted');
   if (proof.evidence_class !== 'dual_client_retained_response_header_contract') throw new TypeError('dual_client_rate_limit_proof_class_invalid');
@@ -30,6 +31,8 @@ function sanitizedRateLimitProof(proof) {
     if (!Number.isInteger(pageCount) || pageCount <= 0) throw new TypeError(`${client}_rate_limit_page_count_invalid`);
     if (!Number.isInteger(minimumRemaining) || minimumRemaining < 0) throw new TypeError(`${client}_rate_limit_remaining_invalid`);
   }
+  if (proof.clients.primary.page_count !== sources.primary.pages_fetched) throw new TypeError('primary_rate_limit_page_count_mismatch');
+  if (proof.clients.independent.page_count !== sources.independent.pages_fetched) throw new TypeError('independent_rate_limit_page_count_mismatch');
   if (typeof proof.resource !== 'string' || proof.resource.length === 0) throw new TypeError('dual_client_rate_limit_resource_invalid');
   return {
     evidence_class: proof.evidence_class,
@@ -56,7 +59,10 @@ export function buildWorkflowEvidenceBundle({ commitSha, primary, independent, p
     primary: sanitizedSource(primarySource, 'repository_api_link_pagination'),
     independent: sanitizedSource(independentSource, 'gh_api_paginate')
   };
-  const acceptedRateLimitProof = sanitizedRateLimitProof(rateLimitProof);
+  if (Date.parse(generatedAt) < Date.parse(sources.primary.retrieved_at) || Date.parse(generatedAt) < Date.parse(sources.independent.retrieved_at)) {
+    throw new TypeError('generated_at_precedes_source_retrieval');
+  }
+  const acceptedRateLimitProof = sanitizedRateLimitProof(rateLimitProof, sources);
   const reconciliation = providerCeilingAmbiguous
     ? { verified: false, reason: 'provider_ceiling_ambiguous', commitSha }
     : reconcileWorkflowEnumerations({ primary, independent, commitSha });
