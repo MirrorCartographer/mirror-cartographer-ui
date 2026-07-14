@@ -33,7 +33,7 @@ function validManifest() {
     primary: { ...method, tool: 'repository_link_header_enumerator' },
     independent: { ...method, tool: 'gh_api_paginate_slurp' },
     transport_receipts: { primary: receipt('primary', 'e'.repeat(64), 'primary'), independent: receipt('independent', 'f'.repeat(64), 'independent') },
-    stabilization: { first_snapshot_at: '2026-07-13T22:20:00Z', second_snapshot_at: '2026-07-13T22:30:00Z', minimum_quiet_interval_seconds: 300, stable: true },
+    stabilization: { first_snapshot_at: '2026-07-13T22:20:00Z', second_snapshot_at: '2026-07-13T22:30:00Z', minimum_quiet_interval_seconds: 300, stable: true, first_normalized_record_set_sha256: digest, second_normalized_record_set_sha256: digest },
     reconciliation: { verified: true, provider_ceiling_ambiguous: false, normalized_record_set_sha256: digest },
     claim_boundary: { authenticated_workflow_enumeration: true, deployment_identity: false, browser_audibility: false, physical_device_behavior: false }
   };
@@ -45,6 +45,9 @@ async function run() {
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, commit_sha: 'd'.repeat(40) }).reason, 'commit_mismatch');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, primary: { ...valid.primary, raw_output_sha256: '' } }).reason, 'raw_output_hash_invalid');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, stable: false } }).reason, 'snapshots_unstable');
+  assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, first_normalized_record_set_sha256: '' } }).reason, 'snapshot_digest_invalid');
+  assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, second_normalized_record_set_sha256: '9'.repeat(64) } }).reason, 'snapshot_digest_divergence');
+  assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, first_normalized_record_set_sha256: '8'.repeat(64), second_normalized_record_set_sha256: '8'.repeat(64) } }).reason, 'stabilization_reconciliation_digest_mismatch');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, primary: { ...valid.primary, records: [{ ...records[0], status: 'in_progress' }, records[1]] } }).reason, 'nonterminal_record');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, independent: { ...valid.independent, records: [records[0]], record_count: 1 } }).reason, 'transport_record_count_mismatch');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, reconciliation: { ...valid.reconciliation, provider_ceiling_ambiguous: true } }).reason, 'provider_ceiling_ambiguous');
@@ -75,11 +78,12 @@ async function run() {
   result = await writeAuthenticatedEvidenceManifest({ input_path: input, output_path: output });
   assert.equal(result.verified, true);
   const written = JSON.parse(await readFile(output, 'utf8'));
-  assert.equal(written.schema_version, 2);
+  assert.equal(written.schema_version, 3);
   assert.equal(written.validation.record_count, 2);
+  assert.equal(written.validation.stabilization_snapshot_sha256, digest);
   assert.equal(written.validation.primary_receipt_sha256, 'e'.repeat(64));
   result = await writeAuthenticatedEvidenceManifest({ input_path: input, output_path: output });
   assert.equal(result.reason, 'output_exists');
-  console.log('18 assertions passed');
+  console.log('22 assertions passed');
 }
 run();
