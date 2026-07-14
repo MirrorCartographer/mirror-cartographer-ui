@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T22:14:41Z",
+  "state": "in_progress",
+  "completed_slice": "Normalized M-004, M-005, and M-006 as reported identifiers rather than verified artifacts, with an explicit state model separating mention, assignment, referent, and accepted artifact status.",
+  "evidence": {
+    "artifact_path": "operations/continuity/manifests/CM-20260714T2214Z-identifier-ontology-normalization.json",
+    "artifact_commit": "824d066c71e1a5a12dc6a70f7ca7c4870ec9c5f4",
+    "verification": "GitHub contents write returned an immutable commit SHA; fetch-back remains required before promotion beyond static repository evidence."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as not found only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Traverse all accessible refs and pre-boundary reachable history; promote an identifier only through reported_identifier, candidate_assignment, candidate_artifact, and accepted_artifact states when all predicates pass.",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false
+}
