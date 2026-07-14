@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T16:53:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The privacy-reviewed public repertory catalog, deterministic hourly controller, stage receipt, and reversible DOM adapter are now composed behind one browser runtime boundary that never self-schedules, never autoplays, preserves continuity identity, propagates reduced-motion policy, and exposes a rollback selector.",
+  "evidence_path": "operations/evidence/V-001-repertory-runtime-2026-07-14T1653Z.json",
+  "acceptance_impact": {
+    "completed": [
+      "A single reversible application integration boundary now exists for the deterministic hourly repertory."
+    ],
+    "remaining_unchanged": [
+      "Authenticated dual-client exact-commit workflow enumeration and reconciliation",
+      "Operations-only sentinel suppression after provider capacity returns",
+      "Exact-commit audio-routing artifact inspection",
+      "Immutable successful Vercel deployment identity",
+      "Bounded physical iPhone Safari audibility verification"
+    ]
+  },
+  "safe_next_action": "Import createPublicRepertoryRuntime from one reversible application entrypoint and add real-browser integration coverage, but do not trigger an application deployment until provider capacity and immutable deployment verification are available.",
+  "canonical_files_overwritten": false,
+  "registry_change": null
+}
