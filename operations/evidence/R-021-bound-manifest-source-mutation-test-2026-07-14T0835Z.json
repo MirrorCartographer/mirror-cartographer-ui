@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T08:35:00Z",
+  "finding": "A promoted evidence object must be serialized from an immutable bound snapshot, not reread from the caller-controlled source path after promotion.",
+  "implementation": {
+    "production_file": "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "production_commit": "d6467b43fd906ae1f1d18e64cc4259dd242582e0",
+    "production_blob": "90ff2096c7c86de2538e55190e64f2c43418bd48",
+    "test_file": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "test_commit": "5b2960673f2a89d60fc8d18e918f05a61e6e8658",
+    "test_blob": "cff7f83d720ada7c26f686985f467432a8c22ed9"
+  },
+  "verification": {
+    "source_fetch_at_exact_commit": true,
+    "test_fetch_at_exact_commit": true,
+    "test_execution": "not_executed_in_connector_only_run",
+    "command": "node --test operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs"
+  },
+  "claim_boundary": {
+    "structural_test_present": true,
+    "runtime_test_passed": false,
+    "authenticated_enumeration_executed": false,
+    "deployment_identity_verified": false
+  },
+  "falsification_route": "Run the pinned Node test. It must fail if the downstream writer observes the mutated source-path bytes instead of the promoted snapshot bytes.",
+  "specialist_registry_change": "none",
+  "canonical_state_overwrite": false
+}
