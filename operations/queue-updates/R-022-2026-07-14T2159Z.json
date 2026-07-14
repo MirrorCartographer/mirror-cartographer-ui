@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "implementation_in_progress",
+  "created_at": "2026-07-14T21:59:18Z",
+  "objective": "Integrate the retained dual-client rate-limit proof into the exact-commit evidence CLI and preserve provider-ceiling ambiguity fail-closed behavior.",
+  "finding": {
+    "observed": "The final workflow evidence bundle requires an accepted dual-client rate-limit proof, but the retained-evidence CLI adapter did not pass one.",
+    "inferred": "The authenticated CLI path could not construct a promotable schema-v2 bundle even when its three existing retained inputs were valid.",
+    "proposed": "Require a fourth distinct retained JSON input, --rate-limit-proof, pass it through the adapter, and derive provider-ceiling ambiguity from the validated independent envelope.",
+    "superseded": "The prior three-input CLI contract is superseded for promotable evidence.",
+    "unresolved": "The existing CLI tests still need fixture updates and execution in an authenticated checkout."
+  },
+  "completed_slices": [
+    "Added rateLimitProof to the gh-envelope bundle adapter and passed it into the schema-v2 evidence bundle.",
+    "Changed the retained-evidence CLI to require, no-follow open, identity-separate, parse, and retain a rate-limit-proof JSON file.",
+    "Propagated independent-envelope provider-ceiling ambiguity into the final fail-closed bundle call."
+  ],
+  "verification": {
+    "type": "static_contract_inspection",
+    "status": "partial",
+    "verified_files": [
+      "tools/vercel-studio/gh-envelope-bundle-adapter.mjs",
+      "tools/vercel-studio/retained-workflow-evidence-cli.mjs"
+    ],
+    "tests_executed": false,
+    "reason": "No authenticated checkout or local repository was available in this run."
+  },
+  "acceptance_remaining": [
+    "Update retained-workflow-evidence-cli.test.mjs fixtures and arguments with a valid fourth retained proof file.",
+    "Run the Node test suite and verify rejection of missing, aliased, symlinked, malformed, and unaccepted proof inputs.",
+    "Execute both authenticated workflow-run clients against one exact commit and preserve raw pages, response-header proof, command text, and final bundle."
+  ],
+  "commits": [
+    "0e1234037c22f8660be4945cf4c986a07de4baea",
+    "9f267b6bd5c11f68436bb925fd863f01c4d01d0b"
+  ],
+  "canonical_queue_mutated": false,
+  "specialist_registry_mutated": false,
+  "files_deleted": false,
+  "privacy_boundary": "No credentials, private workflow records, raw headers, user content, or secret-bearing logs were committed."
+}
