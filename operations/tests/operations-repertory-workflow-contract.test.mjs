@@ -21,15 +21,20 @@ test('repertory workflow remains least-privilege, bounded, and exact-commit orie
   assert.match(source, /workflow_dispatch:/);
 });
 
-test('workflow watches and executes both repertory test surfaces', async () => {
+test('workflow watches and executes every repertory contract surface', async () => {
   const source = await workflow();
-  const contractPath = 'operations/tests/operations-repertory-workflow-contract.test.mjs';
-  const repertoryPath = 'operations/tests/write-public-hourly-stage-payloads.test.mjs';
+  const paths = [
+    'operations/tests/hourly-production-grammar-contract.test.mjs',
+    'operations/tests/operations-repertory-workflow-contract.test.mjs',
+    'operations/tests/write-public-hourly-stage-payloads.test.mjs',
+  ];
 
-  assert.ok(source.split(contractPath).length >= 3, 'contract test must be watched on push/PR and executed');
-  assert.ok(source.split(repertoryPath).length >= 3, 'repertory test must be watched on push/PR and executed');
+  for (const path of paths) {
+    assert.ok(source.split(path).length >= 3, `${path} must be watched on push/PR and executed`);
+  }
+
   assert.match(
     source,
-    /node --test operations\/tests\/operations-repertory-workflow-contract\.test\.mjs operations\/tests\/write-public-hourly-stage-payloads\.test\.mjs/
+    /node --test operations\/tests\/hourly-production-grammar-contract\.test\.mjs operations\/tests\/operations-repertory-workflow-contract\.test\.mjs operations\/tests\/write-public-hourly-stage-payloads\.test\.mjs/
   );
 });
