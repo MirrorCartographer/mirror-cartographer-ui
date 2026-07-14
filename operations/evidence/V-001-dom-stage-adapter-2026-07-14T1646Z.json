@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T16:46:00Z",
+  "slice": "reversible_dom_stage_adapter",
+  "production_on_stage": {
+    "hour": 12,
+    "selection_rule": "hour modulo six-production public repertory catalog",
+    "production_id": "coordinate-bloom",
+    "deployment_claimed": false
+  },
+  "implementation": {
+    "adapter": "operations/studio/repertory-dom-stage-adapter.mjs",
+    "test": "operations/studio/repertory-dom-stage-adapter.test.mjs",
+    "controller_contract": "operations/studio/repertory-controller.mjs",
+    "receipt_contract": "operations/studio/repertory-stage-receipt.mjs",
+    "properties": [
+      "accepts only the controller projection and an injected renderer registry",
+      "preserves continuity id and revision in stage results",
+      "uses deterministic mount identities and reversible rollback selectors",
+      "rejects projections permitting autoplay or initial audio",
+      "defensively removes autoplay and pauses staged media",
+      "applies reduced-motion presentation state",
+      "restores keyed focus when a production recreates the focused control"
+    ]
+  },
+  "verification": {
+    "command": "node --test operations/studio/repertory-dom-stage-adapter.test.mjs",
+    "environment": "local isolated Node test harness with a deterministic DOM-like fixture",
+    "passed": 6,
+    "failed": 0,
+    "browser_verified": false,
+    "mobile_safari_verified": false,
+    "physical_device_verified": false,
+    "deployment_verified": false
+  },
+  "privacy": {
+    "private_source_material": false,
+    "raw_continuity_marks": false,
+    "public_projection_only": true
+  },
+  "rollback": {
+    "route": "Stop importing createDomStageAdapter or revert the two additive adapter commits.",
+    "canonical_state_mutated": false
+  },
+  "limits": [
+    "The deterministic fixture is not a real browser engine.",
+    "Safari focus, media, and reduced-motion behavior remains unverified.",
+    "No application deployment was attempted because provider capacity remains blocked.",
+    "Renderer visual quality and performance are outside this adapter slice."
+  ]
+}
