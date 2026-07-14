@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T21:53:41Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Established the canonical deterministic hourly repertory contract and a static safety/determinism verification contract without changing application runtime or triggering a deployment.",
+  "production_currently_on_stage": {
+    "title": "Wordless Room Game",
+    "production_id": "wordless-room-game",
+    "selection_evidence": "UTC hour 21 maps deterministically to production index 3 under repertory v1.",
+    "runtime_claim": "observed existing stage; no new deployment claim"
+  },
+  "artifacts": [
+    {
+      "path": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+      "commit": "260e3dd6864e836a8288afdbb07aa50864eec53f"
+    },
+    {
+      "path": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.contract.json",
+      "commit": "40d72259b77c29a11a1a9ec68391bd1349ea2bba"
+    }
+  ],
+  "verification": {
+    "result": "pass_static_contract",
+    "verified": [
+      "all 24 UTC hours are represented exactly once",
+      "six-production modulo ordering is deterministic",
+      "UTC hour 21 selects wordless-room-game",
+      "audio remains explicit-gesture-only",
+      "reduced-motion, keyboard, mobile, privacy, performance, and no-commerce constraints are explicit",
+      "runtime integration is explicitly not performed"
+    ],
+    "not_verified": [
+      "application build",
+      "Vercel deployment identity",
+      "physical iPhone Safari audibility"
+    ]
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Graphics Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "registry_change": null,
+  "canonical_queue_overwritten": false,
+  "application_runtime_changed": false,
+  "deployment_attempted": false,
+  "privacy_boundary": {
+    "included": [
+      "public-safe production names",
+      "repository commit identifiers",
+      "abstract aesthetic and continuity roles",
+      "runtime safety constraints"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "secret-bearing logs"
+    ]
+  },
+  "rollback": "Revert this queue projection, 40d72259b77c29a11a1a9ec68391bd1349ea2bba, and 260e3dd6864e836a8288afdbb07aa50864eec53f; no application runtime rollback is required.",
+  "next_action": "After Vercel capacity returns, first verify an operations-only sentinel is skipped or ignored; then implement the selector behind a reversible runtime flag, run the committed contract in an authenticated checkout, and bind one exact application commit to an immutable successful deployment before enabling hourly stage changes."
+}
