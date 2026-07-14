@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T01:26:00Z",
+  "finding": "The stage descriptor's public metadata boundary inspected only top-level keys, allowing forbidden private-source, payment, conversion, checkout, or autoplay fields to pass when nested inside objects or arrays.",
+  "implementation": {
+    "boundary": "recursive-key-and-value traversal",
+    "fail_closed": true,
+    "nested_arrays_checked": true,
+    "nested_objects_checked": true,
+    "deep_freeze_public_metadata": true,
+    "deployment_attempted": false,
+    "application_feature_flag_changed": false
+  },
+  "verification": {
+    "route": "isolated Node execution against repository-equivalent module and test contents",
+    "observed_output": {
+      "tests": 17,
+      "passed": 17,
+      "production": "Production 21",
+      "activation": "operations-only-default-off",
+      "privacy_boundary": "recursive"
+    },
+    "falsification_cases": [
+      "top-level private_source",
+      "nested provenance.private_sources",
+      "array-contained checkout",
+      "continuity-channel mismatch",
+      "ambiguous hour/date selection"
+    ]
+  },
+  "commits": [
+    "d81c3cb2148c052ebe913759f1f10864556e843d",
+    "efce06c1cc9ecfaeec0ba18f3211fdf45af48e2d"
+  ],
+  "evidence_strength": "committed implementation with directly observed isolated deterministic verification",
+  "limits": [
+    "The repository-wide test suite was not executed.",
+    "No Vercel deployment was attempted because the active state prohibits application deployment attempts while build capacity is exhausted.",
+    "This boundary prevents forbidden key classes from entering the descriptor; it does not independently classify arbitrary free-text values for private information."
+  ],
+  "rollback": "Revert commits d81c3cb2148c052ebe913759f1f10864556e843d and efce06c1cc9ecfaeec0ba18f3211fdf45af48e2d. The stage descriptor remains operations-only and default-off."
+}
