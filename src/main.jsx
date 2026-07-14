@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import OperatingAtlas from './components/OperatingAtlas';
+import RoomWorldValid from './components/RoomWorldValid';
 import ErrorBoundary from './components/ErrorBoundary';
-import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
-import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
 import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
@@ -13,10 +11,6 @@ import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRun
 import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
 import './assets/styles.css';
 import './assets/failsafe.css';
-import './assets/autobiography.css';
-import './assets/source-feeling.css';
-import './assets/mobile-enter.css';
-import './assets/possibility-field.css';
 import './assets/comet-garden.css';
 
 installRuntimeInfrastructure();
@@ -26,13 +20,11 @@ installAudioObservabilityRuntime();
 installAudioRoutingEvidenceRuntime();
 installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
-installPossibilityFieldRuntime();
-installCometGardenRuntime();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <OperatingAtlas />
+      <RoomWorldValid />
     </ErrorBoundary>
   </React.StrictMode>,
 );
