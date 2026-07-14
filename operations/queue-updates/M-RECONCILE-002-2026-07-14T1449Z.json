@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "slice_id": "CM-1034",
+  "updated_at": "2026-07-14T14:49:58Z",
+  "state": "in_progress",
+  "completed_slice": "Recorded a privacy-preserving File Library collision ledger proving that V8-004, V8-005, and V8-006 proof-machine records cannot resolve M-004, M-005, or M-006 by numeric suffix alone; semantically adjacent chat artifact names remain lead-only without an explicit identifier assignment.",
+  "evidence": [
+    {
+      "path": "operations/evidence/M-RECONCILE-002-file-library-collision-ledger-2026-07-14T1449Z.json",
+      "commit": "81b4a3b12d355b0d00e7a209e994fe8e1f6e9d9a",
+      "strength": "connector_observed_and_committed"
+    }
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Execute the committed exhaustive-history collector in an authenticated checkout, retain a complete source-class search ledger, and resolve only candidates satisfying namespace, owner, semantic role, temporal precedence, and immutable-locator agreement. Keep all three identifiers unresolved until the unchanged coverage validator accepts the evidence.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "reversible": true
+}
