@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T11:03:44Z",
+  "production_on_stage": {
+    "id": "silent-switchboard",
+    "title": "Silent Switchboard",
+    "selection_basis": "canonical_utc_hour",
+    "hour_key": 495563,
+    "repertory_index": 3
+  },
+  "finding": "The deterministic repertory required a single public runtime import boundary that preserves continuity state across hourly production changes without exposing provenance internals or enabling autoplay, payment logic, or private source material.",
+  "implemented": [
+    "Added a fail-closed runtime adapter over the existing deterministic hourly selector.",
+    "Added normalized versioned continuity state shared across productions.",
+    "Added a public production projection that excludes internal provenance and capability records.",
+    "Added the exact next-hour boundary function for deterministic scheduling.",
+    "Added seven Node contract tests covering deterministic selection, hourly change, continuity preservation, public projection, version rejection, missing-field rejection, and UTC boundary calculation."
+  ],
+  "commits": [
+    "33c4f1dcb664f4bd5113802d73643ff01ff12caf",
+    "7e5c3738b6ffdf17ee100fbb4add0e771daffb1c"
+  ],
+  "verification": {
+    "repository_retention": "committed",
+    "static_review": "completed",
+    "node_test_execution": "not_observed",
+    "browser_runtime": "not_observed",
+    "vercel_deployment": "not_attempted_provider_capacity_blocked",
+    "evidence_strength": "committed_unexecuted"
+  },
+  "constraints_preserved": {
+    "operations_only": true,
+    "non_autoplaying": true,
+    "mobile_safe_contract_retained": true,
+    "accessible_contract_retained": true,
+    "payment_logic": false,
+    "private_source_material": false,
+    "github_history_deleted": false
+  },
+  "rollback": {
+    "method": "Revert the evidence, test, and adapter commits in reverse order without rewriting history.",
+    "commits": [
+      "7e5c3738b6ffdf17ee100fbb4add0e771daffb1c",
+      "33c4f1dcb664f4bd5113802d73643ff01ff12caf"
+    ]
+  },
+  "limits": [
+    "The Node test file has not been executed in an authenticated checkout during this run.",
+    "The adapter is not wired into the application surface.",
+    "No browser, mobile Safari, audio, or immutable Vercel deployment evidence was produced."
+  ],
+  "next_action": "Execute node --test operations/tests/hourly-repertory.test.mjs operations/tests/repertory-runtime-adapter.test.mjs at the exact resulting commit, retain stdout and environment metadata, then prepare a reviewed application integration behind this one import boundary without deploying until provider capacity and immutable deployment verification return."
+}
