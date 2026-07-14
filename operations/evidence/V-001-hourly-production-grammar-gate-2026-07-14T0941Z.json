@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-14T09:41:00Z",
+  "slice": "Bind the deterministic hourly repertory to executable production-grammar invariants.",
+  "production_on_stage": {
+    "hour": 5,
+    "id": "first-light-proof",
+    "title": "First Light Proof"
+  },
+  "changes": [
+    {
+      "path": "operations/tests/hourly-production-grammar-contract.test.mjs",
+      "commit": "74787eab3828b9dac1d1d944657bbdbee614b556",
+      "purpose": "Enforce 24 distinct hourly productions, one continuity channel, explicit sound consent, accessibility, mobile safety, reversibility, absence of payment or conversion logic, public-only privacy boundaries, and observed/inferred/experiment/current-decision provenance."
+    },
+    {
+      "path": ".github/workflows/operations-repertory-tests.yml",
+      "commit": "9d77e6c008b1a41fbce431a6d466079069eda9fd",
+      "purpose": "Watch and execute the production-grammar test in the exact-commit least-privilege repertory workflow."
+    },
+    {
+      "path": "operations/tests/operations-repertory-workflow-contract.test.mjs",
+      "commit": "907cdaf5701e99515b15ab5776a9a84049b0508f",
+      "purpose": "Require CI to retain all three repertory contract surfaces."
+    }
+  ],
+  "verification": {
+    "github_combined_status": {
+      "commit": "907cdaf5701e99515b15ab5776a9a84049b0508f",
+      "vercel_status": "success",
+      "interpretation": "Provider status only; not accepted as immutable deployment identity or application deployment proof."
+    },
+    "github_actions": {
+      "workflow_runs_returned": 0,
+      "coverage_limit": "Connector endpoint filters to pull-request-triggered runs and returns only the first page.",
+      "result": "execution_unresolved"
+    },
+    "structural_review": "The test and workflow contracts are committed and mutually bound; runtime test execution is not claimed without a run record."
+  },
+  "constraints_preserved": {
+    "payments_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "github_files_or_history_deleted": false,
+    "canonical_shared_state_overwritten": false,
+    "autoplay_added": false
+  },
+  "rollback": [
+    "907cdaf5701e99515b15ab5776a9a84049b0508f",
+    "9d77e6c008b1a41fbce431a6d466079069eda9fd",
+    "74787eab3828b9dac1d1d944657bbdbee614b556"
+  ],
+  "acceptance_effect": "Completes an operations-only reversible slice; V-001 remains blocked pending authenticated exhaustive workflow evidence, immutable Vercel deployment identity, audio artifact inspection, and physical iPhone Safari audibility verification."
+}
