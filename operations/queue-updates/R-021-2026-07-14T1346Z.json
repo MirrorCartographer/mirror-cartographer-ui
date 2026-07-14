@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T13:46:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Upgraded the retained promotion CLI artifact to schema version 2 with an exact UTF-8 source byte length and SHA-256 binding, preserving no-overwrite and fail-closed behavior.",
+  "evidence": [
+    "tools/frontier-research/workflow-enumeration-promotion-cli.mjs",
+    "tools/frontier-research/workflow-enumeration-promotion-cli.test.mjs",
+    "operations/evidence/R-021-source-bound-promotion-artifact-2026-07-14T1346Z.json"
+  ],
+  "verification": "Four deterministic Node tests passed in an isolated runtime.",
+  "acceptance_remaining": [
+    "Execute the authenticated repository enumerator for an exact commit.",
+    "Execute and retain the independent gh api --paginate --slurp traversal for the same commit.",
+    "Run at least two non-overlapping reconciled observation windows through the source-bound promotion CLI.",
+    "Integrate the source-bound retained artifact into the Vercel evidence assessor.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Wire the schema-version-2 source binding into the Vercel retained-evidence assessor, then execute both exhaustive clients against one exact commit across two non-overlapping observation windows and retain every raw input plus its matching digest-bound promotion artifact."
+}
