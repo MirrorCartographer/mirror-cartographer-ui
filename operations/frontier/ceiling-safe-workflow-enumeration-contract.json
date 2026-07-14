@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "contract_id": "github-actions-ceiling-safe-enumeration-v1",
+  "queue_item": "R-021",
+  "status": "implementation_ready",
+  "finding": {
+    "observed": "GitHub documents that List workflow runs for a repository returns up to 1,000 results for each search when actor, branch, check_suite_id, created, event, head_sha, or status filters are used.",
+    "inference": "A head_sha-filtered traversal cannot prove exhaustive absence or completeness when the filtered result set could reach the provider ceiling.",
+    "current_decision": "Use unfiltered repository workflow-run pagination as the authoritative enumeration path, filter by exact head_sha locally, and use a head_sha-filtered query only as a non-authoritative diagnostic comparator.",
+    "uncertainty": "GitHub does not state on the cited endpoint page that unfiltered repository pagination has the same 1,000-result search ceiling; this contract therefore requires full Link-header exhaustion and independent count consistency rather than assuming unlimited retention."
+  },
+  "source_status": {
+    "source_class": "primary_official_documentation",
+    "documents": [
+      {
+        "title": "REST API endpoints for workflow runs",
+        "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+        "retrieved_at": "2026-07-14T18:28:37Z",
+        "relevant_claims": [
+          "Filtered workflow-run searches using head_sha and other named parameters return up to 1,000 results.",
+          "per_page supports a maximum of 100.",
+          "head_sha restricts results to runs associated with the specified commit."
+        ]
+      },
+      {
+        "title": "Using pagination in the REST API",
+        "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+        "retrieved_at": "2026-07-14T18:28:37Z",
+        "relevant_claims": [
+          "REST pagination is represented through Link response headers when additional pages exist."
+        ]
+      },
+      {
+        "title": "gh api manual",
+        "url": "https://cli.github.com/manual/gh_api",
+        "retrieved_at": "2026-07-14T18:28:37Z",
+        "relevant_claims": [
+          "--paginate requests additional pages until pagination is exhausted.",
+          "--slurp wraps paginated JSON arrays or objects into one outer array."
+        ]
+      }
+    ]
+  },
+  "authoritative_algorithm": {
+    "endpoint": "GET /repos/{owner}/{repo}/actions/runs?per_page=100",
+    "forbidden_authoritative_filters": [
+      "actor",
+      "branch",
+      "check_suite_id",
+      "created",
+      "event",
+      "head_sha",
+      "status"
+    ],
+    "steps": [
+      "Validate owner, repository, and exact 40-hex commit SHA.",
+      "Request the unfiltered repository workflow-run endpoint with per_page=100.",
+      "Follow every rel=next Link until no next relation remains.",
+      "Retain raw response pages, response retrieval timestamps, status codes, and Link headers.",
+      "Reject any page with a non-200 response, malformed payload, duplicate run ID, or missing required run identity fields.",
+      "Require the sum of workflow_runs lengths to equal the retained enumerated_count.",
+      "Filter locally where run.head_sha equals the exact commit SHA.",
+      "Record all event types without excluding pull_request-associated runs.",
+      "Produce a canonical digest over ordered retained page payloads and traversal metadata.",
+      "Mark coverage complete only after Link exhaustion and all invariants pass."
+    ],
+    "completion_predicate": "link_exhausted && all_http_200 && payloads_valid && no_duplicate_run_ids && count_consistent && raw_pages_retained && canonical_digest_present",
+    "fail_closed_reasons": [
+      "page_limit_reached_before_link_exhaustion",
+      "missing_or_unparseable_link_header_during_known_pagination",
+      "http_error",
+      "payload_invalid",
+      "duplicate_run_id",
+      "count_mismatch",
+      "raw_page_missing",
+      "digest_missing",
+      "commit_sha_invalid"
+    ]
+  },
+  "diagnostic_comparator": {
+    "endpoint": "GET /repos/{owner}/{repo}/actions/runs?head_sha={sha}&per_page=100",
+    "authority": "non_authoritative",
+    "purpose": "Detect divergence and expose provider-ceiling risk without using the filtered result to prove exhaustive completeness.",
+    "rules": [
+      "Retain every filtered page and Link header.",
+      "If total_count >= 1000, set provider_ceiling_ambiguous=true.",
+      "If the filtered set differs from the locally filtered authoritative set, reject reconciliation.",
+      "A filtered zero result cannot override a nonzero authoritative local-filter result.",
+      "Agreement does not replace authoritative Link exhaustion."
+    ]
+  },
+  "output_envelope": {
+    "required": [
+      "repository",
+      "exact_commit_sha",
+      "retrieved_at_start",
+      "retrieved_at_end",
+      "api_version",
+      "per_page",
+      "page_count",
+      "enumerated_count",
+      "matched_run_count",
+      "matched_run_ids",
+      "link_exhausted",
+      "provider_ceiling_ambiguous",
+      "raw_pages_locator",
+      "canonical_sha256",
+      "verified"
+    ],
+    "verified_predicate": "authoritative_completion_predicate && reconciliation_agrees && !provider_ceiling_ambiguous"
+  },
+  "test_vectors": [
+    {
+      "name": "unfiltered traversal exhausted and comparator agrees",
+      "input": {
+        "unfiltered_link_exhausted": true,
+        "authoritative_matched_ids": [101, 104],
+        "filtered_matched_ids": [101, 104],
+        "filtered_total_count": 2
+      },
+      "expected": {
+        "verified": true,
+        "provider_ceiling_ambiguous": false
+      }
+    },
+    {
+      "name": "filtered search reaches documented ceiling",
+      "input": {
+        "unfiltered_link_exhausted": true,
+        "authoritative_matched_ids": [101],
+        "filtered_matched_ids": [101],
+        "filtered_total_count": 1000
+      },
+      "expected": {
+        "verified": false,
+        "provider_ceiling_ambiguous": true
+      }
+    },
+    {
+      "name": "authoritative traversal stops before Link exhaustion",
+      "input": {
+        "unfiltered_link_exhausted": false,
+        "authoritative_matched_ids": [],
+        "filtered_matched_ids": [],
+        "filtered_total_count": 0
+      },
+      "expected": {
+        "verified": false,
+        "reason": "page_limit_reached_before_link_exhaustion"
+      }
+    },
+    {
+      "name": "filtered zero conflicts with authoritative match",
+      "input": {
+        "unfiltered_link_exhausted": true,
+        "authoritative_matched_ids": [205],
+        "filtered_matched_ids": [],
+        "filtered_total_count": 0
+      },
+      "expected": {
+        "verified": false,
+        "reason": "enumeration_divergence"
+      }
+    }
+  ],
+  "falsification_route": [
+    "Run both traversals against a repository with more than 1,000 filtered matches for one supported filter and verify the comparator is marked ambiguous.",
+    "Compare the unfiltered local-filter set against GraphQL or a second independently implemented REST client for the same exact commit.",
+    "Inject duplicate IDs, truncated Link traversal, and count drift into retained fixtures and require rejection.",
+    "Revisit the contract if GitHub documents a universal ceiling for unfiltered workflow-run listing or changes pagination semantics."
+  ],
+  "privacy": {
+    "classification": "public_safe_contract",
+    "prohibitions": [
+      "Do not retain authorization headers or tokens.",
+      "Do not publish private repository run names, logs, actor identities, or artifact contents in public evidence.",
+      "Store raw private-repository responses only in approved restricted evidence storage."
+    ]
+  }
+}
