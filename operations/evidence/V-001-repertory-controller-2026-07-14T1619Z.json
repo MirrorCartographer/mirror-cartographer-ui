@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T16:19:23Z",
+  "slice": "deterministic repertory controller boundary",
+  "files": [
+    {
+      "path": "operations/studio/repertory-controller.mjs",
+      "commit": "2bb0db010a0bca8656d8ed136292dc18e8016a2e"
+    },
+    {
+      "path": "operations/studio/repertory-controller.test.mjs",
+      "commit": "b7befee7ddb891122d1a7764f20c4bbd36d5d778"
+    }
+  ],
+  "verification": {
+    "command": "node --test repertory-controller.test.mjs",
+    "runtime": "isolated Node test runtime",
+    "passed": 6,
+    "failed": 0,
+    "verified_behaviors": [
+      "deterministic hour-to-production selection",
+      "single reversible stage transaction",
+      "continuity identity preservation",
+      "reduced-motion suppression for reducible motion",
+      "non-autoplay and audio-disabled projection policy",
+      "fail-closed production identity divergence",
+      "duplicate production id rejection"
+    ]
+  },
+  "production_fixture": {
+    "hour": 12,
+    "slot_key": "hour-12",
+    "production_id": "quiet-orbit",
+    "mount_key": "quiet-orbit@hour-12",
+    "continuity_id": "continuity-public",
+    "continuity_revision": "r17"
+  },
+  "claims": {
+    "deployment_verified": false,
+    "browser_rendering_verified": false,
+    "mobile_safari_verified": false,
+    "physical_audio_verified": false,
+    "peer_execution_verified": false
+  },
+  "rollback": "Remove the two additive repertory-controller files and disregard this evidence record; no application deployment or persistent user state was changed."
+}
