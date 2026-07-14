@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T15:10:00Z",
+  "memory_id": "continuity-negative-search-boundary-v1",
+  "title": "Negative retrieval evidence is coverage-bounded, not an absence proof",
+  "source_status": {
+    "repository_state": "connector_observed",
+    "repository_commit_search": "connector_observed_first_page_recent_commits",
+    "file_library_search": "semantic_and_exact_token_search_observed",
+    "chat_history": "privacy_reviewed_search_results_only"
+  },
+  "durable_memory": {
+    "rule": "A search that returns no admissible origin object establishes only that the queried index, query formulation, and returned result window did not expose an admissible origin. It does not prove that the identifier was never assigned.",
+    "graph_model": {
+      "search_event_edge": "searched_with",
+      "coverage_edge": "covered_scope",
+      "negative_result_edge": "did_not_return_admissible_origin",
+      "forbidden_inference": "did_not_exist"
+    },
+    "required_fields_for_negative_evidence": [
+      "source_class",
+      "query_text_or_query_hash",
+      "retrieval_time",
+      "index_or_connector",
+      "result_limit_or_page_scope",
+      "privacy_class",
+      "admissibility_rule",
+      "falsification_route"
+    ]
+  },
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "The active queue still requires immutable provenance for M-004, M-005, and M-006 and explicitly forbids reconstructing unverified history."
+    },
+    {
+      "status": "observed",
+      "claim": "File Library searches for the identifiers returned unrelated proof-machine records using V8/V9 namespaces and no inspected result explicitly assigned M-004, M-005, or M-006."
+    },
+    {
+      "status": "inferred",
+      "claim": "The current negative search results constrain the covered retrieval surfaces but cannot establish global nonexistence."
+    },
+    {
+      "status": "proposed",
+      "claim": "Represent every negative provenance search as a coverage-bounded search event node rather than as an absence fact on the artifact node."
+    },
+    {
+      "status": "superseded",
+      "claim": "No search result means the artifact never existed."
+    },
+    {
+      "status": "unresolved",
+      "claim": "An origin assignment may still exist in an unindexed branch, unreachable commit, differently phrased decision log, language lexicon, project document, or privacy-reviewed chat source."
+    }
+  ],
+  "contradiction_resolution": {
+    "apparent_contradiction": "Repeated repository and File Library searches have not produced an admissible origin, yet the identifiers remain unresolved rather than classified nonexistent.",
+    "resolution": "The searches have incomplete and source-specific coverage. Their valid conclusion is did_not_return_admissible_origin for the recorded scope, not did_not_exist."
+  },
+  "privacy_boundary": {
+    "classification": "private_source_safe_summary",
+    "included": [
+      "file titles and namespace labels necessary for collision classification",
+      "repository commit identifiers and messages",
+      "abstract provenance rules"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal information",
+      "credentials",
+      "secret-bearing logs",
+      "unpublished source contents not necessary to establish coverage"
+    ]
+  },
+  "evidence_strength": "connector-observed, query-bounded, non-exhaustive",
+  "falsification_route": [
+    "Produce an immutable source object that explicitly assigns M-004, M-005, or M-006 in the continuity namespace.",
+    "Record namespace, owner, semantic role, temporal precedence, and immutable locator agreement.",
+    "Replace unresolved only for the identifier supported by that object."
+  ]
+}
