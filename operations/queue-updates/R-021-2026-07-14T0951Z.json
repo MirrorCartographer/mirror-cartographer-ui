@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "team": "frontier_research",
+  "updated_at": "2026-07-14T09:51:00Z",
+  "update_type": "append_only_slice",
+  "completed_slice": "Added a committed adversarial hard-link fixture proving the retained manifest writer is required to fail closed when the output path already aliases a protected inode; both aliases must remain byte-identical and unchanged.",
+  "finding_status": "implemented_unexecuted",
+  "source_status": {
+    "primary_documentation_reviewed": true,
+    "repository_sources_reviewed": true,
+    "runtime_result_observed": false
+  },
+  "artifacts": [
+    {
+      "path": "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+      "commit_sha": "721b90076a3e3d008699d20d6b02df51b57ad255"
+    },
+    {
+      "path": "operations/evidence/R-021-hardlink-output-exclusivity-2026-07-14T0951Z.json",
+      "commit_sha": "afb8951ab1aec072a9b5c9e30e4c0469cbb4d192"
+    }
+  ],
+  "acceptance_effect": {
+    "completed": false,
+    "reason": "The new fixture strengthens the no-overwrite boundary but R-021 still requires authenticated dual enumeration, validated reconciliation, retained raw outputs, and runtime execution evidence."
+  },
+  "safe_next_action": "Execute the full retained-evidence test file in an authenticated checkout, retain exact environment metadata, then run both exhaustive workflow-run clients against one exact commit and reconcile their retained outputs without creating a deployment claim."
+}
