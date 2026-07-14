@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T01:19:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed execution-provenance gate requiring exact-commit agreement plus distinct client identifiers, invocation identifiers, and command vectors before a bound authenticated evidence manifest can be written.",
+  "artifacts": [
+    "tools/frontier-research/execution-provenance-binding.mjs",
+    "tools/frontier-research/execution-provenance-binding.test.mjs",
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/evidence/frontier-execution-provenance-binding-2026-07-14T0119Z.json"
+  ],
+  "verification": {
+    "method": "isolated_node_falsification_suite",
+    "assertions_passed": 8
+  },
+  "acceptance_remaining": [
+    "Execute the repository enumerator and independent gh api traversal against one exact commit.",
+    "Record execution attestations for both clients and retain both raw outputs.",
+    "Run the bound writer and reconciliation gate over the resulting evidence.",
+    "Add stronger process-isolation evidence if operational independence is required rather than declared-client independence."
+  ],
+  "safe_next_action": "Run the two authenticated clients from separately identified invocations, preserve their raw outputs and execution declarations, and require the bound writer to pass before accepting the reconciliation bundle."
+}
