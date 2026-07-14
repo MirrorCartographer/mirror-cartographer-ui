@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T15:10:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed semantic binding verifier that runs after byte-complete retention verification and rejects role substitution, missing internal commit claims, nested cross-commit claims, incomplete envelope shapes, unverified reconciliation or promotion payloads, and non-exhaustive retained independent commands.",
+  "files": [
+    "tools/frontier-research/workflow-evidence-semantic-binding-core.mjs",
+    "tools/frontier-research/workflow-evidence-semantic-binding-core.test.mjs",
+    "operations/evidence/R-021-semantic-binding-verifier-2026-07-14T1510Z.json"
+  ],
+  "verification": {
+    "command": "node --test tools/frontier-research/workflow-evidence-semantic-binding-core.test.mjs",
+    "passed": 6,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute the authenticated primary enumerator and independent gh api --paginate --slurp traversal against the same exact commit.",
+    "Retain all seven roles and pass the existing byte-complete retention manifest verifier.",
+    "Run this semantic binding verifier on the real retained artifacts and add explicit tested schema adapters for any observed aliases.",
+    "Run promotion artifact revalidation only after byte and semantic verification both succeed.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Integrate semantic binding between the retention-manifest verifier and promotion revalidation, then exercise the full chain against one authenticated exact-commit evidence set without creating a deployment.",
+  "canonical_files_overwritten": false,
+  "specialist_registry_change": null
+}
