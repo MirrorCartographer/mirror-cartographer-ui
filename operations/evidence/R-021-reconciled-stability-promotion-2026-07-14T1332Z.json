@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T13:32:00Z",
+  "finding": "Temporal stability assessment must consume only observation windows whose primary and independent exhaustive clients have already reconciled for the exact commit; otherwise a stable digest from one client can conceal same-window client disagreement.",
+  "artifact": "tools/frontier-research/workflow-enumeration-promotion-gate.mjs",
+  "test_artifact": "tools/frontier-research/workflow-enumeration-promotion-gate.test.mjs",
+  "verification": {
+    "command": "node --test workflow-enumeration-promotion-gate.test.mjs",
+    "working_directory": "tools/frontier-research",
+    "tests_passed": 3,
+    "tests_failed": 0,
+    "runtime": "local Node test runner"
+  },
+  "source_status": {
+    "repository_state": "observed",
+    "composition_rule": "inferred_and_runtime_verified",
+    "authenticated_private_repository_execution": "not_performed"
+  },
+  "evidence_strength": "committed_and_locally_runtime_verified",
+  "uncertainty": "The integration has not yet consumed retained authenticated observations from the private repository.",
+  "falsification_route": "Provide any observation accepted as promotable where either client pair fails exact reconciliation, a provider ceiling is ambiguous, observations overlap, run status is nonterminal, the quiet period is unmet, or canonical digests drift.",
+  "privacy_boundary": "Contains repository evidence contracts and synthetic test records only; no credentials, private logs, personal data, or raw private source material.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_change": null
+}
