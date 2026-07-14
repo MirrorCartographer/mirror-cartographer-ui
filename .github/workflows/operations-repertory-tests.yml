@@ -1,0 +1,41 @@
+name: Operations Repertory Tests
+
+on:
+  push:
+    paths:
+      - 'operations/repertory/**'
+      - 'operations/tools/write-public-hourly-stage-payloads.mjs'
+      - 'operations/tests/write-public-hourly-stage-payloads.test.mjs'
+      - '.github/workflows/operations-repertory-tests.yml'
+  pull_request:
+    paths:
+      - 'operations/repertory/**'
+      - 'operations/tools/write-public-hourly-stage-payloads.mjs'
+      - 'operations/tests/write-public-hourly-stage-payloads.test.mjs'
+      - '.github/workflows/operations-repertory-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: operations-repertory-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic-repertory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run deterministic repertory tests
+        run: node --test operations/tests/write-public-hourly-stage-payloads.test.mjs
