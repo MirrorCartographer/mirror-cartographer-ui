@@ -69,7 +69,6 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let visits = Number(sessionStorage.getItem('fourth-room-visits') || 0);
   let audio = null;
-  let tone = null;
   let raf = 0;
 
   function resize() {
@@ -77,7 +76,7 @@
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(performance.now());
+    if (reduced) draw(performance.now());
   }
 
   function draw(t) {
@@ -129,7 +128,7 @@
     const enabled = sound.getAttribute('aria-pressed') !== 'true';
     sound.setAttribute('aria-pressed', String(enabled));
     sound.textContent = `Sound: ${enabled ? 'on' : 'off'}`;
-    if (enabled) { tone = audio; ping(); } else { tone = null; audio.close(); audio = null; }
+    if (enabled) ping(); else { await audio.close(); audio = null; }
   });
   door.addEventListener('click', enter);
   reset.addEventListener('click', () => {
