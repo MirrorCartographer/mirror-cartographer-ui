@@ -2,13 +2,13 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateAuthenticatedEvidenceManifest, writeAuthenticatedEvidenceManifest } from './write-vercel-authenticated-evidence-manifest.mjs';
+import { computeNormalizedRecordSetSha256, validateAuthenticatedEvidenceManifest, writeAuthenticatedEvidenceManifest } from './write-vercel-authenticated-evidence-manifest.mjs';
 
 const commit = 'a'.repeat(40);
-const digest = 'b'.repeat(64);
 const rawHash = 'c'.repeat(64);
 const bodyHash = 'd'.repeat(64);
 const records = [{ id: 11, head_sha: commit, status: 'completed' }, { id: 12, head_sha: commit, status: 'cancelled' }];
+const digest = computeNormalizedRecordSetSha256(records);
 
 function receipt(method, receiptHash, requestPrefix) {
   const page2 = `https://api.github.com/repos/MirrorCartographer/mirror-cartographer-ui/actions/runs?head_sha=${commit}&page=2&per_page=1`;
@@ -42,16 +42,27 @@ function validManifest() {
 async function run() {
   const valid = validManifest();
   assert.equal(validateAuthenticatedEvidenceManifest(valid).verified, true);
+  assert.equal(computeNormalizedRecordSetSha256([...records].reverse()), digest);
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, commit_sha: 'd'.repeat(40) }).reason, 'commit_mismatch');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, primary: { ...valid.primary, raw_output_sha256: '' } }).reason, 'raw_output_hash_invalid');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, stable: false } }).reason, 'snapshots_unstable');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, first_normalized_record_set_sha256: '' } }).reason, 'snapshot_digest_invalid');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, second_normalized_record_set_sha256: '9'.repeat(64) } }).reason, 'snapshot_digest_divergence');
-  assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, first_normalized_record_set_sha256: '8'.repeat(64), second_normalized_record_set_sha256: '8'.repeat(64) } }).reason, 'stabilization_reconciliation_digest_mismatch');
+  assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, stabilization: { ...valid.stabilization, first_normalized_record_set_sha256: '8'.repeat(64), second_normalized_record_set_sha256: '8'.repeat(64) } }).reason, 'snapshot_digest_not_bound_to_records');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, primary: { ...valid.primary, records: [{ ...records[0], status: 'in_progress' }, records[1]] } }).reason, 'nonterminal_record');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, independent: { ...valid.independent, records: [records[0]], record_count: 1 } }).reason, 'transport_record_count_mismatch');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, reconciliation: { ...valid.reconciliation, provider_ceiling_ambiguous: true } }).reason, 'provider_ceiling_ambiguous');
   assert.equal(validateAuthenticatedEvidenceManifest({ ...valid, claim_boundary: { ...valid.claim_boundary, deployment_identity: true } }).reason, 'claim_boundary_invalid');
+
+  const forged = structuredClone(valid);
+  forged.stabilization.first_normalized_record_set_sha256 = '7'.repeat(64);
+  forged.stabilization.second_normalized_record_set_sha256 = '7'.repeat(64);
+  forged.reconciliation.normalized_record_set_sha256 = '7'.repeat(64);
+  assert.equal(validateAuthenticatedEvidenceManifest(forged).reason, 'snapshot_digest_not_bound_to_records');
+
+  const metadataDivergence = structuredClone(valid);
+  metadataDivergence.independent.records[0].conclusion = 'success';
+  assert.equal(validateAuthenticatedEvidenceManifest(metadataDivergence).reason, 'canonical_record_set_divergence');
 
   const disconnected = structuredClone(valid);
   disconnected.transport_receipts.primary.pages[0].next_url = disconnected.transport_receipts.primary.pages[0].request_url;
@@ -78,12 +89,13 @@ async function run() {
   result = await writeAuthenticatedEvidenceManifest({ input_path: input, output_path: output });
   assert.equal(result.verified, true);
   const written = JSON.parse(await readFile(output, 'utf8'));
-  assert.equal(written.schema_version, 3);
+  assert.equal(written.schema_version, 4);
   assert.equal(written.validation.record_count, 2);
+  assert.equal(written.validation.normalized_record_set_sha256, digest);
   assert.equal(written.validation.stabilization_snapshot_sha256, digest);
   assert.equal(written.validation.primary_receipt_sha256, 'e'.repeat(64));
   result = await writeAuthenticatedEvidenceManifest({ input_path: input, output_path: output });
   assert.equal(result.reason, 'output_exists');
-  console.log('22 assertions passed');
+  console.log('26 assertions passed');
 }
 run();
