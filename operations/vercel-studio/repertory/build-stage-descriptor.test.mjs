@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import { buildStageDescriptor } from './build-stage-descriptor.mjs';
+
+const productions = Array.from({ length: 24 }, (_, hour) => ({
+  hour,
+  id: `hour-${String(hour).padStart(2, '0')}`,
+  title: `Production ${hour}`,
+  grammar: 'test grammar',
+  autoplay: false,
+  continuity_channel: 'shared-runtime-state',
+  accessibility: ['keyboard-complete', 'screen-reader-labelled', 'reduced-motion-safe'],
+}));
+
+const schedule = {
+  schema_version: 1,
+  selection: {
+    strategy: 'local-hour-modulo',
+    timezone: 'America/New_York',
+    fallback: 'hour-00',
+    randomness: false,
+  },
+  continuity: { state_channel: 'shared-runtime-state' },
+  productions,
+};
+
+const base = {
+  schedule,
+  continuityState: { channel: 'shared-runtime-state', revision: 'r7' },
+  hour: 21,
+  publicMetadata: { provenance_class: 'current_decision' },
+};
+
+const descriptor = buildStageDescriptor(base);
+assert.equal(descriptor.production.id, 'hour-21');
+assert.equal(descriptor.activation, 'operations-only-default-off');
+assert.equal(descriptor.controls.autoplay, false);
+assert.equal(descriptor.controls.payments, false);
+assert.equal(descriptor.controls.conversion_logic, false);
+assert(Object.isFrozen(descriptor));
+assert(Object.isFrozen(descriptor.production));
+assert(Object.isFrozen(descriptor.production.accessibility));
+assert.throws(() => buildStageDescriptor({ ...base, continuityState: { channel: 'fork' } }), /must match/);
+assert.throws(() => buildStageDescriptor({ ...base, publicMetadata: { private_source: 'x' } }), /forbidden/);
+assert.throws(() => buildStageDescriptor({ ...base, date: new Date() }), /exactly one/);
+assert.throws(() => buildStageDescriptor({ schedule, continuityState: { channel: 'shared-runtime-state' }, publicMetadata: {} }), /exactly one/);
+
+console.log(JSON.stringify({ tests: 11, passed: 11, production: descriptor.production.title, activation: descriptor.activation }));
