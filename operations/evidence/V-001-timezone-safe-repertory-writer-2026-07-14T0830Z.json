@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "timezone_safe_repertory_artifact_generation",
+  "observed_at": "2026-07-14T08:30:00Z",
+  "production_on_stage": {
+    "hour": 4,
+    "id": "archive-before-dawn",
+    "title": "Archive Before Dawn"
+  },
+  "change": {
+    "writer_commit": "6c806b96df5de7500b7290007de302e67a507733",
+    "test_commit": "0e2a741b0e9fa49e9d1de2b8ca9f936ec18f9a04",
+    "policy": "Derive each representative local hour through Intl time-zone resolution; require exactly one UTC instant for every local hour and fail closed on skipped or repeated daylight-saving hours.",
+    "deployment_created": false,
+    "payment_or_conversion_logic_added": false,
+    "canonical_shared_state_overwritten": false
+  },
+  "verification": {
+    "source_fetch_ref": "0e2a741b0e9fa49e9d1de2b8ca9f936ec18f9a04",
+    "source_fetch_succeeded": true,
+    "tests_added": [
+      "summer offset resolves midnight to 04:00Z",
+      "winter offset resolves midnight to 05:00Z",
+      "spring-forward missing hour is rejected",
+      "fall-back repeated hour is rejected",
+      "invalid calendar day and IANA zone are rejected",
+      "existing no-overwrite and determinism checks remain"
+    ],
+    "tests_executed": false,
+    "reason_not_executed": "The GitHub connector can commit and fetch repository content but does not provide a repository checkout runtime in this run.",
+    "deployment_claim": "none"
+  },
+  "privacy_boundary": "Public production grammar, repository identifiers, and abstract verification evidence only; no private source material, health data, credentials, or conversion logic.",
+  "rollback": [
+    "Revert test commit 0e2a741b0e9fa49e9d1de2b8ca9f936ec18f9a04",
+    "Revert writer commit 6c806b96df5de7500b7290007de302e67a507733"
+  ],
+  "next_action": "Run node --test operations/tests/write-public-hourly-stage-payloads.test.mjs in an authenticated checkout or CI runner, then retain the exact output before using arbitrary representative dates."
+}
