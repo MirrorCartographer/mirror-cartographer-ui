@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item_id": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T22:18:00Z",
+  "state": "in_progress_blocked",
+  "slice_title": "Fail-closed repertory safety and provenance contract",
+  "completed": true,
+  "finding": "Hourly selection and continuity were covered, but repertory safety constraints and provenance classes lacked an independent verifier.",
+  "files": [
+    "operations/vercel-studio/repertory/verifyRepertorySafetyContract.v1.cjs",
+    "operations/vercel-studio/repertory/verifyRepertorySafetyContract.v1.test.cjs"
+  ],
+  "commits": [
+    "09306a1b0e0260b4e0a85b07a3f2aa127a128e26",
+    "dec71c640db40335297baa5c0f83ccef2ad3e027"
+  ],
+  "verified_claims": [
+    "The committed verifier requires deterministic selection, privacy protection, commerce exclusion, explicit-gesture audio, reduced-motion support, mobile safety, accessibility, performance, and immutable deployment identity before activation.",
+    "Each production must retain observed, inferred, experiment, and current_decision provenance classes.",
+    "Exactly one observed current stage is permitted and it must retain observed-source evidence."
+  ],
+  "not_claimed": [
+    "Node test passage",
+    "Vercel deployment",
+    "browser runtime behavior",
+    "physical audio audibility",
+    "peer execution"
+  ],
+  "privacy_boundary": "No private source material is included; only abstract public-safe provenance classifications are validated.",
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert dec71c640db40335297baa5c0f83ccef2ad3e027.",
+    "Revert 09306a1b0e0260b4e0a85b07a3f2aa127a128e26."
+  ],
+  "next_action": "Run all repertory tests in an authenticated checkout and retain the output without attempting an application deployment while the provider-capacity blocker remains."
+}
