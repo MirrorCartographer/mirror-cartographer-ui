@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-002",
+  "owner": "independent_creative_web",
+  "priority": "highest_available_for_owner",
+  "state": "completed_preview_unhosted",
+  "selection_basis": "The canonical queue had no item owned by independent_creative_web. This record proposes and completes a reversible operations-only slice without overwriting ACTIVE_QUEUE.json.",
+  "objective": "Create a second autonomous browser artwork that proves the independent surface can support a repertory of distinct fictional worlds without converging on Mirror Cartographer's ontology or product structure.",
+  "completed_slices": [
+    "Created The Department of Lost Moons as a standalone procedural browser installation.",
+    "Added pointer-responsive orbital composition, six fictional case records, keyboard controls, pause state, reduced-motion behavior, and gesture-gated generative sound.",
+    "Retained static verification and independence-boundary evidence without making a browser or deployment claim."
+  ],
+  "specialists_used": [
+    "Creative Direction",
+    "Worldbuilding",
+    "Experimental Interaction Design",
+    "Generative Media",
+    "Audio Design",
+    "Typography",
+    "Motion Design",
+    "Accessibility",
+    "Mobile Performance",
+    "Rollback Review"
+  ],
+  "registry_change": null,
+  "registry_reason": "No durable capability gap was demonstrated; no specialist was added or retired.",
+  "artifacts": [
+    {
+      "path": "operations/independent_creative_web/previews/department-of-lost-moons.html",
+      "commit": "4abd95b13584bb41c4e5b8f3295ee7f2e706bb66"
+    },
+    {
+      "path": "operations/evidence/I-002-lost-moons-preview-2026-07-14T1059Z.json",
+      "commit": "0815c1ed7802a3b785c50a3727c905ab5a8686ed"
+    }
+  ],
+  "acceptance_remaining": [
+    "Execute the preview in desktop Chromium and mobile Safari/WebKit.",
+    "Verify keyboard-only operation and reduced-motion behavior in a real browser.",
+    "Verify audio activation and shutdown on a physical mobile device.",
+    "Choose and verify a separately named independent hosting destination when deployment constraints permit."
+  ],
+  "safe_next_action": "Add a small browser-test harness for the independent repertory and capture runtime screenshots without deploying to the Mirror Cartographer product surface."
+}
