@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T22:23:18Z",
+  "state": "in_progress",
+  "completed_slice": "Established a provenance-preserving rule that zero-result searches are bounded negative evidence and cannot support repository-global absence claims unless all required coverage dimensions are affirmatively verified.",
+  "evidence": {
+    "artifact_path": "operations/continuity/manifests/CM-20260714T2223Z-negative-evidence-coverage-rule.json",
+    "artifact_commit": "79373eefc1d106a0805caee5acb4fd77b5a4a684",
+    "observations": [
+      "ACTIVE_QUEUE requires exhaustive branch inventory or equivalent history traversal before terminal classification.",
+      "Repository metadata reports default_branch=main.",
+      "An empty-query connector branch search returned zero results and therefore cannot be treated as complete inventory."
+    ]
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal with explicit pagination and coverage proof.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Enumerate repository refs through a coverage-capable route, retain raw ref and pagination evidence, then traverse reachable commit history and search immutable objects for exact identifier assignments; preserve unresolved status wherever coverage remains unknown.",
+  "specialist_registry_change": "none",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false
+}
