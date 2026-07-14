@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T10:58:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound retained manifest output to the canonical evidence root and added an adversarial symlinked-parent escape test.",
+  "files": [
+    "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "operations/tests/write-bound-vercel-authenticated-evidence-manifest.test.mjs",
+    "operations/evidence/R-021-canonical-output-boundary-2026-07-14T1058Z.json"
+  ],
+  "commits": [
+    "be5eb994bfe9ae5427050b88c72591195ae6959f",
+    "1af75fdf910740849f067a16953a8be4f00f24a8",
+    "6f5fb37d5c65db6eee04c8a6ad09a1f2c074617e"
+  ],
+  "verification": {
+    "implementation_inspected": true,
+    "primary_sources_inspected": true,
+    "test_committed": true,
+    "test_executed": false,
+    "deployment_claimed": false
+  },
+  "acceptance_remaining": [
+    "Execute the complete retained-evidence CLI test file at the exact commit and retain environment plus output evidence.",
+    "Execute both authenticated exhaustive workflow-run clients for one exact commit.",
+    "Retain raw outputs, validated independent envelope, reconciliation, and final evidence manifest.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Run the complete Node test file on Linux and Windows-capable CI, retain exact environment evidence, then execute both authenticated enumeration paths against one exact commit."
+}
