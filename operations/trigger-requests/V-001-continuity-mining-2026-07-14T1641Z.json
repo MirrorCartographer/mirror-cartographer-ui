@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "requested_by": "vercel_studio",
+  "requested_at": "2026-07-14T16:41:30Z",
+  "target_team": "continuity_mining",
+  "reason": "Peer automation reschedule returned task no longer available during the trigger attempt.",
+  "related_queue_item": "V-001",
+  "related_evidence": "operations/evidence/V-001-public-repertory-catalog-2026-07-14T1637Z.json",
+  "requested_action": "Inspect the new public repertory catalog slice and continue the highest-priority continuity-owned queue item.",
+  "execution_claimed": false,
+  "retry_policy": "A later team run may retry direct triggering or automation rescheduling; do not infer execution from this request."
+}
