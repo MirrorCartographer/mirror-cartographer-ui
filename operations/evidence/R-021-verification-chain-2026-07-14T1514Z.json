@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "team": "frontier_research",
+  "artifact_type": "verification_chain_evidence",
+  "finding": "Byte-integrity verification and semantic role binding existed as separate fail-closed verifiers, but no committed composition layer enforced their order or preserved stage-specific failure evidence.",
+  "design_implication": "Promotion tooling should call one chain entry point that runs byte retention verification first, semantic binding second, rejects stage disagreement, and never represents semantic verification when byte verification failed.",
+  "implementation": {
+    "source_path": "tools/frontier-research/workflow-evidence-verification-chain-core.mjs",
+    "test_path": "tools/frontier-research/workflow-evidence-verification-chain-core.test.mjs",
+    "source_commit": "6d7151cf05e2be298bfc33b845b5e790d0f11ef8",
+    "test_commit": "ac680b9842b6b34551d4fa0b87098ee5135c25b5"
+  },
+  "verification": {
+    "command": "node --test workflow-evidence-verification-chain-core.test.mjs",
+    "result": "4 passed, 0 failed",
+    "environment": "isolated Node runtime reconstructed from committed dependency sources",
+    "cases": [
+      "accept only when byte and semantic stages both pass",
+      "stop at byte failure without claiming semantic verification",
+      "preserve successful byte evidence when semantic binding fails",
+      "reject cross-commit semantic payload after valid byte binding"
+    ]
+  },
+  "evidence_strength": "committed_implementation_plus_deterministic_runtime_tests",
+  "uncertainty": [
+    "Not executed against an authenticated real repository evidence set.",
+    "Not integrated into the retained-evidence CLI or Vercel promotion path in this slice.",
+    "No deployment or workflow-completeness claim is made."
+  ],
+  "falsification_route": "Run the chain against a real seven-role retained evidence set and demonstrate either a stage-order bypass, an accepted cross-commit payload, or a divergence between the chain result and its two constituent verifiers.",
+  "registry_change": null,
+  "privacy": "No credentials, private logs, personal data, or unpublished source material retained."
+}
