@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "recorded_at": "2026-07-14T18:28:37Z",
+  "artifact": "operations/frontier/ceiling-safe-workflow-enumeration-contract.json",
+  "artifact_commit": "f8c18d0b2d9dbb1777389dd02011c747af0c693d",
+  "finding": "GitHub explicitly limits workflow-run searches using head_sha and other named filters to 1,000 results. Exact-commit evidence should therefore use exhaustively paginated unfiltered repository runs with local SHA filtering as the authoritative path, while treating head_sha-filtered pagination as a diagnostic comparator.",
+  "evidence_strength": "primary_documentation_plus_implementation_contract",
+  "verification": {
+    "method": "official documentation inspection and committed artifact fetch",
+    "source_urls": [
+      "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+      "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "https://cli.github.com/manual/gh_api"
+    ],
+    "runtime_execution": false,
+    "authenticated_private_repository_execution": false
+  },
+  "limits": [
+    "No authenticated API traversal was executed in this run.",
+    "The official endpoint page does not explicitly promise that unfiltered traversal is free of every provider-side retention limit.",
+    "The contract remains implementation-ready rather than runtime-proven until both independent clients are executed against one exact commit."
+  ],
+  "privacy_boundary": "No credentials, private run payloads, logs, actor identities, or private source material were retained."
+}
