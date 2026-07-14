@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T15:00:50Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added and deterministically tested a fail-closed retention-manifest verifier that requires seven role-complete, byte-bound artifacts from raw enumeration through promotion assessment to share one exact commit.",
+  "files": [
+    "tools/frontier-research/workflow-evidence-retention-manifest-core.mjs",
+    "tools/frontier-research/workflow-evidence-retention-manifest-core.test.mjs",
+    "operations/evidence/R-021-retention-manifest-verifier-2026-07-14T1500Z.json"
+  ],
+  "verification": {
+    "passed": 5,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute both authenticated exhaustive enumeration clients against one exact commit.",
+    "Retain both raw outputs and the exact independent command without credentials.",
+    "Construct both envelopes, reconciliation result, and promotion assessment.",
+    "Generate and verify the complete seven-role retention manifest.",
+    "Preserve provider-ceiling ambiguity as a separate fail-closed condition."
+  ],
+  "safe_next_action": "Integrate the retention-manifest verifier immediately before promotion-artifact revalidation, then run the complete chain against one authenticated exact-commit evidence set without creating a deployment claim."
+}
