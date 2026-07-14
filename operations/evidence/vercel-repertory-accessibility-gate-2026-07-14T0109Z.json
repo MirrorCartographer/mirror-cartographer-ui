@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T01:09:49Z",
+  "production_on_stage": {
+    "hour": 21,
+    "id": "hour-21",
+    "title": "Shadow Registry",
+    "grammar": "silhouette knowledge graph"
+  },
+  "slice": "Fail-closed accessibility and fallback validation for the deterministic hourly repertory selector.",
+  "verification": {
+    "local_node_test": {
+      "status": "passed",
+      "command": "node --test select-production.test.mjs",
+      "tests": 4,
+      "failures": 0,
+      "scope": "isolated fixture matching the committed schedule contract"
+    },
+    "github_round_trip": {
+      "status": "passed",
+      "selector_blob_sha": "bb58cf5ae874499c860b058eb430feaf60e3ff62"
+    }
+  },
+  "guarantees_added": [
+    "Every production must retain keyboard-complete interaction.",
+    "Every production must retain screen-reader labels.",
+    "Every production must retain reduced-motion safety.",
+    "The configured fallback must resolve to an existing production.",
+    "Returned accessibility metadata is frozen with the selected production."
+  ],
+  "limits": [
+    "No browser, mobile Safari, screen-reader, audio, performance, or deployment behavior was exercised.",
+    "The local test used an isolated 24-production fixture rather than a repository checkout.",
+    "No Vercel deployment was attempted because CURRENT_STATE records exhausted build capacity."
+  ],
+  "rollback": [
+    "Revert test commit b9870961f0a85586182c92598ecfb94a909a3500.",
+    "Revert implementation commit 1e526e7a5085b469ca20dfda4e47b817d29a33f2."
+  ]
+}
