@@ -40,27 +40,23 @@ async function openRetainedRegularFile(path, label) {
   try {
     const stats = await handle.stat();
     if (!stats.isFile()) throw new Error(`${label}_not_regular_file`);
-    return {
-      handle,
-      identity: `${stats.dev}:${stats.ino}`
-    };
+    return { handle, identity: `${stats.dev}:${stats.ino}` };
   } catch (error) {
     await handle.close().catch(() => {});
     throw error;
   }
 }
 
-async function openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath }) {
+async function openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath, rateLimitProofPath }) {
   const entries = [
     ['primary', primaryPath],
     ['gh_pages', ghPagesPath],
-    ['gh_command', ghCommandPath]
+    ['gh_command', ghCommandPath],
+    ['rate_limit_proof', rateLimitProofPath]
   ];
   const opened = [];
   try {
-    for (const [label, path] of entries) {
-      opened.push([label, await openRetainedRegularFile(path, label)]);
-    }
+    for (const [label, path] of entries) opened.push([label, await openRetainedRegularFile(path, label)]);
     const identities = opened.map(([, source]) => source.identity);
     if (new Set(identities).size !== identities.length) throw new Error('retained_source_files_not_distinct');
     return new Map(opened);
@@ -72,16 +68,10 @@ async function openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath }) 
 
 async function readJsonHandle(handle, label) {
   let text;
-  try {
-    text = await handle.readFile('utf8');
-  } catch (error) {
-    throw new Error(`${label}_read_failed:${error.code || error.message}`);
-  }
-  try {
-    return JSON.parse(text);
-  } catch {
-    throw new Error(`${label}_json_invalid`);
-  }
+  try { text = await handle.readFile('utf8'); }
+  catch (error) { throw new Error(`${label}_read_failed:${error.code || error.message}`); }
+  try { return JSON.parse(text); }
+  catch { throw new Error(`${label}_json_invalid`); }
 }
 
 export async function buildRetainedWorkflowEvidence({
@@ -89,6 +79,7 @@ export async function buildRetainedWorkflowEvidence({
   primaryPath,
   ghPagesPath,
   ghCommandPath,
+  rateLimitProofPath,
   primaryRetrievedAt,
   ghRetrievedAt,
   generatedAt = new Date().toISOString()
@@ -101,14 +92,13 @@ export async function buildRetainedWorkflowEvidence({
     throw new TypeError('generated_at_precedes_source_retrieval');
   }
 
-  const sources = await openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath });
+  const sources = await openRetainedSources({ primaryPath, ghPagesPath, ghCommandPath, rateLimitProofPath });
   try {
-    const [primary, ghPages, ghCommandText] = await Promise.all([
+    const [primary, ghPages, ghCommandText, rateLimitProof] = await Promise.all([
       readJsonHandle(sources.get('primary').handle, 'primary'),
       readJsonHandle(sources.get('gh_pages').handle, 'gh_pages'),
-      sources.get('gh_command').handle.readFile('utf8').catch(error => {
-        throw new Error(`gh_command_read_failed:${error.code || error.message}`);
-      })
+      sources.get('gh_command').handle.readFile('utf8').catch(error => { throw new Error(`gh_command_read_failed:${error.code || error.message}`); }),
+      readJsonHandle(sources.get('rate_limit_proof').handle, 'rate_limit_proof')
     ]);
     const ghCommand = ghCommandText.trim();
     if (!ghCommand) throw new Error('gh_command_empty');
@@ -124,6 +114,7 @@ export async function buildRetainedWorkflowEvidence({
       ghPages,
       ghCommand,
       ghRetrievedAt: validatedGhRetrievedAt,
+      rateLimitProof,
       generatedAt: validatedGeneratedAt
     });
   } finally {
@@ -133,7 +124,7 @@ export async function buildRetainedWorkflowEvidence({
 
 export async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
-  const required = ['commit', 'primary', 'gh-pages', 'gh-command', 'primary-retrieved-at', 'gh-retrieved-at', 'output'];
+  const required = ['commit', 'primary', 'gh-pages', 'gh-command', 'rate-limit-proof', 'primary-retrieved-at', 'gh-retrieved-at', 'output'];
   for (const key of required) if (!args.get(key)) throw new Error(`missing_argument:${key}`);
 
   const bundle = await buildRetainedWorkflowEvidence({
@@ -141,6 +132,7 @@ export async function main(argv = process.argv.slice(2)) {
     primaryPath: args.get('primary'),
     ghPagesPath: args.get('gh-pages'),
     ghCommandPath: args.get('gh-command'),
+    rateLimitProofPath: args.get('rate-limit-proof'),
     primaryRetrievedAt: args.get('primary-retrieved-at'),
     ghRetrievedAt: args.get('gh-retrieved-at'),
     generatedAt: args.get('generated-at') || new Date().toISOString()
