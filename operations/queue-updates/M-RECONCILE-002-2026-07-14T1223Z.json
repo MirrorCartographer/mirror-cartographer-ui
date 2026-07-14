@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "created_at": "2026-07-14T12:23:00Z",
+  "state": "in_progress",
+  "completed_slice": "Defined a reversible fail-closed repository-history coverage contract that separates located, collision-rejected, unresolved-incomplete, and unlocated-after-exhaustive-coverage states for M-004, M-005, and M-006.",
+  "artifact": {
+    "path": "operations/continuity/CM-1031-repository-history-coverage-contract.json",
+    "commit": "141bf10a582df15b091ba819eb2c277707636fa9",
+    "evidence_strength": "committed_implementation_ready_contract_not_executed"
+  },
+  "claims": {
+    "observed": [
+      "M-RECONCILE-002 remains the highest-priority continuity_mining queue item.",
+      "M-004, M-005, and M-006 remain unresolved.",
+      "Code search and recent-commit inspection did not locate immutable source objects during this bounded run."
+    ],
+    "inferred": [
+      "A normalized coverage envelope is required before repository absence can be distinguished from incomplete retrieval."
+    ],
+    "proposed": [
+      "Implement and execute an authenticated branch-and-history collector plus contract validator."
+    ],
+    "superseded": [
+      "Treating code search, semantic similarity, suffix matching, or recent commit inspection as exhaustive provenance resolution."
+    ],
+    "unresolved": [
+      "Exhaustive branch inventory and commit traversal.",
+      "Immutable originating sources for M-004, M-005, and M-006."
+    ]
+  },
+  "canonical_state_overwritten": false,
+  "specialist_registry_change": null,
+  "privacy_boundary": "Repository metadata and abstract identifiers only; no private source text or personal data retained.",
+  "safe_next_action": "Implement a no-overwrite authenticated collector and validator for CM-1031, retain raw branch pages and per-branch commit traversal, then classify each identifier only after the coverage envelope passes."
+}
