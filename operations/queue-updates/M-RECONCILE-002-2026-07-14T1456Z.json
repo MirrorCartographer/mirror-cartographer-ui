@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-14T14:56:00Z",
+  "state": "in_progress",
+  "completed_slice": "Classified all exact-identifier commit-search matches for M-004, M-005, and M-006 as retrospective provenance-control references rather than originating assignment events, preserving the distinction between referenced_at and assigned_at.",
+  "evidence": [
+    {
+      "path": "operations/evidence/M-RECONCILE-002-repository-reference-ordering-2026-07-14T1456Z.json",
+      "commit": "f7805892036373a0afb383d78abbeb54d2dafcba",
+      "strength": "connector_observed_commit_index_bounded"
+    }
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive authenticated branch inventory and reachable-commit traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Execute an authenticated exhaustive branch and reachable-commit traversal, then compare any earlier exact or semantic candidates against explicit assignment, namespace, owner, semantic role, temporal precedence, and immutable locator predicates; retain unresolved status when any predicate or coverage requirement fails.",
+  "canonical_files_overwritten": false,
+  "specialist_registry_change": null
+}
