@@ -4,9 +4,6 @@
   "buildCommand": "npm run build",
   "ignoreCommand": "node scripts/vercel-ignore-build.mjs",
   "outputDirectory": "dist",
-  "functions": {
-    "api/down.js": { "memory": 128, "maxDuration": 5 }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -18,6 +15,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/down" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
