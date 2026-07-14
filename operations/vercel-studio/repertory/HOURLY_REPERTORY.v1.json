@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "contract_id": "vercel-studio-hourly-repertory-v1",
+  "owner": "vercel_studio",
+  "created_at": "2026-07-14T21:53:41Z",
+  "timezone": "UTC",
+  "selection_rule": {
+    "type": "deterministic_modulo",
+    "expression": "utc_hour % productions.length",
+    "randomness_permitted": false,
+    "continuity_state_preserved_across_productions": true
+  },
+  "global_runtime_constraints": {
+    "audio": "explicit_user_gesture_only",
+    "motion": "honor_prefers_reduced_motion",
+    "mobile": "viewport_safe_and_touch_safe",
+    "accessibility": "keyboard_operable_with_nonvisual_status_equivalent",
+    "performance": "no_required_network_media_for_first_interaction",
+    "privacy": "no_private_source_material",
+    "commerce": "no_payments_or_conversion_logic",
+    "deployment": "fail_closed_until_immutable_successful_vercel_identity_is_verified"
+  },
+  "productions": [
+    {
+      "id": "residual-comet",
+      "title": "Residual Comet",
+      "form": "particle_cinematography",
+      "continuity_role": "companion_signal",
+      "status": "repertory_contract_only",
+      "provenance": {
+        "observed": [
+          "265df83e5d8813f8a0ab6ac84229165fd6d56efb",
+          "1fcbe401733622443d1b3a54dd2370dbd8be9ac8"
+        ],
+        "inferred": "A moving residual can carry state between otherwise distinct productions.",
+        "experiment": "Use particle density and trajectory as the editing rhythm rather than decorative animation.",
+        "current_decision": "Retain as a repertory identity, not an active deployment claim."
+      }
+    },
+    {
+      "id": "coordinate-choir",
+      "title": "Coordinate Choir",
+      "form": "spatial_typography",
+      "continuity_role": "language_field",
+      "status": "proposed",
+      "provenance": {
+        "observed": [],
+        "inferred": "Spatial phrases and coordinate-like labels are a recurring project grammar.",
+        "experiment": "Words enter as positions and harmonize only after visitor navigation.",
+        "current_decision": "Programmed as a reversible future stage; no runtime exists yet."
+      }
+    },
+    {
+      "id": "quiet-machine",
+      "title": "Quiet Machine",
+      "form": "minimal_instrument_panel",
+      "continuity_role": "system_visibility",
+      "status": "proposed",
+      "provenance": {
+        "observed": [],
+        "inferred": "The operating system can become visible without becoming a worker dashboard.",
+        "experiment": "Expose only poetic state transitions, never operational controls or private evidence.",
+        "current_decision": "Programmed as a future stage with strict privacy and non-dashboard boundaries."
+      }
+    },
+    {
+      "id": "wordless-room-game",
+      "title": "Wordless Room Game",
+      "form": "interactive_room",
+      "continuity_role": "current_public_screening_surface",
+      "status": "observed_current_stage",
+      "provenance": {
+        "observed": [
+          "29ee82bc84c08a9af1e2cd1401b9eeb8977b8635",
+          "d69449346f30c8f01ae857674201348531c6b408"
+        ],
+        "inferred": "A wordless room can communicate continuity through motion, response, and retained state.",
+        "experiment": "Treat the interface as a playable film rather than a navigational shell.",
+        "current_decision": "This is the stage selected for UTC hour 21 under repertory v1."
+      }
+    },
+    {
+      "id": "body-constellation",
+      "title": "Body Constellation",
+      "form": "accessible_spatial_map",
+      "continuity_role": "embodied_navigation",
+      "status": "proposed",
+      "provenance": {
+        "observed": [],
+        "inferred": "Body mapping is a durable interaction need, but private bodily content must remain outside public productions.",
+        "experiment": "Use fictional constellations as a public-safe interaction grammar.",
+        "current_decision": "Programmed only as an abstract public-safe production concept."
+      }
+    },
+    {
+      "id": "archive-afterimage",
+      "title": "Archive Afterimage",
+      "form": "cinematic_memory_trace",
+      "continuity_role": "archive_without_exposure",
+      "status": "proposed",
+      "provenance": {
+        "observed": [],
+        "inferred": "An archive can be represented by transformations and absences without displaying source records.",
+        "experiment": "Render provenance classes as light persistence, not document excerpts.",
+        "current_decision": "Programmed as a future privacy-preserving archive stage."
+      }
+    }
+  ],
+  "hour_slots": [
+    {"utc_hour":0,"production_id":"residual-comet"},
+    {"utc_hour":1,"production_id":"coordinate-choir"},
+    {"utc_hour":2,"production_id":"quiet-machine"},
+    {"utc_hour":3,"production_id":"wordless-room-game"},
+    {"utc_hour":4,"production_id":"body-constellation"},
+    {"utc_hour":5,"production_id":"archive-afterimage"},
+    {"utc_hour":6,"production_id":"residual-comet"},
+    {"utc_hour":7,"production_id":"coordinate-choir"},
+    {"utc_hour":8,"production_id":"quiet-machine"},
+    {"utc_hour":9,"production_id":"wordless-room-game"},
+    {"utc_hour":10,"production_id":"body-constellation"},
+    {"utc_hour":11,"production_id":"archive-afterimage"},
+    {"utc_hour":12,"production_id":"residual-comet"},
+    {"utc_hour":13,"production_id":"coordinate-choir"},
+    {"utc_hour":14,"production_id":"quiet-machine"},
+    {"utc_hour":15,"production_id":"wordless-room-game"},
+    {"utc_hour":16,"production_id":"body-constellation"},
+    {"utc_hour":17,"production_id":"archive-afterimage"},
+    {"utc_hour":18,"production_id":"residual-comet"},
+    {"utc_hour":19,"production_id":"coordinate-choir"},
+    {"utc_hour":20,"production_id":"quiet-machine"},
+    {"utc_hour":21,"production_id":"wordless-room-game"},
+    {"utc_hour":22,"production_id":"body-constellation"},
+    {"utc_hour":23,"production_id":"archive-afterimage"}
+  ],
+  "activation_boundary": {
+    "runtime_integration": "not_performed",
+    "reason": "Canonical state forbids application deployment attempts while Vercel build capacity is exhausted.",
+    "required_before_activation": [
+      "operations-only sentinel observed as skipped or ignored",
+      "repertory selector contract test passes in authenticated checkout",
+      "exact application commit bound to immutable successful Vercel deployment identity"
+    ]
+  },
+  "rollback": "Revert the commit that introduced this operations-only file; application runtime is unaffected."
+}
