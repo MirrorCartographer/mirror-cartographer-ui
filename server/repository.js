@@ -57,6 +57,12 @@ async function supabaseRequest(config, path, options = {}) {
   return text ? JSON.parse(text) : null;
 }
 
+function absoluteStorageUrl(config, value) {
+  if (!value) return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  return `${config.supabase.url}${value.startsWith('/') ? '' : '/'}${value}`;
+}
+
 export function createRepository(config) {
   const remote = config.supabase.enabled;
 
@@ -134,7 +140,8 @@ export function createRepository(config) {
       });
       if (!response.ok) throw new Error(`Could not create upload URL (${response.status}).`);
       const signed = await response.json();
-      return { mode: 'signed-upload', path, token: signed.token, uploadUrl: signed.url || signed.signedURL };
+      const rawUrl = signed.url || signed.signedURL;
+      return { mode: 'signed-upload', path, token: signed.token, uploadUrl: absoluteStorageUrl(config, rawUrl) };
     },
   };
 }
