@@ -27,10 +27,165 @@
         animation: breathe 2.8s ease-in-out infinite;
       }
       @keyframes breathe { 50% { transform: scale(1.13); opacity: .68; } }
+
+      .comet-companion,
+      .comet-spark,
+      .comet-bloom { position: fixed; pointer-events: none; z-index: 2147483647; }
+      .comet-companion {
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        opacity: 0;
+        transform: translate3d(-50px,-50px,0);
+        transition: opacity .18s ease;
+        filter: drop-shadow(0 0 8px rgba(255,190,116,.9)) drop-shadow(0 0 18px rgba(196,181,253,.55));
+        will-change: transform;
+      }
+      .comet-companion::before {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 48% 52% 50% 50%;
+        background:
+          radial-gradient(circle at 39% 43%, #332c55 0 1.25px, transparent 1.6px),
+          radial-gradient(circle at 64% 43%, #332c55 0 1.25px, transparent 1.6px),
+          radial-gradient(ellipse at 52% 64%, transparent 0 3px, #8b5e83 3.3px 4px, transparent 4.3px),
+          radial-gradient(circle at 35% 69%, rgba(255,153,190,.72) 0 2.6px, transparent 3px),
+          radial-gradient(circle at 72% 67%, rgba(255,153,190,.72) 0 2.6px, transparent 3px),
+          radial-gradient(circle at 35% 30%, #fffdf4 0 8%, #ffe2bf 38%, #c4b5fd 72%, #7dd3fc 100%);
+        border: 1px solid rgba(255,255,255,.76);
+        box-shadow: inset -4px -5px 8px rgba(82,54,119,.24), inset 3px 3px 6px rgba(255,255,255,.45);
+      }
+      .comet-companion::after {
+        content: "✦";
+        position: absolute;
+        right: -5px;
+        top: -7px;
+        color: #fff8ef;
+        font-size: 11px;
+        text-shadow: 0 0 8px #ffbe74;
+        animation: comet-twinkle 1.2s ease-in-out infinite alternate;
+      }
+      .comet-companion.is-down { transform: scale(.78); }
+      .comet-spark {
+        width: 5px;
+        height: 5px;
+        margin: -2.5px 0 0 -2.5px;
+        border-radius: 50%;
+        background: #fff8ef;
+        box-shadow: 0 0 7px #ffbe74, 0 0 14px #c4b5fd;
+        animation: comet-drift .72s ease-out forwards;
+      }
+      .comet-bloom {
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border: 1px solid rgba(255,226,191,.9);
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(255,190,116,.9), inset 0 0 8px rgba(196,181,253,.65);
+        animation: comet-bloom .9s cubic-bezier(.16,.8,.24,1) forwards;
+      }
+      .comet-bloom::before,
+      .comet-bloom::after {
+        content: "✦";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        color: #fff8ef;
+        text-shadow: 0 0 9px #7dd3fc;
+      }
+      .comet-bloom::before { transform: translate(-50%,-50%) rotate(18deg); }
+      .comet-bloom::after { transform: translate(-50%,-50%) rotate(63deg) scale(.65); }
+      @keyframes comet-twinkle { to { transform: rotate(22deg) scale(1.35); opacity: .68; } }
+      @keyframes comet-drift {
+        to { transform: translate(var(--dx),var(--dy)) scale(.15) rotate(90deg); opacity: 0; }
+      }
+      @keyframes comet-bloom {
+        70% { opacity: .9; }
+        to { transform: scale(8) rotate(35deg); opacity: 0; }
+      }
+      @media (pointer:fine) {
+        html, body, button, a, [role="button"] { cursor: none !important; }
+      }
+      @media (pointer:coarse) {
+        .comet-companion, .comet-spark { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .comet-companion::after { animation: none; }
+        .comet-spark { display: none; }
+        .comet-bloom { animation-duration: .01ms; }
+      }
     </style>
   </head>
   <body>
     <div id="root"><main class="boot-failsafe" aria-label="Loading"><i aria-hidden="true"></i></main></div>
+    <div class="comet-companion" aria-hidden="true"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      (() => {
+        const companion = document.querySelector('.comet-companion');
+        const finePointer = window.matchMedia('(pointer:fine)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let x = -50;
+        let y = -50;
+        let tx = -50;
+        let ty = -50;
+        let lastSpark = 0;
+        let frame = 0;
+
+        const bloom = (clientX, clientY) => {
+          const node = document.createElement('i');
+          node.className = 'comet-bloom';
+          node.style.left = `${clientX}px`;
+          node.style.top = `${clientY}px`;
+          document.body.appendChild(node);
+          node.addEventListener('animationend', () => node.remove(), { once: true });
+        };
+
+        const spark = (clientX, clientY) => {
+          if (reducedMotion) return;
+          const node = document.createElement('i');
+          node.className = 'comet-spark';
+          node.style.left = `${clientX}px`;
+          node.style.top = `${clientY}px`;
+          node.style.setProperty('--dx', `${(Math.random() - .5) * 24}px`);
+          node.style.setProperty('--dy', `${10 + Math.random() * 22}px`);
+          document.body.appendChild(node);
+          node.addEventListener('animationend', () => node.remove(), { once: true });
+        };
+
+        const animate = () => {
+          x += (tx - x) * .34;
+          y += (ty - y) * .34;
+          companion.style.transform = `translate3d(${x - 14}px,${y - 14}px,0)`;
+          frame = requestAnimationFrame(animate);
+        };
+
+        if (finePointer) {
+          frame = requestAnimationFrame(animate);
+          window.addEventListener('pointermove', (event) => {
+            tx = event.clientX;
+            ty = event.clientY;
+            companion.style.opacity = '1';
+            const now = performance.now();
+            if (now - lastSpark > 42) {
+              lastSpark = now;
+              spark(event.clientX - 5, event.clientY + 8);
+            }
+          }, { passive: true });
+          window.addEventListener('pointerleave', () => { companion.style.opacity = '0'; });
+          window.addEventListener('pointerdown', (event) => {
+            companion.classList.add('is-down');
+            bloom(event.clientX, event.clientY);
+          }, { passive: true });
+          window.addEventListener('pointerup', () => companion.classList.remove('is-down'), { passive: true });
+        } else {
+          window.addEventListener('pointerdown', (event) => bloom(event.clientX, event.clientY), { passive: true });
+        }
+
+        window.addEventListener('pagehide', () => cancelAnimationFrame(frame), { once: true });
+      })();
+    </script>
   </body>
 </html>
