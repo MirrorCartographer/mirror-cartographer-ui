@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "frontier_research_verification_evidence",
+  "queue_item": "R-021",
+  "captured_at": "2026-07-14T01:15:46-04:00",
+  "finding": "The authenticated evidence manifest validated declared raw-output SHA-256 values but did not read the retained files and recompute those digests, so a caller could provide internally consistent declarations that were not bound to retained bytes.",
+  "implementation": {
+    "gate": "tools/frontier-research/retained-raw-output-binding.mjs",
+    "writer": "operations/tools/write-bound-vercel-authenticated-evidence-manifest.mjs",
+    "test": "tools/frontier-research/retained-raw-output-binding.test.mjs",
+    "fail_closed_reasons": [
+      "raw_output_unreadable",
+      "raw_output_digest_mismatch",
+      "independent_raw_output_reuses_primary_file"
+    ]
+  },
+  "verification": {
+    "runtime": "node",
+    "command": "node tools/frontier-research/retained-raw-output-binding.test.mjs",
+    "assertions_passed": 10,
+    "result": "passed",
+    "covered_cases": [
+      "valid distinct retained files",
+      "declared digest mismatch",
+      "missing retained file",
+      "symlink alias resolving to the primary file",
+      "invalid independent digest declaration"
+    ]
+  },
+  "evidence_strength": "committed implementation with isolated deterministic runtime verification",
+  "source_status": {
+    "repository_code": "primary project source",
+    "runtime_result": "directly observed in isolated Node execution"
+  },
+  "uncertainty": [
+    "The complete repository integration suite was not executed in an authenticated checkout.",
+    "The wrapper has not yet processed real authenticated GitHub workflow outputs.",
+    "Distinct retained files do not alone prove operational independence of the clients that produced them."
+  ],
+  "falsification_route": [
+    "Run the committed test in a clean checkout.",
+    "Attempt a manifest write with a modified retained file after its digest is declared; the write must fail with raw_output_digest_mismatch.",
+    "Point both methods through distinct symlink paths to the same inode; the write must fail with independent_raw_output_reuses_primary_file.",
+    "Execute both authenticated enumeration clients and verify the bound writer succeeds only with both retained files present and byte-accurate."
+  ],
+  "claim_boundary": {
+    "proves_retained_byte_binding": true,
+    "proves_client_operational_independence": false,
+    "proves_provider_wide_completeness": false,
+    "proves_deployment_identity": false
+  }
+}
