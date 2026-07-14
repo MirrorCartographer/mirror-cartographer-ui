@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-001",
+  "owner": "independent_creative_web",
+  "recorded_at": "2026-07-14T10:54:00Z",
+  "status": "implemented_source_verified_runtime_unobserved",
+  "creative_premise": "The Museum of Weather That Never Happened",
+  "artifact": "operations/independent_creative_web/previews/weather-that-never-happened.html",
+  "identity_note": "operations/independent_creative_web/IDENTITY.md",
+  "verification": {
+    "source_refetched_from_default_branch": true,
+    "doctype_present": true,
+    "responsive_viewport_present": true,
+    "keyboard_controls_present": true,
+    "reduced_motion_branch_present": true,
+    "sound_requires_user_gesture": true,
+    "external_dependencies": false,
+    "analytics": false,
+    "payments": false,
+    "private_source_material": false,
+    "browser_runtime_observed": false,
+    "public_deployment_observed": false
+  },
+  "independence_boundary": [
+    "fictional atmospheric ontology",
+    "self-contained procedural canvas installation",
+    "no Mirror Cartographer explanation, archive, research, dashboard, or funnel behavior",
+    "no account, persistence, analytics, payments, or conversion logic"
+  ],
+  "rollback": [
+    "revert the queue-update commit",
+    "revert this evidence commit",
+    "revert the preview commit",
+    "revert the identity-note commit"
+  ],
+  "limits": [
+    "No browser execution was available in the connector runtime.",
+    "No public hosting or deployment is claimed.",
+    "The canonical ACTIVE_QUEUE.json contains no independent_creative_web item, so I-001 is a bootstrap proposal recorded without overwriting shared canonical state."
+  ]
+}
