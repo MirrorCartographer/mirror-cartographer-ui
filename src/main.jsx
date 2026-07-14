@@ -1,37 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import RoomWorldValid from './components/RoomWorldValid';
+import ErrorBoundary from './components/ErrorBoundary';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
+import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
+import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
+import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
+import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportRuntime';
+import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
+import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
+import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
+import './assets/styles.css';
+import './assets/failsafe.css';
 import './assets/comet-garden.css';
 
+installRuntimeInfrastructure();
+installDeploymentIdentityRuntime();
+installAudioDeviceEvidenceRuntime({ window, navigator, document });
+installAudioObservabilityRuntime();
+installAudioRoutingEvidenceRuntime();
+installAudibilityOutcomeRuntime();
+installAudioEvidenceExportRuntime();
 installCometGardenRuntime();
-
-class VisualBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { failed: false };
-  }
-
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-
-  componentDidCatch(error) {
-    console.error(error);
-  }
-
-  render() {
-    if (this.state.failed) {
-      return <main className="visual-fallback"><button aria-label="Reload" onClick={() => window.location.reload()} /></main>;
-    }
-    return this.props.children;
-  }
-}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <VisualBoundary>
+    <ErrorBoundary>
       <RoomWorldValid />
-    </VisualBoundary>
+    </ErrorBoundary>
   </React.StrictMode>,
 );
