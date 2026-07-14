@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Composed byte retention verification and semantic role binding into one fail-closed verification chain with stage-specific evidence preservation and deterministic tests.",
+  "evidence": "operations/evidence/R-021-verification-chain-2026-07-14T1514Z.json",
+  "commits": [
+    "6d7151cf05e2be298bfc33b845b5e790d0f11ef8",
+    "ac680b9842b6b34551d4fa0b87098ee5135c25b5",
+    "f10caa0407a2726a853949674de961abbe81c5a1"
+  ],
+  "acceptance_remaining": [
+    "Integrate the chain entry point into the retained-evidence CLI and promotion path.",
+    "Run both complete enumeration clients against one exact commit.",
+    "Retain all seven artifacts and run the chain against the resulting evidence set.",
+    "Keep provider-ceiling ambiguity fail-closed."
+  ],
+  "safe_next_action": "Wire verifyWorkflowEvidenceChain into the no-overwrite retained-evidence CLI behind a new output path and add an end-to-end fixture before any deployment action."
+}
