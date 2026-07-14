@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T06:22:49Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added an operations-only compiler that converts the canonical 24-hour repertory through the existing hourly stage manifest into runtime-ready public payloads, preserves observed/inferred/experiment/current_decision provenance, enforces exact ordered hour coverage and one continuity channel, and fails closed on autoplay, private, clinical, credential, payment, purchase, checkout, or conversion material.",
+  "production_currently_on_stage": "sleeping-engine",
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "registry_change": "none",
+  "files": [
+    "operations/tools/public-hourly-stage-payloads.mjs",
+    "operations/tests/public-hourly-stage-payloads.test.mjs",
+    "operations/evidence/V-001-public-hourly-payload-compiler-2026-07-14T0622Z.json"
+  ],
+  "commits": [
+    "6a9036c36d6badfc32c9cab370ee07f7d0ffce2d",
+    "a687ca4ee3286cac9197ba88935bab3381a54ba1",
+    "a68866377def8dbd1bcf26ff45c40dac31d14dc9"
+  ],
+  "verification": "Committed compiler source was fetched back and structurally inspected. A four-test deterministic Node contract was committed but not executed in this connector-only run; no CI, browser, device, audio, or deployment claim is made.",
+  "deployment_effect": "operations-only; no application path changed and no Vercel deployment requested",
+  "acceptance_remaining": [
+    "Execute the public hourly payload compiler tests in an authenticated checkout or CI runner.",
+    "Generate a retained exact 24-entry artifact from the canonical repertory and bind its digest to an application commit.",
+    "Install the runtime and compiled payload artifact behind a disabled-by-default build flag after provider capacity returns.",
+    "Verify keyboard, reduced-motion, browser, Mobile Safari, and user-initiated audio behavior.",
+    "Complete exact-commit workflow enumeration, immutable Vercel deployment identity, and bounded physical iPhone audibility evidence."
+  ],
+  "rollback_route": [
+    "revert this queue-update commit",
+    "revert a68866377def8dbd1bcf26ff45c40dac31d14dc9",
+    "revert a687ca4ee3286cac9197ba88935bab3381a54ba1",
+    "revert 6a9036c36d6badfc32c9cab370ee07f7d0ffce2d"
+  ],
+  "safe_next_action": "Run node --test operations/tests/public-hourly-stage-payloads.test.mjs in an authenticated checkout, then add a no-overwrite CLI that emits and hashes the canonical 24-entry payload artifact without touching application paths or requesting a Vercel deployment."
+}
