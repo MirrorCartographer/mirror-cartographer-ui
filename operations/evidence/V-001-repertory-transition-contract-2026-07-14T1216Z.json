@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "observed_at": "2026-07-14T12:16:18Z",
+  "slice": "accessible deterministic hourly repertory transition contract",
+  "source_commit": "8cf0d4808d891ffaf825db16ba7f47f37170b680",
+  "production_on_stage": {
+    "hour_key": 495564,
+    "repertory_index": 0,
+    "id": "wordless-sky",
+    "title": "Wordless Sky"
+  },
+  "implementation": {
+    "path": "operations/studio/repertory-transition-contract.mjs",
+    "test_path": "operations/tests/repertory-transition-contract.test.mjs",
+    "observed_source_blob_sha": "599d91a89ce322c156a0d86ca2559430788d7dfe",
+    "observed_test_blob_sha": "d24f6387bd9f38cffec9d5aedf076677e527ec5f"
+  },
+  "verification": {
+    "route": "exact-commit source fetched through authenticated GitHub connector, reconstructed dependency boundary, executed with Node test runner",
+    "node": "v22.16.0",
+    "platform": "Linux x86_64",
+    "command": "node --test operations/tests/repertory-transition-contract.test.mjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "exit_status": 0,
+    "evidence_strength": "exact committed source and test fetched; dependencies reconstructed from committed source; not an authenticated full checkout"
+  },
+  "contracts_verified": [
+    "next production activates at the exact canonical UTC hour boundary",
+    "one normalized continuity state survives production changes",
+    "prefers-reduced-motion selects an instantaneous transition",
+    "hidden documents resynchronize on visibility without replaying missed productions",
+    "focus is preserved and title announcements use polite live-region semantics",
+    "audio requires a user gesture and autoplay is prohibited",
+    "payment logic and private source material are prohibited",
+    "environment capability inputs fail closed"
+  ],
+  "deployment": {
+    "attempted": false,
+    "reason": "CURRENT_STATE prohibits application deployment attempts while provider build capacity is exhausted"
+  },
+  "limits": [
+    "No browser integration was executed.",
+    "No Mobile Safari device was exercised.",
+    "No physical audio audibility was tested.",
+    "No Vercel deployment identity was observed."
+  ],
+  "rollback": {
+    "method": "revert the source and test commits, then revert this evidence and queue projection",
+    "source_commit": "4efe0b0c16a10222c653b4866375a60d527b8d9b",
+    "test_commit": "8cf0d4808d891ffaf825db16ba7f47f37170b680"
+  }
+}
