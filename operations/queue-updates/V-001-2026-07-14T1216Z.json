@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T12:16:18Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and executed an accessible deterministic repertory transition contract that preserves continuity across exact UTC hour boundaries, respects reduced motion, resynchronizes hidden documents without replay, preserves focus, requires user gesture for audio, and prohibits autoplay, payments, and private source material.",
+  "evidence": "operations/evidence/V-001-repertory-transition-contract-2026-07-14T1216Z.json",
+  "commits": [
+    "4efe0b0c16a10222c653b4866375a60d527b8d9b",
+    "8cf0d4808d891ffaf825db16ba7f47f37170b680",
+    "7817dbd61efd9fc847f8897d95d6e578710ecb0b"
+  ],
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both independent clients and retain reconciliation evidence.",
+    "Observe operations-only Vercel build suppression after provider capacity returns.",
+    "Observe the exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind a tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Integrate the transition plan at the public runtime boundary only after browser-level focus, visibilitychange, reduced-motion, and timer-throttling tests are available; do not deploy while provider capacity remains exhausted."
+}
