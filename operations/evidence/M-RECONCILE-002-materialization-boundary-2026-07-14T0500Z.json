@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-14T05:00:00Z",
+  "evidence_type": "bounded_repository_history",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "commit search results for M-004, M-005, and M-006",
+    "commit 0f2436cdee875fccf602127ca4ff1cf3075bd1c26",
+    "commit 658b9a26e53c6ee1e6c860de6582fe3d786c06df"
+  ],
+  "finding": "Immutable unresolved-status materialization anchors exist for M-004, M-005, and M-006, but none is an accepted origin assignment.",
+  "verified_locators": {
+    "M-004": "0f2436cdee875fccf602127ca4ff1cf3075bd1c26",
+    "M-005": "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+    "M-006": "94778c45072bad84a0c63077ac23492a1a756a8c"
+  },
+  "coverage": {
+    "authenticated_commit_search": "performed_bounded",
+    "all_refs_inventory": "not_demonstrated",
+    "all_reachable_commits": "not_demonstrated",
+    "non_repository_source_classes": "not_audited_in_this_slice"
+  },
+  "claim_boundary": "This evidence verifies repository materialization anchors only. It does not resolve identifier origin or establish global absence before those commits.",
+  "artifact_commit": "712bc62ef1f68c4413e99cadf618397767a7714d",
+  "privacy_review": "pass_public_repository_metadata_only"
+}
