@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T14:47:54Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and runtime-verified a deterministic, declarative repertory mount-plan boundary that preserves focus, safe-area and reduced-motion requirements, suspends hidden productions inertly, forbids autoplay, network, persistence, payment, conversion, private marks, and executable mount tags, and remains isolated under operations-only paths.",
+  "production_on_stage": "Coordinate Carnival",
+  "evidence": "operations/evidence/V-001-repertory-mount-plan-2026-07-14T1447Z.json",
+  "evidence_commit": "9df7b945ccac02d1f1c074be36e1a544f6f322fd",
+  "acceptance_impact": {
+    "advanced": [
+      "reversible application mount contract",
+      "focus-preserving transition semantics",
+      "hidden-page inert suspension",
+      "mobile safe-area and reduced-motion declaration",
+      "fail-closed media, privacy, commerce, network, persistence, and executable-surface policy"
+    ],
+    "still_blocked": [
+      "application import-boundary mounting",
+      "real Chromium and WebKit DOM verification",
+      "Mobile Safari and screen-reader verification",
+      "provider-capacity-dependent Vercel deployment verification",
+      "immutable deployment identity",
+      "exact-commit audio workflow artifact inspection",
+      "physical iPhone Safari audibility verification"
+    ]
+  },
+  "safe_next_action": "When provider build capacity is confirmed available, add one removable application adapter that applies this declarative plan without replacing the focused node, verify it in Chromium and WebKit with visibility, focus, reduced-motion, and hourly resynchronization assertions, then perform one commit-bound deployment identity check.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false
+}
