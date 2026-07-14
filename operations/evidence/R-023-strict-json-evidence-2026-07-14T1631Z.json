@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "owner": "frontier_research",
+  "finding": "Semantic JSON canonicalization is unsafe when duplicate member names are allowed to reach an ordinary parser, because parser-specific collapse can erase the ambiguity before hashing or attestation.",
+  "source_status": [
+    {
+      "source": "RFC 8259 section 4",
+      "status": "primary_standard",
+      "claim": "Object member names should be unique; receiver behavior for duplicates is unpredictable."
+    },
+    {
+      "source": "RFC 7493 section 2.3",
+      "status": "primary_standard",
+      "claim": "I-JSON objects must not contain duplicate member names."
+    },
+    {
+      "source": "RFC 8785 section 3.1",
+      "status": "primary_specification",
+      "claim": "JCS input is constrained to I-JSON and therefore requires unique property names."
+    }
+  ],
+  "artifact": "tools/frontier-research/strict-json-evidence.mjs",
+  "test_artifact": "tools/frontier-research/strict-json-evidence.test.mjs",
+  "verification": {
+    "command": "node --test strict-json-evidence.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "verified_behaviors": [
+      "unique nested members accepted",
+      "duplicate members rejected before parser collapse",
+      "escaped-name equivalence rejected as duplicate",
+      "same member name permitted in distinct object scopes",
+      "non-finite conversion and trailing content rejected"
+    ]
+  },
+  "evidence_strength": "primary-specification-derived implementation with deterministic local tests and committed source",
+  "uncertainty": [
+    "The implementation has not yet been differential-tested against multiple independent streaming parsers.",
+    "Byte decoding is assumed to occur before this boundary; malformed UTF-8 byte handling is not implemented here.",
+    "This parser does not itself produce RFC 8785 canonical output."
+  ],
+  "falsification_route": "Run a corpus containing duplicate names, escaped-equivalent names, malformed strings, extreme numbers, and deep nesting through this module and at least two independent strict parsers; any accepted ambiguous object or divergent accepted value falsifies the boundary.",
+  "privacy_class": "public_repository_operations",
+  "created_at": "2026-07-14T16:31:45Z"
+}
