@@ -3,6 +3,7 @@ const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 export function installCometGardenRuntime() {
   if (typeof window === 'undefined' || typeof document === 'undefined') return () => {};
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return () => {};
+  if (document.querySelector('.comet-garden')) return () => {};
 
   const garden = document.createElement('div');
   garden.className = 'comet-garden';
@@ -10,9 +11,10 @@ export function installCometGardenRuntime() {
   document.body.appendChild(garden);
 
   const particles = [];
-  const MAX = window.innerWidth < 700 ? 18 : 30;
+  const MAX = window.innerWidth < 700 ? 20 : 36;
   let raf = 0;
   let last = 0;
+  let charge = 0.25;
 
   const spawn = (x, y, force = 0.5) => {
     if (particles.length >= MAX) particles.shift()?.el.remove();
@@ -35,9 +37,21 @@ export function installCometGardenRuntime() {
 
   const onPointer = (event) => {
     if (!event.isPrimary) return;
-    const force = clamp(Math.hypot(event.movementX || 0, event.movementY || 0) / 24, 0.15, 1);
+    const force = clamp(Math.hypot(event.movementX || 0, event.movementY || 0) / 24, 0.15, 1) * (0.7 + charge * 0.8);
     spawn(event.clientX, event.clientY, force);
     if (force > 0.7) spawn(event.clientX, event.clientY, force * 0.7);
+  };
+
+  const onState = (event) => {
+    const detail = event.detail || {};
+    charge = clamp(Number(detail.charge) || 0.25, 0.1, 1);
+    if (Array.isArray(detail.palette)) {
+      garden.style.setProperty('--comet-core', detail.palette[2]);
+      garden.style.setProperty('--comet-wing', detail.palette[3]);
+    }
+    if (detail.complete && Number.isFinite(detail.x) && Number.isFinite(detail.y)) {
+      for (let i = 0; i < 12; i += 1) spawn(detail.x, detail.y, 1);
+    }
   };
 
   const loop = (time) => {
@@ -46,7 +60,7 @@ export function installCometGardenRuntime() {
     last = time;
     for (let i = particles.length - 1; i >= 0; i -= 1) {
       const p = particles[i];
-      p.life -= 0.018;
+      p.life -= 0.016 + (1 - charge) * 0.006;
       p.vx *= 0.992;
       p.vy -= 0.006;
       p.x += p.vx;
@@ -56,8 +70,8 @@ export function installCometGardenRuntime() {
         particles.splice(i, 1);
         continue;
       }
-      p.el.style.transform = `translate3d(${p.x}px,${p.y}px,0) scale(${p.life})`;
-      p.el.style.opacity = String(p.life * 0.72);
+      p.el.style.transform = `translate3d(${p.x}px,${p.y}px,0) scale(${p.life * (0.8 + charge * 0.35)})`;
+      p.el.style.opacity = String(p.life * (0.5 + charge * 0.35));
       p.el.style.width = `${p.size}px`;
       p.el.style.height = `${p.size}px`;
       p.el.style.filter = `hue-rotate(${p.hue}deg)`;
@@ -66,12 +80,14 @@ export function installCometGardenRuntime() {
 
   window.addEventListener('pointermove', onPointer, { passive: true });
   window.addEventListener('pointerdown', onPointer, { passive: true });
+  window.addEventListener('mc:comet-state', onState);
   raf = requestAnimationFrame(loop);
 
   return () => {
     cancelAnimationFrame(raf);
     window.removeEventListener('pointermove', onPointer);
     window.removeEventListener('pointerdown', onPointer);
+    window.removeEventListener('mc:comet-state', onState);
     garden.remove();
   };
 }
