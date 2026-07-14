@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "ICW-001",
+  "owner": "independent_creative_web",
+  "created_at": "2026-07-14T13:46:00Z",
+  "creative_premise": "A browser-native climate with no protagonist, score, account, lore, dashboard, research framing, or product funnel. Visitor movement changes wind; visitor stillness changes pressure; nothing is retained.",
+  "implementation": {
+    "preview_path": "operations/independent-creative-web/weather-that-remembers-no-one/index.html",
+    "test_path": "operations/tests/independent-weather-preview.test.mjs",
+    "determinism": "Fixed simulation seed and deterministic mote initialization; ambient audio noise is ephemeral and begins only after a user gesture.",
+    "privacy": "No persistence, analytics, accounts, network requests, or private source material.",
+    "accessibility": [
+      "Native buttons",
+      "Polite live status",
+      "Visible focus treatment",
+      "Reduced-motion adaptation",
+      "Hidden-page suspension"
+    ],
+    "performance": [
+      "Canvas device pixel ratio capped at 2",
+      "Reduced particle count under reduced-motion preference",
+      "Frame delta capped",
+      "Rendering suspended while hidden"
+    ],
+    "audio": "Web Audio context is created only inside the explicit sound-button click handler; no autoplay."
+  },
+  "verification": {
+    "strength": "committed_static_contract_unexecuted",
+    "reason": "The connected GitHub tool could commit and re-read source files, but no authenticated local runtime or CI invocation was available in this run.",
+    "test_cases_authored": 4,
+    "runtime_claim": false,
+    "deployment_claim": false
+  },
+  "independence_boundary": [
+    "Not a Mirror Cartographer explainer",
+    "Not a research portal",
+    "Not a worker dashboard",
+    "Not a product or conversion surface",
+    "No symbolic glossary or continuity UI"
+  ],
+  "rollback": "Revert commits d143aa3aa844b223a80e6b635dff5c1978eec218 and c6f123fdbe718aae4cbfa7a0616280174a235ce7, or remove the isolated operations/independent-creative-web/weather-that-remembers-no-one directory in a future non-destructive revert commit.",
+  "constraints_respected": [
+    "No GitHub files or history deleted",
+    "Canonical shared state not overwritten",
+    "No deployment attempted during active provider-capacity block"
+  ]
+}
