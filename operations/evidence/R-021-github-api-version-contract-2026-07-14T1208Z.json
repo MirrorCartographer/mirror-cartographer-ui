@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T12:08:48Z",
+  "finding": "The exact-commit workflow enumerator pins GitHub REST API version 2022-11-28. GitHub documentation now identifies 2026-03-10 as latest, while 2022-11-28 remains supported through 2028-03-10. Immediate migration is not required, but reproducible evidence must retain the requested version and fail closed on 410, Deprecation, Sunset, or absence from a current supported-version snapshot.",
+  "source_status": "primary_official_documentation",
+  "sources": [
+    {
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "observed_claims": [
+        "head_sha is a supported repository workflow-run filter",
+        "per_page has a maximum of 100",
+        "filtered searches using head_sha return at most 1000 results",
+        "private repositories require authenticated read access"
+      ]
+    },
+    {
+      "url": "https://docs.github.com/en/rest/about-the-rest-api/api-versions",
+      "observed_claims": [
+        "2026-03-10 is the latest REST API version",
+        "2022-11-28 remains supported until 2028-03-10",
+        "unsupported specified versions return 410 Gone",
+        "Deprecation and Sunset response headers signal approaching retirement"
+      ]
+    }
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/github-api-version-evidence.mjs",
+    "test": "tools/frontier-research/github-api-version-evidence.test.mjs",
+    "commits": [
+      "640c77b54da58e59eb389ff3318a37120cd4f5b0",
+      "7dee6d81db378569b9735217f1be7c40193f1b3d"
+    ]
+  },
+  "evidence_strength": "committed_static_contract_unexecuted",
+  "uncertainty": [
+    "No authenticated live API request was executed in this run.",
+    "The tests were committed but not executed by an observed runtime.",
+    "The supported-version snapshot must be refreshed from GitHub primary documentation at execution time."
+  ],
+  "falsification_route": "Run the tests, then execute the enumerator against an exact commit while retaining the request version, HTTP status, Deprecation header, Sunset header, supported-version snapshot source and observation time. Any 410, lifecycle header, unsupported snapshot result, or non-2xx response must prevent evidence promotion.",
+  "design_implication": "Keep the current pinned API version until a tested migration is justified; bind version lifecycle evidence into every authenticated enumeration envelope so API-version drift cannot silently alter commit-bound evidence semantics."
+}
