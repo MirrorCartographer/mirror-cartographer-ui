@@ -34,40 +34,50 @@
       .comet-companion {
         left: 0;
         top: 0;
-        width: 28px;
-        height: 28px;
+        width: 34px;
+        height: 31px;
         opacity: 0;
         transform: translate3d(-50px,-50px,0);
-        transition: opacity .18s ease;
-        filter: drop-shadow(0 0 8px rgba(255,190,116,.9)) drop-shadow(0 0 18px rgba(196,181,253,.55));
+        transition: opacity .18s ease, filter .12s ease;
+        clip-path: polygon(5% 0, 31% 16%, 50% 10%, 69% 16%, 95% 0, 88% 35%, 96% 58%, 86% 87%, 67% 100%, 33% 100%, 14% 87%, 4% 58%, 12% 35%);
+        background:
+          radial-gradient(circle at 35% 48%, #382e59 0 1.7px, transparent 2px),
+          radial-gradient(circle at 65% 48%, #382e59 0 1.7px, transparent 2px),
+          radial-gradient(ellipse at 50% 64%, #d88cae 0 2px, transparent 2.4px),
+          radial-gradient(circle at 31% 68%, rgba(255,151,187,.72) 0 3.2px, transparent 3.6px),
+          radial-gradient(circle at 69% 68%, rgba(255,151,187,.72) 0 3.2px, transparent 3.6px),
+          linear-gradient(145deg, #fffdf5 0%, #ffe2bf 42%, #c4b5fd 76%, #7dd3fc 100%);
+        border: 1px solid rgba(255,255,255,.78);
+        filter: drop-shadow(0 0 7px rgba(255,190,116,.95)) drop-shadow(0 0 17px rgba(196,181,253,.62));
         will-change: transform;
       }
       .comet-companion::before {
         content: "";
         position: absolute;
-        inset: 3px;
-        border-radius: 48% 52% 50% 50%;
+        left: 7px;
+        top: 20px;
+        width: 20px;
+        height: 8px;
         background:
-          radial-gradient(circle at 39% 43%, #332c55 0 1.25px, transparent 1.6px),
-          radial-gradient(circle at 64% 43%, #332c55 0 1.25px, transparent 1.6px),
-          radial-gradient(ellipse at 52% 64%, transparent 0 3px, #8b5e83 3.3px 4px, transparent 4.3px),
-          radial-gradient(circle at 35% 69%, rgba(255,153,190,.72) 0 2.6px, transparent 3px),
-          radial-gradient(circle at 72% 67%, rgba(255,153,190,.72) 0 2.6px, transparent 3px),
-          radial-gradient(circle at 35% 30%, #fffdf4 0 8%, #ffe2bf 38%, #c4b5fd 72%, #7dd3fc 100%);
-        border: 1px solid rgba(255,255,255,.76);
-        box-shadow: inset -4px -5px 8px rgba(82,54,119,.24), inset 3px 3px 6px rgba(255,255,255,.45);
+          linear-gradient(8deg, transparent 46%, rgba(255,248,239,.9) 48% 52%, transparent 54%) left top / 9px 4px no-repeat,
+          linear-gradient(-8deg, transparent 46%, rgba(255,248,239,.9) 48% 52%, transparent 54%) right top / 9px 4px no-repeat,
+          linear-gradient(-8deg, transparent 46%, rgba(255,248,239,.9) 48% 52%, transparent 54%) left bottom / 9px 4px no-repeat,
+          linear-gradient(8deg, transparent 46%, rgba(255,248,239,.9) 48% 52%, transparent 54%) right bottom / 9px 4px no-repeat;
+        opacity: .9;
       }
       .comet-companion::after {
         content: "✦";
         position: absolute;
-        right: -5px;
-        top: -7px;
+        right: 2px;
+        top: 1px;
         color: #fff8ef;
-        font-size: 11px;
-        text-shadow: 0 0 8px #ffbe74;
+        font-size: 8px;
+        text-shadow: 0 0 7px #ffbe74;
         animation: comet-twinkle 1.2s ease-in-out infinite alternate;
       }
-      .comet-companion.is-down { transform: scale(.78); }
+      .comet-companion.is-down {
+        filter: drop-shadow(0 0 12px rgba(255,190,116,1)) drop-shadow(0 0 24px rgba(196,181,253,.9));
+      }
       .comet-spark {
         width: 5px;
         height: 5px;
@@ -158,7 +168,7 @@
         const animate = () => {
           x += (tx - x) * .34;
           y += (ty - y) * .34;
-          companion.style.transform = `translate3d(${x - 14}px,${y - 14}px,0)`;
+          companion.style.transform = `translate3d(${x - 17}px,${y - 15}px,0)`;
           frame = requestAnimationFrame(animate);
         };
 
