@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-14T22:28:00Z",
+  "slice": "retained_pagination_link_chain_proof",
+  "finding": "Ordered retained pages and rate-limit headers do not by themselves prove exhaustive pagination. GitHub documents the response Link header, specifically rel=next, as the authoritative continuation mechanism; a complete retained traversal must therefore preserve and reconcile each next target with the following request URL and terminate only when rel=next is absent.",
+  "source_status": {
+    "github_pagination_documentation": "observed_primary_source",
+    "repository_queue_and_prior_artifacts": "observed_repository_source",
+    "authenticated_runtime_evidence": "not_observed"
+  },
+  "evidence_strength": "implementation_ready_contract_with_committed_deterministic_tests",
+  "design_implication": "Require a valid pagination-link-chain proof for both exhaustive clients before reconciliation evidence can be promoted. Keep rate-limit proof, provider-ceiling checks, response-body digests, exact-commit binding, and secondary-limit handling as independent fail-closed gates.",
+  "artifacts": [
+    {
+      "path": "tools/frontier-research/pagination-link-chain-validator.mjs",
+      "commit": "ab3362ed91636ad766178ad287d07418312eeb30"
+    },
+    {
+      "path": "tools/frontier-research/pagination-link-chain-validator.test.mjs",
+      "commit": "f481dbdf3f484b2fee89dda190f4aa219b6cf9a1"
+    }
+  ],
+  "verification": {
+    "repository_write": "verified",
+    "fetch_back": "pending_at_record_creation",
+    "node_test_execution": "not_performed",
+    "authenticated_pagination": "not_performed"
+  },
+  "uncertainty": [
+    "Internal Link-chain consistency does not authenticate retained records by itself.",
+    "Endpoints may omit calculable last links; the contract intentionally relies only on rel=next continuity and terminal absence.",
+    "Secondary rate-limit status cannot be proven absent through primary rate-limit headers."
+  ],
+  "falsification_route": [
+    "Run deterministic Node tests and reject any failing case.",
+    "Execute both authenticated exhaustive clients for one exact commit and retain request URLs plus raw Link headers.",
+    "Reject any non-terminal page without rel=next, any mismatch between rel=next and the following request URL, or any terminal page that still advertises rel=next.",
+    "Compare against an independently retained traversal and preserve disagreement as fail-closed."
+  ],
+  "queue_effect": {
+    "state": "completed_handoff_ready",
+    "canonical_queue_overwritten": false,
+    "next_action": "Integrate buildPaginationLinkChainProof into the retained-evidence CLI for both clients, run its tests, then execute authenticated exact-commit traversals and retain raw Link headers with the existing response and digest evidence."
+  },
+  "specialist_registry_change": "none; no durable capability gap established"
+}
