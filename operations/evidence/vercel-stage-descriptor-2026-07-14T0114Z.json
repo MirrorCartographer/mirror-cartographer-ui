@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-14T01:14:00Z",
+  "slice": "operations-only repertory stage descriptor",
+  "source_commits": {
+    "implementation": "054bcfdabaf1d1810d7a9264c8450c1f5d4fc9f3",
+    "test": "4245d423b7e79f0a1d20284826d77ff1e7f8a8c9"
+  },
+  "verification": {
+    "route": "isolated Node execution plus GitHub contents round-trip",
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "committed_blob_sha": "293a3748590349838ae93bab472c75611a7772bb",
+    "verified_behaviors": [
+      "deterministic hour selection",
+      "operations-only default-off activation",
+      "shared continuity channel enforcement",
+      "autoplay disabled",
+      "payments disabled",
+      "conversion logic disabled",
+      "forbidden private-source metadata rejected",
+      "immutable descriptor and nested accessibility array"
+    ]
+  },
+  "limits": [
+    "The committed test file was not executed from a full repository checkout.",
+    "No Vercel deployment was attempted because CURRENT_STATE records exhausted provider build capacity.",
+    "No browser, mobile Safari, screen-reader, audio, or performance behavior is claimed."
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert this evidence commit.",
+    "Revert 4245d423b7e79f0a1d20284826d77ff1e7f8a8c9.",
+    "Revert 054bcfdabaf1d1810d7a9264c8450c1f5d4fc9f3."
+  ]
+}
