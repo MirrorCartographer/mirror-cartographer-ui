@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App';
+import OperatingAtlas from './components/OperatingAtlas';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
@@ -30,7 +30,7 @@ installCometGardenRuntime();
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <OperatingAtlas />
     </ErrorBoundary>
   </React.StrictMode>,
 );
