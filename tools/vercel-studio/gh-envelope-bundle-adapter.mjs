@@ -20,6 +20,7 @@ export function buildWorkflowEvidenceBundleFromGhPages({
   ghPages,
   ghCommand,
   ghRetrievedAt,
+  rateLimitProof,
   generatedAt
 }) {
   const envelope = buildGhPaginatedWorkflowEnvelope({
@@ -42,8 +43,9 @@ export function buildWorkflowEvidenceBundleFromGhPages({
       retrieved_at: ghRetrievedAt,
       pages_fetched: envelope.pageCount
     },
+    rateLimitProof,
     generatedAt,
-    providerCeilingAmbiguous: false
+    providerCeilingAmbiguous: envelope.providerCeilingAmbiguous === true
   });
 
   return {
@@ -53,6 +55,7 @@ export function buildWorkflowEvidenceBundleFromGhPages({
       reason: envelope.reason,
       declared_total: envelope.declaredTotal,
       page_count: envelope.pageCount,
+      provider_ceiling_ambiguous: envelope.providerCeilingAmbiguous === true,
       command_contract: {
         paginate: envelope.command.includes('--paginate'),
         slurp: envelope.command.includes('--slurp')
