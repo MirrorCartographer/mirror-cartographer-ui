@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "R-026-utf8-evidence-vectors",
+  "purpose": "Runtime-neutral byte vectors for strict retained-evidence ingress.",
+  "sources": [
+    {"status":"normative","title":"RFC 3629","locator":"https://www.rfc-editor.org/rfc/rfc3629","sections":["3","4","6","10"]},
+    {"status":"implementation_reference","title":"Node.js Buffer isUtf8","locator":"https://nodejs.org/api/buffer.html#bufferisutf8input"}
+  ],
+  "vectors": [
+    {"id":"ascii","hex":"7b2276223a2241227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-3"},
+    {"id":"two-byte-min","hex":"7b2276223a22c280227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"two-byte-max","hex":"7b2276223a22dfbf227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"three-byte-min","hex":"7b2276223a22e0a080227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"bmp-before-surrogates","hex":"7b2276223a22ed9fbf227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"bmp-after-surrogates","hex":"7b2276223a22ee8080227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"four-byte-min","hex":"7b2276223a22f0908080227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-4"},
+    {"id":"unicode-max","hex":"7b2276223a22f48fbfbf227d","utf8_valid":true,"ingress":"accept","basis":"RFC3629-3"},
+    {"id":"unexpected-continuation","hex":"7b2276223a2280227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-4"},
+    {"id":"truncated-two-byte","hex":"7b2276223a22c2227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-4"},
+    {"id":"truncated-three-byte","hex":"7b2276223a22e282227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-4"},
+    {"id":"overlong-nul-two-byte","hex":"7b2276223a22c080227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-3"},
+    {"id":"overlong-slash-three-byte","hex":"7b2276223a22e080af227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-3"},
+    {"id":"surrogate-encoded","hex":"7b2276223a22eda080227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-3"},
+    {"id":"above-unicode-max","hex":"7b2276223a22f4908080227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-3"},
+    {"id":"obsolete-five-byte-lead","hex":"7b2276223a22f888808080227d","utf8_valid":false,"ingress":"invalid_utf8","basis":"RFC3629-12"},
+    {"id":"bom","hex":"efbbbf7b7d","utf8_valid":true,"ingress":"utf8_bom_forbidden","basis":"project-canonical-policy"},
+    {"id":"leading-surrogate-escape","hex":"7b2276223a225c7564383030227d","utf8_valid":true,"ingress":"lone_surrogate","basis":"project-unicode-scalar-policy"},
+    {"id":"trailing-surrogate-escape","hex":"7b2276223a225c7564633030227d","utf8_valid":true,"ingress":"lone_surrogate","basis":"project-unicode-scalar-policy"},
+    {"id":"escaped-equivalent-duplicate","hex":"7b2261223a312c225c7530303631223a327d","utf8_valid":true,"ingress":"duplicate_member","basis":"project-strict-json-policy"}
+  ]
+}
