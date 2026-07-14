@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-14T08:43:00Z",
+  "production_on_stage": "Archive Before Dawn",
+  "slice": "Added a deterministic Node contract test for the repertory GitHub Actions workflow and made the workflow explicitly check out github.sha, watch its own contract test, and execute both the workflow contract and repertory tests.",
+  "specialists": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Accessibility Engineer",
+    "Mobile Safari Engineer",
+    "Performance Engineer",
+    "Visual Transformation Director"
+  ],
+  "files": [
+    "operations/tests/operations-repertory-workflow-contract.test.mjs",
+    ".github/workflows/operations-repertory-tests.yml"
+  ],
+  "commits": [
+    "8ed7ac06c1c83f3b3ea30b0b3a46eca1dce6d849",
+    "ec5269054d8b198a87536c20a2f8e9fc78fed71b"
+  ],
+  "verification": {
+    "structural": "The committed contract asserts least privilege, five-minute timeout, explicit github.sha checkout, disabled persisted credentials, Node 22, manual dispatch, watched test paths, and execution of both deterministic test files.",
+    "workflow_run_observation": "No workflow run was returned for commit ec5269054d8b198a87536c20a2f8e9fc78fed71b by the available commit workflow lookup.",
+    "runtime_claim": false,
+    "deployment_claim": false
+  },
+  "privacy_boundary": "No private source material, credentials, personal records, payment logic, or conversion logic were added.",
+  "rollback": "Revert ec5269054d8b198a87536c20a2f8e9fc78fed71b, then revert 8ed7ac06c1c83f3b3ea30b0b3a46eca1dce6d849.",
+  "limits": [
+    "The new tests have not yet produced an observable Actions run.",
+    "No Vercel deployment was attempted because CURRENT_STATE requires operations-only work while build capacity is exhausted.",
+    "No browser, audio, or physical-device verification is claimed."
+  ]
+}
