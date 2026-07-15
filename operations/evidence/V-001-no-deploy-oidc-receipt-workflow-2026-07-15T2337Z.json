@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:37:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "production_currently_on_stage": "canonical deterministic hourly repertory; activation remains prohibited",
+  "finding": "The repository already contained a fail-closed GitHub Actions OIDC receipt adapter, but no operations-only workflow invoked it with id-token permission and retained only the verified receipt.",
+  "implemented_slice": {
+    "workflow": ".github/workflows/vercel-repertory-oidc-receipt.yml",
+    "commit": "9939ca9876c7c5327c7bfe21ea2c930d4a580819",
+    "behavior": [
+      "manual dispatch only",
+      "contents read and id-token write permissions only",
+      "runs existing OIDC pipeline, adapter, and repertory publication tests before requesting a token",
+      "validates three lowercase SHA-256 transcript digests and observation epoch",
+      "requests and verifies the GitHub OIDC token in process memory",
+      "writes a no-overwrite mode-0600 token-free receipt",
+      "removes the request-only expected binding before artifact upload",
+      "uploads only verified-receipt.json with 30-day retention",
+      "publishes an explicit non-deployment and non-activation claim boundary"
+    ]
+  },
+  "verification": {
+    "method": "connector-backed post-commit fetch at exact commit",
+    "workflow_blob_sha": "8e93052dec02f940e3a1ef8ec222a682e71d2c3a",
+    "source_checks": [
+      "workflow_dispatch is the only trigger",
+      "permissions are contents:read and id-token:write",
+      "persist-credentials is false",
+      "three existing deterministic test files are invoked",
+      "digest format fails closed",
+      "raw token and request authorization are not written by workflow code",
+      "artifact path contains only verified-receipt.json",
+      "no deployment command or repertory activation command is present"
+    ],
+    "evidence_strength": "committed source behavior verified by exact-commit refetch; workflow execution not yet observed"
+  },
+  "provenance": {
+    "observed": [
+      "V-001 is highest priority and blocked on provider/deployment evidence.",
+      "The Frontier Research adapter exists and returns a token-free exact-run receipt.",
+      "The prior Vercel slice required an operations-only OIDC verification workflow."
+    ],
+    "inferred": [
+      "A manual no-deploy workflow is the safest reversible integration while Vercel build capacity remains blocked."
+    ],
+    "experiment": [
+      "Run the workflow with retained transcript digests and inspect the uploaded receipt artifact."
+    ],
+    "current_decision": "Do not activate the repertory or initiate a Vercel deployment from this workflow."
+  },
+  "privacy_boundary": {
+    "retained": ["verified receipt", "repository/run metadata", "transcript digests", "claim boundary"],
+    "excluded": ["OIDC bearer token", "OIDC request authorization", "private source material", "payment data"]
+  },
+  "limits": [
+    "GitHub Actions has not executed this workflow in this run.",
+    "No live OIDC receipt artifact was observed.",
+    "No Vercel deployment, immutable deployment identity, browser rendering, audio audibility, process integrity, or hardware attestation was verified.",
+    "The current production remains source-defined but not runtime-activated."
+  ],
+  "rollback": "Disable or remove the standalone workflow in a future additive revert commit; no application runtime files, production manifest, payments, or deployment configuration were changed.",
+  "deployment_attempted": false,
+  "runtime_activation_performed": false,
+  "canonical_queue_overwritten": false
+}
