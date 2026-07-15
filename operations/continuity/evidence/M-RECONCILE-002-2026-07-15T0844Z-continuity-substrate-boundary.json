@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:44:00Z",
+  "artifact_type": "durable_memory_boundary",
+  "memory_id": "continuity-substrate-boundary-v1",
+  "memory": "Mirror Cartographer may present distinct deterministic productions while preserving one continuity substrate. That substrate is transferable only as a bounded public abstraction bound to immutable production evidence; it is not copied private source material, not proof of runtime activation, and not evidence that adjacent productions executed.",
+  "claims": [
+    {
+      "claim_id": "CSB-OBS-001",
+      "status": "observed",
+      "claim": "The retained Vercel handoff contract requires adjacent hourly receipts, exact source-commit agreement, exact repertory-digest agreement, privacy_class public_abstract, a 4096-byte ceiling, and rejection of named private-source fields.",
+      "source": {
+        "type": "repository_file",
+        "immutable_commit": "b2a3f28c7b120779898affc226468422e45978a3",
+        "path": "operations/vercel-studio/repertory/buildContinuityHandoff.v1.cjs"
+      },
+      "evidence_strength": "strong_direct"
+    },
+    {
+      "claim_id": "CSB-OBS-002",
+      "status": "observed",
+      "claim": "The handoff explicitly sets runtime_activation_claimed, deployment_claimed, browser_execution_claimed, and audio_claimed to false and marks the envelope reversible.",
+      "source": {
+        "type": "repository_file",
+        "immutable_commit": "b2a3f28c7b120779898affc226468422e45978a3",
+        "path": "operations/vercel-studio/repertory/buildContinuityHandoff.v1.cjs"
+      },
+      "evidence_strength": "strong_direct"
+    },
+    {
+      "claim_id": "CSB-INF-001",
+      "status": "inferred",
+      "claim": "Continuity is modeled as an identity-bearing state transition across productions, not as persistence of one visual surface and not as replication of originating source material.",
+      "basis": ["CSB-OBS-001", "CSB-OBS-002"],
+      "evidence_strength": "moderate_structural_inference"
+    },
+    {
+      "claim_id": "CSB-PROP-001",
+      "status": "proposed",
+      "claim": "Future continuity envelopes should carry claim-state labels and immutable provenance locators for every retained public abstraction before they are admitted into the project knowledge graph.",
+      "falsification_route": "Demonstrate a retained continuity envelope that remains privacy-safe, provenance-preserving, and unambiguous without claim-state labels or immutable source locators."
+    },
+    {
+      "claim_id": "CSB-SUP-001",
+      "status": "superseded",
+      "claim": "Continuity requires exposing prior chat text, medical records, private source excerpts, or credentials to the next production.",
+      "superseded_by": ["CSB-OBS-001", "CSB-INF-001"]
+    },
+    {
+      "claim_id": "CSB-UNR-001",
+      "status": "unresolved",
+      "claim": "The originating decision or lexicon source that first defined the project-wide phrase one underlying continuity state has not been located in immutable repository history during this bounded run.",
+      "coverage_class": "bounded_current_branch_and_indexed_search",
+      "falsification_route": "Locate the earliest immutable decision log, lexicon, project document, or chat-derived provenance object assigning that phrase and semantic role."
+    }
+  ],
+  "contradictions_resolved": [
+    {
+      "tension": "Hourly productions are distinct versus the system preserves one continuity state.",
+      "resolution": "Distinct presentation and persistent identity are separate layers. Production identity may change each hour while a bounded, digest-bound public continuity abstraction crosses the boundary."
+    },
+    {
+      "tension": "A handoff exists versus peers or runtime executed.",
+      "resolution": "The retained contract is operations-only evidence and explicitly denies activation, deployment, browser, and audio claims. Existence of an envelope cannot prove execution."
+    }
+  ],
+  "privacy_boundary": {
+    "included": ["abstract architectural rule", "repository paths", "immutable commit identifiers", "claim states", "falsification routes"],
+    "excluded": ["private chat text", "medical records", "credentials", "private source excerpts", "personal identifiers"]
+  },
+  "specialist_registry_change": false,
+  "canonical_queue_overwritten": false
+}
