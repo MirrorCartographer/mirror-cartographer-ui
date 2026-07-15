@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1038",
+  "recorded_at": "2026-07-15T17:26:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "title": "Composable provenance coverage union rule",
+  "memory_recovered": "Partial provenance searches may be composed only as an explicit coverage union. Composition can increase the searched universe, but it cannot erase unknown permissions, inaccessible refs, deleted-path gaps, source-class exclusions, pagination ceilings, or disagreement between search methods.",
+  "sources": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/CM-1037.json",
+    "recent repository commits through 0ccca88c0c0088559d26b1340b746b9c94ff0dd4"
+  ],
+  "claim_states": {
+    "observed": [
+      "M-RECONCILE-002 requires exhaustive branch or equivalent history coverage before M-004, M-005, or M-006 can be classified unlocated.",
+      "CM-1037 requires machine-readable composition of partial searches and prohibits treating repeated partial searches as exhaustive proof by default.",
+      "Current available evidence includes heterogeneous source classes with different search universes and authority levels."
+    ],
+    "inferred": [
+      "Coverage is a set-valued property over provenance-capable locations, not a scalar confidence score.",
+      "Two individually valid search envelopes can still produce an invalid union when their repository identity, matching rules, temporal snapshot, or permission scope are incompatible."
+    ],
+    "proposed": [
+      "Normalize every search result into a coverage envelope before composition.",
+      "Compute union coverage dimension-by-dimension and retain overlap, contradiction, exclusion, and unknown sets explicitly.",
+      "Permit exhaustive_unlocated only when the union has no capable-location gaps, no unresolved contradictions, no ceilings, and no undeclared exclusions."
+    ],
+    "superseded": [
+      "Search count is a sufficient proxy for coverage quality.",
+      "Independent searches can be merged by concatenating results alone.",
+      "A broader union automatically inherits the strongest terminal status of any member envelope."
+    ],
+    "unresolved": [
+      "No retained union envelope yet enumerates every accessible ref, reachable commit, deleted path, decision-log namespace, language-lexicon namespace, project-document namespace, and authorized historical source class relevant to M-004, M-005, and M-006.",
+      "The originating assigning source for M-004, M-005, and M-006 remains unlocated."
+    ]
+  },
+  "coverage_union_contract": {
+    "member_envelope_required_fields": [
+      "envelope_id",
+      "repository_or_source_identity",
+      "retrieval_time",
+      "permission_scope",
+      "searched_refs_or_namespaces",
+      "reachable_history_scope",
+      "deleted_path_scope",
+      "searched_source_classes",
+      "matching_rules",
+      "pagination_or_ceiling_status",
+      "raw_result_locator",
+      "terminal_status"
+    ],
+    "compatibility_checks": [
+      "repository_or_source_identity_agreement",
+      "matching_rule_equivalence_or_declared_difference",
+      "temporal_snapshot_ordering",
+      "permission_scope_noncontradiction",
+      "immutable_raw_result_retention",
+      "terminal_status_semantic_compatibility"
+    ],
+    "union_outputs": [
+      "covered_locations",
+      "overlapping_locations",
+      "uncovered_capable_locations",
+      "declared_exclusions",
+      "unknown_permission_locations",
+      "ceiling_or_truncation_locations",
+      "contradictory_results",
+      "qualifying_candidates",
+      "union_terminal_status"
+    ],
+    "terminal_status_rules": {
+      "located_verified": "At least one immutable assigning source satisfies namespace, owner, semantic-role, temporal-precedence, and locator agreement, with contradictions adjudicated.",
+      "exhaustive_unlocated": "Every provenance-capable location in the declared accessible universe is covered; exclusions, unknowns, ceilings, inaccessible refs, deleted-path gaps, and unresolved contradictions are empty.",
+      "unresolved_incomplete_coverage": "Any provenance-capable location remains uncovered, inaccessible, excluded, ceiling-limited, or permission-ambiguous.",
+      "unresolved_conflicting_candidates": "Materially qualifying candidates or member results conflict without a retained authority or causal-precedence resolution."
+    },
+    "fail_closed_rules": [
+      "Union terminal status may not be stronger than the weakest unresolved capable-location gap.",
+      "Unknown and excluded are distinct from searched-with-zero-results.",
+      "Overlapping searches do not increase coverage merely by repetition.",
+      "A member envelope with unretained raw results cannot support exhaustive_unlocated.",
+      "A later immutable assigning source invalidates any prior exhaustive_unlocated result and requires supersession."
+    ]
+  },
+  "knowledge_graph_projection": {
+    "node_type": "continuity_rule",
+    "predicate": "partial_provenance_searches_require_explicit_coverage_union",
+    "applies_to": ["M-004", "M-005", "M-006"],
+    "prevents": [
+      "coverage_double_counting",
+      "exclusion_erasure",
+      "permission_scope_erasure",
+      "terminal_status_inflation",
+      "result_concatenation_as_proof"
+    ]
+  },
+  "falsification_route": "Construct a retained union envelope from independently captured member searches. Demonstrate that all provenance-capable locations are covered with no exclusions, unknown permissions, ceilings, inaccessible refs, deleted-path gaps, or contradictions, then show either a qualifying immutable source or a zero-candidate terminal result. A later qualifying immutable source supersedes and falsifies an exhaustive_unlocated classification.",
+  "privacy_boundary": "This record contains repository-governance abstractions and continuity identifiers only. It retains no private chat excerpts, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content.",
+  "reversible": true,
+  "deletes_history": false
+}
