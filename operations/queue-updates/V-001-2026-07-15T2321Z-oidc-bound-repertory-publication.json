@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:21:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a reversible outer publication assessor that requires the existing exact-commit deployment and bounded curl-session evidence plus an externally verified GitHub Actions OIDC exact-run binding. Added five deterministic tests covering success, decoded-only claims, workflow commit mismatch, transcript substitution, and failure of underlying curl publication preconditions.",
+  "evidence": "operations/evidence/V-001-oidc-bound-repertory-publication-2026-07-15T2321Z.json",
+  "acceptance_remaining": [
+    "Execute the new Node test in an authenticated checkout and retain exact output.",
+    "Add an operations-only workflow path that verifies the GitHub OIDC token against GitHub discovery and signing keys, passes only verified claims to the assessor, and never retains the bearer token.",
+    "Execute authenticated all-event workflow enumeration and independent gh api pagination for one exact commit and retain reconciliation.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after provider capacity returns.",
+    "Bind one tested application commit to an immutable READY Vercel deployment and independently request its generated hostname.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/vercel-studio/repertory/assessOidcBoundRepertoryPublicationReadiness.v1.test.cjs in an authenticated checkout and retain output. Then implement an operations-only OIDC verification workflow that does not deploy, activate the repertory, persist tokens, or weaken the existing fail-closed boundaries.",
+  "canonical_queue_overwritten": false,
+  "runtime_activation_performed": false,
+  "deployment_attempted": false
+}
