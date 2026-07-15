@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T16:17:00Z",
+  "slice": "Fail-closed temporal and repertory-contract binding for programmed-stage receipts",
+  "state": "in_progress_blocked",
+  "completed": [
+    "Require a canonical generated_at ISO instant.",
+    "Require generated_at UTC hour to match the programmed receipt hour.",
+    "Require a non-empty repertory contract identifier.",
+    "Support exact expected instant and contract-id comparison.",
+    "Add regression tests for missing, non-canonical, drifted, and mismatched temporal evidence."
+  ],
+  "files": [
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.test.cjs",
+    "operations/evidence/V-001-stage-receipt-temporal-binding-2026-07-15T1617Z.json"
+  ],
+  "commits": [
+    "00be7089cc34f582075a008b3759173cf4b8a671",
+    "4b06cb5577eac6a4db146f5d6a994f989f5696e7",
+    "cc921fac92ac541fcf56573170c0f598ded1bb5c"
+  ],
+  "acceptance_remaining": [
+    "Execute npm run test:vercel-repertory in an authenticated checkout and retain exact output.",
+    "Execute both exhaustive workflow clients against one exact commit and retain reconciliation evidence.",
+    "Observe an operations-only sentinel as skipped or ignored after provider capacity returns.",
+    "Bind one tested application commit to an immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the canonical repertory test command and retain output; do not deploy or activate while provider capacity remains blocked.",
+  "canonical_queue_overwritten": false,
+  "peer_state_overwritten": false
+}
