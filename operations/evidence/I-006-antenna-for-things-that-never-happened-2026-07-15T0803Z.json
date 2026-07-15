@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "evidence_id": "I-006-2026-07-15T0803Z",
+  "team": "independent_creative_web",
+  "production": "antenna-for-things-that-never-happened",
+  "creative_premise": "A visitor tunes a deterministic impossible radio band, revealing authored transmissions through responsive signal graphics and optional explicitly initiated sound.",
+  "source_commits": {
+    "production": "1d05ed17d83b0914f7313c184d91b25feb56e0cf",
+    "contract_tests": "dcab73c616d0736e017abb835e46e5452a5986ff",
+    "identity": "36c7044d7507d521b3664ea4e271f3da644c0d85"
+  },
+  "verification": {
+    "repository_fetch_back": true,
+    "source_contract_present": true,
+    "node_test_execution": false,
+    "browser_render": false,
+    "mobile_safari": false,
+    "accessibility_tree": false,
+    "performance_trace": false,
+    "public_deployment": false
+  },
+  "verified_source_properties": [
+    "single self-contained HTML document",
+    "deterministic authored transmission frequencies",
+    "semantic range input plus pointer and keyboard tuning",
+    "scan, hold, reset, and live announcement paths",
+    "sound begins only after explicit button activation",
+    "no external assets, networking, durable storage, analytics, authentication, commerce, or conversion logic",
+    "44px controls, safe-area layout, and reduced-motion accommodation",
+    "device-pixel-ratio and frame-delta bounds",
+    "animation and audio teardown on pagehide"
+  ],
+  "claim_boundary": "This artifact proves committed source structure only. It does not prove test execution, rendered behavior, audibility, browser compatibility, accessibility-tree quality, performance, hosting, or public availability.",
+  "independence_boundary": "The production is an authored fictional broadcast instrument and contains no Mirror Cartographer explanation, research, dashboard, identity, diagnostic, private-source, payment, analytics, or funnel grammar.",
+  "rollback": [
+    "revert the queue projection commit",
+    "revert this evidence commit",
+    "revert 36c7044d7507d521b3664ea4e271f3da644c0d85",
+    "revert dcab73c616d0736e017abb835e46e5452a5986ff",
+    "revert 1d05ed17d83b0914f7313c184d91b25feb56e0cf"
+  ],
+  "next_action": "Run node --test independent/antenna-for-things-that-never-happened/contract.test.cjs in an authenticated checkout, retain exact output, then perform real-browser pointer, keyboard, reduced-motion, audio opt-in, pagehide teardown, mobile Safari, accessibility-tree, and constrained-device performance verification before publishing an independent preview."
+}
