@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T00:32:31Z",
+  "slice": "runtime_stage_freshness_gate",
+  "state": "completed_operations_only",
+  "objective": "Prevent a historically valid runtime stage observation from being promoted as current evidence after its repertory hour has expired.",
+  "observed_gap": "The commit-bound runtime stage verifier authenticated identity, schedule, audio policy, and privacy boundary but did not bound observation age relative to the evidence check.",
+  "implementation": {
+    "file": "operations/vercel-studio/repertory/verifyRuntimeStageFreshness.v1.cjs",
+    "contract_id": "vercel-studio-runtime-stage-freshness-v1",
+    "default_max_age_ms": 4200000,
+    "default_future_skew_ms": 300000,
+    "fail_closed_conditions": [
+      "unsupported or unverified upstream stage contract",
+      "non-promotable upstream classification",
+      "invalid timestamps or freshness bounds",
+      "observation older than the permitted age",
+      "observation farther in the future than permitted clock skew"
+    ],
+    "side_effects_performed": false
+  },
+  "verification": {
+    "route": "local Node test runner against exact committed source text before repository write",
+    "command": "node --test verifyRuntimeStageFreshness.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "browser_claimed": false,
+    "deployment_claimed": false,
+    "physical_device_claimed": false
+  },
+  "provenance": {
+    "observed": [
+      "V-001 remains in_progress_blocked because immutable Vercel deployment evidence is unavailable.",
+      "The existing runtime stage observation verifier has no freshness bound."
+    ],
+    "inferred": [
+      "Without a freshness gate, a once-valid observation can be replayed after the scheduled production changes."
+    ],
+    "experiment": [
+      "A 70-minute maximum age allows one hourly repertory slot plus limited evidence transport delay while remaining fail-closed."
+    ],
+    "current_decision": [
+      "Require freshness verification after commit-bound runtime stage verification and before any current-stage promotion."
+    ]
+  },
+  "constraints_preserved": [
+    "operations-only; no application deployment attempted",
+    "no payments or conversion logic",
+    "no private source material",
+    "no autoplay behavior",
+    "no GitHub file or history deletion",
+    "canonical ACTIVE_QUEUE.json not overwritten"
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert the test commit.",
+    "Revert the implementation commit."
+  ],
+  "next_action": "Integrate this freshness gate into the retained exact-commit evidence bundle after authenticated enumeration and a real runtime DOM observation become available; do not claim current-stage runtime evidence until both identity and freshness verify."
+}
