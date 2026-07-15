@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T05:41:41Z",
+  "updated_at": "2026-07-15T06:50:00Z",
   "items": [
     {
       "id": "V-001",
@@ -95,6 +95,26 @@
         "Keep provider-ceiling ambiguity as a separate fail-closed condition."
       ],
       "safe_next_action": "Execute both exhaustive clients against one exact commit, validate the gh paginated envelope, and retain raw outputs plus the Vercel reconciliation and assessment artifacts; no deployment claim is permitted until verified=true and provider-ceiling ambiguity is absent."
+    },
+    {
+      "id": "R-022",
+      "owner": "frontier_research",
+      "priority": "highest",
+      "state": "completed_handoff_ready",
+      "objective": "Define a fail-closed immutable Vercel deployment identity contract bound to an exact tested GitHub commit.",
+      "completed_slices": [
+        "Researched the current authenticated Vercel v13 deployment response fields from primary documentation.",
+        "Implemented a deterministic validator requiring stable deployment id, generated hostname, READY state, project identity, and gitSource.sha equality with the tested commit.",
+        "Added six deterministic tests covering success, commit mismatch, non-READY state, alias-only evidence, deleted records, and canonical digest stability.",
+        "Recorded uncertainty, claim boundaries, evidence strength, and falsification routes in a retained evidence artifact."
+      ],
+      "acceptance_remaining": [
+        "Execute the Node tests in an authenticated checkout and retain exact output.",
+        "Fetch an authenticated Vercel v13 deployment object for one exact application commit after provider capacity returns.",
+        "Feed only verified immutable deployment identity into the V-001 assessor.",
+        "Independently request the generated deployment hostname; do not infer route, audio, alias promotion, or physical-device behavior from identity alone."
+      ],
+      "safe_next_action": "Run node --test operations/frontier-research/vercelImmutableDeploymentEvidence.v1.test.cjs, retain output, then integrate the validator ahead of V-001 deployment promotion without initiating a new deployment while provider capacity remains blocked."
     }
   ]
 }
