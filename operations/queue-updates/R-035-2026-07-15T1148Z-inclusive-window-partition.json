@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-020",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T11:48:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Corrected provider-ceiling time partitioning to use disjoint inclusive whole-second windows, preventing boundary duplication while preserving exact parent coverage.",
+  "artifact": "operations/evidence/R-035-inclusive-window-partition-2026-07-15T1148Z.json",
+  "verification": "Five deterministic Node tests passed.",
+  "acceptance_remaining": [
+    "Integrate the v2 disjoint-window contract into the authenticated recursive enumerator.",
+    "Execute exact-commit enumeration against retained provider responses.",
+    "Verify the union of every leaf has no duplicate or missing run IDs.",
+    "Reconcile against an independent gh api traversal.",
+    "Retain provider_ceiling_ambiguous when 1000 results persist inside one UTC second."
+  ],
+  "safe_next_action": "Replace overlapping midpoint recursion with partitionInclusiveWorkflowRunWindow, execute both authenticated clients over identical disjoint windows, and retain raw leaf requests, responses, Link headers, counts, run-ID union, and reconciliation digest.",
+  "active_queue_overwrite": false,
+  "specialist_registry_change": null
+}
