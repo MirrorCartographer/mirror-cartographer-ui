@@ -58,17 +58,17 @@
       {
         "identifier": "M-004",
         "state": "unresolved",
-        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+        "reason": "No eligible immutable originating assignment has been located within inspected coverage."
       },
       {
         "identifier": "M-005",
         "state": "unresolved",
-        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+        "reason": "No eligible immutable originating assignment has been located within inspected coverage."
       },
       {
         "identifier": "M-006",
         "state": "unresolved",
-        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+        "reason": "No eligible immutable originating assignment has been located within inspected coverage."
       }
     ]
   },
