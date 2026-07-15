@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T17:48:00Z",
+  "state": "in_progress",
+  "completed_slice": "Declared a machine-readable provenance-capable location universe for M-004, M-005, and M-006 so future coverage unions cannot derive their search universe from returned results or silently omit private, inaccessible, historical, deleted-path, lexicon, document, or runtime source classes.",
+  "artifact": "operations/continuity/records/CM-1039.json",
+  "claim_status": {
+    "observed": "The canonical queue requires exhaustive history coverage and location of the originating decision-log, language-lexicon, project-document, or chat-history assignment source.",
+    "inferred": "Coverage cannot be adjudicated until capable locations are declared independently of search outcomes and token matches.",
+    "proposed": "Instantiate the CM-1039 universe before capturing member envelopes, and classify every capable class as covered, uncovered, inaccessible, unknown-permission, intentionally-excluded, ceiling-limited, or contradictory.",
+    "superseded": "Returned results define the relevant provenance universe, and excluded private sources may be silently ignored in exhaustive absence claims.",
+    "unresolved": "Accessible refs, reachable history, deleted paths, authorized external records, and immutable assigning sources remain incompletely covered or unlocated."
+  },
+  "acceptance_remaining": [
+    "Capture an authenticated exhaustive accessible-ref inventory and reachable commit set.",
+    "Inspect historical, renamed, deleted, and superseded identifier-capable paths.",
+    "Instantiate retained member envelopes for every admitted capable location class.",
+    "Preserve authorized private source classes as explicit exclusions until a safe reviewed method exists.",
+    "Compose the member envelopes under CM-1038 and locate immutable provenance for M-004, M-005, and M-006 or retain unresolved_incomplete_coverage."
+  ],
+  "safe_next_action": "Create the first authenticated repository member envelope covering accessible refs and reachable history, including raw locators, permission scope, pagination ceilings, historical-path coverage, and explicit gaps; then compose it into the CM-1038 union without strengthening terminal status beyond unresolved_incomplete_coverage.",
+  "privacy_boundary": "No private chats, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content were retained. Private-capable source classes remain declared exclusions, not searched evidence.",
+  "reversible": true,
+  "deletes_history": false
+}
