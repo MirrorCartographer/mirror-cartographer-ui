@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T15:05:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The operations-only programmed-stage receipt builder now emits exact-commit, repertory-digest, production, and distinct hourly-edition identity compatible with the existing fail-closed verifier, while keeping every activation and deployment claim false.",
+  "files": [
+    "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.test.cjs",
+    "operations/evidence/V-001-edition-bound-stage-receipt-builder-2026-07-15T1505Z.json"
+  ],
+  "commits": [
+    "b5365ff4e9a3bdc12062120ad7b9cbd449173bba",
+    "bbd711257a766aba4ab28d64b89b485883cdc92f",
+    "ded63fb13420ad613578dc049dae9fd667b5bee2"
+  ],
+  "verification": {
+    "static_contract_alignment": true,
+    "tests_authored": 5,
+    "tests_executed": false,
+    "deployment_attempted": false,
+    "runtime_activation_claimed": false
+  },
+  "acceptance_remaining": [
+    "Run npm run test:vercel-repertory in an authenticated checkout and retain exact output.",
+    "Execute authenticated all-event workflow pagination for one exact commit with both approved clients and retain reconciliation.",
+    "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+    "Bind a tested application commit to immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Execute the canonical repertory suite without activating or deploying the repertory; retain the builder/verifier integration result and fail closed on any digest, edition, or evidence-class mismatch.",
+  "rollback": "Revert the listed commits in reverse order. Application runtime and deployment state were not modified."
+}
