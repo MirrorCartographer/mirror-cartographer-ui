@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0030Z-repository-report-boundary",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T00:30:13Z",
+  "recovered_memory": {
+    "title": "Repository materialization is a lower-bound report, not an origin assignment",
+    "summary": "The first immutable repository objects currently located for M-004, M-005, and M-006 are unresolved-origin status records created on 2026-07-14. They prove that each identifier was reported by those times, but they explicitly state that the originating assignment source was unlocated. Therefore these commits establish repository report upper bounds for origin-search chronology, not accepted origins.",
+    "durability": "continuity_provenance_boundary"
+  },
+  "identifier_boundaries": [
+    {
+      "identifier": "M-004",
+      "earliest_currently_located_repository_report_at": "2026-07-14T01:36:43Z",
+      "immutable_locator": "commit:0f2436cdee875fccf602127ca4ff1cf3075bd1c26",
+      "artifact_path": "operations/continuity/records/M-004-origin-status.json",
+      "explicit_identifier_assignment": false,
+      "source_status": "unlocated",
+      "disposition": "report_boundary_not_origin"
+    },
+    {
+      "identifier": "M-005",
+      "earliest_currently_located_repository_report_at": "2026-07-14T01:37:07Z",
+      "immutable_locator": "commit:4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+      "artifact_path": "operations/continuity/records/M-005-origin-status.json",
+      "explicit_identifier_assignment": false,
+      "source_status": "unlocated",
+      "disposition": "report_boundary_not_origin"
+    },
+    {
+      "identifier": "M-006",
+      "earliest_currently_located_repository_report_at": "2026-07-14T01:37:20Z",
+      "immutable_locator": "commit:94778c45072bad84a0c63077ac23492a1a756a8c",
+      "artifact_path": "operations/continuity/records/M-006-origin-status.json",
+      "explicit_identifier_assignment": false,
+      "source_status": "unlocated",
+      "disposition": "report_boundary_not_origin"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "REPORT-BOUNDARY-OBS-001",
+      "status": "observed",
+      "text": "Each located origin-status record explicitly marks its identifier unresolved and its source unlocated.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "REPORT-BOUNDARY-INF-001",
+      "status": "inferred",
+      "text": "Any accepted repository origin must predate or be contemporaneous with the corresponding report boundary unless a later provenance carrier resolves an older immutable assignment.",
+      "confidence": "medium_high"
+    },
+    {
+      "claim_id": "REPORT-BOUNDARY-PROP-001",
+      "status": "proposed",
+      "text": "Use these three timestamps as search cutoffs when traversing repository history, while retaining the possibility that eligible non-repository source classes predate them.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "REPORT-BOUNDARY-SUP-001",
+      "status": "superseded",
+      "text": "The first currently located repository object containing an identifier is its originating assignment.",
+      "superseded_by": [
+        "REPORT-BOUNDARY-OBS-001",
+        "REPORT-BOUNDARY-INF-001"
+      ]
+    },
+    {
+      "claim_id": "REPORT-BOUNDARY-UNR-001",
+      "status": "unresolved",
+      "text": "No exhaustive all-branch and all-reachable-commit traversal has yet established whether earlier repository mentions or assignments exist."
+    }
+  ],
+  "contradiction_resolution": {
+    "apparent_conflict": "The origin-status records are immutable repository objects and therefore may appear authoritative.",
+    "resolution": "They are authoritative about unresolved status, not about identifier origin. Their own contents deny that an origin was located.",
+    "status": "resolved"
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository commit metadata",
+      "repository paths",
+      "abstract provenance classifications"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed File Library content"
+    ]
+  },
+  "coverage": {
+    "repository_commit_search": "term-bounded_connector_search",
+    "branch_inventory": "not_exhaustive",
+    "reachable_commit_inventory": "not_exhaustive",
+    "non_repository_sources": "not_reviewed_this_slice"
+  },
+  "next_resolution_step": "Enumerate every accessible branch and reachable commit, restrict candidate-origin search to objects at or before each report boundary, then inspect privacy-reviewed decision logs, language lexicons, project documents, and chat-history locators for earlier explicit assignments.",
+  "specialist_registry_change": "none",
+  "history_deleted": false
+}
