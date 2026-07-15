@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "I-002",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "in_progress_verification_ready",
+  "objective": "Advance The Fourth Room from static-contract coverage to deterministic browser-level verification without publishing, adding external services, or coupling it to Mirror Cartographer.",
+  "selection_basis": "ACTIVE_QUEUE.json contained no canonical independent_creative_web item. The latest additive I-002 handoff named browser-level interaction verification as its safe next action, so this slice advances that existing work without overwriting another team's queue state.",
+  "completed_slices": [
+    "Added a self-hosting Playwright harness for the committed single-file work.",
+    "Specified keyboard interaction, session-scoped memory, reset semantics, opt-in audio lifecycle, reduced-motion behavior, mobile viewport reachability, and network isolation.",
+    "Fetched the committed harness back from its exact creating commit and verified its source blob identity.",
+    "Passed a Node JavaScript syntax check against a local exact copy.",
+    "Retained explicit evidence boundaries and falsification routes without claiming browser execution or deployment."
+  ],
+  "acceptance_remaining": [
+    "Install repository dependencies in an authenticated checkout and run npx playwright test independent/fourth-room/browser.spec.js --reporter=line.",
+    "Capture Chromium and WebKit results; retain exact output and any traces.",
+    "Inspect the accessibility tree and representative mobile performance behavior.",
+    "Publish only to an isolated independent preview after rollback and hosting identity are verified."
+  ],
+  "safe_next_action": "Execute the committed browser harness in Chromium and WebKit, retain exact results and traces, then correct only observed failures before considering an isolated independent index or preview.",
+  "evidence_path": "operations/evidence/I-002-fourth-room-browser-harness-2026-07-15T1007Z.json",
+  "artifact_path": "independent/fourth-room/browser.spec.js",
+  "artifact_commit": "272f703bc90c25f0379e569173ac4abae8827c17"
+}
