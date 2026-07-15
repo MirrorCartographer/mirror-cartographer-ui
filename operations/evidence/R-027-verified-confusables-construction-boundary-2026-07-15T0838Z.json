@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "evidence_id": "R-027-verified-confusables-construction-boundary-2026-07-15T0838Z",
+  "owner": "frontier_research",
+  "status": "implemented_locally_verified",
+  "finding": "Source authentication and semantic parsing must be one fail-closed construction boundary; otherwise independently verified Unicode bytes can be bypassed before dataset construction.",
+  "source_status": {
+    "primary_standard": "Unicode Technical Standard #39 and the exact Unicode 17.0.0 confusables source were researched in the preceding retained slice.",
+    "repository_inputs": [
+      "tools/frontier-research/verify-unicode-confusables-source.mjs",
+      "tools/frontier-research/verify-unicode-confusables-source.test.mjs",
+      "operations/frontier-research/unicode-confusables-17.0.0.manifest.json"
+    ]
+  },
+  "implementation": {
+    "module": "tools/frontier-research/construct-verified-confusables-dataset.mjs",
+    "test": "tools/frontier-research/construct-verified-confusables-dataset.test.mjs",
+    "contract": [
+      "Authenticate exact source bytes before invoking the parser.",
+      "Pass manifest.unicodeVersion to the parser as expectedVersion.",
+      "Do not invoke the parser after any source-integrity failure.",
+      "Return source identity alongside the constructed dataset.",
+      "Fail closed when the parser returns no dataset."
+    ]
+  },
+  "verification": {
+    "command": "node --test construct-verified-confusables-dataset.test.mjs",
+    "environment": "isolated Node reproduction using the committed module and its existing verifier dependency",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "verified bytes reach the parser exactly once with expectedVersion 17.0.0",
+      "byte drift prevents parser invocation",
+      "null parser output fails closed",
+      "missing parser boundary is rejected"
+    ]
+  },
+  "evidence_strength": "deterministic unit proof of control-flow ordering; not an authenticated checkout or production integration claim",
+  "uncertainty": [
+    "Repository code search returned no parseConfusables result, so the adapter uses explicit parser injection rather than assuming a parser path.",
+    "The canonical parser still must be connected in an authenticated checkout.",
+    "The full Unicode source was not downloaded or vendored in this slice."
+  ],
+  "falsification_route": [
+    "Demonstrate a code path that constructs the production confusables dataset without this boundary.",
+    "Show that the canonical parser cannot accept text plus expectedVersion.",
+    "Run the test in the authenticated checkout and retain any divergent result."
+  ],
+  "privacy_class": "public technical metadata only",
+  "deployment_claimed": false
+}
