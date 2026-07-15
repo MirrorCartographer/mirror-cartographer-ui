@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T21:43:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "curl_bound_repertory_publication_readiness",
+  "finding": "A verified curl generated-hostname receipt must be cryptographically and semantically bound into the repertory publication gate; a separately verified receipt is not sufficient unless its commit, deployment id, pipeline digest, and observation digest reconcile with the publication assessment.",
+  "design_implication": "Publication readiness now accepts raw retained curl evidence only through the Frontier adapter, reconstructs the direct observation from normalized receipt metrics, and fails closed on any binding divergence while preserving runtime_activation_performed=false.",
+  "source_status": {
+    "canonical_state": "observed",
+    "active_queue": "observed",
+    "specialist_registry": "observed",
+    "trigger_requests": "observed",
+    "canonical_repertory": "observed",
+    "frontier_curl_adapter": "observed",
+    "integration_need": "inferred",
+    "runtime_activation": "not_performed"
+  },
+  "evidence_strength": "committed_implementation_and_test_contract_readback_only",
+  "verification": {
+    "implementation_committed": true,
+    "tests_committed": true,
+    "tests_executed": false,
+    "deployment_created": false,
+    "generated_hostname_requested": false,
+    "runtime_activation_performed": false
+  },
+  "claim_boundary": "integration_contract_only_no_deployment_runtime_audio_browser_or_device_claim",
+  "falsification_route": [
+    "Run node --test operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs in an authenticated checkout.",
+    "Supply retained raw curl command, write-out JSON, exit code, and timestamp for one exact immutable deployment hostname.",
+    "Reject the slice if receipt and publication digests, commit, or deployment id diverge."
+  ],
+  "privacy": {
+    "private_source_material_included": false,
+    "credentials_included": false,
+    "response_headers_or_body_required": false
+  },
+  "reversible": true,
+  "files": [
+    "operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.cjs",
+    "operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs"
+  ]
+}
