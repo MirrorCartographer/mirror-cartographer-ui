@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T17:33:00Z",
+  "slice": "public_safe_accessible_repertory_stage_cards",
+  "finding": "The six deterministic repertory identities now have public-safe synopsis, nonvisual status, reduced-motion, user-gesture audio, touch-safe mobile, and privacy-boundary metadata without asserting runtime activation.",
+  "source_status": {
+    "canonical_repertory": "observed",
+    "stage_card_language": "proposed_and_tested_contract",
+    "runtime_activation": "not_performed",
+    "deployment_identity": "unverified"
+  },
+  "verification": {
+    "command": "node --test verifyPublicStageCards.v1.test.cjs",
+    "result": "5 passed, 0 failed",
+    "environment": "isolated Node runtime using exact committed file contents"
+  },
+  "commits": {
+    "contract": "70d143a0b320d0c43a0593ed499d77e375b2bd49",
+    "verifier": "5e0944acf87a083b4429b80416aa24fb7e39c1e4",
+    "tests": "9ffff480eae902b4032e0cb721e333028e236bfd"
+  },
+  "claim_boundary": "This proves the operations-only metadata contract and deterministic validator behavior. It does not prove application wiring, browser rendering, deployment, audibility, or physical-device behavior.",
+  "privacy_boundary": "No private source excerpts, health records, credentials, or personal continuity content are present.",
+  "rollback": "Revert the three implementation commits and this evidence commit; application runtime remains unaffected."
+}
