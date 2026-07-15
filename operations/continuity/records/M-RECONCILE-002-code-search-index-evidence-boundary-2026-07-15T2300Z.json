@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "record_id": "M-RECONCILE-002-code-search-index-evidence-boundary-2026-07-15T2300Z",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T23:00:34Z",
+  "scope": "Repository-scoped GitHub connector code-search results for continuity identifiers M-004, M-005, and M-006.",
+  "durable_memory": "A zero-result repository code search is negative indexed-search evidence only. It cannot establish that an identifier is absent from every accessible branch, unindexed object, deleted working-tree state retained in history, commit message, decision source, private chat source, or uploaded file.",
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "A repository-scoped combined search for M-004, M-005, and M-006 returned zero results."
+    },
+    {
+      "status": "observed",
+      "claim": "A repository-scoped search for M-004 alone returned zero results."
+    },
+    {
+      "status": "inferred",
+      "claim": "No currently returned indexed default-search candidate resolves the immutable provenance of M-004, M-005, or M-006."
+    },
+    {
+      "status": "proposed",
+      "claim": "Treat code search as a candidate-discovery mechanism only; require exhaustive refs plus reachable-history traversal and immutable locator agreement for absence or provenance classification."
+    },
+    {
+      "status": "superseded",
+      "claim": "Zero code-search results prove that M-004, M-005, and M-006 never existed in repository history."
+    },
+    {
+      "status": "unresolved",
+      "claim": "The originating assignment source and immutable provenance for M-004, M-005, and M-006 remain unresolved."
+    }
+  ],
+  "coverage": {
+    "class": "indexed_repository_code_search_only",
+    "exhaustive": false,
+    "known_gaps": [
+      "all accessible branch refs",
+      "all reachable commit trees",
+      "commit messages and non-tree metadata unless independently searched",
+      "unindexed or delayed-index objects",
+      "decision logs, language lexicons, project documents, chat history, and File Library sources not represented in the returned repository index"
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "No indexed search result versus unresolved provenance.",
+    "resolution": "There is no contradiction: the first is a bounded retrieval observation; the second is a completeness judgment requiring broader evidence."
+  },
+  "privacy_boundary": {
+    "included": [
+      "queue identifiers",
+      "repository-scoped search outcomes",
+      "abstract evidence classifications"
+    ],
+    "excluded": [
+      "private chat text",
+      "uploaded-file contents",
+      "credentials",
+      "personal, health, or unpublished source material"
+    ]
+  },
+  "falsification_route": [
+    "Locate an immutable repository object assigning M-004, M-005, or M-006 and record its exact ref, commit, path, blob, semantic role, and temporal precedence.",
+    "Or complete exhaustive refs and reachable-history traversal and show that the code-search boundary omitted a qualifying object."
+  ],
+  "specialist_registry_change": "none; no durable capability gap requiring a registry mutation was demonstrated"
+}
