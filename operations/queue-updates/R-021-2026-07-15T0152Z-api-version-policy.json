@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T01:52:52Z",
+  "slice": "github_rest_api_version_policy_gate",
+  "finding": {
+    "status": "observed_from_primary_source",
+    "summary": "GitHub currently supports REST API versions 2026-03-10 and 2022-11-28; the older version has an end-of-support date of 2028-03-10. The existing pagination provenance gate accepted any date-shaped version, so an invented or retired version could be promoted.",
+    "evidence_strength": "high_for_current_documented_policy; unverified_for_future_policy_changes",
+    "uncertainty": "Supported versions can change; the policy observation must be refreshed and the allowlist updated through a reviewed commit."
+  },
+  "artifact": {
+    "implementation": "operations/frontier-research/github-actions/verifyGithubApiVersionPolicy.v1.cjs",
+    "tests": "operations/frontier-research/github-actions/verifyGithubApiVersionPolicy.v1.test.cjs",
+    "classification_on_success": "github_api_version_policy_verified",
+    "fail_closed_conditions": [
+      "unsupported or unrecognized API version",
+      "unapproved policy source",
+      "invalid or stale policy observation",
+      "future-dated policy observation",
+      "legacy version after its support window"
+    ]
+  },
+  "verification": {
+    "command": "node --test verifyGithubApiVersionPolicy.v1.test.cjs",
+    "result": "6 passed, 0 failed",
+    "scope": "deterministic local tests against the exact committed source",
+    "not_claimed": [
+      "authenticated private-repository enumeration",
+      "repository-wide CI",
+      "deployment evidence",
+      "peer execution"
+    ]
+  },
+  "falsification_route": [
+    "Show that an API version absent from GitHub's supported-version list is accepted.",
+    "Show that 2022-11-28 remains accepted on or after 2028-03-10 without a newer policy observation.",
+    "Show that a stale or future-dated policy observation is accepted.",
+    "Refresh the primary source and demonstrate that the committed allowlist diverges from GitHub's supported-version table."
+  ],
+  "design_implication": "Require github_api_version_policy_verified before pagination_provenance_verified evidence can enter R-021 reconciliation. Pin an explicitly supported X-GitHub-Api-Version header and retain the policy observation timestamp with the evidence bundle.",
+  "specialist_registry_change": null,
+  "canonical_queue_overwritten": false
+}
