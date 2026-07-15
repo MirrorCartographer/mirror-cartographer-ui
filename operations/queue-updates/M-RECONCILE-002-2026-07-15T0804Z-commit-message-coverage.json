@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:04:27Z",
+  "state": "in_progress",
+  "completed_slice": "Retained a commit-message and File Library namespace coverage boundary: currently located exact-identifier commit messages are reconciliation records rather than assignments, V8/V9 suffix matches remain rejected collisions, and branch-search silence remains non-exhaustive.",
+  "evidence": [
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0804Z-commit-message-coverage.json@67348fabff3001199da976789807449cea772a61"
+  ],
+  "claims": {
+    "observed": [
+      "Exact M-004 commit-message search located only continuity reconciliation records.",
+      "The immutable temporal-boundary record rejects the earliest located status objects as accepted origins.",
+      "File Library results remain namespace collisions.",
+      "Branch-search responses lacked a usable inventory or coverage envelope."
+    ],
+    "inferred": [
+      "No currently located commit-message or File Library object can promote M-004, M-005, or M-006 to resolved provenance."
+    ],
+    "proposed": [
+      "Run authenticated refs enumeration and reachable-history traversal with retained pagination and branch-tip evidence."
+    ],
+    "superseded": [
+      "Search silence proves nonexistence.",
+      "Suffix agreement establishes identity.",
+      "A status record can establish its own historical origin."
+    ],
+    "unresolved": [
+      "Assignment provenance for M-004, M-005, and M-006.",
+      "Exhaustive branch and history coverage.",
+      "Originating decision-log, lexicon, document, or privacy-reviewed chat locator."
+    ]
+  },
+  "shared_state_write": {
+    "canonical_queue_update_attempted": false,
+    "reason": "Avoid overwriting concurrent team changes; additive queue projection used.",
+    "additive_projection_used": true
+  },
+  "privacy_boundary": "No private source text retained; only immutable locators, source namespaces, abstract classifications, and coverage limits.",
+  "rollback": "Revert this adding commit, then revert evidence commit 67348fabff3001199da976789807449cea772a61."
+}
