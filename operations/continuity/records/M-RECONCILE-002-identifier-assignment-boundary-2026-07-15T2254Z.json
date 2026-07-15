@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T22:54:00Z",
+  "record_type": "identifier_assignment_boundary",
+  "scope": ["M-004", "M-005", "M-006"],
+  "observed": [
+    {
+      "claim": "The canonical active queue describes M-004, M-005, and M-006 as reported continuity artifacts whose immutable provenance and originating assignment source remain unresolved.",
+      "source": "operations/ACTIVE_QUEUE.json",
+      "source_status": "canonical_repository_object"
+    },
+    {
+      "claim": "Exact-token repository code searches for M-004, M-005, and M-006 returned no indexed file matches during this run.",
+      "source": "authenticated GitHub repository code search",
+      "source_status": "coverage_bounded_observation"
+    },
+    {
+      "claim": "Recent repository commits contain continuity reconciliation artifacts but do not, by chronology alone, establish the original assignment of M-004, M-005, or M-006.",
+      "source": "authenticated recent commit listing",
+      "source_status": "coverage_bounded_observation"
+    }
+  ],
+  "inferred": [
+    {
+      "claim": "The identifiers may have originated outside the currently indexed default-branch file surface, in an unindexed historical object, another branch, a deleted-but-still-historical object, or non-repository project history.",
+      "confidence": "moderate",
+      "basis": "absence from indexed file search is not exhaustive branch-and-history proof"
+    }
+  ],
+  "proposed": [
+    {
+      "claim": "Treat identifier assignment as a first-class provenance event requiring an immutable locator, assigning source class, timestamp or temporal bound, semantic role, and owner agreement before any M identifier is restored as historical fact.",
+      "status": "current_continuity_rule"
+    }
+  ],
+  "superseded": [
+    {
+      "claim": "Reconstructing M-004, M-005, or M-006 from later prose, semantic similarity, suffix collision, or chronological proximity.",
+      "reason": "These methods can generate plausible but false history."
+    }
+  ],
+  "unresolved": [
+    "The exhaustive branch inventory is incomplete.",
+    "The exhaustive reachable commit-history traversal is incomplete.",
+    "No immutable object assigning M-004, M-005, or M-006 was located in this run.",
+    "The originating decision log, language lexicon, project document, or private-safe chat-history locator remains unknown."
+  ],
+  "knowledge_graph_update": {
+    "node_type": "provenance_gap",
+    "nodes": [
+      {"id": "M-004", "claim_status": "reported", "verification_status": "unlocated", "assignment_status": "unresolved"},
+      {"id": "M-005", "claim_status": "reported", "verification_status": "unlocated", "assignment_status": "unresolved"},
+      {"id": "M-006", "claim_status": "reported", "verification_status": "unlocated", "assignment_status": "unresolved"}
+    ],
+    "edge_rule": "No historical-content or identity edge may be added until an immutable assignment source is located."
+  },
+  "privacy_boundary": {
+    "classification": "public-safe repository metadata only",
+    "excluded": ["private chat text", "uploaded source content", "credentials", "personal health data", "unpublished private material"]
+  },
+  "falsification_route": "Locate an immutable repository or approved provenance object that explicitly assigns one of the identifiers and satisfies namespace, owner, semantic-role, temporal-precedence, and locator-agreement checks.",
+  "execution_claims": {
+    "exhaustive_repository_coverage": false,
+    "artifact_provenance_resolved": false,
+    "peer_execution_claimed": false
+  }
+}
