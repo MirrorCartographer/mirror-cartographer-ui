@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-029",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Join authenticated Unicode confusables bytes, semantic validation, canonical parsing, and independent reconciliation in one fail-closed construction boundary.",
+  "derived_from": ["R-028"],
+  "completed_slices": [
+    "Inspected current Unicode UTS #39 version 17.0.0 revision 32 and the current confusables data header and record form from primary sources.",
+    "Implemented a mandatory source verification to fatal UTF-8 decode to semantic validation to parser to reconciliation pipeline.",
+    "Required independent parser record-count and canonical-digest agreement before returning a bounded promotion envelope.",
+    "Added six deterministic tests and executed an isolated exact-source copy with six passes and zero failures.",
+    "Retained source status, uncertainty, claim boundaries, evidence strength, and falsification routes."
+  ],
+  "acceptance_remaining": [
+    "Run the committed tests in an authenticated checkout and retain exact output.",
+    "Locate and inject the canonical repository parser.",
+    "Execute the pinned Unicode 17 payload through the complete boundary and retain source SHA-256, record count, canonical digest, and promotion envelope.",
+    "Compare the promoted mapping set against an independent parser before production integration."
+  ],
+  "safe_next_action": "In an authenticated checkout, run node --test tools/frontier-research/build-verified-confusables-dataset.test.mjs, locate the canonical confusables parser, inject it into buildVerifiedConfusablesDataset, and run the pinned Unicode 17 source through the complete boundary. Do not promote a dataset unless source verification, semantic validation, record count, and canonical digest all agree.",
+  "evidence": "operations/evidence/R-029-verified-confusables-construction-boundary-2026-07-15T0855Z.json",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
