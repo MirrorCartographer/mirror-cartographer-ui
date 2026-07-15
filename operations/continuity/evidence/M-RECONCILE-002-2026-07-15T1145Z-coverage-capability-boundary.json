@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T11:45:26Z",
+  "memory_title": "Search visibility is not traversal coverage",
+  "durable_memory": "Repository code search, commit search, direct immutable-object inspection, and branch-name search are distinct evidence modalities. Their union can establish candidate presence, rejection boundaries, and temporal upper bounds, but cannot establish exhaustive branch or reachable-history coverage unless the client retains a complete ref inventory and a traversal ledger proving every reachable commit was visited. Zero results from branch-name or indexed search are therefore capability-bounded observations, not evidence that no branch or historical assignment exists.",
+  "claims": {
+    "observed": [
+      "The canonical queue still requires an exhaustive branch inventory or equivalent repository history traversal before M-004, M-005, or M-006 may be classified as unlocated.",
+      "Authenticated commit search for M-004 returned only downstream continuity reconciliation commits, including unresolved-origin, temporal-boundary, collision-rejection, and search-coverage records.",
+      "A branch-name search with an empty query returned no branch records in this run.",
+      "Direct inspection of commit 114d63cb2723fcf7dfc879819de31d44e076899e confirms that the first located immutable objects are temporal upper bounds, not accepted origins.",
+      "The current connector surface used in this run did not produce a complete ref list, reachable-commit set, deleted-path ledger, or proof that all branches were traversed."
+    ],
+    "inferred": [
+      "Search-index completeness and repository-graph completeness are independent properties.",
+      "A zero-result branch-name search cannot be promoted into a one-branch inventory without an explicit completeness guarantee from the retrieval method.",
+      "Candidate discovery can advance rejection and temporal constraints even when origin resolution remains fail-closed."
+    ],
+    "proposed": [
+      "Represent exhaustive repository coverage as a retained traversal envelope containing ref enumeration method, complete ref set, root commit set, visited commit set, parent-edge closure, historical path queries, deleted-path evidence, retrieval timestamps, and canonical digests.",
+      "Require the traversal envelope to report no unvisited reachable commits and no unresolved ref-pagination or permission blind spots before permitting verified_origin or unlocated_after_exhaustive_coverage.",
+      "Continue using indexed search and immutable commit inspection only as candidate and contradiction-discovery inputs, never as substitutes for graph traversal."
+    ],
+    "superseded": [
+      "Treating zero branch-search results as proof that only the default branch exists.",
+      "Treating commit-search silence before a temporal boundary as exhaustive absence.",
+      "Combining several bounded search modalities and calling the result exhaustive without a retained closure proof."
+    ],
+    "unresolved": [
+      "The complete accessible ref inventory.",
+      "The complete reachable-commit graph and deleted-path history preceding the three temporal upper bounds.",
+      "The originating decision log, language lexicon, project document, or privacy-reviewed chat locator for M-004, M-005, and M-006."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "Several authenticated searches can return no earlier assignment while the provenance outcome remains unresolved.",
+    "resolution": "Authenticated search establishes trustworthy observations about returned results, not completeness of the repository graph. Provenance remains unresolved until coverage completeness is separately proven."
+  },
+  "coverage_matrix": [
+    {
+      "modality": "canonical file fetch",
+      "supports": ["current-state observation", "exact path content", "blob identity"],
+      "does_not_support": ["historical path completeness", "all-ref completeness"]
+    },
+    {
+      "modality": "commit search",
+      "supports": ["indexed candidate discovery", "commit locator discovery"],
+      "does_not_support": ["all-commit traversal", "negative completeness", "deleted unindexed content completeness"]
+    },
+    {
+      "modality": "immutable commit inspection",
+      "supports": ["exact commit diff", "timestamped object evidence", "candidate-role classification"],
+      "does_not_support": ["repository-wide graph closure"]
+    },
+    {
+      "modality": "branch-name search",
+      "supports": ["matching branch discovery when returned"],
+      "does_not_support": ["complete ref inventory without an explicit exhaustive contract"]
+    }
+  ],
+  "sources": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/CM-1032.json",
+    "operations/continuity/manifests/CM-20260714T2157Z-identifier-temporal-boundary.json",
+    "recent commits through e07c2519b7c3214f33f5c2af3de580ad2bab611a",
+    "authenticated GitHub commit search for M-004",
+    "authenticated GitHub branch-name search"
+  ],
+  "source_status": "repository_observed_with_capability_bounded_inference",
+  "evidence_strength": "high_for_coverage_boundary_low_for_origin_resolution",
+  "falsification_route": [
+    "Produce an authenticated retrieval contract demonstrating that the branch search used here returns the complete ref inventory for an empty query.",
+    "Retain a complete ref and reachable-commit traversal envelope and show that indexed search alone yields the same closed set under all historical and deleted-path cases.",
+    "Locate an immutable pre-boundary assignment satisfying exact identifier, namespace, owner, semantic role, temporal precedence, and immutable locator agreement."
+  ],
+  "privacy_boundary": {
+    "classification": "public_safe_repository_metadata_and_abstract_rule",
+    "included": [
+      "repository paths",
+      "commit identifiers",
+      "queue identifiers",
+      "abstract retrieval and provenance semantics"
+    ],
+    "excluded": [
+      "private chat excerpts",
+      "personal or health information",
+      "credentials",
+      "unreviewed File Library contents",
+      "restricted source text"
+    ]
+  },
+  "execution_claimed": false,
+  "reversible": true
+}
