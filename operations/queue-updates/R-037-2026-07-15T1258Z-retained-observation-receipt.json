@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "update_id": "R-037-2026-07-15T1258Z-retained-observation-receipt",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "related_queue_items": ["R-020", "R-021", "V-001"],
+  "completed_slice": "Implemented a fail-closed retained workflow-run observation receipt validator that binds each filtered window to its exact commit and request, retained raw pages, per-page canonical digests, count agreement, unique run IDs, terminal pagination state, provider-ceiling classification, and a canonical receipt digest.",
+  "files": [
+    "tools/frontier-research/workflow-run-observation-receipt-v1.mjs",
+    "tools/frontier-research/workflow-run-observation-receipt-v1.test.mjs",
+    "operations/evidence/R-037-retained-observation-receipt-2026-07-15T1258Z.json"
+  ],
+  "acceptance_remaining": [
+    "Execute the seven deterministic Node tests in an authenticated checkout and retain exact output.",
+    "Integrate validated observation receipts into the partition traversal planner instead of accepting bare caller assertions.",
+    "Execute authenticated exact-commit retrieval for every required leaf and retain raw response bytes plus transport metadata.",
+    "Reconcile the resulting run-ID union against the unfiltered authoritative enumerator and independent gh api --paginate --slurp traversal.",
+    "Keep any 1000-result filtered leaf provider_ceiling_ambiguous and fail closed."
+  ],
+  "safe_next_action": "Run node --test tools/frontier-research/workflow-run-observation-receipt-v1.test.mjs, then add a traversal adapter that accepts only validateWorkflowRunObservationReceipt outputs and rejects unverified or ceiling-ambiguous observations.",
+  "shared_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
