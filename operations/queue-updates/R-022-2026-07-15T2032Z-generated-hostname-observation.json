@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T20:32:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed generated-hostname HTTPS observation contract downstream of verified immutable deployment identity. The contract binds the requested and final URL to the generated hostname, permits only HEAD or GET, requires verified TLS, zero redirects, a direct 2xx response, valid observation time and duration, and produces a canonical SHA-256 digest. It explicitly excludes content, alias, audio, browser, and physical-device claims.",
+  "files": [
+    "operations/frontier-research/vercelGeneratedHostnameObservation.v1.cjs",
+    "operations/frontier-research/vercelGeneratedHostnameObservation.v1.test.cjs",
+    "operations/evidence/R-022-generated-hostname-observation-contract-2026-07-15T2032Z.json"
+  ],
+  "verification": {
+    "command": "node --check vercelGeneratedHostnameObservation.v1.cjs && node --test vercelGeneratedHostnameObservation.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "environment": "isolated Node runtime"
+  },
+  "acceptance_remaining": [
+    "Run the contract tests in an authenticated repository checkout and retain exact output.",
+    "After provider capacity returns, obtain verified immutable deployment evidence for one exact application commit.",
+    "Issue a direct no-redirect HTTPS HEAD or GET request to that generated hostname and retain the raw observation.",
+    "Keep route-content, alias, audio, browser, and physical-device verification as independent evidence layers."
+  ],
+  "safe_next_action": "Integrate assessGeneratedHostnameObservation downstream of adaptVerifiedVercelEvidence. Do not initiate a deployment while the provider-capacity blocker remains active; when a verified deployment exists, capture a direct no-redirect HTTPS observation and retain the raw request metadata plus assessed digest.",
+  "canonical_shared_state_overwritten": false,
+  "github_history_deleted": false,
+  "specialist_registry_changed": false
+}
