@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-15T21:37:00Z",
+  "slice": "repertory_publication_readiness_gate",
+  "production_currently_on_stage": {
+    "utc_hour": 21,
+    "edition_id": "wordless-room-game-21",
+    "production_id": "wordless-room-game",
+    "edition_cue": "threshold-four",
+    "runtime_activation_claimed": false
+  },
+  "finding": "Immutable deployment identity and a direct generated-hostname HTTPS observation are independent prerequisites. Neither may be substituted for the other, and satisfying both still does not prove or perform repertory runtime activation.",
+  "design_implication": "The publication-readiness gate now composes durable repertory provenance, the verified Vercel evidence adapter, and the direct generated-hostname observation contract. It binds exact commit, deployment id, pipeline digest, and hostname observation digest while preserving runtime_activation_performed=false.",
+  "source_status": {
+    "canonical_state": "repository_primary",
+    "active_queue": "repository_primary",
+    "specialist_registry": "repository_primary",
+    "trigger_requests": "repository_primary",
+    "repertory": "repository_primary",
+    "frontier_verified_evidence_adapter": "repository_primary_handoff",
+    "frontier_hostname_observation_contract": "repository_primary_handoff",
+    "verification": "connector_write_and_readback_pending_no_runtime_execution"
+  },
+  "evidence_strength": "implementation_and_deterministic_tests_committed_not_executed_in_checkout",
+  "uncertainty": [
+    "The committed Node tests were not executed in an authenticated checkout during this connector-only run.",
+    "No Vercel deployment, generated-hostname request, browser session, audio route, or physical device was exercised.",
+    "Repository search indexing may lag recent commits; direct path reads were used for source inspection."
+  ],
+  "claim_boundaries": {
+    "runtime_activation": false,
+    "deployment_created": false,
+    "generated_hostname_requested": false,
+    "browser_verified": false,
+    "audio_autoplay": false,
+    "physical_device_audibility_verified": false
+  },
+  "falsification_route": [
+    "Run node --test operations/vercel-studio/repertory/assessRepertoryPublicationReadiness.v1.test.cjs in an authenticated checkout.",
+    "Provide verified deployment identity without a hostname observation and confirm ready=false.",
+    "Provide a redirecting or non-2xx hostname observation and confirm ready=false.",
+    "Change the deployment commit, deployment id, or pipeline digest and confirm binding failure.",
+    "Weaken the repertory runtime boundary and confirm publication remains prohibited."
+  ],
+  "implementation_commits": [
+    "1c8a4a20e1820f435dbaccff970198fefb15dc19",
+    "9ec97f4af8b07863c46e86b658345be5bf3c7522"
+  ]
+}
