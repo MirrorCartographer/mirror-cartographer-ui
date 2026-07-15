@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Archive of Borrowed Gravity</title>
+<style>
+:root{color-scheme:dark;--ink:#f5f0e8;--dim:#9e978d;--bg:#090909;--line:#35312c;--panel:rgba(16,16,16,.78)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:hidden}
+body{min-height:100dvh}.shell{position:relative;min-height:100dvh}.stage{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+header{position:absolute;z-index:2;inset:max(18px,env(safe-area-inset-top)) auto auto max(18px,env(safe-area-inset-left));max-width:min(560px,calc(100vw - 36px));pointer-events:none}
+h1{font-size:clamp(1.05rem,2.8vw,1.6rem);letter-spacing:.06em;margin:0 0 .55rem;text-transform:uppercase}p{margin:0;color:var(--dim);line-height:1.45;font-size:.82rem}
+.controls{position:absolute;z-index:3;left:max(18px,env(safe-area-inset-left));right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{min-height:44px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:.7rem .9rem;font:inherit;cursor:pointer;backdrop-filter:blur(8px)}button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.meter{margin-left:auto;color:var(--dim);font-size:.78rem;background:var(--panel);border:1px solid var(--line);padding:.65rem .8rem;min-height:44px;display:flex;align-items:center}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:620px){.meter{order:-1;width:100%;margin-left:0}.controls{gap:8px}button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="shell">
+<canvas class="stage" aria-label="Interactive field of falling words whose gravity direction follows your pointer or keyboard controls"></canvas>
+<header>
+<h1>Archive of Borrowed Gravity</h1>
+<p>Every word has been lent a direction. Drag the field to tilt gravity. Use arrow keys to rotate it. Press space to freeze the fall without freezing the room.</p>
+</header>
+<div class="controls" aria-label="Archive controls">
+<div class="meter" id="status" role="status" aria-live="polite">gravity 90° · falling</div>
+<button type="button" id="freeze" aria-pressed="false">Freeze fall</button>
+<button type="button" id="scatter">Scatter archive</button>
+<button type="button" id="reset">Reset</button>
+</div>
+<p class="sr" id="instructions">Drag across the canvas to point gravity. Arrow keys rotate gravity. Space freezes or resumes. R resets. S scatters.</p>
+</main>
+<script>
+(()=>{
+'use strict';
+const canvas=document.querySelector('.stage');
+const ctx=canvas.getContext('2d',{alpha:false});
+const freezeBtn=document.querySelector('#freeze');
+const scatterBtn=document.querySelector('#scatter');
+const resetBtn=document.querySelector('#reset');
+const status=document.querySelector('#status');
+const WORDS=['velvet','hinge','weather','mercy','static','orchard','after','bone','lantern','almost','sleep','signal','river','glass','north','borrowed','gravity','echo','dust','door'];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+let dpr=1,w=0,h=0,raf=0,last=0,frozen=reduce.matches,angle=Math.PI/2,pointerDown=false;
+let particles=[];
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+function seed(){
+  particles=Array.from({length:46},(_,i)=>({
+    word:WORDS[i%WORDS.length],x:(i*83%997)/997*w,y:(i*149%991)/991*h,
+    vx:0,vy:0,size:12+(i%5)*3,spin:((i%7)-3)*0.0007,rot:(i%9)*0.16,weight:.55+(i%6)*.11
+  }));
+}
+function resize(){
+  const r=canvas.getBoundingClientRect();dpr=clamp(devicePixelRatio||1,1,2);w=Math.max(1,r.width);h=Math.max(1,r.height);
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(!particles.length)seed();
+}
+function announce(){
+  const deg=Math.round(((angle*180/Math.PI)%360+360)%360);status.textContent=`gravity ${deg}° · ${frozen?'held':'falling'}`;
+  freezeBtn.textContent=frozen?'Resume fall':'Freeze fall';freezeBtn.setAttribute('aria-pressed',String(frozen));
+}
+function setAngleFromPoint(x,y){angle=Math.atan2(y-h/2,x-w/2);announce();}
+function scatter(){
+  particles.forEach((p,i)=>{const a=(i*2.399963+angle)%(Math.PI*2);const m=1.4+(i%8)*.32;p.vx+=Math.cos(a)*m;p.vy+=Math.sin(a)*m;});
+}
+function reset(){angle=Math.PI/2;frozen=reduce.matches;seed();announce();}
+function step(t){
+  const dt=Math.min(32,t-last||16);last=t;ctx.fillStyle='#090909';ctx.fillRect(0,0,w,h);
+  const gx=Math.cos(angle)*0.00055*dt,gy=Math.sin(angle)*0.00055*dt;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  for(const p of particles){
+    if(!frozen){p.vx=(p.vx+gx*p.weight)*.997;p.vy=(p.vy+gy*p.weight)*.997;p.x+=p.vx*dt*.06;p.y+=p.vy*dt*.06;p.rot+=p.spin*dt;}
+    const pad=90;if(p.x<-pad)p.x=w+pad;if(p.x>w+pad)p.x=-pad;if(p.y<-pad)p.y=h+pad;if(p.y>h+pad)p.y=-pad;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.font=`${p.size}px ui-monospace, monospace`;ctx.fillStyle=`rgba(245,240,232,${.32+p.weight*.46})`;ctx.fillText(p.word,0,0);ctx.restore();
+  }
+  ctx.strokeStyle='rgba(245,240,232,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.lineTo(w/2+Math.cos(angle)*56,h/2+Math.sin(angle)*56);ctx.stroke();
+  raf=requestAnimationFrame(step);
+}
+canvas.addEventListener('pointerdown',e=>{pointerDown=true;canvas.setPointerCapture(e.pointerId);setAngleFromPoint(e.clientX,e.clientY)});
+canvas.addEventListener('pointermove',e=>{if(pointerDown)setAngleFromPoint(e.clientX,e.clientY)});
+canvas.addEventListener('pointerup',e=>{pointerDown=false;canvas.releasePointerCapture(e.pointerId)});
+canvas.addEventListener('pointercancel',()=>{pointerDown=false});
+freezeBtn.addEventListener('click',()=>{frozen=!frozen;announce()});scatterBtn.addEventListener('click',scatter);resetBtn.addEventListener('click',reset);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){angle-=Math.PI/18;e.preventDefault();announce()}
+  else if(e.key==='ArrowRight'||e.key==='ArrowDown'){angle+=Math.PI/18;e.preventDefault();announce()}
+  else if(e.code==='Space'){frozen=!frozen;e.preventDefault();announce()}
+  else if(e.key.toLowerCase()==='r')reset();
+  else if(e.key.toLowerCase()==='s')scatter();
+});
+reduce.addEventListener('change',e=>{frozen=e.matches;announce()});
+addEventListener('resize',resize,{passive:true});
+addEventListener('pagehide',()=>{cancelAnimationFrame(raf)});resize();announce();raf=requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>
