@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T21:36:00Z",
+  "purpose": "Preserve the distinction between correctly adjudicated known provenance candidates and an actually exhaustive repository-wide provenance search.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/M-004-M-006-status-record-adjudications-2026-07-15T2036Z.json",
+    "recent default-branch commit history",
+    "connector branch-search result for an empty query"
+  ],
+  "memory_recovered": {
+    "observed": [
+      "Known immutable status records for M-004, M-005, and M-006 have already been adjudicated as downstream references rather than assigning sources.",
+      "The active queue still requires an exhaustive branch inventory or equivalent reachable-history traversal before any identifier may be classified as unlocated after exhaustive coverage.",
+      "The available empty-query branch-search call returned no branches and therefore cannot serve as an exhaustive inventory receipt."
+    ],
+    "inferred": [
+      "Candidate correctness and search completeness are independent evidence dimensions.",
+      "A provenance conclusion can remain fail-closed even when every inspected candidate has been classified correctly, because uninspected branches or commits may contain an earlier assigning source."
+    ],
+    "proposed": [
+      "Require every exhaustive-origin claim to include a schema-valid traversal receipt binding raw branch inventory, raw reachable-commit traversal, candidate records, claim states, provider-ceiling ambiguity, and explicit violations."
+    ],
+    "superseded": [
+      "Any implicit treatment of a default-branch file search, recent commit sample, or empty connector branch result as repository-wide exhaustive coverage."
+    ],
+    "unresolved": [
+      "The authoritative assigning source for M-004 remains unlocated.",
+      "The authoritative assigning source for M-005 remains unlocated.",
+      "The authoritative assigning source for M-006 remains unlocated.",
+      "No complete raw branch inventory and reachable-commit traversal receipt has yet been retained."
+    ]
+  },
+  "contradiction_resolution": {
+    "resolved": "A correct rejection of known status records as assigning sources does not satisfy the separate acceptance criterion for exhaustive branch and history coverage.",
+    "preserved_boundary": "Until a complete receipt exists, the identifiers may be described only as unresolved under current coverage, not absent repository-wide or unlocated after exhaustive coverage."
+  },
+  "artifact_created": "operations/continuity/contracts/exhaustive-provenance-traversal-receipt.v1.schema.json",
+  "evidence_strength": "strong_for_evidence_boundary; insufficient_for_origin_resolution",
+  "privacy": {
+    "contains_private_source_material": false,
+    "public_safe": true,
+    "boundary": "Repository metadata, abstract claim classifications, and contract fields only; no private chat or File Library text is copied."
+  },
+  "falsification_route": "Retain a complete independently reviewable branch inventory and reachable-commit traversal whose raw counts reconcile, whose provider ceiling is unambiguous, and whose candidate set contains an earlier immutable object that explicitly assigns an identifier and passes namespace, authority, semantic-role, temporal-precedence, and immutable-locator agreement."
+}
