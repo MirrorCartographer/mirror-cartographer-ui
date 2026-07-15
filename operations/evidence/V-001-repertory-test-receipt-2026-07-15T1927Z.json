@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-15T19:27:00Z",
+  "slice": "tamper-evident no-overwrite repertory test receipt",
+  "source_status": {
+    "current_state": "repository_default_branch",
+    "active_queue": "repository_default_branch",
+    "specialist_registry": "repository_default_branch",
+    "package_script": "repository_default_branch",
+    "repertory_runner": "repository_default_branch"
+  },
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/repertoryTestReceipt.v1.cjs",
+    "test": "operations/vercel-studio/repertory/repertoryTestReceipt.v1.test.cjs",
+    "properties": [
+      "canonical SHA-256 receipt digest",
+      "sorted unique .test.cjs inventory requirement",
+      "stdout and stderr digest binding",
+      "failure results retained without promotion",
+      "no-overwrite retained evidence writer",
+      "runtime activation, deployment, and autoplay claims fixed false"
+    ]
+  },
+  "verification": {
+    "route": "isolated local Node execution of committed-equivalent source",
+    "command": "node --check repertoryTestReceipt.v1.cjs && node --test repertoryTestReceipt.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "claim_boundary": {
+    "runtime_activation": false,
+    "deployment_created": false,
+    "browser_verified": false,
+    "physical_device_verified": false,
+    "audio_autoplay": false,
+    "evidence_class": "local_test_execution_only"
+  },
+  "rollback": "Leave the receipt module unconsumed or remove a future caller; canonical repertory data and runtime activation state are unchanged."
+}
