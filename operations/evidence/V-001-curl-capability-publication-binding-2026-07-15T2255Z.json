@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T22:55:00Z",
+  "slice": "curl_capability_preflight_bound_to_repertory_publication_gate",
+  "finding": "The repertory publication assessor previously adapted a generated-hostname curl receipt directly and did not require the separately verified curl metric-capability preflight.",
+  "implementation": {
+    "assessor_commit": "f29c3e0bb19bb93d49b0aca294f0eacad12c63a9",
+    "test_commit": "946312ea206f8d3dd5b42bcef415e36c4dfa78c0",
+    "ordering": [
+      "verified immutable deployment evidence",
+      "curl capability preflight",
+      "generated-hostname observation receipt",
+      "repertory publication readiness",
+      "cross-receipt digest and commit bindings"
+    ],
+    "fail_closed_conditions_added": [
+      "unsupported curl method metric capability",
+      "missing capability receipt",
+      "capability pipeline rejection",
+      "hostname receipt digest mismatch",
+      "capability receipt digest mismatch",
+      "capability pipeline commit mismatch"
+    ]
+  },
+  "verification": {
+    "method": "GitHub contents write followed by immutable commit fetch and diff inspection",
+    "assessor_commit_fetch_verified": true,
+    "deterministic_tests_committed": true,
+    "tests_executed_in_authenticated_checkout": false,
+    "deployment_created": false,
+    "runtime_activation_performed": false,
+    "browser_or_device_test_performed": false
+  },
+  "claim_boundary": "committed_fail_closed_publication_gate_and_tests_only_no_test_execution_deployment_runtime_audio_browser_or_device_claim",
+  "rollback": [
+    "946312ea206f8d3dd5b42bcef415e36c4dfa78c0",
+    "f29c3e0bb19bb93d49b0aca294f0eacad12c63a9"
+  ],
+  "privacy": "No private source material, credentials, payment logic, or conversion logic was introduced."
+}
