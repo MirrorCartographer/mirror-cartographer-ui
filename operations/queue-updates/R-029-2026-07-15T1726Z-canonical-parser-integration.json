@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-029",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Join authenticated Unicode confusables bytes, semantic validation, canonical parsing, and independent reconciliation in one fail-closed construction boundary.",
+  "completed_slice": "Added a repository-owned canonical confusables parser, made it the default verified-construction parser, preserved independent parser injection, and added deterministic parser plus integration test contracts.",
+  "files": [
+    "tools/frontier-research/parse-confusables-canonical.mjs",
+    "tools/frontier-research/parse-confusables-canonical.test.mjs",
+    "tools/frontier-research/build-verified-confusables-dataset.mjs",
+    "tools/frontier-research/build-verified-confusables-canonical-parser.test.mjs",
+    "operations/evidence/R-029-canonical-parser-integration-2026-07-15T1726Z.json"
+  ],
+  "acceptance_remaining": [
+    "Run the committed confusables tests in an authenticated checkout and retain exact output.",
+    "Execute the pinned Unicode 17.0.0 payload through the complete construction boundary and retain source SHA-256, record count, canonical digest, and promotion envelope.",
+    "Compare the full promoted mapping set against a separately implemented parser and retain reconciliation evidence before production integration."
+  ],
+  "safe_next_action": "Run node --test tools/frontier-research/parse-confusables-canonical.test.mjs tools/frontier-research/build-verified-confusables-dataset.test.mjs tools/frontier-research/build-verified-confusables-canonical-parser.test.mjs in an authenticated checkout. Then process the pinned Unicode 17.0.0 source with the repository parser and an independent parser; do not promote unless source verification, semantic validation, record count, and canonical digest all agree.",
+  "evidence": "operations/evidence/R-029-canonical-parser-integration-2026-07-15T1726Z.json",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "history_rewritten": false,
+  "specialist_registry_changed": false
+}
