@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:21:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "slice": "oidc_bound_repertory_publication_gate",
+  "status": "implemented_static_verification_only",
+  "production_on_stage": {
+    "repertory": "HOURLY_REPERTORY.v1",
+    "runtime_activation_performed": false,
+    "publication_permitted": false,
+    "reason": "live immutable deployment identity and authenticated execution evidence remain unavailable"
+  },
+  "finding": "A bounded curl session can establish a retained network-observation boundary, but it does not identify the workflow run that produced the evidence. An externally verified GitHub Actions OIDC claim set can bind the exact repository, workflow SHA, workflow ref, run ID, run attempt, runner environment, and retained transcript digests without retaining the bearer token.",
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/assessOidcBoundRepertoryPublicationReadiness.v1.cjs",
+    "test": "operations/vercel-studio/repertory/assessOidcBoundRepertoryPublicationReadiness.v1.test.cjs",
+    "module_commit": "46e0b4a55a3bf2364f88c0f7238d8730d8014c3c",
+    "test_commit": "e86716d611f910ea89dafbf4526c3aa308769f1f"
+  },
+  "verification": {
+    "committed_module_fetched_back": true,
+    "committed_test_fetched_back": true,
+    "test_cases_defined": 5,
+    "test_execution_performed": false,
+    "test_execution_blocker": "No authenticated checkout or gh executable was available in the runtime.",
+    "deployment_attempted": false
+  },
+  "claim_boundary": {
+    "proves_when_executed_with_valid_inputs": [
+      "the publication preconditions passed the existing exact-commit deployment and bounded curl-session gate",
+      "the supplied GitHub OIDC claims were externally signature-verified",
+      "the verified OIDC claims matched the expected repository, immutable repository ID, workflow commit, workflow ref, run ID, run attempt, runner environment, audience, and token validity window",
+      "the OIDC receipt retained hashes and identifiers without retaining the bearer token"
+    ],
+    "does_not_prove": [
+      "same-process execution",
+      "hardware integrity",
+      "transcript content truth",
+      "live deployment availability",
+      "alias promotion",
+      "browser rendering",
+      "audio audibility",
+      "physical iPhone Safari behavior",
+      "runtime repertory activation"
+    ]
+  },
+  "reversibility": {
+    "route": "Remove the new outer assessor and its dedicated test in a future additive revert commit; the existing curl-bound assessor remains unchanged.",
+    "existing_runtime_modified": false,
+    "existing_files_overwritten": false
+  },
+  "privacy_boundary": {
+    "private_source_material_included": false,
+    "credentials_or_tokens_retained": false,
+    "public_safe_operational_metadata_only": true
+  }
+}
