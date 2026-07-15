@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T22:56:00Z",
+  "slice": "Bound curl capability preflight and generated-hostname observation into one temporally coherent, tamper-evident session receipt.",
+  "state": "completed_handoff_ready",
+  "completed": [
+    "Added a fail-closed session wrapper over the existing capability-plus-hostname pipeline.",
+    "Required capability evidence to precede the hostname observation.",
+    "Required observation skew to remain within an explicit bounded session window, defaulting to 15 minutes.",
+    "Bound session identity, child receipt digests, deployment identity, commit identity, timestamps, and skew into a canonical parent digest.",
+    "Added five deterministic Node tests for success, reversed chronology, stale capability evidence, invalid session identity, and digest sensitivity."
+  ],
+  "acceptance_remaining": [
+    "Execute node --test operations/frontier-research/curlGeneratedHostnameSession.v1.test.cjs in an authenticated checkout and retain exact output.",
+    "Integrate the session assessor immediately ahead of V-001 repertory publication readiness.",
+    "After provider capacity returns, capture a real capability preflight and generated-hostname observation inside one retained session.",
+    "Add executable-path or binary-digest evidence if a same-binary claim becomes necessary."
+  ],
+  "safe_next_action": "Run the committed session test, then pass only verified session receipts into the V-001 publication gate; do not infer content, alias, audio, browser, or device behavior.",
+  "canonical_shared_files_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_change": null
+}
