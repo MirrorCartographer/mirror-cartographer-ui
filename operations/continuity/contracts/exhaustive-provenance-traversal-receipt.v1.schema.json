@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operations/continuity/contracts/exhaustive-provenance-traversal-receipt.v1.schema.json",
+  "title": "Exhaustive Provenance Traversal Receipt v1",
+  "description": "Fail-closed receipt for claims that repository branches and reachable commit history were exhaustively traversed for continuity provenance identifiers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "queue_item",
+    "repository",
+    "observed_at",
+    "subject_identifiers",
+    "branch_inventory",
+    "history_traversal",
+    "candidate_records",
+    "claim_states",
+    "coverage_assessment",
+    "privacy",
+    "falsification_route"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "queue_item": {"const": "M-RECONCILE-002"},
+    "repository": {"const": "MirrorCartographer/mirror-cartographer-ui"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "subject_identifiers": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "contains": {"const": "M-004"},
+      "items": {"enum": ["M-004", "M-005", "M-006"]}
+    },
+    "branch_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retrieval_method", "raw_artifact_locator", "page_count", "branch_count", "provider_ceiling_ambiguous", "complete"],
+      "properties": {
+        "retrieval_method": {"type": "string", "minLength": 1},
+        "raw_artifact_locator": {"type": "string", "minLength": 1},
+        "page_count": {"type": "integer", "minimum": 1},
+        "branch_count": {"type": "integer", "minimum": 1},
+        "provider_ceiling_ambiguous": {"type": "boolean"},
+        "complete": {"type": "boolean"}
+      }
+    },
+    "history_traversal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "raw_artifact_locator", "reachable_commit_count", "visited_commit_count", "missing_commits", "complete"],
+      "properties": {
+        "algorithm": {"type": "string", "minLength": 1},
+        "raw_artifact_locator": {"type": "string", "minLength": 1},
+        "reachable_commit_count": {"type": "integer", "minimum": 1},
+        "visited_commit_count": {"type": "integer", "minimum": 1},
+        "missing_commits": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{40}$"}},
+        "complete": {"type": "boolean"}
+      }
+    },
+    "candidate_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["subject_identifier", "immutable_locator", "semantic_role", "classification"],
+        "properties": {
+          "subject_identifier": {"enum": ["M-004", "M-005", "M-006"]},
+          "immutable_locator": {"type": "string", "minLength": 1},
+          "semantic_role": {"enum": ["assigning_source", "downstream_reference", "collision", "unknown"]},
+          "classification": {"enum": ["accepted_origin", "rejected_candidate", "unresolved_candidate"]}
+        }
+      }
+    },
+    "claim_states": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed", "inferred", "proposed", "superseded", "unresolved"],
+      "properties": {
+        "observed": {"type": "array", "items": {"type": "string"}},
+        "inferred": {"type": "array", "items": {"type": "string"}},
+        "proposed": {"type": "array", "items": {"type": "string"}},
+        "superseded": {"type": "array", "items": {"type": "string"}},
+        "unresolved": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "coverage_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exhaustive", "origin_resolution_permitted", "violations"],
+      "properties": {
+        "exhaustive": {"type": "boolean"},
+        "origin_resolution_permitted": {"type": "boolean"},
+        "violations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contains_private_source_material", "public_safe"],
+      "properties": {
+        "contains_private_source_material": {"const": false},
+        "public_safe": {"const": true}
+      }
+    },
+    "falsification_route": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "branch_inventory": {"properties": {"complete": {"const": true}, "provider_ceiling_ambiguous": {"const": false}}},
+          "history_traversal": {"properties": {"complete": {"const": true}, "missing_commits": {"maxItems": 0}}},
+          "coverage_assessment": {"properties": {"violations": {"maxItems": 0}}}
+        }
+      },
+      "then": {
+        "properties": {
+          "coverage_assessment": {"properties": {"exhaustive": {"const": true}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "coverage_assessment": {"properties": {"exhaustive": {"const": false}}}
+        }
+      },
+      "then": {
+        "properties": {
+          "coverage_assessment": {"properties": {"origin_resolution_permitted": {"const": false}}}
+        }
+      }
+    }
+  ]
+}
