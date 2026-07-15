@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T01:53:15Z",
+  "slice": "current_hour_runtime_evidence_gate",
+  "status": "completed_operations_only",
+  "production_scheduled_for_recording_hour": {
+    "utc_hour": 1,
+    "production_id": "coordinate-choir",
+    "title": "Coordinate Choir",
+    "runtime_activation_claimed": false
+  },
+  "problem_closed": "Runtime evidence that is younger than the generic freshness ceiling can no longer be promoted after the deterministic hourly repertory has advanced to a different production.",
+  "design_decision": {
+    "observed": "The repertory changes at exact UTC hour boundaries while the prior freshness contract allowed evidence up to 70 minutes old.",
+    "inferred": "Age-only freshness can admit a correctly verified but no-longer-current stage across an hourly boundary.",
+    "experiment": "Layer a fail-closed current-hour gate over the identity-bound v2 verifier and expose the exact stage expiration instant.",
+    "current_decision": "Promotion requires checked_at to remain strictly before the next UTC hour boundary computed from observed_at."
+  },
+  "files": [
+    "operations/vercel-studio/repertory/verifyRuntimeStageFreshness.v3.cjs",
+    "operations/vercel-studio/repertory/verifyRuntimeStageFreshness.v3.test.cjs"
+  ],
+  "commits": [
+    "1dca8ab81a0db44a98c99d6f2cc15daeef435527",
+    "9647d89dee55e0bbb290f40561f07d6760d7f67f"
+  ],
+  "verification": {
+    "local_node_test": "6 passed, 0 failed",
+    "repository_write": "verified",
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "application_runtime_changed": false
+  },
+  "constraints_preserved": [
+    "operations-only change",
+    "deterministic UTC schedule",
+    "no autoplay or audio activation",
+    "no private source material",
+    "no payment or conversion logic",
+    "mobile and accessibility runtime unaffected",
+    "fail-closed deployment posture"
+  ],
+  "rollback": "Stop consuming verifyRuntimeStageFreshness.v3.cjs and return callers to the untouched v2 contract; revert this record, test, and implementation commits if removal is required.",
+  "next_action": "Wire v3 into the final runtime-evidence promotion path, then verify one fresh runtime_dom_probe before and at an exact UTC hour boundary against an immutable successful Vercel deployment after provider capacity returns."
+}
