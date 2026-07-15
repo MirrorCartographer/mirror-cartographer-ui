@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T09:59:36Z",
+  "memory_id": "continuity.origin_requires_conjunctive_evidence.v1",
+  "title": "Historical origin is a conjunctive claim, not a strongest-match claim",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T085730Z-search-coverage-memory.json",
+    "repository indexed search for M-004, M-005, and M-006"
+  ],
+  "claims": {
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved in the canonical queue.",
+      "The prior continuity slice established that search silence and downstream occurrence are leads rather than origin evidence.",
+      "Current indexed repository search did not return an exact assignment object for M-004, M-005, or M-006.",
+      "The specialist registry contains no continuity-specific roles and the present slice reveals no durable capability gap requiring a registry mutation."
+    ],
+    "inferred": [
+      "Selecting the strongest-looking candidate without complete agreement across assignment, namespace, owner, semantic role, temporal precedence, immutable locator, and conflict checks would reconstruct unverified history.",
+      "Coverage completeness and candidate identity must be represented separately so a valid-looking object cannot conceal incomplete search coverage."
+    ],
+    "proposed": [
+      "Evaluate every origin candidate through operations/continuity/contracts/immutable-origin-candidate.v1.schema.json.",
+      "Permit verified_origin only when the exact assignment is present, exhaustive coverage flags are true, known blind spots are empty, and every agreement dimension is true.",
+      "Retain candidate or quarantined state whenever any mandatory dimension is false, unknown, ambiguous, or untested."
+    ],
+    "superseded": [
+      "Promoting the earliest returned result as origin.",
+      "Promoting the semantically closest result as origin.",
+      "Treating immutable blob identity alone as proof of namespace, ownership, temporal precedence, or historical authority.",
+      "Collapsing incomplete coverage and negative findings into an absence claim."
+    ],
+    "unresolved": [
+      "The immutable originating assignment objects for M-004, M-005, and M-006.",
+      "An exhaustive authenticated ref, reachable-commit, historical-path, and deleted-path traversal.",
+      "The privacy-safe originating decision log, language lexicon, project document, or chat-history locator for each identifier."
+    ]
+  },
+  "durable_rule": {
+    "rule": "Historical origin is verified only by conjunction. No single match, locator, timestamp, search result, or semantic resemblance may substitute for complete assignment evidence, complete coverage, multidimensional agreement, and absence of a conflicting accepted origin.",
+    "fail_closed_status": "quarantined",
+    "contract_path": "operations/continuity/contracts/immutable-origin-candidate.v1.schema.json"
+  },
+  "contradictions_resolved": [
+    {
+      "apparent_contradiction": "A candidate can have exact bytes and still not be the authoritative origin.",
+      "resolution": "Blob identity proves content identity only; historical authority additionally requires repository, commit, path, explicit assignment, namespace, owner, semantic role, temporal precedence, and conflict agreement."
+    },
+    {
+      "apparent_contradiction": "No indexed result appears, yet absence cannot be declared.",
+      "resolution": "Indexed search coverage is not exhaustive branch and history coverage; the correct state remains unresolved rather than absent."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "public repository metadata",
+      "queue identifiers",
+      "abstract provenance rules",
+      "commit and path locator structure",
+      "search outcomes without private source text"
+    ],
+    "excluded": [
+      "private chat excerpts",
+      "personal, medical, financial, household, or relationship material",
+      "credentials",
+      "private source contents",
+      "unreviewed File Library content"
+    ]
+  },
+  "specialist_registry_change": null,
+  "execution_claims": {
+    "schema_committed": true,
+    "schema_runtime_validation_executed": false,
+    "exhaustive_history_traversal_completed": false,
+    "origins_located": false,
+    "peer_execution_claimed": false
+  },
+  "falsification_route": [
+    "Provide an immutable exact-assignment object that satisfies the contract and predates every conflicting candidate.",
+    "Demonstrate exhaustive ref and history coverage with retained raw traversal output.",
+    "Show that any required agreement dimension can be safely omitted without permitting a false origin promotion."
+  ],
+  "next_action": "Implement and run a validator against synthetic positive and negative candidates, then execute authenticated exhaustive repository traversal and evaluate every M-004, M-005, and M-006 candidate without promoting incomplete evidence."
+}
