@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T11:21:05Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added and locally verified a fail-closed consumer-side verifier for commit- and repertory-bound programmed-stage receipts. The verifier rejects malformed identity, continuity drift, and any smuggled runtime, deployment, browser, audio, physical-device, or side-effect claim.",
+  "files": [
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.test.cjs",
+    "operations/evidence/V-001-programmed-stage-receipt-verifier-2026-07-15T1121Z.json"
+  ],
+  "commits": [
+    "1deb74e5580dc56dcb77144e6107f1603fb21a77",
+    "7e5bf4ea15c85435fc748b2dc397ebeac13bfbf7",
+    "bf784d2f25024931ea75b982e49e59c72aff365f"
+  ],
+  "verification": {
+    "command": "node --test verifyProgrammedStageReceipt.v1.test.cjs",
+    "passed": 3,
+    "failed": 0,
+    "exact_commit_blob_fetch": "a68eee29b3abf0dca5d844eaace11a8550183129"
+  },
+  "production_currently_programmed": "archive-afterimage",
+  "activation_claimed": false,
+  "deployment_claimed": false,
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both independent methods and retain reconciliation.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Add this verifier to the canonical repertory suite inventory, execute npm run test:vercel-repertory in an authenticated checkout, and retain the complete TAP output before using any programmed-stage receipt downstream."
+}
