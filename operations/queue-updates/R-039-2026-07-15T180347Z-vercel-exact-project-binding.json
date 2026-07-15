@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "R-039",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "parent_item": "R-022",
+  "created_at": "2026-07-15T18:03:47Z",
+  "state": "completed_handoff_ready",
+  "objective": "Close the cross-project identity gap in immutable Vercel deployment evidence.",
+  "selection_basis": "R-022 is the highest-priority frontier item whose remaining deployment-identity acceptance path exposed a non-duplicative fail-open condition in the committed v1 validator.",
+  "completed_slices": [
+    "Compared the committed v1 validator against current Vercel v13 response fields.",
+    "Identified that presence-only project identity and commit-only Git source matching can accept a deployment from the wrong Vercel project or GitHub repository.",
+    "Implemented v2 requiring trusted expected projectId, project name, GitHub repoId, ref, and commit SHA.",
+    "Added six deterministic tests covering exact acceptance, wrong project, wrong repository, wrong ref, incomplete expected identity, and canonical digest stability.",
+    "Retained source status, uncertainty, evidence strength, claim boundary, and falsification routes."
+  ],
+  "artifacts": [
+    {"path": "operations/frontier-research/vercelImmutableDeploymentEvidence.v2.cjs", "commit": "0f3d5a713c93971db4fa4befd8b1f61195f689ee"},
+    {"path": "operations/frontier-research/vercelImmutableDeploymentEvidence.v2.test.cjs", "commit": "1ee89d8478d35c2d1481eb6a3317a07b46b7e210"},
+    {"path": "operations/evidence/R-039-vercel-exact-project-binding-2026-07-15T180347Z.json", "commit": "b64816c58cf7bc45e9b253aea8f5dd9bfa6e134a"}
+  ],
+  "verification": {
+    "command": "node --check vercelImmutableDeploymentEvidence.v2.cjs && node --test vercelImmutableDeploymentEvidence.v2.test.cjs",
+    "passed": 6,
+    "failed": 0,
+    "scope": "isolated byte-identical pre-commit files"
+  },
+  "acceptance_remaining": [
+    "Integrate v2 ahead of V-001 deployment promotion while retaining v1 only for historical compatibility.",
+    "Source the expected Vercel project ID from trusted configuration or authenticated project metadata, never from the deployment object being validated.",
+    "Fetch and retain one authenticated Vercel v13 deployment object after provider capacity returns.",
+    "Run v2 against the retained object and independently verify project metadata and generated hostname behavior."
+  ],
+  "safe_next_action": "Wire v2 into the V-001 assessor with explicit trusted expected identity inputs; fail closed when any expected project, repository, ref, or commit field is absent or mismatched. Do not initiate a deployment while provider capacity remains blocked."
+}
