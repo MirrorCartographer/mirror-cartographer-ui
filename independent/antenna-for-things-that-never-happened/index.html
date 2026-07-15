@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0a0f" />
+  <title>Antenna for Things That Never Happened</title>
+  <style>
+    :root { color-scheme: dark; --ink:#f2ede2; --muted:#aaa2b1; --line:rgba(242,237,226,.18); --panel:rgba(16,14,22,.78); }
+    * { box-sizing:border-box; }
+    html, body { margin:0; min-height:100%; background:#0b0a0f; color:var(--ink); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    body { overflow:hidden; }
+    button, input { font:inherit; }
+    button { min-width:44px; min-height:44px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.055); color:var(--ink); padding:.7rem 1rem; }
+    button:focus-visible, input:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
+    button[aria-pressed="true"] { background:var(--ink); color:#111018; }
+    main { position:relative; width:100vw; height:100svh; min-height:520px; isolation:isolate; }
+    canvas { position:absolute; inset:0; width:100%; height:100%; touch-action:none; }
+    .veil { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 50% 42%, transparent 0 23%, rgba(11,10,15,.2) 52%, rgba(11,10,15,.88) 100%); }
+    header { position:absolute; z-index:2; top:max(18px, env(safe-area-inset-top)); left:max(18px, env(safe-area-inset-left)); right:max(18px, env(safe-area-inset-right)); display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; pointer-events:none; }
+    h1 { max-width:17ch; margin:0; font-family:Georgia,serif; font-size:clamp(1.35rem,4vw,3.2rem); font-weight:400; line-height:.93; letter-spacing:-.035em; }
+    .station { text-align:right; color:var(--muted); font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; }
+    .transmission { position:absolute; z-index:2; left:50%; top:46%; transform:translate(-50%,-50%); width:min(780px,calc(100vw - 34px)); text-align:center; pointer-events:none; }
+    .fragment { margin:0 auto; min-height:4.5em; display:grid; place-items:center; font-family:Georgia,serif; font-size:clamp(1.35rem,4.5vw,3.75rem); line-height:1.02; text-wrap:balance; text-shadow:0 0 28px rgba(242,237,226,.22); }
+    .quality { margin-top:1rem; color:var(--muted); font-size:.76rem; letter-spacing:.13em; text-transform:uppercase; }
+    .controls { position:absolute; z-index:3; left:max(14px,env(safe-area-inset-left)); right:max(14px,env(safe-area-inset-right)); bottom:max(14px,env(safe-area-inset-bottom)); border:1px solid var(--line); border-radius:22px; padding:14px; background:var(--panel); backdrop-filter:blur(16px); }
+    .row { display:flex; align-items:center; gap:.7rem; }
+    .row + .row { margin-top:.8rem; }
+    label { color:var(--muted); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+    input[type="range"] { width:100%; min-height:44px; accent-color:var(--ink); }
+    output { min-width:6ch; text-align:right; }
+    .buttons { flex-wrap:wrap; justify-content:center; }
+    .hint { margin:.75rem 0 0; color:var(--muted); font-size:.72rem; text-align:center; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (min-width:760px) { .controls { left:50%; right:auto; width:min(760px,calc(100vw - 48px)); transform:translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { canvas { opacity:.78; } }
+  </style>
+</head>
+<body>
+<main>
+  <canvas id="field" aria-label="A responsive field of radio traces representing an impossible broadcast. Drag horizontally or use arrow keys to tune."></canvas>
+  <div class="veil"></div>
+  <header>
+    <h1>Antenna for Things That Never Happened</h1>
+    <div class="station"><div>Band NVR</div><div id="clock">00:00:00</div></div>
+  </header>
+  <section class="transmission" aria-labelledby="fragment">
+    <p class="fragment" id="fragment">Move the dial until the static remembers you.</p>
+    <div class="quality" id="quality">signal absent</div>
+  </section>
+  <section class="controls" aria-label="Antenna controls">
+    <div class="row">
+      <label for="frequency">Frequency</label>
+      <input id="frequency" type="range" min="0" max="1000" value="417" step="1" />
+      <output id="reading" for="frequency">417.0</output>
+    </div>
+    <div class="row buttons">
+      <button id="scan" type="button" aria-pressed="false">Scan</button>
+      <button id="hold" type="button" aria-pressed="false">Hold</button>
+      <button id="sound" type="button" aria-pressed="false">Sound off</button>
+      <button id="reset" type="button">Reset</button>
+    </div>
+    <p class="hint">Drag the sky or use ← →. Space holds. S scans. Sound never starts by itself.</p>
+  </section>
+  <div id="status" class="sr-only" aria-live="polite"></div>
+</main>
+<script>
+(() => {
+  'use strict';
+  const canvas = document.getElementById('field');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const frequency = document.getElementById('frequency');
+  const reading = document.getElementById('reading');
+  const fragment = document.getElementById('fragment');
+  const quality = document.getElementById('quality');
+  const status = document.getElementById('status');
+  const scanButton = document.getElementById('scan');
+  const holdButton = document.getElementById('hold');
+  const soundButton = document.getElementById('sound');
+  const resetButton = document.getElementById('reset');
+  const clock = document.getElementById('clock');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const messages = [
+    [73, 'A train arrived carrying only the weather from your childhood.'],
+    [149, 'At 03:12 the moon requested a smaller name.'],
+    [241, 'Someone left a warm light burning inside the abandoned year.'],
+    [333, 'The ocean practiced your handwriting under every ship.'],
+    [417, 'A door in the field opened onto the room before it was built.'],
+    [508, 'Tomorrow sent back one object: a blue cup with no shadow.'],
+    [612, 'The birds voted to keep one impossible direction.'],
+    [707, 'A city beneath the carpet turned off its last machine.'],
+    [829, 'Every lost key briefly fit the same invisible house.'],
+    [941, 'At noon, gravity forgot the smallest stone.']
+  ];
+  let value = Number(frequency.value);
+  let held = false;
+  let scanning = false;
+  let scanDirection = 1;
+  let pointerId = null;
+  let lastX = 0;
+  let raf = 0;
+  let previous = performance.now();
+  let width = 1;
+  let height = 1;
+  let audio = null;
+  let oscillator = null;
+  let gain = null;
+  let soundOn = false;
+
+  function nearest(v) {
+    let best = messages[0];
+    let distance = Infinity;
+    for (const item of messages) {
+      const d = Math.abs(item[0] - v);
+      if (d < distance) { best = item; distance = d; }
+    }
+    return { item: best, distance };
+  }
+
+  function updateTransmission(announce = false) {
+    const result = nearest(value);
+    const strength = Math.max(0, 1 - result.distance / 48);
+    reading.value = value.toFixed(1);
+    if (strength > .72) {
+      fragment.textContent = result.item[1];
+      quality.textContent = strength > .93 ? 'signal impossible / locked' : 'signal emerging';
+    } else if (strength > .28) {
+      fragment.textContent = result.item[1].replace(/[aeiou]/gi, '·');
+      quality.textContent = 'signal partial';
+    } else {
+      fragment.textContent = 'Move the dial until the static remembers you.';
+      quality.textContent = 'signal absent';
+    }
+    if (announce) status.textContent = `${reading.value}. ${quality.textContent}. ${fragment.textContent}`;
+    if (soundOn && oscillator && gain) {
+      oscillator.frequency.setTargetAtTime(55 + value * .42, audio.currentTime, .03);
+      gain.gain.setTargetAtTime(.008 + strength * .035, audio.currentTime, .04);
+    }
+  }
+
+  function setValue(next, announce = false) {
+    value = Math.max(0, Math.min(1000, next));
+    frequency.value = String(Math.round(value));
+    updateTransmission(announce);
+  }
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    width = innerWidth;
+    height = innerHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw(now) {
+    const dt = Math.min(32, now - previous);
+    previous = now;
+    if (scanning && !held) {
+      let next = value + scanDirection * dt * .035;
+      if (next >= 1000 || next <= 0) scanDirection *= -1;
+      setValue(next);
+    }
+    const result = nearest(value);
+    const strength = Math.max(0, 1 - result.distance / 48);
+    ctx.fillStyle = '#0b0a0f';
+    ctx.fillRect(0, 0, width, height);
+    const mid = height * .46;
+    const time = reduced ? 0 : now * .001;
+    for (let band = 0; band < 7; band++) {
+      ctx.beginPath();
+      const alpha = .07 + band * .022 + strength * .05;
+      ctx.strokeStyle = `rgba(242,237,226,${alpha})`;
+      ctx.lineWidth = band === 3 ? 1.5 : 1;
+      for (let x = 0; x <= width; x += 6) {
+        const noise = Math.sin(x * (.011 + band * .0017) + time * (band + 1) + value * .018);
+        const carrier = Math.sin(x * .003 + value * .031 + band) * (8 + band * 4);
+        const lock = Math.sin(x * .018 + time * 2) * strength * 48;
+        const y = mid + (band - 3) * 28 + noise * (15 + (1 - strength) * 42) + carrier + lock;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.fillStyle = `rgba(242,237,226,${.05 + strength * .08})`;
+    for (let i = 0; i < 60; i++) {
+      const seed = (i * 97 + Math.floor(value) * 13) % 997;
+      const x = (seed / 997) * width;
+      const y = ((seed * 37) % 991) / 991 * height;
+      ctx.fillRect(x, y, 1, 1);
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  function beginPointer(event) {
+    pointerId = event.pointerId;
+    lastX = event.clientX;
+    canvas.setPointerCapture(pointerId);
+  }
+  function movePointer(event) {
+    if (event.pointerId !== pointerId || held) return;
+    const delta = event.clientX - lastX;
+    lastX = event.clientX;
+    setValue(value + delta * 1.7);
+  }
+  function endPointer(event) {
+    if (event.pointerId !== pointerId) return;
+    if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
+    pointerId = null;
+    updateTransmission(true);
+  }
+
+  async function toggleSound() {
+    if (!soundOn) {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      await audio.resume();
+      oscillator = audio.createOscillator();
+      gain = audio.createGain();
+      oscillator.type = 'sine';
+      gain.gain.value = 0;
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start();
+      soundOn = true;
+      soundButton.textContent = 'Sound on';
+      soundButton.setAttribute('aria-pressed', 'true');
+      updateTransmission(true);
+    } else {
+      soundOn = false;
+      if (gain && audio) gain.gain.setTargetAtTime(0, audio.currentTime, .02);
+      if (oscillator) oscillator.stop(audio.currentTime + .05);
+      oscillator = null;
+      gain = null;
+      soundButton.textContent = 'Sound off';
+      soundButton.setAttribute('aria-pressed', 'false');
+      status.textContent = 'Sound off.';
+    }
+  }
+
+  function toggleHold() {
+    held = !held;
+    holdButton.setAttribute('aria-pressed', String(held));
+    holdButton.textContent = held ? 'Release' : 'Hold';
+    status.textContent = held ? 'Frequency held.' : 'Frequency released.';
+  }
+  function toggleScan() {
+    scanning = !scanning;
+    scanButton.setAttribute('aria-pressed', String(scanning));
+    scanButton.textContent = scanning ? 'Stop scan' : 'Scan';
+    status.textContent = scanning ? 'Scanning started.' : 'Scanning stopped.';
+  }
+  function reset() {
+    scanning = false; held = false; scanDirection = 1;
+    scanButton.setAttribute('aria-pressed', 'false');
+    holdButton.setAttribute('aria-pressed', 'false');
+    scanButton.textContent = 'Scan'; holdButton.textContent = 'Hold';
+    setValue(417, true);
+  }
+
+  frequency.addEventListener('input', () => setValue(Number(frequency.value)));
+  frequency.addEventListener('change', () => updateTransmission(true));
+  canvas.addEventListener('pointerdown', beginPointer);
+  canvas.addEventListener('pointermove', movePointer);
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+  scanButton.addEventListener('click', toggleScan);
+  holdButton.addEventListener('click', toggleHold);
+  soundButton.addEventListener('click', () => toggleSound().catch(() => { status.textContent = 'Sound unavailable.'; }));
+  resetButton.addEventListener('click', reset);
+  addEventListener('keydown', event => {
+    if (event.target === frequency) return;
+    if (event.key === 'ArrowLeft') { event.preventDefault(); setValue(value - (event.shiftKey ? 20 : 3), true); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); setValue(value + (event.shiftKey ? 20 : 3), true); }
+    if (event.key === ' ') { event.preventDefault(); toggleHold(); }
+    if (event.key.toLowerCase() === 's') toggleScan();
+  });
+  addEventListener('resize', resize, { passive:true });
+  addEventListener('pagehide', () => {
+    cancelAnimationFrame(raf);
+    if (oscillator) { try { oscillator.stop(); } catch (_) {} }
+    if (audio) audio.close();
+  }, { once:true });
+  setInterval(() => { clock.textContent = new Date().toISOString().slice(11,19); }, 1000);
+  resize(); updateTransmission(); raf = requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
