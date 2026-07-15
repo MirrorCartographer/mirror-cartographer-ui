@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T04:20:00Z",
+  "slice": "programmed_stage_claim_boundary",
+  "status": "completed_operations_only",
+  "finding": "Deterministic repertory selection identifies the production programmed for a UTC hour but does not prove runtime activation, deployment, browser execution, audibility, or physical-device verification.",
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.cjs",
+    "test": "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.test.cjs",
+    "evidence_class": "deterministic_programmed_stage_identity_only",
+    "fail_closed_properties": [
+      "reject unsupported caller fields",
+      "accept only canonical lowercase 40-character source commit identifiers",
+      "force runtime, deployment, browser, audio, device, and side-effect claims to false",
+      "verify the existing repertory safety contract before issuing a receipt"
+    ]
+  },
+  "programmed_stage_at_recorded_hour": {
+    "utc_hour": 4,
+    "production_id": "body-constellation",
+    "runtime_activation_claimed": false
+  },
+  "verification": {
+    "class": "committed_source_fetched_back_and_inspected",
+    "test_execution_claimed": false,
+    "reason": "The available connector exposed repository contents writes and reads but no authenticated checkout or direct Node execution route.",
+    "test_cases_committed": 4
+  },
+  "constraints_preserved": {
+    "operations_only": true,
+    "application_deployment_attempted": false,
+    "payments_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "git_history_deleted": false
+  },
+  "rollback": "Revert commits e6767437e979f04a2df074642963aac4b603335c and b0a11ed3dbe34981211e4ab606a53e656b412077; application runtime is unaffected.",
+  "next_action": "Run the complete repertory Node test directory in an authenticated checkout and require programmed-stage receipts wherever repertory identity is reported outside runtime evidence ingestion."
+}
