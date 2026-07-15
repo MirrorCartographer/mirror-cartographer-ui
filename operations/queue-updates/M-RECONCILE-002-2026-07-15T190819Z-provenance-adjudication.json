@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T19:08:19Z",
+  "slice": "Machine-checkable provenance candidate adjudication",
+  "status": "completed_reversible_slice",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/CM-1039.json",
+    "recent commits through 6f37502dcc5c1747c2b3da984d34973523cd078a"
+  ],
+  "memory_recovered": "A provenance candidate becomes located_verified only when namespace, assignment authority, semantic role, temporal precedence, and immutable locator all agree. Token equality, generated mirrors, search snippets, and downstream references remain non-terminal evidence classes.",
+  "claim_states": {
+    "observed": [
+      "M-RECONCILE-002 remains in progress and requires immutable provenance for M-004, M-005, and M-006.",
+      "The prior location-universe record defines five agreement dimensions but did not provide a machine-checkable per-candidate adjudication object.",
+      "A previously reviewed File Library suffix match for M-004 belongs to a different namespace and lacks an immutable assigning object."
+    ],
+    "inferred": [
+      "Without a per-candidate gate, downstream references and token collisions can be accidentally promoted into provenance conclusions.",
+      "Coverage status and candidate validity are independent: a fully inspected object may still be a noncapable collision."
+    ],
+    "proposed": [
+      "Require one provenance-candidate-adjudication record for every candidate used to resolve M-004, M-005, or M-006.",
+      "Permit located_verified only when all five agreement tests pass and the candidate is a covered immutable assigning source."
+    ],
+    "superseded": [
+      "A matching identifier token is sufficient provenance evidence.",
+      "A search result or generated mirror can independently resolve an originating-source gap."
+    ],
+    "unresolved": [
+      "No immutable assigning source has been located for M-004, M-005, or M-006.",
+      "Accessible branches and reachable history remain incompletely enumerated.",
+      "The schema has not yet been added to repository CI with positive and adversarial validation fixtures."
+    ]
+  },
+  "files": [
+    "operations/continuity/provenance-candidate-adjudication.schema.json",
+    "operations/continuity/examples/PCA-M-004-token-collision.json"
+  ],
+  "verification": {
+    "method": "GitHub create-file acknowledgement followed by default-branch fetch-back",
+    "status": "pending_fetch_back_at_record_creation"
+  },
+  "privacy_boundary": "Only repository governance, abstract source classes, continuity identifiers, and an abstracted collision rationale are retained. No private source text, personal data, health material, credentials, or File Library contents are included.",
+  "specialist_registry_change": "none; no durable capability gap established",
+  "reversible": true,
+  "deletes_history": false,
+  "next_action": "Add JSON Schema validator fixtures for a valid immutable assigning source, a downstream-only reference, a coverage-blocked candidate, and invalid located_verified claims; then use the schema during exhaustive branch and history traversal."
+}
