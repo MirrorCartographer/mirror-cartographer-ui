@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-029",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T17:26:00Z",
+  "finding": "A verified construction boundary is not repository-durable while its canonical parser exists only as an injected caller dependency. The repository now owns a canonical parser and uses it by default, while preserving parser injection for independent differential checks.",
+  "source_status": {
+    "primary_specification": {
+      "source": "Unicode Technical Standard #39, Version 17.0.0, Revision 32",
+      "status": "current_primary_source_inspected",
+      "observed": [
+        "UTS #39 Version 17.0.0 is the current published standard.",
+        "The standard describes Unicode security mechanisms and data-file use; UTS conformance is broader than parsing confusables.txt."
+      ]
+    },
+    "repository_sources": [
+      "operations/ACTIVE_QUEUE.json",
+      "operations/queue-updates/R-029-2026-07-15T0855Z.json",
+      "tools/frontier-research/validate-confusables-semantics.mjs",
+      "tools/frontier-research/build-verified-confusables-dataset.mjs",
+      "tools/frontier-research/build-verified-confusables-dataset.test.mjs"
+    ]
+  },
+  "implementation": {
+    "parser": "tools/frontier-research/parse-confusables-canonical.mjs",
+    "parser_tests": "tools/frontier-research/parse-confusables-canonical.test.mjs",
+    "integration_tests": "tools/frontier-research/build-verified-confusables-canonical-parser.test.mjs",
+    "boundary_change": "buildVerifiedConfusablesDataset now defaults to the repository canonical parser and labels parser identity in the returned bounded envelope.",
+    "independence_boundary": "Callers may still inject a separately implemented parser; injected results remain subject to semantic record-count and canonical-digest reconciliation."
+  },
+  "evidence_strength": "implementation_and_deterministic_test_contract_committed",
+  "verification": {
+    "static_review": "completed",
+    "runtime_test_execution": "not_observed_in_this_connector_run",
+    "production_dataset_execution": "not_performed",
+    "deployment_claimed": false
+  },
+  "uncertainty": [
+    "The committed tests were not executed in an authenticated checkout during this run.",
+    "The pinned Unicode 17.0.0 payload has not yet been processed through the complete boundary.",
+    "No independent parser result has yet been reconciled against the full production payload."
+  ],
+  "claim_boundaries": [
+    "This establishes a repository-owned parser boundary, not complete UTS #39 conformance.",
+    "This does not establish identifier-profile, script-resolution, bidiSkeleton, browser, deployment, or user-interface behavior.",
+    "No production mapping set is promoted by this change alone."
+  ],
+  "falsification_routes": [
+    "Run all three committed confusables test files and retain exact output.",
+    "Process the pinned Unicode 17.0.0 payload and compare record count plus canonical SHA-256 with a separately implemented parser.",
+    "Mutate field count, scalar syntax, source arity, mapping type, duplicate sources, ordering, and hexadecimal case to confirm deterministic fail-closed behavior."
+  ],
+  "privacy_boundary": "Public standards and repository implementation metadata only; no private chat, health, pet-health, credentials, or identifying personal material included.",
+  "files_deleted": false,
+  "history_rewritten": false,
+  "specialist_registry_changed": false
+}
