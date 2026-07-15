@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-critical-test-inventory-2026-07-15T1136Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "created_at": "2026-07-15T11:36:00Z",
+  "evidence_class": "operations_only_local_contract_verification",
+  "source_commit": "a18239a5cc5edd57b8cdba4572687ef95d92a020",
+  "changed_path": "operations/vercel-studio/repertory/repertoryTestInventory.v1.test.cjs",
+  "content_blob_sha": "a6613ff7020d072973c0646faec482f50c3d8044",
+  "finding": "The canonical repertory runner already auto-discovers CommonJS tests, but the newly added programmed-stage receipt verifier was not named in the safety-critical inventory contract. The inventory now requires that verifier exactly once alongside activation and continuity gates.",
+  "verification": {
+    "command": "node --test operations/vercel-studio/repertory/repertoryTestInventory.v1.test.cjs",
+    "environment": "isolated local Node harness using exact committed inventory content, exact canonical runner content, and representative required filenames",
+    "tests": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "claim_boundaries": {
+    "full_repository_suite_executed": false,
+    "deployment_created": false,
+    "browser_execution_observed": false,
+    "audio_playback_observed": false,
+    "physical_device_verified": false,
+    "provider_capacity_retested": false
+  },
+  "rollback": {
+    "method": "revert_commit",
+    "commit": "a18239a5cc5edd57b8cdba4572687ef95d92a020"
+  }
+}
