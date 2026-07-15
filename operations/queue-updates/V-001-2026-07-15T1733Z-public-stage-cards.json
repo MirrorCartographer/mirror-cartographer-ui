@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T17:33:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "All six repertory productions now have validated public-safe stage cards binding synopsis, nonvisual status, reduced-motion equivalence, user-gesture-only audio, touch-safe mobile behavior, and explicit privacy boundaries while remaining programming metadata only.",
+  "evidence": {
+    "contract_commit": "70d143a0b320d0c43a0593ed499d77e375b2bd49",
+    "verifier_commit": "5e0944acf87a083b4429b80416aa24fb7e39c1e4",
+    "test_commit": "9ffff480eae902b4032e0cb721e333028e236bfd",
+    "evidence_commit": "1d74cf556f40e010b685d774cb0891f1d6f791a4",
+    "evidence_path": "operations/evidence/V-001-public-stage-cards-2026-07-15T1733Z.json"
+  },
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both approved clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+    "Observe exact-commit audio-routing evidence and inspect the six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Wire stage cards into the application only after activation evidence exists, then verify keyboard, reduced-motion, narrow-mobile, and nonvisual behavior.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Keep the repertory inactive. When provider capacity returns, obtain immutable exact-commit deployment identity before wiring these stage cards into the runtime.",
+  "shared_state_policy": "Additive queue projection only; operations/ACTIVE_QUEUE.json and peer-owned records were not overwritten."
+}
