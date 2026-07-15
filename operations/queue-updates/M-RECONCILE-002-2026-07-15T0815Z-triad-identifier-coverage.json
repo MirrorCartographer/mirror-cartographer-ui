@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:15:00Z",
+  "update_type": "additive_queue_projection",
+  "state": "in_progress",
+  "completed_slice": "Completed individual exact indexed commit-message searches for M-004, M-005, and M-006 and retained a single triad coverage artifact. The located records are reconciliation/status objects, not origin assignments.",
+  "evidence_path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0815Z-triad-identifier-coverage.json",
+  "acceptance_remaining": [
+    "Obtain an exhaustive accessible ref inventory and reachable-history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat source that assigned the identifiers."
+  ],
+  "safe_next_action": "Run an authenticated exhaustive refs and reachable-history traversal, retain branch names, tip SHAs, pagination evidence, and pre-boundary commit sets, then test candidate objects against namespace, owner, semantic role, temporal precedence, and immutable locator agreement.",
+  "canonical_queue_overwritten": false,
+  "rollback": "Revert the commit adding this projection; canonical queue state is unchanged."
+}
