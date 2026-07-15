@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "item": {
+    "id": "R-026",
+    "owner": "frontier_research",
+    "priority": "highest",
+    "state": "completed_handoff_ready",
+    "objective": "Bind the UTS #39 confusable-key audit to exact, versioned, integrity-verified Unicode source bytes.",
+    "completed_slices": [
+      "Researched the current Unicode 17 security-data location from the normative UTS #39 data-files section.",
+      "Retrieved the exact Unicode 17.0.0 confusables.txt source and retained its SHA-256, byte length, version header, data date, and MA record count.",
+      "Implemented a fail-closed source verifier that rejects mutable latest aliases, byte drift, version drift, and record-count drift.",
+      "Verified the implementation with four deterministic Node tests."
+    ],
+    "acceptance_remaining": [
+      "Independently reproduce the exact source retrieval and manifest values in an authenticated repository checkout or CI job.",
+      "Decide whether to vendor the source bytes or retain them as a separately archived build input under the Unicode terms of use.",
+      "Require source verification before parseConfusables is allowed to construct a production dataset.",
+      "Define explicit migration behavior for future Unicode versions; never replace the pinned dataset silently."
+    ],
+    "safe_next_action": "Add an integration adapter that reads the pinned manifest, verifies downloaded or archived bytes with enforceUnicodeConfusablesSource, and only then calls parseConfusables with expectedVersion=17.0.0. Retain verification output and prohibit latest aliases."
+  },
+  "canonical_queue_overwritten": false,
+  "registry_change": null,
+  "deletions": []
+}
