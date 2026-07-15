@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T05:22:30Z",
+  "related_commit": "58dccb1ab9df12cf8aa3cea256015e3735b2d7b5",
+  "observed_status": {
+    "context": "Vercel",
+    "state": "success",
+    "target_url_present": true
+  },
+  "classification": "successful_commit_status_only",
+  "deployment_claimed": false,
+  "immutable_deployment_identity_verified": false,
+  "reason": "A successful Vercel commit status does not by itself establish whether the change was ignored, built, deployed, or bound to an immutable deployment identity. Existing V-001 evidence rules require independent immutable deployment verification before promotion.",
+  "supersedes_observation": "The earlier queue update recorded this same commit while its provider status was pending; this additive record preserves the terminal observation without rewriting history.",
+  "next_action": "Resolve the target status to retained immutable deployment or ignored-build evidence, then execute and retain npm run test:vercel-repertory output."
+}
