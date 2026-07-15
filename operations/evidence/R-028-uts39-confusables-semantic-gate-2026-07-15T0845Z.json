@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "evidence_id": "R-028-2026-07-15T0845Z",
+  "owner": "frontier_research",
+  "finding": "Pinned source-byte authentication is necessary but not sufficient: a parser can still accept malformed, duplicate, version-drifted, obsolete-type, invalid-scalar, or non-idempotent confusables mappings. A separate semantic gate is required after byte verification and before dataset promotion.",
+  "source_status": [
+    {
+      "source": "https://www.unicode.org/reports/tr39/",
+      "kind": "primary_normative",
+      "observed_version": "17.0.0",
+      "observed_revision": 32,
+      "observed_date": "2025-09-04",
+      "supports": [
+        "confusables.txt uses source, target, and obsolete MA fields",
+        "comments are informative only",
+        "mappings are idempotent",
+        "data can change between Unicode versions"
+      ]
+    },
+    {
+      "source": "https://www.unicode.org/Public/security/latest/confusables.txt",
+      "kind": "primary_data",
+      "status": "current mutable alias inspected but not used as immutable production input"
+    }
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/validate-confusables-semantics.mjs",
+    "tests": "tools/frontier-research/validate-confusables-semantics.test.mjs",
+    "invariants": [
+      "declared Unicode version equals expectedVersion",
+      "exactly three semicolon-delimited fields",
+      "source is one Unicode scalar",
+      "target is a nonempty Unicode scalar sequence",
+      "mapping type is MA",
+      "source mappings are unique",
+      "one-pass remapping of every target is unchanged"
+    ]
+  },
+  "evidence_strength": "implementation_committed_with_deterministic_tests_not_yet_run_in_authenticated_checkout",
+  "uncertainty": [
+    "The full pinned Unicode 17 payload was not executed through this validator in this run.",
+    "The repository canonical parser and construction call sites remain unlocated through the available non-indexed code-search surface.",
+    "This validates data-file semantics, not complete UTS #39 skeleton, bidiSkeleton, script-resolution, or identifier-profile conformance."
+  ],
+  "falsification_route": [
+    "Run node --test tools/frontier-research/validate-confusables-semantics.test.mjs in an authenticated checkout.",
+    "Run the pinned Unicode 17 confusables.txt bytes through source verification and then this semantic validator.",
+    "Compare record count and canonical digest against an independent parser.",
+    "Reject this design if the normative source field is not single-scalar in the pinned version or if legitimate mappings fail the idempotency check."
+  ],
+  "claim_boundaries": {
+    "deployment_claimed": false,
+    "production_integration_claimed": false,
+    "full_uts39_conformance_claimed": false,
+    "source_bytes_retrieved_into_repository": false
+  }
+}
