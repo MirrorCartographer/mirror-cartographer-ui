@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T05:32:09Z",
+  "slice": "durable_repertory_provenance_boundary",
+  "state": "completed_reversible_operations_only_slice",
+  "finding": "The canonical repertory contains a production-level current_decision sentence that encodes selection for UTC hour 21. Static production provenance persists across hours, so transient stage identity embedded there can become false even while the deterministic selector remains correct.",
+  "implementation": {
+    "validator": "operations/vercel-studio/repertory/validateDurableRepertoryProvenance.v1.cjs",
+    "tests": "operations/vercel-studio/repertory/validateDurableRepertoryProvenance.v1.test.cjs",
+    "boundary": "Durable production provenance may describe observed evidence, inference, experiment, and current design decision, but may not claim the production is selected now or for a transient hour. Programmed-stage identity remains a separate commit-and-repertory-bound receipt.",
+    "properties": [
+      "fails closed for malformed or empty repertories",
+      "requires unique production identifiers",
+      "requires observed, inferred, experiment, and current_decision provenance structure",
+      "rejects transient current-stage or hour-selection wording in durable provenance",
+      "never promotes validation to activation or deployment evidence"
+    ]
+  },
+  "production_on_stage": {
+    "utc_hour": 5,
+    "production_id": "archive-afterimage",
+    "evidence_class": "deterministic_repertory_identity_only",
+    "runtime_activation_claimed": false
+  },
+  "aesthetic_provenance": {
+    "observed": "The repertory contract explicitly separates observed references, inference, experiment, and current decision while preserving public-safe identities.",
+    "inferred": "Archive Afterimage can remain the programmed archive-without-exposure identity without converting a temporary schedule fact into durable historical provenance.",
+    "experiment": "Represent continuity through afterimage persistence while stage timing is derived only from the deterministic selector.",
+    "current_decision": "Keep production meaning durable and compute stage identity separately from UTC hour and the canonical repertory digest."
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "registry_change": null,
+  "verification": {
+    "committed_source_created": true,
+    "committed_test_created": true,
+    "test_execution_claimed": false,
+    "provider_status": {
+      "commit": "c6bc6ea456d7f7d8b59330a2c763657699c9f7aa",
+      "context": "Vercel",
+      "observed_state": "failure",
+      "target_reason": "build-rate-limit",
+      "immutable_success_claimed": false
+    },
+    "strongest_feasible_route": "Created the operations-only validator and deterministic node:test suite through the repository connector, then queried the exact test commit's provider status. The provider returned the existing build-rate-limit failure; no deployment or runtime claim was promoted."
+  },
+  "privacy_boundary": "No private source material, user records, credentials, payments, conversion logic, analytics, or runtime content were added.",
+  "rollback": "Revert commits c6bc6ea456d7f7d8b59330a2c763657699c9f7aa and 05f568aae567b115882666ea0d114a86a7381c67. Application runtime is unaffected.",
+  "limits": [
+    "The node:test suite was not executed in an authenticated checkout during this run.",
+    "The canonical repertory's transient UTC-hour sentence was detected conceptually but not rewritten in this slice; the validator establishes the boundary before a later provenance-only correction.",
+    "No browser execution, audio playback, mobile Safari verification, immutable deployment identity, or physical-device evidence is claimed.",
+    "V-001 acceptance remains blocked on authenticated exhaustive workflow reconciliation, provider capacity, exact-commit audio artifact inspection, immutable deployment identity, and bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Execute the full repertory suite in an authenticated checkout, wire this validator to the canonical repertory test path, then replace the time-bound wordless-room-game current_decision with a durable design decision while retaining historical selection evidence in a separate stage receipt."
+}
