@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T19:30:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a no-overwrite CLI that executes the canonical repertory test runner, captures raw stdout and stderr, writes a tamper-evident receipt, and preserves non-activation, non-deployment, and non-autoplay boundaries.",
+  "files": [
+    "operations/vercel-studio/repertory/captureRepertoryTestReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/captureRepertoryTestReceipt.v1.test.cjs",
+    "operations/evidence/V-001-repertory-capture-cli-2026-07-15T1930Z.json"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "scope": "isolated local Node contract tests"
+  },
+  "acceptance_remaining": [
+    "Run the committed capture CLI in an authenticated checkout against the complete repository repertory suite and retain its three generated artifacts.",
+    "Execute authenticated exact-commit workflow enumeration through both exhaustive clients and retain reconciliation evidence.",
+    "Observe provider build suppression after capacity returns.",
+    "Bind a tested application commit to immutable successful Vercel deployment identity.",
+    "Complete bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node operations/vercel-studio/repertory/captureRepertoryTestReceipt.v1.cjs operations/evidence in an authenticated checkout; do not activate the repertory or create an application deployment while provider capacity remains blocked.",
+  "registry_change": null
+}
