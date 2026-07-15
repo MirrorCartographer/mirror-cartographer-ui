@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:06:00Z",
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "finding": "Temporal proximity plus a caller-supplied session identifier does not establish that retained capability and hostname command transcripts participated in the asserted bounded session.",
+  "source_status": {
+    "primary_current": [
+      {
+        "source": "Node.js crypto documentation",
+        "url": "https://nodejs.org/api/crypto.html",
+        "observed_fact": "Node exposes cryptographic random generation primitives including randomBytes and randomUUID.",
+        "retrieved_on": "2026-07-15"
+      },
+      {
+        "source": "RFC 9562",
+        "url": "https://www.rfc-editor.org/rfc/rfc9562.html",
+        "observed_fact": "UUID version 4 is based on random or pseudorandom bits, suitable as one possible challenge identifier when generated correctly.",
+        "retrieved_on": "2026-07-15"
+      }
+    ],
+    "repository_evidence": [
+      "operations/frontier-research/curlGeneratedHostnameSession.v1.cjs",
+      "operations/frontier-research/curlGeneratedHostnamePipeline.v1.cjs"
+    ]
+  },
+  "artifact": {
+    "implementation": "operations/frontier-research/curlGeneratedHostnameChallengeBinding.v1.cjs",
+    "tests": "operations/frontier-research/curlGeneratedHostnameChallengeBinding.v1.test.cjs",
+    "contract": [
+      "challenge nonce must be syntactically valid and issued before capability observation",
+      "both retained raw transcripts must contain the exact challenge nonce",
+      "each transcript must bind the corresponding child receipt digest",
+      "each raw transcript digest must verify",
+      "the parent receipt binds both transcript digests, both child receipt digests, session receipt, deployment identity, hostname, and expected commit"
+    ]
+  },
+  "evidence_strength": "committed implementation and deterministic tests; runtime execution not observed in this connector-only run",
+  "uncertainty": [
+    "A transcript containing a nonce can still be fabricated after the fact unless acquisition is performed by a trusted runner or independently timestamped retention system.",
+    "This contract does not prove both commands used the same process or curl binary.",
+    "No real Vercel hostname request or provider deployment retrieval was performed."
+  ],
+  "claim_boundary": "Verifies challenge presence, raw transcript integrity, and child-receipt binding only; does not claim same process, same executable, content correctness, alias behavior, audio, browser behavior, or physical-device behavior.",
+  "falsification_route": [
+    "A challenge issued after capability observation is accepted.",
+    "A transcript lacking the nonce is accepted.",
+    "A transcript bound to a different child receipt is accepted.",
+    "A raw transcript can change without invalidating its digest or parent receipt."
+  ],
+  "specialist_registry_change": "none; no durable capability gap demonstrated"
+}
