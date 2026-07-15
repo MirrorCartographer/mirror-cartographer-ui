@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T05:41:41Z",
+  "slice": "canonical_repertory_contract_gate",
+  "status": "completed_operations_only",
+  "production_selected_for_utc_hour_5": "archive-afterimage",
+  "selection_basis": "utc_hour % productions.length",
+  "change": {
+    "file": "operations/vercel-studio/repertory/canonicalRepertoryContract.v1.test.cjs",
+    "purpose": "Load the canonical repertory through the required test command and fail closed on provenance drift, non-deterministic slot mapping, incomplete hourly coverage, unsafe runtime constraints, or activation claims.",
+    "runtime_modified": false,
+    "deployment_attempted": false
+  },
+  "verification": {
+    "static_review": "passed",
+    "test_execution": "not_executed_in_connector_runtime",
+    "reason": "The GitHub connector provides repository content writes but no authenticated Node execution surface.",
+    "required_command": "npm run test:vercel-repertory",
+    "expected_discovery_rule": "runRepertoryTests.v1.mjs discovers every sorted *.test.cjs file in its directory"
+  },
+  "constraints_preserved": {
+    "audio": "explicit_user_gesture_only",
+    "motion": "honor_prefers_reduced_motion",
+    "mobile": "viewport_safe_and_touch_safe",
+    "accessibility": "keyboard_operable_with_nonvisual_status_equivalent",
+    "privacy": "no_private_source_material",
+    "commerce": "no_payments_or_conversion_logic",
+    "deployment": "fail_closed_until_immutable_successful_vercel_identity_is_verified"
+  },
+  "specialist_registry_change": "none",
+  "privacy_boundary": "No private source content, credentials, user records, or source excerpts were added.",
+  "rollback": [
+    "Revert commit 5d6037872b0e433c0b1f01f6ad17277194fc0b89 to remove the canonical repertory test.",
+    "Revert commit a0de84c1e582a96058c2e2349bde680a99b75cab to remove the queue projection update."
+  ],
+  "next_action": "Execute npm run test:vercel-repertory in an authenticated checkout and retain output before promoting this slice from statically verified to executed evidence."
+}
