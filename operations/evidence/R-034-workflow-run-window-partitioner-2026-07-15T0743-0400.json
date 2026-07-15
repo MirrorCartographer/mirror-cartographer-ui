@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-034",
+  "owner": "frontier_research",
+  "finding": "GitHub's repository workflow-run endpoint documents a maximum of 1,000 results for filtered searches including head_sha and created, while per_page is capped at 100. Exact-commit retrieval therefore remains absence-unproven whenever a filtered window reaches the ceiling unless the search space is partitioned and every leaf is independently paginated.",
+  "primary_sources": [
+    {
+      "publisher": "GitHub Docs",
+      "title": "REST API endpoints for workflow runs — List workflow runs for a repository",
+      "api_version_page": "2022-11-28",
+      "observed_on": "2026-07-15",
+      "claims": ["filtered searches can return up to 1000 results", "head_sha and created are supported filters", "per_page maximum is 100"]
+    }
+  ],
+  "artifact": "tools/frontier-research/workflow-run-window-partitioner.mjs",
+  "verification": {
+    "method": "isolated Node test harness reproducing committed logic",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "evidence_strength": "primary_documentation_plus_deterministic_unit_tests",
+  "uncertainty": [
+    "No authenticated repository enumeration was executed in this run.",
+    "A below-ceiling leaf still requires complete Link-header pagination and independent reconciliation.",
+    "The minimum partition granularity is a local policy and may require adjustment for provider timestamp semantics."
+  ],
+  "falsification_route": "Produce a documented GitHub API guarantee that head_sha-filtered searches cannot reach the 1000-result ceiling, or show a partition tree accepted despite an unresolved ceiling leaf.",
+  "claim_boundary": "The partitioner produces a fail-closed retrieval plan; it does not itself establish exhaustive workflow-run coverage."
+}
