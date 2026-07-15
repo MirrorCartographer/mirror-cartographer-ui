@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "contract_id": "vercel-studio-public-stage-cards-v1",
+  "owner": "vercel_studio",
+  "activation_status": "programming_metadata_only",
+  "cards": [
+    {"production_id":"residual-comet","title":"Residual Comet","short_synopsis":"A companion signal crosses the field and leaves a readable trace.","nonvisual_status":"A moving signal changes position and density without requiring visual tracking.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"abstract_public_state_only"},
+    {"production_id":"coordinate-choir","title":"Coordinate Choir","short_synopsis":"Phrases become positions, then gather into a spatial chorus.","nonvisual_status":"Coordinate phrases are announced in deterministic reading order.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"synthetic_language_only"},
+    {"production_id":"quiet-machine","title":"Quiet Machine","short_synopsis":"A restrained instrument reveals poetic state changes without exposing operations.","nonvisual_status":"State transitions are available as concise text status updates.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"no_worker_controls_or_private_evidence"},
+    {"production_id":"wordless-room-game","title":"Wordless Room Game","short_synopsis":"A playable room answers movement like a film that notices its audience.","nonvisual_status":"Room responses are represented by ordered interaction states and labels.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"fictional_room_state_only"},
+    {"production_id":"body-constellation","title":"Body Constellation","short_synopsis":"Fictional stars form an embodied map without displaying personal bodily records.","nonvisual_status":"Constellations expose names, relationships, and focus state as text.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"fictional_constellations_no_health_data"},
+    {"production_id":"archive-afterimage","title":"Archive Afterimage","short_synopsis":"Memory appears as persistence, transformation, and absence rather than documents.","nonvisual_status":"Archive classes are described as transformations without source excerpts.","motion_mode":"reduced_motion_equivalent_required","audio_mode":"silent_by_default_user_gesture_only","mobile_mode":"touch_safe_single_viewport","privacy_boundary":"provenance_classes_no_source_material"}
+  ],
+  "rollback":"Revert the commits introducing this operations-only contract; application runtime is unaffected."
+}
