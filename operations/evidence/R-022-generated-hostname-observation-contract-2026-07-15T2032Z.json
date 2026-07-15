@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T20:32:00Z",
+  "finding": "Immutable deployment identity and generated-hostname response observation are distinct evidence layers. A successful direct HTTPS HEAD or GET response may establish only that the exact generated hostname returned a successful response at the observation time; it cannot establish content correctness, alias promotion, audio routing, browser execution, or physical-device behavior.",
+  "source_status": {
+    "primary_standard": {
+      "title": "RFC 9110: HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "status": "IETF Standards Track",
+      "relevance": [
+        "HEAD is a defined safe read method whose response is equivalent to GET apart from response content.",
+        "2xx status codes represent successful responses.",
+        "3xx status codes require additional action and therefore cannot prove a direct generated-hostname response without recording redirects."
+      ]
+    },
+    "repository_sources": [
+      "operations/frontier-research/verifiedVercelEvidenceAdapter.v1.cjs",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/CURRENT_STATE.json"
+    ]
+  },
+  "artifact": "operations/frontier-research/vercelGeneratedHostnameObservation.v1.cjs",
+  "test_artifact": "operations/frontier-research/vercelGeneratedHostnameObservation.v1.test.cjs",
+  "evidence_strength": "deterministic_local_contract_tested",
+  "uncertainty": [
+    "No live generated hostname was requested in this run.",
+    "Deployment Protection may produce authentication responses; those are retained as observations but do not satisfy public reachability.",
+    "A 2xx response does not establish expected application content or media behavior."
+  ],
+  "falsification_routes": [
+    "Provide a verified deployment evidence envelope and an observation whose requested or final URL differs from the generated hostname; the contract must reject it.",
+    "Provide a redirect, TLS failure, network error, non-2xx response, unsafe method, or malformed timestamp; the contract must reject it.",
+    "Run the same normalized observation with reordered object fields; the canonical digest must remain stable."
+  ],
+  "claim_boundary": "generated_hostname_https_response_verified_only_no_content_alias_audio_browser_or_device_claims",
+  "deployment_created": false,
+  "credentials_persisted": false
+}
