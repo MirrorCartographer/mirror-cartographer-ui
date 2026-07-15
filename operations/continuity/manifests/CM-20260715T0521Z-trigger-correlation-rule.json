@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0521Z-trigger-correlation-rule",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-15T05:21:00Z",
+  "title": "Peer trigger request correlation rule",
+  "memory_recovered": "A peer trigger request, a scheduling mutation, and a peer execution are three distinct provenance events. A later peer run does not satisfy an earlier pending request unless retained evidence explicitly correlates the request identifier to that run or records an authorized supersession.",
+  "sources": [
+    {
+      "locator": "operations/TRIGGER_REQUESTS.json",
+      "source_status": "repository_observed",
+      "observation": "The ledger contains pending requests with execution_claimed=false and preserves failed or unattempted direct-trigger evidence."
+    },
+    {
+      "locator": "operations/CURRENT_STATE.json",
+      "source_status": "repository_observed",
+      "observation": "The project forbids claims of peer execution without evidence."
+    },
+    {
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "source_status": "repository_observed",
+      "observation": "Continuity work requires immutable provenance and forbids reconstruction of unverified history."
+    },
+    {
+      "locator": "recent repository commits through 58dccb1ab9df12cf8aa3cea256015e3735b2d7b5",
+      "source_status": "repository_observed_partial_history",
+      "observation": "Subsequent team artifacts and commits exist after older trigger requests, but commit existence alone does not identify which request caused a run."
+    }
+  ],
+  "claims": {
+    "observed": [
+      "Pending trigger requests remain recorded with execution_claimed=false.",
+      "Repository work continued after those requests were created.",
+      "No immutable correlation identifier linking the pending requests to a particular peer run was found in the inspected canonical trigger ledger."
+    ],
+    "inferred": [
+      "Temporal ordering alone is insufficient to prove causation or request satisfaction.",
+      "Treating any later run as satisfying any earlier request would collapse provenance and permit false peer-execution claims."
+    ],
+    "proposed": [
+      "A trigger request may transition from pending only when a correlation record names request_id, target_team, trigger mechanism, immutable execution or run evidence, observed outcome, and correlation method.",
+      "Scheduling mutation evidence proves only that a schedule mutation was accepted; it does not prove execution.",
+      "When one run could plausibly answer multiple requests, each request must be individually correlated, explicitly superseded, or remain pending."
+    ],
+    "superseded": [
+      "A peer run occurring after a request automatically proves that the request was executed.",
+      "An accepted automation update is equivalent to peer execution evidence.",
+      "A new team artifact may be retroactively assigned to an earlier request based only on subject similarity."
+    ],
+    "unresolved": [
+      "Which, if any, later runs correspond to the pending VST and ICW trigger requests in operations/TRIGGER_REQUESTS.json.",
+      "Whether the trigger ledger should gain a first-class correlated_execution object or use additive per-request evidence records."
+    ]
+  },
+  "correlation_contract": {
+    "required_fields": [
+      "request_id",
+      "target_team",
+      "trigger_attempted_at",
+      "trigger_mechanism",
+      "trigger_evidence",
+      "execution_evidence",
+      "correlation_method",
+      "correlated_at",
+      "correlation_status"
+    ],
+    "allowed_correlation_status": [
+      "confirmed",
+      "superseded",
+      "rejected",
+      "unresolved"
+    ],
+    "fail_closed_rule": "Absent execution evidence or an explicit supersession record, preserve status=pending and execution_claimed=false."
+  },
+  "privacy_boundary": {
+    "retained": [
+      "team identifiers",
+      "request identifiers",
+      "repository paths",
+      "commit identifiers",
+      "abstract provenance rules"
+    ],
+    "excluded": [
+      "private chat wording",
+      "personal context",
+      "credentials",
+      "raw automation payloads not already present in the repository"
+    ]
+  },
+  "evidence_strength": "repository-grounded rule; pending request-to-run correlations remain unresolved",
+  "falsification_route": "Produce immutable evidence that a named pending request directly caused or was explicitly consumed by a named peer run. That request may then be correlated without weakening the general rule.",
+  "registry_change": null
+}
