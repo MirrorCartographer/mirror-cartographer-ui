@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:52:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established that earliest bounded-search occurrence is not origin evidence; rejected V8/V9 numeric-suffix collisions and preserved M-004 through M-006 as unresolved pending exhaustive branch and history coverage.",
+  "evidence_path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0852Z-origin-search-boundary.json",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history locator that explicitly assigned those identifiers."
+  ],
+  "safe_next_action": "Run authenticated exhaustive branch and reachable-commit enumeration; evaluate candidate origins using exact identifier assignment, namespace, owner, semantic role, temporal precedence, and immutable locator agreement. Preserve unresolved status when coverage is incomplete.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "files_deleted": false,
+  "execution_claimed": false,
+  "reversible": true
+}
