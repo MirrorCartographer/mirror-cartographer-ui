@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-required-repertory-test-inventory-2026-07-15T2148Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T21:48:50Z",
+  "finding": "Dynamic .test.cjs discovery can still omit a critical gate while executing the remaining suite successfully; required activation and curl-bound publication tests must be asserted before spawning Node's test runner.",
+  "slice": {
+    "module": "operations/vercel-studio/repertory/repertoryTestInventory.v1.cjs",
+    "runner": "operations/vercel-studio/repertory/runRepertoryTests.v1.mjs",
+    "test": "operations/vercel-studio/repertory/requiredRepertoryTestInventory.v1.test.cjs",
+    "required_tests": [
+      "assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs",
+      "assessRepertoryActivation.v1.test.cjs"
+    ],
+    "failure_mode": "repertory_test_execution_prohibited"
+  },
+  "verification": {
+    "route": "isolated Node syntax and deterministic unit execution using committed source text",
+    "commands": [
+      "node --check repertoryTestInventory.v1.cjs",
+      "node --test requiredRepertoryTestInventory.v1.test.cjs"
+    ],
+    "result": {
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "full_authenticated_checkout_suite_executed": false
+  },
+  "claim_boundary": {
+    "established": [
+      "critical repertory test names are now required before the canonical runner executes",
+      "missing, empty, invalid, or duplicate inventories fail closed"
+    ],
+    "not_established": [
+      "the complete repository repertory suite passes in an authenticated checkout",
+      "runtime activation",
+      "deployment identity",
+      "browser audio routing",
+      "physical-device audibility"
+    ]
+  },
+  "runtime_activation_performed": false,
+  "privacy": "No credentials, private source material, response content, or personal data retained.",
+  "rollback": [
+    "Revert the queue and evidence commits.",
+    "Revert requiredRepertoryTestInventory.v1.test.cjs.",
+    "Revert runRepertoryTests.v1.mjs.",
+    "Revert repertoryTestInventory.v1.cjs."
+  ]
+}
