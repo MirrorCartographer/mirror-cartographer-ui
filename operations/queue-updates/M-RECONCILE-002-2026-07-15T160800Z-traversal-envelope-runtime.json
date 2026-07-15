@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T16:08:00Z",
+  "state": "in_progress",
+  "completed_slice": "Implemented a deterministic repository-traversal envelope producer and fail-closed validator that canonicalizes evidence, recomputes traversal digests, derives coverage status, and prohibits terminal provenance when pagination, permissions, reachable-history closure, deleted-path inspection, or blind-spot requirements are unmet.",
+  "artifacts": [
+    {
+      "path": "tools/continuity/repository-traversal-envelope-v1.cjs",
+      "commit": "53e498ffa5569cf304995e19d941afd796e6c841"
+    },
+    {
+      "path": "tools/continuity/repository-traversal-envelope-v1.test.cjs",
+      "commit": "51d61feeaed8d2210d759a5c38b78b7bd07bb657"
+    },
+    {
+      "path": "operations/continuity/records/CM-1034.json",
+      "commit": "5e94d6670669a9f9865caebc5432b8da359851c7"
+    }
+  ],
+  "verification": {
+    "tests_authored": 7,
+    "runtime_execution_observed": false,
+    "covered_conditions": [
+      "deterministic canonicalization",
+      "incomplete pagination",
+      "unknown permission scope",
+      "unvisited reachable commits",
+      "missing deleted-path inspection",
+      "traversal digest tampering",
+      "conflicting coverage"
+    ]
+  },
+  "acceptance_remaining": [
+    "Execute node --test tools/continuity/repository-traversal-envelope-v1.test.cjs in an authenticated checkout and retain exact output.",
+    "Produce retained authenticated input covering every accessible branch, tag, and other relevant ref with complete pagination and known permission scope.",
+    "Traverse all reachable commits from the retained roots and prove parent-edge closure with zero unvisited reachable commits.",
+    "Inspect historical and deleted paths for M-004, M-005, and M-006, then feed the retained observations through the producer and validator.",
+    "Classify each identifier as located or exhaustive-unlocated only when terminal_provenance_allowed is true; otherwise preserve unresolved status."
+  ],
+  "safe_next_action": "Run the committed test file, then build an authenticated retained traversal input and generate the first real envelope. Do not resolve M-004, M-005, or M-006 from connector search snippets or incomplete branch coverage.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy_boundary": "Public-safe repository metadata, abstract identifiers, commit identities, and validation semantics only; no private source material retained."
+}
