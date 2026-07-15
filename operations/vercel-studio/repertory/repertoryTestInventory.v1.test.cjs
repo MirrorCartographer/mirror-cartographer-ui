@@ -10,6 +10,7 @@ const runnerPath = join(repertoryDirectory, 'runRepertoryTests.v1.mjs');
 const criticalTests = Object.freeze([
   'assessRepertoryActivation.v1.test.cjs',
   'buildContinuityHandoff.v1.test.cjs',
+  'verifyProgrammedStageReceipt.v1.test.cjs',
 ]);
 
 function discoveredTestNames() {
@@ -26,7 +27,7 @@ test('canonical runner retains deterministic fail-closed discovery', () => {
   assert.match(runnerSource, /spawnSync\(process\.execPath, \['--test', \.\.\.testFiles\]/);
 });
 
-test('critical activation and continuity gates remain discoverable exactly once', () => {
+test('critical activation, continuity, and programmed-stage gates remain discoverable exactly once', () => {
   const discovered = discoveredTestNames();
   assert.ok(discovered.length >= criticalTests.length + 1, 'repertory suite unexpectedly contracted');
 
