@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T06:46:29Z",
+  "state": "in_progress",
+  "completed_slice": "Recorded an indexed-source coverage boundary: repository search silence remains coverage-limited, File Library numeric suffix matches remain rejected collisions, and recent continuity summaries remain lead-only rather than identifier assignments.",
+  "evidence": [
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0646Z-indexed-source-coverage.json@ab60ed1bd72907ddec4645393ddd4a3eed0a02dd"
+  ],
+  "claims": {
+    "observed": [
+      "No indexed repository match was returned for the exact continuity identifier query used in this run.",
+      "File Library retrieval returned unrelated V8/V9 suffix matches."
+    ],
+    "inferred": [
+      "Originating assignment evidence may exist outside indexed default-branch content or in an unqueried source class."
+    ],
+    "proposed": [
+      "Enumerate all accessible branches and traverse reachable history before any unlocated-after-exhaustive-coverage classification."
+    ],
+    "superseded": [
+      "Search silence proves historical nonexistence.",
+      "Numeric suffix agreement resolves identifier provenance."
+    ],
+    "unresolved": [
+      "Immutable assignment objects for M-004, M-005, and M-006.",
+      "Exhaustive branch and history coverage."
+    ]
+  },
+  "safe_next_action": "Enumerate every accessible branch, retain branch tip SHAs and pagination evidence, traverse each branch's reachable commit history for exact identifier and assignment-language candidates, and adjudicate under operations/continuity/contracts/identifierAssignmentAuthority.v1.json. Preserve unresolved status until exhaustive coverage is evidenced.",
+  "shared_state_write": {
+    "canonical_queue_update_attempted": true,
+    "result": "rejected_by_sha_conflict",
+    "conflict_policy": "fail_closed_no_overwrite",
+    "additive_projection_used": true
+  },
+  "privacy_boundary": "No private source text retained; only source classes, coverage limits, classifications, and immutable repository locators.",
+  "rollback": "Revert the adding commit; the canonical queue and other teams' state remain untouched."
+}
