@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-test-inventory-2026-07-15T0856Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T08:56:00Z",
+  "finding": "The canonical repertory runner dynamically discovers sorted .test.cjs files, but prior evidence did not independently fail closed when critical activation or continuity tests were removed or duplicated.",
+  "implemented_slice": {
+    "path": "operations/vercel-studio/repertory/repertoryTestInventory.v1.test.cjs",
+    "commit": "c3c7eeb2477af0801e022907c7ac44f6f8d4f83a",
+    "behavior": [
+      "Verifies that the canonical runner retains sorted .test.cjs discovery, zero-test fail-closed behavior, and node --test execution.",
+      "Requires assessRepertoryActivation.v1.test.cjs and buildContinuityHandoff.v1.test.cjs to be discoverable exactly once.",
+      "Requires the inventory gate itself to be auto-discovered exactly once.",
+      "Rejects unstable ordering and path-traversal-like test names."
+    ]
+  },
+  "verification": {
+    "strongest_feasible_route": "Fetched the committed file by exact commit SHA and inspected its retained contents.",
+    "test_execution": "not_executed",
+    "reason": "No authenticated repository checkout or command-execution surface was available in this run.",
+    "claims_not_made": [
+      "No passing npm run test:vercel-repertory claim.",
+      "No application runtime claim.",
+      "No Vercel deployment claim.",
+      "No browser, audio, or physical-device claim."
+    ]
+  },
+  "production_context": {
+    "programmed_stage": "quiet-machine",
+    "basis": "Previously retained deterministic repertory mapping for UTC hour 08.",
+    "runtime_execution_claimed": false
+  },
+  "privacy_boundary": {
+    "classification": "public_abstract",
+    "private_source_material_included": false,
+    "payments_or_conversion_logic_added": false
+  },
+  "reversibility": {
+    "rollback": "Revert commit c3c7eeb2477af0801e022907c7ac44f6f8d4f83a and this evidence commit in reverse order.",
+    "history_deleted": false
+  },
+  "limits": [
+    "The full repertory suite still requires execution in an authenticated checkout.",
+    "Critical-test anchors are intentionally narrow and may need expansion only through a future evidence-backed slice.",
+    "Provider capacity and immutable deployment identity remain unresolved."
+  ]
+}
