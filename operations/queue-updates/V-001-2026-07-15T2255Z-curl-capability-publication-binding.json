@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T22:55:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound Frontier Research's curl capability preflight and generated-hostname pipeline ahead of repertory publication readiness, with fail-closed cross-receipt digest and exact-commit checks.",
+  "evidence": "operations/evidence/V-001-curl-capability-publication-binding-2026-07-15T2255Z.json",
+  "canonical_queue_overwritten": false,
+  "acceptance_remaining": [
+    "Execute npm run test:vercel-repertory in an authenticated checkout and retain output.",
+    "Execute authenticated all-event workflow enumeration through both independent clients and retain reconciliation.",
+    "Observe an operations-only sentinel reported as skipped or ignored after provider capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run the complete repertory test command in an authenticated checkout; publication and runtime activation remain prohibited until every retained receipt and immutable deployment identity verifies against one exact application commit."
+}
