@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T03:15:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a machine-readable coverage-claim lattice that separates indexed-query completeness from repository-history completeness and forbids classifying M-004, M-005, or M-006 as unlocated until authenticated all-ref and reachable-commit traversal evidence is retained.",
+  "artifact": {
+    "path": "operations/continuity/manifests/CM-20260715T0315Z-coverage-claim-lattice.json",
+    "commit": "da490d4b3043e3d3102bd382ce4db3a5bcf8f2d8"
+  },
+  "contradiction_resolved": "A no-result search may be complete for the submitted query while remaining incomplete for repository provenance; those evidence claims are not interchangeable.",
+  "claim_status": {
+    "observed": "No indexed M-004 result and no usable branch inventory were returned in this run.",
+    "inferred": "Connector no-result behavior cannot establish repository-wide absence.",
+    "proposed": "Require the coverage lattice in future provenance adjudication artifacts.",
+    "superseded": "No-result code search proves historical nonexistence.",
+    "unresolved": "Complete ref inventory and provenance for M-004, M-005, and M-006."
+  },
+  "acceptance_remaining": [
+    "Obtain an authenticated exhaustive branch/ref inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after repository_exhaustive coverage is verified.",
+    "Locate the originating decision log, language lexicon, project document, or eligible chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Build and retain an authenticated ref inventory plus deduplicated reachable-commit manifest, including pagination and tool-limit evidence, then apply namespace and temporal-origin gates to each M-series candidate.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": null,
+  "privacy": {
+    "private_material_exposed": false,
+    "basis": "Only repository metadata, abstract evidence classes, and unresolved artifact identifiers were retained."
+  }
+}
