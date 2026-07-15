@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "slice_id": "R-042",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T23:34:47Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added an operations-only GitHub Actions adapter that derives exact-run identity from runner environment, invokes the verified OIDC receipt pipeline in memory, emits no token-bearing values, and persists only verified receipts with exclusive no-overwrite owner-only file semantics.",
+  "files": [
+    "operations/frontier-research/githubActionsOidcReceiptAdapter.v1.cjs",
+    "operations/frontier-research/githubActionsOidcReceiptAdapter.v1.test.cjs",
+    "operations/evidence/R-042-github-actions-oidc-adapter-2026-07-15T1934-0400.json"
+  ],
+  "commits": [
+    "e00a74103b96fa18e0c4f7fbf4ffddba21914a2a",
+    "9f845646ef91f1d1624ffedc24d5b12eea27c671",
+    "f92b3cdf0f69a33d7859f0367da3bba676a7cc21"
+  ],
+  "verification": "Repository fetch verified the implementation blob. Six deterministic tests were committed but were not executed in an authenticated checkout during this run; no passing execution is claimed.",
+  "acceptance_remaining": [
+    "Execute node --test operations/frontier-research/githubActionsOidcReceiptAdapter.v1.test.cjs in an authenticated checkout and retain exact output.",
+    "Add an operations-only workflow with permissions contents: read and id-token: write that invokes the adapter without deployment actions.",
+    "Request one real GitHub OIDC token, retain only the verified receipt, and verify logs and artifacts contain no authorization or JWT values.",
+    "Feed the verified receipt into the existing repertory/deployment evidence gate without weakening immutable deployment requirements."
+  ],
+  "safe_next_action": "Create and execute an operations-only GitHub Actions workflow adapter using id-token: write, explicit secret masking before any diagnostic output, a fixed custom audience, no deployment steps, and no-overwrite retained receipt output. Fail before downstream evidence promotion on any adapter violation.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": null
+}
