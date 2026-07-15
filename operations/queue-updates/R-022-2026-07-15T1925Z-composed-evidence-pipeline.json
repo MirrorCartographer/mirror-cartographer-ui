@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T19:25:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Composed authenticated Vercel deployment retrieval validation directly ahead of immutable deployment identity validation in one fail-closed pipeline.",
+  "artifacts": [
+    "operations/frontier-research/vercelDeploymentEvidencePipeline.v1.cjs",
+    "operations/frontier-research/vercelDeploymentEvidencePipeline.v1.test.cjs",
+    "operations/evidence/R-022-composed-vercel-evidence-pipeline-2026-07-15T1925Z.json"
+  ],
+  "commits": [
+    "dd94232eb675557afa6056c14bcaadc4a28e734f",
+    "02b5714702f2d4bab66155cc105b5991d1797193",
+    "b07b1ba09f9b8917f5d77cd3e757cac7e1457f35"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "acceptance_remaining": [
+    "Execute the composed pipeline in an authenticated checkout using a retained Vercel v13 response after provider capacity returns.",
+    "Feed only verified pipeline output into the V-001 promotion assessor.",
+    "Independently request the generated deployment hostname.",
+    "Do not infer browser, audio, alias, or physical-device behavior from deployment identity."
+  ],
+  "safe_next_action": "Add a Vercel Studio adapter that accepts only verified composed-pipeline output and rejects direct raw deployment objects, without initiating a deployment while provider capacity remains blocked.",
+  "shared_state_overwritten": false
+}
