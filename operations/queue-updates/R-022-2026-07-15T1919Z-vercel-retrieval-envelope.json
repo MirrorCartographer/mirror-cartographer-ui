@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added and tested a fail-closed authenticated retrieval envelope that binds an exact Vercel deployment GET request to deployment id, project id, observation time, response status, and canonical response-body digest without persisting credentials.",
+  "artifacts": [
+    "operations/frontier-research/vercelDeploymentRetrievalEnvelope.v1.cjs",
+    "operations/frontier-research/vercelDeploymentRetrievalEnvelope.v1.test.cjs",
+    "operations/evidence/R-022-vercel-retrieval-envelope-2026-07-15T1919Z.json"
+  ],
+  "verification": "6 deterministic Node tests passed; syntax check passed.",
+  "acceptance_remaining": [
+    "Integrate the retrieval envelope ahead of immutable deployment identity validation.",
+    "Execute one authenticated exact deployment retrieval after provider capacity returns.",
+    "Retain a redacted request descriptor and response body digest; never retain credentials.",
+    "Independently request the generated deployment hostname before any route claim."
+  ],
+  "specialist_registry_change": null,
+  "next_action": "Compose retrieval-envelope verification with vercelImmutableDeploymentEvidence.v1.cjs so copied, stale, cross-project, or tampered deployment objects cannot enter V-001 promotion."
+}
