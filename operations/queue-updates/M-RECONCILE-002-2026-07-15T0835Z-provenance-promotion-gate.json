@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:35:00Z",
+  "update_type": "additive_completed_slice",
+  "completed_slice": "Established a fail-closed provenance promotion gate requiring namespace, owner, semantic role, temporal precedence, immutable locator, and coverage adequacy agreement before any continuity identifier may be promoted to authoritative origin.",
+  "evidence_path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0835Z-provenance-promotion-gate.json",
+  "canonical_queue_modified": false,
+  "state_effect": "M-004, M-005, and M-006 remain unresolved and quarantined; no historical assignment was reconstructed.",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat source that assigned those identifiers."
+  ],
+  "safe_next_action": "Apply the promotion gate to every candidate found during exhaustive ref and reachable-history traversal, retaining per-dimension true, false, or unknown results and immutable locators.",
+  "rollback": "Revert this additive queue-update commit; the canonical queue and prior team records remain unchanged."
+}
