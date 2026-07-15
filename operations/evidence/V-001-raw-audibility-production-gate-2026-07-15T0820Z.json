@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-15T08:20:00Z",
+  "slice": "raw_audibility_production_acceptance_gate",
+  "finding": "Production acceptance must derive physical iPhone Safari audibility from retained raw observation evidence rather than trusting a caller-supplied summary assessment.",
+  "design_implication": "The final gate now invokes the frontier-research mobile Safari validator directly, binds its raw tested_commit and deployment_id to the expected immutable deployment, and fails closed on missing human observation or divergent identity.",
+  "source_status": {
+    "current_state": "inspected",
+    "active_queue": "inspected",
+    "specialist_registry": "inspected",
+    "trigger_requests": "inspected",
+    "recent_commits": "inspected",
+    "prior_production_gate": "inspected",
+    "frontier_mobile_safari_validator": "inspected"
+  },
+  "verification": {
+    "command": "node --test assessProductionAcceptanceFromRawEvidence.v1.test.cjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "environment": "isolated Node test reproduction before repository commit"
+  },
+  "claim_boundary": "No deployment, route activation, browser rendering, or physical-device audibility is claimed.",
+  "reversibility": {
+    "strategy": "Revert the queue projection, evidence record, test, and implementation commits in reverse order.",
+    "destructive_actions": false
+  },
+  "privacy": {
+    "private_source_material_exposed": false,
+    "credentials_persisted": false,
+    "payments_or_conversion_logic_added": false
+  }
+}
