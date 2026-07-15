@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "artifact": "provenance_candidate_adjudication",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T05:34:00Z",
+  "purpose": "Evaluate candidate source objects for M-004, M-005, and M-006 without reconstructing unverified history or promoting semantic resemblance to provenance.",
+  "durable_memory": "A continuity identifier is resolved only by agreement among assignment evidence, namespace, owner, semantic role, temporal precedence, and immutable locator. Textual similarity, later summaries, automation prose, and suffix collisions are leads rather than identity evidence.",
+  "claim_states": {
+    "observed": [
+      "M-004, M-005, and M-006 are referenced as missing continuity artifacts in the active queue.",
+      "Current repository evidence does not yet supply an authenticated exhaustive ref-and-history traversal.",
+      "Existing queue state explicitly preserves unresolved classification until exhaustive coverage is available."
+    ],
+    "inferred": [
+      "Candidate adjudication must be repeatable and independent of the reviewer who encountered the candidate.",
+      "A single failed gate is sufficient to prevent resolved status, while incomplete coverage requires unresolved rather than rejected when the candidate cannot be fully tested."
+    ],
+    "proposed": [
+      "Represent every candidate as a gate-by-gate record with source class, immutable locator, temporal relation, and falsification route.",
+      "Permit resolved status only when all identity gates pass and repository coverage is sufficient to exclude stronger conflicting candidates."
+    ],
+    "superseded": [
+      "Treating a filename suffix match, semantic resemblance, or later completion summary as sufficient provenance.",
+      "Recreating M-series artifacts from inferred content when the originating assignment is absent."
+    ],
+    "unresolved": [
+      "The originating assignment objects for M-004, M-005, and M-006.",
+      "Whether inaccessible refs or unindexed history contain stronger candidates."
+    ]
+  },
+  "candidate_record": {
+    "candidate_id": "string",
+    "target_identifier": "M-004|M-005|M-006",
+    "source_class": "decision_log|language_lexicon|project_document|chat_history|commit|automation_output|file_library|other",
+    "immutable_locator": "string|null",
+    "content_digest": "sha256|null",
+    "observed_at": "RFC3339",
+    "privacy_class": "public_safe|private_restricted|metadata_only",
+    "gates": {
+      "assignment_evidence": "pass|fail|unknown",
+      "namespace_agreement": "pass|fail|unknown",
+      "owner_agreement": "pass|fail|unknown",
+      "semantic_role_agreement": "pass|fail|unknown",
+      "temporal_precedence": "pass|fail|unknown",
+      "immutable_locator_verified": "pass|fail|unknown",
+      "coverage_sufficient": "pass|fail|unknown"
+    },
+    "classification": "resolved|rejected_collision|lead_only|unresolved",
+    "reason": "string",
+    "falsification_route": "string"
+  },
+  "classification_rules": [
+    "resolved requires every gate to pass",
+    "rejected_collision requires at least one identity gate to fail with sufficient evidence",
+    "lead_only applies when resemblance exists but assignment or immutable-locator evidence is absent",
+    "unresolved applies when coverage or a required gate remains unknown",
+    "private content must not be copied into public-safe artifacts; retain only bounded metadata and immutable locators"
+  ],
+  "registry_change": null
+}
