@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T04:18:00Z",
+  "slice": "snapshot_bound_absence_rule",
+  "state": "in_progress",
+  "completed": [
+    "Recovered and structured the distinction between historically valid negative evidence and current repository truth.",
+    "Bound repository-wide absence and unlocated claims to an immutable repository snapshot and accessible-ref inventory.",
+    "Defined fail-closed freshness requirements for reusing exhaustive absence evidence after repository mutation.",
+    "Preserved M-004, M-005, and M-006 as unresolved because no exhaustive immutable traversal manifest exists.",
+    "Reduced all relevant source material to abstract repository and continuity rules without retaining private wording or attribution."
+  ],
+  "evidence": {
+    "manifest_path": "operations/continuity/manifests/CM-20260715T0418Z-snapshot-bound-absence-rule.json",
+    "manifest_commit": "ffe84efbeb26a306d32ac6a201500ff828c02594",
+    "canonical_queue_blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "observed_repository_head_before_manifest": "318211af84376f0af9b6365b1e1c177c89211950",
+    "prior_coverage_lattice_commit": "da490d4b3043e3d3102bd382ce4db3a5bcf8f2d8",
+    "prior_noncoercive_rule_commit": "481a73b83daa5e9c77f0dbb15057a9c1e807608a"
+  },
+  "claims": {
+    "observed": "The repository continued changing after earlier continuity searches, while M-RECONCILE-002 still requires exhaustive history coverage before unlocated classification.",
+    "inferred": "Exhaustive negative evidence is reproducible only when bound to immutable repository and ref-set identity.",
+    "proposed": "Continuity adjudicators must treat snapshot-bound absence as stale for present-tense use after relevant repository mutation unless a fresh exhaustive traversal is retained.",
+    "superseded": "An exhaustive absence result remains universally current without snapshot or freshness qualification.",
+    "unresolved": "Immutable originating objects for M-004, M-005, and M-006 remain unlocated."
+  },
+  "acceptance_remaining": [
+    "Obtain an authenticated exhaustive accessible-ref inventory or equivalent repository-history traversal anchored to an immutable snapshot.",
+    "Retain deduplicated reachable-commit inventory, inaccessible-object handling, tool identity, timestamps, and canonical digests.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only within the validated snapshot.",
+    "Locate the originating decision log, language lexicon, project document, or eligible chat-history assignment."
+  ],
+  "safe_next_action": "Generate and retain an authenticated ref-and-reachable-commit manifest for one immutable repository snapshot, then apply assignment, namespace, owner, semantic-role, temporal-precedence, immutable-locator, and snapshot-freshness gates to every M-004, M-005, and M-006 candidate.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none",
+  "history_deleted": false
+}
