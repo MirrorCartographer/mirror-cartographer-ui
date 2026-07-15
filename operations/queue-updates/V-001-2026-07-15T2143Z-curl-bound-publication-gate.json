@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T21:43:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound Frontier Research's retained curl generated-hostname receipt into the repertory publication-readiness path with fail-closed reconciliation of commit, deployment id, deployment-pipeline digest, and hostname-observation digest.",
+  "production_on_stage": {
+    "utc_hour": 21,
+    "edition_id": "wordless-room-game-21",
+    "production_id": "wordless-room-game",
+    "edition_cue": "threshold-four",
+    "runtime_activation_performed": false
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer"
+  ],
+  "specialist_registry_change": null,
+  "verification": {
+    "implementation_committed": true,
+    "test_contract_committed": true,
+    "test_execution_pending": true,
+    "deployment_attempted": false,
+    "runtime_or_audio_claimed": false
+  },
+  "acceptance_remaining": [
+    "Execute the curl-bound publication gate tests in an authenticated checkout and retain exact output.",
+    "After provider capacity returns, obtain one exact immutable READY deployment and retain a zero-redirect TLS-verified curl receipt for its generated hostname.",
+    "Keep runtime activation, browser behavior, audio routing, and physical iPhone Safari audibility as separate acceptance layers."
+  ],
+  "safe_next_action": "Run node --test operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs; do not create an application deployment while provider capacity remains blocked.",
+  "rollback": "Revert the four additive commits for this slice; canonical repertory and application runtime remain unchanged.",
+  "privacy_boundary": "No private source material, credentials, headers, or response body were committed."
+}
