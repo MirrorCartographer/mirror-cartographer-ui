@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { validateConfusablesSemantics } from './validate-confusables-semantics.mjs';
+import { parseCanonicalConfusables } from './parse-confusables-canonical.mjs';
 
 function fail(code, message, details = {}) {
   const error = new Error(message);
@@ -27,14 +28,15 @@ function assertPlainRecord(value, label) {
  *   -> canonical parser -> independent count/digest reconciliation -> promotion envelope.
  *
  * The injected sourceVerifier must authenticate the exact bytes and return a record
- * containing at least verified=true. The injected parser must return canonicalMappings,
- * an array of strings in the validator's canonical `SOURCE;TARGET;MA` form.
+ * containing at least verified=true. The repository-owned parser is used by default;
+ * a caller may inject an independent parser for differential testing. A parser must
+ * return canonicalMappings, an array of strings in canonical `SOURCE;TARGET;MA` form.
  */
 export function buildVerifiedConfusablesDataset({
   sourceBytes,
   expectedVersion,
   sourceVerifier,
-  parser
+  parser = parseCanonicalConfusables
 }) {
   if (!(sourceBytes instanceof Uint8Array)) {
     throw new TypeError('sourceBytes must be a Uint8Array');
@@ -113,6 +115,9 @@ export function buildVerifiedConfusablesDataset({
     sourceEvidence: Object.freeze({ ...sourceEvidence }),
     semanticEvidence,
     dataset: parsed.dataset,
+    parserIdentity: parser === parseCanonicalConfusables
+      ? 'repository_canonical_v1'
+      : 'injected_independent',
     limits: Object.freeze([
       'Does not establish complete UTS #39 conformance.',
       'Does not establish identifier-profile, script-resolution, bidiSkeleton, browser, or deployment behavior.'
