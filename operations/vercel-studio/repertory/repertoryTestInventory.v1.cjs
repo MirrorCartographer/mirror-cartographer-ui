@@ -3,6 +3,7 @@
 const REQUIRED_REPERTORY_TESTS = Object.freeze([
   'assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs',
   'assessRepertoryActivation.v1.test.cjs',
+  'vercelRepertoryOidcWorkflowContract.v1.test.cjs',
 ]);
 
 function assessRepertoryTestInventory(discoveredNames, requiredNames = REQUIRED_REPERTORY_TESTS) {
