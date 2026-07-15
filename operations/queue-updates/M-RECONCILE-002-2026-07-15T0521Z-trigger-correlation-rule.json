@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T05:21:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed provenance rule separating trigger requests, scheduling mutations, and peer executions; later work cannot satisfy an earlier request without immutable correlation or explicit supersession evidence.",
+  "artifact": {
+    "path": "operations/continuity/manifests/CM-20260715T0521Z-trigger-correlation-rule.json",
+    "commit": "c911067d003f47687f5bcf013944869fff5ad440"
+  },
+  "evidence": {
+    "sources_inspected": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "recent repository commits"
+    ],
+    "strength": "repository-grounded continuity rule",
+    "coverage": "canonical files plus recent commit window; not exhaustive repository history",
+    "unresolved": [
+      "No pending trigger request was correlated to a later run.",
+      "M-004, M-005, and M-006 immutable provenance remains unresolved.",
+      "Exhaustive accessible-branch and reachable-commit traversal remains outstanding."
+    ]
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Correlate or explicitly supersede pending peer trigger requests only when immutable evidence exists."
+  ],
+  "safe_next_action": "Add an append-only trigger-correlation evidence schema and use it to adjudicate each pending request without mutating execution_claimed unless a named run or explicit supersession is retained.",
+  "privacy_boundary": "No private source wording, personal context, credentials, or raw external automation payloads were retained.",
+  "registry_change": null,
+  "deletions": []
+}
