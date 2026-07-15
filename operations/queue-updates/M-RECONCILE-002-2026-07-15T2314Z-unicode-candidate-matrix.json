@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "priority": "highest",
+  "state": "in_progress",
+  "objective": "Resolve the provenance and location of reported continuity artifacts M-004, M-005, and M-006 without reconstructing unverified history.",
+  "completed_slice": "Created a retained candidate-only Unicode variant matrix for the exact ASCII identifiers M-004, M-005, and M-006; recorded representative indexed repository searches and preserved a strict separation between discovery equivalence and canonical identity.",
+  "memory_recovered": "Canonical identifier identity and Unicode-assisted discovery are separate layers. Candidate generation must be deterministic, original code points must remain intact, and no variant may be promoted without immutable exact assignment or explicit alias evidence.",
+  "claims": {
+    "observed": "Representative current indexed repository searches for five M-004 confusable variants returned no results.",
+    "inferred": "A deterministic matrix reduces ad hoc visual matching and improves repeatable exhaustive traversal.",
+    "proposed": "Use the retained matrix as a manifest for all-ref and reachable-history search with immutable locators.",
+    "superseded": "Visual equality or normalization alone can establish identifier identity.",
+    "unresolved": "Exhaustive branch, commit-history, decision-log, lexicon, project-document, chat-history, and File Library traversal remains incomplete."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Search the retained candidate matrix across all accessible refs and reachable commit trees.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Execute an authenticated all-ref and reachable-history traversal using the retained Unicode candidate matrix. For every hit, preserve original code points, blob SHA, commit SHA, path, line, namespace, owner, semantic role, and temporal precedence; keep all results candidate-only unless exact assignment or explicit alias evidence is found.",
+  "evidence": "operations/continuity/records/M-RECONCILE-002-unicode-candidate-matrix-2026-07-15T2314Z.json",
+  "source_status": "bounded_indexed_current_repository_non_exhaustive",
+  "privacy_boundary": "No private chat text, File Library content, credentials, or personal material was copied into repository artifacts.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
