@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T05:36:39Z",
+  "slice": "durable_repertory_source_repair",
+  "problem": {
+    "observed": "The canonical repertory encoded Wordless Room Game as an observed current stage and stated that it was selected for UTC hour 21.",
+    "conflict": "The committed durable provenance validator rejects transient stage-selection claims inside the durable repertory source.",
+    "risk": "A static source artifact could be mistaken for runtime activation evidence and would fail its own provenance contract."
+  },
+  "change": {
+    "file": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+    "production_id": "wordless-room-game",
+    "status_before": "observed_current_stage",
+    "status_after": "repertory_contract_only",
+    "continuity_role_before": "current_public_screening_surface",
+    "continuity_role_after": "public_screening_candidate",
+    "decision_after": "Retain as a reversible repertory identity; activation requires separate runtime evidence."
+  },
+  "verification": {
+    "route": "deterministic local Node execution against the committed validateDurableRepertoryProvenance.v1.cjs logic and the complete updated repertory JSON",
+    "result": {
+      "valid": true,
+      "production_count": 6,
+      "violations": [],
+      "activation_claimed": false,
+      "deployment_claimed": false
+    },
+    "source_commit": "7cb4c43f821e96cfb3e31b560641058c47646cf3"
+  },
+  "runtime_claims": {
+    "application_runtime_changed": false,
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "audio_playback_claimed": false,
+    "physical_device_verification_claimed": false
+  },
+  "privacy": {
+    "private_source_material_added": false,
+    "payments_or_conversion_logic_added": false
+  },
+  "rollback": "Revert commit 7cb4c43f821e96cfb3e31b560641058c47646cf3 to restore the prior repertory metadata. No application runtime file was changed.",
+  "next_action": "Bind validateDurableRepertoryProvenance.v1.cjs to the repository-required repertory test command, then execute the complete operations-only repertory suite in an authenticated checkout."
+}
