@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:44:00Z",
+  "update_type": "completed_reversible_slice",
+  "completed_slice": "Recovered and retained the project-wide continuity substrate boundary: distinct deterministic productions may share one continuity state only through a bounded public abstraction bound to immutable production evidence. The boundary explicitly separates continuity identity from private source material and from runtime, deployment, browser, audio, or peer-execution claims.",
+  "state_after": "in_progress",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers.",
+    "Locate the earliest immutable source assigning the phrase and semantic role one underlying continuity state."
+  ],
+  "safe_next_action": "Traverse all accessible refs and reachable history, then test candidate origin objects for the continuity-state phrase and M-004 through M-006 using namespace, owner, semantic role, temporal precedence, immutable locator, and coverage agreement. Do not promote bounded-search absence to exhaustive absence.",
+  "files": [
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0844Z-continuity-substrate-boundary.json"
+  ],
+  "commits": [
+    "16cc82de7eb2c89d43db482d22854788342d6490"
+  ],
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false
+}
