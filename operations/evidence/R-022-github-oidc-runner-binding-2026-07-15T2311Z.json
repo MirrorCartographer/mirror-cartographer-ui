@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T23:11:00Z",
+  "finding": "Challenge-bearing transcripts can still be fabricated after collection unless the collection is bound to an independently verified execution identity. GitHub Actions OIDC exposes repository, repository_id, workflow_ref, workflow_sha, run_id, run_attempt, runner_environment, jti, iat, and exp claims that can bind retained transcript digests to one exact workflow run after external JWT verification.",
+  "source_status": {
+    "github_oidc_reference": "primary_current_documentation",
+    "repository_state": "authenticated_private_repository",
+    "local_test_execution": "observed_in_ephemeral_node_runtime"
+  },
+  "evidence_strength": "implemented_and_locally_tested_contract_not_yet_integrated_into_authenticated_workflow",
+  "design_implication": "Require external OIDC signature verification, exact repository and immutable repository ID agreement, exact workflow ref and workflow SHA agreement, exact run ID and attempt agreement, runner environment agreement, observation within token validity, and binding to the challenge and both transcript digests before promoting runner identity evidence.",
+  "claim_boundary": "This proves only that externally verified GitHub-issued claims identify the asserted repository workflow run and that the receipt binds specified transcript digests. It does not prove same-process execution, hardware integrity, command truth, transcript truth, deployment behavior, browser behavior, audio behavior, or physical-device behavior.",
+  "uncertainty": [
+    "The module consumes already verified claims and does not implement JWT signature or JWKS verification.",
+    "A compromised workflow or runner can still produce misleading transcript content.",
+    "OIDC run identity is stronger provenance than a caller-supplied session ID but is not remote hardware attestation."
+  ],
+  "falsification_routes": [
+    "Accept decoded-only claims without external signature verification.",
+    "Accept a mismatched workflow SHA, run ID, run attempt, repository ID, or workflow ref.",
+    "Accept an observation outside the token validity interval.",
+    "Change a bound transcript digest without changing the parent receipt digest."
+  ],
+  "implementation": {
+    "module": "operations/frontier-research/githubOidcRunnerBinding.v1.cjs",
+    "tests": "operations/frontier-research/githubOidcRunnerBinding.v1.test.cjs",
+    "test_result": "6 passed, 0 failed in local Node test runtime"
+  }
+}
