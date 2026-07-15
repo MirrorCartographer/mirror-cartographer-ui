@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T03:01:00Z",
+  "slice": "canonical_repertory_bound_runtime_promotion",
+  "status": "completed_operations_only",
+  "production_scheduled_for_recording_hour": {
+    "utc_hour": 3,
+    "production_id": "wordless-room-game",
+    "title": "Wordless Room Game",
+    "runtime_activation_claimed": false
+  },
+  "problem_closed": "Runtime evidence promotion no longer accepts caller-authored expected-stage identity; the expected production, repertory contract, and UTC hour are derived from the validated canonical repertory and deterministic selector.",
+  "design_decision": {
+    "observed": "The prior promotion gate compared evidence against an expectedStage object supplied by its caller.",
+    "inferred": "A caller could author a self-consistent but non-canonical expectedStage and bypass the repertory selector as the source of truth.",
+    "experiment": "Compose the canonical repertory validator and hourly selector directly ahead of the existing freshness and expected-identity promotion gate.",
+    "current_decision": "Promotion derives expected identity from repertory.contract_id and the selector result for checkedAt.getUTCHours(); malformed repertories and identity divergence fail closed."
+  },
+  "specialists_used": [
+    "Reliability Engineer",
+    "Interaction Designer",
+    "Mobile Safari Engineer",
+    "Audio Engineer",
+    "Accessibility Engineer",
+    "Performance Engineer",
+    "Test Harness Engineer",
+    "Deployment Verifier",
+    "Rollback Engineer",
+    "Visual Transformation Director"
+  ],
+  "files": [
+    "operations/vercel-studio/repertory/promoteRuntimeStageFromRepertory.v1.cjs",
+    "operations/vercel-studio/repertory/promoteRuntimeStageFromRepertory.v1.test.cjs"
+  ],
+  "commits": [
+    "e0ce979f0de35834b53463f3a37db342bf7d42c2",
+    "1631225578c2e75b9a4518785ae9ed07dd99b862"
+  ],
+  "verification": {
+    "local_node_test": "6 passed, 0 failed",
+    "repository_writes": "verified",
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "application_runtime_changed": false
+  },
+  "constraints_preserved": [
+    "operations-only change",
+    "deterministic UTC schedule",
+    "no autoplay or audio activation",
+    "no private source material",
+    "no payment or conversion logic",
+    "mobile and accessibility runtime unaffected",
+    "fail-closed deployment posture"
+  ],
+  "rollback": "Stop consuming promoteRuntimeStageFromRepertory.v1.cjs and return to the untouched caller-supplied expected-stage promotion gate; revert the additive implementation, test, and record commits if removal is required.",
+  "next_action": "Wire the canonical repertory-bound promotion function into the retained runtime-evidence promotion path, then exercise selector to freshness to promotion against one immutable successful Vercel deployment after provider capacity returns."
+}
