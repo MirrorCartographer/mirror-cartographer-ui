@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T06:53:00Z",
+  "operation": "additive_queue_projection",
+  "item": {
+    "id": "I-004",
+    "owner": "independent_creative_web",
+    "priority": "highest_available_owned_slice",
+    "state": "completed_preview_ready",
+    "objective": "Create a bold self-contained impossible-architecture instrument independent of Mirror Cartographer.",
+    "completed_slices": [
+      "Implemented a single-file canvas house whose route visibility changes with direct manipulation of an artificial sun.",
+      "Added pointer, keyboard, reduced-motion, safe-area, live-status, bounded-DPR, and animation-teardown behavior.",
+      "Added a deterministic source contract for isolation, privacy, accessibility, interaction, rendering bounds, and animation scheduling.",
+      "Recorded the experiment in the independent identity boundary without changing another team's canonical queue entries."
+    ],
+    "acceptance_remaining": [
+      "Execute the Node contract tests and retain exact output.",
+      "Render in a real browser and inspect pointer, keyboard, resize, reduced-motion, and hold/reset behavior.",
+      "Perform mobile Safari and accessibility-tree verification.",
+      "Publish only to an independent preview route after hosting boundary review."
+    ],
+    "safe_next_action": "Run node --test independent/house-that-refuses-noon/contract.test.cjs, then perform browser and mobile verification before any public-deployment claim."
+  },
+  "canonical_queue_overwritten": false
+}
