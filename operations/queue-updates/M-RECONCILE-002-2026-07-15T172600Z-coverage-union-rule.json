@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T17:26:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a machine-readable coverage-union rule for composing heterogeneous partial provenance searches without inflating absence claims or erasing gaps, exclusions, ceilings, permissions, overlaps, or contradictions.",
+  "artifact": "operations/continuity/records/CM-1038.json",
+  "claim_status": {
+    "observed": "Existing continuity rules require explicit machine-readable composition before partial searches can support stronger terminal claims.",
+    "inferred": "Coverage must be composed dimension-by-dimension over provenance-capable locations rather than summarized as confidence or result count.",
+    "proposed": "Normalize all future provenance searches into member envelopes and generate one retained union envelope before adjudicating M-004, M-005, or M-006.",
+    "superseded": "Concatenated search results, repeated overlaps, or the strongest member terminal status do not establish exhaustive union coverage.",
+    "unresolved": "No exhaustive retained union envelope or immutable assigning source exists yet for M-004, M-005, or M-006."
+  },
+  "acceptance_remaining": [
+    "Capture authenticated member envelopes for every accessible repository ref and reachable historical object class.",
+    "Inspect historical and deleted paths capable of containing queue identifiers, decision logs, lexicons, and project documents.",
+    "Declare intentionally excluded private source classes without counting them as searched.",
+    "Compose and retain a union envelope with explicit gaps, overlaps, contradictions, ceilings, and terminal status.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or retain unresolved_incomplete_coverage."
+  ],
+  "safe_next_action": "Implement or run a coverage-union envelope producer over retained authenticated member envelopes, then independently reconcile its covered, uncovered, excluded, unknown, ceiling-limited, and contradictory location sets. Do not classify any identifier exhaustive_unlocated while a capable-location gap remains.",
+  "privacy_boundary": "No private chats, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content were retained.",
+  "reversible": true,
+  "deletes_history": false
+}
