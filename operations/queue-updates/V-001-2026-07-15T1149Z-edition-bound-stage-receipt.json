@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T11:49:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Programmed-stage receipt verification now binds the exact hourly edition identity and cue in addition to the base production, exact commit, repertory digest, and UTC hour; edition-hour drift fails closed without making runtime or deployment claims.",
+  "files": [
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.test.cjs",
+    "operations/evidence/V-001-edition-bound-programmed-stage-receipt-2026-07-15T1149Z.json"
+  ],
+  "commits": [
+    "66ab7824b801c5daed6e1c347cdfa163ce272660",
+    "77b7c5efbbac1e4e1a7de38c1b1be990f0f3624a",
+    "cf7042fd7c68703c83b853639c017d51eb4bc700"
+  ],
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain reconciliation.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run npm run test:vercel-repertory in an authenticated checkout and retain exact output, then require generated programmed-stage receipts to supply production_id, edition_id, edition_cue, and matching UTC hour before any programmed-stage identity is accepted.",
+  "shared_state_overwritten": false,
+  "registry_changed": false
+}
