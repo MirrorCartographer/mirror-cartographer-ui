@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T03:08:00Z",
+  "finding": "Static API-version policy validity and actual response-time version validity are distinct evidence classes and must both pass before pagination provenance can be promoted.",
+  "completed_slice": "Integrated verifyGithubApiResponseVersion.v1.cjs into verifyWorkflowEnumerationEvidence.v1.cjs ahead of pagination verification.",
+  "promotion_order": [
+    "api_version_policy",
+    "api_response_version",
+    "pagination_provenance"
+  ],
+  "fail_closed_conditions": [
+    "missing transmitted X-GitHub-Api-Version header",
+    "configured and transmitted version mismatch",
+    "invalid or non-success response status",
+    "410 Gone",
+    "Deprecation response header",
+    "Sunset response header",
+    "incomplete or invalid pagination provenance"
+  ],
+  "evidence_strength": "implementation_committed_tests_updated_execution_unverified",
+  "uncertainty": "The connector could commit and read repository files, but this run could not execute Node tests because the isolated shell had no network path to clone the private repository.",
+  "falsification_route": "Demonstrate any accepted workflow enumeration for which the request header is absent or mismatched, the response is non-2xx or carries Deprecation/Sunset, or pagination provenance is invalid.",
+  "files": [
+    "operations/frontier-research/github-actions/verifyWorkflowEnumerationEvidence.v1.cjs",
+    "operations/frontier-research/github-actions/verifyWorkflowEnumerationEvidence.v1.test.cjs"
+  ],
+  "commits": [
+    "997f365b313d000a93796bbec3ffa9dd2ec9a554",
+    "f1f51779bd88eeb9dff12b63229fbe45fd524fe0"
+  ],
+  "acceptance_remaining": [
+    "Execute the updated Node tests in an authenticated checkout.",
+    "Capture sanitized request headers and response lifecycle headers in both exhaustive enumeration clients.",
+    "Execute both clients against one exact commit and retain reconciled evidence."
+  ],
+  "specialist_registry_change": null
+}
