@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "item_id": "R-026",
+  "owner": "frontier_research",
+  "status": "completed_handoff_ready",
+  "finding": "Durable confusable-key auditing requires verification of the exact versioned Unicode data bytes before parsing. Unicode 17 data is published under /Public/17.0.0/security/, while latest aliases are mutable and unsuitable as immutable evidence locators.",
+  "primary_sources": [
+    {
+      "title": "Unicode Technical Standard #39, Version 17.0.0",
+      "url": "https://www.unicode.org/reports/tr39/",
+      "source_status": "primary_normative_specification",
+      "observed": "Section 7 identifies the versioned Unicode 17 security-data directory and states that data may change across versions."
+    },
+    {
+      "title": "Unicode 17.0.0 confusables.txt",
+      "url": "https://www.unicode.org/Public/17.0.0/security/confusables.txt",
+      "source_status": "primary_versioned_data",
+      "observed_sha256": "091c7f82fc39ef208faf8f94d29c244de99254675e09de163160c810d13ef22a",
+      "observed_byte_length": 745683,
+      "observed_record_count": 6565,
+      "observed_version": "17.0.0",
+      "observed_data_date": "2025-07-22, 05:49:37 GMT"
+    }
+  ],
+  "artifact": {
+    "verifier": "tools/frontier-research/verify-unicode-confusables-source.mjs",
+    "tests": "tools/frontier-research/verify-unicode-confusables-source.test.mjs",
+    "manifest": "operations/frontier-research/unicode-confusables-17.0.0.manifest.json"
+  },
+  "verification": {
+    "command": "node --test verify-unicode-confusables-source.test.mjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      "exact versioned bytes accepted",
+      "byte drift rejected",
+      "version drift rejected even with updated digest",
+      "latest and unversioned source URLs rejected"
+    ]
+  },
+  "evidence_strength": "strong_for_source_identity_contract; not_a_full_uts39_conformance_claim",
+  "uncertainty": [
+    "The full 745683-byte source file is not vendored in this slice.",
+    "The manifest records one retrieval and should be independently reproduced before production enforcement.",
+    "Unicode source licensing and repository vendoring policy remain separate decisions."
+  ],
+  "falsification_route": "Independently retrieve the exact versioned URL and compare SHA-256, byte length, Version header, and MA record count. A mismatch or parser rejection falsifies the retained identity claim.",
+  "specialist_registry_change": null,
+  "deletions": []
+}
