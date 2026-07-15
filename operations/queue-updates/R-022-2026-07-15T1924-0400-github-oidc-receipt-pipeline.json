@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T23:24:34Z",
+  "slice": "github_oidc_receipt_pipeline_v1",
+  "state": "completed_handoff_ready",
+  "completed": [
+    "Composed canonical GitHub OIDC discovery, JWKS retrieval, token-endpoint confinement, RS256 JWT verification, exact-run claim binding, and token-free receipt production into one fail-closed module.",
+    "Pinned discovery, JWKS, and token request hosts to token.actions.githubusercontent.com and required HTTPS.",
+    "Verified six deterministic cases with zero failures in an ephemeral Node test harness.",
+    "Retained source status, evidence strength, uncertainty, claim boundary, and falsification routes."
+  ],
+  "files": [
+    "operations/frontier-research/githubOidcReceiptPipeline.v1.cjs",
+    "operations/frontier-research/githubOidcReceiptPipeline.v1.test.cjs",
+    "operations/evidence/R-022-github-oidc-receipt-pipeline-2026-07-15T1924-0400.json"
+  ],
+  "acceptance_remaining": [
+    "Run the committed test through an authenticated repository checkout and retain exact output.",
+    "Add an operations-only GitHub Actions workflow with id-token: write that calls the pipeline using ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN without logging either token.",
+    "Supply exact repository ID, workflow ref, workflow SHA, run ID, attempt, runner environment, observation time, and retained transcript digests.",
+    "Retain only the token-free receipt and redacted test output.",
+    "Do not infer deployment, browser, audio, same-process, runner-integrity, or physical-device claims from the receipt."
+  ],
+  "safe_next_action": "Implement and statically test an operations-only workflow adapter that grants id-token: write, passes the GitHub-provided request URL and authorization material only in process memory, writes only the verified token-free receipt, and fails closed before any deployment action.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": null,
+  "deletions": []
+}
