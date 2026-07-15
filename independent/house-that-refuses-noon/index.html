@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The House That Refuses Noon</title>
+<style>
+:root{color-scheme:dark;--ink:#f1eadf;--dim:#a99f91;--line:rgba(241,234,223,.28);--panel:rgba(14,14,17,.72)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#08080a;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}body{overflow:hidden}
+main{position:fixed;inset:0;display:grid;grid-template-rows:1fr auto;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+header{position:fixed;left:max(18px,env(safe-area-inset-left));top:max(18px,env(safe-area-inset-top));max-width:min(34rem,calc(100vw - 36px));pointer-events:none;text-shadow:0 2px 16px #000}
+h1{margin:0 0 .45rem;font-size:clamp(1.05rem,2.2vw,1.55rem);letter-spacing:.08em;text-transform:uppercase;font-weight:600}p{margin:0;color:var(--dim);font-size:.78rem;line-height:1.5}
+.controls{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;padding:12px max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:linear-gradient(transparent,var(--panel) 38%);position:relative;z-index:2}
+button{appearance:none;border:1px solid var(--line);background:rgba(8,8,10,.76);color:var(--ink);min-height:44px;padding:.7rem 1rem;border-radius:999px;font:inherit;letter-spacing:.04em}button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.status{min-height:44px;display:flex;align-items:center;color:var(--dim);font-size:.74rem;padding:0 .25rem}
+@media (prefers-reduced-motion:reduce){canvas{cursor:default}}
+</style>
+</head>
+<body>
+<main>
+<canvas id="scene" aria-label="Interactive impossible house. Drag to move the artificial sun; shadow alignment opens and closes passages."></canvas>
+<div class="controls" aria-label="House controls">
+<button id="turn" type="button">Turn sun</button>
+<button id="still" type="button" aria-pressed="false">Hold architecture</button>
+<button id="reset" type="button">Return to dusk</button>
+<div id="status" class="status" role="status" aria-live="polite">The house is waiting for a direction.</div>
+</div>
+</main>
+<header><h1>The House That Refuses Noon</h1><p>Move the light. The walls do not move, but the routes do.</p></header>
+<script>
+(()=>{
+'use strict';
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d',{alpha:false});
+const status=document.getElementById('status'),turn=document.getElementById('turn'),still=document.getElementById('still'),reset=document.getElementById('reset');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let w=0,h=0,dpr=1,angle=-2.35,target=angle,held=false,raf=0,last=0,pointer=false;
+const rooms=[[-2,-1,2,2],[1,-2,2,2],[-1,1,2,2],[2,1,2,2],[-3,2,2,2],[0,4,2,2]];
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+function project(x,y,z=0){const s=Math.min(w,h)*.085,ox=w*.5,oy=h*.48;return [ox+(x-y)*s,oy+(x+y)*s*.48-z*s]}
+function poly(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
+function room(x,y,rw,rh,i){const z=.72, a=project(x,y,0),b=project(x+rw,y,0),c=project(x+rw,y+rh,0),d=project(x,y+rh,0),A=project(x,y,z),B=project(x+rw,y,z),C=project(x+rw,y+rh,z),D=project(x,y+rh,z);const pulse=.5+.5*Math.sin(angle+i*1.7);poly([a,b,B,A],`rgba(${25+20*pulse},${24+18*pulse},${29+22*pulse},1)`,'rgba(235,228,215,.22)');poly([b,c,C,B],`rgba(${12+10*pulse},${12+9*pulse},${15+12*pulse},1)`,'rgba(235,228,215,.18)');poly([A,B,C,D],`rgba(${45+26*pulse},${39+20*pulse},${48+30*pulse},1)`,'rgba(245,238,225,.32)');}
+function passage(a,b,open){const p=project(...a),q=project(...b);ctx.strokeStyle=open?'rgba(246,232,190,.9)':'rgba(126,116,105,.22)';ctx.lineWidth=open?3:1;ctx.setLineDash(open?[]:[5,7]);ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();ctx.setLineDash([])}
+function draw(t=0){raf=0;const dt=Math.min(40,t-last||16);last=t;if(!held&&!reduce){let diff=((target-angle+Math.PI*3)%(Math.PI*2))-Math.PI;angle+=diff*Math.min(1,dt*.0045)}else angle=target;
+ctx.fillStyle='#08080a';ctx.fillRect(0,0,w,h);const sunX=w*.5+Math.cos(angle)*Math.min(w,h)*.34,sunY=h*.45+Math.sin(angle)*Math.min(w,h)*.28;const glow=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,Math.min(w,h)*.42);glow.addColorStop(0,'rgba(223,190,126,.14)');glow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+rooms.forEach((r,i)=>room(...r,i));const gates=[[[0,0],[2,-1]],[[2,0],[2,2]],[[0,2],[3,2]],[[-2,1],[-2,3]],[[-1,3],[1,5]]];let openCount=0;gates.forEach((g,i)=>{const open=Math.cos(angle-i*.91)>.55;if(open)openCount++;passage(g[0],g[1],open)});ctx.fillStyle='rgba(241,234,223,.68)';ctx.beginPath();ctx.arc(sunX,sunY,4,0,Math.PI*2);ctx.fill();status.textContent=held?`Architecture held. ${openCount} passage${openCount===1?'':'s'} visible.`:`${openCount} passage${openCount===1?'':'s'} visible. Noon remains impossible.`;if(!reduce&&!held&&Math.abs(target-angle)>.001)raf=requestAnimationFrame(draw)}
+function schedule(){if(!raf)raf=requestAnimationFrame(draw)}
+function setFromPoint(x,y){const dx=x-w*.5,dy=y-h*.45;target=Math.atan2(dy,dx);schedule()}
+canvas.addEventListener('pointerdown',e=>{pointer=true;canvas.setPointerCapture(e.pointerId);setFromPoint(e.clientX,e.clientY)});canvas.addEventListener('pointermove',e=>{if(pointer)setFromPoint(e.clientX,e.clientY)});canvas.addEventListener('pointerup',()=>pointer=false);canvas.addEventListener('pointercancel',()=>pointer=false);
+turn.addEventListener('click',()=>{target+=Math.PI/4;schedule()});still.addEventListener('click',()=>{held=!held;still.setAttribute('aria-pressed',String(held));still.textContent=held?'Release architecture':'Hold architecture';schedule()});reset.addEventListener('click',()=>{held=false;still.setAttribute('aria-pressed','false');still.textContent='Hold architecture';target=-2.35;schedule()});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){target-=.18;schedule()}if(e.key==='ArrowRight'){target+=.18;schedule()}if(e.key===' '){e.preventDefault();still.click()}if(e.key==='Escape')reset.click()});addEventListener('resize',()=>{resize();schedule()});addEventListener('pagehide',()=>{if(raf)cancelAnimationFrame(raf)});resize();draw();
+})();
+</script>
+</body>
+</html>
