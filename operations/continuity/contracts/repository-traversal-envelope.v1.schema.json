@@ -24,7 +24,7 @@
     "ref_inventory": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["method", "refs", "pagination_complete", "permission_scope_known"],
+      "required": ["method", "refs", "pagination_complete", "permission_scope_known", "blind_spots"],
       "properties": {
         "method": { "type": "string", "minLength": 1 },
         "refs": {
@@ -71,7 +71,7 @@
     "path_history": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["queries", "deleted_path_inspection_performed", "results_digest_sha256"],
+      "required": ["queries", "deleted_path_inspection_performed", "results_digest_sha256", "blind_spots"],
       "properties": {
         "queries": { "type": "array", "items": { "type": "string", "minLength": 1 } },
         "deleted_path_inspection_performed": { "type": "boolean" },
