@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "I-002-browser-harness",
+  "owner": "independent_creative_web",
+  "recorded_at": "2026-07-15T10:07:00Z",
+  "creative_work": "The Fourth Room",
+  "premise": "A self-contained narrative room that changes through entry, remembers only within the current browser session, and treats sound as an explicitly invited material rather than ambient coercion.",
+  "artifact": {
+    "path": "independent/fourth-room/browser.spec.js",
+    "creating_commit": "272f703bc90c25f0379e569173ac4abae8827c17",
+    "source_blob_sha": "0442cde40d79319bd4b667ae17f6809f7d28f56b"
+  },
+  "coverage": [
+    "keyboard activation and authored state transition",
+    "sessionStorage persistence across reload and explicit reset",
+    "audio-context construction only after user activation",
+    "audio-context closure after opt-out",
+    "reduced-motion mode without a requestAnimationFrame loop",
+    "390 by 844 mobile viewport control reachability",
+    "network isolation during browser verification"
+  ],
+  "verification": {
+    "source_fetch_back": "passed",
+    "javascript_syntax_check": "passed with node --check against a local exact copy",
+    "playwright_execution": "not_run",
+    "reason_not_run": "The automation runtime did not have @playwright/test installed; repository dependencies were not installed in an authenticated checkout.",
+    "deployment_claimed": false,
+    "browser_behavior_claimed": false
+  },
+  "independence_boundary": {
+    "mirror_cartographer_runtime_dependency": false,
+    "external_network_dependency": false,
+    "authentication": false,
+    "analytics": false,
+    "commerce": false,
+    "persistent_identity_storage": false
+  },
+  "falsification_routes": [
+    "Run npx playwright test independent/fourth-room/browser.spec.js --reporter=line in an authenticated checkout.",
+    "Fail the slice if any browser schedules animation frames under reduced motion.",
+    "Fail the slice if audio construction occurs before a sound-button activation.",
+    "Fail the slice if any control falls outside the declared mobile viewport.",
+    "Fail the slice if any request leaves the loopback origin."
+  ],
+  "limits": [
+    "No browser engine executed in this run.",
+    "No accessibility tree was captured.",
+    "No mobile performance trace was captured.",
+    "No hosting or public deployment was attempted."
+  ]
+}
