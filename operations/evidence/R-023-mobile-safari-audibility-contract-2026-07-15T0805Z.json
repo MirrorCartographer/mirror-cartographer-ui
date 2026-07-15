@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "owner": "frontier_research",
+  "created_at": "2026-07-15T08:05:00Z",
+  "finding": "Web Audio processing state and deployment identity are insufficient to prove physical audibility. A direct user gesture may be required before an AudioContext is allowed to transition from suspended to running, and a human observation on the exact physical device remains a separate acceptance layer.",
+  "primary_sources": [
+    {
+      "status": "current_primary_specification",
+      "title": "Web Audio API 1.1",
+      "locator": "https://www.w3.org/TR/webaudio/",
+      "supports": ["allowed-to-start may depend on sticky activation", "resume remains pending when context is not allowed to start", "running state starts rendering but does not prove speaker audibility"]
+    },
+    {
+      "status": "vendor_primary_guidance",
+      "title": "New video policies for iOS",
+      "locator": "https://webkit.org/blog/6784/new-video-policies-for-ios/",
+      "supports": ["direct event-handler user gesture distinction", "media playback policy is user-controlled"]
+    },
+    {
+      "status": "vendor_primary_guidance",
+      "title": "Auto-Play Policy Changes for macOS",
+      "locator": "https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/",
+      "supports": ["assume audible media requires user gesture", "detect denied playback instead of assuming success"]
+    }
+  ],
+  "artifact": {
+    "validator": "operations/frontier-research/mobileSafariAudibilityEvidence.v1.cjs",
+    "tests": "operations/frontier-research/mobileSafariAudibilityEvidence.v1.test.cjs",
+    "claim_boundary": "verified=true confirms only human-observed audibility for the named physical iPhone Safari environment, exact tested commit, and immutable deployment identity. It does not generalize to other devices, routes, volumes, users, or later deployments."
+  },
+  "evidence_strength": "primary-source-backed contract; deterministic tests authored but not executed in this connector-only run",
+  "uncertainty": [
+    "Current iOS and Safari versions must be recorded at execution time.",
+    "AudioContext running state cannot independently establish speaker output.",
+    "Human observation is subjective and bounded to one device/output route."
+  ],
+  "falsification_route": [
+    "Run the Node tests and retain exact output.",
+    "Provide a complete physical-device evidence object with direct gesture, running context, route checks, and human observation.",
+    "Demonstrate any accepted object missing a required field or accepting route-active-only evidence; either result falsifies the validator contract."
+  ]
+}
