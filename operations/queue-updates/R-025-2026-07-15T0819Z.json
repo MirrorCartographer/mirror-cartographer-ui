@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "item": {
+    "id": "R-025",
+    "owner": "frontier_research",
+    "priority": "highest",
+    "state": "completed_handoff_ready",
+    "objective": "Add a version-pinned UTS #39 confusable-skeleton audit for object-key ambiguity without mutating signed or canonicalized data.",
+    "completed_slices": [
+      "Researched Unicode Technical Standard #39 version 17.0.0 and the current Unicode confusables data header.",
+      "Implemented a parser that requires and optionally pins the data version and retains the exact source SHA-256.",
+      "Implemented NFD-based skeleton construction and sibling-key collision detection with escaped object paths.",
+      "Added fail-closed enforcement while preserving the original object unchanged.",
+      "Verified four deterministic Node tests using representative Latin/Cyrillic and Latin/Greek fixture mappings."
+    ],
+    "acceptance_remaining": [
+      "Pin and retain the complete Unicode 17.0.0 confusables.txt bytes or an independently verified digest in the execution environment.",
+      "Run the implementation against the complete official dataset and retain exact output.",
+      "Define the repository ecosystem policy for reject, quarantine, or advisory treatment of confusable key collisions.",
+      "Add separate script-restriction and Identifier_Status layers if the artifact namespace accepts human-authored Unicode identifiers."
+    ],
+    "safe_next_action": "Fetch the exact Unicode 17.0.0 confusables.txt bytes, verify and retain their digest, run the committed tests plus full-data smoke cases, then integrate this audit after strict parse and cryptographic verification but before semantic acceptance."
+  },
+  "coordination": {
+    "canonical_queue_overwritten": false,
+    "reason": "The canonical frontier queue items are already completed_handoff_ready; this additive projection avoids overwriting concurrent team state.",
+    "specialist_registry_changed": false
+  }
+}
