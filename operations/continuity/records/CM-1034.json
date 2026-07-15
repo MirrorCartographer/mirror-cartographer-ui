@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1034",
+  "recorded_at": "2026-07-15T16:08:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "subject": "Executable repository-traversal evidence boundary",
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "The repository already contained repository-traversal-envelope.v1.schema.json, but the preceding continuity queue update identified a deterministic producer and validator as the safe next action.",
+      "sources": [
+        "operations/continuity/contracts/repository-traversal-envelope.v1.schema.json@821596dfa1f08fb2e80a8a918b519046f150cdea",
+        "operations/queue-updates/M-RECONCILE-002-2026-07-15T115200Z-traversal-bounded-provenance.json@4baee6be107722179150a90acdbfac67c792abf3"
+      ]
+    },
+    {
+      "status": "observed",
+      "claim": "M-004, M-005, and M-006 remain unresolved until complete accessible ref inventory, reachable-history closure, historical/deleted-path inspection, pagination, and permission-scope evidence are retained.",
+      "sources": [
+        "operations/ACTIVE_QUEUE.json@950a2315da4fc6312410ecc440383afba0b9f1eb"
+      ]
+    },
+    {
+      "status": "inferred",
+      "claim": "A schema alone cannot prevent a caller from supplying internally inconsistent digests or incorrectly promoting incomplete coverage; executable validation is required at the decision boundary.",
+      "basis": "The schema constrains shape and selected terminal conditions, while canonical digest recomputation and deterministic assessment require procedural checks."
+    },
+    {
+      "status": "proposed",
+      "claim": "Produce traversal envelopes only from retained authenticated enumeration inputs, then admit terminal provenance decisions only after validateEnvelope succeeds and terminal_provenance_allowed is true.",
+      "implementation": "tools/continuity/repository-traversal-envelope-v1.cjs@53e498ffa5569cf304995e19d941afd796e6c841"
+    },
+    {
+      "status": "superseded",
+      "claim": "A structurally schema-shaped traversal report is sufficient evidence for terminal provenance.",
+      "superseded_by": "Digest recomputation, deterministic coverage assessment, and fail-closed executable validation."
+    },
+    {
+      "status": "unresolved",
+      "claim": "Whether the accessible repository history contains immutable assignments for M-004, M-005, or M-006.",
+      "resolution_route": "Run the producer against a retained exhaustive ref and history traversal, inspect historical and deleted paths, and preserve an unresolved outcome unless terminal coverage is proven."
+    }
+  ],
+  "durable_rule": "Terminal continuity provenance may not be derived from report shape or caller assertion. It requires deterministic reconstruction, digest agreement, known permission scope, complete pagination, zero unvisited reachable commits, completed deleted-path inspection, no blind spots, and a successful fail-closed validator result.",
+  "privacy_boundary": {
+    "retained": [
+      "public-safe repository metadata",
+      "abstract queue and continuity identifiers",
+      "commit identifiers",
+      "validation semantics"
+    ],
+    "excluded": [
+      "private chat excerpts",
+      "health or pet-health material",
+      "credentials",
+      "identifying personal information",
+      "unreviewed file-library content"
+    ]
+  },
+  "verification": {
+    "implementation_commit": "53e498ffa5569cf304995e19d941afd796e6c841",
+    "test_commit": "51d61feeaed8d2210d759a5c38b78b7bd07bb657",
+    "tests_authored": 7,
+    "runtime_execution_observed": false,
+    "claim_boundary": "Implementation and deterministic test cases are committed; no passing runtime count is claimed in this connector-only run."
+  }
+}
