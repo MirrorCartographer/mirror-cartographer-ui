@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T08:57:30Z",
+  "memory_id": "continuity.search_coverage_is_not_provenance.v1",
+  "title": "Search coverage is evidence about the search, not proof of historical origin",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "recent repository commits",
+    "repository code search for M-004",
+    "prior M-RECONCILE-002 commit records"
+  ],
+  "claims": {
+    "observed": [
+      "The canonical queue keeps M-004, M-005, and M-006 unresolved pending exhaustive branch and history traversal.",
+      "Repository code search returned no indexed file match for M-004 in this run.",
+      "Recent commits contain downstream continuity records discussing M-004 through M-006."
+    ],
+    "inferred": [
+      "A zero-result indexed code search cannot establish that an identifier never existed because index scope, branch coverage, deleted paths, and unreachable commits remain unproven.",
+      "A downstream commit mentioning an identifier is an occurrence record, not necessarily the immutable object that originally assigned it."
+    ],
+    "proposed": [
+      "Every provenance reconciliation must retain a separate coverage envelope naming branches, refs, commit traversal method, search method, retrieval time, and known blind spots.",
+      "Promotion from unresolved to located requires exact identifier assignment plus namespace, owner, semantic-role, temporal-precedence, and immutable-locator agreement."
+    ],
+    "superseded": [
+      "Treating the earliest returned search result as the historical origin.",
+      "Treating a zero-result code search as exhaustive absence.",
+      "Treating numeric suffix matches across unrelated namespaces as identity."
+    ],
+    "unresolved": [
+      "The immutable originating objects for M-004, M-005, and M-006.",
+      "Complete branch, tag, deleted-path, and reachable-commit coverage."
+    ]
+  },
+  "durable_rule": {
+    "rule": "Occurrence, retrieval order, and search silence are each provenance leads. None becomes origin evidence without an explicit immutable assignment object and a retained coverage envelope.",
+    "promotion_requirements": [
+      "exact_identifier_assignment",
+      "namespace_agreement",
+      "owner_agreement",
+      "semantic_role_agreement",
+      "temporal_precedence",
+      "immutable_locator_agreement",
+      "no_conflicting_accepted_origin"
+    ],
+    "fail_closed_state": "unresolved"
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "queue identifiers",
+      "abstract provenance rules",
+      "commit identifiers and search outcomes"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal, medical, financial, household, or relationship material",
+      "credentials and private source contents"
+    ]
+  },
+  "specialist_registry_change": null,
+  "execution_claims": {
+    "exhaustive_history_traversal_completed": false,
+    "origins_located": false,
+    "peer_execution_claimed": false
+  },
+  "next_action": "Obtain an authenticated exhaustive ref inventory and traverse every reachable commit and historical path for exact M-004, M-005, and M-006 assignment objects; preserve unresolved status when any coverage dimension is incomplete."
+}
