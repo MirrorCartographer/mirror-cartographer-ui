@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-027",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Prevent unverified Unicode confusables bytes from reaching semantic dataset construction.",
+  "completed_slices": [
+    "Implemented a fail-closed adapter that authenticates exact source bytes before parser invocation.",
+    "Bound parser expectedVersion to the authenticated manifest version.",
+    "Returned source identity with the dataset for downstream provenance retention.",
+    "Added four deterministic tests proving parser non-invocation after integrity failure."
+  ],
+  "acceptance_remaining": [
+    "Connect the repository's canonical confusables parser through the adapter in an authenticated checkout.",
+    "Run the committed tests in that checkout and retain exact output.",
+    "Add an end-to-end fixture using the retained Unicode 17.0.0 manifest and archived or freshly retrieved verified bytes.",
+    "Audit for any production dataset-construction path that bypasses the adapter."
+  ],
+  "safe_next_action": "Locate the canonical parser in an authenticated checkout, wire it through constructVerifiedConfusablesDataset, run both verifier and integration tests, and retain evidence without vendoring or replacing the Unicode source automatically.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false
+}
