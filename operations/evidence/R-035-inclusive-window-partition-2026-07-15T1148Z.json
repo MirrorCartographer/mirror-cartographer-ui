@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-020",
+  "artifact_id": "R-035",
+  "recorded_at": "2026-07-15T11:48:00Z",
+  "finding": "GitHub range syntax is inclusive at both endpoints. Reusing the midpoint as the end of the left child and start of the right child can duplicate workflow runs created exactly at that boundary.",
+  "source_status": {
+    "workflow_runs_endpoint": "primary_official_current",
+    "search_range_semantics": "primary_official_current",
+    "prior_partitioner": "repository_artifact_observed"
+  },
+  "evidence_strength": "strong_for_range_semantics_and_documented_provider_ceiling; implementation verification is deterministic-local, not authenticated-provider execution",
+  "design_implication": "Partition filtered workflow-run searches into disjoint inclusive whole-second windows: left.end + 1 second = right.start. Reject fractional-second boundaries and fail closed when the 1000-result ceiling persists within one UTC second.",
+  "claim_boundary": "This corrects interval geometry only. It does not establish complete Link-header pagination, authenticated repository coverage, independent-client reconciliation, or deployment evidence.",
+  "uncertainty": [
+    "The endpoint documentation references general GitHub search syntax; live endpoint behavior at exact second boundaries remains to be confirmed with authenticated retained responses.",
+    "Multiple workflow runs may legitimately share one created_at second, so a one-second leaf can remain provider_ceiling_ambiguous."
+  ],
+  "falsification_route": [
+    "Create or identify runs exactly at a planned split second and compare parent results with the union of disjoint children.",
+    "Retain raw API responses and verify no missing or duplicate run IDs across leaf unions.",
+    "Compare the primary executor with an independent gh api traversal using identical disjoint windows."
+  ],
+  "files": [
+    "tools/frontier-research/workflow-run-window-partitioner-v2.mjs",
+    "tools/frontier-research/workflow-run-window-partitioner-v2.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test workflow-run-window-partitioner-v2.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "specialist_registry_change": null
+}
