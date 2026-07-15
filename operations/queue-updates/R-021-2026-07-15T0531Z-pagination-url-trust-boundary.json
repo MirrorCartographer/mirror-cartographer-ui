@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T05:31:00Z",
+  "slice": "Constrain every retained workflow pagination URL to the exact GitHub repository Actions endpoint and immutable exact-commit query before it can enter chain reconciliation.",
+  "source_status": {
+    "github_pagination_docs": "current_primary_source",
+    "github_workflow_runs_docs": "current_primary_source",
+    "rfc_8288": "normative_primary_source"
+  },
+  "finding": "Link-chain equality proves continuity between retained pages but does not independently establish that the chain remains on GitHub's API origin, targets the intended repository Actions endpoint, or preserves the exact-commit and exhaustive-enumeration query. URL trust must be validated separately and fail closed.",
+  "design_implication": "Both authenticated enumeration clients should validate the initial request URL and every rel=next target with validateGitHubWorkflowPaginationUrl before issuing the request or accepting retained evidence. Only HTTPS api.github.com URLs for /repos/{owner}/{repo}/actions/runs with one matching head_sha, per_page=100, optional positive page, and no narrowing filters are trusted.",
+  "artifacts": [
+    "operations/frontier-research/github-actions/validateGitHubWorkflowPaginationUrlPolicy.v1.cjs",
+    "operations/frontier-research/github-actions/validateGitHubWorkflowPaginationUrlPolicy.v1.test.cjs"
+  ],
+  "verification": {
+    "method": "node --test",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "evidence_strength": "implementation_committed_and_deterministically_tested"
+  },
+  "falsification_route": [
+    "A cross-origin or non-HTTPS URL is accepted.",
+    "A URL for another repository or endpoint is accepted.",
+    "A missing, changed, or duplicated head_sha is accepted.",
+    "A narrowing event/status/branch-style filter is accepted.",
+    "userinfo, fragments, invalid page numbers, or per_page below 100 are accepted."
+  ],
+  "uncertainty": [
+    "The policy is not yet wired into the live enumerator or sanitized pagination-chain validator.",
+    "Authenticated private-repository enumeration was not executed in this slice.",
+    "GitHub Enterprise Server origins are intentionally unsupported by this repository-specific policy."
+  ],
+  "registry_change": null,
+  "next_action": "Wire this URL policy before every network fetch in both exhaustive clients and before retained-page reconciliation, then run both clients against one exact commit and retain raw outputs plus the reconciliation bundle."
+}
