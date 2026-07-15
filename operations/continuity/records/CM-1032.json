@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1032",
+  "queue_item": "M-RECONCILE-002",
+  "title": "Historical provenance resolution requires outcome-level invariants",
+  "recorded_at": "2026-07-15T11:34:45Z",
+  "memory": {
+    "durable_rule": "Historical identifier provenance must be represented as one of four mutually distinct outcomes: verified_origin, unlocated_after_exhaustive_coverage, unresolved_incomplete_coverage, or conflicting_candidates. Terminal outcomes require retained exhaustive coverage; incomplete coverage and unresolved candidate disagreement must fail closed rather than being collapsed into absence or arbitrary selection.",
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved under M-RECONCILE-002.",
+      "CM-1029 established that unlocated is a coverage-qualified terminal classification.",
+      "The existing immutable-origin candidate contract constrains accepted origin candidates but does not itself encode all resolution outcomes or prevent an incomplete negative search from being serialized as terminal absence."
+    ],
+    "inferred": [
+      "Candidate validation and final resolution are separate layers: a valid candidate may still conflict with another admissible candidate.",
+      "The same retained coverage envelope must govern both verified-origin and unlocated terminal outcomes.",
+      "A machine-checkable outcome contract reduces semantic drift between queue prose, continuity records, and future traversal tooling."
+    ],
+    "proposed": [
+      "Validate every M-004 through M-006 resolution artifact against operations/continuity/contracts/provenance-resolution-outcome.v1.schema.json.",
+      "Require zero candidates plus complete blind-spot-free retained coverage for unlocated_after_exhaustive_coverage.",
+      "Require exactly one candidate plus complete retained coverage for verified_origin.",
+      "Require at least two candidates for conflicting_candidates and retain unresolved claim status until a deterministic precedence rule resolves them."
+    ],
+    "superseded": [
+      "A candidate schema alone is sufficient to represent the final state of a provenance investigation.",
+      "No candidate found and unlocated_after_exhaustive_coverage are interchangeable.",
+      "Multiple plausible candidates may be resolved by silently selecting the newest record."
+    ],
+    "unresolved": [
+      "Exhaustive accessible ref and reachable-commit inventory.",
+      "Historical and deleted-path traversal for M-004, M-005, and M-006.",
+      "Validated outcome instances for each unresolved identifier."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "The system needs a terminal answer for each identifier, but current evidence is incomplete.",
+    "resolution": "Resolution state and terminal answer are distinct. unresolved_incomplete_coverage is a valid durable state that preserves the investigation without asserting origin or absence."
+  },
+  "implementation": {
+    "contract": "operations/continuity/contracts/provenance-resolution-outcome.v1.schema.json",
+    "contract_commit": "41b41fceb63ed457f1aaa0499c25ae2c7b7aa5d3",
+    "effect": "Adds fail-closed structural invariants for terminal origin, terminal unlocated, incomplete coverage, and candidate conflict outcomes without modifying prior records."
+  },
+  "provenance": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "sources": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/continuity/records/CM-1029.json",
+      "operations/continuity/contracts/immutable-origin-candidate.v1.schema.json",
+      "recent repository commits through 2026-07-15T11:34:45Z"
+    ],
+    "source_status": "repository_observed_and_structurally_inferred",
+    "coverage_status": "incomplete",
+    "falsification_route": [
+      "Produce a counterexample accepted by the new schema where a terminal unlocated outcome lacks exhaustive retained coverage or contains a candidate.",
+      "Demonstrate that collapsing conflicting candidates or incomplete coverage into a terminal result does not increase false provenance claims.",
+      "Locate an authoritative continuity rule that defines a different complete outcome partition."
+    ]
+  },
+  "privacy": {
+    "classification": "public_safe_abstract_rule",
+    "included": [
+      "repository paths and commit identifiers",
+      "queue identifiers",
+      "abstract provenance, coverage, and conflict semantics"
+    ],
+    "excluded": [
+      "private chat excerpts",
+      "personal or health information",
+      "credentials",
+      "unreviewed File Library content",
+      "restricted source contents"
+    ]
+  }
+}
