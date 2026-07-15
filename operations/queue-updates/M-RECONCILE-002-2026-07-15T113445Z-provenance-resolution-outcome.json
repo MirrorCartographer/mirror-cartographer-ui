@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T11:34:45Z",
+  "state": "in_progress",
+  "completed_slice": "Added a fail-closed provenance resolution outcome contract that distinguishes verified origin, exhaustive unlocated, incomplete coverage, and conflicting candidates with terminal-outcome invariants.",
+  "artifacts": [
+    {
+      "path": "operations/continuity/contracts/provenance-resolution-outcome.v1.schema.json",
+      "commit": "41b41fceb63ed457f1aaa0499c25ae2c7b7aa5d3"
+    },
+    {
+      "path": "operations/continuity/records/CM-1032.json",
+      "commit": "4d947d1ce2996f3f3860ae089a57158e2c851122"
+    }
+  ],
+  "acceptance_remaining": [
+    "Retain an exhaustive accessible ref inventory and raw traversal evidence.",
+    "Traverse reachable commits, historical paths, and deleted-path evidence for M-004, M-005, and M-006.",
+    "Create one schema-valid resolution outcome instance per identifier without promoting incomplete coverage to a terminal claim."
+  ],
+  "safe_next_action": "Implement a deterministic ref-and-history traversal envelope producer, retain its raw inventory, then emit schema-valid unresolved_incomplete_coverage outcomes until all terminal coverage invariants are satisfied.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy_boundary": "Public-safe repository metadata and abstract provenance semantics only; no private source content retained."
+}
