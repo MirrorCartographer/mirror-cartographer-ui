@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T20:36:00Z",
+  "state": "in_progress",
+  "completed_slice": "Adjudicated the immutable repository status records for M-004, M-005, and M-006 as downstream_reference_only. Each record explicitly preserves unresolved/unlocated origin status and therefore cannot serve as an assigning source.",
+  "artifacts": [
+    "operations/continuity/records/M-004-M-006-status-record-adjudications-2026-07-15T2036Z.json"
+  ],
+  "observed": [
+    "M-004, M-005, and M-006 each have an immutable repository status record declaring the origin unresolved and unlocated.",
+    "The inspected status records are continuity-owned downstream records, not identifier-assignment events."
+  ],
+  "inferred": [
+    "Each identifier was already in circulation before its unresolved-status record was committed."
+  ],
+  "proposed": [],
+  "superseded": [],
+  "unresolved": [
+    "The authoritative assigning source for M-004 remains unlocated.",
+    "The authoritative assigning source for M-005 remains unlocated.",
+    "The authoritative assigning source for M-006 remains unlocated.",
+    "All-branch and reachable-history coverage remains incomplete."
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Traverse every accessible branch and reachable commit, then test any earlier M-004, M-005, or M-006 occurrence against the existing provenance validator. Do not promote status records, search snippets, automation prose, generated mirrors, or namespace collisions to assigning sources.",
+  "shared_state_policy": "Projection only; operations/ACTIVE_QUEUE.json was not overwritten.",
+  "specialist_registry_change": null,
+  "privacy": {"contains_private_source_material": false}
+}
