@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "evidence_id": "R-037-retained-observation-receipt-2026-07-15T1258Z",
+  "queue_owner": "frontier_research",
+  "related_queue_items": ["R-020", "R-021", "V-001"],
+  "finding": "A partition traversal cannot treat caller-supplied totalCount and paginationComplete values as evidence. Each leaf observation must be bound to its exact request window and commit, retained raw pages, per-page canonical digests, contiguous page numbering, terminal Link state, count agreement, and a canonical receipt digest.",
+  "source_status": {
+    "github_workflow_runs_documentation": {
+      "type": "primary_current",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository",
+      "observed_claims": [
+        "The repository workflow-runs endpoint lists all workflow runs and supports narrowing parameters.",
+        "Filtered searches using head_sha or created return at most 1000 results.",
+        "Actions read permission is required for private repositories."
+      ]
+    },
+    "github_pagination_documentation": {
+      "type": "primary_current",
+      "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+      "observed_claims": [
+        "REST pagination is represented through Link headers when additional pages exist."
+      ]
+    }
+  },
+  "artifact": {
+    "implementation": "tools/frontier-research/workflow-run-observation-receipt-v1.mjs",
+    "tests": "tools/frontier-research/workflow-run-observation-receipt-v1.test.mjs",
+    "schema_version": 1,
+    "required_bindings": [
+      "exact 40-hex head SHA",
+      "inclusive whole-second UTC created window",
+      "GET request identity",
+      "GitHub REST API version 2022-11-28",
+      "application/vnd.github+json accept header",
+      "per_page=100",
+      "contiguous retained pages",
+      "HTTP 200 for every retained page",
+      "canonical SHA-256 digest for every raw response",
+      "workflow-run count agreement",
+      "unique run identifiers",
+      "exact-commit consistency",
+      "terminal absence of Link next",
+      "canonical receipt digest"
+    ]
+  },
+  "evidence_strength": "implementation_ready_static_inspection",
+  "verification": {
+    "committed": true,
+    "authenticated_post_write_refetch": false,
+    "node_tests_executed": false,
+    "test_cases_authored": 7,
+    "claim": "The committed contract and deterministic tests are retained; runtime passage is not claimed."
+  },
+  "uncertainty": [
+    "The connector environment did not provide an authenticated checkout for Node test execution.",
+    "Receipt validation cannot prove that a caller used authentic credentials or that retained bytes came from GitHub transport without an independently retained transport record.",
+    "A totalCount at or above 1000 remains provider_ceiling_ambiguous and cannot be promoted.",
+    "Cross-client reconciliation and unfiltered authoritative enumeration remain separate gates."
+  ],
+  "falsification_route": [
+    "Run node --test tools/frontier-research/workflow-run-observation-receipt-v1.test.mjs in an authenticated checkout.",
+    "Mutate a retained raw response after digesting and confirm response_digest_mismatch.",
+    "Insert a cross-commit or duplicate run and confirm rejection.",
+    "Leave a terminal next link or omit a page and confirm pagination_incomplete.",
+    "Execute authenticated exact-commit retrieval and independently compare the receipt run-ID set against gh api --paginate --slurp and the unfiltered enumerator."
+  ],
+  "claim_boundary": "This artifact defines and tests structural integrity for one retained filtered-window observation. It does not establish provider authenticity, exhaustive repository history, cross-client agreement, deployment identity, route behavior, audio behavior, or physical-device behavior."
+}
