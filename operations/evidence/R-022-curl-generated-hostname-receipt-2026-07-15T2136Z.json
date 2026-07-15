@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T21:36:00Z",
+  "finding": "A generated-hostname observation should not accept an unstructured prose report or a bare HTTP status. A retained curl --write-out JSON receipt can be promoted only when the command itself proves HEAD-only operation, zero redirect allowance, normal TLS verification, exact generated-hostname targeting, and machine-readable transfer metrics.",
+  "primary_sources": [
+    {
+      "title": "curl man page",
+      "url": "https://curl.se/docs/manpage.html",
+      "source_status": "current_primary_documentation",
+      "observations": [
+        "--write-out %{json} emits a JSON object containing available transfer keys.",
+        "num_redirects reports followed redirects.",
+        "url_effective reports the last fetched URL.",
+        "ssl_verify_result equal to 0 means peer certificate verification succeeded.",
+        "method, response_code, and time_total are available write-out variables."
+      ]
+    }
+  ],
+  "artifact": "operations/frontier-research/curlGeneratedHostnameReceipt.v1.cjs",
+  "test": "operations/frontier-research/curlGeneratedHostnameReceipt.v1.test.cjs",
+  "evidence_strength": "deterministic_local_contract_tested_against_current_primary_tool_documentation",
+  "uncertainty": [
+    "No live Vercel generated hostname was requested.",
+    "The exact curl version in the eventual authenticated checkout was not observed.",
+    "A successful receipt proves only a direct HTTPS response at the generated hostname, not content correctness, alias promotion, browser behavior, audio, or physical-device behavior."
+  ],
+  "falsification_route": [
+    "Run the documented curl command against an immutable verified deployment hostname.",
+    "Retain the exact command array, raw %{json} output, exit code, and observation time.",
+    "Reject the receipt if the installed curl lacks required write-out fields or reports nonzero TLS verification, redirects, URL divergence, transfer failure, or non-2xx status.",
+    "Independently compare the retained raw metrics with the normalized receipt digest."
+  ],
+  "privacy_boundary": {
+    "credentials_retained": false,
+    "response_body_retained": false,
+    "headers_retained": false,
+    "public_safe": true
+  }
+}
