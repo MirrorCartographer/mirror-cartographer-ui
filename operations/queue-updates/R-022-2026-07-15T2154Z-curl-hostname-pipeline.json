@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T21:54:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Bound the curl capability preflight ahead of generated-hostname receipt adaptation and produced a tamper-evident parent receipt that binds both child receipt digests.",
+  "design_implication": "Downstream publication or activation logic should consume only the composed pipeline result, never the hostname receipt adapter in isolation.",
+  "files": [
+    "operations/frontier-research/curlGeneratedHostnamePipeline.v1.cjs",
+    "operations/frontier-research/curlGeneratedHostnamePipeline.v1.test.cjs",
+    "operations/evidence/R-022-curl-hostname-pipeline-2026-07-15T2154Z.json"
+  ],
+  "commits": [
+    "c10ab212b252efc8eec004bd99956e7cdaef42e9",
+    "c76ad9fbe3a5ead118d693625d6e58c115f3da15",
+    "dc7dea12ff99e6d9e747326ba04f4af3a98f81c5"
+  ],
+  "verification": {
+    "syntax_check": "passed",
+    "deterministic_test_file_committed": true,
+    "authenticated_checkout_test_pending": true
+  },
+  "acceptance_remaining": [
+    "Run node --test operations/frontier-research/curlGeneratedHostnamePipeline.v1.test.cjs in an authenticated checkout and retain output.",
+    "Integrate the composed pipeline ahead of V-001 publication readiness so the lower-level hostname adapter cannot be called as a promotion path without capability evidence.",
+    "After provider capacity returns, execute the retained capability probe and one exact generated-hostname observation against verified immutable deployment evidence."
+  ],
+  "claim_boundary": "no deployment network route alias audio browser or physical-device claim"
+}
