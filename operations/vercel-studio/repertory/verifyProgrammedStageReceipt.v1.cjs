@@ -9,6 +9,13 @@ const FALSE_CLAIM_FIELDS = Object.freeze([
   'side_effects_performed',
 ]);
 
+const PRODUCTION_METADATA_FIELDS = Object.freeze([
+  'title',
+  'form',
+  'continuity_role',
+  'repertory_status',
+]);
+
 function parseCanonicalIsoInstant(value) {
   if (typeof value !== 'string') return null;
   const parsed = new Date(value);
@@ -36,7 +43,14 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
   if (!generatedAt) violations.push('invalid_generated_at');
   else if (generatedAt.getUTCHours() !== receipt.utc_hour) violations.push('generated_at_hour_mismatch');
 
-  if (!receipt.programmed_production || typeof receipt.programmed_production.id !== 'string' || receipt.programmed_production.id.length === 0) violations.push('missing_programmed_production');
+  if (!receipt.programmed_production || typeof receipt.programmed_production.id !== 'string' || receipt.programmed_production.id.length === 0) {
+    violations.push('missing_programmed_production');
+  }
+  for (const field of PRODUCTION_METADATA_FIELDS) {
+    if (typeof receipt.programmed_production?.[field] !== 'string' || receipt.programmed_production[field].length === 0) {
+      violations.push(`missing_programmed_production_${field}`);
+    }
+  }
   if (!receipt.programmed_edition || typeof receipt.programmed_edition.id !== 'string' || receipt.programmed_edition.id.length === 0) violations.push('missing_programmed_edition');
   if (typeof receipt.programmed_edition?.cue !== 'string' || receipt.programmed_edition.cue.length === 0) violations.push('missing_programmed_edition_cue');
   if (receipt.programmed_edition?.utc_hour !== receipt.utc_hour) violations.push('edition_hour_mismatch');
@@ -49,6 +63,10 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
   if (expected.generated_at && receipt.generated_at !== expected.generated_at) violations.push('generated_at_mismatch');
   if (expected.utc_hour !== undefined && receipt.utc_hour !== expected.utc_hour) violations.push('utc_hour_mismatch');
   if (expected.production_id && receipt.programmed_production?.id !== expected.production_id) violations.push('production_id_mismatch');
+  if (expected.production_title && receipt.programmed_production?.title !== expected.production_title) violations.push('production_title_mismatch');
+  if (expected.production_form && receipt.programmed_production?.form !== expected.production_form) violations.push('production_form_mismatch');
+  if (expected.production_continuity_role && receipt.programmed_production?.continuity_role !== expected.production_continuity_role) violations.push('production_continuity_role_mismatch');
+  if (expected.production_repertory_status && receipt.programmed_production?.repertory_status !== expected.production_repertory_status) violations.push('production_repertory_status_mismatch');
   if (expected.edition_id && receipt.programmed_edition?.id !== expected.edition_id) violations.push('edition_id_mismatch');
   if (expected.edition_cue && receipt.programmed_edition?.cue !== expected.edition_cue) violations.push('edition_cue_mismatch');
 
@@ -60,10 +78,19 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
     repertory_sha256: receipt.repertory_sha256 || null,
     generated_at: receipt.generated_at || null,
     production_id: receipt.programmed_production?.id || null,
+    production_title: receipt.programmed_production?.title || null,
+    production_form: receipt.programmed_production?.form || null,
+    production_continuity_role: receipt.programmed_production?.continuity_role || null,
+    production_repertory_status: receipt.programmed_production?.repertory_status || null,
     edition_id: receipt.programmed_edition?.id || null,
     edition_cue: receipt.programmed_edition?.cue || null,
     violations: Object.freeze(violations),
   });
 }
 
-module.exports = { FALSE_CLAIM_FIELDS, parseCanonicalIsoInstant, verifyProgrammedStageReceipt };
+module.exports = {
+  FALSE_CLAIM_FIELDS,
+  PRODUCTION_METADATA_FIELDS,
+  parseCanonicalIsoInstant,
+  verifyProgrammedStageReceipt,
+};
