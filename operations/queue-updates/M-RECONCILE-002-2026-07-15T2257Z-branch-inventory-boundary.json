@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T22:57:22Z",
+  "state": "in_progress",
+  "completed_slice": "Established that query-dependent zero-result branch discovery is bounded evidence and cannot satisfy the exhaustive branch-inventory acceptance criterion.",
+  "artifact": "operations/continuity/records/M-RECONCILE-002-branch-inventory-evidence-boundary-2026-07-15T2257Z.json",
+  "artifact_commit": "0fce40c3f6e20e5b5e3f646ddf3619a2bfe515f6",
+  "acceptance_effect": {
+    "completed": [],
+    "still_remaining": [
+      "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+      "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+      "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+    ]
+  },
+  "next_action": "Use an authenticated exhaustive refs enumeration with explicit completeness semantics, retain the raw inventory, then traverse every reachable commit tree for exact M-004, M-005, and M-006 assignment objects. Preserve unresolved status until both branch and history coverage are complete.",
+  "canonical_queue_overwritten": false,
+  "trigger_ledger_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_change": null
+}
