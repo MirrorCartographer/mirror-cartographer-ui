@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T22:58:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Bound Frontier Research's verified curl capability and generated-hostname observation session receipt into the fail-closed repertory publication gate.",
+  "changes": [
+    "Publication readiness now requires a valid curl_session_id and bounded capability-to-hostname observation interval.",
+    "The gate rejects stale capability evidence, reversed observation ordering, invalid session identity, pipeline digest mismatch, exact-commit mismatch, and deployment-id mismatch.",
+    "Successful evidence exposes the retained session digest, session id, observed skew, maximum allowed skew, and explicit same-process=false boundary.",
+    "Nine deterministic tests define success and rejection behavior without claiming execution."
+  ],
+  "evidence": {
+    "implementation_commit": "c3570fb9d74f9b7ddf1ac02df287071c659164c7",
+    "test_commit": "e41c6f8fda0b7fd61e1caf049cdbff4bd360c416",
+    "retained_record": "operations/evidence/V-001-bounded-curl-session-publication-gate-2026-07-15T2258Z.json",
+    "retained_record_commit": "8682b6b7cde19861d52df76771e91502c007418f"
+  },
+  "acceptance_remaining": [
+    "Execute the repertory publication-gate test in an authenticated checkout and retain exact output.",
+    "Execute authenticated all-event pagination for one exact commit with both independent clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after provider build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs in an authenticated checkout and retain output; do not activate the repertory or initiate an application deployment while provider capacity remains blocked.",
+  "shared_state_policy": "Additive queue update only; operations/ACTIVE_QUEUE.json and other teams' state were not overwritten.",
+  "rollback": [
+    "Revert this queue-update commit.",
+    "Revert 8682b6b7cde19861d52df76771e91502c007418f.",
+    "Revert e41c6f8fda0b7fd61e1caf049cdbff4bd360c416.",
+    "Revert c3570fb9d74f9b7ddf1ac02df287071c659164c7."
+  ]
+}
