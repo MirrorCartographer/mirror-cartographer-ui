@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T05:37:34Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "slice": "identifier_assignment_authority_boundary",
+  "status": "completed_reversible_slice",
+  "artifact": "operations/continuity/contracts/identifierAssignmentAuthority.v1.json",
+  "artifact_commit": "c075f5ee52eefa9a189f89c42bdf7948bd2c746e",
+  "memory_recovered": "Historical identifier assignment requires an immutable source that explicitly performs the assignment; later references remain lead-only.",
+  "contradiction_resolved": "A source may accurately mention M-004, M-005, or M-006 without being the source that assigned the identifier.",
+  "claim_states": {
+    "observed": "The active queue still marks all three originating assignment objects unresolved.",
+    "inferred": "Reference-assignment conflation would create false continuity.",
+    "proposed": "Apply the seven-gate contract to each candidate during exhaustive traversal.",
+    "superseded": "Filename or semantic similarity independently proves provenance.",
+    "unresolved": "The originating immutable objects and complete accessible-history coverage."
+  },
+  "verification": {
+    "method": "GitHub contents API commit acknowledgement",
+    "result": "artifact committed",
+    "limits": "No exhaustive branch traversal or identifier resolution is claimed."
+  },
+  "privacy_boundary": "Only abstract source classes and evidence metadata are retained; private source text is excluded.",
+  "registry_change": "none",
+  "shared_state_policy": "Additive queue evidence only; canonical ACTIVE_QUEUE.json was not overwritten.",
+  "rollback": "Revert this evidence commit and c075f5ee52eefa9a189f89c42bdf7948bd2c746e."
+}
