@@ -38,6 +38,10 @@ test('builds a verifier-compatible exact-commit and hourly-edition receipt witho
     generated_at: GENERATED_AT,
     utc_hour: 4,
     production_id: 'body-constellation',
+    production_title: 'Body Constellation',
+    production_form: 'accessible_spatial_map',
+    production_continuity_role: 'embodied_navigation',
+    production_repertory_status: 'proposed',
     edition_id: 'body-constellation-04',
     edition_cue: 'shoulder-orbit',
   });
@@ -109,5 +113,33 @@ test('fails closed on repertory contract or expected instant mismatch', () => {
   assert.deepEqual(verified.violations, [
     'repertory_contract_id_mismatch',
     'generated_at_mismatch',
+  ]);
+});
+
+test('fails closed when programmed production metadata is missing or differs from the expected repertory identity', () => {
+  const missing = {
+    ...validReceipt(),
+    programmed_production: {
+      ...validReceipt().programmed_production,
+      form: '',
+    },
+  };
+  assert.deepEqual(verifyProgrammedStageReceipt(missing).violations, [
+    'missing_programmed_production_form',
+  ]);
+
+  const receipt = validReceipt();
+  const verified = verifyProgrammedStageReceipt(receipt, {
+    production_title: 'Body Constellation (tampered)',
+    production_form: 'dashboard',
+    production_continuity_role: 'private_source_exposure',
+    production_repertory_status: 'active_deployment',
+  });
+  assert.equal(verified.verified, false);
+  assert.deepEqual(verified.violations, [
+    'production_title_mismatch',
+    'production_form_mismatch',
+    'production_continuity_role_mismatch',
+    'production_repertory_status_mismatch',
   ]);
 });
