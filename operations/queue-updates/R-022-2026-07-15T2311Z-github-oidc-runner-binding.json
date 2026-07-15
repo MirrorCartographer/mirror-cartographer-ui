@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T23:11:00Z",
+  "slice": "GitHub Actions OIDC exact-run identity binding for retained challenge and transcript digests",
+  "state": "completed_handoff_ready",
+  "completed": [
+    "Researched current GitHub Actions OIDC claims from primary documentation.",
+    "Implemented a fail-closed contract requiring external token verification and exact repository, repository ID, workflow ref, workflow SHA, run ID, run attempt, runner environment, and token-window agreement.",
+    "Bound the prior challenge receipt and both retained transcript digests into a deterministic parent receipt.",
+    "Verified six deterministic tests in a local Node runtime."
+  ],
+  "acceptance_remaining": [
+    "Integrate external JWT signature and issuer-key verification in the evidence workflow rather than passing decoded claims alone.",
+    "Request a custom audience and retain a redacted verification result without retaining the bearer token.",
+    "Run the challenge-bound capability and hostname observations in the exact verified workflow run and retain the resulting receipt.",
+    "Keep same-process, hardware integrity, transcript truth, deployment, browser, audio, and physical-device claims fail-closed."
+  ],
+  "safe_next_action": "Add an operations-only GitHub Actions evidence workflow that requests id-token: write, obtains a custom-audience token, verifies it against GitHub's OIDC discovery and JWKS endpoints, passes only verified claims into githubOidcRunnerBinding.v1.cjs, and retains the receipt plus test output without persisting the bearer token.",
+  "specialist_registry_change": null
+}
