@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "I-002",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "in_progress_score_ready_for_integration",
+  "objective": "Advance The Fourth Room with a deterministic generative score that coordinates narrative, spatial, threshold, and sound parameters while preserving its independent identity and strict privacy boundary.",
+  "selection_basis": "ACTIVE_QUEUE.json still contains no canonical independent_creative_web item. The latest additive I-002 record remains the highest-priority independent work, so this slice extends it without overwriting canonical queue state.",
+  "completed_slices": [
+    "Added a versioned deterministic room-score engine driven only by non-negative visit count.",
+    "Encoded authored narrative cycling, continuing spatial evolution, bounded visual growth, threshold language, and opt-in audio parameters in one immutable score object.",
+    "Added eight deterministic Node tests covering baseline state, repeatability, threshold semantics, narrative/spatial divergence, bounds, sequence shape, fail-closed validation, and version identity.",
+    "Ran the exact local source tests successfully: 8 passed, 0 failed.",
+    "Fetched the committed score engine back from its creating commit and recorded blob identity.",
+    "Retained an additive evidence artifact with independence, claim, privacy, verification, and rollback boundaries."
+  ],
+  "acceptance_remaining": [
+    "Wire scoreVisit into index.html without weakening the existing explicit audio-activation, session-only memory, reduced-motion, and network-isolation behavior.",
+    "Run node --test independent/fourth-room/room-score.test.mjs in an authenticated checkout.",
+    "Run the existing Playwright harness in Chromium and WebKit after integration and retain output/traces.",
+    "Inspect the accessibility tree and representative mobile performance behavior.",
+    "Publish only to an isolated independent preview after hosting identity and rollback are verified."
+  ],
+  "evidence_path": "operations/evidence/I-002-fourth-room-score-2026-07-15T1020Z.json",
+  "artifact_paths": [
+    "independent/fourth-room/room-score.mjs",
+    "independent/fourth-room/room-score.test.mjs"
+  ],
+  "artifact_commits": [
+    "5fd1ba355f429e9fc3b58d4114e6b95a6b6c3279",
+    "6fb61aaca64f51c18f3d8695312e494c9853d472"
+  ],
+  "safe_next_action": "Integrate the deterministic score into the existing single-page experience, then require both Node and browser harness success before an isolated preview."
+}
