@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "contract_id": "identifier-assignment-authority-v1",
+  "created_at": "2026-07-15T05:37:34Z",
+  "queue_item": "M-RECONCILE-002",
+  "purpose": "Distinguish the historical act that assigned a continuity identifier from later mentions, summaries, filenames, and semantic matches.",
+  "durable_memory": "A continuity identifier is historically assigned only by an immutable source object whose content explicitly performs the assignment, identifies the governed object, and predates dependent references.",
+  "assignment_authority_sources": [
+    "decision log entry explicitly assigning the identifier",
+    "language lexicon entry explicitly binding the identifier",
+    "project document explicitly creating the identifier and governed object",
+    "privacy-safe chat-history evidence explicitly performing the assignment"
+  ],
+  "lead_only_sources": [
+    "later completion prose",
+    "queue summaries",
+    "filenames or suffix matches",
+    "semantic resemblance",
+    "retrospective descriptions",
+    "derived graph nodes without an assignment locator"
+  ],
+  "required_gates": [
+    "explicit_assignment_language",
+    "identifier_exact_match",
+    "governed_object_match",
+    "owner_or_namespace_agreement",
+    "temporal_precedence",
+    "immutable_locator",
+    "privacy_safe_projection"
+  ],
+  "classifications": {
+    "resolved": "All gates pass and the assignment source is immutable.",
+    "rejected_collision": "At least one identity gate demonstrably fails.",
+    "lead_only": "The source mentions or resembles the identifier but does not perform the assignment.",
+    "unresolved": "One or more gates remain unknown or coverage is incomplete.",
+    "unlocated_after_exhaustive_coverage": "Exhaustive accessible coverage is evidenced and no assignment source is found; reconstruction remains prohibited."
+  },
+  "claim_register": {
+    "observed": [
+      "M-004, M-005, and M-006 remain unresolved in the active queue.",
+      "No verified originating assignment locator has been established."
+    ],
+    "inferred": [
+      "Treating a reference as an assignment would create false historical certainty."
+    ],
+    "proposed": [
+      "Apply this contract to every candidate found during exhaustive repository and privacy-safe source traversal."
+    ],
+    "superseded": [
+      "A matching filename, suffix, semantic role, or completion summary can independently establish identifier provenance."
+    ],
+    "unresolved": [
+      "The originating assignment objects for M-004, M-005, and M-006.",
+      "Whether inaccessible or unindexed history contains stronger evidence."
+    ]
+  },
+  "privacy_boundary": "Retain only source class, immutable locator or digest, timestamp, gate outcomes, and classification; do not reproduce private source text.",
+  "reversibility": "Revert the adding commit; no existing queue, registry, runtime, or history is modified."
+}
