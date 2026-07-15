@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1033",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T11:52:00Z",
+  "title": "Traversal-bounded provenance",
+  "durable_memory": "A provenance conclusion is only as strong as the retained repository-traversal envelope that supports it. Search visibility, authenticated access, and multiple agreeing query methods do not by themselves establish complete reachable-history coverage.",
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "M-004, M-005, and M-006 remain unresolved because no retained exhaustive ref inventory, reachable-commit traversal, deleted-path inspection, and origin assignment source currently closes the provenance gap.",
+      "evidence": [
+        "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+        "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T1145Z-coverage-capability-boundary.json"
+      ]
+    },
+    {
+      "status": "inferred",
+      "claim": "Repository search results and branch-search results are discovery evidence, not coverage evidence, unless their pagination, permission scope, and reachable graph are independently retained and reconciled."
+    },
+    {
+      "status": "proposed",
+      "claim": "Every terminal provenance outcome should cite a schema-valid repository traversal envelope whose ref inventory is complete, permission scope is known, unvisited reachable commit count is zero, deleted paths were inspected, and blind-spot lists are empty.",
+      "implementation": "operations/continuity/contracts/repository-traversal-envelope.v1.schema.json"
+    },
+    {
+      "status": "superseded",
+      "claim": "Agreement among authenticated code search, commit search, and branch search is sufficient to classify a missing identifier as historically absent.",
+      "superseded_by": "Coverage must be demonstrated through retained graph traversal rather than inferred from search agreement."
+    },
+    {
+      "status": "unresolved",
+      "claim": "Whether an exhaustive accessible-history traversal will locate immutable origins for M-004, M-005, and M-006 or support an exhaustive-unlocated outcome."
+    }
+  ],
+  "identity_resolution_rule": {
+    "required_agreement": [
+      "namespace",
+      "owner",
+      "semantic_role",
+      "temporal_precedence",
+      "immutable_locator"
+    ],
+    "terminal_outcome_precondition": "coverage_assessment.terminal_provenance_allowed must be true",
+    "fail_closed_outcome": "unresolved_incomplete_coverage"
+  },
+  "falsification_routes": [
+    "Produce a retained traversal envelope showing complete accessible history and an immutable object that assigns one of the identifiers to its claimed artifact.",
+    "Produce two immutable candidates satisfying the identity agreement rule, which would change the outcome to conflicting_candidates.",
+    "Demonstrate a permission, pagination, ref, commit-graph, historical-path, or deleted-path blind spot, which keeps terminal provenance prohibited."
+  ],
+  "privacy_boundary": "Repository metadata, abstract provenance semantics, and public-safe identifiers only. No private chat text, credentials, personal records, or unreviewed File Library content retained.",
+  "specialist_registry_changed": false
+}
