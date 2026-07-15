@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "evidence_id": "M-RECONCILE-002-2026-07-15T0646Z-indexed-source-coverage",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-15T06:46:29Z",
+  "purpose": "Record a privacy-safe, coverage-bounded search for originating assignment evidence for M-004, M-005, and M-006 without treating search silence or suffix collisions as provenance.",
+  "sources_inspected": [
+    {
+      "source_class": "repository_canonical_state",
+      "locators": [
+        "operations/CURRENT_STATE.json@894edf8b749c94bf454d1098c20c3946f5d7c20c",
+        "operations/ACTIVE_QUEUE.json@94f2187af3af27594e3b9d6364ceae18ea770c77",
+        "operations/SPECIALIST_REGISTRY.json@0249aea064eda2cc5c7bc86713201e1cd26354ff",
+        "operations/TRIGGER_REQUESTS.json@350d30cb09a3e6d0fb76c3bcd5793465b14dc1d2"
+      ],
+      "coverage_class": "exact_files"
+    },
+    {
+      "source_class": "repository_recent_commits",
+      "locator": "GitHub commit search, newest 20 commits as of 2026-07-15T06:46:29Z",
+      "coverage_class": "bounded_recent_window"
+    },
+    {
+      "source_class": "repository_code_search",
+      "queries": ["M-004 M-005 M-006", "M-004"],
+      "coverage_class": "index_dependent_non_exhaustive",
+      "result": "no indexed matches returned"
+    },
+    {
+      "source_class": "file_library",
+      "queries": ["M-004 M-005 M-006 identifier assignment continuity artifact", "M-004", "M-005", "M-006"],
+      "coverage_class": "semantic_and_keyword_retrieval_non_exhaustive",
+      "result": "suffix-adjacent V8/V9 proof-machine records and unrelated generated assets returned"
+    }
+  ],
+  "memory_recovered": {
+    "statement": "Search silence is not historical absence, and identifier-like suffixes outside the continuity namespace are collision candidates rather than assignment evidence.",
+    "status": "observed_and_reaffirmed",
+    "durability": "project_operating_rule"
+  },
+  "candidate_adjudication": [
+    {
+      "candidate_class": "repository indexed search silence",
+      "classification": "coverage_limited_no_match",
+      "reason": "Code search is index-dependent and did not establish exhaustive branch or commit-history coverage."
+    },
+    {
+      "candidate_class": "File Library V8/V9 records with numeric suffixes 004, 005, or 006",
+      "classification": "rejected_collision",
+      "reason": "Namespace, owner, semantic role, and governed object do not agree with continuity identifiers M-004, M-005, or M-006."
+    },
+    {
+      "candidate_class": "recent continuity completion commits",
+      "classification": "lead_only",
+      "reason": "They define provenance rules and report unresolved status but do not contain the originating identifier assignment objects."
+    }
+  ],
+  "claim_register": {
+    "observed": [
+      "The active queue still marks M-004, M-005, and M-006 provenance as unresolved.",
+      "The repository code-search queries used in this run returned no indexed matches.",
+      "File Library retrieval returned unrelated suffix matches rather than continuity assignment sources."
+    ],
+    "inferred": [
+      "The originating assignment may be outside indexed default-branch content, in inaccessible history, or in an unqueried private-safe source class."
+    ],
+    "proposed": [
+      "Perform exhaustive branch enumeration and per-branch commit-history traversal before using the classification unlocated_after_exhaustive_coverage."
+    ],
+    "superseded": [
+      "A no-result repository search proves an identifier never existed.",
+      "A matching numeric suffix is enough to resolve continuity provenance."
+    ],
+    "unresolved": [
+      "Originating immutable assignment objects for M-004, M-005, and M-006.",
+      "Complete branch and commit-history coverage."
+    ]
+  },
+  "privacy_boundary": "No private source text is reproduced. Only source class, query class, coverage class, classification, and immutable repository locators are retained.",
+  "verification": {
+    "method": "connector fetch-back plus JSON parse expectation",
+    "execution_status": "source-level only",
+    "limitations": "No exhaustive branch inventory or local git traversal was available in this slice."
+  },
+  "reversibility": "Revert the adding commit; no existing history, runtime, queue item, or specialist registry entry is deleted."
+}
