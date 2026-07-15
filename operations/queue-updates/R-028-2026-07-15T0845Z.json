@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-028",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Require normative semantic validation of authenticated Unicode confusables mappings before dataset promotion.",
+  "derived_from": ["R-026", "R-027"],
+  "completed_slices": [
+    "Inspected Unicode UTS #39 version 17.0.0 revision 32 and current confusables data references.",
+    "Implemented a parser-independent semantic validator for version, record shape, MA type, Unicode scalar validity, source uniqueness, and mapping idempotency.",
+    "Added six deterministic tests covering acceptance and five fail-closed classes.",
+    "Retained source status, uncertainty, claim boundaries, and falsification routes."
+  ],
+  "acceptance_remaining": [
+    "Run the committed tests in an authenticated checkout and retain exact output.",
+    "Execute the pinned Unicode 17 source through byte verification followed by semantic validation.",
+    "Locate the canonical parser and route verified construction through the semantic gate before dataset promotion.",
+    "Compare canonical mapping digest and record count against an independent parser."
+  ],
+  "safe_next_action": "In an authenticated checkout, run node --test tools/frontier-research/validate-confusables-semantics.test.mjs, then integrate validateConfusablesSemantics immediately after enforceUnicodeConfusablesSource and before parseConfusables output is accepted. Do not claim full UTS #39 conformance from this data gate alone.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false
+}
