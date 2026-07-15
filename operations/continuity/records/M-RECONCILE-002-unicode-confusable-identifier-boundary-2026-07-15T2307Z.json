@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "record_id": "M-RECONCILE-002-unicode-confusable-identifier-boundary-2026-07-15T2307Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T23:07:40Z",
+  "title": "Unicode confusable identifier boundary for unresolved continuity artifacts",
+  "memory": "Unicode confusable normalization may be used to discover candidate references, but a normalized or skeleton-equivalent token is not the canonical identifier and cannot establish immutable provenance without exact-source agreement.",
+  "claims": {
+    "observed": [
+      "The canonical unresolved identifiers in ACTIVE_QUEUE.json are the exact ASCII strings M-004, M-005, and M-006.",
+      "Repository code search for the exact ASCII token M-004 returned no indexed candidates in this run.",
+      "Frontier Research R-029 defines a fail-closed construction boundary for a verified Unicode confusables dataset, but its production dataset integration remains incomplete."
+    ],
+    "inferred": [
+      "Historical text may contain visually similar dash, letter, or digit code points that are not byte-identical to the canonical identifiers.",
+      "Confusable or normalization-aware discovery could expand recall, but automatic canonicalization would create false provenance and namespace-collision risk."
+    ],
+    "proposed": [
+      "Search exact ASCII identifiers first, then explicitly enumerate Unicode dash and confusable variants as candidate-only queries.",
+      "Store every variant with original code points, source locator, normalization form, skeleton digest, namespace, owner, semantic role, and temporal position.",
+      "Promote a candidate to canonical provenance only when the immutable source itself assigns the exact canonical identifier or a retained decision object explicitly records the alias relationship.",
+      "Treat normalization, case folding, and confusable skeletons as retrieval aids rather than identity mutation operations."
+    ],
+    "superseded": [
+      "A visually identical token is equivalent to the canonical identifier.",
+      "A confusable skeleton match alone resolves M-004, M-005, or M-006.",
+      "Normalization may overwrite the original source token in provenance records."
+    ],
+    "unresolved": [
+      "No exhaustive Unicode-variant search has yet been performed across all accessible branches, reachable commit trees, decision logs, language lexicons, project documents, chat history, and File Library sources.",
+      "The canonical source objects assigning M-004, M-005, and M-006 remain unlocated.",
+      "R-029's verified confusables dataset has not yet been promoted for production use."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "A look-alike identifier may be relevant to provenance while not being the canonical identifier.",
+    "resolution": "Relevance and identity are separate claims. Confusable equivalence can justify candidate inspection, but only immutable exact-source or explicit alias evidence can establish canonical identity."
+  },
+  "source_status": [
+    {
+      "source": "operations/ACTIVE_QUEUE.json",
+      "status": "canonical_current_queue",
+      "use": "Defines exact unresolved ASCII identifiers and acceptance criteria."
+    },
+    {
+      "source": "GitHub exact-token code search for M-004",
+      "status": "indexed_query_bounded_observation",
+      "use": "Returned no candidate in this run; does not prove historical absence."
+    },
+    {
+      "source": "operations/queue-updates/R-029-2026-07-15T0855Z.json",
+      "status": "frontier_handoff",
+      "use": "Supplies the verified-confusables construction boundary and its remaining limitations."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "Repository queue identifiers",
+      "Abstract Unicode and provenance rules",
+      "Repository-scoped search outcome",
+      "Public-safe source classifications"
+    ],
+    "excluded": [
+      "Private chat text",
+      "File Library contents",
+      "Credentials",
+      "Personal, medical, or relationship information",
+      "Unpublished private source material"
+    ]
+  },
+  "falsification_route": [
+    "Locate an immutable source whose original token is a Unicode-confusable variant and which explicitly declares that variant an alias of one canonical M identifier.",
+    "Show that promoting skeleton-equivalent tokens without exact-source agreement produces no collisions across all relevant namespaces.",
+    "Demonstrate that original code points can be discarded without changing provenance conclusions."
+  ],
+  "coverage_class": "bounded_non_exhaustive",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
