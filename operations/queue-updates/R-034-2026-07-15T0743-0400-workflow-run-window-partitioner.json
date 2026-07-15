@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-034",
+  "owner": "frontier_research",
+  "priority": "highest_available_frontier_continuation",
+  "state": "implemented_handoff_ready",
+  "objective": "Eliminate silent acceptance of GitHub Actions workflow-run searches that reach the provider's documented 1000-result filtered-search ceiling.",
+  "basis": "R-020 and R-021 remain handoff-ready but retain provider-ceiling ambiguity as an acceptance gap. This additive continuation converts that gap into a deterministic partition and tree-assessment contract without overwriting operations/ACTIVE_QUEUE.json.",
+  "completed_slice": [
+    "Rechecked current GitHub primary documentation for workflow-run filtered-search and pagination limits.",
+    "Implemented deterministic UTC time-window bisection at or above the provider ceiling.",
+    "Implemented fail-closed tree assessment requiring every leaf to be below the ceiling.",
+    "Added tests for below-ceiling acceptance, deterministic splitting, minimum-window ambiguity, malformed inputs, and unresolved child propagation.",
+    "Retained source status, uncertainty, evidence strength, falsification route, and claim boundary."
+  ],
+  "files": [
+    "tools/frontier-research/workflow-run-window-partitioner.mjs",
+    "tools/frontier-research/workflow-run-window-partitioner.test.mjs",
+    "operations/evidence/R-034-workflow-run-window-partitioner-2026-07-15T0743-0400.json",
+    "operations/queue-updates/R-034-2026-07-15T0743-0400-workflow-run-window-partitioner.json"
+  ],
+  "commits": [
+    "af49ea6272879e2ad11983e61af9beacdfb07b88",
+    "e07c2519b7c3214f33f5c2af3de580ad2bab611a",
+    "f92617e8239ffb1ba640e5329f284de0786a8a39"
+  ],
+  "verification": {
+    "isolated_node_tests": {"passed": 4, "failed": 0},
+    "authenticated_provider_execution": "not_performed"
+  },
+  "registry_change": null,
+  "next_action": "Integrate recursive partition execution into the authenticated R-020 enumerator, retain every request/response leaf and Link traversal, and reconcile the resulting complete leaf union against the independent gh api traversal before V-001 promotion."
+}
