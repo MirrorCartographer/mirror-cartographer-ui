@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T08:14:43Z",
+  "slice": "Bind repertory production acceptance to exact-commit immutable deployment evidence and physical iPhone Safari audibility evidence.",
+  "source_status": {
+    "current_state": "observed_repository_file",
+    "active_queue": "observed_repository_file",
+    "specialist_registry": "observed_repository_file",
+    "trigger_requests": "observed_repository_file",
+    "frontier_mobile_safari_validator": "observed_commit_a526dfc28cb8d2cb014564e9e1ee2892ab289779",
+    "repertory_activation_assessor": "observed_commit_58f4019d67b8c97f2a4688cb5d55aac0f41db8e6"
+  },
+  "finding": "Activation preconditions and a running audio route are insufficient for production acceptance. Acceptance must fail closed unless the activation assessment, immutable deployment identity, and human-observed physical iPhone Safari audibility evidence agree on the same tested commit and deployment id.",
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/assessProductionAcceptance.v1.cjs",
+    "tests": "operations/vercel-studio/repertory/assessProductionAcceptance.v1.test.cjs",
+    "module_commit": "fdc46d4303d34f90ada52450a20ba524f60f696f",
+    "test_commit": "d8629926a3c5f4503e0e7bbc49e3333b34440a71"
+  },
+  "verification": {
+    "command": "node --test assessProductionAcceptance.v1.test.cjs",
+    "environment": "isolated Node-compatible local execution using the committed source text",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "claims_not_made": [
+      "No Vercel deployment was created or verified.",
+      "No repertory was activated.",
+      "No browser audio route was observed.",
+      "No physical iPhone audibility was observed."
+    ]
+  },
+  "privacy_boundary": "No private source text, credentials, personal records, analytics, payments, or conversion logic were introduced.",
+  "reversibility": {
+    "delete_prohibited": true,
+    "rollback": "Revert the additive evidence, test, and module commits in reverse order."
+  },
+  "specialist_registry_change": "none",
+  "reason_no_registry_change": "The existing Vercel Studio reliability, audio, mobile Safari, test, deployment verification, and rollback roles cover this capability."
+}
