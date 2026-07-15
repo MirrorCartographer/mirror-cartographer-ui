@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:04:27Z",
+  "artifact_type": "commit_message_coverage_boundary",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "default_branch": "main",
+    "source_classes_inspected": [
+      "operations current state",
+      "canonical active queue",
+      "specialist registry",
+      "trigger requests",
+      "recent repository commits",
+      "immutable continuity commits",
+      "GitHub commit-message search",
+      "File Library semantic retrieval"
+    ],
+    "coverage_class": "indexed_and_connector_bounded",
+    "exhaustive": false
+  },
+  "memory_recovered": "Exact GitHub commit-message search for M-004 returned only three continuity-created reconciliation records. The earliest located immutable objects remain unresolved-origin status records, not assignment records. File Library retrieval again returned V8/V9 proof-machine suffix collisions rather than continuity_mining assignments.",
+  "claims": {
+    "observed": [
+      {
+        "claim": "Exact commit-message search for M-004 returned commits 83205275e023fccf602127ca4ff1cf3075bd1c26, 0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a, and 114d63cb2723fcf7dfc879819de31d44e076899e.",
+        "status": "observed",
+        "authority": "GitHub connector result"
+      },
+      {
+        "claim": "Commit 114d63cb2723fcf7dfc879819de31d44e076899e explicitly classifies the first located M-004, M-005, and M-006 objects as unresolved-origin status records and not accepted origins.",
+        "status": "observed",
+        "authority": "immutable commit inspection"
+      },
+      {
+        "claim": "File Library semantic retrieval produced V8/V9 numerical identifier matches in proof-machine artifacts, not continuity_mining namespace assignments.",
+        "status": "observed",
+        "authority": "File Library retrieval"
+      },
+      {
+        "claim": "The branch-search connector returned no branch inventory for empty and main queries.",
+        "status": "observed",
+        "authority": "GitHub connector behavior"
+      }
+    ],
+    "inferred": [
+      "The originating assignments, if they exist, are not established by currently located commit messages or File Library suffix matches.",
+      "Branch-search silence cannot be converted into an exhaustive single-branch claim because the connector did not return a coverage envelope."
+    ],
+    "proposed": [
+      "Use an authenticated git or refs API traversal that retains every branch name, tip SHA, pagination record, and reachable-commit set.",
+      "Search only pre-boundary objects for explicit assignment language and require namespace, owner, semantic-role, temporal-precedence, and immutable-locator agreement."
+    ],
+    "superseded": [
+      "A matching numeric suffix in File Library can resolve continuity provenance.",
+      "No branch-search results prove that only main exists.",
+      "The first searchable identifier mention is necessarily the historical assignment."
+    ],
+    "unresolved": [
+      "Immutable assignment objects for M-004, M-005, and M-006.",
+      "Exhaustive accessible branch inventory.",
+      "Exhaustive reachable-history traversal before each temporal boundary.",
+      "Originating decision log, language lexicon, project document, or privacy-reviewed chat locator."
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "apparent_conflict": "File Library contains records ending in 004, 005, and 006 while continuity provenance remains unresolved.",
+      "resolution": "The records belong to V8/V9 proof-machine namespaces and fail namespace and semantic-role agreement; they are collisions, not continuity origins."
+    },
+    {
+      "apparent_conflict": "Branch search returned no rows although main is known as the default branch.",
+      "resolution": "The search response is treated as connector limitation, not repository topology evidence."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit SHAs",
+      "abstract claim classifications",
+      "source-class labels",
+      "coverage limitations"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "File Library source bodies"
+    ]
+  },
+  "verification": {
+    "method": "cross-source classification against immutable commit content and retrieved source namespaces",
+    "result": "passed_with_incomplete_coverage",
+    "promotion_allowed": false
+  },
+  "falsification_route": "Produce a retained exhaustive refs and reachable-history traversal containing an earlier immutable object that explicitly assigns one of the identifiers in the continuity_mining namespace and satisfies every authority predicate.",
+  "rollback": "Revert the commit adding this evidence file; no canonical state or prior history is modified."
+}
