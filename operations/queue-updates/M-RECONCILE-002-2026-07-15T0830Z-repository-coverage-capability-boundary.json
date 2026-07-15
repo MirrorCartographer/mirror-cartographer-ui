@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:30:00Z",
+  "update_type": "additive_queue_projection",
+  "canonical_queue_overwritten": false,
+  "completed_slice": "Established a repository-coverage capability boundary: default-branch metadata, bounded recent commits, indexed commit-message searches, unindexed code search, and zero-result branch search do not constitute exhaustive refs or reachable-history traversal.",
+  "state": "in_progress",
+  "acceptance_remaining": [
+    "Obtain a complete authenticated inventory of all accessible refs with tip SHAs and retained pagination or command evidence.",
+    "Traverse and retain reachable pre-boundary history and trees from every accessible ref.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Use an authenticated refs endpoint or local git fetch to retain every accessible ref and tip SHA, then traverse all reachable commits and pre-boundary trees. Treat zero-result discovery surfaces as capability outcomes, not absence evidence.",
+  "evidence": {
+    "path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0830Z-repository-coverage-capability-boundary.json",
+    "commit": "4b0e0f924c14e9523012be6afdacbff2f760c75b"
+  },
+  "claim_status": {
+    "observed": "Current connector-backed coverage is bounded and non-exhaustive.",
+    "inferred": "The empty branch-search response reflects an unproven discovery surface, not repository-wide branch absence.",
+    "proposed": "Retain authenticated refs and reachable-history traversal evidence before any absence classification.",
+    "superseded": "Default-branch metadata or zero-result search can stand in for exhaustive ref inventory.",
+    "unresolved": "Originating immutable assignments and complete historical coverage."
+  },
+  "privacy_boundary": "No private chat text, personal records, credentials, or raw File Library contents were retained.",
+  "rollback": "Revert this additive queue projection commit; the canonical queue remains unchanged."
+}
