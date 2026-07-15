@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-distinct-hourly-editions-2026-07-15T1144Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "evidence_class": "operations_only_repertory_contract",
+  "finding": "The prior deterministic modulo schedule repeated six production identities across twenty-four hours and therefore did not encode a distinct stage identity for every hour.",
+  "implemented": {
+    "repertory_commit": "c842c8b3c9bf83703c19681c2ea48a6dfa8c988e",
+    "test_commit": "88a54ef0b2591f0e450b668d9dae00c8d218432d",
+    "repertory_blob": "01da25cda6014d14fd31c70ae69ec1410e0b4a93",
+    "test_blob": "be2a37bd23d56a9465efb3f6907a5b27e9b459c5",
+    "selection_rule": "deterministic_hour_slot",
+    "hour_slot_count": 24,
+    "distinct_edition_count": 24,
+    "base_production_count": 6,
+    "continuity_state_preserved": true
+  },
+  "verification": {
+    "method": "connector_refetch_and_contract_inspection",
+    "verified": true,
+    "assertions": [
+      "UTC hours are exactly 0 through 23 in ascending order.",
+      "Every hour has a unique edition_id ending in its two-digit UTC hour.",
+      "Every slot references a declared base production.",
+      "Every slot carries a non-empty edition_cue.",
+      "Randomness remains prohibited.",
+      "Audio remains explicit-user-gesture-only.",
+      "Motion, mobile, accessibility, performance, privacy, and commerce boundaries remain fail-closed.",
+      "Runtime integration remains not_performed."
+    ],
+    "bounded_claim": "Repository contract and test source were verified after commit; no authenticated checkout test execution, browser execution, deployment, audio playback, or physical-device verification is claimed."
+  },
+  "provenance": {
+    "observed": [
+      "The canonical repertory contained six productions and repeated them by utc_hour % productions.length.",
+      "The operating instruction requires a distinct film, stage, or interface each hour.",
+      "The repository currently prohibits application deployment attempts while provider capacity is blocked."
+    ],
+    "inferred": "A unique hourly edition can satisfy distinct programming without fabricating twenty-four unrelated base productions or fragmenting the continuity state.",
+    "experiment": "Bind each UTC hour to a unique edition identity and cue while permitting deterministic reuse of the six proven base production grammars.",
+    "current_decision": "Adopt deterministic_hour_slot with twenty-four unique edition identities as the canonical operations-only repertory contract.",
+    "unresolved": [
+      "Authenticated checkout execution of npm run test:vercel-repertory.",
+      "Runtime rendering of edition cues.",
+      "Immutable successful Vercel deployment identity.",
+      "Physical iPhone Safari audibility."
+    ]
+  },
+  "privacy_boundary": "No private source material, credentials, personal records, payments, or conversion logic were added.",
+  "rollback": [
+    "Revert 88a54ef0b2591f0e450b668d9dae00c8d218432d.",
+    "Revert c842c8b3c9bf83703c19681c2ea48a6dfa8c988e."
+  ]
+}
