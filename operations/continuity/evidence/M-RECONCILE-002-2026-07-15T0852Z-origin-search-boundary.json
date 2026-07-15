@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T08:52:00Z",
+  "memory_title": "Identifier occurrence is not identifier origin",
+  "claim_states": {
+    "observed": [
+      "The canonical continuity queue requires immutable provenance for M-004, M-005, and M-006 and forbids reconstruction of unverified history.",
+      "Repository code search returned no indexed file result for the exact token M-004.",
+      "Repository commit search returned only later continuity reconciliation commits containing M-004, including commits that explicitly classify the origin as unresolved or record namespace rejection and temporal boundaries.",
+      "File Library search returned V8/V9 proof-machine identifiers such as V8-004 and V9-004; these are suffix collisions in a different namespace and semantic role."
+    ],
+    "inferred": [
+      "The first discoverable repository commit mentioning M-004 in a bounded search is a downstream reconciliation record, not evidence of the original assignment.",
+      "A lexical suffix match across namespaces cannot establish continuity-artifact identity."
+    ],
+    "proposed": [
+      "Promote a candidate origin only when an immutable object explicitly assigns the exact M-00x identifier and satisfies namespace, owner, semantic-role, and temporal-precedence agreement.",
+      "Record search-method coverage separately from claim resolution so bounded silence cannot be mistaken for exhaustive absence."
+    ],
+    "superseded": [
+      "Treating V8-004, V9-004, or analogous numbered records as candidates for M-004 solely because the numeric suffix matches.",
+      "Treating a later provenance-gap record as the historical origin of the identifier it discusses."
+    ],
+    "unresolved": [
+      "The originating decision log, language lexicon, project document, chat-history locator, branch, or commit that first assigned M-004, M-005, and M-006 remains unlocated.",
+      "An exhaustive branch inventory and reachable-history traversal was not available through the current connector search surface."
+    ]
+  },
+  "source_status": {
+    "canonical_queue": "authoritative_current_state",
+    "repository_commit_search": "bounded_authenticated_search",
+    "repository_code_search": "bounded_unindexed_or_zero_result_search",
+    "file_library_search": "lead_only_cross_namespace_search"
+  },
+  "evidence_strength": "moderate_for_rejection_boundary_low_for_origin_resolution",
+  "contradictions_resolved": [
+    {
+      "apparent_contradiction": "A record can be the earliest search result and still not be the origin.",
+      "resolution": "Search-result precedence is coverage-relative; origin requires explicit assignment plus semantic and namespace agreement."
+    },
+    {
+      "apparent_contradiction": "File Library contains matching numbered identifiers but continuity provenance remains unresolved.",
+      "resolution": "The matching suffixes belong to V8/V9 proof-machine namespaces and different semantic roles, so they are rejected collisions rather than continuity origins."
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "public repository metadata",
+      "abstract identifier and namespace rules",
+      "file titles and non-personal semantic classifications"
+    ],
+    "excluded": [
+      "private chat excerpts",
+      "personal identifiers",
+      "medical or relationship material",
+      "credentials",
+      "private source text"
+    ]
+  },
+  "falsification_route": [
+    "Enumerate every accessible branch and all reachable commits using an authenticated exhaustive client.",
+    "Locate an immutable object that explicitly assigns each exact identifier before downstream references.",
+    "Verify namespace, owner, semantic role, and temporal precedence; reject ambiguous multiple origins.",
+    "Inspect privacy-reviewed decision logs, lexicons, project documents, and chat-history locators only through provenance-safe references."
+  ],
+  "execution_claimed": false,
+  "reversible": true
+}
