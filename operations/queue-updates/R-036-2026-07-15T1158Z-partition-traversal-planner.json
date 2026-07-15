@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "update_id": "R-036-2026-07-15T1158Z-partition-traversal-planner",
+  "owner": "frontier_research",
+  "related_queue_items": ["R-020", "R-021"],
+  "state": "completed_handoff_ready",
+  "completed_slice": "Converted the disjoint inclusive window partition rule into a deterministic fail-closed traversal planner with retained-observation, pagination-completeness, duplicate-window, and one-second saturation gates.",
+  "files": [
+    "tools/frontier-research/workflow-run-partition-traversal-v1.mjs",
+    "tools/frontier-research/workflow-run-partition-traversal-v1.test.mjs",
+    "operations/evidence/R-036-partition-traversal-planner-2026-07-15T1158Z.json"
+  ],
+  "acceptance_remaining": [
+    "Execute the committed Node test in an authenticated checkout and retain exact output.",
+    "Integrate the planner into an authenticated created-window retrieval client without replacing the unfiltered authoritative enumerator.",
+    "Retain every raw page and Link header, then reconcile final run IDs against the unfiltered repository traversal and independent gh api traversal.",
+    "Fail closed if any one-second leaf remains at the provider ceiling or if any leaf lacks complete pagination evidence."
+  ],
+  "safe_next_action": "Run node --test tools/frontier-research/workflow-run-partition-traversal-v1.test.mjs; then implement the provider-request adapter that records total_count, raw pages, Link headers, retrieval timestamps, and paginationComplete for each planned leaf."
+}
