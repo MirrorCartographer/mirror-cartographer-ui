@@ -67,8 +67,8 @@
       "id": "wordless-room-game",
       "title": "Wordless Room Game",
       "form": "interactive_room",
-      "continuity_role": "current_public_screening_surface",
-      "status": "observed_current_stage",
+      "continuity_role": "public_screening_candidate",
+      "status": "repertory_contract_only",
       "provenance": {
         "observed": [
           "29ee82bc84c08a9af1e2cd1401b9eeb8977b8635",
@@ -76,7 +76,7 @@
         ],
         "inferred": "A wordless room can communicate continuity through motion, response, and retained state.",
         "experiment": "Treat the interface as a playable film rather than a navigational shell.",
-        "current_decision": "This is the stage selected for UTC hour 21 under repertory v1."
+        "current_decision": "Retain as a reversible repertory identity; activation requires separate runtime evidence."
       }
     },
     {
