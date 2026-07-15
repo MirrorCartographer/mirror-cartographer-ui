@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T09:59:36Z",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Formalized a fail-closed immutable-origin candidate contract that separates candidate identity from search coverage and permits verified_origin only when exact assignment, exhaustive coverage, all agreement dimensions, and conflict checks pass conjunctively.",
+  "artifacts": [
+    "operations/continuity/contracts/immutable-origin-candidate.v1.schema.json",
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T095936Z-origin-candidate-contract.json"
+  ],
+  "canonical_queue_overwritten": false,
+  "acceptance_remaining": [
+    "Implement and execute a deterministic validator for the contract.",
+    "Obtain an exhaustive authenticated branch, tag, ref, reachable-commit, historical-path, and deleted-path inventory.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or retain unresolved status after demonstrably exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-safe chat-history locator that assigned each identifier."
+  ],
+  "safe_next_action": "Add synthetic pass/fail fixtures and a validator for immutable-origin-candidate.v1.schema.json, then evaluate candidates produced by exhaustive repository traversal; never promote a strongest-match candidate when any coverage or agreement field is incomplete.",
+  "specialist_registry_change": null,
+  "rollback": {
+    "method": "revert_commits_in_reverse_order",
+    "files_are_additive": true
+  }
+}
