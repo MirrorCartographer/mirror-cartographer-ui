@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T21:44:00Z",
+  "state": "in_progress",
+  "slice": "File Library recall and namespace-collision boundary",
+  "completed": [
+    "Re-ran File Library retrieval for M-004, M-005, M-006 and provenance-bearing source classes.",
+    "Classified V8/V9 numeric suffix matches as namespace and semantic-role collisions rather than continuity provenance candidates.",
+    "Preserved exact-token non-results as coverage-bounded rather than absence evidence.",
+    "Retained a public-safe provenance record without copying private uploaded or chat content."
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Complete and retain the all-branch reachable-history traversal receipt. For any File Library lead, require exact M-prefixed identifier text in an assigning context and reconcile it to an immutable locator before promotion.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none; no durable capability gap established",
+  "artifact": "operations/continuity/records/M-RECONCILE-002-file-library-recall-boundary-2026-07-15T2144Z.json",
+  "privacy": {
+    "contains_private_source_material": false,
+    "public_safe": true
+  }
+}
