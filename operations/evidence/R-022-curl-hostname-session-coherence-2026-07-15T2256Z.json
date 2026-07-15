@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "team": "frontier_research",
+  "recorded_at": "2026-07-15T22:56:00Z",
+  "finding": "The existing composed curl pipeline proved capability and hostname observation independently but did not prove temporal coherence within one bounded execution session.",
+  "implementation": {
+    "module": "operations/frontier-research/curlGeneratedHostnameSession.v1.cjs",
+    "test": "operations/frontier-research/curlGeneratedHostnameSession.v1.test.cjs",
+    "session_rule": "Capability evidence must precede hostname observation and remain within a caller-declared bounded skew, defaulting to 15 minutes.",
+    "digest_binding": [
+      "session_id",
+      "pipeline_receipt_sha256",
+      "capability_receipt_sha256",
+      "hostname_receipt_sha256",
+      "expected_commit_sha",
+      "deployment_id",
+      "generated_hostname",
+      "both observation timestamps",
+      "observed and maximum skew"
+    ]
+  },
+  "source_status": {
+    "repository_sources": "observed",
+    "same_session_requirement": "inferred from evidence-composition gap",
+    "fifteen_minute_default": "proposed operational bound and caller-overridable",
+    "deployment_or_network_execution": "not performed"
+  },
+  "evidence_strength": "committed deterministic implementation and five committed Node test cases; runtime execution not retained in this run",
+  "uncertainty": [
+    "The connector does not execute repository tests.",
+    "No authenticated curl process, Vercel deployment fetch, generated-hostname request, browser check, audio check, or physical-device check occurred.",
+    "A bounded session does not prove the same operating-system process or binary path unless future evidence adds executable identity."
+  ],
+  "claim_boundary": "This artifact only defines a fail-closed temporal and digest binding between already-validated capability and hostname receipts.",
+  "falsification_route": [
+    "A capability timestamp later than the hostname timestamp produces verified=true.",
+    "A capability timestamp outside maximum_session_skew_ms produces verified=true.",
+    "Changing session identity or either child receipt leaves the parent digest unchanged."
+  ],
+  "privacy": {
+    "credentials_retained": false,
+    "private_source_material_retained": false,
+    "raw_network_output_retained": false
+  }
+}
