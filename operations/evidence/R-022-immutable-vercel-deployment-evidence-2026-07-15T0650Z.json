@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "created_at": "2026-07-15T06:50:00Z",
+  "finding": "A successful status or mutable alias is insufficient to bind application code to a Vercel deployment. Acceptance requires the authenticated Vercel deployment object to expose a stable deployment id and generated hostname, READY state, project identity, and gitSource.sha equal to the exact tested GitHub commit.",
+  "source_status": "primary_current",
+  "sources": [
+    {
+      "publisher": "Vercel",
+      "title": "Get a deployment by ID or URL",
+      "url": "https://vercel.com/docs/rest-api/deployments/get-a-deployment-by-id-or-url",
+      "observed_fields": ["id", "url", "readyState", "status", "projectId", "name", "createdAt", "ready", "gitSource.type", "gitSource.sha", "deletedAt", "softDeletedByRetention"]
+    },
+    {
+      "publisher": "Vercel",
+      "title": "Accessing Deployments through Generated URLs",
+      "url": "https://vercel.com/docs/deployments/generated-urls",
+      "use": "Distinguishes generated deployment URLs from project aliases and custom domains."
+    }
+  ],
+  "artifact": {
+    "validator": "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.cjs",
+    "tests": "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.test.cjs",
+    "validator_commit": "717c80ad81d7de207a6592f90852a6c9f6509ccf",
+    "test_commit": "b3b172e4fd15cd46b71bd17fe90b2df2865167ef"
+  },
+  "evidence_strength": "implementation_ready_static_contract",
+  "verification": {
+    "repository_write_confirmed": true,
+    "fetch_back_pending": true,
+    "node_tests_executed": false,
+    "authenticated_vercel_api_observation": false,
+    "deployment_claimed": false
+  },
+  "uncertainty": [
+    "The Vercel API response shape may contain additional fields or account-specific omissions.",
+    "A READY deployment identity does not by itself prove route behavior, audio audibility, or production alias promotion."
+  ],
+  "falsification_route": [
+    "Run the six deterministic Node tests.",
+    "Fetch an authenticated v13 deployment object for an exact commit.",
+    "Demonstrate rejection for mismatched gitSource.sha, non-READY state, deleted records, or absent deployment id.",
+    "Independently request the generated deployment hostname and retain response identity evidence."
+  ],
+  "claim_boundary": "No deployment, runtime, route, or audibility claim is made by this artifact."
+}
