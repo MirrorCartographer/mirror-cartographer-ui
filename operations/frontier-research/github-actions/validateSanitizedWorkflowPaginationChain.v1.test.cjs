@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { validateSanitizedWorkflowPaginationChain } = require('./validateSanitizedWorkflowPaginationChain.v1.cjs');
+const { analyzeLinkHeader, validateSanitizedWorkflowPaginationChain } = require('./validateSanitizedWorkflowPaginationChain.v1.cjs');
 
 const SHA = 'a'.repeat(40);
 const VERSION = '2026-03-10';
@@ -11,24 +11,13 @@ function responseEvidence(link = null) {
   return {
     classification: 'sanitized_github_response_evidence',
     verified: true,
-    request: {
-      api_version: VERSION,
-      headers: { 'X-GitHub-Api-Version': VERSION }
-    },
-    response: {
-      status: 200,
-      headers: { Link: link }
-    }
+    request: { api_version: VERSION, headers: { 'X-GitHub-Api-Version': VERSION } },
+    response: { status: 200, headers: { Link: link } }
   };
 }
 
 function page(pageIndex, requestUrl, records, link = null) {
-  return {
-    page_index: pageIndex,
-    request_url: requestUrl,
-    response_evidence: responseEvidence(link),
-    records
-  };
+  return { page_index: pageIndex, request_url: requestUrl, response_evidence: responseEvidence(link), records };
 }
 
 test('accepts a complete two-page sanitized Link chain', () => {
@@ -37,14 +26,41 @@ test('accepts a complete two-page sanitized Link chain', () => {
   const result = validateSanitizedWorkflowPaginationChain({
     exact_commit: SHA,
     api_version: VERSION,
-    pages: [
-      page(1, first, [{ id: 1, head_sha: SHA }], `<${second}>; rel="next"`),
-      page(2, second, [{ id: 2, head_sha: SHA }])
-    ]
+    pages: [page(1, first, [{ id: 1, head_sha: SHA }], `<${second}>; rel="next"`), page(2, second, [{ id: 2, head_sha: SHA }])]
   });
   assert.equal(result.verified, true);
   assert.equal(result.coverage, 'link_chain_complete');
   assert.equal(result.record_count, 2);
+});
+
+test('parses a comma inside a URI reference without splitting the link-value', () => {
+  const next = 'https://api.github.com/repos/o/r/actions/runs?cursor=a,b&page=2';
+  const analysis = analyzeLinkHeader(`<${next}>; rel="next", <https://api.github.com/page/9>; rel="last"`);
+  assert.equal(analysis.malformed, false);
+  assert.equal(analysis.next_url, next);
+});
+
+test('accepts relation token lists and case-insensitive parameter names', () => {
+  const next = 'https://api.github.com/page/2';
+  const analysis = analyzeLinkHeader(`<${next}>; REL="prev next"; title="two, still one parameter"`);
+  assert.equal(analysis.malformed, false);
+  assert.equal(analysis.next_url, next);
+});
+
+test('rejects malformed Link syntax fail-closed', () => {
+  const result = validateSanitizedWorkflowPaginationChain({
+    exact_commit: SHA,
+    api_version: VERSION,
+    pages: [page(1, 'https://api.github.com/page/1', [], '<https://api.github.com/page/2; rel="next"')]
+  });
+  assert.equal(result.verified, false);
+  assert.ok(result.reasons.includes('page_1_malformed_link_header'));
+});
+
+test('rejects conflicting duplicate next relations', () => {
+  const analysis = analyzeLinkHeader('<https://api.github.com/page/2>; rel="next", <https://api.github.com/page/3>; rel="next"');
+  assert.equal(analysis.malformed, true);
+  assert.equal(analysis.next_url, null);
 });
 
 test('rejects a skipped or substituted request URL', () => {
@@ -53,10 +69,7 @@ test('rejects a skipped or substituted request URL', () => {
   const result = validateSanitizedWorkflowPaginationChain({
     exact_commit: SHA,
     api_version: VERSION,
-    pages: [
-      page(1, first, [{ id: 1, head_sha: SHA }], `<${expectedSecond}>; rel="next"`),
-      page(2, 'https://api.github.com/page/3', [{ id: 2, head_sha: SHA }])
-    ]
+    pages: [page(1, first, [{ id: 1, head_sha: SHA }], `<${expectedSecond}>; rel="next"`), page(2, 'https://api.github.com/page/3', [{ id: 2, head_sha: SHA }])]
   });
   assert.equal(result.verified, false);
   assert.ok(result.reasons.includes('page_2_link_chain_mismatch'));
@@ -67,10 +80,7 @@ test('rejects duplicate run identifiers and cross-commit records', () => {
   const result = validateSanitizedWorkflowPaginationChain({
     exact_commit: SHA,
     api_version: VERSION,
-    pages: [page(1, 'https://api.github.com/page/1', [
-      { id: 7, head_sha: SHA },
-      { id: 7, head_sha: other }
-    ])]
+    pages: [page(1, 'https://api.github.com/page/1', [{ id: 7, head_sha: SHA }, { id: 7, head_sha: other }])]
   });
   assert.equal(result.verified, false);
   assert.ok(result.reasons.includes('duplicate_run_id_7'));
@@ -91,11 +101,7 @@ test('rejects an unverified sanitized response envelope', () => {
   const p = page(1, 'https://api.github.com/page/1', []);
   p.response_evidence.verified = false;
   p.response_evidence.classification = 'rejected';
-  const result = validateSanitizedWorkflowPaginationChain({
-    exact_commit: SHA,
-    api_version: VERSION,
-    pages: [p]
-  });
+  const result = validateSanitizedWorkflowPaginationChain({ exact_commit: SHA, api_version: VERSION, pages: [p] });
   assert.equal(result.verified, false);
   assert.ok(result.reasons.includes('page_1_unsanitized_or_unverified_response'));
 });
