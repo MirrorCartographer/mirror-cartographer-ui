@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "I-003",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "completed_source_verified",
+  "objective": "Create a third self-contained independent work that tests deterministic spatial interpretation without storage, sound, networking, or Mirror Cartographer coupling.",
+  "selection_basis": "I-002 was completed_preview_ready and ACTIVE_QUEUE.json contained no newer independent_creative_web item, so this additive record advances the independent studio without modifying another team's queue state.",
+  "completed_slices": [
+    "Implemented Unfinished Constellation as a single-file interactive spatial instrument.",
+    "Added pointer and keyboard-accessible controls, live status, reduced-motion behavior, safe-area layout, DPR-bounded canvas rendering, and page-exit animation cleanup.",
+    "Added static contract tests for self-containment, independence, accessibility, single-loop animation, network isolation, and absence of durable storage or autoplay media.",
+    "Extended the independent identity notes with explicit experiment provenance.",
+    "Detected and corrected a duplicate animation-loop startup defect during source fetch-back.",
+    "Retained source-level evidence without claiming test execution, browser rendering, hosting, or deployment."
+  ],
+  "acceptance_remaining": [
+    "Run node --test independent/unfinished-constellation/contract.test.cjs in an authenticated checkout.",
+    "Render in desktop and mobile browsers and inspect pointer, keyboard, reduced-motion, resize, clear, hold, and animation teardown behavior.",
+    "Capture an accessibility-tree inspection and a representative mobile performance trace.",
+    "Publish only to an isolated independent preview after hosting provenance and rollback are verified."
+  ],
+  "safe_next_action": "Execute contract tests for all three independent works and a browser interaction harness for Unfinished Constellation, then create an independent index only after each work has verified preview evidence.",
+  "evidence_path": "operations/evidence/I-003-unfinished-constellation-2026-07-15T0544Z.json"
+}
