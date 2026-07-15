@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T05:28:00Z",
+  "slice": "prescriptive_descriptive_origin_boundary",
+  "state": "in_progress",
+  "completed": [
+    "Classified current instructions, automation prompts, queue objectives, and later completion reports as prescriptive or descriptive sources unless they explicitly perform a qualifying identifier assignment.",
+    "Established that present operational authority cannot manufacture historical provenance for M-004, M-005, or M-006.",
+    "Added a speech-act classification contract for future candidate-origin evidence packets.",
+    "Preserved all three identifier origins as unresolved because exhaustive history coverage and qualifying assignative sources remain absent."
+  ],
+  "evidence": {
+    "manifest": "operations/continuity/manifests/CM-20260715T0528Z-prescriptive-descriptive-boundary.json",
+    "manifest_commit": "e194015312809161b45503bf79e7d4d4a6850cfd",
+    "evidence_strength": "repository-grounded rule; no origin resolution claimed"
+  },
+  "claims": {
+    "observed": "Current canonical operations files require originating-source provenance and preserve execution claims fail-closed.",
+    "inferred": "Conflating current governance with historical assignment would permit retrospective provenance fabrication.",
+    "proposed": "Require speech_act classification before applying the existing conjunctive origin-adjudication gates.",
+    "superseded": "Current operational authority or later report wording can stand in for an original assignment record.",
+    "unresolved": "M-004, M-005, and M-006 origins; exhaustive branch and reachable-commit coverage."
+  },
+  "privacy_boundary": "No private source text or personal context was retained; only abstract source classes, repository locators, and unresolved identifiers were recorded.",
+  "registry_change": null,
+  "history_deleted": false,
+  "canonical_queue_overwritten": false,
+  "next_action": "Classify every future candidate by speech act, then continue exhaustive accessible-branch and reachable-commit traversal and promote only pre-boundary or immutably back-referenced assignative sources that pass all origin gates."
+}
