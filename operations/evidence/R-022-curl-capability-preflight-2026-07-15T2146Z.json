@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "team": "frontier_research",
+  "recorded_at": "2026-07-15T21:46:00Z",
+  "finding": "The generated-hostname curl receipt requires curl >= 7.72.0 because %{json} was added in 7.70.0 but the required method metric was added in 7.72.0.",
+  "source_status": {
+    "curl_manpage": "primary_current",
+    "documentation_version_observed": "8.21.1",
+    "relevant_introductions": {
+      "json_write_out": "7.70.0",
+      "method_metric": "7.72.0"
+    }
+  },
+  "evidence_strength": "strong_for_documented_version_boundary",
+  "uncertainty": [
+    "The curl build in the eventual authenticated checkout has not yet been observed.",
+    "A compatible version number does not by itself prove the packaged executable emits every required key; the preflight therefore also requires an observed key-presence probe."
+  ],
+  "design_implication": "Run a no-network curl capability preflight before generated-hostname observation and reject the observation path when the executable is older than 7.72.0, the version command fails, or any required write-out key is absent.",
+  "artifact": "operations/frontier-research/curlHostnameCapabilityPreflight.v1.cjs",
+  "test_artifact": "operations/frontier-research/curlHostnameCapabilityPreflight.v1.test.cjs",
+  "verification": {
+    "command": "node --check curlHostnameCapabilityPreflight.v1.cjs && node --test curlHostnameCapabilityPreflight.v1.test.cjs",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "environment": "isolated local reconstruction"
+  },
+  "claim_boundary": "This proves only that retained version output and probe keys satisfy the capability contract; it does not prove network reachability, TLS success, deployment identity, route correctness, browser behavior, or audibility.",
+  "falsification_route": [
+    "Run curl --version in the authenticated checkout and retain exact output and exit code.",
+    "Run a no-network write-out expansion probe and retain its parsed keys.",
+    "Reject the capability claim if curl is older than 7.72.0 or any required key is absent."
+  ],
+  "privacy": {
+    "credentials_retained": false,
+    "network_body_retained": false,
+    "private_source_material_retained": false
+  }
+}
