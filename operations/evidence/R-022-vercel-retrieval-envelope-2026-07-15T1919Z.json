@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "finding": "A deployment response is insufficient evidence unless it is bound to an exact authenticated GET request, expected deployment id, expected project id, observation time, and a digest of the returned body.",
+  "source_status": {
+    "repository_contract": "observed",
+    "current_external_primary_source_lookup": "attempted_but_not_retrieved",
+    "implementation_basis": "existing approved vercel_api_v13_get_deployment contract plus fail-closed provenance requirements"
+  },
+  "evidence_strength": "deterministic_local_tested_prototype",
+  "verification": {
+    "command": "node --check vercelDeploymentRetrievalEnvelope.v1.cjs && node --test vercelDeploymentRetrievalEnvelope.v1.test.cjs",
+    "result": "6 passed, 0 failed"
+  },
+  "claim_boundary": "This proves validator behavior only; it does not prove any live Vercel deployment, route, audio behavior, or provider response.",
+  "falsification_route": "Provide a retained authenticated retrieval whose exact request path, project scope, response body digest, and deployment object all agree; any mismatch must fail closed.",
+  "privacy": {
+    "credentials_persisted": false,
+    "private_source_material_included": false
+  }
+}
