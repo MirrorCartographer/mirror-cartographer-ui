@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T21:36:00Z",
+  "slice": "exhaustive_provenance_traversal_receipt_contract",
+  "state": "in_progress",
+  "completed": [
+    "Separated candidate adjudication correctness from repository-search completeness.",
+    "Added a fail-closed JSON Schema for retaining branch inventory, reachable-history traversal, candidates, claim states, violations, privacy, and falsification evidence.",
+    "Recorded that the available empty-query connector branch search is not an exhaustive branch receipt and cannot support repository-wide absence claims."
+  ],
+  "acceptance_remaining": [
+    "Produce a complete raw branch inventory through an exhaustive repository-capable client.",
+    "Traverse all commits reachable from every retained branch head and reconcile reachable versus visited commit counts.",
+    "Emit every M-004, M-005, and M-006 occurrence as an immutable provenance candidate.",
+    "Validate the completed receipt and resolve origins only if exhaustive coverage and assigning-source agreement both pass."
+  ],
+  "safe_next_action": "Run an authenticated exhaustive branch listing and all-reachable-commit traversal, retain raw outputs, then populate and validate operations/continuity/contracts/exhaustive-provenance-traversal-receipt.v1.schema.json. Keep all three origins unresolved while exhaustive=false.",
+  "canonical_state_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy": {
+    "contains_private_source_material": false,
+    "public_safe": true
+  }
+}
