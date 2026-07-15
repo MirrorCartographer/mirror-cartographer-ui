@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T16:24:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Programmed-stage receipt verification now fails closed when production title, form, continuity role, or repertory status is missing or differs from the expected repertory identity.",
+  "evidence": {
+    "verifier_commit": "a491218b6ad9ecdfb5d1567fb30d36ba38d5e522",
+    "test_commit": "641c8a5972107ffb3097ebe7d3087b91a131faed",
+    "evidence_commit": "15fa0b26f1c637d19bfba2cc8b270b603d439e01",
+    "evidence_path": "operations/evidence/V-001-programmed-production-metadata-binding-2026-07-15T1624Z.json"
+  },
+  "acceptance_remaining": [
+    "Execute npm run test:vercel-repertory in an authenticated checkout and retain exact output.",
+    "Execute authenticated all-event pagination for an exact commit with both approved clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+    "Observe exact-commit audio-routing evidence and inspect the six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run npm run test:vercel-repertory and retain exact output. Keep the repertory inactive and avoid application deployment while provider build capacity remains blocked.",
+  "shared_state_policy": "Additive queue projection only; operations/ACTIVE_QUEUE.json and peer-owned records were not overwritten."
+}
