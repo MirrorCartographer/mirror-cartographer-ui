@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T05:21:00Z",
+  "slice": "RFC 8288-aware Link header parsing for retained workflow pagination evidence",
+  "source_status": {
+    "github_pagination_documentation": {
+      "status": "current_primary_source",
+      "api_version_observed": "2026-03-10",
+      "finding": "GitHub directs clients to follow the URL associated with rel=next until no next link remains."
+    },
+    "rfc_8288": {
+      "status": "standards_track_primary_source",
+      "finding": "Link is a structured HTTP field whose comma separators must be interpreted outside URI references and quoted parameter values."
+    }
+  },
+  "prior_gap": "The committed validator used link.split(',') and a single strict regular expression. That can misparse a valid URI reference or quoted parameter containing a comma and did not distinguish malformed Link syntax from an absent next relation.",
+  "implementation": [
+    "Added state-aware Link value splitting across URI-reference and quoted-string boundaries.",
+    "Added relation-token parsing with case-insensitive parameter names.",
+    "Rejected malformed syntax and conflicting duplicate rel=next targets fail-closed.",
+    "Preserved exact next-URL continuity validation and the existing public nextUrlFromLink interface."
+  ],
+  "evidence_strength": "implementation_committed_and_locally_regression_tested",
+  "verification": {
+    "local_node_test": {
+      "passed": 4,
+      "failed": 0,
+      "covered": [
+        "comma inside URI reference",
+        "relation token list and case-insensitive REL parameter",
+        "malformed angle-bracket syntax",
+        "conflicting duplicate next relations"
+      ]
+    },
+    "repository_test_file_updated": true,
+    "authenticated_live_enumeration_executed": false
+  },
+  "uncertainty": [
+    "The complete repository test suite was not executed in an authenticated checkout.",
+    "No live private-repository pagination response was captured in this slice.",
+    "The parser intentionally supports the subset needed for GitHub pagination evidence rather than claiming complete RFC 8288 implementation."
+  ],
+  "falsification_route": [
+    "Provide a valid GitHub Link header that the parser rejects.",
+    "Provide malformed or ambiguous Link syntax that the parser accepts as a complete chain.",
+    "Demonstrate a divergence between the parser's next target and GitHub's documented rel=next target on retained raw response evidence."
+  ],
+  "handoff": "Run the complete committed Node test file, then exercise both authenticated enumeration clients against one exact commit and retain raw Link headers for parser-versus-provider comparison.",
+  "registry_change": null,
+  "deletions": []
+}
