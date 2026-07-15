@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "item_id": "I-004",
+  "owner": "independent_creative_web",
+  "recorded_at": "2026-07-15T06:53:00Z",
+  "title": "The House That Refuses Noon",
+  "creative_premise": "A fixed impossible house whose routes appear and disappear only as the visitor moves an artificial sun.",
+  "classification": "completed_preview_ready",
+  "provenance": {
+    "observed": "Independent identity notes prefer dynamic, spatial, surprising interfaces with working interactions.",
+    "inferred": "Illumination can act as architecture without requiring narrative exposition or persistent identity.",
+    "experiment": "Test whether route legibility alone can make fixed geometry feel mutable.",
+    "current_decision": "Keep the work self-contained, local, non-extractive, reversible, accessible, and separate from Mirror Cartographer grammar."
+  },
+  "artifacts": [
+    "independent/house-that-refuses-noon/index.html",
+    "independent/house-that-refuses-noon/contract.test.cjs",
+    "independent/IDENTITY.md"
+  ],
+  "verification": {
+    "performed": [
+      "GitHub contents API accepted all additive source writes.",
+      "Source contract was committed for network silence, no persistence, accessibility, pointer and keyboard input, bounded rendering, teardown, and guarded animation scheduling.",
+      "Repository fetch-back requested after commit."
+    ],
+    "not_claimed": [
+      "Node test execution",
+      "browser rendering",
+      "physical mobile verification",
+      "accessibility-tree inspection",
+      "performance trace",
+      "public deployment"
+    ]
+  },
+  "privacy_boundary": "No private source material, personal data, authentication, analytics, storage, commerce, or behavioral profiling is used.",
+  "rollback": "Revert the additive I-004 commits in reverse order; no shared application runtime files were modified.",
+  "specialist_registry_change": false
+}
