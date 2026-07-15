@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T21:54:00Z",
+  "finding": "A valid generated-hostname receipt must not be promotable unless the local curl capability preflight succeeds first; the final pipeline receipt must bind both the capability receipt digest and the hostname observation receipt digest.",
+  "source_status": {
+    "repository_primary": [
+      "operations/frontier-research/curlHostnameCapabilityPreflight.v1.cjs",
+      "operations/frontier-research/curlGeneratedHostnameReceipt.v1.cjs",
+      "operations/frontier-research/vercelGeneratedHostnameObservation.v1.cjs"
+    ],
+    "external_primary_research": "not repeated; this slice applies the already-retained curl capability finding without changing external factual claims"
+  },
+  "evidence_strength": "deterministic repository implementation plus syntax verification; full repository test execution remains pending",
+  "uncertainty": [
+    "The complete Node test suite has not been executed in an authenticated checkout.",
+    "No authenticated curl capability probe or network transfer was performed in this run.",
+    "No Vercel deployment identity, route, alias, audio, browser, or physical-device behavior was verified."
+  ],
+  "falsification_route": [
+    "Run node --test operations/frontier-research/curlGeneratedHostnamePipeline.v1.test.cjs in an authenticated checkout.",
+    "Demonstrate a case where a rejected capability preflight can still produce verified=true; that would falsify the ordering invariant.",
+    "Mutate either bound child receipt while preserving the parent digest; success would falsify the tamper-evident binding claim."
+  ],
+  "claim_boundary": "implementation_ready_fail_closed_pipeline_only_no_deployment_or_reachability_claim",
+  "files": [
+    "operations/frontier-research/curlGeneratedHostnamePipeline.v1.cjs",
+    "operations/frontier-research/curlGeneratedHostnamePipeline.v1.test.cjs"
+  ],
+  "commits": [
+    "c10ab212b252efc8eec004bd99956e7cdaef42e9",
+    "c76ad9fbe3a5ead118d693625d6e58c115f3da15"
+  ],
+  "verification": {
+    "command": "node --check curlGeneratedHostnamePipeline.v1.cjs",
+    "result": "passed",
+    "full_test_suite_executed": false
+  }
+}
