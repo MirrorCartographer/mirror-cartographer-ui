@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0041Z-origin-candidate-adjudication",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T00:41:00Z",
+  "recovered_memory": {
+    "title": "Origin resolution is conjunctive, not similarity-based",
+    "summary": "A candidate source may resolve M-004, M-005, or M-006 only when one immutable object simultaneously passes explicit assignment, namespace, owner, semantic-role, temporal-precedence, and locator-integrity checks. Exact label reuse, textual similarity, discovery order, or a later report boundary cannot substitute for any missing condition.",
+    "durability": "continuity_origin_adjudication_contract"
+  },
+  "inputs": {
+    "required": [
+      "identifier",
+      "candidate_source_class",
+      "candidate_immutable_locator",
+      "candidate_created_at",
+      "candidate_content_digest",
+      "assignment_excerpt_or_structured_field",
+      "assigned_referent",
+      "namespace",
+      "owner",
+      "semantic_role",
+      "report_boundary_at"
+    ],
+    "eligible_source_classes": [
+      "repository_decision_log",
+      "repository_language_lexicon",
+      "repository_project_document",
+      "privacy_reviewed_chat_history_locator",
+      "privacy_reviewed_file_library_document"
+    ]
+  },
+  "gates": [
+    {
+      "gate": "explicit_assignment",
+      "pass_when": "The candidate performs an assignment of the identifier to a referent, rather than merely mentioning or reporting the identifier.",
+      "fail_states": ["mention_only", "status_report_only", "retrospective_reconstruction", "assignment_ambiguous"]
+    },
+    {
+      "gate": "namespace_agreement",
+      "pass_when": "The identifier belongs to the same continuity namespace as the unresolved queue node.",
+      "fail_states": ["suffix_collision", "foreign_schema", "namespace_unresolved"]
+    },
+    {
+      "gate": "owner_agreement",
+      "pass_when": "The candidate's owning system or team agrees with the continuity artifact owner or has an explicit provenance handoff.",
+      "fail_states": ["owner_conflict", "handoff_missing", "owner_unresolved"]
+    },
+    {
+      "gate": "semantic_role_agreement",
+      "pass_when": "The assigned referent has the same artifact type and functional role as the unresolved identifier claim.",
+      "fail_states": ["semantic_collision", "role_mismatch", "referent_unresolved"]
+    },
+    {
+      "gate": "temporal_precedence",
+      "pass_when": "The assignment is at or before the repository report boundary, or carries a verifiable immutable back-reference to an older qualifying assignment.",
+      "fail_states": ["downstream_reference", "timestamp_unresolved", "mutable_back_reference"]
+    },
+    {
+      "gate": "immutable_locator_integrity",
+      "pass_when": "The source can be re-fetched by an immutable locator and its retained digest matches the evaluated content.",
+      "fail_states": ["mutable_locator", "digest_mismatch", "source_unavailable"]
+    }
+  ],
+  "decision_rule": {
+    "operator": "AND",
+    "accept_state": "origin_verified",
+    "accept_when": "All six gates pass for the same candidate object and referent.",
+    "otherwise": "origin_unresolved",
+    "quarantine_states": [
+      "candidate_lead_only",
+      "rejected_collision",
+      "downstream_reference",
+      "coverage_incomplete",
+      "privacy_review_required"
+    ],
+    "prohibited_promotions": [
+      "majority-of-gates",
+      "confidence-score-only",
+      "first-discovered-object",
+      "exact-identifier-string-only",
+      "automation-completion-prose-only"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "ORIGIN-ADJ-OBS-001",
+      "status": "observed",
+      "text": "The active queue requires immutable provenance and the originating decision log, language lexicon, project document, or chat-history source; prior continuity artifacts separately reject temporal and namespace collisions.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ORIGIN-ADJ-INF-001",
+      "status": "inferred",
+      "text": "Because each existing gate excludes a different false-positive class, origin promotion must be conjunctive rather than score-based.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ORIGIN-ADJ-PROP-001",
+      "status": "proposed",
+      "text": "All future candidate-origin evidence packets should emit one result per gate and a final fail-closed disposition using this contract.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "ORIGIN-ADJ-SUP-001",
+      "status": "superseded",
+      "text": "A strong semantic match or exact identifier match may compensate for missing provenance dimensions.",
+      "superseded_by": ["ORIGIN-ADJ-OBS-001", "ORIGIN-ADJ-INF-001"]
+    },
+    {
+      "claim_id": "ORIGIN-ADJ-UNR-001",
+      "status": "unresolved",
+      "text": "No candidate for M-004, M-005, or M-006 has yet been demonstrated to pass all six gates under exhaustive source coverage."
+    }
+  ],
+  "contradiction_resolution": {
+    "apparent_conflict": "A candidate can be highly similar, temporally eligible, and immutably stored while still lacking explicit assignment or namespace agreement.",
+    "resolution": "Eligibility is not identity. The candidate remains a lead until every required dimension converges on the same object and referent.",
+    "status": "resolved"
+  },
+  "falsification_route": [
+    "Produce one immutable candidate object for an unresolved identifier.",
+    "Re-fetch it by immutable locator and verify its digest.",
+    "Demonstrate explicit assignment, matching namespace, owner, semantic role, and temporal eligibility.",
+    "If any gate fails or cannot be evaluated, retain unresolved status."
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "abstract source classes",
+      "abstract gate outcomes",
+      "content digests",
+      "privacy-reviewed locators"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "unreviewed File Library content",
+      "raw sensitive excerpts"
+    ]
+  },
+  "coverage": {
+    "repository_branch_inventory": "not_exhaustive",
+    "repository_reachable_commit_inventory": "not_exhaustive",
+    "non_repository_source_review": "not_performed_this_slice",
+    "origin_resolution": "unresolved"
+  },
+  "specialist_registry_change": "none",
+  "history_deleted": false,
+  "next_resolution_step": "Build a no-overwrite candidate evidence packet for each discovered pre-boundary source, evaluate all six gates, and promote no origin until exhaustive branch coverage and eligible privacy-reviewed source coverage are documented."
+}
