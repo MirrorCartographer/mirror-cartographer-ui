@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T07:01:00Z",
+  "team": "independent_creative_web",
+  "queue_item": "I-005",
+  "piece": "Archive of Borrowed Gravity",
+  "creative_premise": "An authored typographic field in which every word is lent a manipulable direction of gravity; the visitor tilts, freezes, scatters, and resets the archive without accounts, storage, networking, or sound.",
+  "files": [
+    "independent/archive-of-borrowed-gravity/index.html",
+    "independent/archive-of-borrowed-gravity/contract.test.cjs",
+    "independent/IDENTITY.md"
+  ],
+  "verification": {
+    "method": "node --test against the exact source and contract prepared for commit",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "claims_supported": [
+      "source contract rejects network, storage, analytics, authentication, commerce, and autoplay dependencies",
+      "pointer and keyboard interaction paths are present",
+      "live status, pressed state, and 44px minimum controls are present",
+      "device-pixel-ratio and frame delta are bounded",
+      "page-exit animation cancellation and pointer-cancel handling are present",
+      "reduced-motion state freezes simulation and no sound API is required"
+    ],
+    "claims_not_supported": [
+      "public deployment",
+      "real-browser rendering",
+      "physical mobile Safari behavior",
+      "accessibility-tree inspection",
+      "measured performance"
+    ]
+  },
+  "privacy_boundary": "No private source material, visitor data, persistent storage, analytics, authentication, commerce, or external service calls are present.",
+  "independence_boundary": "The work is a self-contained kinetic typography instrument and does not explain, implement, or visually imitate Mirror Cartographer.",
+  "rollback": [
+    "revert the additive queue projection",
+    "revert this evidence record",
+    "revert the identity-note addition",
+    "revert the contract-test file",
+    "revert the instrument file"
+  ]
+}
