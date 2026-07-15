@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T04:15:00Z",
+  "slice": "sanitized_workflow_pagination_chain_validation",
+  "status": "completed_handoff_ready",
+  "finding": "Per-response sanitization does not prove exhaustive pagination. Every retained page must be linked to the prior response's Link rel=next target, and the retained final page must not advertise another page.",
+  "primary_sources": [
+    {
+      "status": "current_official_documentation",
+      "source": "GitHub REST API pagination documentation",
+      "retrieved_on": "2026-07-15",
+      "claim": "Paginated responses use the Link header; clients must follow rel=next until it is absent."
+    },
+    {
+      "status": "current_official_documentation",
+      "source": "GitHub REST API version documentation",
+      "retrieved_on": "2026-07-15",
+      "claim": "Requests should transmit an explicit X-GitHub-Api-Version value."
+    }
+  ],
+  "artifacts": [
+    "operations/frontier-research/github-actions/validateSanitizedWorkflowPaginationChain.v1.cjs",
+    "operations/frontier-research/github-actions/validateSanitizedWorkflowPaginationChain.v1.test.cjs"
+  ],
+  "verification": {
+    "command": "node --test validateSanitizedWorkflowPaginationChain.v1.test.cjs",
+    "result": "5_passed_0_failed",
+    "coverage": [
+      "valid two-page Link chain",
+      "skipped or substituted page URL",
+      "duplicate workflow-run identifiers",
+      "cross-commit workflow-run records",
+      "final page still advertising rel=next",
+      "unverified sanitized response envelope"
+    ]
+  },
+  "evidence_strength": "implementation_committed_and_deterministically_tested",
+  "uncertainty": [
+    "No authenticated private-repository enumeration was executed.",
+    "The validator is not yet wired into the retained-evidence CLI.",
+    "Live response URL normalization behavior has not yet been exercised."
+  ],
+  "falsification_route": [
+    "A retained page request URL differs from the exact prior rel=next URL and validation still succeeds.",
+    "A final retained page contains rel=next and validation still succeeds.",
+    "Duplicate run IDs or cross-commit records are accepted.",
+    "An unsanitized or rejected response envelope is accepted."
+  ],
+  "registry_change": null,
+  "next_action": "Wire the chain validator immediately after per-page sanitization in both authenticated enumeration clients, then feed only a verified link_chain_complete envelope into reconciliation and retained evidence bundling."
+}
