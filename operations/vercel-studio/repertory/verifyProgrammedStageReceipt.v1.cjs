@@ -1,0 +1,45 @@
+'use strict';
+
+const FALSE_CLAIM_FIELDS = Object.freeze([
+  'runtime_activation_claimed',
+  'deployment_claimed',
+  'browser_execution_claimed',
+  'audio_playback_claimed',
+  'physical_device_verification_claimed',
+  'side_effects_performed',
+]);
+
+function verifyProgrammedStageReceipt(receipt, expected = {}) {
+  const violations = [];
+  if (!receipt || typeof receipt !== 'object' || Array.isArray(receipt)) {
+    return Object.freeze({ verified: false, violations: ['receipt_not_object'] });
+  }
+  if (receipt.schema_version !== 1) violations.push('unsupported_schema_version');
+  if (receipt.evidence_class !== 'commit_and_repertory_bound_programmed_stage_identity_only') violations.push('wrong_evidence_class');
+  if (!/^[0-9a-f]{40}$/.test(receipt.source_commit || '')) violations.push('invalid_source_commit');
+  if (!/^[0-9a-f]{64}$/.test(receipt.repertory_sha256 || '')) violations.push('invalid_repertory_digest');
+  if (receipt.exact_commit_bound !== true) violations.push('exact_commit_not_bound');
+  if (receipt.repertory_content_bound !== true) violations.push('repertory_content_not_bound');
+  if (receipt.safety_contract_verified !== true) violations.push('safety_contract_unverified');
+  if (receipt.continuity_state_preserved !== true) violations.push('continuity_not_preserved');
+  if (!Number.isInteger(receipt.utc_hour) || receipt.utc_hour < 0 || receipt.utc_hour > 23) violations.push('invalid_utc_hour');
+  if (!receipt.programmed_production || typeof receipt.programmed_production.id !== 'string' || receipt.programmed_production.id.length === 0) violations.push('missing_programmed_production');
+  for (const field of FALSE_CLAIM_FIELDS) {
+    if (receipt[field] !== false) violations.push(`${field}_must_be_false`);
+  }
+  if (expected.source_commit && receipt.source_commit !== expected.source_commit) violations.push('source_commit_mismatch');
+  if (expected.repertory_sha256 && receipt.repertory_sha256 !== expected.repertory_sha256) violations.push('repertory_digest_mismatch');
+  if (expected.utc_hour !== undefined && receipt.utc_hour !== expected.utc_hour) violations.push('utc_hour_mismatch');
+  if (expected.production_id && receipt.programmed_production?.id !== expected.production_id) violations.push('production_id_mismatch');
+
+  return Object.freeze({
+    verified: violations.length === 0,
+    evidence_class: receipt.evidence_class || null,
+    source_commit: receipt.source_commit || null,
+    repertory_sha256: receipt.repertory_sha256 || null,
+    production_id: receipt.programmed_production?.id || null,
+    violations: Object.freeze(violations),
+  });
+}
+
+module.exports = { FALSE_CLAIM_FIELDS, verifyProgrammedStageReceipt };
