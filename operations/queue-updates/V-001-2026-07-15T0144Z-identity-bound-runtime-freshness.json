@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T01:44:00Z",
+  "slice": "identity-bound runtime stage freshness",
+  "finding": "The v1 freshness gate validated age and upstream classification but could re-emit absent or malformed deployment identity fields from a forged object. Freshness alone was therefore insufficient for promotion across the evidence trust boundary.",
+  "implementation": {
+    "contract_id": "vercel-studio-runtime-stage-freshness-v2",
+    "classification": "commit_bound_runtime_stage_fresh_identity_bound",
+    "source_path": "operations/vercel-studio/repertory/verifyRuntimeStageFreshness.v2.cjs",
+    "test_path": "operations/vercel-studio/repertory/verifyRuntimeStageFreshness.v2.test.cjs",
+    "source_commit": "c6f97d866a56c53ab0775040e52a9c50a9545101",
+    "test_commit": "d82323015b2b7ade8bb56fcbeb519c0d69f6abc4"
+  },
+  "fail_closed_checks": [
+    "required production, commit, deployment, URL, and repertory identities",
+    "40-character hexadecimal commit identity",
+    "HTTPS deployment URL without embedded credentials",
+    "explicit audio and privacy policy verification",
+    "explicit absence of side effects",
+    "bounded freshness and future clock skew"
+  ],
+  "verification": {
+    "command": "node --test verifyRuntimeStageFreshness.v2.test.cjs",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "environment": "Node built-in test runner against byte-identical candidate source before repository write"
+  },
+  "deployment_claim": false,
+  "reason_no_deployment": "CURRENT_STATE prohibits application deployment attempts while Vercel build capacity remains exhausted and immutable deployment identity is unverified.",
+  "rollback": "Stop consuming the v2 contract and return callers to verifyRuntimeStageFreshness.v1.cjs; the v1 artifact was not modified.",
+  "specialist_registry_change": null,
+  "privacy_boundary": {
+    "private_source_material_included": false,
+    "credentials_persisted": false
+  },
+  "canonical_queue_overwritten": false,
+  "next_action": "Wire the v2 freshness contract into the runtime evidence promotion path, then execute it only against a commit-bound immutable deployment observation after provider capacity returns."
+}
