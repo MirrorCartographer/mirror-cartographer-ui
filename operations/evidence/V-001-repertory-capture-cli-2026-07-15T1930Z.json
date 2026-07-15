@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "team": "vercel_studio",
+  "recorded_at": "2026-07-15T19:30:00Z",
+  "slice": "repertory_test_capture_cli",
+  "claim": "The canonical repertory test runner can now be executed through a no-overwrite capture CLI that retains raw stdout, raw stderr, and a tamper-evident receipt while preserving runtime_activation=false, deployment_created=false, and audio_autoplay=false.",
+  "source_status": {
+    "canonical_state": "repository_primary",
+    "active_queue": "repository_primary",
+    "runner_contract": "repository_primary",
+    "receipt_contract": "repository_primary",
+    "verification": "isolated_local_node_execution"
+  },
+  "evidence_strength": "deterministic_contract_tested_locally",
+  "verification": {
+    "syntax_command": "node --check operations/vercel-studio/repertory/captureRepertoryTestReceipt.v1.cjs",
+    "test_command": "node --test operations/vercel-studio/repertory/captureRepertoryTestReceipt.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "boundaries": {
+    "runtime_activation": false,
+    "deployment_created": false,
+    "audio_autoplay": false,
+    "full_repository_repertory_suite_executed": false,
+    "vercel_deployment_verified": false,
+    "physical_device_audibility_verified": false
+  },
+  "falsification_route": [
+    "Run the committed CLI in an authenticated checkout and inspect all three retained artifacts.",
+    "Modify either raw stream after capture and confirm its digest no longer matches the receipt.",
+    "Repeat with the same timestamp and confirm no-overwrite behavior rejects replacement.",
+    "Force a failing repertory test and confirm the receipt remains retained but passed=false."
+  ],
+  "implementation_commits": [
+    "c58365623168548d34f5fa40d4491ca1297de224",
+    "ed16474971c37885d95ddd5ee0e6f5f2c169091d"
+  ]
+}
