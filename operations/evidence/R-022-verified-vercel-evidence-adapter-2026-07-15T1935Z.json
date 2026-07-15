@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T19:35:00Z",
+  "finding": "A downstream consumer must not accept a raw Vercel deployment object or an independently asserted identity result. It must accept only a fully verified composed retrieval-and-identity pipeline output bound to the expected commit.",
+  "source_status": {
+    "repository_primary": true,
+    "external_primary_search": "attempted_no_usable_result",
+    "fresh_provider_behavior_asserted": false
+  },
+  "evidence_strength": "deterministic_local_contract",
+  "uncertainty": [
+    "Not executed in the authenticated repository checkout.",
+    "No live Vercel request was made.",
+    "No deployment, route, alias, audio, browser, or physical-device behavior is established."
+  ],
+  "artifact": "operations/frontier-research/verifiedVercelEvidenceAdapter.v1.cjs",
+  "tests": {
+    "artifact": "operations/frontier-research/verifiedVercelEvidenceAdapter.v1.test.cjs",
+    "command": "node --test operations/frontier-research/verifiedVercelEvidenceAdapter.v1.test.cjs",
+    "isolated_result": { "tests": 6, "passed": 6, "failed": 0 }
+  },
+  "falsification_routes": [
+    "Show a raw deployment object that the adapter accepts.",
+    "Show a retrieval-unverified pipeline that the adapter accepts.",
+    "Show a commit mismatch at any binding layer that the adapter accepts.",
+    "Show retained violations or a missing pipeline digest that still produces verified evidence."
+  ],
+  "claim_boundary": "immutable deployment identity handoff only; no runtime or deployment success claim"
+}
