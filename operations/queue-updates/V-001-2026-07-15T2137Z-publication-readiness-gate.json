@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T21:37:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a fail-closed repertory publication-readiness gate that requires durable repertory provenance, verified immutable Vercel deployment evidence, and an independent direct generated-hostname HTTPS observation while preserving runtime_activation_performed=false.",
+  "acceptance_remaining": [
+    "Execute the committed publication-readiness tests in an authenticated checkout and retain exact output.",
+    "Execute authenticated all-event pagination for one exact commit with both independent clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform a direct no-redirect HTTPS observation of the generated hostname.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Run node --test operations/vercel-studio/repertory/assessRepertoryPublicationReadiness.v1.test.cjs and retain output. After provider capacity returns, feed one exact commit through the verified deployment pipeline and direct generated-hostname observation contract. Do not activate the repertory or create an application deployment while capacity remains blocked.",
+  "canonical_shared_state_overwritten": false,
+  "specialist_registry_changed": false,
+  "rollback": {
+    "type": "additive_commit_revert",
+    "files": [
+      "operations/vercel-studio/repertory/assessRepertoryPublicationReadiness.v1.cjs",
+      "operations/vercel-studio/repertory/assessRepertoryPublicationReadiness.v1.test.cjs",
+      "operations/evidence/V-001-repertory-publication-readiness-gate-2026-07-15T2137Z.json",
+      "operations/queue-updates/V-001-2026-07-15T2137Z-publication-readiness-gate.json"
+    ]
+  }
+}
