@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-bounded-curl-session-publication-gate-2026-07-15T2258Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T22:58:00Z",
+  "slice": "Require Frontier Research's bounded curl capability-plus-hostname session receipt before repertory publication readiness can pass.",
+  "source_status": {
+    "observed": [
+      "operations/CURRENT_STATE.json records V-001 as blocked and prohibits application deployment attempts while provider build capacity is exhausted.",
+      "operations/ACTIVE_QUEUE.json names commit-bound fail-closed deployment evidence as V-001's highest-priority objective.",
+      "operations/frontier-research/curlGeneratedHostnameSession.v1.cjs provides a deterministic bounded-session assessor with timestamp ordering, maximum skew, session identity, and canonical receipt digest.",
+      "The prior Vercel publication gate consumed the underlying curl pipeline directly and did not require the bounded-session receipt."
+    ],
+    "inferred": [
+      "A valid but stale curl capability receipt could otherwise be combined with a later hostname observation without proving one bounded execution session."
+    ],
+    "experiment": [
+      "Insert assessCurlGeneratedHostnameSession ahead of repertory publication assessment and reject missing, stale, reversed, or invalid session evidence."
+    ],
+    "current_decision": [
+      "Publication readiness requires a verified bounded-session receipt whose pipeline digest, exact commit, and deployment id agree with the downstream publication evidence.",
+      "No same-process, content, alias, audio, browser, device, deployment, or runtime activation claim is made."
+    ]
+  },
+  "implementation": {
+    "file": "operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.cjs",
+    "commit": "c3570fb9d74f9b7ddf1ac02df287071c659164c7",
+    "test_file": "operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs",
+    "test_commit": "e41c6f8fda0b7fd61e1caf049cdbff4bd360c416"
+  },
+  "verification": {
+    "status": "committed_not_executed",
+    "strongest_feasible_route": "GitHub contents writes succeeded and immutable commit identifiers were returned for implementation and deterministic tests.",
+    "required_command": "node --test operations/vercel-studio/repertory/assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs",
+    "covered_cases": [
+      "valid bounded retained session",
+      "unsupported curl capability",
+      "redirect-following command",
+      "TLS verification failure",
+      "deployment commit mismatch",
+      "missing session identity",
+      "stale capability evidence",
+      "capability observed after hostname",
+      "repertory runtime-boundary weakening"
+    ]
+  },
+  "runtime_boundary": {
+    "application_changed": false,
+    "deployment_attempted": false,
+    "runtime_activation_performed": false,
+    "audio_claimed": false,
+    "physical_device_claimed": false
+  },
+  "privacy_boundary": "Contains only public-safe repository metadata, abstract evidence contracts, file paths, and commit identifiers; no private source material is included.",
+  "rollback": [
+    "Revert e41c6f8fda0b7fd61e1caf049cdbff4bd360c416",
+    "Revert c3570fb9d74f9b7ddf1ac02df287071c659164c7"
+  ]
+}
