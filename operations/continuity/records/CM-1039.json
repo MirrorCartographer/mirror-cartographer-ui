@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1039",
+  "recorded_at": "2026-07-15T17:48:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "title": "Provenance-capable location universe declaration",
+  "memory_recovered": "Before an identifier can be classified located or exhaustively unlocated, the system must declare the complete accessible universe of source locations capable of assigning that identifier. Search coverage is valid only relative to that declared universe; omitted source classes remain explicit gaps rather than disappearing from the conclusion.",
+  "sources": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/records/CM-1037.json",
+    "operations/continuity/records/CM-1038.json",
+    "recent repository commits through e6a63197963ade09823cae1e1bf1ab58a4088be3"
+  ],
+  "claim_states": {
+    "observed": [
+      "M-RECONCILE-002 requires exhaustive branch or equivalent history traversal and the originating decision-log, lexicon, project-document, or chat-history source for M-004, M-005, and M-006.",
+      "CM-1037 prohibits exhaustive absence claims without terminal coverage of every capable historical object class.",
+      "CM-1038 requires coverage unions to preserve unknown permissions, exclusions, ceilings, inaccessible refs, deleted-path gaps, and contradictions."
+    ],
+    "inferred": [
+      "A coverage union cannot be evaluated until the provenance-capable location universe is declared independently of observed search results.",
+      "Source capability depends on semantic authority to assign an identifier, not merely on whether a source contains the identifier string."
+    ],
+    "proposed": [
+      "Require every provenance investigation to instantiate this universe declaration before producing member search envelopes.",
+      "Treat any capable location omitted from the declaration or lacking a terminal member envelope as uncovered_capable_location.",
+      "Separate authorized-but-intentionally-excluded private sources from inaccessible, unknown-permission, and searched-zero-result locations."
+    ],
+    "superseded": [
+      "The set of returned search results defines the relevant source universe.",
+      "A source is provenance-capable merely because it contains a matching identifier token.",
+      "Private sources excluded for safety may be silently ignored when computing exhaustive coverage."
+    ],
+    "unresolved": [
+      "The accessible branch and reachable commit universe has not yet been exhaustively enumerated.",
+      "The existence and location of authorized external decision logs, language lexicons, project documents, and chat-history assignment sources remain incompletely established.",
+      "No immutable assigning source has been located for M-004, M-005, or M-006."
+    ]
+  },
+  "location_universe_contract": {
+    "universe_id": "M-RECONCILE-002-provenance-universe-v1",
+    "subject_identifiers": ["M-004", "M-005", "M-006"],
+    "capability_test": {
+      "required": [
+        "source_can_authoritatively_assign_or_define_project identifiers",
+        "source identity and semantic role are distinguishable from token coincidence",
+        "source is temporally capable of preceding or causing downstream references",
+        "source can be addressed by an immutable or retained locator when admitted as evidence"
+      ],
+      "nonqualifying_by_default": [
+        "suffix-only filename collisions",
+        "generated mirrors without assignment authority",
+        "automation completion prose without immutable backing object",
+        "current-state summaries that only repeat an earlier identifier",
+        "search-index snippets without retained source-object identity"
+      ]
+    },
+    "capable_location_classes": [
+      {
+        "class": "repository_current_tree",
+        "required_dimensions": ["all accessible refs", "all identifier-capable namespaces", "exact path and blob identity"],
+        "current_status": "partial"
+      },
+      {
+        "class": "repository_reachable_history",
+        "required_dimensions": ["all accessible refs", "reachable commit set", "historical blobs and renamed paths"],
+        "current_status": "uncovered"
+      },
+      {
+        "class": "repository_deleted_or_superseded_paths",
+        "required_dimensions": ["deleted paths", "renames", "superseded decision records", "historical queue artifacts"],
+        "current_status": "uncovered"
+      },
+      {
+        "class": "repository_decision_logs_and_queue_artifacts",
+        "required_dimensions": ["decision namespaces", "queue namespaces", "team output namespaces", "authority and temporal precedence"],
+        "current_status": "partial"
+      },
+      {
+        "class": "language_lexicons_and_symbol_glossaries",
+        "required_dimensions": ["authorized lexicon locations", "identifier assignment semantics", "version and temporal precedence"],
+        "current_status": "unknown_permission_or_location"
+      },
+      {
+        "class": "project_documents_and_design_records",
+        "required_dimensions": ["authorized document locations", "document identity", "assignment authority", "retained version"],
+        "current_status": "partial_or_unknown"
+      },
+      {
+        "class": "authorized_chat_history",
+        "required_dimensions": ["explicit authorization", "privacy-safe extraction", "message identity", "temporal precedence", "assignment semantics"],
+        "current_status": "intentionally_excluded_pending_safe_authorized_method"
+      },
+      {
+        "class": "file_library_material",
+        "required_dimensions": ["explicitly reviewed file identity", "namespace agreement", "assignment authority", "privacy-safe admission"],
+        "current_status": "intentionally_excluded_except_reviewed_public_safe_material"
+      },
+      {
+        "class": "automation_runtime_outputs",
+        "required_dimensions": ["immutable backing artifact", "execution evidence", "non-lead provenance status"],
+        "current_status": "lead_only_unless_backed"
+      }
+    ],
+    "location_states": [
+      "covered_positive",
+      "covered_zero_result",
+      "uncovered_capable_location",
+      "inaccessible",
+      "unknown_permission",
+      "intentionally_excluded",
+      "ceiling_limited",
+      "contradictory",
+      "noncapable_collision"
+    ],
+    "terminal_rules": [
+      "located_verified requires an immutable assigning source that passes namespace, authority, semantic-role, temporal-precedence, and locator agreement.",
+      "exhaustive_unlocated requires every capable location in the declared accessible universe to be covered with zero qualifying candidates and no inaccessible, unknown-permission, excluded, ceiling-limited, or contradictory capable locations.",
+      "Any omitted capable class forces unresolved_incomplete_coverage.",
+      "Any later-discovered capable location expands the universe and supersedes prior terminal absence claims until searched."
+    ]
+  },
+  "knowledge_graph_projection": {
+    "node_type": "continuity_rule",
+    "predicate": "provenance_conclusion_requires_declared_capable_location_universe",
+    "applies_to": ["M-004", "M-005", "M-006"],
+    "prevents": [
+      "result_defined_search_universe",
+      "capable_source_omission",
+      "token_collision_as_provenance",
+      "private_exclusion_erasure",
+      "premature_exhaustive_absence"
+    ]
+  },
+  "falsification_route": "Produce a retained, independently reviewable universe declaration showing that one listed class is not semantically capable of assigning the identifiers, or identify an omitted capable class and revise the universe. A verified immutable assigning source falsifies any exhaustive_unlocated conclusion; a newly accessible capable location reopens coverage until terminally searched.",
+  "privacy_boundary": "This record names abstract source classes and repository-governance identifiers only. It contains no private chat excerpts, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content. Private source classes are declared as exclusions rather than represented as searched.",
+  "reversible": true,
+  "deletes_history": false
+}
