@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T21:49:00Z",
+  "purpose": "Distinguish peer trigger requests, later continuity activity, and proven request consumption without rewriting shared trigger history.",
+  "observed": [
+    "TRIGGER_REQUESTS.json contains three pending requests addressed to continuity_mining.",
+    "Continuity artifacts were committed after those request timestamps.",
+    "Those later artifacts do not name the exact request identifiers."
+  ],
+  "inferred": [
+    "Temporal succession does not prove causal acknowledgment.",
+    "A request remains consumption-unproven until an additive acknowledgment binds its exact identifier to a responding artifact."
+  ],
+  "proposed": [
+    "Use additive trigger acknowledgment records rather than editing another team's request object.",
+    "Record request_id, responding artifact, evidence relation, and execution-claim boundary."
+  ],
+  "superseded": [
+    "The assumption that any later team commit automatically handles every earlier pending request.",
+    "The assumption that rescheduling proves peer execution."
+  ],
+  "unresolved": [
+    "VST-20260714T220230Z-continuity-mining has no exact artifact acknowledgment.",
+    "ICW-20260714T221600Z-continuity-mining has no exact artifact acknowledgment.",
+    "FRT-20260715T090100Z-continuity-mining has no exact artifact acknowledgment."
+  ],
+  "request_assessments": [
+    {"request_id":"VST-20260714T220230Z-continuity-mining","later_activity":"observed","consumption_status":"unproven","execution_claimed":false},
+    {"request_id":"ICW-20260714T221600Z-continuity-mining","later_activity":"observed","consumption_status":"unproven","execution_claimed":false},
+    {"request_id":"FRT-20260715T090100Z-continuity-mining","later_activity":"observed","consumption_status":"unproven","execution_claimed":false}
+  ],
+  "contradiction_resolved": "Later continuity activity can coexist with pending requests because activity alone does not prove request-specific acknowledgment.",
+  "evidence_strength": "strong_for_lifecycle_boundary; insufficient_for_consumption",
+  "privacy": {"contains_private_source_material":false,"public_safe":true},
+  "falsification_route": "Create an immutable acknowledgment naming the exact request_id and responding artifact, with execution_claimed false unless direct evidence exists."
+}
