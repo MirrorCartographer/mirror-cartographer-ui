@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mirrorcartographer.example/operations/continuity/provenance-candidate-adjudication.schema.json",
+  "title": "Provenance Candidate Adjudication",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "queue_item",
+    "subject_identifier",
+    "candidate",
+    "agreement_tests",
+    "classification",
+    "claim_states",
+    "privacy",
+    "falsification_route"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_id": {"type": "string", "pattern": "^PCA-[A-Za-z0-9._:-]+$"},
+    "queue_item": {"const": "M-RECONCILE-002"},
+    "subject_identifier": {"enum": ["M-004", "M-005", "M-006"]},
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_class", "locator", "immutable_identity", "observed_role", "coverage_status"],
+      "properties": {
+        "source_class": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "immutable_identity": {"type": ["string", "null"]},
+        "observed_role": {"enum": ["assigning_source", "downstream_reference", "generated_mirror", "search_snippet", "token_collision", "unknown"]},
+        "coverage_status": {"enum": ["covered", "partial", "inaccessible", "unknown_permission", "intentionally_excluded", "ceiling_limited"]}
+      }
+    },
+    "agreement_tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "authority", "semantic_role", "temporal_precedence", "immutable_locator"],
+      "properties": {
+        "namespace": {"$ref": "#/$defs/testResult"},
+        "authority": {"$ref": "#/$defs/testResult"},
+        "semantic_role": {"$ref": "#/$defs/testResult"},
+        "temporal_precedence": {"$ref": "#/$defs/testResult"},
+        "immutable_locator": {"$ref": "#/$defs/testResult"}
+      }
+    },
+    "classification": {"enum": ["located_verified", "candidate_unverified", "downstream_reference_only", "noncapable_collision", "coverage_blocked"]},
+    "claim_states": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed", "inferred", "proposed", "superseded", "unresolved"],
+      "properties": {
+        "observed": {"$ref": "#/$defs/stringList"},
+        "inferred": {"$ref": "#/$defs/stringList"},
+        "proposed": {"$ref": "#/$defs/stringList"},
+        "superseded": {"$ref": "#/$defs/stringList"},
+        "unresolved": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "contains_private_source_material"],
+      "properties": {
+        "class": {"enum": ["public_repository_governance", "private_source_abstracted", "excluded_private_source"]},
+        "contains_private_source_material": {"const": false}
+      }
+    },
+    "falsification_route": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "testResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": {"enum": ["pass", "fail", "unknown", "not_testable"]},
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "stringList": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"classification": {"const": "located_verified"}}},
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "immutable_identity": {"type": "string", "minLength": 1},
+              "observed_role": {"const": "assigning_source"},
+              "coverage_status": {"const": "covered"}
+            }
+          },
+          "agreement_tests": {
+            "properties": {
+              "namespace": {"properties": {"status": {"const": "pass"}}},
+              "authority": {"properties": {"status": {"const": "pass"}}},
+              "semantic_role": {"properties": {"status": {"const": "pass"}}},
+              "temporal_precedence": {"properties": {"status": {"const": "pass"}}},
+              "immutable_locator": {"properties": {"status": {"const": "pass"}}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"candidate": {"properties": {"coverage_status": {"enum": ["partial", "inaccessible", "unknown_permission", "intentionally_excluded", "ceiling_limited"]}}}}},
+      "then": {"properties": {"classification": {"const": "coverage_blocked"}}}
+    },
+    {
+      "if": {"properties": {"candidate": {"properties": {"observed_role": {"enum": ["generated_mirror", "search_snippet", "token_collision"]}}}}},
+      "then": {"properties": {"classification": {"enum": ["downstream_reference_only", "noncapable_collision"]}}}
+    }
+  ]
+}
