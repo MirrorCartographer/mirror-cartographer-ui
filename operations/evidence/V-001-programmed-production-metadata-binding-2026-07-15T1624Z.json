@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-programmed-production-metadata-binding-2026-07-15T1624Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "created_at": "2026-07-15T16:24:00Z",
+  "slice": "programmed_production_metadata_binding",
+  "finding": "The programmed-stage receipt verifier previously bound the production identifier but did not require or independently compare the production title, form, continuity role, and repertory status. A retained receipt could therefore preserve the correct ID while drifting the public-safe production semantics.",
+  "implementation": {
+    "verifier": "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "tests": "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.test.cjs",
+    "verifier_commit": "a491218b6ad9ecdfb5d1567fb30d36ba38d5e522",
+    "test_commit": "641c8a5972107ffb3097ebe7d3087b91a131faed"
+  },
+  "contract_changes": [
+    "Require non-empty title, form, continuity_role, and repertory_status on programmed_production.",
+    "Allow exact expected-value comparison for all four production metadata fields.",
+    "Return the bound metadata in the verifier result for retained evidence inspection.",
+    "Reject metadata drift without asserting runtime activation, deployment, audio playback, browser execution, or physical-device verification."
+  ],
+  "verification": {
+    "method": "committed deterministic Node test contract",
+    "covered_cases": [
+      "valid exact metadata binding",
+      "missing production form",
+      "title mismatch",
+      "form mismatch",
+      "continuity-role mismatch",
+      "repertory-status mismatch"
+    ],
+    "runtime_execution_observed": false,
+    "reason": "The GitHub connector exposed repository writes and retained source inspection but no authenticated Node checkout execution surface in this run."
+  },
+  "claim_boundaries": {
+    "deployment_observed": false,
+    "browser_execution_observed": false,
+    "audio_playback_observed": false,
+    "physical_device_verification_observed": false,
+    "application_runtime_modified": false
+  },
+  "rollback": [
+    "Revert the queue-update and evidence commits.",
+    "Revert test commit 641c8a5972107ffb3097ebe7d3087b91a131faed.",
+    "Revert verifier commit a491218b6ad9ecdfb5d1567fb30d36ba38d5e522."
+  ]
+}
