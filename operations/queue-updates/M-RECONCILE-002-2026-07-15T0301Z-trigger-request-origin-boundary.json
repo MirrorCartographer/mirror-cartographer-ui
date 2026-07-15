@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T03:01:30Z",
+  "state": "in_progress",
+  "completed_slice": "Classified immutable peer trigger-request records as coordination evidence and candidate leads only. They cannot resolve M-004, M-005, or M-006 because they perform no explicit artifact assignment, do not establish continuity namespace or artifact ownership, have the wrong semantic role, and are downstream of the unresolved reports. Immutable storage alone is insufficient for origin promotion.",
+  "artifact": {
+    "path": "operations/continuity/manifests/CM-20260715T0301Z-trigger-request-origin-boundary.json",
+    "commit": "f395d77b40cb5a252976bb89dc4a50515ab24af9"
+  },
+  "claims": {
+    "observed": "The trigger ledger records pending coordination requests and explicitly retains execution_claimed=false.",
+    "inferred": "A coordination record cannot become an originating artifact assignment merely because it is precise and immutably committed.",
+    "proposed": "Default future trigger-request ingestion to coordination_evidence and require a separate immutable originating object for origin promotion.",
+    "superseded": "A committed trigger request naming a completed slice can itself prove the origin of the underlying artifact.",
+    "unresolved": "M-004, M-005, and M-006 remain unlocated because exhaustive branch, commit, and eligible non-repository source coverage is incomplete."
+  },
+  "contradictions_resolved": [
+    "Resolved the apparent conflict between immutable trigger metadata and provenance authority: immutability proves the trigger record, not the origin of a different artifact."
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable candidate sources at or before each repository report boundary.",
+    "Evaluate qualifying candidates against all six origin-adjudication gates.",
+    "Inspect eligible privacy-reviewed decision logs, language lexicons, project documents, chat-history locators, and File Library documents.",
+    "Promote an origin only when one candidate passes every gate under documented coverage."
+  ],
+  "privacy_boundary": "No private chat text, personal records, credentials, raw File Library content, or sensitive excerpts were written.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none",
+  "history_deleted": false,
+  "safe_next_action": "Continue exhaustive pre-boundary repository traversal while excluding trigger requests from origin promotion; retain unresolved status wherever coverage or any adjudication gate is incomplete."
+}
