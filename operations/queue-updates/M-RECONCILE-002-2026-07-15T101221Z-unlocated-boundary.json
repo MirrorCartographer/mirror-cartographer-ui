@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T10:12:21Z",
+  "state": "in_progress",
+  "completed_slice": "Established that unlocated is a coverage-qualified terminal classification and that bounded negative search evidence must remain unresolved_incomplete_coverage.",
+  "artifact": "operations/continuity/records/CM-1029.json",
+  "artifact_commit": "ae733474f175552f0be223a7e21330f725ce8e6f",
+  "acceptance_remaining": [
+    "Retain an exhaustive accessible ref inventory.",
+    "Traverse reachable commits and historical and deleted paths for M-004, M-005, and M-006.",
+    "Resolve each identifier to verified_origin, unlocated_after_exhaustive_coverage, or conflicting_candidates using retained evidence."
+  ],
+  "safe_next_action": "Implement and execute a retained exhaustive ref-and-history traversal, recording raw inventory, method, counts, timestamps, and blind spots before changing any provenance-gap node from unresolved.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy_boundary": "Public-safe repository metadata and abstract provenance rules only; no private source content retained."
+}
