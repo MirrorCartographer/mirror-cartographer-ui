@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:37:00Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "priority": "highest",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a manual operations-only GitHub Actions workflow that runs the existing OIDC and repertory tests, requests and verifies a GitHub OIDC token in process memory, binds the exact run to three retained transcript digests, removes request-only material, and uploads only a token-free verified receipt. The workflow contains no deployment or repertory activation path.",
+  "files": [
+    ".github/workflows/vercel-repertory-oidc-receipt.yml",
+    "operations/evidence/V-001-no-deploy-oidc-receipt-workflow-2026-07-15T2337Z.json",
+    "operations/queue-updates/V-001-2026-07-15T2337Z-no-deploy-oidc-receipt-workflow.json"
+  ],
+  "commits": [
+    "9939ca9876c7c5327c7bfe21ea2c930d4a580819",
+    "8c1763440fd5b6583f4113be6708d34ba687cbfd"
+  ],
+  "verification": "Exact-commit connector refetch confirmed manual-only triggering, least-privilege permissions, no persisted checkout credentials, fail-closed digest validation, invocation of three existing deterministic test files, token-free artifact scope, and absence of deployment or activation commands. Workflow execution remains unobserved.",
+  "acceptance_remaining": [
+    "Dispatch vercel-repertory-oidc-receipt.yml with exact retained transcript digests and inspect the successful workflow run and uploaded verified receipt.",
+    "Execute authenticated all-event workflow enumeration and independent gh api pagination for the exact workflow commit and retain reconciliation.",
+    "Observe an operations-only Vercel sentinel as skipped or ignored after provider capacity returns.",
+    "Bind one tested application commit to an immutable READY Vercel deployment and independently request its generated hostname.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Dispatch the no-deploy OIDC receipt workflow for commit 9939ca9876c7c5327c7bfe21ea2c930d4a580819 using retained transcript digests, then inspect the workflow jobs and artifact. Do not deploy or activate the repertory.",
+  "rollback": "Revert the standalone workflow commit; application runtime and deployment configuration were not modified.",
+  "canonical_queue_overwritten": false,
+  "runtime_activation_performed": false,
+  "deployment_attempted": false
+}
