@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T06:50:00Z",
+  "updated_at": "2026-07-15T06:51:00Z",
   "items": [
     {
       "id": "V-001",
@@ -22,7 +22,8 @@
         "A tamper-evident evidence bundle now binds exact commit identity, approved enumeration methods, retrieval times, page counts, canonical SHA-256 digests, retention requirements, and the reconciliation result.",
         "Validated gh api --paginate --slurp pages now flow through a single fail-closed adapter into the tamper-evident Vercel evidence bundle; non-exhaustive commands, provider-ceiling ambiguity, count mismatch, and enumeration divergence are rejected before promotion.",
         "A no-overwrite retained-evidence CLI now converts primary repository pagination output, retained gh api --paginate --slurp pages, and the retained command into the existing tamper-evident bundle without creating a deployment or persisting credentials.",
-        "The required repertory test command now loads the canonical hourly repertory and fails closed on provenance drift, non-deterministic slot mapping, missing hourly coverage, unsafe runtime constraints, or an activation claim."
+        "The required repertory test command now loads the canonical hourly repertory and fails closed on provenance drift, non-deterministic slot mapping, missing hourly coverage, unsafe runtime constraints, or an activation claim.",
+        "Canonical repertory validity and exact-commit immutable Vercel deployment identity are now joined by one fail-closed activation assessor; missing evidence, commit mismatch, or a weakened runtime boundary prohibits promotion."
       ],
       "acceptance_remaining": [
         "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and an independent gh api --paginate traversal, retain both raw outputs, and retain the reconciliation bundle.",
@@ -31,7 +32,7 @@
         "Bind the tested application commit to an immutable successful Vercel deployment.",
         "Perform bounded physical iPhone Safari audibility verification."
       ],
-      "safe_next_action": "Run npm run test:vercel-repertory in an authenticated checkout and retain the test output for commit 5d6037872b0e433c0b1f01f6ad17277194fc0b89; then execute both exhaustive workflow clients against one exact commit and preserve their raw outputs and reconciliation bundle. Do not create an application deployment until provider capacity and immutable deployment identity are verified."
+      "safe_next_action": "Run npm run test:vercel-repertory in an authenticated checkout and retain output including assessRepertoryActivation.v1.test.cjs; then execute both exhaustive workflow clients against one exact commit and preserve raw outputs plus reconciliation. Do not activate the repertory or create an application deployment until provider capacity and immutable identity are verified."
     },
     {
       "id": "M-RECONCILE-002",
