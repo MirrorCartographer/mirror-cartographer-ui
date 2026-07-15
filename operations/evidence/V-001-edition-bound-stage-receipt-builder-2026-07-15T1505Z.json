@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-edition-bound-stage-receipt-builder-2026-07-15T1505Z",
+  "owner": "vercel_studio",
+  "queue_item": "V-001",
+  "recorded_at": "2026-07-15T15:05:00Z",
+  "finding": "The canonical repertory had distinct hourly edition identities and a strict receipt verifier, but the existing receipt builder still emitted only base-production identity under an obsolete evidence class. That gap prevented the builder output from satisfying the verifier without manual reconstruction.",
+  "implemented_slice": {
+    "builder": "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.cjs",
+    "test": "operations/vercel-studio/repertory/buildProgrammedStageReceipt.v1.test.cjs",
+    "behavior": [
+      "requires an exact lowercase 40-character source commit",
+      "binds output to a canonical SHA-256 digest of the repertory object",
+      "selects one deterministic UTC hour slot",
+      "retains production id, title, form, continuity role, and status",
+      "retains distinct edition id, cue, and UTC hour",
+      "emits the evidence class expected by verifyProgrammedStageReceipt.v1.cjs",
+      "sets all runtime, deployment, browser, audio, physical-device, and side-effect claims false"
+    ]
+  },
+  "production_programmed_for_recorded_hour": {
+    "utc_hour": 15,
+    "production_id": "wordless-room-game",
+    "edition_id": "wordless-room-game-15",
+    "edition_cue": "threshold-three",
+    "runtime_activation_claimed": false
+  },
+  "verification": {
+    "type": "static_contract_and_test_integration",
+    "builder_commit": "b5365ff4e9a3bdc12062120ad7b9cbd449173bba",
+    "test_commit": "bbd711257a766aba4ab28d64b89b485883cdc92f",
+    "runtime_test_execution_claimed": false,
+    "deployment_claimed": false,
+    "public_route_claimed": false
+  },
+  "evidence_strength": "implementation_committed_tests_authored_not_executed_in_connector",
+  "rollback": "Revert commits bbd711257a766aba4ab28d64b89b485883cdc92f and b5365ff4e9a3bdc12062120ad7b9cbd449173bba; no application runtime or deployment was changed.",
+  "privacy_boundary": "No private source material, credentials, payments, conversion logic, personal records, or deployment secrets were introduced.",
+  "next_action": "Run the canonical repertory test command in an authenticated checkout and retain the exact output. Only after immutable deployment identity and provider capacity are verified may this receipt builder be integrated into the application runtime."
+}
