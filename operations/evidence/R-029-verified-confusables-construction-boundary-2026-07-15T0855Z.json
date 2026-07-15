@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-029",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T08:55:00Z",
+  "derived_from": ["R-028"],
+  "finding": "Authenticated source bytes and semantic validation must be joined to the canonical parser by a fail-closed construction boundary that independently reconciles parser record count and canonical mapping digest before dataset promotion.",
+  "source_status": [
+    {
+      "source": "https://www.unicode.org/reports/tr39/",
+      "authority": "primary_normative",
+      "observed_version": "17.0.0",
+      "observed_revision": 32,
+      "observed_date": "2025-09-04"
+    },
+    {
+      "source": "https://www.unicode.org/Public/security/latest/confusables.txt",
+      "authority": "primary_data",
+      "observed_version": "17.0.0",
+      "observed_format": "source ; target ; MA"
+    }
+  ],
+  "artifact": {
+    "implementation": "tools/frontier-research/build-verified-confusables-dataset.mjs",
+    "implementation_commit": "e6422b9a35ba969276699d7a1569e93f6f1227b8",
+    "tests": "tools/frontier-research/build-verified-confusables-dataset.test.mjs",
+    "tests_commit": "9887f6e91231fca7bca61bd0648f5350815612ab"
+  },
+  "enforced_order": [
+    "source_byte_verification",
+    "fatal_utf8_decode",
+    "semantic_validation",
+    "canonical_parser",
+    "independent_record_count_reconciliation",
+    "independent_canonical_digest_reconciliation",
+    "bounded_promotion_envelope"
+  ],
+  "claim_status": {
+    "observed": "UTS #39 17.0.0 revision 32 and the current confusables data format were inspected from Unicode primary sources.",
+    "inferred": "A parser can silently drop, duplicate, or transform records even when source bytes and pre-parser semantics are valid.",
+    "implemented": "A parser-independent construction boundary now rejects unverified bytes, invalid UTF-8, semantic failures, parser shape drift, record-count divergence, and canonical-digest divergence.",
+    "unresolved": "The repository canonical parser and pinned production Unicode 17 payload remain unlocated through the available indexed search surface.",
+    "not_claimed": [
+      "complete UTS #39 conformance",
+      "identifier profile correctness",
+      "script resolution correctness",
+      "bidiSkeleton correctness",
+      "production integration"
+    ]
+  },
+  "verification": {
+    "method": "node --test on an isolated exact copy of the committed implementation and test source",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "mandatory stage order and promotion envelope",
+      "unverified source rejection",
+      "semantic rejection before parser",
+      "record count divergence",
+      "canonical digest divergence",
+      "fatal UTF-8 rejection"
+    ],
+    "authenticated_checkout": false
+  },
+  "evidence_strength": "implementation_verified_in_isolated_runtime",
+  "falsification_routes": [
+    "Run the committed tests in an authenticated checkout and compare exact output.",
+    "Run the pinned Unicode 17 payload through the boundary and retain source SHA-256, record count, and canonical digest.",
+    "Integrate the actual canonical parser and demonstrate that independent count and digest reconciliation pass.",
+    "Compare the promoted mapping set against a second independent parser implementation."
+  ],
+  "files_deleted": false,
+  "canonical_queue_overwritten": false
+}
