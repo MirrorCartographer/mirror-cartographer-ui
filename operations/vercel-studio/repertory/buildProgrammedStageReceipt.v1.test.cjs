@@ -7,13 +7,14 @@ const { buildProgrammedStageReceipt, repertoryDigest } = require('./buildProgram
 const { verifyProgrammedStageReceipt } = require('./verifyProgrammedStageReceipt.v1.cjs');
 
 const COMMIT = 'e6767437e979f04a2df074642963aac4b603335c';
+const GENERATED_AT = '2026-07-15T04:20:00.000Z';
+
+function validReceipt() {
+  return buildProgrammedStageReceipt(repertory, new Date(GENERATED_AT), { source_commit: COMMIT });
+}
 
 test('builds a verifier-compatible exact-commit and hourly-edition receipt without activation claims', () => {
-  const receipt = buildProgrammedStageReceipt(
-    repertory,
-    new Date('2026-07-15T04:20:00.000Z'),
-    { source_commit: COMMIT },
-  );
+  const receipt = validReceipt();
 
   assert.equal(receipt.evidence_class, 'commit_and_repertory_bound_programmed_stage_identity_only');
   assert.equal(receipt.utc_hour, 4);
@@ -33,6 +34,8 @@ test('builds a verifier-compatible exact-commit and hourly-edition receipt witho
   const verified = verifyProgrammedStageReceipt(receipt, {
     source_commit: COMMIT,
     repertory_sha256: repertoryDigest(repertory),
+    repertory_contract_id: repertory.contract_id,
+    generated_at: GENERATED_AT,
     utc_hour: 4,
     production_id: 'body-constellation',
     edition_id: 'body-constellation-04',
@@ -59,18 +62,18 @@ test('selection advances deterministically to a distinct edition while continuit
 
 test('rejects caller fields that could smuggle activation claims', () => {
   assert.throws(
-    () => buildProgrammedStageReceipt(repertory, new Date('2026-07-15T04:20:00.000Z'), { source_commit: COMMIT, runtime_active: true }),
+    () => buildProgrammedStageReceipt(repertory, new Date(GENERATED_AT), { source_commit: COMMIT, runtime_active: true }),
     /unsupported programmed stage receipt field: runtime_active/,
   );
 });
 
 test('requires an exact commit binding', () => {
   assert.throws(
-    () => buildProgrammedStageReceipt(repertory, new Date('2026-07-15T04:20:00.000Z')),
+    () => buildProgrammedStageReceipt(repertory, new Date(GENERATED_AT)),
     /source_commit must be a lowercase 40-character commit SHA/,
   );
   assert.throws(
-    () => buildProgrammedStageReceipt(repertory, new Date('2026-07-15T04:20:00.000Z'), { source_commit: 'main' }),
+    () => buildProgrammedStageReceipt(repertory, new Date(GENERATED_AT), { source_commit: 'main' }),
     /source_commit must be a lowercase 40-character commit SHA/,
   );
 });
@@ -79,7 +82,32 @@ test('fails closed when an hourly slot loses distinct edition identity', () => {
   const mutated = JSON.parse(JSON.stringify(repertory));
   delete mutated.hour_slots[4].edition_id;
   assert.throws(
-    () => buildProgrammedStageReceipt(mutated, new Date('2026-07-15T04:20:00.000Z'), { source_commit: COMMIT }),
+    () => buildProgrammedStageReceipt(mutated, new Date(GENERATED_AT), { source_commit: COMMIT }),
     /programmed hour slot must declare a non-empty edition_id/,
   );
+});
+
+test('fails closed when generated_at is missing, non-canonical, or names a different UTC hour', () => {
+  const missing = { ...validReceipt() };
+  delete missing.generated_at;
+  assert.deepEqual(verifyProgrammedStageReceipt(missing).violations, ['invalid_generated_at']);
+
+  const nonCanonical = { ...validReceipt(), generated_at: '2026-07-15T04:20:00Z' };
+  assert.deepEqual(verifyProgrammedStageReceipt(nonCanonical).violations, ['invalid_generated_at']);
+
+  const drifted = { ...validReceipt(), generated_at: '2026-07-15T05:20:00.000Z' };
+  assert.deepEqual(verifyProgrammedStageReceipt(drifted).violations, ['generated_at_hour_mismatch']);
+});
+
+test('fails closed on repertory contract or expected instant mismatch', () => {
+  const receipt = validReceipt();
+  const verified = verifyProgrammedStageReceipt(receipt, {
+    repertory_contract_id: 'wrong-contract',
+    generated_at: '2026-07-15T04:21:00.000Z',
+  });
+  assert.equal(verified.verified, false);
+  assert.deepEqual(verified.violations, [
+    'repertory_contract_id_mismatch',
+    'generated_at_mismatch',
+  ]);
 });
