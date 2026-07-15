@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "R-023",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Define a fail-closed physical iPhone Safari audibility evidence contract that cannot be satisfied by deployment identity, workflow success, AudioContext state, or route activity alone.",
+  "completed_slices": [
+    "Researched current W3C Web Audio activation semantics and WebKit user-gesture guidance.",
+    "Implemented a deterministic validator binding human-observed audibility to an exact commit, immutable deployment identity, physical iOS Safari environment, direct user gesture, running context, source and destination state, volume, hardware mute, and output route checks.",
+    "Added four deterministic tests covering complete acceptance, activation failure, route-only overclaim prevention, and canonical digest stability.",
+    "Recorded claim boundaries, uncertainty, evidence strength, and falsification routes."
+  ],
+  "acceptance_remaining": [
+    "Run node --test operations/frontier-research/mobileSafariAudibilityEvidence.v1.test.cjs in an authenticated checkout and retain exact output.",
+    "After provider capacity returns, bind one immutable READY Vercel deployment to the tested application commit.",
+    "Execute the protocol on a physical iPhone Safari instance and retain the completed evidence object.",
+    "Feed verified evidence into V-001 without generalizing beyond the named device, route, commit, and deployment."
+  ],
+  "safe_next_action": "Execute the deterministic tests, then hand the validator to Vercel Studio for integration as the final physical-audibility gate after immutable deployment identity verification. Do not infer audibility from AudioContext running state or automated workflow artifacts."
+}
