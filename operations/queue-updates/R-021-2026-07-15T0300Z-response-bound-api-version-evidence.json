@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T03:00:00Z",
+  "slice": "response-bound GitHub API version evidence verifier",
+  "finding": "A static supported-version allowlist does not prove that an actual enumeration request sent the intended X-GitHub-Api-Version header or that GitHub accepted the version without deprecation, sunset, or 410 Gone signals.",
+  "source_status": {
+    "github_api_versions": "primary_current",
+    "workflow_runs_endpoint": "primary_current"
+  },
+  "evidence_strength": "implementation_verified_locally_not_yet_exercised_against_authenticated_private_repository",
+  "artifacts": [
+    "operations/frontier-research/github-actions/verifyGithubApiResponseVersion.v1.cjs",
+    "operations/frontier-research/github-actions/verifyGithubApiResponseVersion.v1.test.cjs"
+  ],
+  "verification": {
+    "command": "node --test verifyGithubApiResponseVersion.v1.test.cjs",
+    "passed": 6,
+    "failed": 0
+  },
+  "falsification_route": [
+    "A request without an explicit X-GitHub-Api-Version header is promoted.",
+    "A configured version that differs from the transmitted header is promoted.",
+    "A 410 Gone response is promoted.",
+    "A response carrying Deprecation or Sunset headers is promoted.",
+    "A non-2xx workflow enumeration response is promoted."
+  ],
+  "limits": [
+    "Not yet wired into verifyWorkflowEnumerationEvidence.v1.cjs.",
+    "No authenticated private-repository response headers were retained in this slice.",
+    "No deployment claim is made."
+  ],
+  "next_action": "Compose this verifier into the integrated workflow enumeration gate and retain exact request headers, response status, Deprecation, and Sunset headers for both exhaustive clients."
+}
