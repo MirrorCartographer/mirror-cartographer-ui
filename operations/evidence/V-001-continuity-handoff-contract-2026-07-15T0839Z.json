@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T08:39:00Z",
+  "slice": "continuity_state_handoff_contract",
+  "finding": "The canonical hourly repertory asserted continuity preservation, but lacked a fail-closed artifact defining how public-safe state may cross adjacent production boundaries without implying runtime activation.",
+  "implementation": {
+    "contract": "operations/vercel-studio/repertory/buildContinuityHandoff.v1.cjs",
+    "test": "operations/vercel-studio/repertory/buildContinuityHandoff.v1.test.cjs",
+    "properties": [
+      "requires adjacent UTC hour slots including 23-to-0 wrap",
+      "requires identical exact source commit and canonical repertory digest",
+      "accepts only public_abstract continuity state",
+      "rejects named private-source fields and payloads over 4096 bytes",
+      "produces a deterministic continuity-state SHA-256 digest",
+      "explicitly denies deployment, runtime, browser, and audio claims"
+    ]
+  },
+  "programmed_stage_at_recording_time": {
+    "utc_hour": 8,
+    "production_id": "quiet-machine",
+    "title": "Quiet Machine",
+    "status": "programmed_by_contract_not_verified_active"
+  },
+  "verification": {
+    "method": "isolated Node test execution using the committed module and test contents",
+    "command": "node --test buildContinuityHandoff.v1.test.cjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "coverage": [
+      "deterministic public-safe handoff",
+      "daily wrap adjacency",
+      "non-adjacent and evidence-drift rejection",
+      "private and oversized state rejection"
+    ],
+    "repository_fetch_verification_pending": true
+  },
+  "provenance": {
+    "observed": [
+      "operations/CURRENT_STATE.json forbids application deployment attempts while provider capacity is exhausted",
+      "operations/ACTIVE_QUEUE.json retains V-001 as highest-priority and blocked",
+      "HOURLY_REPERTORY.v1.json requires continuity state preservation and assigns UTC hour 8 to quiet-machine"
+    ],
+    "inferred": "A compact public-abstract state envelope can preserve continuity across productions without exposing source records or turning the surface into an operations dashboard.",
+    "experiment": "Bind adjacent programmed-stage receipts to one state digest and fail closed on source, repertory, temporal, privacy, or size drift.",
+    "current_decision": "Retain as an operations-only contract; do not integrate into runtime until immutable deployment identity and provider capacity are verified."
+  },
+  "claims": {
+    "deployment": false,
+    "runtime_activation": false,
+    "browser_execution": false,
+    "audio": false,
+    "physical_device": false
+  },
+  "rollback": "Revert commits b2a3f28c7b120779898affc226468422e45978a3 and da2b909442df8adc169e12fdc29c7391e4fa0ea4; no application runtime path was changed."
+}
