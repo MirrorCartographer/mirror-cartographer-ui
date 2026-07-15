@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T03:11:00Z",
+  "slice": "canonical_runtime_stage_ingestion_boundary",
+  "state": "completed_operations_only",
+  "finding": "The canonical repertory promotion gate existed, but a durable ingestion boundary was still needed to reject caller-authored expected-stage identity and unknown bypass fields before promotion.",
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/ingestRuntimeStageEvidence.v1.cjs",
+    "test": "operations/vercel-studio/repertory/ingestRuntimeStageEvidence.v1.test.cjs",
+    "behavior": [
+      "accept only the canonical runtime-stage ingestion fields",
+      "reject caller-supplied expectedStage or expected_stage identity",
+      "reject unknown fields",
+      "derive expected production, contract, and hour exclusively from the validated repertory selector",
+      "fail closed on runtime identity divergence"
+    ]
+  },
+  "verification": {
+    "status": "source_committed_tests_not_executed_in_connector_runtime",
+    "test_cases_authored": 5,
+    "deployment_claimed": false,
+    "runtime_activation_claimed": false
+  },
+  "privacy_boundary": "Operations-only code and synthetic fixtures; no private source material, credentials, analytics, payments, or conversion logic.",
+  "rollback": "Stop importing ingestRuntimeStageEvidence.v1.cjs; all prior promotion modules remain untouched.",
+  "specialist_registry_change": false,
+  "next_action": "Execute the committed test in an authenticated checkout, then route retained runtime-evidence ingestion through this boundary and prove no direct caller can reach the older caller-supplied expected-stage promotion function."
+}
