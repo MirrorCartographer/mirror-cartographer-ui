@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T23:24:34Z",
+  "artifact": "operations/frontier-research/githubOidcReceiptPipeline.v1.cjs",
+  "finding": "The prior verifier and exact-run binder left discovery, JWKS retrieval, GitHub token endpoint confinement, token disposal, and receipt production as separate workflow responsibilities. A composed fail-closed pipeline can enforce those transitions without retaining or emitting the bearer token.",
+  "primary_sources": [
+    {
+      "status": "current_primary_documentation",
+      "url": "https://docs.github.com/en/actions/concepts/security/openid-connect",
+      "observed_claims": [
+        "GitHub Actions jobs can request unique short-lived OIDC JWTs.",
+        "The documented JOSE algorithm is RS256.",
+        "Documented claims include repository, repository_id, run_id, run_attempt, runner_environment, issuer, iat, nbf, and exp."
+      ]
+    },
+    {
+      "status": "live_primary_metadata",
+      "url": "https://token.actions.githubusercontent.com/.well-known/openid-configuration",
+      "observed_claims": [
+        "GitHub exposes an OIDC discovery document from the canonical token.actions.githubusercontent.com issuer."
+      ]
+    }
+  ],
+  "implementation": {
+    "discovery_url_pinned": "https://token.actions.githubusercontent.com/.well-known/openid-configuration",
+    "request_and_jwks_hosts_pinned": "token.actions.githubusercontent.com",
+    "https_required": true,
+    "signature_verifier": "githubOidcJwtVerifier.v1.cjs",
+    "exact_run_binder": "githubOidcRunnerBinding.v1.cjs",
+    "token_retained": false,
+    "token_value_emitted": false
+  },
+  "verification": {
+    "method": "node --test with mocked discovery, JWKS, token endpoint, generated RSA keypair, signed JWT, and exact-run expectations",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "cases": [
+      "valid discovery/JWKS/RS256/exact-run receipt",
+      "non-GitHub token endpoint host",
+      "discovery issuer substitution",
+      "workflow SHA mismatch",
+      "token response missing value",
+      "missing id-token authorization material"
+    ],
+    "execution_environment": "ephemeral local test harness using repository-compatible Node CommonJS modules",
+    "repository_execution_claimed": false
+  },
+  "evidence_strength": "deterministic_unit_verified_implementation_ready",
+  "uncertainty": [
+    "No live GitHub Actions OIDC token was requested.",
+    "No network-failure retry policy or JWKS cache policy is implemented.",
+    "The pipeline does not establish same-process execution, trusted runner integrity, hardware attestation, transcript truth, deployment identity, browser behavior, audio audibility, or physical-device behavior."
+  ],
+  "falsification_route": [
+    "Show that a non-HTTPS or non-GitHub request/JWKS host is accepted.",
+    "Show that an issuer-substituted discovery document is accepted.",
+    "Show that an invalid RS256 signature or wrong audience is accepted.",
+    "Show that exact repository, workflow SHA, run ID, attempt, or transcript digest mismatches are accepted.",
+    "Show that the returned object contains the raw bearer token."
+  ],
+  "specialist_registry_change": null,
+  "deletions": []
+}
