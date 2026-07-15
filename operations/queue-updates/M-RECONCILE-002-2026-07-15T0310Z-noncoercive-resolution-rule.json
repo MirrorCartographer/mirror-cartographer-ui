@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T03:10:00Z",
+  "slice": "noncoercive_resolution_rule",
+  "state": "in_progress",
+  "completed": [
+    "Recovered and structured the rule that unresolved is a valid continuity state.",
+    "Defined evidence-qualified transitions from unresolved to observed, inferred, or resolved.",
+    "Prohibited promotion based only on narratively coherent reconstruction.",
+    "Applied the rule to M-004, M-005, and M-006 without changing their unresolved status.",
+    "Reduced a private language-history source to an abstract principle without retaining private wording or attribution."
+  ],
+  "evidence": {
+    "manifest_path": "operations/continuity/manifests/CM-20260715T0310Z-noncoercive-resolution-rule.json",
+    "manifest_commit": "19e1d452281a84878a14c34b419338447897fa98",
+    "canonical_queue_blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "prior_boundary_manifest_blob": "e988fc93cdea5d65f8f936071a51e12ab92e6abd"
+  },
+  "claims": {
+    "observed": "The queue prohibits reconstructing unverified history and requires unresolved retention under incomplete coverage.",
+    "inferred": "Resolution is an evidence-qualified transition, not a narrative obligation.",
+    "proposed": "Continuity schemas should fail closed on unsupported unresolved-to-resolved transitions.",
+    "superseded": "Fill missing history with the most coherent reconstruction.",
+    "unresolved": "The originating assignments for M-004, M-005, and M-006 remain unlocated."
+  },
+  "acceptance_remaining": [
+    "Obtain exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or eligible chat-history assignment."
+  ],
+  "safe_next_action": "Traverse all accessible branches and reachable history; run every candidate through explicit assignment, namespace, owner, semantic role, temporal precedence, and immutable locator gates; retain unresolved status whenever any required gate or coverage condition is incomplete.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none",
+  "history_deleted": false
+}
