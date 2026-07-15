@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T19:05:00Z",
+  "slice": "fail_closed_programmed_stage_projection",
+  "production_currently_programmed": {
+    "utc_hour": 19,
+    "edition_id": "coordinate-choir-19",
+    "production_id": "coordinate-choir",
+    "title": "Coordinate Choir",
+    "edition_cue": "west-field",
+    "claim_boundary": "programming_projection_only",
+    "runtime_activation": false
+  },
+  "inputs": [
+    "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+    "operations/vercel-studio/repertory/PUBLIC_STAGE_CARDS.v1.json"
+  ],
+  "artifacts": {
+    "implementation": "operations/vercel-studio/repertory/projectProgrammedStage.v1.cjs",
+    "implementation_commit": "48886a6cdd5895f530adbdc0a34daa42d511f3dd",
+    "test": "operations/vercel-studio/repertory/projectProgrammedStage.v1.test.cjs",
+    "test_commit": "b2870e3ea99ab64088c0988aff9bf394efa7b504"
+  },
+  "verification": {
+    "command": "node --check projectProgrammedStage.v1.cjs && node --test projectProgrammedStage.v1.test.cjs",
+    "result": "5_passed_0_failed",
+    "coverage": [
+      "deterministic stage projection",
+      "runtime activation boundary",
+      "programming-metadata-only boundary",
+      "title drift rejection",
+      "UTC hour validation"
+    ]
+  },
+  "runtime_or_deployment_evidence": "none; operations-only projection does not activate the application or establish deployment identity",
+  "privacy_boundary": "Only public-safe abstract repertory and stage-card metadata are projected. No private source material is read or emitted.",
+  "rollback": "Revert commits 48886a6cdd5895f530adbdc0a34daa42d511f3dd and b2870e3ea99ab64088c0988aff9bf394efa7b504; application runtime is unaffected.",
+  "limits": [
+    "The projection has not been integrated into the application.",
+    "No Vercel deployment was initiated.",
+    "No browser, Mobile Safari, audio, accessibility-tree, or served-byte behavior is claimed.",
+    "The current programmed stage is derived from UTC metadata and is not evidence that the public site displayed it."
+  ]
+}
