@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T05:37:00Z",
+  "slice": "versioned_authenticated_request_contract",
+  "source_status": {
+    "primary_sources": [
+      {
+        "source": "GitHub REST API endpoints for workflow runs",
+        "status": "current_official_documentation",
+        "observations": [
+          "The repository workflow-runs endpoint recommends Accept: application/vnd.github+json.",
+          "Current examples specify X-GitHub-Api-Version: 2026-03-10.",
+          "Private-repository access requires authentication with Actions read permission.",
+          "head_sha-filtered searches are capped at 1000 results."
+        ]
+      },
+      {
+        "source": "GitHub REST pagination and best-practices documentation",
+        "status": "current_official_documentation",
+        "observations": [
+          "Pagination evidence depends on stable request semantics and Link traversal.",
+          "Requests should identify a valid User-Agent and retain credentials securely."
+        ]
+      }
+    ]
+  },
+  "finding": "A validated pagination URL and complete Link chain do not prove reproducible response semantics unless the retained evidence also binds the request media type, explicit REST API version, authenticated request class, and User-Agent while excluding credential values.",
+  "comparison_against_prior_work": {
+    "not_duplicate_of": [
+      "RFC 8288 Link parser hardening",
+      "pagination URL origin/path/query trust boundary",
+      "sanitized pagination chain continuity",
+      "dual-client reconciliation"
+    ],
+    "new_boundary": "request headers and versioned response semantics before pagination acceptance"
+  },
+  "design_implication": "Both exhaustive clients should emit a credential-free validated request-contract receipt. Reconciliation and evidence bundling must fail closed when media type, API version, authentication class, or User-Agent identity is absent or divergent.",
+  "artifacts": [
+    "operations/frontier-research/github-actions/validateGitHubWorkflowRequestContract.v1.cjs",
+    "operations/frontier-research/github-actions/validateGitHubWorkflowRequestContract.v1.test.cjs"
+  ],
+  "verification": {
+    "method": "node --test validateGitHubWorkflowRequestContract.v1.test.cjs",
+    "result": "5 passed, 0 failed",
+    "evidence_strength": "implementation_committed_and_deterministically_tested",
+    "covered_cases": [
+      "valid exact versioned authenticated request",
+      "media-type drift",
+      "API-version drift",
+      "case-insensitive duplicate headers",
+      "missing bearer authentication",
+      "credential non-retention",
+      "malformed header container",
+      "invalid User-Agent"
+    ]
+  },
+  "uncertainty": [
+    "The validator is not yet wired into the primary enumerator or independent gh client.",
+    "No authenticated private-repository request was executed in this slice.",
+    "GitHub CLI may synthesize headers internally; an adapter must capture non-secret request identity without logging tokens."
+  ],
+  "falsification_route": [
+    "Accept a request whose API version differs from the retained expected version.",
+    "Accept duplicate case-insensitive headers with conflicting values.",
+    "Expose any authorization credential value in validator output.",
+    "Promote pagination evidence when request-contract validation is absent or rejected."
+  ],
+  "registry_change": null,
+  "safe_next_action": "Wire the request-contract validator ahead of URL and pagination-chain validation in both exhaustive clients, pin one explicit API version in retained evidence, and require reconciliation to compare the two credential-free request receipts before accepting exact-commit coverage."
+}
