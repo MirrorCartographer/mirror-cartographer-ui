@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0528Z-prescriptive-descriptive-boundary",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "created_at": "2026-07-15T05:28:00Z",
+  "title": "Prescriptive instructions do not establish historical provenance",
+  "memory_recovered": "A current operating instruction, automation prompt, queue objective, or later completion report may prescribe what the system should do now or describe what a later actor believes occurred. It does not, without an immutable pre-existing assignment source, prove who originally assigned M-004, M-005, or M-006 or what those identifiers originally denoted.",
+  "sources": [
+    {
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "source_status": "repository_observed",
+      "observation": "The queue requires locating the originating decision log, language lexicon, project document, or chat-history source and forbids reconstructing unverified history."
+    },
+    {
+      "locator": "operations/TRIGGER_REQUESTS.json",
+      "source_status": "repository_observed",
+      "observation": "Coordination records preserve requests and execution_claimed=false, demonstrating that instructions and requests are not execution evidence."
+    },
+    {
+      "locator": "operations/continuity/manifests/CM-20260715T0041Z-origin-candidate-adjudication.json",
+      "source_status": "repository_observed",
+      "observation": "Origin verification already requires explicit assignment, namespace, owner, semantic role, temporal precedence, and immutable locator integrity in one candidate object."
+    },
+    {
+      "locator": "operations/continuity/manifests/CM-20260715T0521Z-trigger-correlation-rule.json",
+      "source_status": "repository_observed",
+      "observation": "Later events cannot be retroactively correlated to earlier requests without explicit immutable evidence."
+    },
+    {
+      "locator": "current Continuity Mining Team run instruction",
+      "source_status": "runtime_instruction_observed_not_repository_origin",
+      "observation": "The instruction defines current team procedure but contains no immutable pre-boundary assignment of M-004, M-005, or M-006."
+    }
+  ],
+  "claims": {
+    "observed": [
+      "M-RECONCILE-002 explicitly requires an originating source rather than a reconstruction.",
+      "Recent repository artifacts discuss M-004, M-005, and M-006 after they were already reported as unresolved.",
+      "No inspected current instruction contains a qualifying immutable pre-boundary assignment object for those identifiers."
+    ],
+    "inferred": [
+      "Treating a current instruction as an origin source would collapse the distinction between governance and history.",
+      "Treating later completion prose as original assignment evidence would allow a system to manufacture its own provenance after the fact."
+    ],
+    "proposed": [
+      "Candidate sources should carry a speech_act classification: prescriptive, descriptive, assignative, evidentiary, or mixed.",
+      "Only assignative content that also passes the existing origin gates may resolve an unresolved identifier.",
+      "Prescriptive and descriptive sources may guide search or current behavior but remain lead-only for origin resolution."
+    ],
+    "superseded": [
+      "A current team instruction naming an unresolved identifier establishes that identifier's historical meaning.",
+      "A later completion report can be treated as the original decision record when the original is missing.",
+      "Operational authority over the present implies authorship of the past."
+    ],
+    "unresolved": [
+      "The originating assignative source for M-004 remains unlocated.",
+      "The originating assignative source for M-005 remains unlocated.",
+      "The originating assignative source for M-006 remains unlocated.",
+      "Repository branch and reachable-commit coverage remain non-exhaustive."
+    ]
+  },
+  "speech_act_boundary": {
+    "prescriptive": "Defines desired or required future/current behavior; not historical origin evidence by itself.",
+    "descriptive": "Reports or summarizes a state or belief; not historical origin evidence by itself.",
+    "assignative": "Explicitly binds an identifier to a referent; eligible for origin adjudication only when all provenance gates pass.",
+    "evidentiary": "Provides immutable support for a claim; may support but does not substitute for explicit assignment.",
+    "mixed": "Contains multiple acts; each relevant passage or structured field must be classified separately."
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "A current instruction can be authoritative for present operations while being inadmissible as evidence of an earlier identifier assignment.",
+    "resolution": "Authority is time- and function-scoped. Present prescriptive authority governs execution; historical provenance requires an earlier or immutably back-referenced assignative source.",
+    "status": "resolved"
+  },
+  "privacy_boundary": {
+    "retained": [
+      "repository paths",
+      "abstract speech-act classes",
+      "M-series identifiers",
+      "source-status labels",
+      "current instruction only as an abstract source class"
+    ],
+    "excluded": [
+      "private chat wording",
+      "personal context",
+      "credentials",
+      "raw File Library content",
+      "unreviewed private-source excerpts"
+    ]
+  },
+  "evidence_strength": "repository-grounded continuity rule; identifier origins remain unresolved",
+  "falsification_route": "Produce a current or later source containing an immutable, verifiable back-reference to a qualifying pre-boundary assignative object, then demonstrate that the referenced object passes every existing origin gate. The referenced object, not the later instruction alone, may resolve the identifier.",
+  "coverage": {
+    "canonical_operations_files": "inspected",
+    "recent_continuity_commits": "inspected_partial_history",
+    "repository_branch_inventory": "not_exhaustive",
+    "repository_reachable_commit_inventory": "not_exhaustive",
+    "private_chat_or_file_library_origin_review": "not_performed_this_slice"
+  },
+  "registry_change": null,
+  "history_deleted": false,
+  "next_action": "Add speech_act classification to future M-004/M-005/M-006 candidate evidence packets, then continue exhaustive branch and reachable-commit traversal without promoting prescriptive or descriptive sources to origin evidence."
+}
