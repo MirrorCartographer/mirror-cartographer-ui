@@ -89,7 +89,7 @@
     canvas.height = Math.round(innerHeight * dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
     if (!points.length) seed();
-    draw();
+    if (reduced) draw();
   }
 
   function updateMeter() {
