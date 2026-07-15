@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T00:30:13Z",
+  "state": "in_progress",
+  "completed_slice": "Established immutable repository report boundaries for M-004, M-005, and M-006 from their unresolved-origin status commits, while explicitly refusing to classify those records as originating assignments.",
+  "evidence": {
+    "manifest": "operations/continuity/manifests/CM-20260715T0030Z-repository-report-boundary.json",
+    "manifest_commit": "d076edc17c53d2990b80e4652cf74f3f5ee961e0",
+    "source_commits": [
+      "0f2436cdee875fccf602127ca4ff1cf3075bd1c26",
+      "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+      "94778c45072bad84a0c63077ac23492a1a756a8c"
+    ]
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-reviewed chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Traverse all accessible branches and reachable commits through each identifier's report boundary, then reconcile earlier candidates against namespace, owner, semantic role, temporal precedence, explicit assignment, and immutable locator agreement. Preserve unresolved status if coverage remains incomplete.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": "none",
+  "history_deleted": false
+}
