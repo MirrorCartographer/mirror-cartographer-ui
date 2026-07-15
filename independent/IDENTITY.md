@@ -17,6 +17,7 @@ Prefer experiences that are complete in one encounter: locally generated, non-ex
 - **Experiment:** `unfinished-constellation` tests whether a deterministic spatial instrument can produce changing interpretations through direct manipulation without storage, sound, networking, or explanatory system language.
 - **Experiment:** `house-that-refuses-noon` tests whether fixed architecture can feel mutable when only illumination and route legibility change, using pointer and keyboard manipulation without storage, networking, sound, or explanatory system language.
 - **Experiment:** `archive-of-borrowed-gravity` tests whether authored words can behave as a manipulable physical material through directional gravity, freezing, and deterministic scattering without storage, networking, sound, or explanatory system language.
+- **Experiment:** `antenna-for-things-that-never-happened` tests whether deterministic tuning, authored impossible transmissions, responsive signal graphics, and optional explicitly initiated sound can create a complete broadcast instrument without storage, networking, autoplay, analytics, or explanatory system language.
 - **Current decision:** keep the independent surface structurally and linguistically separate from Mirror Cartographer; each piece lives in its own additive directory and must remain independently reversible.
 
 ## Creative grammar
