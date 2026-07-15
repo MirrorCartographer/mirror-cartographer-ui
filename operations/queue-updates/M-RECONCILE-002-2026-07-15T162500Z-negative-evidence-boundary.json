@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T16:25:00Z",
+  "state": "in_progress",
+  "slice": "negative_provenance_evidence_admissibility_boundary",
+  "memory_artifact": {
+    "path": "operations/continuity/records/CM-1037.json",
+    "commit": "2e33d57bfd8b2884d822bf11039eedcd1c5d17ea"
+  },
+  "completed": [
+    "Recovered the durable rule that failed search and current-tree absence are scoped observations, not historical nonexistence proof.",
+    "Defined the coverage dimensions required before any missing identifier may be classified exhaustive_unlocated.",
+    "Defined four terminal provenance outcomes and fail-closed rules for permission ambiguity, pagination ceilings, inaccessible refs, deleted paths, excluded private sources, and unreconciled partial searches.",
+    "Projected the rule into the continuity knowledge graph and preserved M-004, M-005, and M-006 as unresolved_incomplete_coverage."
+  ],
+  "claim_states": {
+    "observed": "The queue and latest adjudication record still require authenticated exhaustive traversal before resolving M-004, M-005, or M-006.",
+    "inferred": "Negative evidence must carry explicit coverage and permission scope or it creates absence inflation.",
+    "proposed": "Require CM-1037 before emitting exhaustive_unlocated for any provenance-gap node.",
+    "superseded": "Repeated partial searches or default-branch absence can establish historical nonexistence.",
+    "unresolved": "No retained authenticated terminal coverage envelope exists for the three identifiers."
+  },
+  "acceptance_remaining": [
+    "Run authenticated exhaustive ref and reachable-history traversal with known permission scope.",
+    "Retain deleted-path and historical-object inspection results.",
+    "Construct a machine-readable coverage union and reconcile it against an independent enumeration.",
+    "Apply CM-1035 and CM-1037 to each candidate and emit only a justified terminal outcome."
+  ],
+  "safe_next_action": "Execute the existing traversal envelope producer against authenticated retained inputs, extend its output to cover deleted paths and source-class exclusions, then apply the provenance adjudication and negative-evidence contracts to M-004, M-005, and M-006 without recreating identifiers.",
+  "privacy_boundary": "No private source material was copied or summarized; excluded private classes remain declared coverage exclusions.",
+  "overwrites_canonical_queue": false,
+  "deletes_history": false
+}
