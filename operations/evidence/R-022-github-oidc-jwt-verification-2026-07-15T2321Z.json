@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T23:21:00Z",
+  "finding": "The existing exact-run binding accepted claims labeled externally verified but did not itself verify the JWT signature. A deterministic RS256/JWKS verifier now closes that implementation gap before claims enter the binding contract.",
+  "primary_sources": [
+    {
+      "url": "https://docs.github.com/en/actions/reference/security/oidc",
+      "status": "current_primary_documentation",
+      "observed": "GitHub documents RS256 JOSE headers and claims including repository_id, workflow_ref, workflow_sha, run_id, run_attempt, runner_environment, iat, nbf, exp, and jti."
+    },
+    {
+      "url": "https://token.actions.githubusercontent.com/.well-known/openid-configuration",
+      "status": "live_primary_discovery_document",
+      "observed": "GitHub publishes OIDC discovery metadata and a signing-key endpoint for independent verification."
+    }
+  ],
+  "artifact": "operations/frontier-research/githubOidcJwtVerifier.v1.cjs",
+  "test_artifact": "operations/frontier-research/githubOidcJwtVerifier.v1.test.cjs",
+  "verification": {
+    "command": "node --test operations/frontier-research/githubOidcJwtVerifier.v1.test.cjs",
+    "environment": "local Node runtime using repository-identical file contents",
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "valid RS256 token",
+      "tampered payload",
+      "audience mismatch",
+      "expired token",
+      "unknown signing key",
+      "non-RS256 header"
+    ]
+  },
+  "evidence_strength": "deterministic_unit_verified_implementation_ready_not_yet_executed_in_github_actions",
+  "uncertainty": [
+    "No live GitHub Actions OIDC token was requested in this run.",
+    "JWKS discovery retrieval, caching, rotation, and network failure behavior remain workflow integration responsibilities.",
+    "Signature verification proves token authenticity under the selected key; it does not prove runner integrity, same-process execution, transcript truth, deployment behavior, or physical-device behavior."
+  ],
+  "falsification_route": [
+    "Accept a token whose payload changed after signing.",
+    "Accept a token signed by a key absent from the trusted JWKS.",
+    "Accept a non-RS256 token, wrong issuer, wrong audience, or token outside its validity interval.",
+    "Produce externally_verified claims without a successful cryptographic signature check."
+  ],
+  "specialist_registry_change": "none_no_durable_capability_gap_demonstrated"
+}
