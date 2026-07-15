@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "priority": "highest",
+  "state": "in_progress",
+  "recorded_at": "2026-07-15T23:07:40Z",
+  "objective": "Resolve the provenance and location of reported continuity artifacts M-004, M-005, and M-006 without reconstructing unverified history.",
+  "completed_slice": "Established a Unicode-confusable identifier boundary: normalization and skeleton equivalence may expand candidate discovery, but cannot establish canonical identity or overwrite original source tokens without immutable exact-source or explicit alias evidence.",
+  "evidence": "operations/continuity/records/M-RECONCILE-002-unicode-confusable-identifier-boundary-2026-07-15T2307Z.json",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Perform exact-token and explicitly retained Unicode-variant searches across all accessible immutable sources.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Enumerate Unicode dash, letter, and digit variants for each canonical identifier without mutating the originals; search them across exhaustive refs and reachable history; retain code points and immutable locators; promote only exact assignments or explicit alias records.",
+  "claim_boundary": "This slice defines candidate-discovery and identity rules. It does not claim that any Unicode variant exists, that repository history has been exhausted, or that M-004, M-005, or M-006 has been located.",
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
