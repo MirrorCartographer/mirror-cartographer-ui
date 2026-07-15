@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-stage-receipt-temporal-binding-2026-07-15T1617Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T16:17:00Z",
+  "finding": "The programmed-stage receipt verifier previously accepted receipts with missing, non-canonical, or hour-inconsistent generated_at values, leaving the selected hourly edition insufficiently bound to its claimed observation instant.",
+  "implemented_boundary": {
+    "canonical_iso_instant_required": true,
+    "generated_at_utc_hour_must_equal_receipt_utc_hour": true,
+    "repertory_contract_id_required": true,
+    "expected_generated_at_supported": true,
+    "expected_repertory_contract_id_supported": true,
+    "activation_claims_remain_prohibited": true
+  },
+  "production_currently_programmed": {
+    "utc_hour": 16,
+    "production_id": "body-constellation",
+    "edition_id": "body-constellation-16",
+    "edition_cue": "pelvic-arc",
+    "runtime_activation_claimed": false
+  },
+  "verification": {
+    "method": "deterministic Node test contract committed",
+    "cases_added": [
+      "missing generated_at is rejected",
+      "non-canonical ISO instant is rejected",
+      "generated_at hour drift is rejected",
+      "repertory contract mismatch is rejected",
+      "expected instant mismatch is rejected"
+    ],
+    "runtime_execution_observed": false,
+    "reason": "The GitHub connector can commit source and inspect repository state but did not provide a Node execution environment in this run."
+  },
+  "claim_limits": [
+    "No Vercel deployment was initiated.",
+    "No browser execution was observed.",
+    "No audio playback or physical-device behavior is claimed.",
+    "The programmed production identity is not proof of runtime activation."
+  ],
+  "rollback": [
+    "Revert the queue-update commit.",
+    "Revert this evidence commit.",
+    "Revert the test commit.",
+    "Revert the verifier commit."
+  ]
+}
