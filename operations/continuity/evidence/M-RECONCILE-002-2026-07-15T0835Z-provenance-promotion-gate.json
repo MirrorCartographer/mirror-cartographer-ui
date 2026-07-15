@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:35:00Z",
+  "artifact_type": "provenance_promotion_gate",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "target_identifiers": ["M-004", "M-005", "M-006"],
+    "purpose": "Prevent later reconciliation records, suffix collisions, bounded search silence, or reconstructed prose from being promoted into originating continuity authority."
+  },
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0830Z-repository-coverage-capability-boundary.json",
+    "recent commits through 896b7061041971f27ede2a4722b011d877e7b59d"
+  ],
+  "memory_recovered": "Continuity identifiers are not resolved by string equality alone. Resolution requires a conjunction of namespace, ownership, semantic role, temporal precedence, immutable locator, and coverage adequacy. Any failed or unknown dimension preserves unresolved status.",
+  "claim_classes": {
+    "observed": [
+      "The canonical queue requires immutable provenance or an unlocated classification after exhaustive coverage.",
+      "Current repository evidence is bounded and does not establish exhaustive refs or reachable-history coverage.",
+      "Later reconciliation commits establish later identifier usage, not originating assignment authority."
+    ],
+    "inferred": [
+      "A single promotion rule is needed so future teams do not resolve provenance gaps using inconsistent evidence thresholds."
+    ],
+    "proposed": [
+      "Apply this gate before changing any M-004, M-005, or M-006 node from unresolved or quarantined to located or authoritative."
+    ],
+    "superseded": [
+      "Exact text match alone is sufficient provenance.",
+      "Later descriptive prose can recreate an earlier assignment.",
+      "Search silence under incomplete coverage justifies an unlocated classification."
+    ],
+    "unresolved": [
+      "Complete accessible ref inventory.",
+      "Reachable pre-boundary history and tree traversal.",
+      "Originating immutable objects for M-004, M-005, and M-006."
+    ]
+  },
+  "promotion_gate": {
+    "required_dimensions": {
+      "namespace_agreement": "Candidate belongs to the continuity_mining M namespace rather than an unrelated numeric suffix namespace.",
+      "owner_agreement": "Candidate source explicitly or structurally assigns authority to continuity_mining or its predecessor continuity function.",
+      "semantic_role_agreement": "Candidate is an originating assignment, decision, registry, queue, lexicon, or project record, not a later mention or reconstruction.",
+      "temporal_precedence": "Candidate predates the first known reconciliation or provenance-gap record and is consistent with the claimed assignment chronology.",
+      "immutable_locator": "Candidate is addressable by commit SHA plus path, blob SHA, retained source digest, or privacy-reviewed chat locator with stable retrieval metadata.",
+      "coverage_adequacy": "The search surface used to exclude competing earlier objects is exhaustive or its remaining incompleteness is explicitly non-material to the claim."
+    },
+    "decision_rule": "promote only when every required dimension is true; reject when any dimension is false; retain unresolved when any dimension is unknown",
+    "allowed_outcomes": [
+      "authoritative_origin_located",
+      "candidate_rejected",
+      "unresolved_coverage_incomplete",
+      "unlocated_after_exhaustive_coverage"
+    ],
+    "forbidden_outcomes": [
+      "authoritative_by_string_match",
+      "authoritative_by_later_reconstruction",
+      "unlocated_from_zero_result_without_completeness_proof"
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "apparent_conflict": "A later commit may contain the exact identifier and a plausible description.",
+      "resolution": "Identifier and semantic similarity are necessary lead evidence but fail temporal-precedence and originating-role requirements unless an earlier immutable assignment is retained."
+    },
+    {
+      "apparent_conflict": "A bounded search may return no earlier object.",
+      "resolution": "No-result evidence can reject a candidate only within the searched surface; it cannot support repository-wide absence or unlocated status until coverage is exhaustive."
+    }
+  ],
+  "privacy_boundary": {
+    "included": ["repository paths", "commit SHAs", "abstract source classes", "claim-state transitions", "coverage metadata"],
+    "excluded": ["private chat text", "personal records", "credentials", "raw File Library contents"],
+    "publication_rule": "Store only the minimum locator and classification metadata needed to audit promotion decisions."
+  },
+  "verification": {
+    "method": "manual schema and rule consistency review against the canonical queue and prior capability-boundary artifact",
+    "result": "passed",
+    "promotion_performed": false,
+    "reason": "No candidate currently satisfies all required dimensions."
+  },
+  "falsification_route": "Present an immutable pre-reconciliation source object and demonstrate all six required dimensions; or complete exhaustive ref and reachable-history coverage and show no qualifying object exists.",
+  "rollback": "Revert this additive commit; no canonical queue, registry, trigger ledger, or prior evidence object was modified."
+}
