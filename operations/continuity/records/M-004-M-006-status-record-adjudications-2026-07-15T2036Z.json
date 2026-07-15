@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T20:36:00Z",
+  "purpose": "Preserve the immutable repository status records for M-004, M-005, and M-006 as downstream-reference evidence without promoting them to assigning sources.",
+  "source_status": "repository_objects_verified",
+  "records": [
+    {
+      "record_id": "PCA-M-004-origin-status-commit",
+      "queue_item": "M-RECONCILE-002",
+      "subject_identifier": "M-004",
+      "candidate": {
+        "source_class": "repository_commit_and_created_status_record",
+        "locator": "operations/continuity/records/M-004-origin-status.json",
+        "immutable_identity": "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a",
+        "observed_role": "downstream_reference",
+        "coverage_status": "covered"
+      },
+      "agreement_tests": {
+        "namespace": {"status": "pass", "evidence": ["The record is in the continuity namespace and explicitly names M-004."]},
+        "authority": {"status": "fail", "evidence": ["The record declares source_status=unlocated and contains no accepted origin candidate."]},
+        "semantic_role": {"status": "fail", "evidence": ["Its role is to materialize unresolved status, not assign the identifier."]},
+        "temporal_precedence": {"status": "unknown", "evidence": ["No exhaustive all-branch history traversal establishes that this is the earliest project-wide mention."]},
+        "immutable_locator": {"status": "pass", "evidence": ["Commit 0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a immutably creates the status record."]}
+      },
+      "classification": "downstream_reference_only",
+      "claim_states": {
+        "observed": ["An immutable repository object records M-004 as unresolved and unlocated."],
+        "inferred": ["The status record was created after the identifier was already being discussed or reported."],
+        "proposed": [],
+        "superseded": [],
+        "unresolved": ["The assigning source and first authoritative use of M-004 remain unlocated."]
+      },
+      "privacy": {"contains_private_source_material": false},
+      "falsification_route": "Locate an earlier immutable object that explicitly assigns M-004 and passes namespace, authority, semantic-role, temporal-precedence, and immutable-locator agreement."
+    },
+    {
+      "record_id": "PCA-M-005-origin-status-commit",
+      "queue_item": "M-RECONCILE-002",
+      "subject_identifier": "M-005",
+      "candidate": {
+        "source_class": "repository_commit_and_created_status_record",
+        "locator": "operations/continuity/records/M-005-origin-status.json",
+        "immutable_identity": "4c9814eacf20dd62949b97045ef2cf6cf68ab9e9",
+        "observed_role": "downstream_reference",
+        "coverage_status": "covered"
+      },
+      "agreement_tests": {
+        "namespace": {"status": "pass", "evidence": ["The record is in the continuity namespace and explicitly names M-005."]},
+        "authority": {"status": "fail", "evidence": ["The record declares source_status=unlocated and candidate_sources is empty."]},
+        "semantic_role": {"status": "fail", "evidence": ["Its role is to materialize unresolved status, not assign the identifier."]},
+        "temporal_precedence": {"status": "unknown", "evidence": ["No exhaustive all-branch history traversal establishes that this is the earliest project-wide mention."]},
+        "immutable_locator": {"status": "pass", "evidence": ["Commit 4c9814eacf20dd62949b97045ef2cf6cf68ab9e9 immutably creates the status record."]}
+      },
+      "classification": "downstream_reference_only",
+      "claim_states": {
+        "observed": ["An immutable repository object records M-005 as unresolved and unlocated."],
+        "inferred": ["The status record was created after the identifier was already being discussed or reported."],
+        "proposed": [],
+        "superseded": [],
+        "unresolved": ["The assigning source and first authoritative use of M-005 remain unlocated."]
+      },
+      "privacy": {"contains_private_source_material": false},
+      "falsification_route": "Locate an earlier immutable object that explicitly assigns M-005 and passes namespace, authority, semantic-role, temporal-precedence, and immutable-locator agreement."
+    },
+    {
+      "record_id": "PCA-M-006-origin-status-commit",
+      "queue_item": "M-RECONCILE-002",
+      "subject_identifier": "M-006",
+      "candidate": {
+        "source_class": "repository_commit_and_created_status_record",
+        "locator": "operations/continuity/records/M-006-origin-status.json",
+        "immutable_identity": "94778c45072bad84a0c63077ac23492a1a756a8c",
+        "observed_role": "downstream_reference",
+        "coverage_status": "covered"
+      },
+      "agreement_tests": {
+        "namespace": {"status": "pass", "evidence": ["The record is in the continuity namespace and explicitly names M-006."]},
+        "authority": {"status": "fail", "evidence": ["The record declares source_status=unlocated and candidate_sources is empty."]},
+        "semantic_role": {"status": "fail", "evidence": ["Its role is to materialize unresolved status, not assign the identifier."]},
+        "temporal_precedence": {"status": "unknown", "evidence": ["No exhaustive all-branch history traversal establishes that this is the earliest project-wide mention."]},
+        "immutable_locator": {"status": "pass", "evidence": ["Commit 94778c45072bad84a0c63077ac23492a1a756a8c immutably creates the status record."]}
+      },
+      "classification": "downstream_reference_only",
+      "claim_states": {
+        "observed": ["An immutable repository object records M-006 as unresolved and unlocated."],
+        "inferred": ["The status record was created after the identifier was already being discussed or reported."],
+        "proposed": [],
+        "superseded": [],
+        "unresolved": ["The assigning source and first authoritative use of M-006 remain unlocated."]
+      },
+      "privacy": {"contains_private_source_material": false},
+      "falsification_route": "Locate an earlier immutable object that explicitly assigns M-006 and passes namespace, authority, semantic-role, temporal-precedence, and immutable-locator agreement."
+    }
+  ],
+  "coverage_boundary": "The three cited repository objects were directly inspected. Repository-wide branch and reachable-history coverage remains incomplete, so absence outside these objects is not claimed.",
+  "privacy": {"contains_private_source_material": false}
+}
