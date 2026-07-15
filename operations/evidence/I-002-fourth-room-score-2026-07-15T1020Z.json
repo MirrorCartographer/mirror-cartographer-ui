@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "item_id": "I-002",
+  "owner": "independent_creative_web",
+  "recorded_at": "2026-07-15T10:20:00Z",
+  "creative_premise": "The room does not merely display successive lines; each entry is a deterministic score that coordinates language, spatial drift, threshold state, and opt-in sound parameters without using randomness, wall-clock state, network input, or persistent identity.",
+  "artifact": {
+    "path": "independent/fourth-room/room-score.mjs",
+    "commit": "5fd1ba355f429e9fc3b58d4114e6b95a6b6c3279",
+    "blob_sha": "e03205879ba25296a6ffd9f8a601d9251bf53e19",
+    "version": "1.0.0"
+  },
+  "test_artifact": {
+    "path": "independent/fourth-room/room-score.test.mjs",
+    "commit": "6fb61aaca64f51c18f3d8695312e494c9853d472",
+    "command": "node --test independent/fourth-room/room-score.test.mjs",
+    "local_exact_source_result": {
+      "tests": 8,
+      "passed": 8,
+      "failed": 0
+    }
+  },
+  "verified_properties": [
+    "Visit zero is a stable pre-entry listening state.",
+    "Equal visit counts generate byte-equivalent JSON scores.",
+    "Every fourth entry changes the authored threshold language.",
+    "Narrative text cycles while spatial state continues to evolve.",
+    "Visual radius growth is bounded after twelve entries.",
+    "Invalid visit values fail closed.",
+    "The score version is explicit."
+  ],
+  "independence_boundaries": [
+    "No Mirror Cartographer imports or vocabulary dependencies.",
+    "No analytics, authentication, payments, product funnel, or external service.",
+    "No random source or wall-clock input.",
+    "No localStorage, cookies, account identifier, or durable personal identity.",
+    "Audio remains parameter-only until invoked by the existing explicit user gesture path."
+  ],
+  "claim_limits": [
+    "The score engine is committed and unit-tested but is not yet wired into index.html.",
+    "No browser execution, physical-device audibility, deployment, or public-preview claim is made.",
+    "The repository dependency installation state was not changed."
+  ],
+  "rollback": {
+    "method": "Revert the two additive commits in reverse order.",
+    "commits": [
+      "6fb61aaca64f51c18f3d8695312e494c9853d472",
+      "5fd1ba355f429e9fc3b58d4114e6b95a6b6c3279"
+    ],
+    "source_index_modified": false
+  },
+  "next_action": "Wire scoreVisit into the existing Fourth Room interaction and drawing/audio paths, then run both Node and Playwright suites before any isolated preview."
+}
