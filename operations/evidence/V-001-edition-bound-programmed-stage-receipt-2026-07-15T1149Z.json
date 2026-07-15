@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-edition-bound-programmed-stage-receipt-2026-07-15T1149Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T11:49:00Z",
+  "finding": "A programmed-stage receipt bound only to a base production can falsely collapse distinct hourly editions that reuse the same production grammar.",
+  "implemented_contract": {
+    "source_commit_required": true,
+    "repertory_digest_required": true,
+    "utc_hour_required": true,
+    "production_id_required": true,
+    "edition_id_required": true,
+    "edition_cue_required": true,
+    "edition_hour_must_equal_receipt_hour": true,
+    "runtime_activation_claimed": false,
+    "deployment_claimed": false,
+    "browser_execution_claimed": false,
+    "audio_playback_claimed": false,
+    "physical_device_verification_claimed": false,
+    "side_effects_performed": false
+  },
+  "files": [
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.test.cjs"
+  ],
+  "commits": [
+    "66ab7824b801c5daed6e1c347cdfa163ce272660",
+    "77b7c5efbbac1e4e1a7de38c1b1be990f0f3624a"
+  ],
+  "verification": {
+    "method": "post-write authenticated refetch and static contract inspection",
+    "result": "implemented_and_refetched",
+    "test_execution": "not_performed_in_connector_runtime",
+    "claim_boundary": "No runtime, browser, deployment, audio, or physical-device behavior is claimed."
+  },
+  "rollback": {
+    "method": "revert commits in reverse order",
+    "commits": [
+      "77b7c5efbbac1e4e1a7de38c1b1be990f0f3624a",
+      "66ab7824b801c5daed6e1c347cdfa163ce272660"
+    ]
+  },
+  "privacy": "Public-safe identifiers and abstract production metadata only; no private source material included."
+}
