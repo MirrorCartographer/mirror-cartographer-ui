@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T08:57:30Z",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Recovered and retained the durable rule that indexed search silence, retrieval order, and downstream identifier occurrence are provenance leads rather than origin evidence; defined a fail-closed coverage envelope and promotion requirements for M-004 through M-006.",
+  "evidence_path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T085730Z-search-coverage-memory.json",
+  "canonical_queue_overwritten": false,
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch and ref inventory.",
+    "Traverse all reachable commits and historical paths for exact assignment objects.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or retain unlocated status after demonstrably exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or privacy-safe chat-history locator that assigned each identifier."
+  ],
+  "safe_next_action": "Run authenticated exhaustive ref and commit traversal, retain the coverage envelope, and promote an origin only when exact assignment, namespace, owner, semantic role, temporal precedence, immutable locator, and conflict checks all agree.",
+  "specialist_registry_change": null,
+  "rollback": {
+    "method": "revert_commit",
+    "files_are_additive": true
+  }
+}
