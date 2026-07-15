@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T11:45:26Z",
+  "slice": "repository_coverage_capability_boundary",
+  "state_after": "in_progress",
+  "completed_slice": "Separated authenticated search visibility from exhaustive repository-graph traversal and retained a modality-by-modality coverage matrix. Zero-result branch or indexed searches now remain bounded observations rather than absence evidence.",
+  "evidence": {
+    "path": "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T1145Z-coverage-capability-boundary.json",
+    "commit": "27827b04fe8f5cb6e171a8f19b36ed8c37d300da"
+  },
+  "acceptance_remaining": [
+    "Obtain and retain a complete accessible ref inventory with pagination and permission-blind-spot status.",
+    "Traverse every reachable commit with parent-edge closure and retain the visited-set proof.",
+    "Inspect historical and deleted paths preceding the M-004, M-005, and M-006 temporal upper bounds.",
+    "Locate immutable origins or emit schema-valid unlocated outcomes only after exhaustive coverage."
+  ],
+  "safe_next_action": "Implement or execute an authenticated ref-and-reachable-history traversal that emits a digest-bound coverage envelope; do not classify any identifier as verified or unlocated while ref, commit, path, deletion, pagination, or permission coverage remains incomplete.",
+  "claims": {
+    "observed": "Current authenticated search modalities did not supply exhaustive graph coverage.",
+    "inferred": "Search completeness cannot be inferred from authentication or multiple bounded modalities.",
+    "proposed": "Require a retained closure-proof traversal envelope for terminal provenance outcomes.",
+    "superseded": "Zero search results imply no branch or historical assignment exists.",
+    "unresolved": "Complete refs, reachable commits, deleted paths, and originating assignments."
+  },
+  "privacy": "public-safe repository metadata and abstract provenance rules only",
+  "execution_claimed": false,
+  "reversible": true
+}
