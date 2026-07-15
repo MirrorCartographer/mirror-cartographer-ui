@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T08:20:00Z",
+  "update_type": "completed_reversible_slice",
+  "completed_slice": "Final production acceptance now derives audibility from retained raw physical iPhone Safari evidence using the frontier validator, rather than accepting a precomputed summary object.",
+  "state_after": "in_progress_blocked",
+  "acceptance_remaining": [
+    "Execute authenticated all-event pagination for an exact commit with both exhaustive clients and retain reconciliation.",
+    "Observe an operations-only sentinel reported as skipped or ignored after Vercel build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform and retain bounded physical iPhone Safari audibility verification, then feed the raw observation into the new gate."
+  ],
+  "safe_next_action": "Run the canonical repertory suite plus assessProductionAcceptanceFromRawEvidence.v1.test.cjs in an authenticated checkout. Do not activate a production or claim audibility until immutable deployment identity and retained raw physical-device evidence pass the fail-closed gate.",
+  "files": [
+    "operations/vercel-studio/repertory/assessProductionAcceptanceFromRawEvidence.v1.cjs",
+    "operations/vercel-studio/repertory/assessProductionAcceptanceFromRawEvidence.v1.test.cjs",
+    "operations/evidence/V-001-raw-audibility-production-gate-2026-07-15T0820Z.json"
+  ],
+  "canonical_queue_overwritten": false
+}
