@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:30:00Z",
+  "artifact_type": "repository_coverage_capability_boundary",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "target_identifiers": ["M-004", "M-005", "M-006"],
+    "goal": "Distinguish searched surfaces from exhaustively traversed repository history."
+  },
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "operations/continuity/evidence/M-RECONCILE-002-2026-07-15T0815Z-triad-identifier-coverage.json",
+    "recent repository commits through f45b19fe3e6bfb1953c5ef84da4d0d16a513c53f",
+    "GitHub repository metadata",
+    "GitHub indexed exact-identifier and commit-message search surfaces",
+    "GitHub branch-search connector surface"
+  ],
+  "memory_recovered": "The current evidence set proves only bounded indexed-search coverage. The repository metadata reports code search as unindexed, and an empty branch-search request returned no inventory. Therefore neither connector result may be promoted to exhaustive refs or reachable-history coverage. The durable rule is that a zero-result discovery surface is evidence about that surface's capability and response, not evidence that no branches, commits, or originating assignment objects exist.",
+  "claims": {
+    "observed": [
+      "The canonical queue still requires exhaustive branch inventory or equivalent repository-history traversal before M-004, M-005, or M-006 can be classified as unlocated.",
+      "The accessible repository metadata identified main as the default branch and reported the repository code-search index as unavailable.",
+      "Recent commit enumeration returned continuity, frontier, Vercel, and independent-team records, including the prior triad identifier coverage artifact.",
+      "The branch-search connector returned an empty result for an empty discovery query and supplied no branch inventory, pagination record, or completeness assertion.",
+      "The prior triad evidence explicitly labels its coverage indexed_connector_bounded and exhaustive=false."
+    ],
+    "inferred": [
+      "The empty branch-search response is a connector-discovery limitation or unsupported query outcome; it cannot establish that main is the only accessible ref.",
+      "Exact commit-message search remains useful for locating known strings but cannot establish tree-content absence or unreachable-ref absence."
+    ],
+    "proposed": [
+      "Use an authenticated refs endpoint or local git fetch that records every returned ref name and tip SHA.",
+      "Traverse reachable commits from every retained tip and preserve command, pagination, timestamp, count, and digest evidence.",
+      "Search pre-boundary trees for explicit assignment language only after refs and reachability coverage are retained."
+    ],
+    "superseded": [
+      "An empty branch-search result is an exhaustive branch inventory.",
+      "Repository default_branch metadata proves no other refs exist.",
+      "Indexed exact-string silence proves the originating object is absent from repository history."
+    ],
+    "unresolved": [
+      "Complete accessible ref inventory.",
+      "Reachable pre-boundary commit and tree coverage from every accessible ref.",
+      "Immutable originating assignments for M-004, M-005, and M-006.",
+      "Originating decision log, language lexicon, project document, or privacy-reviewed chat locator."
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "apparent_conflict": "The repository metadata exposes main while branch search returns no results.",
+      "resolution": "These surfaces answer different questions. Default-branch metadata establishes one known ref; the empty branch-search response supplies no completeness claim and cannot negate additional refs."
+    },
+    {
+      "apparent_conflict": "Exact identifier searches found reconciliation commits, yet the assignments remain unresolved.",
+      "resolution": "Later reconciliation records prove identifier usage after the provenance gap was recognized; they do not provide temporal precedence or originating assignment authority."
+    }
+  ],
+  "coverage_matrix": {
+    "repository_metadata": {
+      "status": "observed",
+      "coverage": "one known default branch plus repository properties",
+      "exhaustive": false
+    },
+    "recent_commit_enumeration": {
+      "status": "observed",
+      "coverage": "bounded latest commits",
+      "exhaustive": false
+    },
+    "exact_commit_message_search": {
+      "status": "observed",
+      "coverage": "indexed matching commit messages",
+      "exhaustive": false
+    },
+    "code_search": {
+      "status": "unavailable_unindexed",
+      "coverage": "none established",
+      "exhaustive": false
+    },
+    "branch_search": {
+      "status": "zero_result_without_completeness_proof",
+      "coverage": "none established",
+      "exhaustive": false
+    },
+    "all_refs_and_reachable_history": {
+      "status": "unresolved",
+      "coverage": "not yet retained",
+      "exhaustive": false
+    }
+  },
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "repository metadata",
+      "commit SHAs and messages",
+      "abstract provenance classifications",
+      "connector capability outcomes"
+    ],
+    "excluded": [
+      "private chat text",
+      "personal records",
+      "credentials",
+      "raw File Library contents"
+    ],
+    "publication_rule": "Retain only source-class, locator, coverage, and claim-status metadata needed to audit provenance."
+  },
+  "verification": {
+    "result": "passed_as_capability_boundary",
+    "promotion_allowed": false,
+    "reason": "No exhaustive ref or reachable-history evidence was produced."
+  },
+  "falsification_route": "Produce a retained authenticated ref inventory and reachable-history traversal whose completeness can be independently checked; then locate an earlier immutable assignment object satisfying namespace, owner, semantic role, temporal precedence, and immutable locator agreement.",
+  "rollback": "Revert the additive commit that creates this evidence file; no existing history or canonical queue object was modified."
+}
