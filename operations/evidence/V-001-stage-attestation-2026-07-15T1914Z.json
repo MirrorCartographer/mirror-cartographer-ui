@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-stage-attestation-2026-07-15T1914Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "finding": "A programmed-stage projection needs a deterministic digest over the exact projection, repertory slot, production metadata, public stage card, and activation boundaries before it can be used as retained programming evidence.",
+  "implementation": {
+    "module": "operations/vercel-studio/repertory/attestProgrammedStage.v1.cjs",
+    "test": "operations/vercel-studio/repertory/attestProgrammedStage.v1.test.cjs",
+    "runtime_activation": false,
+    "deployment_created": false
+  },
+  "verification": {
+    "commands": [
+      "node --check attestProgrammedStage.v1.cjs",
+      "node --test attestProgrammedStage.v1.test.cjs"
+    ],
+    "result": {
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "coverage": [
+      "deterministic canonical SHA-256",
+      "public-card drift rejection",
+      "repertory-slot drift rejection",
+      "activation-claim rejection",
+      "metadata-boundary rejection",
+      "production-metadata digest sensitivity"
+    ]
+  },
+  "claim_boundary": "This proves deterministic local attestation behavior for the committed module and fixtures. It does not prove runtime integration, deployment, browser rendering, audio routing, or physical-device behavior.",
+  "privacy_boundary": "No private source material, worker controls, credentials, or user data are present.",
+  "rollback_route": "Do not consume the attestation module; canonical repertory and public stage cards remain unchanged.",
+  "specialist_registry_change": "none"
+}
