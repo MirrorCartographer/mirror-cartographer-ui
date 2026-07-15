@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T23:24:00Z",
+  "state": "in_progress",
+  "completed_slice": "Recorded a source-class-aware negative-evidence boundary: current repository indexing and File Library semantic retrieval did not locate immutable assignments for M-004, M-005, or M-006; V8/V9 numeric-suffix matches were rejected as namespace collisions rather than promoted as aliases.",
+  "artifact": "operations/continuity/records/M-RECONCILE-002-source-class-negative-evidence-2026-07-15T2324Z.json",
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Perform authenticated all-ref and reachable-history traversal for exact and retained confusable candidates. Preserve original bytes, commit and blob locators, namespace, semantic role, owner, and temporal precedence. Keep each identifier unresolved unless an immutable exact assignment or explicit alias decision is found.",
+  "canonical_queue_overwritten": false,
+  "registry_change": "none",
+  "deletion_performed": false
+}
