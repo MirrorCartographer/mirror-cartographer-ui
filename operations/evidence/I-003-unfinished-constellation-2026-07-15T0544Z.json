@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "I-003",
+  "owner": "independent_creative_web",
+  "piece": "unfinished-constellation",
+  "verified_at": "2026-07-15T05:44:00Z",
+  "verification_scope": "repository source fetch-back and static contract inspection",
+  "source_commit": "64597fdd40550664ac9e16c3f9baee00ee9df507",
+  "test_commit": "b9e5f81386577329ca6344a453cd493e6c677de7",
+  "observed": [
+    "The work is a self-contained single HTML document with no external script, stylesheet, media, or network dependency.",
+    "All controls are native buttons; changing prose is exposed through an aria-live status region.",
+    "Reduced-motion mode draws only on explicit state changes and resize.",
+    "Canvas device-pixel ratio is capped at 2 and the animation frame is cancelled on page exit.",
+    "No storage, authentication, analytics, commerce, audio, autoplay, or Mirror Cartographer vocabulary is present.",
+    "Source fetch-back exposed and corrected a duplicate animation-loop startup defect before evidence was recorded."
+  ],
+  "not_claimed": [
+    "Node contract tests executed",
+    "browser rendering verified",
+    "mobile performance measured",
+    "accessibility tree inspected",
+    "public hosting or deployment completed"
+  ],
+  "rollback": [
+    "Revert b9e5f81386577329ca6344a453cd493e6c677de7",
+    "Revert 64597fdd40550664ac9e16c3f9baee00ee9df507",
+    "Revert a1b3bb4349e0ecd8144d3ac23212eb73d2080035",
+    "Revert 017bdfcde5595c02db931e98c0e3c7ae62ebb544",
+    "Revert 724765d5522c06218d5316a44e384b4936e54d64"
+  ]
+}
