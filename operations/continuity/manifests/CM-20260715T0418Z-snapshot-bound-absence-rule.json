@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T04:18:00Z",
+  "memory_id": "snapshot_bound_absence_rule",
+  "memory": "A repository-wide absence or unlocated claim is valid only for the immutable repository snapshot, accessible-ref inventory, and traversal method named by its evidence. Later repository mutations do not falsify the earlier bounded result, but they do prevent that result from being silently promoted to present-tense repository truth.",
+  "provenance": {
+    "canonical_queue_blob": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+    "current_state_blob": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "specialist_registry_blob": "0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "trigger_requests_blob": "350d30cb09a3e6d0fb76c3bcd5793465b14dc1d2",
+    "prior_coverage_lattice_commit": "da490d4b3043e3d3102bd382ce4db3a5bcf8f2d8",
+    "prior_noncoercive_rule_commit": "481a73b83daa5e9c77f0dbb15057a9c1e807608a",
+    "observed_repository_head_before_write": "318211af84376f0af9b6365b1e1c177c89211950"
+  },
+  "claim_states": {
+    "observed": [
+      "M-RECONCILE-002 requires exhaustive branch inventory or equivalent repository-history traversal before M-004, M-005, or M-006 may be classified unlocated.",
+      "The repository continued to receive commits after earlier continuity searches and coverage artifacts were recorded.",
+      "Prior continuity rules already distinguish incomplete search coverage from repository-exhaustive coverage and preserve unresolved as a valid state."
+    ],
+    "inferred": [
+      "An exhaustive result without an immutable snapshot locator is not reproducible and cannot safely support a durable absence claim.",
+      "A snapshot-valid absence result can remain historically true while becoming stale for present-tense repository state."
+    ],
+    "proposed": [
+      "Every repository-exhaustive continuity result should retain the searched head or object set, ref inventory digest, traversal-tool identity and version, start and completion timestamps, inaccessible refs, and output digest.",
+      "Present-tense absence claims should fail closed when the repository head or accessible-ref set differs from the retained search snapshot unless a fresh exhaustive traversal is completed."
+    ],
+    "superseded": [
+      "Once exhaustive, an absence result remains universally current without regard to later repository mutations.",
+      "A search timestamp alone is an adequate substitute for immutable repository snapshot identity."
+    ],
+    "unresolved": [
+      "No exhaustive immutable ref-and-reachable-commit manifest has yet been retained for M-004, M-005, and M-006.",
+      "The originating assignments for M-004, M-005, and M-006 remain unlocated."
+    ]
+  },
+  "required_evidence_for_snapshot_bound_absence": [
+    "repository_full_name",
+    "immutable_repository_head_or_complete_object_set",
+    "accessible_ref_inventory_and_digest",
+    "reachable_commit_inventory_and_digest",
+    "traversal_method_and_tool_version",
+    "coverage_start_and_completion_times",
+    "inaccessible_or_failed_objects",
+    "candidate_query_or_matching_rules",
+    "canonical_output_digest"
+  ],
+  "state_transition_rule": {
+    "from": "unresolved",
+    "to": "unlocated_after_exhaustive_coverage",
+    "allowed_only_when": "All required evidence is retained and validates against one immutable repository snapshot.",
+    "present_tense_reuse": "Requires proof that the relevant repository head and accessible-ref inventory have not changed, otherwise a fresh traversal is required.",
+    "fail_closed": true
+  },
+  "privacy_boundary": {
+    "retained": [
+      "repository metadata",
+      "abstract continuity rules",
+      "M-series identifiers",
+      "immutable object identifiers"
+    ],
+    "excluded": [
+      "private chat wording",
+      "personal context",
+      "credentials",
+      "raw File Library material",
+      "speaker attribution"
+    ]
+  },
+  "falsification_route": [
+    "Produce an earlier retained rule that already binds exhaustive absence claims to immutable snapshots with equivalent present-tense staleness handling.",
+    "Demonstrate that repository-exhaustive traversal can be reproduced without any immutable object or ref-set identity.",
+    "Show that a later commit cannot introduce, restore, rename, or expose an artifact relevant to a prior absence claim."
+  ],
+  "specialist_registry_change": "none",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false,
+  "next_action": "Build an authenticated accessible-ref and reachable-commit manifest anchored to one immutable repository snapshot, then adjudicate M-004, M-005, and M-006 only within that declared snapshot and retain a freshness check for any later present-tense reuse."
+}
