@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T01:57:00Z",
+  "slice": "integrated_api_version_policy_and_pagination_gate",
+  "sources": [
+    {
+      "status": "primary_source_current",
+      "locator": "https://docs.github.com/en/rest/about-the-rest-api/api-versions",
+      "observed_at": "2026-07-15T01:00:00Z",
+      "supports": "supported GitHub REST API versions and legacy support window"
+    },
+    {
+      "status": "repository_artifact",
+      "locator": "operations/frontier-research/github-actions/verifyGithubApiVersionPolicy.v1.cjs",
+      "supports": "fail-closed supported-version policy"
+    },
+    {
+      "status": "repository_artifact",
+      "locator": "operations/frontier-research/github-actions/verifyPaginationProvenance.v1.cjs",
+      "supports": "retained exact-commit pagination provenance validation"
+    }
+  ],
+  "finding": {
+    "status": "observed_and_tested",
+    "summary": "The pagination-provenance validator only required a date-shaped API version, so unsupported or retired versions could pass that layer. A single promotion boundary must verify current API-version policy before pagination provenance can be considered.",
+    "evidence_strength": "high_for_composed_local_contract; authenticated_private_repository_execution_outstanding",
+    "uncertainty": "The committed allowlist remains a time-bounded policy snapshot and must be refreshed from the primary source."
+  },
+  "artifact": {
+    "implementation": "operations/frontier-research/github-actions/verifyWorkflowEnumerationEvidence.v1.cjs",
+    "tests": "operations/frontier-research/github-actions/verifyWorkflowEnumerationEvidence.v1.test.cjs",
+    "classification_on_success": "workflow_enumeration_evidence_verified",
+    "ordering": [
+      "verify GitHub API-version policy",
+      "fail closed without invoking pagination promotion when policy fails",
+      "verify retained pagination provenance",
+      "promote only when both independent contracts verify"
+    ]
+  },
+  "verification": {
+    "command": "node --test verifyWorkflowEnumerationEvidence.v1.test.cjs",
+    "result": "5 passed, 0 failed",
+    "coverage": [
+      "valid supported version plus valid pagination accepted",
+      "invented date-shaped version rejected before pagination promotion",
+      "stale policy observation rejected before pagination promotion",
+      "valid policy with incomplete pagination rejected",
+      "legacy version rejected after documented support window"
+    ],
+    "not_claimed": [
+      "authenticated private-repository enumeration",
+      "transport-header capture",
+      "repository token identity",
+      "deployment verification",
+      "peer execution"
+    ]
+  },
+  "design_implication": "R-021 evidence ingestion should call the integrated gate instead of calling pagination provenance directly. Retained evidence must include the exact request API version, approved policy source, and policy observation time.",
+  "falsification_route": [
+    "Show that an unsupported date-shaped API version reaches workflow_enumeration_evidence_verified.",
+    "Show that stale policy evidence reaches pagination verification.",
+    "Show that pagination_provenance_verified can bypass the integrated gate in the R-021 ingestion path.",
+    "Compare the committed version allowlist against GitHub's current primary-source version table."
+  ],
+  "specialist_registry_change": null,
+  "canonical_queue_overwritten": false,
+  "next_action": "Wire verifyWorkflowEnumerationEvidence.v1.cjs into the retained-evidence CLI and reconciliation input path, then execute both authenticated enumerators for one exact commit while retaining the request header and policy evidence."
+}
