@@ -30,10 +30,12 @@ test('provides accessible controls and equivalent status', () => {
   assert.match(source, /matchMedia\('\(prefers-reduced-motion: reduce\)'\)/);
 });
 
-test('bounds rendering cost and stops animation on page exit', () => {
+test('bounds rendering cost and keeps one animation loop', () => {
   assert.match(source, /Math\.min\(devicePixelRatio \|\| 1, 2\)/);
   assert.match(source, /cancelAnimationFrame\(raf\)/);
-  assert.match(source, /if \(!reduced\) raf = requestAnimationFrame\(draw\)/);
+  assert.match(source, /function resize\(\)[^]*?if \(reduced\) draw\(\);[^]*?\n  }/);
+  assert.doesNotMatch(source, /function resize\(\)[^]*?\n    draw\(\);[^]*?\n  }/);
+  assert.equal((source.match(/requestAnimationFrame\(draw\)/g) || []).length, 2);
 });
 
 test('uses no network, durable identity storage, audio, or autoplay media', () => {
