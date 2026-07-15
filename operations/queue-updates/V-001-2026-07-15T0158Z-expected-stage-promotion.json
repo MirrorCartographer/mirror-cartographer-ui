@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T01:58:00Z",
+  "slice": "expected_stage_identity_promotion_gate",
+  "status": "completed_operations_only",
+  "production_scheduled_for_recording_hour": {
+    "utc_hour": 1,
+    "production_id": "coordinate-choir",
+    "title": "Coordinate Choir",
+    "runtime_activation_claimed": false
+  },
+  "problem_closed": "Current-hour runtime evidence cannot be promoted unless its production identity, repertory contract, and UTC repertory hour exactly match the deterministic expected stage supplied by the promotion caller.",
+  "design_decision": {
+    "observed": "The v3 freshness gate proves that evidence belongs to the current repertory hour but does not independently prove that the observed production is the production selected for that hour.",
+    "inferred": "Fresh evidence for the wrong production or an obsolete repertory contract could otherwise remain structurally promotable.",
+    "experiment": "Layer an exact expected-stage identity gate over v3 and retain the expected identity in the promoted artifact.",
+    "current_decision": "Promotion fails closed on production_id, repertory_contract_id, or repertory_hour_utc mismatch."
+  },
+  "files": [
+    "operations/vercel-studio/repertory/promoteRuntimeStageEvidence.v1.cjs",
+    "operations/vercel-studio/repertory/promoteRuntimeStageEvidence.v1.test.cjs"
+  ],
+  "commits": [
+    "81ff3a0db92760891d2a466cab98519c8bd23faf",
+    "abee09461a7d78b029f39284e1aebb2995ef0d77"
+  ],
+  "verification": {
+    "local_node_test": "6 passed, 0 failed",
+    "repository_write": "verified",
+    "deployment_attempted": false,
+    "deployment_claimed": false,
+    "application_runtime_changed": false
+  },
+  "constraints_preserved": [
+    "operations-only change",
+    "deterministic UTC schedule",
+    "no autoplay or audio activation",
+    "no private source material",
+    "no payment or conversion logic",
+    "mobile and accessibility runtime unaffected",
+    "fail-closed deployment posture"
+  ],
+  "rollback": "Stop consuming promoteRuntimeStageEvidence.v1.cjs and continue using the untouched v3 freshness verifier; revert the additive implementation, test, and record commits if removal is required.",
+  "next_action": "Bind expectedStage directly to the deterministic repertory selector output rather than caller-authored values, then exercise the complete promotion path against immutable deployment evidence after Vercel capacity returns."
+}
