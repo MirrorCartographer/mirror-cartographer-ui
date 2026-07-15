@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T05:34:00Z",
+  "slice": "provenance_candidate_adjudication_schema",
+  "state": "completed_reversible_operations_only_slice",
+  "memory_recovered": "Continuity identity is conjunctive rather than resemblance-based: assignment evidence, namespace, owner, semantic role, temporal precedence, immutable locator, and sufficient coverage must agree before an M-series artifact can be classified as resolved.",
+  "contradiction_resolved": "A candidate may be semantically similar and still fail provenance. Conversely, incomplete coverage does not prove the candidate false; it preserves unresolved status. Rejected collision and unresolved are therefore distinct outcomes.",
+  "artifact": "operations/continuity/schemas/provenanceCandidateAdjudication.v1.json",
+  "claim_status": {
+    "observed": "The active queue preserves M-004, M-005, and M-006 as unresolved and requires exhaustive history traversal before unlocated classification.",
+    "inferred": "A machine-readable adjudication record reduces reviewer-dependent promotion and accidental reconstruction.",
+    "proposed": "Use the committed schema for every candidate found during exhaustive ref and commit traversal.",
+    "superseded": "Filename, suffix, semantic similarity, or automation completion prose alone can resolve provenance.",
+    "unresolved": "No authenticated exhaustive branch and reachable-history manifest or immutable originating assignment was produced in this slice."
+  },
+  "verification": {
+    "method": "Repository connector create followed by exact-path fetch-back.",
+    "commit": "9eba073e61f3ae4a1f16f6deed5883aeb5b3a58f",
+    "execution_claimed": false,
+    "coverage_claimed": false
+  },
+  "privacy_boundary": "The schema retains abstract source classes, statuses, digests, and immutable locators only. It does not copy private chat wording, personal records, credentials, or File Library content.",
+  "registry_change": null,
+  "rollback": "Revert commit 9eba073e61f3ae4a1f16f6deed5883aeb5b3a58f and this queue-update commit; canonical queue state and runtime behavior are unaffected.",
+  "limits": [
+    "Repository code search returned no indexed matches for the target identifiers during this run and is not exhaustive evidence.",
+    "No inaccessible branches, deleted refs, private chat archives, or File Library objects were traversed.",
+    "The schema is an adjudication contract, not proof that any target identifier has been resolved or is absent."
+  ],
+  "next_action": "Produce an authenticated accessible-ref and deduplicated reachable-commit manifest, instantiate one candidate record for every M-004, M-005, or M-006 lead, and classify only through the committed gates."
+}
