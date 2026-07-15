@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "record_id": "M-RECONCILE-002-source-class-negative-evidence-2026-07-15T2324Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T23:24:00Z",
+  "purpose": "Preserve bounded negative evidence and namespace-collision handling for unresolved continuity identifiers M-004, M-005, and M-006 without reconstructing unverified history.",
+  "sources_inspected": [
+    {
+      "source_class": "repository_canonical_state",
+      "locator": "operations/CURRENT_STATE.json",
+      "result": "operating constraints confirmed"
+    },
+    {
+      "source_class": "repository_active_queue",
+      "locator": "operations/ACTIVE_QUEUE.json",
+      "result": "M-RECONCILE-002 remains highest-priority continuity_mining item"
+    },
+    {
+      "source_class": "repository_specialist_registry",
+      "locator": "operations/SPECIALIST_REGISTRY.json",
+      "result": "no durable capability gap supporting a registry change"
+    },
+    {
+      "source_class": "repository_trigger_ledger",
+      "locator": "operations/TRIGGER_REQUESTS.json",
+      "result": "prior trigger requests remain evidence-bounded"
+    },
+    {
+      "source_class": "repository_code_index",
+      "queries": ["M-004", "M-005"],
+      "result": "zero indexed matches",
+      "coverage_class": "current_repository_index_non_exhaustive"
+    },
+    {
+      "source_class": "file_library_semantic_search",
+      "queries": [
+        "M-004 M-005 M-006 continuity artifact identifier assignment Mirror Cartographer",
+        "M-004 M-005 M-006",
+        "continuity mining provenance gap ledger"
+      ],
+      "result": "no immutable assignment source retrieved; returned V8/V9 proof-machine records and unrelated generated assets",
+      "coverage_class": "semantic_retrieval_non_exhaustive_private_source_boundary"
+    },
+    {
+      "source_class": "recent_repository_commits",
+      "result": "recent continuity work records Unicode candidate and confusable boundaries; no immutable original assignment source observed",
+      "coverage_class": "recent_commit_window_non_exhaustive"
+    }
+  ],
+  "claims": {
+    "observed": [
+      "Exact repository code-index queries for M-004 and M-005 returned zero results in this run.",
+      "File Library semantic retrieval returned records named V8-004, V8-005, V8-006, V9-004, V9-005, and V9-006, but did not return an immutable source assigning M-004, M-005, or M-006.",
+      "The retrieved V8/V9 records have explicit namespaces and semantic roles unrelated to the continuity queue identifiers."
+    ],
+    "inferred": [
+      "The V8/V9 suffix matches are namespace collisions, not aliases for M-004 through M-006.",
+      "Absence from current repository indexing and one semantic retrieval pass lowers confidence that an assignment source is present in those bounded views, but does not establish historical absence."
+    ],
+    "proposed": [
+      "Treat all suffix-only matches as rejected collision candidates unless an immutable source explicitly aliases them to the M namespace.",
+      "Represent negative searches with source class, query, timestamp, and coverage class so later exhaustive traversal can supersede rather than erase them."
+    ],
+    "superseded": [
+      "Using numeric suffix equality as identifier identity.",
+      "Treating zero search results as proof that an artifact never existed.",
+      "Recreating missing M identifiers from semantically adjacent records."
+    ],
+    "unresolved": [
+      "No immutable provenance object assigning M-004, M-005, or M-006 has been located.",
+      "All accessible branches and reachable commit history have not yet been exhaustively traversed.",
+      "Originating decision-log, language-lexicon, project-document, or chat-history assignment remains unlocated."
+    ]
+  },
+  "collision_candidates": [
+    {
+      "candidate_namespace": "V8",
+      "candidate_ids": ["V8-004", "V8-005", "V8-006"],
+      "classification": "rejected_namespace_collision",
+      "reason": "Exact namespace differs and records are proof-machine benchmark entries with unrelated semantic roles."
+    },
+    {
+      "candidate_namespace": "V9",
+      "candidate_ids": ["V9-004", "V9-005", "V9-006"],
+      "classification": "rejected_namespace_collision",
+      "reason": "Exact namespace differs and records are curated proof-machine evolution entries with unrelated semantic roles."
+    }
+  ],
+  "evidence_strength": "bounded_negative_evidence",
+  "falsification_route": [
+    "Locate an immutable repository blob or commit assigning M-004, M-005, or M-006.",
+    "Locate a retained decision log, lexicon, project document, or private source that explicitly assigns one of the identifiers and preserves provenance.",
+    "Locate an explicit alias decision connecting an M identifier to a V8/V9 record with namespace, owner, semantic role, temporal precedence, and immutable locator agreement."
+  ],
+  "privacy_boundary": {
+    "included": [
+      "identifier tokens",
+      "source classes",
+      "search outcomes",
+      "public-safe collision classifications"
+    ],
+    "excluded": [
+      "private source text",
+      "personal data",
+      "medical or relationship content",
+      "credentials",
+      "unpublished chat excerpts"
+    ]
+  },
+  "registry_change": "none",
+  "deletion_performed": false
+}
