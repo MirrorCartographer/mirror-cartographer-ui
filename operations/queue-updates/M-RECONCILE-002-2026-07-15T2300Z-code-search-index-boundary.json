@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T23:00:34Z",
+  "state": "in_progress",
+  "completed_slice": "Classified zero-result repository code searches for M-004, M-005, and M-006 as bounded indexed-search evidence rather than exhaustive absence proof, preserving unresolved provenance and an explicit falsification route.",
+  "evidence": {
+    "record_path": "operations/continuity/records/M-RECONCILE-002-code-search-index-evidence-boundary-2026-07-15T2300Z.json",
+    "record_commit": "ecc11cb4efb6763e34ceb52546a09d3780ef9727",
+    "searches": [
+      "combined repository-scoped search: M-004 M-005 M-006 -> zero results",
+      "repository-scoped search: M-004 -> zero results"
+    ],
+    "coverage_class": "indexed_repository_code_search_only",
+    "exhaustive": false
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent authenticated refs traversal.",
+    "Traverse all reachable commit trees and relevant commit metadata.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated only after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, chat-history source, or other immutable assignment source."
+  ],
+  "safe_next_action": "Run an authenticated exhaustive refs inventory, retain the raw result and completeness contract, then traverse every reachable commit tree and commit message for exact identifiers and assignment semantics without recreating missing history.",
+  "canonical_state_overwritten": false,
+  "execution_claimed_for_peers": false
+}
