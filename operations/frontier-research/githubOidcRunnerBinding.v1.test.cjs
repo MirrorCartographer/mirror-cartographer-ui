@@ -1,0 +1,11 @@
+'use strict';
+const test=require('node:test'); const assert=require('node:assert/strict');
+const {assessGitHubOidcRunnerBinding}=require('./githubOidcRunnerBinding.v1.cjs');
+const H='a'.repeat(64);
+function sample(){return {signature_verification:'externally_verified',verified_oidc_claims:{iss:'https://token.actions.githubusercontent.com',aud:'mirrorcartographer-evidence',repository:'MirrorCartographer/mirror-cartographer-ui',repository_id:'1003910384',workflow_ref:'MirrorCartographer/mirror-cartographer-ui/.github/workflows/evidence.yml@refs/heads/main',workflow_sha:'b'.repeat(40),run_id:'12345',run_attempt:'1',runner_environment:'github-hosted',jti:'unique-token-id',iat:100,exp:400},expected:{audience:'mirrorcartographer-evidence',repository:'MirrorCartographer/mirror-cartographer-ui',repository_id:'1003910384',workflow_ref:'MirrorCartographer/mirror-cartographer-ui/.github/workflows/evidence.yml@refs/heads/main',commit_sha:'b'.repeat(40),run_id:'12345',run_attempt:'1',runner_environment:'github-hosted',observed_at_epoch:200,challenge_receipt_sha256:H,capability_transcript_sha256:H,hostname_transcript_sha256:H}}}
+test('accepts externally verified exact-run binding',()=>assert.equal(assessGitHubOidcRunnerBinding(sample()).verified,true));
+test('rejects unverified signature',()=>{const x=sample();x.signature_verification='decoded_only';assert.ok(assessGitHubOidcRunnerBinding(x).violations.includes('oidc:signature_not_externally_verified'));});
+test('rejects commit mismatch',()=>{const x=sample();x.expected.commit_sha='c'.repeat(40);assert.ok(assessGitHubOidcRunnerBinding(x).violations.includes('oidc:workflow_sha_mismatch'));});
+test('rejects run attempt mismatch',()=>{const x=sample();x.expected.run_attempt='2';assert.ok(assessGitHubOidcRunnerBinding(x).violations.includes('oidc:run_attempt_mismatch'));});
+test('rejects observation outside token window',()=>{const x=sample();x.expected.observed_at_epoch=401;assert.ok(assessGitHubOidcRunnerBinding(x).violations.includes('oidc:observation_outside_token_window'));});
+test('receipt changes with transcript digest',()=>{const a=sample();const b=sample();b.expected.hostname_transcript_sha256='d'.repeat(64);assert.notEqual(assessGitHubOidcRunnerBinding(a).receipt.receipt_sha256,assessGitHubOidcRunnerBinding(b).receipt.receipt_sha256);});
