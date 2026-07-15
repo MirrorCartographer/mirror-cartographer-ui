@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T05:28:00Z",
+  "slice": "commit-bound programmed-stage receipt",
+  "state": "completed_operations_only",
+  "finding": "A deterministic programmed-stage identity is not reproducible evidence unless it is bound to both an exact source commit and the canonical repertory content.",
+  "implementation": {
+    "source": "operations/vercel-studio/repertory/buildCommitBoundProgrammedStageReceipt.v1.cjs",
+    "test": "operations/vercel-studio/repertory/buildCommitBoundProgrammedStageReceipt.v1.test.cjs",
+    "source_commit": "6f9f2b818d263b8c30720c120bc060a37beefc72",
+    "test_commit": "169be1f2e64e106cbec299830436f8581ffa5bbb",
+    "evidence_class": "commit_and_repertory_bound_programmed_stage_identity_only"
+  },
+  "verification": {
+    "committed_files_fetched": true,
+    "deterministic_tests_committed": true,
+    "node_test_execution_claimed": false,
+    "provider_status": "failure",
+    "provider_status_reason": "Vercel build-rate limit",
+    "deployment_claimed": false,
+    "runtime_activation_claimed": false
+  },
+  "safety": {
+    "application_runtime_modified": false,
+    "payments_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "autoplay_added": false,
+    "history_deleted": false
+  },
+  "rollback": "Revert commits 169be1f2e64e106cbec299830436f8581ffa5bbb and 6f9f2b818d263b8c30720c120bc060a37beefc72; application runtime is unaffected.",
+  "next_action": "Run the complete repertory suite in an authenticated checkout and require the commit-and-repertory-bound receipt before any programmed-stage evidence is promoted into deployment or runtime evidence."
+}
