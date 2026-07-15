@@ -1,13 +1,27 @@
 import { readdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
+const require = createRequire(import.meta.url);
+const {
+  assessRepertoryTestInventory,
+} = require('./repertoryTestInventory.v1.cjs');
+
 const directory = dirname(fileURLToPath(import.meta.url));
-const testFiles = readdirSync(directory)
+const testNames = readdirSync(directory)
   .filter((name) => name.endsWith('.test.cjs'))
-  .sort()
-  .map((name) => join(directory, name));
+  .sort();
+const inventory = assessRepertoryTestInventory(testNames);
+
+if (!inventory.verified) {
+  console.error('Repertory test inventory failed closed.');
+  console.error(JSON.stringify(inventory));
+  process.exit(1);
+}
+
+const testFiles = testNames.map((name) => join(directory, name));
 
 if (testFiles.length === 0) {
   console.error('No repertory tests were discovered; failing closed.');
