@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sourceUrl": "https://www.unicode.org/Public/17.0.0/security/confusables.txt",
+  "unicodeVersion": "17.0.0",
+  "dataDate": "2025-07-22, 05:49:37 GMT",
+  "retrievedAt": "2026-07-15T08:31:00Z",
+  "sha256": "091c7f82fc39ef208faf8f94d29c244de99254675e09de163160c810d13ef22a",
+  "byteLength": 745683,
+  "recordCount": 6565,
+  "sourceStatus": "primary_versioned_unicode_data",
+  "claimBoundary": "This manifest identifies the exact retrieved source bytes. It does not by itself establish full UTS #39 conformance or authorize silent dataset upgrades.",
+  "falsificationRoute": "Retrieve the exact versioned URL independently and compare SHA-256, byte length, Version header, and MA record count. Any mismatch invalidates this manifest until investigated."
+}
