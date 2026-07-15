@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T11:52:00Z",
+  "state": "in_progress",
+  "completed_slice": "Added a fail-closed repository traversal envelope contract and retained the durable rule that terminal provenance cannot outrun complete ref, reachable-history, historical-path, deleted-path, pagination, and permission coverage.",
+  "artifacts": [
+    {
+      "path": "operations/continuity/contracts/repository-traversal-envelope.v1.schema.json",
+      "commit": "821596dfa1f08fb2e80a8a918b519046f150cdea"
+    },
+    {
+      "path": "operations/continuity/records/CM-1033.json",
+      "commit": "2f8504f61e7b1fd6718d36a757bc4f4f84898946"
+    }
+  ],
+  "acceptance_remaining": [
+    "Produce and retain a complete accessible ref inventory with pagination and permission scope evidence.",
+    "Traverse all reachable commits from retained roots and retain parent-edge closure with zero unvisited reachable commits.",
+    "Inspect historical and deleted paths for M-004, M-005, and M-006.",
+    "Locate immutable identifier assignments or retain schema-valid exhaustive-unlocated outcomes only after terminal coverage is allowed."
+  ],
+  "safe_next_action": "Implement a deterministic producer and validator for repository-traversal-envelope.v1, execute it against all accessible refs, and feed only a terminally complete envelope into the existing provenance-resolution outcome contract.",
+  "canonical_queue_overwritten": false,
+  "specialist_registry_changed": false,
+  "privacy_boundary": "Public-safe repository metadata and abstract provenance semantics only; no private source content retained."
+}
