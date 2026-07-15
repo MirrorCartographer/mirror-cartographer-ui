@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T23:55:08Z",
+  "finding": "The canonical repertory runner auto-discovers every .test.cjs file, but the explicit fail-closed required-test inventory did not require the Vercel repertory OIDC workflow contract test. A future rename, omission, or accidental removal could therefore weaken the security boundary without the inventory identifying that specific required contract.",
+  "durable_improvement": "Added vercelRepertoryOidcWorkflowContract.v1.test.cjs to REQUIRED_REPERTORY_TESTS and to the inventory test's exactly-once critical gate set.",
+  "implementation_commits": [
+    "5b871ca0d5ea23b12d54f71948615783dcd0da9f",
+    "85219830a888ab857bcafc25ce17bdc1e9db4a7a"
+  ],
+  "verification": {
+    "method": "exact_commit_source_refetch",
+    "commit": "85219830a888ab857bcafc25ce17bdc1e9db4a7a",
+    "verified_properties": [
+      "OIDC workflow contract is an explicit required repertory test",
+      "missing required tests produce required_repertory_test_missing",
+      "unverified inventory prohibits repertory test execution",
+      "critical OIDC gate must be discoverable exactly once"
+    ]
+  },
+  "evidence_strength": "exact_commit_source_verified",
+  "claim_boundary": "The additive source change and exact-commit contents are verified. Node test execution, GitHub Actions execution, Vercel deployment, browser rendering, and audio behavior are not claimed.",
+  "rollback": "Revert commits 85219830a888ab857bcafc25ce17bdc1e9db4a7a and 5b871ca0d5ea23b12d54f71948615783dcd0da9f; no runtime or deployment state was changed.",
+  "privacy_boundary": "No private source material, credentials, health data, payment logic, or conversion logic was added."
+}
