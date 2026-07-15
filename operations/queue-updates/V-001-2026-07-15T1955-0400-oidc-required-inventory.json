@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T23:55:08Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Promoted the no-deploy Vercel repertory OIDC workflow contract from incidental auto-discovery to an explicit fail-closed required repertory test, with an exactly-once inventory guard.",
+  "implementation_commits": [
+    "5b871ca0d5ea23b12d54f71948615783dcd0da9f",
+    "85219830a888ab857bcafc25ce17bdc1e9db4a7a"
+  ],
+  "evidence_commit": "cf533534c7fab2d31b371bd9fb6e27f8310a9f99",
+  "acceptance_remaining": [
+    "Run npm run test:vercel-repertory in an authenticated checkout and retain exact output.",
+    "Dispatch the no-deploy OIDC receipt workflow for one exact commit and retain its token-free artifact.",
+    "Execute and reconcile both exhaustive workflow-run enumeration clients.",
+    "Bind a tested application commit to an immutable READY Vercel deployment after provider capacity returns.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Execute the canonical repertory suite and retain output proving the required OIDC inventory and static workflow contract pass together. Do not activate the repertory or create an application deployment until exact-run OIDC evidence, exhaustive run reconciliation, and immutable Vercel identity verify.",
+  "claim_boundary": "Source behavior is exact-commit verified; test execution, workflow execution, deployment, rendering, and audibility are not claimed."
+}
