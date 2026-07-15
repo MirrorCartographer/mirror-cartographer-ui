@@ -15,8 +15,10 @@ function valid() {
       head_sha: SHA,
       endpoint: '/repos/{owner}/{repo}/actions/runs',
       per_page: 100,
-      api_version: '2026-03-10'
+      api_version: '2026-03-10',
+      headers: { 'X-GitHub-Api-Version': '2026-03-10' }
     },
+    response: { status: 200, headers: {} },
     api_version_policy: {
       observed_at: '2026-07-15T01:00:00Z',
       source: 'https://docs.github.com/en/rest/about-the-rest-api/api-versions'
@@ -32,10 +34,11 @@ function valid() {
   };
 }
 
-test('accepts only when policy and pagination both verify', () => {
+test('accepts only when policy, response version, and pagination verify', () => {
   const result = verifyWorkflowEnumerationEvidence(valid(), NOW);
   assert.equal(result.verified, true);
   assert.equal(result.classification, 'workflow_enumeration_evidence_verified');
+  assert.equal(result.api_response_version.verified, true);
 });
 
 test('rejects invented date-shaped API version before pagination promotion', () => {
@@ -55,17 +58,19 @@ test('rejects stale API policy observation before pagination promotion', () => {
   assert.equal(result.pagination_provenance, null);
 });
 
-test('rejects valid policy with invalid pagination', () => {
+test('rejects valid policy and response version with invalid pagination', () => {
   const input = valid();
   input.retrieval_complete = false;
   const result = verifyWorkflowEnumerationEvidence(input, NOW);
   assert.ok(result.reasons.includes('pagination_provenance:retrieval_not_declared_complete'));
   assert.equal(result.api_version_policy.verified, true);
+  assert.equal(result.api_response_version.verified, true);
 });
 
 test('rejects legacy version after support window ends', () => {
   const input = valid();
   input.request.api_version = '2022-11-28';
+  input.request.headers['X-GitHub-Api-Version'] = '2022-11-28';
   input.api_version_policy.observed_at = '2028-03-10T00:00:00Z';
   const result = verifyWorkflowEnumerationEvidence(input, new Date('2028-03-10T00:00:01Z'));
   assert.ok(result.reasons.includes('api_version_policy:api_version_support_window_ended'));
