@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "record_id": "M-RECONCILE-002-unicode-candidate-matrix-2026-07-15T2314Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T23:14:27Z",
+  "title": "Candidate-only Unicode variant matrix for unresolved continuity identifiers",
+  "memory": "Identifier recovery must preserve a two-layer model: canonical identity is the exact ASCII queue token, while Unicode look-alikes are candidate discovery keys whose original code points and source locators must remain intact.",
+  "canonical_identifiers": ["M-004", "M-005", "M-006"],
+  "candidate_dimensions": [
+    {
+      "dimension": "separator",
+      "variants": [
+        {"glyph": "-", "code_point": "U+002D", "name": "HYPHEN-MINUS", "status": "canonical_component"},
+        {"glyph": "‐", "code_point": "U+2010", "name": "HYPHEN", "status": "candidate_only"},
+        {"glyph": "‑", "code_point": "U+2011", "name": "NON-BREAKING HYPHEN", "status": "candidate_only"},
+        {"glyph": "–", "code_point": "U+2013", "name": "EN DASH", "status": "candidate_only"},
+        {"glyph": "−", "code_point": "U+2212", "name": "MINUS SIGN", "status": "candidate_only"}
+      ]
+    },
+    {
+      "dimension": "leading_letter",
+      "variants": [
+        {"glyph": "M", "code_point": "U+004D", "name": "LATIN CAPITAL LETTER M", "status": "canonical_component"},
+        {"glyph": "Ｍ", "code_point": "U+FF2D", "name": "FULLWIDTH LATIN CAPITAL LETTER M", "status": "candidate_only"},
+        {"glyph": "М", "code_point": "U+041C", "name": "CYRILLIC CAPITAL LETTER EM", "status": "candidate_only"}
+      ]
+    },
+    {
+      "dimension": "digits",
+      "variants": [
+        {"glyph_set": "0123456789", "range": "U+0030-U+0039", "name": "ASCII DIGITS", "status": "canonical_component"},
+        {"glyph_set": "０１２３４５６７８９", "range": "U+FF10-U+FF19", "name": "FULLWIDTH DIGITS", "status": "candidate_only"}
+      ]
+    }
+  ],
+  "generated_candidate_examples": [
+    "M‐004", "M‑004", "M–004", "M−004", "Ｍ-004", "М-004", "M-００４",
+    "M‐005", "M‑005", "M–005", "M−005", "Ｍ-005", "М-005", "M-００５",
+    "M‐006", "M‑006", "M–006", "M−006", "Ｍ-006", "М-006", "M-００６"
+  ],
+  "repository_search_observations": [
+    {"query": "M‐004", "result_count": 0, "source": "GitHub indexed repository code search", "coverage": "indexed_current_repository_bounded"},
+    {"query": "M‑004", "result_count": 0, "source": "GitHub indexed repository code search", "coverage": "indexed_current_repository_bounded"},
+    {"query": "M–004", "result_count": 0, "source": "GitHub indexed repository code search", "coverage": "indexed_current_repository_bounded"},
+    {"query": "M−004", "result_count": 0, "source": "GitHub indexed repository code search", "coverage": "indexed_current_repository_bounded"},
+    {"query": "М-004", "result_count": 0, "source": "GitHub indexed repository code search", "coverage": "indexed_current_repository_bounded"}
+  ],
+  "claims": {
+    "observed": [
+      "ACTIVE_QUEUE.json defines M-004, M-005, and M-006 as exact ASCII identifiers.",
+      "Five indexed current-repository searches for representative M-004 confusable variants returned zero results.",
+      "The prior continuity record requires original code-point preservation and exact-source or explicit-alias evidence before canonical promotion."
+    ],
+    "inferred": [
+      "A finite candidate matrix improves repeatability and prevents ad hoc visual matching.",
+      "Zero indexed results for representative variants lowers the probability of a current default-branch look-alike, but does not establish historical absence."
+    ],
+    "proposed": [
+      "Use this matrix as an input manifest for exhaustive ref and reachable-history traversal.",
+      "Record each hit with original token, code-point sequence, blob SHA, commit SHA, path, line, namespace, owner, semantic role, and temporal precedence.",
+      "Keep every hit candidate_only until an immutable source assigns the exact ASCII identifier or explicitly records an alias."
+    ],
+    "superseded": [
+      "Generate Unicode variants informally during each search.",
+      "Treat visual equality as identity.",
+      "Replace source tokens with normalized forms in retained evidence."
+    ],
+    "unresolved": [
+      "The full matrix has not been searched across all branches and reachable commits.",
+      "Decision logs, language lexicons, project documents, private chat history, and File Library sources remain incompletely traversed.",
+      "Immutable assignment sources for M-004, M-005, and M-006 remain unlocated."
+    ]
+  },
+  "contradiction_resolution": {
+    "apparent_conflict": "Normalization is useful for recall but dangerous for provenance.",
+    "resolution": "Store canonical and discovery identities separately: normalized or confusable forms may select candidates, while original bytes and immutable source context determine identity."
+  },
+  "privacy_boundary": {
+    "included": ["Repository queue identifiers", "Unicode code-point metadata", "Bounded repository search counts", "Public-safe provenance rules"],
+    "excluded": ["Private chat text", "File Library contents", "Credentials", "Personal, medical, relationship, or household material", "Unpublished private source text"]
+  },
+  "coverage_class": "bounded_indexed_current_repository_non_exhaustive",
+  "falsification_route": [
+    "Find a current indexed repository hit for any recorded zero-result query under the same repository state.",
+    "Show that original code-point preservation changes no provenance conclusion across all discovered collisions.",
+    "Locate an immutable explicit alias decision that safely promotes a non-ASCII candidate to one canonical M identifier."
+  ],
+  "canonical_queue_overwritten": false,
+  "files_deleted": false,
+  "specialist_registry_changed": false
+}
