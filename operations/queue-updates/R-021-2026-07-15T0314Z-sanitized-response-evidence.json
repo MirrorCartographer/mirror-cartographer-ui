@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T03:14:00Z",
+  "slice": "Sanitized GitHub request/response evidence boundary",
+  "finding": "Authenticated workflow enumeration must retain the transmitted API version and response lifecycle metadata while excluding all credential-bearing and unrelated header values from durable evidence.",
+  "source_status": {
+    "primary_sources": [
+      "GitHub REST API versioning documentation",
+      "GitHub REST API response and pagination header behavior"
+    ],
+    "repository_sources": [
+      "operations/ACTIVE_QUEUE.json",
+      "operations/frontier-research/github-actions/verifyGithubApiResponseVersion.v1.cjs",
+      "operations/frontier-research/github-actions/verifyWorkflowEnumerationEvidence.v1.cjs"
+    ]
+  },
+  "artifact": {
+    "implementation": "operations/frontier-research/github-actions/buildSanitizedGithubResponseEvidence.v1.cjs",
+    "tests": "operations/frontier-research/github-actions/buildSanitizedGithubResponseEvidence.v1.test.cjs",
+    "behavior": [
+      "Allowlist X-GitHub-Api-Version, Accept, User-Agent, response status, Deprecation, Sunset, Link, and X-GitHub-Request-Id.",
+      "Record only sensitive header names observed, never their values.",
+      "Reject evidence missing requested API version, transmitted API-version header, or valid response status.",
+      "Normalize header names case-insensitively."
+    ]
+  },
+  "verification": {
+    "command": "node --test buildSanitizedGithubResponseEvidence.v1.test.cjs",
+    "result": "4 passed, 0 failed",
+    "environment": "isolated local Node runtime using exact committed source text"
+  },
+  "evidence_strength": "implementation_committed_and_deterministically_tested",
+  "uncertainty": [
+    "The builder is not yet wired into both authenticated enumeration clients.",
+    "No private-repository enumeration was executed in this slice.",
+    "No live GitHub response headers were retained or promoted."
+  ],
+  "falsification_route": [
+    "Fail if any sensitive header value appears in serialized output.",
+    "Fail if missing API-version or status evidence is accepted.",
+    "Fail if the downstream response-version verifier cannot consume the sanitized shape.",
+    "Fail if Link pagination metadata is lost before pagination provenance validation."
+  ],
+  "registry_change": null,
+  "next_action": "Wire the sanitizer immediately after each authenticated HTTP response and before any retained-file write, then pass its output into verifyWorkflowEnumerationEvidence for both independent exact-commit enumeration clients."
+}
