@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T21:46:00Z",
+  "slice": "curl_hostname_capability_preflight",
+  "state": "completed_handoff_ready",
+  "completed": [
+    "Established curl 7.72.0 as the minimum executable version for the existing generated-hostname receipt because method is required and was added after %{json}.",
+    "Implemented a fail-closed no-network capability receipt bound to exact curl version output, version command exit code, required metric-key presence, observation time, and a canonical digest.",
+    "Verified seven deterministic tests covering compatible, minimum, incompatible, missing-key, failed-command, digest-stability, and executable-versus-libcurl parsing cases."
+  ],
+  "files": [
+    "operations/frontier-research/curlHostnameCapabilityPreflight.v1.cjs",
+    "operations/frontier-research/curlHostnameCapabilityPreflight.v1.test.cjs",
+    "operations/evidence/R-022-curl-capability-preflight-2026-07-15T2146Z.json"
+  ],
+  "acceptance_remaining": [
+    "Run curl --version in the authenticated checkout and retain exact output and exit code.",
+    "Produce and retain the required write-out key-presence probe from that executable.",
+    "Require a verified capability receipt before accepting any generated-hostname curl receipt.",
+    "After provider capacity returns, execute the bounded generated-hostname observation against one exact verified deployment."
+  ],
+  "safe_next_action": "Integrate assessCurlHostnameCapabilityPreflight ahead of adaptCurlGeneratedHostnameReceipt, then execute both test files in an authenticated checkout without initiating a deployment."
+}
