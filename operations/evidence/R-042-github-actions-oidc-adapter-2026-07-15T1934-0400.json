@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_id": "R-042",
+  "owner": "frontier_research",
+  "created_at": "2026-07-15T23:34:47Z",
+  "queue_basis": "R-022 safe_next_action and the latest frontier OIDC receipt pipeline handoff",
+  "source_status": {
+    "primary_sources": [
+      {
+        "title": "GitHub Docs: OpenID Connect",
+        "url": "https://docs.github.com/en/actions/concepts/security/openid-connect",
+        "observed": "GitHub documents per-job short-lived OIDC JWTs, RS256, run identity claims, and request access through workflow jobs."
+      },
+      {
+        "title": "GitHub Docs: Workflow commands",
+        "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#masking-a-value-in-a-log",
+        "observed": "GitHub documents explicit masking for sensitive values written by workflow steps."
+      }
+    ],
+    "repository_sources": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/frontier-research/githubOidcReceiptPipeline.v1.cjs",
+      "recent frontier, vercel, and continuity commits"
+    ]
+  },
+  "finding": "The verified OIDC receipt pipeline existed, but no single operations-only adapter constrained GitHub runner environment ingestion, exact-run expectation derivation, no-overwrite receipt persistence, and token-free output.",
+  "design_implication": "Runner-provided repository, commit, run, attempt, and environment values now override any user-authored expected JSON identity fields; only audience, observation time, and transcript digests are read from the expected file. The raw request authorization and JWT remain process-memory inputs and are excluded from returned and persisted output.",
+  "files": [
+    {
+      "path": "operations/frontier-research/githubActionsOidcReceiptAdapter.v1.cjs",
+      "commit": "e00a74103b96fa18e0c4f7fbf4ffddba21914a2a"
+    },
+    {
+      "path": "operations/frontier-research/githubActionsOidcReceiptAdapter.v1.test.cjs",
+      "commit": "9f845646ef91f1d1624ffedc24d5b12eea27c671"
+    }
+  ],
+  "verification": {
+    "status": "authored_and_repository_fetch_verified_not_executed",
+    "test_count": 6,
+    "covered_cases": [
+      "required environment validation",
+      "runner identity precedence over expected JSON",
+      "in-memory authorization handoff with token-free result",
+      "pipeline rejection propagation",
+      "transcript digest and observation-time validation",
+      "exclusive no-overwrite owner-only receipt persistence"
+    ],
+    "repository_blob_sha": "0ed4875e523e5b2fed566f9c242a8c5e9953de54",
+    "execution_limit": "No authenticated checkout or GitHub Actions run was available in this tool path; tests are committed but not claimed as executed."
+  },
+  "evidence_strength": "implementation_ready_with_deterministic_tests_authored_execution_pending",
+  "uncertainty": [
+    "Live ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN behavior was not observed.",
+    "No workflow permission boundary was executed.",
+    "No retained receipt was produced from a real GitHub-hosted runner.",
+    "The adapter does not establish same-process integrity, hardware identity, deployment identity, or transcript-content truth."
+  ],
+  "falsification_route": [
+    "Execute the committed tests in an authenticated checkout and reject on any failure.",
+    "Run an operations-only workflow with id-token: write and prove that missing permission fails closed.",
+    "Inspect retained output and reject if request authorization or JWT bytes appear.",
+    "Attempt expected-file identity substitution and reject if it can override runner repository, SHA, run, attempt, or runner environment.",
+    "Attempt a second write to the same output path and reject if overwrite succeeds."
+  ],
+  "privacy_boundary": "No credentials, OIDC token values, private source material, or user-specific personal data are retained.",
+  "specialist_registry_change": null
+}
