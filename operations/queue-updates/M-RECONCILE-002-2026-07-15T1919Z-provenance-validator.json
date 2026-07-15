@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T19:19:00Z",
+  "state": "in_progress",
+  "completed_slice": "Added and verified an executable fail-closed validator for provenance-candidate adjudication records. The validator prevents partial coverage, token collisions, generated mirrors, search snippets, failed agreement tests, or missing immutable identity from being promoted to located_verified.",
+  "artifacts": [
+    "operations/continuity/validateProvenanceCandidate.v1.cjs",
+    "operations/continuity/validateProvenanceCandidate.v1.test.cjs",
+    "operations/evidence/M-RECONCILE-002-provenance-validator-2026-07-15T1919Z.json"
+  ],
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent repository history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or chat-history source that assigned those identifiers."
+  ],
+  "safe_next_action": "Run exhaustive branch and reachable-history traversal, emit one validated adjudication record for every M-004, M-005, or M-006 candidate, and preserve unresolved status until a covered immutable assigning source passes all five agreement tests.",
+  "shared_state_policy": "Projection only; operations/ACTIVE_QUEUE.json was not overwritten.",
+  "specialist_registry_change": null,
+  "privacy": {
+    "contains_private_source_material": false
+  }
+}
