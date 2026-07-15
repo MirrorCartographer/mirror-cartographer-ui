@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "item_id": "R-025",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T08:19:00Z",
+  "finding": "Normalization-equivalent key checks do not detect visually confusable identifiers such as Latin and Cyrillic lookalikes. UTS #39 confusable skeleton comparison is a separate semantic acceptance layer and must not mutate or replace the original signed object.",
+  "source_status": {
+    "unicode_uts39": {
+      "url": "https://www.unicode.org/reports/tr39/",
+      "version": "17.0.0",
+      "date": "2025-09-04",
+      "status": "primary_stable_standard"
+    },
+    "unicode_confusables_data": {
+      "url": "https://www.unicode.org/Public/security/latest/confusables.txt",
+      "observed_version": "17.0.0",
+      "status": "primary_normative_data"
+    }
+  },
+  "artifact": {
+    "implementation": "tools/frontier-research/uts39-confusable-key-audit.mjs",
+    "tests": "tools/frontier-research/uts39-confusable-key-audit.test.mjs",
+    "properties": [
+      "requires a version header and optionally pins the expected Unicode version",
+      "records SHA-256 of the exact confusables data text",
+      "constructs NFD-based confusable skeletons from MA mappings",
+      "detects collisions only among sibling keys in the same object",
+      "reports JSON-Pointer-escaped object paths",
+      "does not mutate keys, values, or canonical evidence bytes",
+      "supports fail-closed enforcement"
+    ]
+  },
+  "verification": {
+    "command": "node --test tools/frontier-research/uts39-confusable-key-audit.test.mjs",
+    "execution_environment": "local isolated Node runtime using the committed source and test contents",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "evidence_strength": "implementation_verified_with_fixture_data",
+  "uncertainty": [
+    "The full Unicode 17.0.0 confusables data file was not vendored into the repository in this slice.",
+    "The implementation handles the current MA single-code-point source format; future data-format changes must fail closed and receive new tests.",
+    "Confusable skeleton equality is a risk signal, not proof of malicious intent.",
+    "Script restriction and Identifier_Status policies remain separate layers."
+  ],
+  "falsification_routes": [
+    "Run the parser against the complete pinned Unicode 17.0.0 confusables.txt and official conformance examples.",
+    "Show a valid MA record with a multi-code-point source that the parser incorrectly rejects.",
+    "Demonstrate two sibling keys with equal UTS #39 skeletons that the audit fails to report.",
+    "Demonstrate a reported collision whose skeletons differ under the pinned dataset."
+  ],
+  "claim_boundaries": [
+    "No full UTS #39 conformance claim is made.",
+    "No normalization, JCS digest, signature, deployment, or runtime claim is inferred from this audit.",
+    "No claim is made that all visually similar strings are confusable under UTS #39."
+  ]
+}
