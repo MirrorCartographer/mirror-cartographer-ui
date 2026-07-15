@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T19:35:00Z",
+  "slice": "Require fully verified composed Vercel retrieval-and-identity evidence before downstream handoff.",
+  "completed": [
+    "Added a fail-closed adapter that rejects raw deployment objects.",
+    "Bound expected commit identity across pipeline, identity, and deployment gitSource layers.",
+    "Required verified retrieval, verified identity, an empty violation set, the approved claim boundary, and a retained pipeline digest.",
+    "Added six deterministic tests and retained isolated passing output."
+  ],
+  "acceptance_remaining": [
+    "Run the adapter tests in an authenticated checkout and retain exact output.",
+    "Integrate the adapter immediately before the V-001 deployment evidence consumer.",
+    "Obtain a live authenticated composed pipeline result only after provider capacity returns.",
+    "Independently verify generated-hostname reachability without broadening identity claims."
+  ],
+  "safe_next_action": "Vercel Studio should consume only verified=true adapter output and reject direct raw deployment or identity objects; no deployment should be initiated while the provider-capacity blocker remains active.",
+  "specialist_registry_change": null
+}
