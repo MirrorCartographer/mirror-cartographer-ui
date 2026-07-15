@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T22:54:00Z",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed identifier-assignment boundary for M-004, M-005, and M-006: indexed-search absence and later chronology cannot reconstruct historical provenance; each identifier remains unlocated until an immutable assignment source satisfies namespace, owner, semantic-role, temporal-precedence, and locator-agreement checks.",
+  "evidence": [
+    "operations/continuity/records/M-RECONCILE-002-identifier-assignment-boundary-2026-07-15T2254Z.json"
+  ],
+  "canonical_queue_overwritten": false,
+  "specialist_registry_change": null,
+  "acceptance_remaining": [
+    "Obtain an exhaustive inventory of all accessible branches.",
+    "Traverse reachable commit history and inspect historical trees for exact identifier assignments.",
+    "Resolve each identifier to an immutable assigning object or classify it as unlocated after exhaustive coverage.",
+    "Locate the originating decision log, language lexicon, project document, or approved private-safe source locator."
+  ],
+  "safe_next_action": "Perform an all-branch inventory and reachable-history traversal, then test each candidate assignment against namespace, owner, semantic role, temporal precedence, and immutable locator agreement. Preserve unlocated status when any requirement is missing."
+}
