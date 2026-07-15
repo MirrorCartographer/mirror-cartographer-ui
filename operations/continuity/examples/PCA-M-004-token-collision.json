@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "record_id": "PCA-M-004-token-collision-20260715",
+  "queue_item": "M-RECONCILE-002",
+  "subject_identifier": "M-004",
+  "candidate": {
+    "source_class": "file_library_search_result",
+    "locator": "abstracted:file-library-suffix-match",
+    "immutable_identity": null,
+    "observed_role": "token_collision",
+    "coverage_status": "covered"
+  },
+  "agreement_tests": {
+    "namespace": {"status": "fail", "evidence": ["The matched token belongs to a different proof-machine namespace."]},
+    "authority": {"status": "fail", "evidence": ["The source has no demonstrated authority to assign Mirror Cartographer continuity identifiers."]},
+    "semantic_role": {"status": "fail", "evidence": ["The match is suffix-level coincidence rather than an assigning statement."]},
+    "temporal_precedence": {"status": "unknown", "evidence": ["No verified causal precedence over downstream M-004 references was established."]},
+    "immutable_locator": {"status": "fail", "evidence": ["No admissible immutable source-object identity was retained."]}
+  },
+  "classification": "noncapable_collision",
+  "claim_states": {
+    "observed": ["A suffix match for M-004 was reported in a different namespace."],
+    "inferred": ["Token equality without namespace and authority agreement cannot establish provenance."],
+    "proposed": ["Apply this adjudication schema to every future M-004, M-005, or M-006 candidate before changing provenance status."],
+    "superseded": ["Any matching M-004 token may resolve the continuity provenance gap."],
+    "unresolved": ["The authoritative assigning source for continuity identifier M-004 remains unlocated."]
+  },
+  "privacy": {
+    "class": "private_source_abstracted",
+    "contains_private_source_material": false
+  },
+  "falsification_route": "Produce an immutable source object in the Mirror Cartographer continuity namespace that authoritatively assigns M-004, predates downstream references, and passes all five agreement tests."
+}
