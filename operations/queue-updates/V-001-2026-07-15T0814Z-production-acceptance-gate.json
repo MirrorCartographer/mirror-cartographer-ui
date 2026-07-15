@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T08:14:43Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "A fail-closed production acceptance assessor now requires agreement among canonical repertory activation preconditions, exact-commit immutable Vercel deployment identity, and physical iPhone Safari audibility evidence for the same commit and deployment id.",
+  "commits": [
+    "fdc46d4303d34f90ada52450a20ba524f60f696f",
+    "d8629926a3c5f4503e0e7bbc49e3333b34440a71",
+    "14250da768b0df318e0392f85a5c033e160175e3"
+  ],
+  "verification": {
+    "test_command": "node --test assessProductionAcceptance.v1.test.cjs",
+    "passed": 4,
+    "failed": 0,
+    "deployment_verified": false,
+    "physical_device_verified": false
+  },
+  "acceptance_remaining": [
+    "Execute authenticated exact-commit workflow enumeration with both retained clients and reconcile outputs.",
+    "Observe operations-only Vercel build suppression after provider capacity returns.",
+    "Bind one tested application commit to an immutable READY Vercel deployment.",
+    "Observe the exact-commit audio-routing workflow artifact.",
+    "Perform bounded physical iPhone Safari audibility verification and pass its retained assessment into the production acceptance gate."
+  ],
+  "safe_next_action": "In an authenticated checkout, run the committed production acceptance tests alongside npm run test:vercel-repertory. Do not activate the repertory or claim production acceptance until immutable deployment and physical audibility evidence exist for the same commit and deployment id.",
+  "canonical_queue_overwritten": false
+}
