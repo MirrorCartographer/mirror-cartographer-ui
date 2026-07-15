@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0310Z-noncoercive-resolution-rule",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T03:10:00Z",
+  "recovered_memory": {
+    "title": "Unresolved is a valid continuity state",
+    "summary": "When source coverage is incomplete or candidate evidence fails provenance gates, continuity work must preserve the unresolved state rather than force coherence by reconstructing a plausible assignment. Resolution is an evidence transition, not a narrative obligation.",
+    "durability": "noncoercive_resolution_rule"
+  },
+  "sources_inspected": [
+    {
+      "source_class": "canonical_operating_state",
+      "path": "operations/CURRENT_STATE.json",
+      "blob_sha": "894edf8b749c94bf454d1098c20c3946f5d7c20c",
+      "observed_state": "Production acceptance and deployment claims remain fail-closed when evidence is incomplete."
+    },
+    {
+      "source_class": "canonical_active_queue",
+      "path": "operations/ACTIVE_QUEUE.json",
+      "blob_sha": "7ce65492e6c84e7afa6dafa8567d49f323dd0769",
+      "observed_state": "M-RECONCILE-002 explicitly forbids reconstructing unverified history and requires unresolved retention under incomplete coverage."
+    },
+    {
+      "source_class": "continuity_manifest",
+      "path": "operations/continuity/manifests/CM-20260715T0301Z-trigger-request-origin-boundary.json",
+      "blob_sha": "e988fc93cdea5d65f8f936071a51e12ab92e6abd",
+      "observed_state": "Trigger evidence was retained as coordination evidence while M-004, M-005, and M-006 remained unresolved."
+    },
+    {
+      "source_class": "private_language_history",
+      "locator_policy": "withheld",
+      "observed_state": "Earlier project language repeatedly distinguishes genuine resolution from compelled smoothing of contradiction.",
+      "privacy_treatment": "Only the abstract operational principle is retained; no private text, speaker attribution, personal context, filename, or excerpt is copied into the repository."
+    },
+    {
+      "source_class": "recent_commit_history",
+      "observed_state": "Recent continuity commits preserve scope-bounded negative evidence, temporal precedence, fail-closed origin adjudication, and coordination-only trigger classification."
+    }
+  ],
+  "operational_rule": {
+    "name": "noncoercive_resolution",
+    "inputs": [
+      "candidate provenance evidence",
+      "coverage declaration",
+      "origin-adjudication gate results",
+      "contradiction set"
+    ],
+    "transition_conditions": {
+      "unresolved_to_observed": "An immutable source object explicitly establishes the claim within the eligible namespace and source class.",
+      "unresolved_to_inferred": "Multiple compatible sources support a bounded inference while the originating object remains absent; inference must not be labeled origin fact.",
+      "unresolved_to_resolved": "All required origin gates pass and coverage is sufficient for the asserted resolution class.",
+      "remain_unresolved": "Coverage is incomplete, any required gate fails or is unevaluated, or candidate evidence only improves plausibility without establishing identity."
+    },
+    "prohibited_transition": "No claim may move from unresolved to resolved solely because a coherent reconstruction can be narrated.",
+    "application_to_queue": [
+      {
+        "identifier": "M-004",
+        "state": "unresolved",
+        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+      },
+      {
+        "identifier": "M-005",
+        "state": "unresolved",
+        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+      },
+      {
+        "identifier": "M-006",
+        "state": "unresolved",
+        "reason": "No eligible immutable originating assignment has been located under exhaustive coverage."
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "NONCOERCIVE-OBS-001",
+      "status": "observed",
+      "text": "The active queue requires unresolved retention and prohibits reconstruction of unverified M-series history.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "NONCOERCIVE-INF-001",
+      "status": "inferred",
+      "text": "Across operating rules and prior continuity adjudications, resolution functions as an evidence-qualified state transition rather than a requirement to eliminate contradiction.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "NONCOERCIVE-PROP-001",
+      "status": "proposed",
+      "text": "All continuity schemas should reject unresolved-to-resolved transitions that lack an immutable source locator and passing required gates, even when a reconstruction is semantically persuasive.",
+      "confidence": "high"
+    },
+    {
+      "claim_id": "NONCOERCIVE-SUP-001",
+      "status": "superseded",
+      "text": "A continuity gap should be filled with the most coherent reconstruction when exact history cannot be found.",
+      "superseded_by": [
+        "NONCOERCIVE-OBS-001",
+        "NONCOERCIVE-INF-001"
+      ]
+    },
+    {
+      "claim_id": "NONCOERCIVE-UNR-001",
+      "status": "unresolved",
+      "text": "The originating decision log, language lexicon, project document, or chat-history assignment for M-004, M-005, and M-006 remains unlocated."
+    }
+  ],
+  "contradiction_resolution": {
+    "apparent_conflict": "Continuity mining is tasked with resolving contradictions, while the evidence may not permit a definitive historical assignment.",
+    "resolution": "Resolve the contradiction at the rule level by distinguishing adjudication from closure: the team can determine that available evidence is insufficient and preserve that insufficiency as the accurate state.",
+    "status": "resolved"
+  },
+  "privacy_boundary": {
+    "included": [
+      "abstract operational principle",
+      "repository paths and blob identifiers",
+      "claim-state transitions",
+      "M-series unresolved identifiers"
+    ],
+    "excluded": [
+      "private chat wording",
+      "speaker attribution",
+      "personal history",
+      "sensitive emotional context",
+      "raw File Library content",
+      "credentials"
+    ]
+  },
+  "coverage": {
+    "canonical_state": "inspected_at_blob_sha",
+    "active_queue": "inspected_at_blob_sha",
+    "prior_continuity_manifest": "inspected_at_blob_sha",
+    "recent_commits": "sampled_not_exhaustive",
+    "private_language_history": "principle_only_privacy_reduction",
+    "repository_branch_inventory": "not_exhaustive",
+    "repository_reachable_commit_inventory": "not_exhaustive",
+    "origin_resolution": "unresolved"
+  },
+  "specialist_registry_change": "none",
+  "history_deleted": false,
+  "next_resolution_step": "Apply the noncoercive-resolution rule to every M-004/M-005/M-006 candidate during exhaustive branch and commit traversal; promote only candidates that pass the existing origin contract with immutable locators."
+}
