@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T16:15:00Z",
+  "state": "in_progress",
+  "slice": "immutable_identifier_provenance_adjudication_boundary",
+  "memory_artifact": {
+    "path": "operations/continuity/records/CM-1035.json",
+    "commit": "2d1a511d9abac4e540e07150f32359376253ad7a"
+  },
+  "completed": [
+    "Recovered the rule that continuity identifiers are resolved by provenance agreement rather than textual resemblance.",
+    "Defined required agreement across exact identifier, namespace, assigning authority, semantic role, chronology, immutable locator, retained source content, and terminal traversal coverage.",
+    "Defined fail-closed rejection conditions and four explicit terminal outcomes.",
+    "Preserved M-004, M-005, and M-006 as unresolved because no authenticated exhaustive traversal result was available in this run."
+  ],
+  "claim_states": {
+    "observed": "The canonical queue still marks immutable provenance and exhaustive coverage as outstanding.",
+    "inferred": "Text matches require semantic and authority adjudication before they can become provenance evidence.",
+    "proposed": "Apply CM-1035 as the candidate-resolution matrix after authenticated traversal.",
+    "superseded": "Search-hit or filename resemblance is sufficient for resolution.",
+    "unresolved": "No candidate for M-004, M-005, or M-006 has yet satisfied the complete matrix."
+  },
+  "acceptance_remaining": [
+    "Run an authenticated exhaustive ref and reachable-history traversal with known permission scope.",
+    "Retain historical and deleted-path inspection results.",
+    "Apply CM-1035 to each candidate source object.",
+    "Classify each identifier as located_verified, exhaustive_unlocated, unresolved_incomplete_coverage, or unresolved_conflicting_candidates."
+  ],
+  "safe_next_action": "Execute the committed traversal envelope producer against retained authenticated enumeration inputs, then apply CM-1035 to every M-004, M-005, and M-006 candidate. Do not reconstruct identifiers or promote search hits without immutable source agreement.",
+  "privacy_boundary": "No private chat excerpts, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content were retained.",
+  "overwrites_canonical_queue": false,
+  "deletes_history": false
+}
