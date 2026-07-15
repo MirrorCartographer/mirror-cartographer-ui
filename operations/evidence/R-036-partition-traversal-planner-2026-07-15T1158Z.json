@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "evidence_id": "R-036-partition-traversal-planner-2026-07-15T1158Z",
+  "queue_owner": "frontier_research",
+  "related_queue_items": ["R-020", "R-021"],
+  "status": "implementation_committed_static_verification",
+  "finding": {
+    "observed": "GitHub documents a 1,000-result ceiling for workflow-run searches using created or head_sha filters and a maximum page size of 100.",
+    "prior_artifact": "workflow-run-window-partitioner-v2.mjs corrected inclusive midpoint overlap but did not orchestrate recursive observations, leaf pagination state, or terminal ambiguity.",
+    "current_decision": "Use a deterministic breadth-first traversal planner that accepts retained per-window observations, recursively applies disjoint inclusive partitions, requires paginationComplete on every below-ceiling leaf, and fails closed on missing observations or a saturated one-second leaf.",
+    "uncertainty": "The planner has not yet executed authenticated provider requests and does not authenticate observation contents."
+  },
+  "primary_sources": [
+    {
+      "title": "REST API endpoints for workflow runs",
+      "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28",
+      "retrieved_at": "2026-07-15T11:58:00Z",
+      "claims": [
+        "Filtered searches using created or head_sha return up to 1,000 results.",
+        "per_page supports a maximum of 100."
+      ]
+    },
+    {
+      "title": "gh api manual",
+      "url": "https://cli.github.com/manual/gh_api",
+      "retrieved_at": "2026-07-15T11:58:00Z",
+      "claims": ["--paginate follows pagination and --slurp combines page results for retained independent comparison."]
+    }
+  ],
+  "artifacts": [
+    "tools/frontier-research/workflow-run-partition-traversal-v1.mjs",
+    "tools/frontier-research/workflow-run-partition-traversal-v1.test.mjs"
+  ],
+  "verification": {
+    "method": "authenticated post-write refetch and static invariant inspection",
+    "runtime_test_executed": false,
+    "confirmed_invariants": [
+      "duplicate interval visits throw",
+      "observation interval mismatch throws",
+      "missing observations fail closed",
+      "below-ceiling leaves require explicit paginationComplete=true",
+      "saturated one-second leaves remain provider_ceiling_ambiguous",
+      "claim boundary excludes response authenticity, reconciliation, and deployment identity"
+    ]
+  },
+  "falsification_route": [
+    "Run node --test tools/frontier-research/workflow-run-partition-traversal-v1.test.mjs in an authenticated checkout.",
+    "Inject overlapping or missing child observations and require fail-closed output.",
+    "Execute authenticated created-window queries and compare the final run-ID union against the unfiltered authoritative enumerator and independent gh api traversal.",
+    "Reject the design if GitHub changes filter ceilings, timestamp precision, or inclusive range semantics."
+  ],
+  "privacy": "No credentials, private workflow payloads, actor identities, logs, or artifact contents are retained here."
+}
