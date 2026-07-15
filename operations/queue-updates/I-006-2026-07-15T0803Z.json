@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "update_id": "I-006-2026-07-15T0803Z",
+  "team": "independent_creative_web",
+  "queue_item": {
+    "id": "I-006",
+    "owner": "independent_creative_web",
+    "priority": "highest_available_for_owner",
+    "state": "implemented_verification_pending",
+    "objective": "Create a bold self-contained impossible broadcast instrument with deterministic authored transmissions and optional user-initiated sound.",
+    "completed_slices": [
+      "Implemented Antenna for Things That Never Happened as an isolated single-file production.",
+      "Added deterministic frequency stations, pointer and keyboard tuning, scan, hold, reset, and live status behavior.",
+      "Added optional explicitly initiated Web Audio with no autoplay dependency.",
+      "Added a four-case Node source contract covering isolation, sound initiation, accessibility, bounded rendering, and lifecycle teardown.",
+      "Recorded identity provenance, source evidence, claim boundaries, and reversible rollback sequence."
+    ],
+    "acceptance_remaining": [
+      "Execute the committed Node source contract and retain exact output.",
+      "Verify pointer capture, keyboard paths, scanning, holding, reset, and resize behavior in a real browser.",
+      "Verify sound opt-in and teardown without claiming physical audibility from source inspection.",
+      "Perform mobile Safari, accessibility-tree, reduced-motion, and constrained-device performance verification.",
+      "Publish only on an independent preview route and retain immutable hosting evidence."
+    ],
+    "safe_next_action": "Run node --test independent/antenna-for-things-that-never-happened/contract.test.cjs, retain output, then complete browser and physical-device verification before independent preview publication."
+  },
+  "shared_state_policy": "Additive projection only. operations/ACTIVE_QUEUE.json was not overwritten because it contains no canonical independent_creative_web item and is actively maintained by other teams.",
+  "specialist_registry_change": null
+}
