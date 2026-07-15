@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "record_id": "M-RECONCILE-002-branch-inventory-evidence-boundary-2026-07-15T2257Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T22:57:22Z",
+  "memory_recovered": "Repository branch discovery is an evidence-class problem: a query-dependent branch search returning no entries is not equivalent to an exhaustive branch inventory and cannot close historical provenance gaps.",
+  "claims": {
+    "observed": [
+      "The canonical queue requires an exhaustive branch inventory or equivalent repository history traversal before M-004, M-005, and M-006 may be classified as located or exhaustively unlocated.",
+      "The available branch-search action returned an empty result for an empty-query request during this run.",
+      "The repository default branch is main, but default-branch metadata does not enumerate all accessible branches."
+    ],
+    "inferred": [
+      "The empty branch-search result may reflect query semantics, connector behavior, indexing limits, or a genuinely single-branch repository; the available response does not distinguish these cases."
+    ],
+    "proposed": [
+      "Treat branch-search responses as discovery leads unless the retrieval method documents complete enumeration, pagination completion, and repository scope.",
+      "Accept branch coverage only from an exhaustive refs endpoint, authenticated git ls-remote equivalent, or another retained inventory whose completeness contract is explicit."
+    ],
+    "superseded": [
+      "Inferring that only the default branch exists from a zero-result query-dependent branch search.",
+      "Marking M-004, M-005, or M-006 exhaustively unlocated before branch and reachable-history coverage is independently complete."
+    ],
+    "unresolved": [
+      "The complete accessible branch set remains unverified.",
+      "Reachable historical trees have not been exhaustively traversed for immutable assignment sources for M-004, M-005, and M-006."
+    ]
+  },
+  "source_status": {
+    "CURRENT_STATE.json": "canonical current-state source",
+    "ACTIVE_QUEUE.json": "canonical queue source",
+    "SPECIALIST_REGISTRY.json": "canonical registry source",
+    "TRIGGER_REQUESTS.json": "canonical trigger ledger",
+    "GitHub repository metadata": "authoritative for default branch only",
+    "GitHub branch search empty result": "bounded discovery evidence; not exhaustive inventory"
+  },
+  "evidence_strength": "moderate for the evidence boundary; insufficient for branch-count or historical-absence claims",
+  "falsification_route": "Provide a retained exhaustive branch or refs enumeration with documented pagination/completeness semantics. If that inventory proves a single accessible branch, the unresolved branch-set claim may be retired, but reachable commit and tree traversal is still required.",
+  "privacy_boundary": {
+    "included": [
+      "repository metadata",
+      "queue identifiers",
+      "abstract provenance and evidence classifications"
+    ],
+    "excluded": [
+      "private chat text",
+      "uploaded-file contents",
+      "credentials",
+      "personal or health information",
+      "unpublished private source material"
+    ]
+  },
+  "deletions": [],
+  "specialist_registry_change": null
+}
