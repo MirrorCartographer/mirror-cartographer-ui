@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1037",
+  "recorded_at": "2026-07-15T16:25:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "title": "Negative provenance evidence admissibility boundary",
+  "memory_recovered": "A failed search is a search outcome, not historical proof. An identifier may be classified exhaustive_unlocated only when the retained traversal evidence demonstrates terminal coverage of every repository namespace and historical object class capable of assigning that identifier.",
+  "claim_states": {
+    "observed": [
+      "The canonical queue requires exhaustive branch inventory or equivalent repository history traversal before M-004, M-005, or M-006 may be classified unlocated.",
+      "The latest continuity adjudication rule still preserves all three identifiers as unresolved because authenticated exhaustive traversal evidence is absent.",
+      "Repository search, File Library suffix resemblance, automation prose, and current-tree absence each cover only a subset of possible provenance locations."
+    ],
+    "inferred": [
+      "Negative evidence is only as strong as the declared search universe and permission scope.",
+      "Current-tree absence cannot exclude deleted paths, unreachable commits, alternate refs, external decision logs, or private source classes that were intentionally excluded."
+    ],
+    "proposed": [
+      "Represent every negative provenance result as a coverage-bearing assertion rather than a bare not_found value.",
+      "Permit exhaustive_unlocated only when all required coverage dimensions are terminal, authenticated, retained, and internally consistent."
+    ],
+    "superseded": [
+      "No code-search result means the identifier never existed.",
+      "Current default-branch absence is equivalent to exhaustive repository-history absence.",
+      "Repeated partial searches accumulate automatically into exhaustive proof without a reconciled coverage envelope."
+    ],
+    "unresolved": [
+      "No retained authenticated envelope currently proves exhaustive accessible-ref, reachable-history, deleted-path, and source-class coverage for M-004, M-005, or M-006.",
+      "The originating authority and semantic role for each identifier remain unlocated."
+    ]
+  },
+  "negative_evidence_contract": {
+    "required_dimensions": [
+      "repository_identity",
+      "authenticated_actor_or_connector_scope",
+      "enumerated_refs",
+      "reachable_commit_set",
+      "historical_path_and_deleted_path_inspection",
+      "searched_namespaces",
+      "searched_source_classes",
+      "query_or_matching_rules",
+      "retrieval_time",
+      "raw_result_retention",
+      "coverage_ceiling_or_truncation_status",
+      "cross-client_or_independent_reconciliation",
+      "terminal_status"
+    ],
+    "admissible_terminal_statuses": {
+      "located_verified": "An immutable source object satisfies the full provenance adjudication matrix.",
+      "exhaustive_unlocated": "All capable provenance locations in the declared accessible universe were terminally covered and no qualifying source object exists.",
+      "unresolved_incomplete_coverage": "At least one capable provenance location, ref, history class, permission scope, or source class remains uncovered or ambiguous.",
+      "unresolved_conflicting_candidates": "Two or more candidates satisfy material portions of the matrix without a justified causal or authority precedence rule."
+    },
+    "fail_closed_rules": [
+      "Any unknown permission scope prohibits exhaustive_unlocated.",
+      "Any pagination ceiling, truncation, unresolved ref, inaccessible branch, or uninspected deleted-path class prohibits exhaustive_unlocated.",
+      "Current-tree search alone may only produce current_tree_absence.",
+      "Automation completion prose may only produce a lead and may not produce historical absence proof.",
+      "Private source classes intentionally excluded for safety must remain declared exclusions rather than being counted as searched.",
+      "Multiple partial searches may be composed only through an explicit coverage union whose gaps and overlaps are machine-readable."
+    ]
+  },
+  "knowledge_graph_projection": {
+    "node_type": "continuity_rule",
+    "predicate": "negative_evidence_requires_terminal_coverage",
+    "applies_to": ["M-004", "M-005", "M-006"],
+    "prevents": [
+      "absence_inflation",
+      "search_scope_erasure",
+      "permission_scope_erasure",
+      "historical_reconstruction_from_missing_results"
+    ]
+  },
+  "falsification_route": "Produce a retained authenticated traversal envelope that names the accessible universe, proves terminal coverage for every required dimension, reconciles independent enumerations, and either identifies an immutable assigning source or returns zero qualifying candidates without ceilings or exclusions. Any later qualifying immutable source falsifies an exhaustive_unlocated classification.",
+  "privacy_boundary": "This record contains repository-governance abstractions and identifiers only. It retains no private chat excerpts, health or pet-health material, credentials, identifying personal information, or unreviewed File Library content.",
+  "reversible": true,
+  "deletes_history": false
+}
