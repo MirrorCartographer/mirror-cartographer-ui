@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T23:41:17Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a deterministic static contract test that fails closed if the no-deploy Vercel repertory OIDC workflow broadens triggers or permissions, persists checkout credentials, uploads request-only material, introduces deployment or activation commands, reorders OIDC ahead of prerequisite gates, or weakens the explicit runtime/device claim boundary.",
+  "implementation_commit": "0eb7614608f06e6a2d82101335c7425d0474f5a5",
+  "evidence_commit": "4e095f1161f2e365bc182e4dc2296f458ead7926",
+  "acceptance_remaining": [
+    "Run node --test operations/vercel-studio/repertory/vercelRepertoryOidcWorkflowContract.v1.test.cjs in an authenticated checkout and retain exact output.",
+    "Dispatch the no-deploy OIDC receipt workflow for one exact commit and retain its token-free artifact.",
+    "Execute and reconcile both exhaustive workflow-run enumeration clients.",
+    "Bind a tested application commit to an immutable READY Vercel deployment after provider capacity returns.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Execute the new static contract test together with the existing OIDC and repertory suites. Do not deploy or activate the repertory until exact-run OIDC evidence, exhaustive run reconciliation, and immutable Vercel identity all verify.",
+  "claim_boundary": "Source implementation and additive commit are verified; test execution, workflow execution, deployment, rendering, and audio behavior are not claimed."
+}
