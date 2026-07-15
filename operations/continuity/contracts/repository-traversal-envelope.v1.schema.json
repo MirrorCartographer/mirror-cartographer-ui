@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operations/continuity/contracts/repository-traversal-envelope.v1.schema.json",
+  "title": "Repository Traversal Envelope",
+  "description": "Fail-closed evidence contract for repository-history coverage used in continuity provenance decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository",
+    "retrieved_at",
+    "default_branch",
+    "ref_inventory",
+    "commit_traversal",
+    "path_history",
+    "coverage_assessment",
+    "privacy_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "retrieved_at": { "type": "string", "format": "date-time" },
+    "default_branch": { "type": "string", "minLength": 1 },
+    "ref_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "refs", "pagination_complete", "permission_scope_known"],
+      "properties": {
+        "method": { "type": "string", "minLength": 1 },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "type", "target_sha"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "type": { "enum": ["branch", "tag", "other"] },
+              "target_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+            }
+          }
+        },
+        "pagination_complete": { "type": "boolean" },
+        "permission_scope_known": { "type": "boolean" },
+        "blind_spots": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "commit_traversal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roots", "visited_commits", "parent_edges", "unvisited_reachable_count", "digest_sha256"],
+      "properties": {
+        "roots": { "type": "array", "items": { "type": "string", "pattern": "^[0-9a-f]{40}$" } },
+        "visited_commits": { "type": "array", "items": { "type": "string", "pattern": "^[0-9a-f]{40}$" } },
+        "parent_edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["child", "parents"],
+            "properties": {
+              "child": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+              "parents": { "type": "array", "items": { "type": "string", "pattern": "^[0-9a-f]{40}$" } }
+            }
+          }
+        },
+        "unvisited_reachable_count": { "type": "integer", "minimum": 0 },
+        "digest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "path_history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queries", "deleted_path_inspection_performed", "results_digest_sha256"],
+      "properties": {
+        "queries": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "deleted_path_inspection_performed": { "type": "boolean" },
+        "results_digest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "blind_spots": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "coverage_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "terminal_provenance_allowed", "reasons"],
+      "properties": {
+        "status": { "enum": ["complete_accessible_history", "incomplete_coverage", "conflicting_coverage"] },
+        "terminal_provenance_allowed": { "type": "boolean" },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "privacy_boundary": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "coverage_assessment": {
+            "properties": { "terminal_provenance_allowed": { "const": true } },
+            "required": ["terminal_provenance_allowed"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ref_inventory": {
+            "properties": {
+              "pagination_complete": { "const": true },
+              "permission_scope_known": { "const": true },
+              "blind_spots": { "maxItems": 0 }
+            }
+          },
+          "commit_traversal": {
+            "properties": { "unvisited_reachable_count": { "const": 0 } }
+          },
+          "path_history": {
+            "properties": {
+              "deleted_path_inspection_performed": { "const": true },
+              "blind_spots": { "maxItems": 0 }
+            }
+          },
+          "coverage_assessment": {
+            "properties": { "status": { "const": "complete_accessible_history" } }
+          }
+        }
+      }
+    }
+  ]
+}
