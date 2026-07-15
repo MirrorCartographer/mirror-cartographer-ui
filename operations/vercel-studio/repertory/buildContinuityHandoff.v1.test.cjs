@@ -28,8 +28,29 @@ test('fails closed on non-adjacent stages or evidence drift', () => {
   assert.throws(() => buildContinuityHandoff(receipt(8, 'quiet-machine'), receipt(9, 'wordless-room-game', { repertory_sha256: 'd'.repeat(64) }), state), /digest mismatch/);
 });
 
-test('rejects private material and oversized state', () => {
-  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, chat_text: 'private' }), /forbidden field/);
+test('rejects private material at any depth and oversized state', () => {
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, nested: { chat_text: 'private' } }), /forbidden field/);
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, layers: [{ private_source: 'secret' }] }), /forbidden field/);
   assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { privacy_class: 'private' }), /public_abstract/);
   assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { privacy_class: 'public_abstract', payload: 'x'.repeat(5000) }), /4096-byte/);
+});
+
+test('rejects circular, non-plain, and unsupported continuity values', () => {
+  const circular = { privacy_class: 'public_abstract' };
+  circular.self = circular;
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), circular), /circular reference/);
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, when: new Date() }), /plain object/);
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, callback() {} }), /unsupported value/);
+  assert.throws(() => buildContinuityHandoff(receipt(8, 'a'), receipt(9, 'b'), { ...state, score: Infinity }), /non-finite number/);
+});
+
+test('retains an immutable deep clone rather than caller-owned nested references', () => {
+  const original = { ...state, nested: { phase: 3 }, sequence: [{ signal: 'dim' }] };
+  const handoff = buildContinuityHandoff(receipt(8, 'quiet-machine'), receipt(9, 'wordless-room-game'), original);
+  original.nested.phase = 99;
+  original.sequence[0].signal = 'bright';
+  assert.equal(handoff.continuity_state.nested.phase, 3);
+  assert.equal(handoff.continuity_state.sequence[0].signal, 'dim');
+  assert.equal(Object.isFrozen(handoff.continuity_state.nested), true);
+  assert.equal(Object.isFrozen(handoff.continuity_state.sequence[0]), true);
 });
