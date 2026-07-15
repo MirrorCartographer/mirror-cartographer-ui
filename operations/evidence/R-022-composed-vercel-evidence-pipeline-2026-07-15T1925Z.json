@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T19:25:00Z",
+  "finding": "Authenticated retrieval provenance and immutable deployment identity must be composed into one fail-closed gate; neither validator may be bypassed or treated as sufficient alone.",
+  "source_status": {
+    "repository_contracts": "primary_project_source",
+    "external_primary_source_lookup": "attempted_no_usable_result",
+    "implementation_basis": "existing approved repository contracts only"
+  },
+  "evidence_strength": "deterministic_local_test_of_composed_contract",
+  "uncertainty": [
+    "No live Vercel request was executed.",
+    "No deployment existence, READY state, route reachability, alias promotion, browser behavior, or audio behavior is established.",
+    "External provider documentation was not newly recovered during this run."
+  ],
+  "artifact": {
+    "implementation": "operations/frontier-research/vercelDeploymentEvidencePipeline.v1.cjs",
+    "tests": "operations/frontier-research/vercelDeploymentEvidencePipeline.v1.test.cjs",
+    "implementation_commit": "dd94232eb675557afa6056c14bcaadc4a28e734f",
+    "test_commit": "02b5714702f2d4bab66155cc105b5991d1797193"
+  },
+  "verification": {
+    "commands": [
+      "node --check operations/frontier-research/vercelDeploymentEvidencePipeline.v1.cjs",
+      "node --test operations/frontier-research/vercelDeploymentEvidencePipeline.v1.test.cjs"
+    ],
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "environment": "local isolated Node execution against repository-equivalent dependencies"
+  },
+  "falsification_route": [
+    "Provide an unauthenticated, tampered, cross-commit, non-READY, or provenance-unbound response that the pipeline incorrectly verifies.",
+    "Demonstrate nondeterministic pipeline digests for identical normalized evidence.",
+    "Show a live provider response shape that invalidates an assumed repository contract; revise the contract before promotion."
+  ],
+  "claim_boundary": "authenticated_retrieval_and_immutable_deployment_identity_contract_verified_locally_only",
+  "privacy_boundary": "No credentials, private response bodies, personal data, or raw account identifiers were retained."
+}
