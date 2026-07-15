@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-15T23:06:00Z",
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "change_type": "additive_completed_slice",
+  "completed_slice": "Added a fail-closed challenge-and-transcript binding assessor that requires a pre-issued cryptographic challenge to appear in both retained raw command transcripts, binds each transcript to its corresponding child receipt digest, verifies raw transcript digests, and produces a tamper-evident parent receipt without claiming same-process execution.",
+  "files": [
+    "operations/frontier-research/curlGeneratedHostnameChallengeBinding.v1.cjs",
+    "operations/frontier-research/curlGeneratedHostnameChallengeBinding.v1.test.cjs",
+    "operations/evidence/R-022-curl-challenge-transcript-binding-2026-07-15T2306Z.json"
+  ],
+  "verification": {
+    "test_command": "node --test operations/frontier-research/curlGeneratedHostnameChallengeBinding.v1.test.cjs",
+    "runtime_executed": false,
+    "reason": "GitHub connector provides repository writes but no authenticated checkout test runtime in this run."
+  },
+  "acceptance_remaining": [
+    "Execute and retain the deterministic Node test output.",
+    "Generate the challenge before capability collection in a trusted runner.",
+    "Retain raw capability and hostname transcripts containing the exact challenge and their SHA-256 digests.",
+    "Integrate verified challenge binding immediately ahead of V-001 repertory publication or deployment promotion.",
+    "Obtain real authenticated Vercel deployment identity and generated-hostname network evidence after provider capacity returns."
+  ],
+  "safe_next_action": "Run the challenge-binding test in an authenticated checkout, then modify the retained curl acquisition CLI to generate a cryptographic challenge before both commands and emit immutable raw transcript envelopes; do not infer same-process execution or initiate a deployment while provider capacity remains blocked.",
+  "canonical_queue_overwritten": false,
+  "history_deleted": false
+}
