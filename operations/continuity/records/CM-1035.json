@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "record_id": "CM-1035",
+  "recorded_at": "2026-07-15T16:15:00Z",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "subject": "Immutable-identifier provenance adjudication boundary",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json@894edf8b749c94bf454d1098c20c3946f5d7c20c",
+    "operations/ACTIVE_QUEUE.json@950a2315da4fc6312410ecc440383afba0b9f1eb",
+    "operations/SPECIALIST_REGISTRY.json@0249aea064eda2cc5c7bc86713201e1cd26354ff",
+    "operations/TRIGGER_REQUESTS.json@199460553cc13f6ade78947799fc9035b8c19bc9",
+    "operations/continuity/records/CM-1034.json@a2d1a047cadae767062aa81b80a6bf42150649c8",
+    "tools/continuity/repository-traversal-envelope-v1.cjs@53e498ffa5569cf304995e19d941afd796e6c841",
+    "tools/continuity/repository-traversal-envelope-v1.test.cjs@51d61feeaed8d2210d759a5c38b78b7bd07bb657"
+  ],
+  "claims": [
+    {
+      "status": "observed",
+      "claim": "M-004, M-005, and M-006 remain unresolved in the canonical queue because immutable provenance and exhaustive accessible-history coverage have not been established.",
+      "source": "operations/ACTIVE_QUEUE.json@950a2315da4fc6312410ecc440383afba0b9f1eb"
+    },
+    {
+      "status": "observed",
+      "claim": "The prior continuity slice established an executable fail-closed traversal envelope but did not produce an authenticated exhaustive traversal result.",
+      "source": "operations/continuity/records/CM-1034.json@a2d1a047cadae767062aa81b80a6bf42150649c8"
+    },
+    {
+      "status": "inferred",
+      "claim": "Even after exhaustive traversal, a text match alone is insufficient to resolve an identifier; the candidate must agree on namespace, owner, semantic role, temporal precedence, and immutable locator.",
+      "basis": "The queue explicitly requires provenance rather than reconstruction, and prior continuity rules reject namespace collisions and lead-only prose."
+    },
+    {
+      "status": "proposed",
+      "claim": "Adjudicate every candidate object through the resolution matrix in this record before changing a provenance-gap node from unresolved.",
+      "resolution_matrix": {
+        "required_agreement": [
+          "identifier_exact_match",
+          "continuity_namespace_match",
+          "owner_or_assigning_authority_match",
+          "semantic_role_match",
+          "temporal_precedence_consistent",
+          "immutable_locator_present",
+          "source_object_content_retained",
+          "traversal_coverage_terminal"
+        ],
+        "rejection_conditions": [
+          "suffix_or_substring_match_only",
+          "different_namespace",
+          "automation_completion_prose_without_source_object",
+          "reconstructed_identifier",
+          "mutable-only locator",
+          "unknown permission scope",
+          "incomplete ref or history traversal",
+          "deleted-path inspection incomplete",
+          "conflicting candidate assignments"
+        ],
+        "terminal_outcomes": [
+          "located_verified",
+          "exhaustive_unlocated",
+          "unresolved_incomplete_coverage",
+          "unresolved_conflicting_candidates"
+        ]
+      }
+    },
+    {
+      "status": "superseded",
+      "claim": "A repository search hit or identifier-shaped filename can resolve M-004, M-005, or M-006.",
+      "superseded_by": "Exact namespace-aware immutable-object agreement plus terminal traversal coverage."
+    },
+    {
+      "status": "unresolved",
+      "claim": "Whether any accessible immutable object satisfies all resolution-matrix requirements for M-004, M-005, or M-006.",
+      "resolution_route": "Execute authenticated exhaustive traversal, retain candidate source objects and locators, then apply this matrix without recreating absent history."
+    }
+  ],
+  "durable_rule": "Continuity identifiers are resolved by provenance agreement, not resemblance. A candidate may change state only when its exact identifier, namespace, authority, semantic role, chronology, immutable locator, retained source content, and terminal traversal coverage all agree. Otherwise the identifier remains unresolved or is classified exhaustive-unlocated only after complete coverage.",
+  "privacy_boundary": {
+    "retained": [
+      "repository paths and blob identities",
+      "abstract continuity identifiers",
+      "claim-state semantics",
+      "verification and falsification routes"
+    ],
+    "excluded": [
+      "private chat text",
+      "health and pet-health details",
+      "credentials or tokens",
+      "identifying personal information",
+      "unreviewed file-library content"
+    ]
+  },
+  "specialist_registry_decision": {
+    "change": "none",
+    "reason": "No durable capability gap beyond the existing continuity team mandate was demonstrated."
+  }
+}
