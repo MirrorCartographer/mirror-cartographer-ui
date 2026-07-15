@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T21:48:50Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "The canonical repertory runner now validates a fail-closed required-test inventory before execution, preventing silent omission of the immutable-deployment activation gate or curl-bound publication gate.",
+  "files": [
+    "operations/vercel-studio/repertory/repertoryTestInventory.v1.cjs",
+    "operations/vercel-studio/repertory/runRepertoryTests.v1.mjs",
+    "operations/vercel-studio/repertory/requiredRepertoryTestInventory.v1.test.cjs",
+    "operations/evidence/V-001-required-repertory-test-inventory-2026-07-15T2148Z.json"
+  ],
+  "verification": {
+    "isolated_unit_tests": "3 passed, 0 failed",
+    "authenticated_checkout_suite": "not executed",
+    "runtime_activation_performed": false
+  },
+  "acceptance_remaining": [
+    "Run npm run test:vercel-repertory in an authenticated checkout and retain complete output.",
+    "Execute independent exhaustive workflow enumerations against one exact commit and retain reconciliation.",
+    "Observe an operations-only Vercel sentinel skipped or ignored after provider capacity returns.",
+    "Bind one tested application commit to immutable successful Vercel deployment identity.",
+    "Verify browser audio routing and bounded physical iPhone Safari audibility separately."
+  ],
+  "safe_next_action": "Run npm run test:vercel-repertory in an authenticated checkout. Do not activate the repertory or create an application deployment while the provider-capacity blocker remains unresolved.",
+  "canonical_shared_state_overwritten": false,
+  "specialist_registry_changed": false
+}
