@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "artifact_id": "CM-20260715T0315Z-coverage-claim-lattice",
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T03:15:00Z",
+  "title": "Repository coverage claims form a non-interchangeable evidence lattice",
+  "durable_memory": "A repository search result is evidence about the inspected search surface, not evidence of repository-wide absence. Provenance may be classified unlocated only after the declared coverage includes every accessible ref and the reachable commit graph, with immutable traversal evidence retained.",
+  "claim_states": {
+    "observed": [
+      "The active queue requires exhaustive branch inventory or equivalent history traversal before M-004, M-005, and M-006 may be classified unlocated.",
+      "The GitHub code-search connector returned no indexed result for M-004 in this run.",
+      "An empty branch-search query returned no branch objects and therefore did not establish a branch inventory."
+    ],
+    "inferred": [
+      "No-result indexed search is compatible with absence, incomplete indexing, inaccessible refs, unsupported query behavior, or namespace mismatch.",
+      "Coverage evidence must be retained independently from the candidate provenance objects it evaluates."
+    ],
+    "proposed": [
+      "All continuity provenance artifacts should declare one coverage class from this lattice and reject promotion from a weaker class to repository_exhaustive without immutable traversal evidence."
+    ],
+    "superseded": [
+      "Treating a no-result code search as proof that an artifact never existed.",
+      "Describing an unspecified repository search as exhaustive."
+    ],
+    "unresolved": [
+      "The complete accessible ref inventory for the repository.",
+      "The originating immutable objects for M-004, M-005, and M-006."
+    ]
+  },
+  "coverage_lattice": [
+    {
+      "class": "single_object",
+      "meaning": "One immutable object was inspected.",
+      "permits_absence_claim": false
+    },
+    {
+      "class": "indexed_query",
+      "meaning": "One or more indexed search queries were executed.",
+      "permits_absence_claim": false
+    },
+    {
+      "class": "default_branch_path_set",
+      "meaning": "Declared paths on the default branch were inspected.",
+      "permits_absence_claim": false
+    },
+    {
+      "class": "declared_ref_subset",
+      "meaning": "A named, incomplete set of refs and reachable objects was traversed.",
+      "permits_absence_claim": false
+    },
+    {
+      "class": "all_accessible_refs",
+      "meaning": "Every ref returned by an authenticated inventory was traversed, but graph-completeness or hidden-ref limits remain unresolved.",
+      "permits_absence_claim": false
+    },
+    {
+      "class": "repository_exhaustive",
+      "meaning": "Every accessible ref and reachable commit was traversed with retained inventory, pagination, commit identities, and tool-limit evidence.",
+      "permits_absence_claim": true
+    }
+  ],
+  "promotion_gate": {
+    "target": "repository_exhaustive",
+    "required_evidence": [
+      "authenticated ref inventory with pagination completeness",
+      "immutable snapshot time and repository identity",
+      "reachable commit traversal for every inventoried ref",
+      "deduplicated commit-object manifest",
+      "declared handling of tags, pull-request refs, deleted refs, forks, and inaccessible objects",
+      "tool ceiling and error ledger",
+      "candidate query and namespace rules",
+      "digest or immutable locator for retained traversal outputs"
+    ],
+    "fail_closed_conditions": [
+      "empty or unsupported branch query",
+      "unknown pagination completeness",
+      "search-index status unknown or incomplete",
+      "unresolved API ceiling",
+      "uninspected accessible ref",
+      "missing traversal artifact",
+      "candidate identified only by suffix collision"
+    ]
+  },
+  "contradiction_resolved": "A search can be complete relative to its declared query while remaining incomplete relative to repository history. Query completeness and repository completeness are separate claims.",
+  "falsification_route": "Falsify this rule by producing a documented GitHub guarantee that a no-result indexed code search covers every accessible ref and all reachable historical objects, including unindexed or deleted-path history; absent such a guarantee, the weaker coverage classification remains required.",
+  "privacy": {
+    "classification": "public_repository_metadata_only",
+    "private_material_exposed": false,
+    "excluded": [
+      "private chat wording",
+      "personal context",
+      "credentials",
+      "raw file-library content"
+    ]
+  },
+  "specialist_registry_change": null,
+  "next_action": "Implement an authenticated ref-and-commit inventory artifact, then apply this lattice to M-004, M-005, and M-006 candidate adjudication."
+}
