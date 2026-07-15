@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T23:21:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Implemented and unit-verified a fail-closed RS256 verifier for GitHub Actions OIDC JWTs using trusted JWKS input, issuer, audience, and validity-window checks before exact-run claim binding.",
+  "files": [
+    "operations/frontier-research/githubOidcJwtVerifier.v1.cjs",
+    "operations/frontier-research/githubOidcJwtVerifier.v1.test.cjs",
+    "operations/evidence/R-022-github-oidc-jwt-verification-2026-07-15T2321Z.json"
+  ],
+  "verification": "6 deterministic Node tests passed; 0 failed.",
+  "acceptance_remaining": [
+    "Add an operations-only GitHub Actions workflow with id-token: write.",
+    "Request a custom-audience token through the runner OIDC endpoint without retaining the bearer token.",
+    "Fetch discovery metadata and JWKS, pass verified claims into githubOidcRunnerBinding.v1.cjs, and retain only the resulting receipt plus redacted test evidence.",
+    "Execute the complete chain against one exact repository workflow run and attempt."
+  ],
+  "safe_next_action": "Create the operations-only workflow adapter that obtains a short-lived custom-audience token, verifies it through githubOidcJwtVerifier.v1.cjs, immediately discards the token, then passes only verified claims into githubOidcRunnerBinding.v1.cjs.",
+  "claim_boundary": "Implementation and deterministic unit verification only; no live workflow execution, runner integrity, same-process execution, transcript truth, deployment, browser, audio, or physical-device claim.",
+  "specialist_registry_change": "none"
+}
