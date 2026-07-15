@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T21:36:00Z",
+  "state": "completed_handoff_ready",
+  "completed_slice": "Added a fail-closed adapter that converts retained curl --write-out JSON into a tamper-evident generated-hostname observation receipt only when the command and metrics prove HEAD-only access, no redirect following, exact hostname binding, normal TLS verification, successful transfer, and direct 2xx response.",
+  "files": [
+    "operations/frontier-research/curlGeneratedHostnameReceipt.v1.cjs",
+    "operations/frontier-research/curlGeneratedHostnameReceipt.v1.test.cjs",
+    "operations/evidence/R-022-curl-generated-hostname-receipt-2026-07-15T2136Z.json"
+  ],
+  "verification": {
+    "command": "node --check operations/frontier-research/curlGeneratedHostnameReceipt.v1.cjs && node --test operations/frontier-research/curlGeneratedHostnameReceipt.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "execution_scope": "isolated local reconstruction using the committed dependency source"
+  },
+  "acceptance_remaining": [
+    "Run the adapter in an authenticated checkout using a verified immutable Vercel deployment evidence object.",
+    "Retain the exact curl command array, raw %{json} output, curl exit code, and observation timestamp.",
+    "Do not infer content, alias, audio, browser, or physical-device claims from the receipt."
+  ],
+  "safe_next_action": "After provider capacity returns and immutable deployment identity is verified, run curl --silent --show-error --head --max-redirs 0 --write-out '%{json}' --output /dev/null against the exact generated hostname, retain raw output, and pass it through adaptCurlGeneratedHostnameReceipt()."
+}
