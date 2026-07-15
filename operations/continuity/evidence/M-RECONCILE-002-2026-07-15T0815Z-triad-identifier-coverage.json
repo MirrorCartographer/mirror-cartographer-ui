@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-15T08:15:00Z",
+  "artifact_type": "triad_identifier_commit_message_coverage",
+  "scope": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "identifiers": ["M-004", "M-005", "M-006"],
+    "coverage_class": "indexed_connector_bounded",
+    "exhaustive": false
+  },
+  "memory_recovered": "Exact commit-message searches now cover all three disputed identifiers individually. Each search resolves only to continuity-created unresolved-origin, namespace-rejection, or temporal-boundary records. No located commit message is an originating assignment. File Library retrieval again yields V8/V9 proof-machine identifiers whose namespace and semantic role do not match continuity_mining.",
+  "identifier_results": {
+    "M-004": {
+      "located_commits": ["83205275e023fccf602127ca4ff1cf3075bd1c26", "0f2436cdee875fccb32e7e0dc571c4d9a4d98c6a", "114d63cb2723fcf7dfc879819de31d44e076899e"],
+      "origin_assignment_located": false
+    },
+    "M-005": {
+      "located_commits": ["4c9814eacf20dd62949b97045ef2cf6cf68ab9e9"],
+      "origin_assignment_located": false
+    },
+    "M-006": {
+      "located_commits": ["83205275e023fccf602127ca4ff1cf3075bd1c26", "94778c45072bad84a0c63077ac23492a1a756a8c", "114d63cb2723fcf7dfc879819de31d44e076899e"],
+      "origin_assignment_located": false
+    }
+  },
+  "claims": {
+    "observed": [
+      "M-004 exact indexed search returned three continuity reconciliation records.",
+      "M-005 exact indexed search returned one unresolved-origin status record.",
+      "M-006 exact indexed search returned three continuity reconciliation records.",
+      "File Library results use V8/V9 prefixes and proof-machine semantics."
+    ],
+    "inferred": [
+      "The originating assignments are not present in currently indexed exact-identifier commit messages.",
+      "The identifiers may have entered repository continuity records from an external or unretained source, but that source class is not established."
+    ],
+    "proposed": [
+      "Enumerate every accessible ref and reachable commit with an authenticated exhaustive traversal.",
+      "Search pre-boundary trees and privacy-reviewed source classes for explicit assignment language."
+    ],
+    "superseded": [
+      "M-004-only search coverage is sufficient for the full triad.",
+      "Numeric suffix collisions resolve continuity provenance.",
+      "Indexed search silence proves exhaustive history absence."
+    ],
+    "unresolved": [
+      "Immutable assignment objects for M-004, M-005, and M-006.",
+      "Exhaustive accessible ref and pre-boundary reachable-history coverage.",
+      "Originating decision log, lexicon, project document, or privacy-reviewed chat locator."
+    ]
+  },
+  "contradictions_resolved": [
+    {
+      "apparent_conflict": "M-005 has fewer indexed hits than M-004 and M-006.",
+      "resolution": "Hit-count asymmetry reflects reconciliation wording, not stronger or weaker provenance; all three remain unresolved under identical authority predicates."
+    },
+    {
+      "apparent_conflict": "File Library contains 004, 005, and 006 identifiers.",
+      "resolution": "The V8/V9 records fail namespace, owner, and semantic-role agreement."
+    }
+  ],
+  "privacy_boundary": {
+    "included": ["repository paths", "commit SHAs", "abstract classifications", "coverage limits"],
+    "excluded": ["private chat text", "personal records", "credentials", "File Library source bodies"]
+  },
+  "verification": {
+    "result": "passed_with_incomplete_coverage",
+    "promotion_allowed": false
+  },
+  "falsification_route": "Produce an earlier immutable assignment object from an exhaustively retained ref and history traversal that satisfies namespace, owner, semantic-role, temporal-precedence, and immutable-locator agreement.",
+  "rollback": "Revert the commit adding this additive evidence file."
+}
