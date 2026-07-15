@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-021",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-15T00:36:00Z",
+  "slice": "retained_workflow_pagination_provenance_gate",
+  "finding": {
+    "status": "observed_from_primary_source",
+    "summary": "GitHub's repository workflow-runs endpoint supports head_sha filtering, a maximum per_page of 100, Link-based pagination, and a 1,000-result ceiling when search parameters such as head_sha are used. A retained result cannot support exhaustive-coverage claims unless request identity, page order, Link-chain termination, per-page payload integrity, exact-commit membership, and the provider ceiling are checked together.",
+    "evidence_strength": "high_for_api_contract; unverified_for_private_repository_execution",
+    "uncertainty": "GitHub may introduce newer API versions; the validator records but does not independently prove transport headers or authentication identity."
+  },
+  "artifact": {
+    "implementation": "operations/frontier-research/github-actions/verifyPaginationProvenance.v1.cjs",
+    "tests": "operations/frontier-research/github-actions/verifyPaginationProvenance.v1.test.cjs",
+    "classification_on_success": "pagination_provenance_verified",
+    "fail_closed_conditions": [
+      "invalid exact commit SHA",
+      "unexpected endpoint",
+      "per_page not equal to 100",
+      "invalid API version format",
+      "missing or non-contiguous pages",
+      "missing intermediate next link",
+      "terminal next link still present",
+      "more than 100 records in a page",
+      "cross-commit workflow run",
+      "duplicate or invalid run identifier",
+      "page digest mismatch",
+      "reported count mismatch",
+      "1,000-result provider-ceiling ambiguity",
+      "retrieval not explicitly declared complete"
+    ]
+  },
+  "verification": {
+    "command": "node --test verifyPaginationProvenance.v1.test.cjs",
+    "result": "6 passed, 0 failed",
+    "scope": "deterministic local tests against exact source prior to repository write",
+    "not_claimed": [
+      "authenticated private-repository enumeration",
+      "transport-header capture",
+      "GitHub identity or token provenance",
+      "deployment evidence",
+      "peer execution"
+    ]
+  },
+  "falsification_route": [
+    "Construct a retained pagination envelope with a broken intermediate Link chain and show that the validator accepts it.",
+    "Construct a page whose payload differs from its recorded SHA-256 digest and show that the validator accepts it.",
+    "Supply 1,000 exact-commit records and show that the validator promotes the result as exhaustive.",
+    "Execute both authenticated enumerators for one exact commit and compare the accepted run set against the raw retained pages."
+  ],
+  "design_implication": "Place this gate before R-021 reconciliation. Only pagination_provenance_verified envelopes may enter the independent-enumeration comparison; provider-ceiling ambiguity remains non-promotable.",
+  "specialist_registry_change": null,
+  "canonical_queue_overwritten": false
+}
