@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T11:36:00Z",
+  "scope": "completed_slice",
+  "state": "in_progress_blocked",
+  "completed_slice": "The safety-critical repertory inventory now requires the programmed-stage receipt verifier exactly once, preventing the canonical test command from silently losing this commit-and-repertory-bound non-activation gate.",
+  "files": [
+    "operations/vercel-studio/repertory/repertoryTestInventory.v1.test.cjs",
+    "operations/evidence/V-001-repertory-critical-test-inventory-2026-07-15T1136Z.json"
+  ],
+  "commits": [
+    "a18239a5cc5edd57b8cdba4572687ef95d92a020",
+    "f084a9ae64ab0c9a6ee0a48ad1a56c7588b59173"
+  ],
+  "verification": {
+    "isolated_inventory_tests_passed": true,
+    "tests": 3,
+    "full_repertory_suite_executed": false
+  },
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both the primary enumerator and an independent gh api --paginate traversal, retain both raw outputs, and retain the reconciliation bundle.",
+    "Observe an operations-only sentinel reported as skipped or ignored after build capacity returns.",
+    "Observe an exact-commit audio-routing workflow and inspect its six-outcome artifact.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "next_action": "Run npm run test:vercel-repertory in an authenticated checkout and retain the complete output; then execute both exhaustive workflow clients against one exact commit without activating the repertory or creating an application deployment while provider capacity remains unverified."
+}
