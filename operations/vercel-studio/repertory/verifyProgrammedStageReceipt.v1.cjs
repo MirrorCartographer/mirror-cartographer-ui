@@ -24,6 +24,9 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
   if (receipt.continuity_state_preserved !== true) violations.push('continuity_not_preserved');
   if (!Number.isInteger(receipt.utc_hour) || receipt.utc_hour < 0 || receipt.utc_hour > 23) violations.push('invalid_utc_hour');
   if (!receipt.programmed_production || typeof receipt.programmed_production.id !== 'string' || receipt.programmed_production.id.length === 0) violations.push('missing_programmed_production');
+  if (!receipt.programmed_edition || typeof receipt.programmed_edition.id !== 'string' || receipt.programmed_edition.id.length === 0) violations.push('missing_programmed_edition');
+  if (typeof receipt.programmed_edition?.cue !== 'string' || receipt.programmed_edition.cue.length === 0) violations.push('missing_programmed_edition_cue');
+  if (receipt.programmed_edition?.utc_hour !== receipt.utc_hour) violations.push('edition_hour_mismatch');
   for (const field of FALSE_CLAIM_FIELDS) {
     if (receipt[field] !== false) violations.push(`${field}_must_be_false`);
   }
@@ -31,6 +34,8 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
   if (expected.repertory_sha256 && receipt.repertory_sha256 !== expected.repertory_sha256) violations.push('repertory_digest_mismatch');
   if (expected.utc_hour !== undefined && receipt.utc_hour !== expected.utc_hour) violations.push('utc_hour_mismatch');
   if (expected.production_id && receipt.programmed_production?.id !== expected.production_id) violations.push('production_id_mismatch');
+  if (expected.edition_id && receipt.programmed_edition?.id !== expected.edition_id) violations.push('edition_id_mismatch');
+  if (expected.edition_cue && receipt.programmed_edition?.cue !== expected.edition_cue) violations.push('edition_cue_mismatch');
 
   return Object.freeze({
     verified: violations.length === 0,
@@ -38,6 +43,8 @@ function verifyProgrammedStageReceipt(receipt, expected = {}) {
     source_commit: receipt.source_commit || null,
     repertory_sha256: receipt.repertory_sha256 || null,
     production_id: receipt.programmed_production?.id || null,
+    edition_id: receipt.programmed_edition?.id || null,
+    edition_cue: receipt.programmed_edition?.cue || null,
     violations: Object.freeze(violations),
   });
 }
