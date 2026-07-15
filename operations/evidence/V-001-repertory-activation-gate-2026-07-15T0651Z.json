@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-activation-gate-2026-07-15T0651Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T06:51:00Z",
+  "slice": "Bind canonical repertory validity and immutable Vercel deployment identity into one fail-closed activation assessor.",
+  "files": [
+    "operations/vercel-studio/repertory/assessRepertoryActivation.v1.cjs",
+    "operations/vercel-studio/repertory/assessRepertoryActivation.v1.test.cjs"
+  ],
+  "commits": [
+    "58f4019d67b8c97f2a4688cb5d55aac0f41db8e6",
+    "574974efa39432eb8e13edbeb9b17f1052830efb"
+  ],
+  "verification": {
+    "method": "isolated local Node execution using the committed assessor and dependency contracts with a schema-equivalent repertory fixture, followed by repository fetch-back",
+    "command": "node --test assessRepertoryActivation.v1.test.cjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "coverage": [
+      "valid repertory plus exact-commit READY deployment identity permits precondition promotion",
+      "missing deployment evidence fails closed",
+      "commit mismatch fails closed",
+      "weakened runtime boundary fails closed"
+    ],
+    "limitations": [
+      "The connected GitHub surface cannot execute the repository checkout's npm script.",
+      "No Vercel deployment was initiated or inspected.",
+      "No runtime activation, browser audio, or physical-device behavior is claimed."
+    ]
+  },
+  "claim_boundary": "activation_precondition_contract_verified_in_isolation_only",
+  "runtime_changed": false,
+  "deployment_claimed": false,
+  "activation_claimed": false,
+  "rollback": "Revert commits 574974efa39432eb8e13edbeb9b17f1052830efb and 58f4019d67b8c97f2a4688cb5d55aac0f41db8e6."
+}
