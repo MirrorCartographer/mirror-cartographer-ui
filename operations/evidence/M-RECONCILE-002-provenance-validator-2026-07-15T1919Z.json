@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "recorded_at": "2026-07-15T19:19:00Z",
+  "slice": "Executable provenance-candidate adjudication boundary",
+  "claims": {
+    "observed": [
+      "The repository already contained a provenance-candidate schema requiring namespace, authority, semantic-role, temporal-precedence, and immutable-locator agreement.",
+      "The new validator and six deterministic tests were committed and fetched back from the default branch.",
+      "Local Node syntax and test execution completed with six passing tests and zero failures."
+    ],
+    "inferred": [
+      "Executable enforcement reduces the risk that a token collision, downstream reference, or partial search is promoted into authoritative provenance."
+    ],
+    "proposed": [
+      "Require every future M-004, M-005, or M-006 candidate record to pass this validator before classification is accepted."
+    ],
+    "superseded": [
+      "A matching identifier token alone is sufficient to resolve provenance.",
+      "Search completeness and candidate validity are the same property."
+    ],
+    "unresolved": [
+      "No immutable assigning source for M-004, M-005, or M-006 has yet been located.",
+      "Exhaustive branch and reachable-history coverage remains incomplete."
+    ]
+  },
+  "verification": {
+    "commands": [
+      "node --check operations/continuity/validateProvenanceCandidate.v1.cjs",
+      "node --test operations/continuity/validateProvenanceCandidate.v1.test.cjs"
+    ],
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "coverage": [
+      "valid immutable assigning source",
+      "downstream reference retained without promotion",
+      "token collision retained as noncapable",
+      "partial coverage forced to coverage_blocked",
+      "failed agreement rejects located_verified",
+      "missing immutable identity rejects located_verified"
+    ]
+  },
+  "privacy": {
+    "class": "public_repository_governance",
+    "contains_private_source_material": false,
+    "excluded": [
+      "raw private chat",
+      "file-library contents",
+      "personal data",
+      "health and pet-health material",
+      "credentials and account identifiers"
+    ]
+  }
+}
