@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T23:41:17Z",
+  "slice": "Static fail-closed contract test for the no-deploy Vercel repertory OIDC workflow.",
+  "implementation_commit": "0eb7614608f06e6a2d82101335c7425d0474f5a5",
+  "files": [
+    "operations/vercel-studio/repertory/vercelRepertoryOidcWorkflowContract.v1.test.cjs"
+  ],
+  "observed": [
+    "The repository contains .github/workflows/vercel-repertory-oidc-receipt.yml.",
+    "The new test reads that exact workflow path and encodes six deterministic contract checks."
+  ],
+  "verified_by_source_inspection": [
+    "manual workflow_dispatch only",
+    "contents: read and id-token: write permissions",
+    "checkout persist-credentials: false",
+    "verified-receipt.json is the sole uploaded path",
+    "request-only expected.json is removed",
+    "prohibited deployment and repertory activation commands are rejected",
+    "prerequisite deterministic gates must precede the live OIDC request",
+    "claim boundary must retain browser, audio, deployment, and device uncertainty"
+  ],
+  "execution_status": "not_executed",
+  "execution_reason": "The connected GitHub surface supported additive source changes but did not provide an authenticated checkout runtime for node --test during this run.",
+  "claim_boundary": [
+    "Source commit existence is verified.",
+    "Test passage is not claimed.",
+    "GitHub Actions execution is not claimed.",
+    "Vercel deployment identity is not claimed.",
+    "Browser rendering, mobile Safari behavior, and physical audio audibility remain unproven."
+  ],
+  "reversibility": "Revert the standalone implementation commit; no application runtime, repertory manifest, deployment configuration, or payment surface was changed.",
+  "privacy": "Contains repository-operational facts only; no private chat, credentials, health data, contact data, or private source material."
+}
