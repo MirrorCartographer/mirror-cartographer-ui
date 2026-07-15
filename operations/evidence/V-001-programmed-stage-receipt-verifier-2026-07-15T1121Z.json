@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-programmed-stage-receipt-verifier-2026-07-15T1121Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-15T11:21:05Z",
+  "finding": "The repertory already emitted exact-commit and repertory-bound programmed-stage receipts, but no independent consumer-side verifier prevented malformed identity fields or smuggled activation, deployment, browser, audio, device, or side-effect claims from being accepted downstream.",
+  "implemented_slice": {
+    "module": "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs",
+    "module_commit": "1deb74e5580dc56dcb77144e6107f1603fb21a77",
+    "test": "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.test.cjs",
+    "test_commit": "7e5bf4ea15c85435fc748b2dc397ebeac13bfbf7",
+    "behavior": [
+      "Requires exact lowercase commit identity and a canonical SHA-256 repertory digest.",
+      "Requires explicit commit binding, repertory binding, verified safety contract, and continuity preservation.",
+      "Rejects any activation, deployment, browser, audio, physical-device, or side-effect claim unless it is exactly false.",
+      "Optionally reconciles expected commit, repertory digest, UTC hour, and production identity."
+    ]
+  },
+  "verification": {
+    "local_node_test": {
+      "command": "node --test verifyProgrammedStageReceipt.v1.test.cjs",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "committed_blob_sha": "a68eee29b3abf0dca5d844eaace11a8550183129",
+    "exact_commit_fetch_verified": true,
+    "full_repertory_suite_executed": false
+  },
+  "production_context": {
+    "programmed_stage": "archive-afterimage",
+    "programmed_title": "Archive Afterimage",
+    "basis": "Canonical UTC hour 11 slot in HOURLY_REPERTORY.v1.json.",
+    "runtime_execution_claimed": false,
+    "deployment_claimed": false
+  },
+  "privacy_boundary": {
+    "classification": "public_abstract",
+    "private_source_material_included": false,
+    "payments_or_conversion_logic_added": false
+  },
+  "limits": [
+    "The full npm run test:vercel-repertory suite was not executed because no authenticated repository checkout was available.",
+    "No browser, Vercel deployment, audio playback, or physical-device behavior was tested.",
+    "Provider build capacity and immutable deployment identity remain unresolved."
+  ],
+  "rollback": "Revert test commit 7e5bf4ea15c85435fc748b2dc397ebeac13bfbf7, module commit 1deb74e5580dc56dcb77144e6107f1603fb21a77, and this evidence commit in reverse order."
+}
