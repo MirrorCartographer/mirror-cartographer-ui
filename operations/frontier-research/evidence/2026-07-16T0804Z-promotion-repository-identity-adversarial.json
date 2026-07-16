@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "recorded_at": "2026-07-16T08:04:43Z",
+  "research_question": "Can immutable preview deployment evidence be accepted when the deployment comes from the wrong GitHub repository or Vercel project but shares the expected commit SHA, branch, state, and hostname shape?",
+  "protected_surfaces_unchanged": [
+    "automations",
+    "schedules",
+    "canonical shared state",
+    "deployments",
+    "production infrastructure",
+    "credentials",
+    "DNS",
+    "irreversible user data"
+  ],
+  "phases": [
+    {
+      "checkpoint": "before_adopting_research_direction",
+      "claim_or_design_under_test": "Exact commit, preview branch, non-production target, READY state, and generated hostname are sufficient to bind promotion evidence to Mirror Cartographer.",
+      "method": "Inspected the canonical promotion checklist, promotion assessor, and immutable Vercel deployment evidence contract; constructed wrong-repository and wrong-project counterexamples without calling a deployment API.",
+      "evidence": [
+        "operations/deployment/PROMOTION_CHECKLIST.json at preview",
+        "operations/deployment/validate-promotion-evidence.v1.mjs at preview",
+        "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.cjs at preview",
+        "GitHub repository metadata confirming repository id 1003910384"
+      ],
+      "counterexample_or_failure_found": "The assessor did not compare deployment.gitSource.repoId or deployment.name against canonical expected identity. A deployment from another repository or Vercel project could satisfy all existing checks if other fields matched.",
+      "repair_or_refinement": "Adopt a composed identity requirement: exact repository id and expected Vercel project name must agree in addition to SHA, branch, target, state, and hostname. Missing expected identity must fail closed.",
+      "remaining_uncertainty": "The canonical Vercel project ID has not been retrieved from authenticated provider metadata, so project ID matching remains optional until a real value is available.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "rollback_route": "Revert commits f6ad861ed782d0ae57a7006301a5776edd7ea36d and c1be320d97941c3f902c327ace157117ab191586.",
+      "next_falsifiable_step": "Attempt deterministic fixtures where a wrong repoId or project name otherwise satisfies every promotion check; each must fail closed."
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_or_design_under_test": "The new identity binding rejects cross-repository and cross-project substitution without duplicating the immutable deployment validator.",
+      "method": "Added repository/project comparison only in the promotion composition layer, retained the canonical immutable deployment validator, and added reversible in-memory negative-control fixtures.",
+      "evidence": [
+        "implementation commit f6ad861ed782d0ae57a7006301a5776edd7ea36d",
+        "checklist commit c1be320d97941c3f902c327ace157117ab191586",
+        "test commit 6435bf7ad3329655b75814b4dd02426df8dd2f0a"
+      ],
+      "counterexample_or_failure_found": "A checklist without expected identity could otherwise silently weaken the gate. The implementation now emits expected_github_repo_id_missing and expected_vercel_project_name_missing.",
+      "repair_or_refinement": "Advanced result schema to version 4, exposed observed repo/project identity, expanded non-success states in the checklist, and added fail-closed missing-identity behavior.",
+      "remaining_uncertainty": "Downstream consumers expecting result schema version 3 have not been exhaustively inventoried. Project-name identity is weaker than immutable project-ID identity.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "rollback_route": "Revert commits 6435bf7ad3329655b75814b4dd02426df8dd2f0a, c1be320d97941c3f902c327ace157117ab191586, and f6ad861ed782d0ae57a7006301a5776edd7ea36d in reverse order.",
+      "next_falsifiable_step": "Execute the promotion validator test suite at the exact preview head and inspect all schema-version consumers."
+    },
+    {
+      "checkpoint": "during_verification",
+      "claim_or_design_under_test": "The source-level repair is sufficient to declare promotion readiness.",
+      "method": "Separated repository-source evidence from runtime verification and provider deployment evidence; checked for evidence overreach and rollback failure assumptions.",
+      "evidence": [
+        "GitHub metadata confirms repository id 1003910384",
+        "source and negative-control fixtures are committed on preview",
+        "no authenticated Vercel deployment object or retained Node test output was produced in this run"
+      ],
+      "counterexample_or_failure_found": "Committed tests are not executed tests, and repository metadata does not establish the Vercel project ID or a live commit-matched deployment. Promotion success cannot be claimed.",
+      "repair_or_refinement": "Kept promotion blocked and limited the claim to source-level enforcement. Recorded exact rollback commits and withheld deployment/publication claims.",
+      "remaining_uncertainty": "Runtime test passage, downstream schema compatibility, authenticated Vercel project ID, immutable deployment identity, route checks, accessibility, mobile, audio, privacy, and performance remain unverified.",
+      "outcome": "documented_unresolved_question",
+      "robustness_increased": true,
+      "rollback_route": "Revert the evidence-record commit, then 6435bf7ad3329655b75814b4dd02426df8dd2f0a, c1be320d97941c3f902c327ace157117ab191586, and f6ad861ed782d0ae57a7006301a5776edd7ea36d.",
+      "next_falsifiable_step": "Run node --test operations/deployment/validate-promotion-evidence.v1.test.mjs at exact preview head, retain output, inventory schema consumers, then obtain read-only authenticated Vercel project metadata and bind the canonical project ID before any promotion assessment."
+    }
+  ],
+  "strongest_surviving_proposal": "Promotion evidence must compose one provider-authenticated deployment proof bound simultaneously to the exact commit, preview branch, non-production target, generated hostname, GitHub repository ID, Vercel project identity, commit-matched checks, zero critical risks, and a recorded rollback route.",
+  "rejected_alternatives": [
+    "Treating commit SHA equality as repository identity",
+    "Treating branch equality as repository identity",
+    "Trusting any Vercel project with the expected deployment name shape",
+    "Duplicating immutable deployment validation inside the promotion gate",
+    "Allowing absent expected identity to degrade to best-effort matching",
+    "Treating committed negative controls as executed verification"
+  ],
+  "unresolved_risks": [
+    "Canonical authenticated Vercel project ID is unknown",
+    "Runtime test output is not retained",
+    "Schema-version-3 consumers may require migration",
+    "No immutable live deployment evidence is available",
+    "All browser, device, accessibility, audio, privacy, and performance checks remain outstanding"
+  ],
+  "promotion_decision": "blocked"
+}
