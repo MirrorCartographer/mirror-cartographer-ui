@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T02:06:45Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Resolved repertory selection-rule contract drift by adding a fail-closed validator for deterministic direct UTC hour-slot selection, rejecting the superseded modulo rule, and making its test mandatory in the repertory test inventory.",
+  "evidence": [
+    "operations/vercel-studio/repertory/verifySelectionRule.v1.cjs",
+    "operations/vercel-studio/repertory/verifySelectionRule.v1.test.cjs",
+    "operations/vercel-studio/repertory/repertoryTestInventory.v1.cjs",
+    "operations/evidence/V-001-selection-rule-contract-2026-07-16T0206Z.json"
+  ],
+  "verification": {
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "runtime_tested": false,
+    "deployment_tested": false
+  },
+  "canonical_queue_overwritten": false,
+  "acceptance_remaining": [
+    "Run the complete npm run test:vercel-repertory command in an authenticated checkout and retain exact output.",
+    "Execute authenticated exhaustive workflow enumeration for one exact commit with both approved clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel as skipped or ignored after Vercel capacity returns.",
+    "Bind one tested application commit to an immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "safe_next_action": "Integrate verifySelectionRule into the activation assessor so activation fails closed unless the exact canonical direct-hour contract verifies, then execute the full repertory test command without initiating an application deployment.",
+  "rollback": "Revert this operations-only slice's commits; no runtime or deployment state is affected."
+}
