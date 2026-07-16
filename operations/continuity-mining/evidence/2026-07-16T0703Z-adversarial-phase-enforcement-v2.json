@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "work_item": "M-RECONCILE-002",
+  "branch": "preview",
+  "implementation_commit": "9b1efa49b4e6dfee03b7ef66c18d551eed3c71fb",
+  "test_commit": "459b9a8068b9680069ea1b2981b2feed13188e44",
+  "protected_surfaces_mutated": [],
+  "claim_boundary": "This record proves adversarial record-validation logic was added and reviewed. It does not prove runtime test execution, exhaustive repository coverage, or provenance for M-004, M-005, or M-006.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "target": "validateAdversarialPhaseRecord.v1 enforcement boundary",
+      "attacks": [
+        "Construct a record claiming design_stronger=true with no repairs.",
+        "Construct a safe-failure claim without evidence that the fixture was reversed.",
+        "Inject non-string structured values into attack arrays.",
+        "Attempt verified status while material uncertainty remains."
+      ],
+      "findings": [
+        "Version 1 accepted stronger verdicts without requiring any repair.",
+        "Version 1 did not require intentional failure fixtures to be reversed or evidenced.",
+        "Version 1 validated arrays structurally but did not constrain their entries to durable strings.",
+        "Verified status could coexist with material uncertainty when coverage_class was exhaustive."
+      ],
+      "repairs": [
+        "Selected a side-by-side version 2 validator rather than destructively replacing version 1.",
+        "Added consistency rules for stronger verdicts, verified claims, structured arrays, and reversible experiments."
+      ],
+      "remaining_uncertainty": [
+        "No repository command currently proves all producers have migrated to version 2."
+      ],
+      "evidence_quality": "Direct inspection of committed version 1 source and protocol; deterministic counterexamples encoded as version 2 tests.",
+      "rollback_route": "Revert commits 459b9a8068b9680069ea1b2981b2feed13188e44 and 9b1efa49b4e6dfee03b7ef66c18d551eed3c71fb on preview.",
+      "claim_status_after_review": "coverage_bounded",
+      "design_stronger": true,
+      "strength_reason": "Previously admissible self-contradictory records now have explicit fail-closed rules.",
+      "next_falsifiable_step": "Execute the version 2 Node tests and retain exact output."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "target": "validateAdversarialPhaseRecord.v2.cjs",
+      "attacks": [
+        "Attempt empty repairs with a stronger verdict.",
+        "Attempt a protected deployment mutation disguised as a reversible fixture.",
+        "Attempt bounded verification with unresolved uncertainty.",
+        "Attempt malformed attack entries."
+      ],
+      "findings": [
+        "The implementation rejects all encoded counterexamples by construction.",
+        "The implementation is additive and does not alter canonical queue, automation, deployment, schedule, production, or user data state."
+      ],
+      "repairs": [
+        "Added deployment, schedule, and credential mutation checks to the protected-surface guard.",
+        "Required experiment_reversed=true and non-empty experiment_evidence for intentional failures.",
+        "Required verified claims to use exhaustive coverage and retain no material uncertainty."
+      ],
+      "remaining_uncertainty": [
+        "Tests are committed but were not executed through the connector.",
+        "Existing version 1 consumers may not yet call version 2."
+      ],
+      "evidence_quality": "Exact committed source and deterministic negative-control fixtures; runtime execution unavailable in this connector path.",
+      "rollback_route": "Remove the two additive version 2 files by reverting their commits; version 1 remains untouched.",
+      "claim_status_after_review": "coverage_bounded",
+      "design_stronger": true,
+      "strength_reason": "The validation surface is stricter while rollback remains isolated and non-destructive.",
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialPhaseRecord.v2.test.cjs at the exact test commit."
+    },
+    {
+      "checkpoint": "verification",
+      "target": "M-RECONCILE-002 continuity claim boundary",
+      "attacks": [
+        "Attempt to infer M-004, M-005, or M-006 provenance from validator completeness.",
+        "Attempt to treat committed tests as executed evidence.",
+        "Attempt to treat bounded branch coverage as exhaustive."
+      ],
+      "findings": [
+        "Validator completeness does not establish historical provenance.",
+        "Committed tests do not establish runtime passage.",
+        "The active queue still requires exhaustive branch and commit-history traversal."
+      ],
+      "repairs": [
+        "Kept M-004, M-005, and M-006 unresolved.",
+        "Recorded an explicit claim boundary and prohibited promotion from this artifact alone."
+      ],
+      "remaining_uncertainty": [
+        "Exhaustive branch inventory is still absent.",
+        "Immutable originating sources for M-004, M-005, and M-006 remain unlocated.",
+        "Version 2 integration into a canonical continuity verification command is unproven."
+      ],
+      "evidence_quality": "Strong for source-level enforcement changes; bounded for execution and historical provenance.",
+      "rollback_route": "Revert this evidence commit, then the test and implementation commits; no shared state rollback is required.",
+      "claim_status_after_review": "coverage_bounded",
+      "design_stronger": true,
+      "strength_reason": "The design now separates record validity, runtime execution, and provenance verification instead of allowing them to collapse into one claim.",
+      "next_falsifiable_step": "Execute the tests, retain output, then identify every version 1 caller and prove migration or compatibility before making version 2 canonical."
+    }
+  ],
+  "publication_decision": "blocked",
+  "publication_evidence_required": [
+    "Exact-commit Node test output for version 2.",
+    "Inventory of every caller or producer of adversarial phase records.",
+    "Evidence that version 2 is integrated without invalidating legitimate bounded records.",
+    "Exhaustive repository traversal before any provenance resolution claim."
+  ]
+}
