@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "review_id": "CF-adversarial-ownership-drift-2026-07-16T0801Z",
+  "branch": "preview",
+  "scope": "Operations-only review of Cloudflare ownership, publication authority, and deployment-evidence boundaries; no deployment, DNS, credential, automation, schedule, or canonical queue mutation performed.",
+  "phases": [
+    {
+      "checkpoint": "before_deployment_or_architectural_commitment",
+      "claim_or_design_tested": "The repository has a coherent, currently assigned Cloudflare responsibility that can safely guide architectural or deployment work.",
+      "challenge_method": [
+        "Read operations/CURRENT_STATE.json and operations/ACTIVE_QUEUE.json from preview.",
+        "Compared canonical queue ownership with recent Cloudflare implementation, test, queue, and evidence commits.",
+        "Sought provider-role conflicts, duplicate publication authority, stale ownership, and unsupported deployment assumptions."
+      ],
+      "evidence": [
+        "CURRENT_STATE identifies Vercel capacity and immutable Vercel deployment verification as the active deployment boundary.",
+        "ACTIVE_QUEUE contains Vercel Studio, Continuity Mining, and Frontier Research items but no Cloudflare-owned active item.",
+        "Recent Cloudflare commits establish publication-boundary tests, output enforcement, canonical test binding, and evidence artifacts.",
+        "Existing Cloudflare evidence explicitly states that source contracts do not prove a live Cloudflare deployment or hostname."
+      ],
+      "failures_or_counterexamples_found": [
+        "A mature Cloudflare code and evidence surface can coexist with no canonical Cloudflare queue assignment.",
+        "Historical Cloudflare queue commits do not establish that the responsibility remains active in the current canonical queue.",
+        "Treating the committed Cloudflare controls as current deployment authority would conflict with CURRENT_STATE and Vercel-owned publication policy.",
+        "Starting architecture or deployment work from team-title intent alone would create architecture drift and duplicate provider authority."
+      ],
+      "repairs_made": [
+        "Kept Cloudflare fail-closed and non-authoritative for publication.",
+        "Restricted this cycle to an additive evidence record rather than modifying canonical queue state or provider configuration.",
+        "Defined queue ownership and immutable provider evidence as separate prerequisites: neither may be inferred from historical commits."
+      ],
+      "remaining_uncertainty": [
+        "Whether Cloudflare is intended to own DNS, edge controls, fallback delivery, archival mirroring, or no active production role.",
+        "Whether a superseded or omitted Cloudflare queue object exists outside the accessible canonical queue.",
+        "Whether any Cloudflare account or project is currently linked to this repository."
+      ],
+      "rollback_route": "Revert the commit that adds this evidence-only artifact; no runtime or canonical state changed.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Resolve Cloudflare ownership through one explicit canonical queue item or an explicit no-active-role decision before any provider architecture or deployment experiment."
+    },
+    {
+      "checkpoint": "immediately_after_implementation",
+      "claim_or_design_tested": "Adding another validator or provider integration would strengthen the system in this cycle.",
+      "challenge_method": [
+        "Compared the identified ownership defect with existing publication-boundary and output-enforcement controls.",
+        "Tested the competing explanation that missing enforcement, rather than missing authority, was the primary gap.",
+        "Evaluated whether a new validator would produce independent safety value or duplicate existing policy."
+      ],
+      "evidence": [
+        "The repository already contains Cloudflare publication-boundary and publication-enforcement tests bound to a canonical command.",
+        "The unresolved fact is organizational authority and provider identity, not absence of another source-level guard.",
+        "No immutable Cloudflare project or deployment object was available to validate."
+      ],
+      "failures_or_counterexamples_found": [
+        "Another validator would not answer who owns Cloudflare work or whether Cloudflare is linked to the repository.",
+        "A new integration could pass source tests while still targeting the wrong project, branch, build output, or provider role.",
+        "Writing a Cloudflare queue item without authoritative intent would mutate shared planning state based on inference."
+      ],
+      "repairs_made": [
+        "Rejected duplicate implementation and speculative queue mutation.",
+        "Recorded the authority gap as the primary defect and preserved reversibility.",
+        "Kept existing Cloudflare controls intact and made no production-facing change."
+      ],
+      "remaining_uncertainty": [
+        "The canonical Cloudflare test command was not executed in this connector-only cycle.",
+        "No consumer inventory proves every Cloudflare publication path uses the canonical gate.",
+        "No authoritative Cloudflare provider metadata was inspected."
+      ],
+      "rollback_route": "Revert this evidence-only commit.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "After ownership is explicitly resolved, inventory all Cloudflare publication-path consumers and execute the canonical contract suite at the exact preview commit."
+    },
+    {
+      "checkpoint": "verification_before_success",
+      "claim_or_design_tested": "Cloudflare work is verified, deployable, publishable, or promotable based on the current repository evidence.",
+      "challenge_method": [
+        "Required current canonical ownership, immutable provider identity, exact commit agreement, branch mapping, generated hostname, quota and cancellation state, rollback evidence, and successful canonical test execution.",
+        "Applied non-success classification to absent, queued, canceled, skipped, superseded, rate-limited, stale, and commit-mismatched deployment states.",
+        "Constructed counterexamples in which source controls are green while provider ownership or deployment identity is absent or wrong."
+      ],
+      "evidence": [
+        "No Cloudflare-owned item is present in the current ACTIVE_QUEUE.",
+        "No immutable Cloudflare deployment object, project identifier, commit-matched hostname, branch mapping, DNS authority, quota state, or rollback execution evidence was available.",
+        "The active repository deployment state remains fail-closed around Vercel verification."
+      ],
+      "failures_or_counterexamples_found": [
+        "A passing source contract cannot prove current team authority.",
+        "A historical queue commit can be stale or superseded by the canonical queue.",
+        "A valid Cloudflare deployment could still be non-authoritative if Vercel remains sole publication owner.",
+        "A generated hostname or alias without exact commit and branch agreement can represent stale or mismatched content."
+      ],
+      "repairs_made": [
+        "Blocked Cloudflare deployment, publication, and promotion claims.",
+        "Separated four gates that must all pass: canonical ownership, provider-role non-conflict, source-level enforcement, and immutable deployment evidence.",
+        "Retained missing, stale, canceled, skipped, superseded, rate-limited, and commit-mismatched evidence as non-success."
+      ],
+      "remaining_uncertainty": [
+        "Cloudflare's intended role and authority remain unresolved.",
+        "Provider account linkage, project configuration, branch mapping, domain authority, quota state, and cancellation history remain unknown.",
+        "Canonical tests and rollback behavior were not executed in this cycle."
+      ],
+      "rollback_route": "No deployment or shared-state mutation occurred; revert this evidence-only commit if removal is required.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Obtain an explicit canonical ownership decision, then perform read-only Cloudflare project reconciliation before any disposable non-production deployment fixture is considered."
+    }
+  ],
+  "strongest_surviving_design": "Use a four-gate Cloudflare boundary: (1) an explicit current canonical ownership assignment or explicit no-active-role decision, (2) a non-overlapping provider role relative to Vercel, (3) source-level publication enforcement through the canonical Cloudflare contract suite, and (4) immutable commit- and branch-matched provider deployment evidence with quota, cancellation, hostname, and rollback status. Failure or absence at any gate blocks publication and promotion.",
+  "rejected_alternatives": [
+    "Infer active Cloudflare authority from the automation title or historical Cloudflare commits.",
+    "Add another overlapping validator before resolving ownership.",
+    "Mutate ACTIVE_QUEUE based on inferred intent.",
+    "Treat source-level test binding as live deployment evidence.",
+    "Allow Cloudflare and Vercel to publish the same surface without explicit ownership, precedence, and rollback semantics.",
+    "Trigger a deployment to discover configuration."
+  ],
+  "unresolved_risks": [
+    "No current canonical Cloudflare owner or queue item.",
+    "Unknown Cloudflare account and project linkage.",
+    "Unknown branch, build-command, output-directory, hostname, DNS, quota, cancellation, and rollback state.",
+    "Canonical Cloudflare tests not executed at the exact evidence commit.",
+    "Potential stale historical Cloudflare planning artifacts."
+  ],
+  "deployment_evidence_status": "absent_non_success",
+  "publication_or_promotion_decision": "blocked",
+  "created_at": "2026-07-16T08:01:46Z"
+}
