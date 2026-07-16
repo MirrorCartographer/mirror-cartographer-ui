@@ -8,12 +8,14 @@ const { validateImmutableDeploymentEvidence } = require('../frontier-research/ve
 
 const NON_SUCCESS_STATES = new Set(['queued','building','failed','canceled','skipped','superseded','rate_limited','stale']);
 
-export function assessPromotion(checklist, evidence) {
+export function assessPromotion(checklist, evidence, options = {}) {
   const failures = [];
   const requiredChecks = Array.isArray(checklist?.required_checks) ? checklist.required_checks : [];
   const checks = evidence?.checks && typeof evidence.checks === 'object' ? evidence.checks : {};
   const expectedState = checklist?.promotion_requires?.preview_deployment_state ?? 'ready';
   const expectedIdentity = checklist?.expected_deployment_identity ?? {};
+  const nowMs = Number.isFinite(options.nowMs) ? options.nowMs : Date.now();
+  const maxEvidenceAgeMs = checklist?.promotion_requires?.max_deployment_evidence_age_ms;
 
   if (evidence?.source_branch !== checklist?.source_branch) failures.push('source_branch_mismatch');
   if (evidence?.target_branch !== checklist?.target_branch) failures.push('target_branch_mismatch');
@@ -29,6 +31,17 @@ export function assessPromotion(checklist, evidence) {
   const immutableDeployment = validateImmutableDeploymentEvidence(evidence?.deployment_identity_evidence);
   if (!immutableDeployment.verified) failures.push('immutable_deployment_identity_unverified');
   for (const violation of immutableDeployment.violations) failures.push(`immutable_deployment_identity:${violation}`);
+
+  const observedAtMs = Date.parse(immutableDeployment.normalized?.observed_at || '');
+  if (!Number.isFinite(maxEvidenceAgeMs) || maxEvidenceAgeMs <= 0) {
+    failures.push('deployment_evidence_freshness_policy_missing');
+  } else if (Number.isNaN(observedAtMs)) {
+    failures.push('deployment_evidence_observed_at_invalid');
+  } else {
+    const evidenceAgeMs = nowMs - observedAtMs;
+    if (evidenceAgeMs < 0) failures.push('deployment_evidence_observed_in_future');
+    if (evidenceAgeMs > maxEvidenceAgeMs) failures.push('deployment_evidence_stale');
+  }
 
   const immutableHostname = immutableDeployment.normalized?.deployment?.url;
   const expectedPreviewUrl = immutableHostname ? `https://${immutableHostname}` : null;
@@ -63,7 +76,7 @@ export function assessPromotion(checklist, evidence) {
   }
 
   return {
-    schema_version: 4,
+    schema_version: 5,
     promotable: failures.length === 0,
     failures,
     assessed_preview_commit: evidence?.preview_commit ?? null,
@@ -75,6 +88,9 @@ export function assessPromotion(checklist, evidence) {
     immutable_deployment_target: deploymentTarget ?? null,
     immutable_deployment_github_repo_id: deploymentRepoId ?? null,
     immutable_deployment_project_name: deploymentProjectName ?? null,
+    deployment_evidence_observed_at: immutableDeployment.normalized?.observed_at ?? null,
+    deployment_evidence_max_age_ms: Number.isFinite(maxEvidenceAgeMs) ? maxEvidenceAgeMs : null,
+    deployment_evidence_age_ms: Number.isNaN(observedAtMs) ? null : nowMs - observedAtMs,
     required_check_count: requiredChecks.length,
     passed_required_check_count: requiredChecks.filter((name) => checks[name]?.status === 'pass' && checks[name]?.commit === evidence?.preview_commit).length
   };
