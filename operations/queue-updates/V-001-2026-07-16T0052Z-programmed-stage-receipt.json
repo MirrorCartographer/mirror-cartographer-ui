@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:52:19Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Retained a source-bound operations-only receipt for the UTC-hour programmed stage, preserving continuity and all safety boundaries without activating runtime, deploying, autoplaying audio, or exposing private material.",
+  "production_currently_programmed": {
+    "edition_id": "residual-comet-00",
+    "production_id": "residual-comet",
+    "title": "Residual Comet",
+    "cue": "long-tail-entry",
+    "utc_hour": 0,
+    "claim_boundary": "programmed identity, not observed runtime"
+  },
+  "evidence": "operations/evidence/V-001-programmed-stage-receipt-2026-07-16T0052Z.json",
+  "verification": {
+    "source_blob_sha": "01da25cda6014d14fd31c70ae69ec1410e0b4a93",
+    "deterministic_slot_lookup": true,
+    "runtime_test_executed": false,
+    "deployment_test_executed": false
+  },
+  "unresolved": [
+    "The canonical repertory selection type and existing safety-verifier selection type are not currently aligned.",
+    "The full npm run test:vercel-repertory command has not been executed in an authenticated checkout.",
+    "Immutable Vercel deployment identity remains unverified while provider capacity is blocked."
+  ],
+  "shared_state_policy": "Additive queue projection only; operations/ACTIVE_QUEUE.json was not overwritten.",
+  "specialist_registry_change": null,
+  "rollback": "Revert this queue-update commit and the linked evidence commit; application runtime is unaffected.",
+  "safe_next_action": "Reconcile deterministic_hour_slot versus deterministic_modulo across the canonical repertory and its safety tests, then execute npm run test:vercel-repertory and retain exact output before any activation or deployment attempt."
+}
