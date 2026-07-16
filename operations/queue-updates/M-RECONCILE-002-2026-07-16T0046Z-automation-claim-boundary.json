@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-16T00:46:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "state": "in_progress",
+  "completed_slice": "Established a fail-closed source-class boundary for automation completion prose after a claimed continuity file and commit failed direct repository resolution.",
+  "evidence": [
+    "operations/continuity/automation-completion-claim-boundary.v1.json",
+    "ca9c079b33b6c27b53d1b257b5a781864c3b13ec",
+    "operations/ACTIVE_QUEUE.json#M-RECONCILE-002"
+  ],
+  "claim_status": {
+    "observed": "The named default-branch path and commit were not resolvable through direct repository APIs.",
+    "inferred": "Automation completion prose is not repository truth without immutable corroboration.",
+    "proposed": "Quarantine unresolved completion-report identifiers and admit them only after source, namespace, owner, semantic-role, and temporal checks.",
+    "superseded": "Detailed completion prose alone proves a write or execution occurred.",
+    "unresolved": "The missing identifiers may refer to inaccessible, failed, or prose-only state."
+  },
+  "acceptance_remaining": [
+    "Obtain an exhaustive branch inventory or equivalent reachable-history traversal.",
+    "Locate immutable provenance for M-004, M-005, and M-006 or classify each as unlocated after exhaustive coverage.",
+    "Audit remaining completion reports for unresolved file, commit, deployment, test, and peer-run identifiers."
+  ],
+  "safe_next_action": "Build a deterministic completion-claim reconciliation ledger that verifies every immutable identifier against accessible repository objects and keeps failures unresolved without reconstruction.",
+  "canonical_files_overwritten": false
+}
