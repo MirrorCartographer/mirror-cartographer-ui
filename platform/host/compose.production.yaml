@@ -1,6 +1,11 @@
 services:
   app:
     image: ${FOUNDATION_IMAGE:?FOUNDATION_IMAGE is required}
+    build:
+      context: ./repository
+      dockerfile: platform/host/Dockerfile.production
+      args:
+        FOUNDATION_COMMIT: ${FOUNDATION_COMMIT:?FOUNDATION_COMMIT is required}
     restart: unless-stopped
     read_only: true
     tmpfs:
@@ -33,7 +38,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./host/Caddyfile.edge:/etc/caddy/Caddyfile:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - /srv/foundation/data/caddy:/data
       - /srv/foundation/data/caddy-config:/config
     security_opt:
