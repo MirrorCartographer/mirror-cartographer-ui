@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "subject": "Executable validation of the three scheduled adversarial review checkpoints",
+  "decision": "block",
+  "implementation_commits": [
+    "70e97fc6951f0a8f3da98ff0c640e5894917c43c",
+    "ba643923f57223e8e1a0cf9804bcd8664f883453"
+  ],
+  "phases": [
+    {
+      "checkpoint": "before_knowledge_commit",
+      "claim_or_design_tested": "The existing durable checkpoint protocol is sufficient to prevent incomplete adversarial records from being adopted.",
+      "challenge_method": "Constructed malformed records mentally and against a disposable local validator design, including omitted fields, duplicate checkpoints, reordered phases, malformed evidence collections, and success with unresolved uncertainty.",
+      "evidence": [
+        "operations/continuity/adversarial-review-protocol.v1.json at commit 8f17bc3e77cbef58c5d897866ebf8998183a3990",
+        "The protocol defines required fields and block rules but contains no executable consumer or rejection path."
+      ],
+      "failures_or_counterexamples_found": [
+        "A prose-only protocol cannot itself reject a record missing rollback_route.",
+        "A record can duplicate or reorder checkpoints unless an executable consumer checks identity and order.",
+        "A success decision can coexist with unresolved uncertainty unless decision consistency is validated."
+      ],
+      "repairs_made": [
+        "Selected an additive CommonJS validator rather than modifying automation, deployment, or shared-state paths.",
+        "Defined exact ordered checkpoints and required field types.",
+        "Added fail-closed success-versus-uncertainty consistency checks."
+      ],
+      "remaining_uncertainty": [
+        "No canonical Continuity Mining entrypoint is yet proven to invoke the validator.",
+        "The current validator checks structure, not the factual adequacy of evidence."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Repository-grounded design analysis plus disposable local counterexamples; no production or shared-state mutation.",
+      "rollback_route": "Revert implementation commit 70e97fc6951f0a8f3da98ff0c640e5894917c43c and test commit ba643923f57223e8e1a0cf9804bcd8664f883453.",
+      "next_falsifiable_step": "Attempt to pass a missing-field record through the committed validator and require valid=false."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The new validator rejects the principal false-positive record shapes without duplicating or destabilizing existing runtime controls.",
+      "challenge_method": "Ran five disposable Node test fixtures locally: one valid blocked cycle and four intentional failures covering omitted rollback, duplicate/reordered checkpoints, prose evidence in place of an array, and canonicalization with remaining uncertainty.",
+      "evidence": [
+        "Local command: node --test /tmp/validateContinuityAdversarialReview.v1.test.cjs",
+        "Observed result: 5 tests passed, 0 failed, exit code 0.",
+        "Committed validator: operations/continuity/validate-adversarial-review.v1.cjs",
+        "Committed controls: operations/continuity/validate-adversarial-review.v1.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "No tested structural counterexample bypassed the validator.",
+        "The local execution preceded the repository commits and therefore is not exact-commit runtime evidence."
+      ],
+      "repairs_made": [
+        "Preserved an additive, dependency-free validator with no automation, deployment, schedule, credential, DNS, or shared-state hooks.",
+        "Recorded the distinction between locally executed logic and commit-matched verification."
+      ],
+      "remaining_uncertainty": [
+        "Arrays may be empty even where stronger evidence content should eventually be required.",
+        "Unknown decision vocabulary is not yet rejected.",
+        "No consumer inventory has established compatibility or canonical invocation."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Executed disposable tests plus committed source; execution is content-matched by construction but not retained as exact-commit CI evidence.",
+      "rollback_route": "Revert ba643923f57223e8e1a0cf9804bcd8664f883453, then 70e97fc6951f0a8f3da98ff0c640e5894917c43c.",
+      "next_falsifiable_step": "Execute the committed test file at exact commit ba643923f57223e8e1a0cf9804bcd8664f883453 and retain stdout, stderr, exit code, Node version, and SHA."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The repository contains the intended validator and negative controls at the stated commit, and success can be declared.",
+      "challenge_method": "Fetched both committed files directly from commit ba643923f57223e8e1a0cf9804bcd8664f883453 and compared their structure with the locally executed artifacts; then challenged the success claim against missing canonical integration and non-commit-matched runtime evidence.",
+      "evidence": [
+        "Committed validator blob ff419a67b4fa30e38ada75ae032ce2f11bc2bd68 fetched from ba643923f57223e8e1a0cf9804bcd8664f883453.",
+        "Committed test blob 6ce7cb0696dedde9efe47e7af828a2cceefc028e fetched from ba643923f57223e8e1a0cf9804bcd8664f883453.",
+        "Both files contain the intended ordered checkpoint, required-field, type, uniqueness, and unresolved-uncertainty controls."
+      ],
+      "failures_or_counterexamples_found": [
+        "Exact committed runtime execution has not been retained.",
+        "The validator is not proven to be invoked before recovered knowledge is committed.",
+        "Structural validity can still coexist with weak, stale, or fabricated evidence content."
+      ],
+      "repairs_made": [
+        "Blocked adoption/canonicalization rather than representing source presence as operational enforcement.",
+        "Durably documented the exact evidence boundary and rollback route."
+      ],
+      "remaining_uncertainty": [
+        "Runtime passage at the exact repository commit remains unproven.",
+        "Canonical entrypoint integration remains unproven.",
+        "Evidence semantic quality and freshness remain outside validator v1."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Exact-commit repository inspection plus non-commit-matched local execution; sufficient for source-level hardening, insufficient for operational success.",
+      "rollback_route": "Revert this evidence commit, then ba643923f57223e8e1a0cf9804bcd8664f883453, then 70e97fc6951f0a8f3da98ff0c640e5894917c43c.",
+      "next_falsifiable_step": "Run node --test operations/continuity/validate-adversarial-review.v1.test.cjs at the exact repository head and then prove a canonical Continuity Mining command rejects a missing rollback_route field fail-closed."
+    }
+  ],
+  "protected_systems_changed": [],
+  "publication_or_canonicalization_status": "blocked"
+}
