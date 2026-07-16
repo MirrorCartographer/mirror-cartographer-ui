@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "CF-001",
+  "owner": "cloudflare_research",
+  "priority": "highest_available_handoff",
+  "state": "completed_handoff_ready",
+  "recorded_at": "2026-07-16T00:16:31Z",
+  "objective": "Create a fail-closed publication boundary for the Cloudflare research surface so private material, unresolved claims, and diagnosis or treatment content cannot be promoted as public evidence packets.",
+  "selection_basis": {
+    "canonical_queue_owned_item_found": false,
+    "operative_handoff": "VST-20260714T220230Z-cloudflare-research",
+    "constraint": "No cloudflare_research item existed in operations/ACTIVE_QUEUE.json; this additive queue update does not overwrite the canonical queue or fabricate prior completion history."
+  },
+  "completed_slices": [
+    "Implemented a deterministic evidence-packet publication assessor.",
+    "Rejected medical diagnosis, treatment recommendation, and clinical decision claim types.",
+    "Required public privacy classification, explicit identifier absence, traceable provenance, evidence-state labeling, uncertainty for inferred or proposed claims, and a falsification route.",
+    "Verified seven deterministic adversarial tests against byte-identical pre-commit files.",
+    "Recorded the Cloudflare static-asset versus Worker-response header boundary from current primary documentation."
+  ],
+  "acceptance_remaining": [
+    "Run the committed test file in an authenticated checkout and retain exact output.",
+    "Integrate the assessor into the research-surface build or publication path before any public artifact is emitted.",
+    "Add response-header enforcement separately for Worker-generated responses; do not assume _headers covers them.",
+    "Deploy only after a commit-bound Cloudflare preview or production identity can be retained and independently requested."
+  ],
+  "safe_next_action": "Wire assessPublicationPacket into the evidence-packet build step and create a no-deploy contract test proving that a rejected packet cannot produce a public asset or Worker response.",
+  "files": [
+    "operations/cloudflare-research/publicationBoundary.v1.mjs",
+    "operations/cloudflare-research/publicationBoundary.v1.test.mjs",
+    "operations/evidence/CF-001-publication-boundary-2026-07-15T2016-0400.json"
+  ],
+  "privacy_boundary": "No private conversations, personal health records, credentials, or identifying source material were read or published. The implementation encodes a boundary; it is not a de-identification engine.",
+  "deletion_performed": false
+}
