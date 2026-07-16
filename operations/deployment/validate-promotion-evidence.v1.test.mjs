@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assessPromotion } from './validate-promotion-evidence.v1.mjs';
+import { assessPromotion, requiredCheckProfileDigest } from './validate-promotion-evidence.v1.mjs';
 
 const sha = 'a'.repeat(40);
 const nowMs = Date.parse('2026-07-16T09:00:00.000Z');
+const requiredChecks = ['build','smoke','mobile','accessibility','interaction','audio','deployment_identity','rollback','adversarial_review'];
 const checklist = {
   source_branch: 'preview', target_branch: 'main',
   expected_deployment_identity: {
@@ -12,7 +13,12 @@ const checklist = {
     vercel_project_name: 'mirror-cartographer-ui',
     vercel_project_id: null
   },
-  required_checks: ['build','smoke','mobile','accessibility','interaction','audio','deployment_identity','rollback','adversarial_review'],
+  required_checks: requiredChecks,
+  required_check_profile: {
+    id: 'preview-promotion-core',
+    version: 1,
+    sha256: requiredCheckProfileDigest(requiredChecks)
+  },
   promotion_requires: {
     preview_deployment_state: 'ready',
     max_deployment_evidence_age_ms: 900000,
@@ -43,10 +49,25 @@ function evidence() {
 }
 const assess = (c, e) => assessPromotion(c, e, { nowMs });
 
+function withChecks(names, profile = {}) {
+  return {
+    ...checklist,
+    required_checks: names,
+    required_check_profile: {
+      id: 'preview-promotion-core',
+      version: 1,
+      sha256: requiredCheckProfileDigest(names),
+      ...profile
+    }
+  };
+}
+
 test('accepts complete commit-bound ready evidence with fresh deployment and check observations', () => {
   const result = assess(checklist,evidence());
   assert.equal(result.promotable,true);
-  assert.equal(result.schema_version,6);
+  assert.equal(result.schema_version,7);
+  assert.equal(result.required_check_profile_id,'preview-promotion-core');
+  assert.equal(result.required_check_profile_calculated_sha256,checklist.required_check_profile.sha256);
   assert.equal(result.immutable_deployment_identity_verified,true);
   assert.equal(result.immutable_deployment_git_ref,'preview');
   assert.equal(result.immutable_deployment_github_repo_id,1003910384);
@@ -155,4 +176,43 @@ test('fails closed when the required-check freshness policy is absent', () => {
   const result=assess(weakChecklist,evidence());
   assert.equal(result.promotable,false);
   assert.ok(result.failures.includes('required_check_freshness_policy_missing'));
+});
+
+test('rejects an empty required-check set even when its digest matches', () => {
+  const result=assess(withChecks([]), evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_checks_missing_or_empty'));
+});
+test('rejects duplicate required checks even when the declared profile digest matches', () => {
+  const names=['build','build'];
+  const result=assess(withChecks(names), evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_checks_duplicate'));
+});
+test('rejects non-normalized or unsafe check identifiers', () => {
+  const names=['build',' Accessibility ','../rollback'];
+  const result=assess(withChecks(names), evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_identifier_invalid'));
+});
+test('rejects an absent required-check profile', () => {
+  const weakChecklist={...checklist}; delete weakChecklist.required_check_profile;
+  const result=assess(weakChecklist,evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_profile_id_missing'));
+  assert.ok(result.failures.includes('required_check_profile_version_invalid'));
+  assert.ok(result.failures.includes('required_check_profile_digest_missing_or_invalid'));
+});
+test('rejects a reduced required-check set under the prior profile digest', () => {
+  const reduced=requiredChecks.filter((name)=>name !== 'accessibility');
+  const weakChecklist=withChecks(reduced,{sha256:checklist.required_check_profile.sha256});
+  const result=assess(weakChecklist,evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_profile_digest_mismatch'));
+});
+test('rejects an unexplained profile digest mutation', () => {
+  const weakChecklist=withChecks(requiredChecks,{sha256:'0'.repeat(64)});
+  const result=assess(weakChecklist,evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_profile_digest_mismatch'));
 });
