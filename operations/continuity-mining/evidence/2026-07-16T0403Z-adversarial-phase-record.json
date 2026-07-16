@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "branch": "preview",
+  "implementation_commit": "9659900ec4824ff4287353433d01bda95273681c",
+  "target": "operations/continuity-mining/ADVERSARIAL_REVIEW_PROTOCOL.md",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "attacks": [
+        "Searched for contradiction with the active M-RECONCILE-002 objective and its unresolved provenance boundaries.",
+        "Tested whether the requested adversarial behavior could accidentally authorize destructive edits to shared state or automation schedules.",
+        "Constructed the counterexample in which a plausible suffix match is promoted as M-004, M-005, or M-006 despite cross-namespace collision.",
+        "Challenged the assumption that newer automation prose is stronger than an earlier immutable source object."
+      ],
+      "findings": [
+        "The existing queue already requires immutable provenance and rejects namespace collisions, but no durable checkpoint protocol specified when those attacks must occur.",
+        "A generic instruction to destabilize could be misused unless the destabilization target and protected surfaces are explicit.",
+        "Repository and File Library coverage remain bounded rather than exhaustive."
+      ],
+      "repairs": [
+        "Defined three mandatory checkpoints with fail-closed gates.",
+        "Explicitly protected automations, schedules, canonical shared state, irreversible user data, repository history, privacy boundaries, and production state.",
+        "Retained M-004, M-005, and M-006 as unresolved rather than reconstructing them."
+      ],
+      "remaining_uncertainty": [
+        "No exhaustive all-branch and all-history traversal has yet located or disproved the original M-004, M-005, and M-006 objects.",
+        "Equivalent continuity protocols may exist outside currently retrievable repository coverage."
+      ],
+      "rollback_route": "Reset preview to 10be123765ae1b17a37b54b43848fbffe6c50ab3 or revert commit 9659900ec4824ff4287353433d01bda95273681c.",
+      "claim_status_after_review": "coverage_bounded",
+      "design_stronger": true,
+      "strength_reason": "The recovery process now has explicit attack surfaces, protected surfaces, gates, and required records before historical claims can acquire authority."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "attacks": [
+        "Compared the protocol against CURRENT_STATE and ACTIVE_QUEUE constraints.",
+        "Checked for architecture drift into deployment, automation administration, or production mutation.",
+        "Attempted misuse scenarios: overclaiming provenance, overwriting another owner, exposing private source material, and treating partial coverage as exhaustive.",
+        "Checked rollback isolation by confirming the change is a new file on preview and can be reverted independently."
+      ],
+      "findings": [
+        "The implementation is continuity-owned and does not overwrite ACTIVE_QUEUE, CURRENT_STATE, automation configuration, or another team's artifact.",
+        "The protocol could have become a second truth hierarchy; this was avoided by making it subordinate to the existing repository truth hierarchy and queue objective.",
+        "No application code or deployment configuration changed."
+      ],
+      "repairs": [
+        "Scoped the protocol to continuity artifacts and claims rather than all project operations.",
+        "Required duplicate artifacts to be consolidated by reference rather than destructively deleted.",
+        "Added a standard machine-readable phase record shape."
+      ],
+      "remaining_uncertainty": [
+        "A repository-wide duplicate-file search was limited by available code-search coverage.",
+        "No executable continuity validator currently consumes the phase record schema."
+      ],
+      "rollback_route": "Revert commit 9659900ec4824ff4287353433d01bda95273681c; the prior preview head is 10be123765ae1b17a37b54b43848fbffe6c50ab3.",
+      "claim_status_after_review": "verified",
+      "design_stronger": true,
+      "strength_reason": "The implementation is isolated, reversible, owner-scoped, and cannot itself promote unresolved historical claims."
+    },
+    {
+      "checkpoint": "verification",
+      "attacks": [
+        "Fetched the committed file by exact commit SHA rather than trusting the write response alone.",
+        "Used known File Library suffix collisions as negative controls that must remain rejected.",
+        "Removed the hypothetical immutable locator from a candidate evidence envelope and confirmed the protocol requires fail-closed unresolved status.",
+        "Tested the claim boundary: verification covers the protocol's presence and constraints, not the provenance resolution of M-004, M-005, or M-006."
+      ],
+      "findings": [
+        "The exact-commit fetch returned the complete protocol at the intended path.",
+        "Negative controls remain classified as collisions rather than provenance matches.",
+        "The protocol prohibits exhaustive or verified claims when coverage or required evidence is missing."
+      ],
+      "repairs": [],
+      "remaining_uncertainty": [
+        "The protocol has not yet been exercised by an executable validator or a completed exhaustive branch traversal.",
+        "M-004, M-005, and M-006 remain unresolved."
+      ],
+      "rollback_route": "Revert commits 9659900ec4824ff4287353433d01bda95273681c and the evidence-record commit if the protocol proves incompatible with the repository truth hierarchy.",
+      "claim_status_after_review": "verified",
+      "design_stronger": true,
+      "strength_reason": "Verification is commit-bound, negative-control aware, and explicitly limited to the protocol artifact rather than the unresolved historical claims."
+    }
+  ],
+  "overall_strength_verdict": "stronger",
+  "next_action": "Implement a small fail-closed validator for adversarial phase records, then run it against one valid fixture and reversible failing fixtures for missing immutable locator, cross-namespace collision, duplicate candidate, and partial coverage."
+}
