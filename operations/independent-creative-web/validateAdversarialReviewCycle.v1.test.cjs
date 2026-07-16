@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const { validateAdversarialReviewCycle } = require('./validateAdversarialReviewCycle.v1.cjs');
 
 function phase(checkpoint, overrides = {}) {
+  const stronger = checkpoint === 'post_implementation';
   return {
     schema_version: 2,
     checkpoint,
@@ -14,10 +15,10 @@ function phase(checkpoint, overrides = {}) {
     challenge_method: 'Construct reversible counterexamples and inspect evidence boundaries.',
     evidence: ['operations/independent-creative-web/ADVERSARIAL_REVIEW_PROTOCOL.md'],
     findings: [],
-    repairs: checkpoint === 'post_implementation' ? ['Added cycle-level validation.'] : [],
-    remaining_uncertainty: checkpoint === 'verification' ? ['Runtime tests not yet executed.'] : [],
+    repairs: stronger ? ['Added cycle-level validation.'] : [],
+    remaining_uncertainty: stronger ? [] : ['Runtime behavior remains unverified.'],
     rollback_route: 'Revert the cycle-validator commits on preview.',
-    robustness_verdict: checkpoint === 'post_implementation' ? 'stronger' : 'unchanged_with_bounded_uncertainty',
+    robustness_verdict: stronger ? 'stronger' : 'unchanged_with_bounded_uncertainty',
     next_falsifiable_step: 'Execute the Node test suite and retain exact output.',
     publication_decision: checkpoint === 'verification' ? 'block' : undefined,
     ...overrides,
