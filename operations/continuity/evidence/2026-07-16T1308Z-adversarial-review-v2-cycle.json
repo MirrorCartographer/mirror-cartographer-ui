@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "subject": "Semantic hardening of adversarial publication records",
+  "decision": "block",
+  "implementation_commits": [
+    "925929d68ad19734b49e5d3a03b5acc68ea01a7f",
+    "633c974166ef867088bd5dea0ff35d3dd18fc20d"
+  ],
+  "phases": [
+    {
+      "checkpoint": "before_knowledge_commit",
+      "claim_or_design_tested": "The v1 adversarial record validator prevents incomplete or misleading records from being treated as publication-ready.",
+      "challenge_method": "Inspected the exact v1 validator and constructed safe in-memory counterexamples using unknown decision vocabulary, omitted publication-evidence inventories, empty evidence arrays, and blank evidence items.",
+      "evidence": [
+        "operations/continuity/validate-adversarial-review.v1.cjs blob ff419a67b4fa30e38ada75ae032ce2f11bc2bd68",
+        "operations/continuity/validate-adversarial-review.v1.test.cjs blob 6ce7cb0696dedde9efe47e7af828a2cceefc028e"
+      ],
+      "failures_or_counterexamples_found": [
+        "Unknown decisions such as blocked were not rejected.",
+        "A phase could provide an empty evidence array and still satisfy structural validation.",
+        "Blank evidence items were not rejected.",
+        "No explicit inventory captured evidence still required before publication."
+      ],
+      "repairs_made": [
+        "Selected an additive v2 wrapper to preserve v1 consumers.",
+        "Defined exact decision vocabulary.",
+        "Required non-empty string evidence and an explicit publication-evidence inventory at every checkpoint.",
+        "Required publication, adoption, or canonicalization to fail while any publication evidence remains outstanding."
+      ],
+      "remaining_uncertainty": [
+        "String evidence can still be stale, fabricated, or non-commit-matched.",
+        "No canonical publication command is proven to invoke v2."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Exact repository source inspection plus disposable counterexample design; no deployment, automation, schedule, shared-state, or user-data mutation.",
+      "rollback_route": "Revert commits 633c974166ef867088bd5dea0ff35d3dd18fc20d and 925929d68ad19734b49e5d3a03b5acc68ea01a7f.",
+      "next_falsifiable_step": "Attempt to validate an unknown decision and an empty evidence array; both must return valid=false.",
+      "evidence_required_before_publication": [
+        "Exact-commit runtime output for the v2 test suite",
+        "Proof that the canonical publication path invokes v2 fail-closed"
+      ]
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The additive v2 validator rejects the identified semantic false positives without throwing on malformed phases.",
+      "challenge_method": "Executed seven disposable local Node fixtures covering a valid blocked record, unknown decision, omitted evidence inventory, blank evidence, empty evidence, publication with outstanding evidence, and a null phase.",
+      "evidence": [
+        "Local command: node --test /tmp/adversarial-v2/test.cjs",
+        "Observed result: 7 passed, 0 failed, exit code 0",
+        "Implementation commit 925929d68ad19734b49e5d3a03b5acc68ea01a7f",
+        "Test commit 633c974166ef867088bd5dea0ff35d3dd18fc20d"
+      ],
+      "failures_or_counterexamples_found": [
+        "No tested semantic counterexample bypassed v2.",
+        "The disposable execution was content-matched but was not run from a checkout at the exact committed SHA.",
+        "V2 validates evidence syntax but not provenance, freshness, digest, or factual adequacy."
+      ],
+      "repairs_made": [
+        "Added seven committed negative and positive controls.",
+        "Kept the validator dependency-free and additive.",
+        "Preserved fail-closed behavior for malformed phases without touching operational systems."
+      ],
+      "remaining_uncertainty": [
+        "Exact-commit runtime execution remains unretained.",
+        "Existing record producers may not yet emit evidence_required_before_publication.",
+        "Canonical integration remains unknown."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Executed disposable tests and committed source; sufficient for source-contract hardening, insufficient for operational publication success.",
+      "rollback_route": "Revert test commit 633c974166ef867088bd5dea0ff35d3dd18fc20d, then implementation commit 925929d68ad19734b49e5d3a03b5acc68ea01a7f.",
+      "next_falsifiable_step": "Execute operations/continuity/validate-adversarial-review.v2.test.cjs from exact commit 633c974166ef867088bd5dea0ff35d3dd18fc20d and retain output and runtime identity.",
+      "evidence_required_before_publication": [
+        "Exact-commit Node test output",
+        "Producer compatibility inventory",
+        "Canonical gate invocation evidence"
+      ]
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The committed v2 implementation and controls match the tested design and justify publication success.",
+      "challenge_method": "Fetched both files at exact commit 633c974166ef867088bd5dea0ff35d3dd18fc20d, confirmed their blobs and semantic controls, then challenged success against missing exact-commit execution and missing canonical gate binding.",
+      "evidence": [
+        "Committed validator blob 36c88b9e64779c77a6e9a60e4bec42e5099bc56b",
+        "Committed test blob effd341f4f72f18f4e75c17ea56fba0d51ae7b4f",
+        "Exact source inspection confirms decision, evidence-item, inventory, and outstanding-evidence controls."
+      ],
+      "failures_or_counterexamples_found": [
+        "Source presence does not prove runtime passage at the exact commit.",
+        "No canonical publication entrypoint is proven to invoke v2.",
+        "Evidence remains free text and may be weak, stale, duplicated, or fabricated."
+      ],
+      "repairs_made": [
+        "Blocked publication rather than representing source-level hardening as operational enforcement.",
+        "Recorded exact blob identities, evidence limitations, and rollback order."
+      ],
+      "remaining_uncertainty": [
+        "Exact-commit test passage is unproven.",
+        "Canonical integration and producer compatibility are unproven.",
+        "Structured provenance and freshness validation remain future work."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Exact-commit repository inspection plus non-commit-matched disposable execution; strong source evidence, incomplete publication evidence.",
+      "rollback_route": "Revert this evidence commit, then 633c974166ef867088bd5dea0ff35d3dd18fc20d, then 925929d68ad19734b49e5d3a03b5acc68ea01a7f.",
+      "next_falsifiable_step": "Run node --test operations/continuity/validate-adversarial-review.v2.test.cjs at the exact repository head, retain SHA, Node version, stdout, stderr, and exit code, then prove the canonical publication path rejects decision=blocked.",
+      "evidence_required_before_publication": [
+        "Exact-commit successful test execution",
+        "Fail-closed canonical publication-path integration",
+        "Inventory of producers and direct v1 consumers"
+      ]
+    }
+  ],
+  "protected_systems_changed": [],
+  "publication_or_canonicalization_status": "blocked"
+}
