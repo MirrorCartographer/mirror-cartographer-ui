@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0d0c" />
+  <title>The Fourth Room — Trace</title>
+  <style>
+    :root { color-scheme:dark; --ink:#eee6d8; --dim:#9d968a; --wall:#0d0d0c; --line:#71695d; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:var(--wall); color:var(--ink); font-family:Georgia,'Times New Roman',serif; }
+    body { min-height:100svh; display:grid; place-items:center; overflow:hidden; }
+    main { width:min(92vw,760px); padding:clamp(1rem,4vw,3rem); text-align:center; }
+    h1 { margin:0; font-size:clamp(2.5rem,9vw,6.5rem); font-weight:400; letter-spacing:-.055em; line-height:.9; }
+    p { color:var(--dim); line-height:1.55; }
+    svg { width:min(78vw,520px); aspect-ratio:1; margin:1rem auto; overflow:visible; }
+    .ghost { fill:none; stroke:rgba(238,230,216,.12); stroke-width:1; stroke-dasharray:2 8; }
+    .trace { fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 8px rgba(238,230,216,.18)); }
+    .node { fill:var(--wall); stroke:var(--ink); stroke-width:1.5; }
+    button,a { font:inherit; color:inherit; }
+    button { min-height:44px; border:1px solid var(--line); background:transparent; padding:.65rem 1rem; cursor:pointer; }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
+    .meta { min-height:1.5em; font:12px/1.4 ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .back { position:fixed; top:max(1rem,env(safe-area-inset-top)); left:max(1rem,env(safe-area-inset-left)); color:var(--dim); }
+    @media (prefers-reduced-motion:no-preference) { .trace { transition:stroke-dashoffset .7s ease; } }
+  </style>
+</head>
+<body>
+  <a class="back" href="./index.html">Return to the room</a>
+  <main>
+    <h1>The mark the room kept</h1>
+    <p>Each entry adds one segment. The eighth closes the figure. The ninth begins another without remembering who drew the first.</p>
+    <svg viewBox="0 0 100 100" role="img" aria-labelledby="trace-title trace-description">
+      <title id="trace-title">A deterministic trace made by entering the Fourth Room</title>
+      <desc id="trace-description">No trace has been drawn.</desc>
+      <polyline class="ghost" points="18,62 34,24 58,18 78,42 68,76 44,84 22,74 18,62" />
+      <polyline id="trace" class="trace" points="" />
+      <g id="nodes" aria-hidden="true"></g>
+    </svg>
+    <p id="meta" class="meta" aria-live="polite">No trace has been drawn.</p>
+    <button id="inscribe" type="button">Inscribe one entry</button>
+  </main>
+  <script type="module">
+    import { traceForVisit } from './room-trace.mjs';
+
+    const key = 'fourth-room-visits';
+    const raw = Number(sessionStorage.getItem(key) || 0);
+    let visits = Number.isSafeInteger(raw) && raw >= 0 ? raw : 0;
+    const trace = document.querySelector('#trace');
+    const nodes = document.querySelector('#nodes');
+    const meta = document.querySelector('#meta');
+    const description = document.querySelector('#trace-description');
+    const button = document.querySelector('#inscribe');
+
+    function render() {
+      const state = traceForVisit(visits);
+      trace.setAttribute('points', state.points.map(point => `${point.x * 100},${point.y * 100}`).join(' '));
+      nodes.replaceChildren(...state.points.map(point => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('class', 'node');
+        circle.setAttribute('cx', String(point.x * 100));
+        circle.setAttribute('cy', String(point.y * 100));
+        circle.setAttribute('r', '1.4');
+        return circle;
+      }));
+      meta.textContent = state.description;
+      description.textContent = state.description;
+      document.body.dataset.closed = String(state.closed);
+    }
+
+    button.addEventListener('click', () => {
+      visits += 1;
+      sessionStorage.setItem(key, String(visits));
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
