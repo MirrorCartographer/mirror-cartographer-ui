@@ -1,0 +1,37 @@
+{
+  email off
+  admin off
+  servers {
+    protocols h1 h2 h3
+  }
+}
+
+{$FOUNDATION_DOMAIN} {
+  encode zstd gzip
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  @health path /healthz
+  handle @health {
+    reverse_proxy app:80
+  }
+
+  handle {
+    reverse_proxy app:80
+  }
+
+  log {
+    output file /data/access.log {
+      roll_size 25MiB
+      roll_keep 5
+      roll_keep_for 168h
+    }
+    format json
+  }
+}
