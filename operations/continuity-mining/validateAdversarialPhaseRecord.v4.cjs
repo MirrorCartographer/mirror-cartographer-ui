@@ -30,7 +30,12 @@ function validateEvidenceItem(item) {
 }
 
 function validateAdversarialPhaseRecord(record) {
-  const normalized = record && typeof record === 'object' ? { ...record, schema_version: 3 } : record;
+  const evidenceLocators = Array.isArray(record?.evidence_inspected)
+    ? record.evidence_inspected.map((item) => nonEmpty(item?.locator) ? item.locator : 'invalid evidence item')
+    : record?.evidence_inspected;
+  const normalized = record && typeof record === 'object'
+    ? { ...record, schema_version: 3, evidence_inspected: evidenceLocators }
+    : record;
   const base = validateV3(normalized);
   const violations = base.violations.filter((v) => v !== 'schema_version_must_be_3');
 
