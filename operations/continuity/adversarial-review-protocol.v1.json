@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "owner": "continuity_mining",
   "purpose": "Require explicit, durable adversarial review before recovered knowledge is committed, immediately after implementation, and during verification.",
   "safety_boundary": {
@@ -19,6 +19,16 @@
       "representing committed source as executed runtime evidence"
     ]
   },
+  "cycle_identity": {
+    "required_fields": ["cycle_id", "target_id", "target_digest_or_commit", "started_at"],
+    "rule": "All three checkpoint records must carry identical cycle and target identity. Target substitution, branch substitution, and commit substitution block adoption."
+  },
+  "required_checkpoint_order": [
+    "before_knowledge_commit",
+    "post_implementation",
+    "verification"
+  ],
+  "checkpoint_cardinality": "Each required checkpoint must occur exactly once in a substantive cycle. Missing, duplicated, or reordered checkpoints block adoption.",
   "required_checkpoints": [
     {
       "checkpoint": "before_knowledge_commit",
@@ -60,7 +70,11 @@
     }
   ],
   "required_record_fields": [
+    "cycle_id",
+    "target_id",
+    "target_digest_or_commit",
     "checkpoint",
+    "recorded_at",
     "claim_or_design_tested",
     "challenge_method",
     "evidence",
@@ -72,15 +86,30 @@
     "rollback_route",
     "next_falsifiable_step"
   ],
+  "evidence_rules": {
+    "minimum_fields": ["type", "locator", "observed_at", "supported_claim", "strength", "retention_status"],
+    "commit_bound_claims": "Claims about repository implementation or verification require an exact commit or blob locator.",
+    "weak_evidence": "Lead-only, mutable, stale, non-reproducible, or non-commit-matched evidence cannot close uncertainty or prove success.",
+    "execution_boundary": "Source, fixtures, or committed test files do not prove runtime execution."
+  },
+  "uncertainty_transition_rules": {
+    "carried": "Must remain visible in the next checkpoint.",
+    "repaired": "Must reference a retained repair and disappear from the next checkpoint's active uncertainty.",
+    "rejected": "Must reference retained counterevidence and disappear from the next checkpoint's active uncertainty.",
+    "orphan_disposition": "A disposition for uncertainty not present in the prior checkpoint is invalid."
+  },
   "decision_rules": {
     "missing_checkpoint": "block",
+    "duplicate_or_reordered_checkpoint": "block",
+    "cycle_or_target_identity_drift": "block",
     "missing_required_field": "block",
     "material_unresolved_contradiction": "block",
     "weak_or_non_commit_matched_evidence": "cannot_verify_success",
     "safe_negative_control_failure": "repair_or_document_before_adoption",
-    "rollback_route_unavailable": "block_irreversible_adoption"
+    "rollback_route_unavailable": "block_irreversible_adoption",
+    "remaining_uncertainty": "block_success_claim_until_explicitly_carried_or_resolved"
   },
   "adoption_boundary": "This protocol is an additive governance artifact. It does not by itself prove that every Continuity Mining entrypoint invokes it, that any test has executed, or that recovered knowledge is canonical.",
-  "rollback_route": "Revert the commit that introduced this file. No production, deployment, automation, schedule, credential, DNS, or shared-state rollback is required.",
-  "next_falsifiable_step": "Create a disposable three-checkpoint record with one omitted required field and prove the intended validator or canonical review path rejects it fail-closed."
+  "rollback_route": "Revert the commits that introduced and updated this file. No production, deployment, automation, schedule, credential, DNS, or shared-state rollback is required.",
+  "next_falsifiable_step": "Implement a disposable validator fixture proving that omitted fields, duplicate checkpoints, target substitution, orphan uncertainty dispositions, and non-commit-matched evidence are rejected fail-closed."
 }
