@@ -31,7 +31,7 @@
   </style>
 </head>
 <body>
-  <div class="room">
+  <div class="room" id="room" data-mode="listening">
     <canvas id="field" aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
     <main>
@@ -46,19 +46,12 @@
       <button class="control" id="reset" type="button">Reset</button>
     </div>
   </div>
-<script>
+<script type="module">
+import { scoreVisit } from './room-score.mjs';
+
 (() => {
   'use strict';
-  const lines = [
-    'A small light moves behind the wall, keeping pace with your breathing.',
-    'Nothing opens. The room becomes deeper anyway.',
-    'A chair remembers the weight of someone who has not arrived.',
-    'The ceiling lowers by one thought, then changes its mind.',
-    'You hear a door close in a building with no second floor.',
-    'The room gives back the silence, but warmer.',
-    'A line appears where the horizon would be if this were outside.',
-    'For one second, every object agrees on where the center is.'
-  ];
+  const room = document.querySelector('#room');
   const canvas = document.querySelector('#field');
   const ctx = canvas.getContext('2d', { alpha:false });
   const door = document.querySelector('#door');
@@ -67,9 +60,19 @@
   const sound = document.querySelector('#sound');
   const reset = document.querySelector('#reset');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let visits = Number(sessionStorage.getItem('fourth-room-visits') || 0);
+  const storedVisits = Number(sessionStorage.getItem('fourth-room-visits') || 0);
+  let visits = Number.isSafeInteger(storedVisits) && storedVisits >= 0 ? storedVisits : 0;
+  let score = scoreVisit(visits);
   let audio = null;
   let raf = 0;
+
+  function applyScore(nextScore) {
+    score = nextScore;
+    room.dataset.mode = score.mode;
+    message.textContent = score.line;
+    count.textContent = score.countLabel;
+    door.querySelector('span').textContent = score.doorLabel;
+  }
 
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -82,10 +85,10 @@
   function draw(t) {
     const w = innerWidth, h = innerHeight;
     ctx.fillStyle = '#11100e'; ctx.fillRect(0,0,w,h);
-    const phase = reduced ? visits * .55 : t * .00008;
-    const x = w * (.5 + Math.sin(phase + visits * .31) * .16);
-    const y = h * (.48 + Math.cos(phase * 1.3 + visits * .21) * .12);
-    const r = Math.max(w,h) * (.48 + Math.min(visits,12) * .012);
+    const drift = reduced ? 0 : t * .00008;
+    const x = w * (score.field.x + Math.sin(drift + score.field.phase) * .025);
+    const y = h * (score.field.y + Math.cos(drift * 1.3 + score.field.phase) * .02);
+    const r = Math.max(w,h) * score.field.radius;
     const g = ctx.createRadialGradient(x,y,0,x,y,r);
     g.addColorStop(0,'rgba(116,101,74,.24)');
     g.addColorStop(.35,'rgba(49,45,38,.18)');
@@ -93,52 +96,62 @@
     ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
     ctx.strokeStyle = 'rgba(233,225,210,.055)'; ctx.lineWidth = 1;
     for (let i=0;i<7;i++) {
-      const q = (i+1)/8; const bend = Math.sin(phase*3+i+visits)*12;
+      const q = (i+1)/8;
+      const bend = Math.sin(drift*3+i+score.field.phase)*12;
       ctx.beginPath(); ctx.moveTo(w*q+bend,0); ctx.lineTo(w*(1-q)-bend,h); ctx.stroke();
     }
     if (!reduced) raf = requestAnimationFrame(draw);
   }
 
   function ping() {
-    if (!audio) return;
+    if (!audio || sound.getAttribute('aria-pressed') !== 'true') return;
     const now = audio.currentTime;
     const osc = audio.createOscillator();
     const gain = audio.createGain();
-    osc.type = 'sine'; osc.frequency.setValueAtTime(73 + (visits % 5) * 11, now);
-    osc.frequency.exponentialRampToValueAtTime(42, now + 1.8);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(score.audio.frequencyStart, now);
+    osc.frequency.exponentialRampToValueAtTime(score.audio.frequencyEnd, now + score.audio.duration * .86);
     gain.gain.setValueAtTime(.0001, now);
-    gain.gain.exponentialRampToValueAtTime(.035, now + .08);
-    gain.gain.exponentialRampToValueAtTime(.0001, now + 2.1);
-    osc.connect(gain).connect(audio.destination); osc.start(now); osc.stop(now + 2.2);
+    gain.gain.exponentialRampToValueAtTime(score.audio.gainPeak, now + .08);
+    gain.gain.exponentialRampToValueAtTime(.0001, now + score.audio.duration);
+    osc.connect(gain).connect(audio.destination);
+    osc.start(now);
+    osc.stop(now + score.audio.duration + .1);
   }
 
   function enter() {
     visits += 1;
     sessionStorage.setItem('fourth-room-visits', String(visits));
-    message.textContent = lines[(visits - 1) % lines.length];
-    count.textContent = String(visits).padStart(2,'0');
-    door.querySelector('span').textContent = visits % 4 === 0 ? 'The room entered you' : 'Enter again';
+    applyScore(scoreVisit(visits));
     ping();
     if (reduced) draw(performance.now());
   }
 
   sound.addEventListener('click', async () => {
-    if (!audio) { audio = new (window.AudioContext || window.webkitAudioContext)(); }
-    if (audio.state === 'suspended') await audio.resume();
     const enabled = sound.getAttribute('aria-pressed') !== 'true';
-    sound.setAttribute('aria-pressed', String(enabled));
-    sound.textContent = `Sound: ${enabled ? 'on' : 'off'}`;
-    if (enabled) ping(); else { await audio.close(); audio = null; }
+    if (enabled) {
+      if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+      if (audio.state === 'suspended') await audio.resume();
+      sound.setAttribute('aria-pressed', 'true');
+      sound.textContent = 'Sound: on';
+      ping();
+    } else {
+      sound.setAttribute('aria-pressed', 'false');
+      sound.textContent = 'Sound: off';
+      if (audio) await audio.close();
+      audio = null;
+    }
   });
   door.addEventListener('click', enter);
   reset.addEventListener('click', () => {
-    visits = 0; sessionStorage.removeItem('fourth-room-visits');
-    message.textContent = 'The room is listening for a shape, not a name.';
-    count.textContent = '00'; door.querySelector('span').textContent = 'Enter without proof';
+    visits = 0;
+    sessionStorage.removeItem('fourth-room-visits');
+    applyScore(scoreVisit(0));
     if (reduced) draw(performance.now());
   });
   addEventListener('resize', resize, { passive:true });
-  resize(); count.textContent = String(visits).padStart(2,'0');
+  applyScore(score);
+  resize();
   if (!reduced) raf = requestAnimationFrame(draw);
   addEventListener('pagehide', () => cancelAnimationFrame(raf), { once:true });
 })();
