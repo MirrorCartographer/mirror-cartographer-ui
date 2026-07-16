@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "target": "validateAdversarialPhaseRecord.v3",
+  "branch": "preview",
+  "implementation_commit": "cc941831c784909321458aea025636962a213ed6",
+  "test_commit": "b20a9cec659e3cead4354a8cc29306396388c03f",
+  "claim_boundary": "Source and deterministic negative-control fixtures are committed. Runtime test execution, exhaustive repository coverage, and provenance resolution for M-004, M-005, and M-006 are not claimed.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Version 2 fails closed for incomplete continuity adversarial records.",
+      "challenge_method": [
+        "Construct a bounded verification record with no inspected evidence or negative controls.",
+        "Construct a record with a placeholder rollback route.",
+        "Construct a non-verified record with no claim boundary."
+      ],
+      "findings": [
+        "Version 2 required evidence, negative controls, and claim boundaries only for verified claims.",
+        "Version 2 accepted any non-empty rollback string, including placeholders such as N/A.",
+        "A bounded verification record could therefore appear complete without proving what was inspected or how it was challenged."
+      ],
+      "repairs": [
+        "Require evidence and negative controls for every verification checkpoint.",
+        "Require a claim boundary for every record.",
+        "Reject known placeholder rollback routes."
+      ],
+      "remaining_uncertainty": [
+        "Semantic adequacy of free-text evidence descriptions is not machine-verifiable.",
+        "Existing version-2 consumers have not been exhaustively inventoried."
+      ],
+      "design_stronger": true,
+      "evidence_quality": "Direct source inspection of committed version-2 validator and tests.",
+      "rollback_route": "Revert commits b20a9cec659e3cead4354a8cc29306396388c03f and cc941831c784909321458aea025636962a213ed6 on preview.",
+      "next_falsifiable_step": "Run the version-3 Node test suite and retain exact output."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "Version 3 closes the identified verification-record gaps without mutating protected systems.",
+      "challenge_method": [
+        "Add safe malformed-record fixtures for missing evidence, missing negative controls, placeholder rollback, inconsistent bounded status, missing claim boundary, and orphan experiment fields.",
+        "Add a reversible in-memory intentional-failure fixture as a positive control."
+      ],
+      "findings": [
+        "The source now rejects all identified fail-open record shapes.",
+        "Intentional-failure metadata can no longer appear without the explicit experiment flag.",
+        "No automation, schedule, deployment, production system, credential, shared state, or irreversible user data was modified."
+      ],
+      "repairs": [
+        "Added schema-version enforcement and cross-field consistency checks.",
+        "Added seven deterministic test fixtures.",
+        "Kept version 2 intact to preserve a reversible migration path."
+      ],
+      "remaining_uncertainty": [
+        "Tests are committed but were not executed through the repository connector.",
+        "No canonical caller has yet been migrated to version 3."
+      ],
+      "design_stronger": true,
+      "evidence_quality": "Commit-matched source and test artifacts; runtime execution absent.",
+      "rollback_route": "Revert commits b20a9cec659e3cead4354a8cc29306396388c03f and cc941831c784909321458aea025636962a213ed6 on preview.",
+      "next_falsifiable_step": "Execute node --test operations/continuity-mining/validateAdversarialPhaseRecord.v3.test.cjs at the exact preview commit."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The implementation is ready to become canonical continuity enforcement.",
+      "challenge_method": [
+        "Compare the new checks against the active M-RECONCILE-002 acceptance criteria.",
+        "Attempt to separate record validity from provenance truth and runtime test passage."
+      ],
+      "findings": [
+        "Record validity remains distinct from historical provenance.",
+        "M-004, M-005, and M-006 remain unresolved because exhaustive branch/history traversal and immutable originating sources are absent.",
+        "Canonical adoption is premature until runtime tests pass and version-2 callers are inventoried."
+      ],
+      "repairs": [
+        "Retained version 3 as additive, non-canonical enforcement.",
+        "Preserved coverage-bounded status and explicit claim boundaries.",
+        "Blocked any resolution or publication claim."
+      ],
+      "remaining_uncertainty": [
+        "Runtime behavior is unverified.",
+        "Consumer compatibility is unknown.",
+        "Historical provenance gaps remain unresolved."
+      ],
+      "design_stronger": true,
+      "evidence_quality": "Strong source-level evidence, bounded verification evidence, no runtime execution.",
+      "rollback_route": "Revert this evidence commit, then b20a9cec659e3cead4354a8cc29306396388c03f and cc941831c784909321458aea025636962a213ed6 on preview.",
+      "next_falsifiable_step": "Run and retain the exact test output, then inventory every version-2 import before making version 3 canonical."
+    }
+  ],
+  "resolution_decision": "blocked",
+  "robustness_increased": true
+}
