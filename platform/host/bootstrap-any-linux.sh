@@ -35,7 +35,7 @@ ufw allow 443/tcp
 ufw allow 443/udp
 ufw --force enable
 
-mkdir -p "$FOUNDATION_ROOT" /var/lib/foundation/releases /var/lib/foundation/backups /srv/foundation/data/caddy /srv/foundation/data/caddy-config
+mkdir -p "$FOUNDATION_ROOT" /var/lib/foundation/releases /var/lib/foundation/backups /var/lib/foundation/deployment-evidence /srv/foundation/data/caddy /srv/foundation/data/caddy-config
 if [[ ! -d "$FOUNDATION_ROOT/repository/.git" ]]; then
   git clone --branch "$FOUNDATION_REF" "$FOUNDATION_REPOSITORY" "$FOUNDATION_ROOT/repository"
 else
@@ -59,13 +59,43 @@ cat > "$FOUNDATION_ROOT/deploy.sh" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT=/opt/foundation
+STATE=/var/lib/foundation
+EVIDENCE="$STATE/deployment-evidence"
 source "$ROOT/.env"
+mkdir -p "$EVIDENCE"
+
+health_ok() {
+  curl -fsS --max-time 5 "https://$FOUNDATION_DOMAIN/healthz" >/dev/null
+}
+
+record_evidence() {
+  local outcome=$1 candidate_commit=$2 candidate_image=$3 active_commit=$4 active_image=$5
+  local timestamp evidence_file
+  timestamp=$(date -u +%Y%m%dT%H%M%SZ)
+  evidence_file="$EVIDENCE/${timestamp}-${candidate_commit}-${outcome}.env"
+  umask 077
+  {
+    printf 'timestamp_utc=%s\n' "$timestamp"
+    printf 'hostname=%s\n' "$(hostname --fqdn 2>/dev/null || hostname)"
+    printf 'domain=%s\n' "$FOUNDATION_DOMAIN"
+    printf 'outcome=%s\n' "$outcome"
+    printf 'candidate_commit=%s\n' "$candidate_commit"
+    printf 'candidate_image=%s\n' "$candidate_image"
+    printf 'active_commit=%s\n' "$active_commit"
+    printf 'active_image=%s\n' "$active_image"
+  } > "$evidence_file"
+  sha256sum "$evidence_file" > "$evidence_file.sha256"
+}
+
+PREVIOUS_COMMIT=$(cat "$STATE/current-commit" 2>/dev/null || true)
+PREVIOUS_IMAGE=$(cat "$STATE/current-image" 2>/dev/null || true)
+
 git -C "$ROOT/repository" fetch origin "$FOUNDATION_REF"
 git -C "$ROOT/repository" checkout "$FOUNDATION_REF"
 git -C "$ROOT/repository" reset --hard "origin/$FOUNDATION_REF"
 COMMIT=$(git -C "$ROOT/repository" rev-parse HEAD)
 IMAGE="foundation-ui:$COMMIT"
-RELEASE="/var/lib/foundation/releases/$COMMIT"
+RELEASE="$STATE/releases/$COMMIT"
 mkdir -p "$RELEASE"
 rm -rf "$RELEASE/source"
 cp -a "$ROOT/repository/." "$RELEASE/source"
@@ -81,16 +111,41 @@ docker compose build --pull app
 docker image inspect "$IMAGE" --format '{{.Id}}' > "$RELEASE/image-id"
 docker compose up -d --remove-orphans
 for _ in $(seq 1 60); do
-  if curl -fsS --max-time 5 "https://$FOUNDATION_DOMAIN/healthz" >/dev/null; then
-    ln -sfn "$RELEASE" /var/lib/foundation/current
-    printf '%s\n' "$COMMIT" > /var/lib/foundation/current-commit
-    printf '%s\n' "$IMAGE" > /var/lib/foundation/current-image
+  if health_ok; then
+    ln -sfn "$RELEASE" "$STATE/current"
+    printf '%s\n' "$COMMIT" > "$STATE/current-commit"
+    printf '%s\n' "$IMAGE" > "$STATE/current-image"
+    record_evidence promoted "$COMMIT" "$IMAGE" "$COMMIT" "$IMAGE"
     exit 0
   fi
   sleep 2
 done
-echo "Health verification failed; release was not promoted" >&2
+
+echo "Candidate health verification failed; release was not promoted" >&2
 docker compose ps >&2 || true
+
+if [[ -n "$PREVIOUS_COMMIT" && -n "$PREVIOUS_IMAGE" ]] && docker image inspect "$PREVIOUS_IMAGE" >/dev/null 2>&1; then
+  echo "Rolling back to promoted image $PREVIOUS_IMAGE" >&2
+  export FOUNDATION_COMMIT="$PREVIOUS_COMMIT" FOUNDATION_IMAGE="$PREVIOUS_IMAGE"
+  docker compose up -d --no-build --remove-orphans
+  for _ in $(seq 1 30); do
+    if health_ok; then
+      record_evidence rolled-back "$COMMIT" "$IMAGE" "$PREVIOUS_COMMIT" "$PREVIOUS_IMAGE"
+      echo "Rollback verified; previous promoted release is healthy" >&2
+      exit 1
+    fi
+    sleep 2
+  done
+  record_evidence rollback-failed "$COMMIT" "$IMAGE" "$PREVIOUS_COMMIT" "$PREVIOUS_IMAGE"
+  echo "CRITICAL: candidate and rollback health verification both failed" >&2
+  docker compose ps >&2 || true
+  exit 2
+fi
+
+# No promoted image exists, so leave no unverified public runtime running.
+docker compose down --remove-orphans || true
+record_evidence rejected-no-rollback "$COMMIT" "$IMAGE" UNDEPLOYED UNDEPLOYED
+echo "No previous promoted image was available; unverified runtime stopped" >&2
 exit 1
 EOF
 chmod 0755 "$FOUNDATION_ROOT/deploy.sh"
