@@ -1,0 +1,17 @@
+services:
+  mirror-cartographer:
+    build:
+      context: ..
+      dockerfile: platform/Containerfile
+    image: foundation-intelligence/mirror-cartographer:preview
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /data
+      - /config
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
