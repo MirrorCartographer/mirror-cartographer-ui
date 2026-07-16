@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T01:59:18Z",
+  "evidence_class": "operations_only_tested_contract_improvement",
+  "slice": "Bind programmed-stage freshness verification to the complete commit-and-repertory-bound receipt contract.",
+  "problem_closed": "A timestamp-current but structurally malformed or unbound programmed-stage receipt could previously pass the isolated freshness checker.",
+  "implementation": {
+    "source_path": "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.cjs",
+    "source_commit": "018a1aa933dbf9e011d6558b2e93549ad53c3ac6",
+    "test_path": "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.test.cjs",
+    "test_commit": "43c89a6b01a96238e27d940d792e6189263ee027",
+    "structural_dependency": "operations/vercel-studio/repertory/verifyProgrammedStageReceipt.v1.cjs"
+  },
+  "verification": {
+    "method": "Local Node test execution against byte-identical implementation, structural verifier, and test content before repository write.",
+    "command": "node --test verifyProgrammedStageFreshness.v1.test.cjs",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "covered": [
+      "valid current-hour structurally verified receipt",
+      "one-hour freshness boundary",
+      "future-dated receipt",
+      "fresh but structurally invalid receipt",
+      "expected source commit and repertory digest mismatch",
+      "invalid maximum age"
+    ],
+    "full_authenticated_repertory_suite_executed": false
+  },
+  "production_programmed_for_utc_hour": {
+    "utc_hour": 1,
+    "edition_id": "coordinate-choir-01",
+    "production_id": "coordinate-choir",
+    "title": "Coordinate Choir",
+    "edition_cue": "north-field",
+    "runtime_activation_claimed": false
+  },
+  "boundaries": {
+    "deployment_claimed": false,
+    "browser_execution_claimed": false,
+    "audio_playback_claimed": false,
+    "physical_device_verification_claimed": false,
+    "payments_or_conversion_logic_added": false,
+    "private_source_material_exposed": false,
+    "application_runtime_changed": false
+  },
+  "rollback": [
+    "Revert commit 43c89a6b01a96238e27d940d792e6189263ee027.",
+    "Revert commit 018a1aa933dbf9e011d6558b2e93549ad53c3ac6."
+  ],
+  "next_action": "Run npm run test:vercel-repertory in an authenticated checkout and retain the complete output, then execute both exhaustive workflow clients against one exact commit without activating or deploying the repertory."
+}
