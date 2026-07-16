@@ -5,6 +5,12 @@ import { assessPromotion } from './validate-promotion-evidence.v1.mjs';
 const sha = 'a'.repeat(40);
 const checklist = {
   source_branch: 'preview', target_branch: 'main',
+  expected_deployment_identity: {
+    github_repo_id: 1003910384,
+    github_repository: 'MirrorCartographer/mirror-cartographer-ui',
+    vercel_project_name: 'mirror-cartographer-ui',
+    vercel_project_id: null
+  },
   required_checks: ['build','smoke','mobile','accessibility','interaction','audio','deployment_identity','rollback','adversarial_review'],
   promotion_requires: { preview_deployment_state: 'ready' }
 };
@@ -37,6 +43,8 @@ test('accepts complete commit-bound ready evidence with immutable preview deploy
   assert.equal(result.promotable,true);
   assert.equal(result.immutable_deployment_identity_verified,true);
   assert.equal(result.immutable_deployment_git_ref,'preview');
+  assert.equal(result.immutable_deployment_github_repo_id,1003910384);
+  assert.equal(result.immutable_deployment_project_name,'mirror-cartographer-ui');
 });
 test('rejects canceled state', () => { const e=evidence(); e.preview_deployment_state='canceled'; assert.equal(assessPromotion(checklist,e).promotable,false); });
 test('rejects check commit mismatch', () => { const e=evidence(); e.checks.smoke.commit='b'.repeat(40); assert.ok(assessPromotion(checklist,e).failures.includes('required_check_commit_mismatch:smoke')); });
@@ -78,4 +86,23 @@ test('rejects immutable deployment evidence with no git ref', () => {
   const result=assessPromotion(checklist,e);
   assert.equal(result.promotable,false);
   assert.ok(result.failures.includes('immutable_deployment_git_ref_missing'));
+});
+test('rejects the same commit and branch from a different GitHub repository', () => {
+  const e=evidence(); e.deployment_identity_evidence.deployment.gitSource.repoId=999999999;
+  const result=assessPromotion(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('immutable_deployment_github_repo_mismatch'));
+});
+test('rejects the same repository commit deployed by a different Vercel project', () => {
+  const e=evidence(); e.deployment_identity_evidence.deployment.name='mirror-cartographer-fork';
+  const result=assessPromotion(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('immutable_deployment_project_name_mismatch'));
+});
+test('fails closed when expected repository identity is absent from the checklist', () => {
+  const weakChecklist={...checklist}; delete weakChecklist.expected_deployment_identity;
+  const result=assessPromotion(weakChecklist,evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('expected_github_repo_id_missing'));
+  assert.ok(result.failures.includes('expected_vercel_project_name_missing'));
 });
