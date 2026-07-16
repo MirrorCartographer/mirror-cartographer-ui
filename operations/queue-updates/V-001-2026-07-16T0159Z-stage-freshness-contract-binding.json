@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T01:59:18Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Programmed-stage freshness now fails closed unless the complete receipt contract verifies, including exact commit binding, repertory digest binding, safety, continuity, production metadata, edition identity, and false runtime/deployment claims.",
+  "files": [
+    "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.cjs",
+    "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.test.cjs",
+    "operations/evidence/V-001-stage-freshness-contract-binding-2026-07-16T0159Z.json"
+  ],
+  "commits": [
+    "018a1aa933dbf9e011d6558b2e93549ad53c3ac6",
+    "43c89a6b01a96238e27d940d792e6189263ee027",
+    "44dd7c317c619278b7a318b49a5c3562cd867eb0"
+  ],
+  "verification": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "full_authenticated_repertory_suite_executed": false
+  },
+  "acceptance_remaining_unchanged": [
+    "Execute authenticated all-event pagination for an exact commit with both clients and retain reconciliation evidence.",
+    "Observe an operations-only sentinel skipped or ignored after provider capacity returns.",
+    "Observe exact-commit audio-routing evidence.",
+    "Bind a tested application commit to immutable successful Vercel deployment identity.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "canonical_queue_overwritten": false,
+  "next_action": "Run the complete authenticated repertory suite and preserve output; do not activate or deploy while the provider block remains."
+}
