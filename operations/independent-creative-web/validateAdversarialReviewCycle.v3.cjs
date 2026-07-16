@@ -18,13 +18,11 @@ function validateAdversarialReviewCycle(cycle) {
           errors.push(`phase_${index + 1}:publish_with_remaining_uncertainty`);
         }
 
-        if (phase && phase.evidence_required_before_publication !== undefined) {
-          if (!Array.isArray(phase.evidence_required_before_publication) ||
-              !phase.evidence_required_before_publication.every(nonEmptyString)) {
-            errors.push(`phase_${index + 1}:invalid_evidence_required_before_publication`);
-          } else if (phase.evidence_required_before_publication.length > 0) {
-            errors.push(`phase_${index + 1}:publish_with_outstanding_evidence_requirement`);
-          }
+        if (!phase || !Array.isArray(phase.evidence_required_before_publication) ||
+            !phase.evidence_required_before_publication.every(nonEmptyString)) {
+          errors.push(`phase_${index + 1}:invalid_evidence_required_before_publication`);
+        } else if (phase.evidence_required_before_publication.length > 0) {
+          errors.push(`phase_${index + 1}:publish_with_outstanding_evidence_requirement`);
         }
       });
     }
@@ -34,7 +32,7 @@ function validateAdversarialReviewCycle(cycle) {
     ...base,
     valid: errors.length === 0,
     errors,
-    claim_boundary: 'Validates v2 cycle structure and publication-decision consistency, and prevents publication while any checkpoint retains uncertainty or an explicit evidence requirement; does not prove implementation behavior, test execution, provider state, or deployment readiness.',
+    claim_boundary: 'Validates v2 cycle structure and publication-decision consistency, and prevents publication while any checkpoint retains uncertainty or lacks an explicit, satisfied evidence-requirement inventory; does not prove implementation behavior, test execution, provider state, or deployment readiness.',
   };
 }
 
