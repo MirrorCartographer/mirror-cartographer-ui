@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "evidence_id": "CF-002-publication-enforcement-2026-07-15T2020-0400",
+  "queue_item": "CF-002",
+  "owner": "cloudflare_research",
+  "recorded_at": "2026-07-16T00:20:57Z",
+  "claim": "A publication packet rejected by publicationBoundary.v1 cannot invoke a static renderer or Worker renderer through publicationEnforcement.v1; accepted Worker responses receive mandatory runtime security headers that renderer output cannot weaken.",
+  "implementation": [
+    "operations/cloudflare-research/publicationEnforcement.v1.mjs",
+    "operations/cloudflare-research/publicationEnforcement.v1.test.mjs"
+  ],
+  "verification": {
+    "command": "node --test publicationEnforcement.v1.test.mjs against byte-identical local files",
+    "result": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "adversarial_finding": "The first test implementation exposed that renderer headers could override mandatory noindex and no-store values. The merge order was corrected and the suite rerun successfully."
+  },
+  "boundaries": {
+    "deployment_attempted": false,
+    "public_route_verified": false,
+    "diagnosis_or_treatment_claims_published": false,
+    "payment_moved_to_vercel": false,
+    "privacy_scope": "Structured packet fields and repository-safe implementation only; no private source material processed."
+  },
+  "limits": [
+    "The gate is not yet wired into a deployed Cloudflare Worker or static build pipeline.",
+    "The structured assessor does not provide general prose de-identification or clinical validation.",
+    "Runtime behavior is proven by deterministic Node tests, not by a live Cloudflare request."
+  ],
+  "falsification_route": "Import the module in an authenticated checkout, run the retained tests, then attempt a rejected packet through both adapters and verify neither renderer is called; for deployment evidence, wire the adapter into the Worker/build path and retain exact-commit request results."
+}
