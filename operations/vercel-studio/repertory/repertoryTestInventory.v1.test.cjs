@@ -4,12 +4,18 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { readdirSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
+const {
+  REQUIRED_REPERTORY_TESTS,
+  assessRepertoryTestInventory,
+} = require('./repertoryTestInventory.v1.cjs');
 
 const repertoryDirectory = __dirname;
 const runnerPath = join(repertoryDirectory, 'runRepertoryTests.v1.mjs');
 const criticalTests = Object.freeze([
+  'assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs',
   'assessRepertoryActivation.v1.test.cjs',
   'buildContinuityHandoff.v1.test.cjs',
+  'repertoryTestInventory.v1.test.cjs',
   'verifyProgrammedStageReceipt.v1.test.cjs',
   'vercelRepertoryOidcWorkflowContract.v1.test.cjs',
 ]);
@@ -28,9 +34,15 @@ test('canonical runner retains deterministic fail-closed discovery', () => {
   assert.match(runnerSource, /spawnSync\(process\.execPath, \['--test', \.\.\.testFiles\]/);
 });
 
-test('critical activation, continuity, programmed-stage, and OIDC gates remain discoverable exactly once', () => {
+test('critical publication, activation, continuity, programmed-stage, inventory, and OIDC gates are mandatory', () => {
+  assert.deepEqual(
+    [...REQUIRED_REPERTORY_TESTS].sort(),
+    [...criticalTests].sort(),
+    'required inventory must name every critical repertory gate',
+  );
+
   const discovered = discoveredTestNames();
-  assert.ok(discovered.length >= criticalTests.length + 1, 'repertory suite unexpectedly contracted');
+  assert.ok(discovered.length >= criticalTests.length, 'repertory suite unexpectedly contracted');
 
   for (const criticalTest of criticalTests) {
     assert.equal(
@@ -39,12 +51,17 @@ test('critical activation, continuity, programmed-stage, and OIDC gates remain d
       `critical repertory test missing or duplicated: ${criticalTest}`,
     );
   }
+});
 
-  assert.equal(
-    discovered.filter((name) => name === 'repertoryTestInventory.v1.test.cjs').length,
-    1,
-    'inventory gate must itself be auto-discovered exactly once',
-  );
+test('inventory fails closed before execution when any critical gate is removed', () => {
+  for (const criticalTest of criticalTests) {
+    const contracted = discoveredTestNames().filter((name) => name !== criticalTest);
+    const assessment = assessRepertoryTestInventory(contracted);
+    assert.equal(assessment.verified, false, `removal must fail closed: ${criticalTest}`);
+    assert.ok(assessment.missing_required_tests.includes(criticalTest));
+    assert.ok(assessment.violations.includes('required_repertory_test_missing'));
+    assert.equal(assessment.claim_boundary, 'repertory_test_execution_prohibited');
+  }
 });
 
 test('discovery order is stable and contains no path traversal entries', () => {
