@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import CompositionWorld from './components/CompositionWorld';
+import SpatialSoundField from './components/SpatialSoundField';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
@@ -26,7 +26,7 @@ installCometGardenRuntime();
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <CompositionWorld />
+      <SpatialSoundField />
     </ErrorBoundary>
   </React.StrictMode>,
 );
