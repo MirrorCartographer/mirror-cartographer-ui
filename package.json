@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "fia:build": "node tools/fia-build.mjs",
+    "fia:serve": "node tools/serve-owned.mjs",
+    "fia:image": "docker build -f Dockerfile.fia -t mirror-cartographer/fia-composition:local .",
     "build:pages": "vite build --base=/mirror-cartographer-ui/",
     "preview": "vite preview",
     "test:infrastructure": "node scripts/infrastructure-contract-check.mjs",

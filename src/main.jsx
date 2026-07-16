@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import RoomWorldValid from './components/RoomWorldValid';
+import CompositionWorld from './components/CompositionWorld';
 import ErrorBoundary from './components/ErrorBoundary';
-import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
 import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
@@ -12,7 +11,6 @@ import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRun
 import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
 import './assets/styles.css';
 import './assets/failsafe.css';
-import './assets/comet-garden.css';
 
 installRuntimeInfrastructure();
 installDeploymentIdentityRuntime();
@@ -21,12 +19,11 @@ installAudioObservabilityRuntime();
 installAudioRoutingEvidenceRuntime();
 installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
-installCometGardenRuntime();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <RoomWorldValid />
+      <CompositionWorld />
     </ErrorBoundary>
   </React.StrictMode>,
 );
