@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "team": "cloudflare_research",
+  "review_id": "CF-adversarial-provider-boundary-2026-07-16T0708Z",
+  "branch": "preview",
+  "scope": "Provider-role and publication-boundary review; operations-only, no deployment attempted.",
+  "phases": [
+    {
+      "checkpoint": "before_deployment_or_architectural_commitment",
+      "claim_or_design_tested": "Cloudflare may be treated as an active deployment provider for Mirror Cartographer based on repository references alone.",
+      "challenge_method": [
+        "Searched recent Cloudflare commits and existing publication-boundary evidence.",
+        "Compared the repository's fail-closed Vercel state with the available Cloudflare evidence.",
+        "Attempted branch discovery for preview and cross-checked it by reading a known file directly from the preview ref."
+      ],
+      "evidence": [
+        "operations/CURRENT_STATE.json on preview identifies Vercel capacity as the active deployment blocker and prohibits deployment success claims without evidence.",
+        "Recent Cloudflare commits establish source-level publication contracts but explicitly do not prove a live Cloudflare deployment or hostname.",
+        "Branch search returned no preview branch while direct fetch from ref preview succeeded, demonstrating a discovery false negative."
+      ],
+      "failures_or_counterexamples_found": [
+        "Repository source contracts are not immutable provider deployment evidence.",
+        "Branch-search absence is not proof that a branch does not exist.",
+        "No verified Cloudflare project, production branch mapping, preview mapping, deployment ID, commit SHA, generated hostname, DNS authority, or rollback execution was available."
+      ],
+      "repairs_made": [
+        "Retained a fail-closed provider role: Cloudflare remains unverified and non-authoritative for publication.",
+        "Required direct ref reads or immutable API objects to corroborate branch discovery before making branch-mapping claims."
+      ],
+      "remaining_uncertainty": [
+        "Cloudflare account/project metadata is not available in this run.",
+        "The intended long-term Cloudflare role—DNS, edge controls, fallback, or publisher—remains unresolved."
+      ],
+      "rollback_route": "Revert the commit that adds this evidence artifact; no runtime state changed.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Obtain read-only Cloudflare project metadata and test exact repository, branch, build, output, deployment-commit, hostname, and domain-authority agreement without triggering a deployment."
+    },
+    {
+      "checkpoint": "immediately_after_implementation",
+      "claim_or_design_tested": "An implementation change was necessary to improve safety in this cycle.",
+      "challenge_method": [
+        "Reviewed the canonical Cloudflare contract runner and its required publication-boundary tests.",
+        "Searched for a concrete source-level defect that could be repaired without duplicating existing controls."
+      ],
+      "evidence": [
+        "The canonical runner already fails closed on missing required tests, package-script drift, and test failure.",
+        "Existing commits already bind publication boundary and output enforcement into local and preview gates."
+      ],
+      "failures_or_counterexamples_found": [
+        "Adding another overlapping validator would duplicate existing work and increase architecture drift.",
+        "Provider identity and deployment truth cannot be repaired through source-only code without authoritative Cloudflare metadata."
+      ],
+      "repairs_made": [
+        "Chose the safer reversible alternative: record the unresolved provider-evidence boundary rather than add duplicate implementation.",
+        "Made no application, deployment, DNS, credential, automation, schedule, or shared-state change."
+      ],
+      "remaining_uncertainty": [
+        "The canonical contract tests were not executed in this connector-only run.",
+        "No Cloudflare deployment path was exercised."
+      ],
+      "rollback_route": "Revert this evidence-only commit.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Execute the canonical Cloudflare contract suite at an exact preview commit and retain immutable output before changing publication architecture."
+    },
+    {
+      "checkpoint": "verification_before_success",
+      "claim_or_design_tested": "The current Cloudflare state is ready for publication, promotion, or success declaration.",
+      "challenge_method": [
+        "Applied non-success handling to missing, queued, canceled, skipped, superseded, rate-limited, stale, and commit-mismatched evidence states.",
+        "Required immutable provider identity, exact commit agreement, hostname evidence, branch mapping, and rollback evidence."
+      ],
+      "evidence": [
+        "No immutable Cloudflare deployment object or commit-matched preview/production evidence was present.",
+        "Current repository state remains explicitly fail-closed for deployment acceptance."
+      ],
+      "failures_or_counterexamples_found": [
+        "A green source test or committed publication contract can coexist with no live deployment.",
+        "A provider alias or generic hostname can point to a stale or different commit.",
+        "Provider-role overlap with Vercel could create split authority and ambiguous rollback."
+      ],
+      "repairs_made": [
+        "Blocked publication and promotion.",
+        "Preserved Vercel as the only repository-policy-backed deployment owner until an explicit non-overlapping Cloudflare role is documented and proven."
+      ],
+      "remaining_uncertainty": [
+        "Cloudflare provider ownership, quota state, cancellation history, branch mapping, and DNS authority remain unknown.",
+        "No live verification or rollback drill occurred."
+      ],
+      "rollback_route": "No deployment occurred; revert this evidence-only commit if the record itself must be removed.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Perform a read-only provider metadata reconciliation, then construct a disposable non-production fixture to prove stale, canceled, superseded, and commit-mismatched deployment objects fail closed."
+    }
+  ],
+  "strongest_surviving_design": "Keep Vercel as the sole publication authority defined by repository policy. Treat Cloudflare as an unverified optional provider until one explicit non-overlapping role is selected and proven with immutable, commit-matched metadata. Require corroborated branch mapping, exact build/output configuration, generated hostname, domain authority, quota/cancellation state, and an executable rollback route before any Cloudflare publication claim.",
+  "rejected_alternatives": [
+    "Treat repository references or source tests as proof of a live Cloudflare deployment.",
+    "Treat branch-search absence as authoritative branch nonexistence.",
+    "Add another overlapping publication validator without a demonstrated gap.",
+    "Allow Cloudflare and Vercel to publish the same surface without explicit ownership and failover semantics.",
+    "Trigger an exploratory deployment merely to discover configuration."
+  ],
+  "unresolved_risks": [
+    "Unknown Cloudflare project and account linkage.",
+    "Unknown production and preview branch mappings.",
+    "Unknown build command and output directory agreement.",
+    "Unknown domain and DNS authority.",
+    "Unknown quota, cancellation, stale-artifact, and supersession states.",
+    "Canonical Cloudflare tests not executed in this run."
+  ],
+  "deployment_evidence_status": "absent_non_success",
+  "publication_or_promotion_decision": "blocked",
+  "created_at": "2026-07-16T07:08:34Z"
+}
