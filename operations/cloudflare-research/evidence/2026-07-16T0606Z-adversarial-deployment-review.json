@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "team": "Cloudflare Research Team",
+  "recorded_at": "2026-07-16T06:06:00Z",
+  "scope": "operations-only adversarial review; no deployment, DNS, credential, schedule, automation, or production mutation",
+  "checkpoints": [
+    {
+      "checkpoint": "before_deployment_or_architectural_commitment",
+      "claim_or_design_tested": "The preview branch is available as the required non-production integration surface and Cloudflare can be evaluated without conflicting with the canonical Vercel path.",
+      "challenge_method": [
+        "Queried branch discovery for preview",
+        "Attempted a safe idempotent preview-branch creation from main",
+        "Searched repository content for Cloudflare and Wrangler configuration",
+        "Compared observed repository state with the preview/production policy"
+      ],
+      "evidence": [
+        "Branch discovery returned no preview result",
+        "Branch creation returned Reference already exists (HTTP 422), proving preview exists despite discovery failure",
+        "PREVIEW_PRODUCTION_POLICY.md assigns preview to adversarial integration and Vercel Preview to canonical verification",
+        "Repository code search returned no Cloudflare or Wrangler configuration"
+      ],
+      "failures_or_counterexamples_found": [
+        "Connector branch search can produce a false negative for an existing branch",
+        "A discovery-only workflow could incorrectly create duplicate recovery work or report preview missing",
+        "No repository-grounded evidence currently supports an active Cloudflare deployment path"
+      ],
+      "repairs_made": [
+        "Established an existence check rule: treat an idempotent create-reference 422 as positive branch-existence evidence, not failure",
+        "Kept Cloudflare classified as an unverified alternative rather than a live provider",
+        "Made no provider, DNS, deployment, or production changes"
+      ],
+      "remaining_uncertainty": [
+        "Exact preview HEAD commit was not exposed by the branch-search response",
+        "Cloudflare project/account linkage cannot be verified from repository evidence",
+        "Provider build quota and branch mapping remain unknown"
+      ],
+      "rollback_route": "Delete only this evidence file by reverting its commit; no infrastructure rollback is required.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Resolve preview HEAD through a branch-ref-capable source, then verify whether any Cloudflare project is linked to the exact repository and preview branch without triggering a deployment."
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_or_design_tested": "An operations-only evidence record can strengthen governance without altering runtime behavior.",
+      "challenge_method": [
+        "Restricted implementation to a new evidence artifact on preview",
+        "Checked for accidental production, DNS, credential, automation, schedule, or shared-state mutations",
+        "Tested whether the record distinguishes provider evidence from inference"
+      ],
+      "evidence": [
+        "Only a new JSON evidence artifact was introduced",
+        "No deployment was requested",
+        "No Cloudflare configuration was added",
+        "No success state was inferred from queued, canceled, skipped, superseded, stale, rate-limited, or commit-mismatched evidence"
+      ],
+      "failures_or_counterexamples_found": [
+        "A document can overstate confidence if repository search absence is treated as proof that no external Cloudflare project exists"
+      ],
+      "repairs_made": [
+        "Bound the conclusion to repository-grounded evidence only",
+        "Recorded external Cloudflare linkage as unresolved rather than absent"
+      ],
+      "remaining_uncertainty": [
+        "External provider state remains inaccessible in this run"
+      ],
+      "rollback_route": "Revert the evidence commit on preview.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Obtain read-only Cloudflare project metadata and compare repository, production branch, preview branch, build command, output directory, and latest deployment commit."
+    },
+    {
+      "checkpoint": "verification_before_success",
+      "claim_or_design_tested": "The Cloudflare design is ready for publication or promotion.",
+      "challenge_method": [
+        "Required exact-commit deployment identity, ready state, branch mapping, build/output configuration, route reachability, rollback, and provider-role separation",
+        "Rejected branch-search output as a sole source of truth after the observed false negative",
+        "Applied fail-closed deployment-state semantics"
+      ],
+      "evidence": [
+        "No immutable Cloudflare deployment ID or URL",
+        "No ready deployment object",
+        "No commit-matched Cloudflare evidence",
+        "No verified Cloudflare branch mapping, build command, output directory, environment variables, domains, or rollback execution"
+      ],
+      "failures_or_counterexamples_found": [
+        "The publication claim is falsified by missing provider and deployment identity evidence"
+      ],
+      "repairs_made": [
+        "Publication and promotion remain blocked",
+        "Cloudflare remains a reversible candidate path only"
+      ],
+      "remaining_uncertainty": [
+        "Whether Cloudflare provides value as fallback hosting, edge middleware, DNS only, or no role",
+        "Whether duplicate provider deployments would create contradictory public surfaces"
+      ],
+      "rollback_route": "No deployment occurred; revert this evidence commit if the record itself must be removed.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Perform a read-only provider inventory and reject any design that duplicates Vercel ownership without an explicit failover contract."
+    }
+  ],
+  "strongest_surviving_design": {
+    "canonical_provider": "Vercel remains the only repository-policy-backed preview and promotion path.",
+    "cloudflare_role": "Unverified optional candidate limited to a clearly bounded role such as DNS, edge controls, or documented fallback; not a second implicit production owner.",
+    "required_contract": [
+      "one canonical production owner",
+      "explicit branch mapping",
+      "exact commit-bound deployment identity",
+      "ready state",
+      "non-overlapping provider responsibilities",
+      "tested rollback and failover semantics",
+      "no private archive exposure"
+    ]
+  },
+  "rejected_alternatives": [
+    "Treating branch-search absence as proof that preview does not exist",
+    "Treating Cloudflare as active because it was previously discussed",
+    "Running an exploratory deployment without verified provider role and branch mapping",
+    "Allowing Vercel and Cloudflare to publish the same surface without an explicit authority and failover contract"
+  ],
+  "unresolved_risks": [
+    "External Cloudflare account/project state is unknown",
+    "Preview HEAD and current deployment evidence are not resolved in this record",
+    "Provider quota, cancellation, stale-artifact, and branch-mapping behavior remain untested",
+    "Duplicate public-surface and DNS authority conflicts remain possible if Cloudflare is later enabled without governance"
+  ],
+  "deployment_evidence_status": "absent",
+  "publication_or_promotion_decision": "blocked"
+}
