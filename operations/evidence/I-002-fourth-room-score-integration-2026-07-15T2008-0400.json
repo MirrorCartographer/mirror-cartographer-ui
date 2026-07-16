@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "queue_item": "I-002",
+  "owner": "independent_creative_web",
+  "recorded_at": "2026-07-16T00:08:00Z",
+  "creative_premise": "The room is an authored spatial encounter whose narrative, field geometry, threshold state, and optional tone now advance from one deterministic visit score rather than four loosely coupled behaviors.",
+  "sources_inspected": [
+    "operations/CURRENT_STATE.json",
+    "operations/ACTIVE_QUEUE.json",
+    "operations/SPECIALIST_REGISTRY.json",
+    "operations/TRIGGER_REQUESTS.json",
+    "independent/IDENTITY.md",
+    "independent/fourth-room/index.html",
+    "independent/fourth-room/room-score.mjs",
+    "independent/fourth-room/browser.spec.js",
+    "recent repository commits for I-002"
+  ],
+  "implementation": {
+    "index_commit": "9e14f84902fefa4c31d320357a20a9564e35ba3d",
+    "browser_harness_commit": "af209a95e818022a2540957e9a6f609e14b90108",
+    "changes": [
+      "Loaded scoreVisit as a local ES module.",
+      "Made narrative line, door label, count, room mode, field geometry, and audio envelope derive from one score object.",
+      "Validated malformed session visit state fail-closed to zero.",
+      "Kept AudioContext construction behind explicit user activation.",
+      "Kept sessionStorage as the only memory surface.",
+      "Kept reduced-motion behavior free of requestAnimationFrame loops.",
+      "Updated the local browser harness to serve the score module and assert deterministic modes, scored audio, mobile reachability, and local-only requests."
+    ]
+  },
+  "verification": {
+    "strength": "exact-commit source refetch and static harness correspondence",
+    "completed": [
+      "Refetched index.html from its exact creating commit.",
+      "Confirmed score-driven state application, field geometry, audio parameters, session-only reset, and reduced-motion branch in committed source.",
+      "Confirmed browser harness was committed with local module serving and adversarial no-autoplay coverage."
+    ],
+    "not_claimed": [
+      "Node test execution",
+      "Playwright Chromium execution",
+      "Playwright WebKit execution",
+      "public preview deployment",
+      "physical-device audio or rendering behavior"
+    ]
+  },
+  "independence_boundary": {
+    "separate_from_mirror_cartographer": true,
+    "dashboard": false,
+    "research_surface": false,
+    "product_funnel": false,
+    "payments_or_conversion": false,
+    "analytics_or_tracking": false,
+    "external_network_dependency": false,
+    "private_source_material_exposed": false
+  },
+  "privacy_boundary": "Only authored public-safe fiction and session-local visit count are used. No identity, account, health, relationship, private chat, analytics, or durable behavioral record is introduced.",
+  "rollback": {
+    "route": "Revert af209a95e818022a2540957e9a6f609e14b90108, then 9e14f84902fefa4c31d320357a20a9564e35ba3d.",
+    "data_migration_required": false
+  },
+  "falsification_route": "Run the room-score Node tests and the Playwright harness in Chromium and WebKit. Any mismatch in authored line, mode, visit persistence, no-autoplay behavior, reduced-motion loop count, control reachability, or request set invalidates readiness for preview."
+}
