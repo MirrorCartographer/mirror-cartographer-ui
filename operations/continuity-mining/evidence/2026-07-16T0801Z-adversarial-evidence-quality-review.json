@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "work_item": "M-RECONCILE-002",
+  "branch": "preview",
+  "claim_boundary": "This record proves source-level evidence-structure enforcement was added. It does not prove runtime test passage, exhaustive repository coverage, or provenance for M-004, M-005, or M-006.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "v3 verification records provide sufficient evidence integrity",
+      "challenge_method": ["constructed prose-only evidence counterexample", "checked for duplicate validator work", "tested whether mutable evidence could masquerade as durable evidence"],
+      "evidence": ["operations/continuity-mining/validateAdversarialPhaseRecord.v3.cjs", "operations/continuity-mining/validateAdversarialPhaseRecord.v3.test.cjs"],
+      "findings": ["v3 requires nonempty evidence strings but no locator, observation time, immutability, retained copy, digest, or commit identity", "a record containing only 'tests passed' can satisfy its evidence shape"],
+      "repairs": ["selected an additive v4 gate that composes v3 rather than copying all prior rules", "kept recovered knowledge unresolved and canonical shared state unchanged"],
+      "remaining_uncertainty": ["v3 consumer inventory is incomplete"],
+      "evidence_quality": "direct immutable repository source inspection",
+      "rollback_route": "revert e9b248244c539898d4e06bffca6cd80936a60c85 and ae55c7f3ea7a2d5f6e1f13df6befd2a95430ffb4 on preview",
+      "robustness_increased": true,
+      "next_falsifiable_step": "construct structured and malformed evidence fixtures"
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "v4 composes v3 without architecture drift and rejects uninspectable evidence",
+      "challenge_method": ["reviewed adapter behavior", "found and repaired an initial compatibility failure where v3 rejected structured evidence objects", "added reversible malformed in-memory fixtures"],
+      "evidence": ["commit ae55c7f3ea7a2d5f6e1f13df6befd2a95430ffb4", "commit ff7f136e8d11477e75a46b723cb5c12556cb0bdc"],
+      "findings": ["the first v4 implementation passed objects directly to v3, conflicting with v3 string-array validation", "structured evidence needs an explicit locator adapter before base validation"],
+      "repairs": ["mapped structured evidence to locators only for the v3 base gate while retaining full v4 validation", "added negative controls for prose-only, mutable, malformed-commit, and lead-only evidence"],
+      "remaining_uncertainty": ["tests are committed but not executed in this connector environment"],
+      "evidence_quality": "immutable commits plus source inspection; runtime execution absent",
+      "rollback_route": "revert ff7f136e8d11477e75a46b723cb5c12556cb0bdc then ae55c7f3ea7a2d5f6e1f13df6befd2a95430ffb4 on preview",
+      "robustness_increased": true,
+      "next_falsifiable_step": "execute the exact Node test command and retain output"
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "the committed artifacts justify making v4 canonical or resolving continuity provenance",
+      "challenge_method": ["separated source existence from test execution", "tested claim-boundary inflation", "checked rollback and protected-system impact"],
+      "evidence": ["operations/ACTIVE_QUEUE.json", "commits ae55c7f3ea7a2d5f6e1f13df6befd2a95430ffb4 and ff7f136e8d11477e75a46b723cb5c12556cb0bdc"],
+      "findings": ["source-level enforcement exists", "runtime passage is unproven", "M-004, M-005, and M-006 remain coverage-bounded", "no deployment, automation, schedule, production, credential, shared-state, or irreversible user-data mutation occurred"],
+      "repairs": ["blocked canonical migration and provenance resolution", "recorded exact rollback and evidence requirements"],
+      "remaining_uncertainty": ["all v3 imports and producers are not inventoried", "full branch and history traversal remains outstanding"],
+      "evidence_quality": "commit-matched source evidence with explicit execution and coverage limitations",
+      "rollback_route": "revert this evidence commit, ff7f136e8d11477e75a46b723cb5c12556cb0bdc, and ae55c7f3ea7a2d5f6e1f13df6befd2a95430ffb4 on preview",
+      "robustness_increased": true,
+      "evidence_required_before_publication": ["retained output from node --test operations/continuity-mining/validateAdversarialPhaseRecord.v4.test.cjs", "inventory of every v3 consumer", "migration compatibility evidence", "exhaustive provenance coverage before resolving M-004, M-005, or M-006"],
+      "next_falsifiable_step": "run the v4 test suite at exact preview head and retain output, then inventory v3 consumers"
+    }
+  ],
+  "decision": "stronger_but_noncanonical_and_unresolved"
+}
