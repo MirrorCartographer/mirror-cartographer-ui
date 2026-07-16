@@ -21,7 +21,6 @@ build_once() {
   local destination="$1"
   docker buildx build \
     --no-cache \
-    --network=none \
     --build-arg "NODE_IMAGE=$NODE_IMAGE" \
     --build-arg "SOURCE_COMMIT=$SOURCE_COMMIT" \
     --build-arg "SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH" \
@@ -60,6 +59,7 @@ cat > "$OUT/result.json" <<JSON
   "nodeImage": "$NODE_IMAGE",
   "artifactInventorySha256": "$ARTIFACT_SHA256",
   "reproducibleRuns": 2,
+  "dependencyIntakeNetwork": "required-until-npm-mirror-is-local",
   "networkDuringCompilation": "none"
 }
 JSON
