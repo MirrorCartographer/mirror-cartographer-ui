@@ -92,6 +92,31 @@ test('rejects mutable or unsupported evidence retention', () => {
   assert.match(validateRecord(record).errors.join('\n'), /retention_status is unsupported/);
 });
 
+test('rejects evidence semantically bound to a different claim', () => {
+  const record = validRecord();
+  record.phases[1].evidence[0].supported_claim = 'a different design is safe';
+  assert.match(
+    validateRecord(record).errors.join('\n'),
+    /supported_claim must exactly match claim_or_design_tested/
+  );
+});
+
+test('rejects checkpoint or evidence chronology reversal', () => {
+  const reversedCheckpoint = validRecord();
+  reversedCheckpoint.phases[1].recorded_at = '2026-07-16T12:50:00Z';
+  assert.match(
+    validateRecord(reversedCheckpoint).errors.join('\n'),
+    /must not precede the cycle start or prior checkpoint/
+  );
+
+  const futureEvidence = validRecord();
+  futureEvidence.phases[2].evidence[0].observed_at = '2026-07-16T13:05:00Z';
+  assert.match(
+    validateRecord(futureEvidence).errors.join('\n'),
+    /observed_at must not follow recorded_at/
+  );
+});
+
 test('rejects lead-only evidence for a success decision', () => {
   const record = validRecord();
   record.decision = 'canonicalize';
