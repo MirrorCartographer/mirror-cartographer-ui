@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1.7
+
+# NODE_IMAGE must be an immutable digest reference, for example:
+# node:22.17.0-bookworm-slim@sha256:<digest>
+ARG NODE_IMAGE
+FROM ${NODE_IMAGE} AS dependencies
+
+WORKDIR /workspace
+ENV npm_config_audit=false \
+    npm_config_fund=false \
+    npm_config_update_notifier=false \
+    npm_config_ignore_scripts=true
+
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm,sharing=locked \
+    npm ci --ignore-scripts --strict-peer-deps
+
+FROM ${NODE_IMAGE} AS build
+WORKDIR /workspace
+
+ARG SOURCE_DATE_EPOCH
+ARG SOURCE_COMMIT
+ENV NODE_ENV=production \
+    TZ=UTC \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} \
+    VITE_SOURCE_COMMIT=${SOURCE_COMMIT}
+
+COPY --from=dependencies /workspace/node_modules ./node_modules
+COPY . .
+
+# Compilation is network-isolated. Any undeclared download during the build fails.
+RUN --network=none npm run build
+
+# Normalize timestamps and produce a deterministic file inventory.
+RUN find dist -exec touch -h -d "@${SOURCE_DATE_EPOCH}" {} + \
+ && find dist -type f -print0 | sort -z | xargs -0 sha256sum > /workspace/dist.sha256
+
+FROM scratch AS artifact
+COPY --from=build /workspace/dist /dist
+COPY --from=build /workspace/dist.sha256 /dist.sha256
