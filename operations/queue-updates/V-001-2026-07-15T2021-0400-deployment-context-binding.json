@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:21:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Repertory activation now requires immutable Vercel project and GitHub repository context binding in addition to exact-commit deployment identity.",
+  "evidence": "operations/evidence/V-001-repertory-deployment-context-binding-2026-07-15T2021-0400.json",
+  "commits": {
+    "implementation": "53e31b0dd70d1564400397009b7456bc6665ea21",
+    "tests": "95733181708a896317f3a4f84109c4ac39dda589",
+    "evidence": "1ae7dd5c5e390dcf745c95c272557609a4dbf9e9"
+  },
+  "acceptance_remaining": [
+    "Run the complete npm run test:vercel-repertory inventory in an authenticated checkout and retain exact output.",
+    "Obtain a real authenticated Vercel v13 deployment object after provider capacity returns and supply the canonical expected project context.",
+    "Verify the generated deployment hostname independently before any repertory activation claim.",
+    "Complete bounded physical iPhone Safari audio verification."
+  ],
+  "safe_next_action": "Update every activation caller and retained evidence packet to provide expected_deployment_context using immutable repository id 1003910384 and the canonical Vercel project identity; then run the full repertory inventory without initiating a deployment.",
+  "deployment_attempted": false,
+  "activation_claimed": false
+}
