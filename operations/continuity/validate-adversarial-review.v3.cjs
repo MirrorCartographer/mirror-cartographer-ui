@@ -56,6 +56,10 @@ function validateRecord(record) {
         return;
       }
 
+      if (!isNonEmptyString(phase.challenge_outcome_detail)) {
+        errors.push(`phase ${phaseIndex} challenge_outcome_detail must be a non-empty string`);
+      }
+
       if (
         phase.challenge_outcome === 'refined_design' &&
         (!Array.isArray(phase.repairs_made) || phase.repairs_made.length === 0)
