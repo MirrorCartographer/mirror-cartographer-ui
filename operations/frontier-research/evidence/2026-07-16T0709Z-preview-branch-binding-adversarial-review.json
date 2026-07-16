@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "review_type": "three_checkpoint_adversarial_review",
+  "subject": "promotion evidence branch and deployment-target binding",
+  "implementation_commit": "a590b2f62e5c767b3a4896bb9f99b3e92b30a75e",
+  "test_commit": "ba10b136a9ffce9cd15113df14347c4f39bf7d7e",
+  "protected_systems_changed": false,
+  "phases": [
+    {
+      "checkpoint": "before_research_direction",
+      "claim_or_design_under_test": "An immutable READY deployment bound to the exact commit and hostname is sufficient preview evidence.",
+      "method": "Construct counterexamples where the same commit is deployed from main or as a production-target deployment while all existing commit, hostname, state, check, risk, and rollback fields pass.",
+      "evidence": [
+        "operations/deployment/validate-promotion-evidence.v1.mjs previously checked commit and hostname but not deployment.gitSource.ref or deployment.target",
+        "operations/deployment/PROMOTION_CHECKLIST.json defines preview as the source branch"
+      ],
+      "counterexample_or_failure_found": "A READY deployment for the same SHA from main, or a production-target deployment, could be mislabeled as preview evidence.",
+      "repair_or_refinement": "Require immutable deployment gitSource.ref to equal the checklist source branch and reject target=production for preview evidence.",
+      "remaining_uncertainty": "Vercel may represent preview target as null or another non-production value; the gate therefore rejects only explicit production target while branch identity remains mandatory.",
+      "outcome": "refined_design",
+      "robustness_increased": true
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_or_design_under_test": "The new checks fail closed without disrupting valid preview evidence.",
+      "method": "Add disposable deterministic fixtures for valid preview evidence, wrong-branch evidence, production-target evidence, and missing git ref.",
+      "evidence": [
+        "operations/deployment/validate-promotion-evidence.v1.test.mjs contains three new negative controls and one valid control",
+        "assessment output now exposes immutable_deployment_git_ref and immutable_deployment_target"
+      ],
+      "counterexample_or_failure_found": "No source-level bypass remains for missing or mismatched git ref or explicit production target.",
+      "repair_or_refinement": "Schema advanced to version 3 so downstream consumers can detect the changed evidence contract.",
+      "remaining_uncertainty": "The tests were committed but not executed through the connector in this run.",
+      "outcome": "stronger_supporting_evidence",
+      "robustness_increased": true
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_under_test": "The repository is ready for promotion after this repair.",
+      "method": "Attempt to falsify readiness using current state, active queue, provider-capacity constraints, and absence of an authenticated immutable deployment object.",
+      "evidence": [
+        "operations/CURRENT_STATE.json remains in_progress_blocked",
+        "operations/ACTIVE_QUEUE.json still requires exact-commit authenticated workflow enumeration, immutable Vercel deployment identity, preview checks, and physical iPhone Safari verification"
+      ],
+      "counterexample_or_failure_found": "Source-level enforcement does not prove runtime test passage or a live commit-matched preview deployment.",
+      "repair_or_refinement": "Keep promotion blocked and preserve the existing operations-only constraint while provider capacity is unavailable.",
+      "remaining_uncertainty": "Runtime compatibility of schema version 3 consumers and exact Vercel target semantics remain unverified.",
+      "outcome": "documented_unresolved_question",
+      "robustness_increased": true
+    }
+  ],
+  "strongest_surviving_proposal": "Promotion evidence must bind one immutable READY deployment to the exact preview commit, generated hostname, preview source branch, and a non-production deployment target before any required checks can authorize promotion.",
+  "rejected_alternatives": [
+    "Treat exact SHA equality as proof that the deployment came from preview",
+    "Accept a production deployment as a substitute for preview verification",
+    "Infer branch identity from the evidence envelope source_branch field rather than the provider deployment object"
+  ],
+  "unresolved_risks": [
+    "Node tests not executed in an authenticated checkout",
+    "Downstream schema version 2 consumers not exhaustively inventoried",
+    "No authenticated commit-matched Vercel deployment object available",
+    "Provider build capacity remains blocked"
+  ],
+  "promotion_decision": "blocked",
+  "rollback_route": "Revert ba10b136a9ffce9cd15113df14347c4f39bf7d7e, then a590b2f62e5c767b3a4896bb9f99b3e92b30a75e on preview.",
+  "next_falsifiable_step": "Execute node --test operations/deployment/validate-promotion-evidence.v1.test.mjs at exact preview head, retain output, inventory schema consumers, then validate one authenticated READY deployment whose gitSource.ref is preview and whose target is not production."
+}
