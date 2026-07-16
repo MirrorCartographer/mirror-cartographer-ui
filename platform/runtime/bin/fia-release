@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${FIA_ROOT:-/var/lib/foundation-intelligence}"
+RELEASES="$ROOT/releases"
+CURRENT="$ROOT/current"
+PREVIOUS="$ROOT/previous"
+LOCK="$ROOT/release.lock"
+
+usage() {
+  echo "usage: fia-release activate <artifact.tar.gz> <sha256> | rollback | status" >&2
+  exit 64
+}
+
+mkdir -p "$RELEASES"
+exec 9>"$LOCK"
+flock -x 9
+
+status() {
+  printf 'current=%s\n' "$(readlink "$CURRENT" 2>/dev/null || echo none)"
+  printf 'previous=%s\n' "$(readlink "$PREVIOUS" 2>/dev/null || echo none)"
+}
+
+activate() {
+  local archive="$1" expected="$2" actual id stage target old
+  test -f "$archive" || { echo "artifact missing: $archive" >&2; exit 66; }
+  actual="$(sha256sum "$archive" | awk '{print $1}')"
+  test "$actual" = "$expected" || { echo "checksum mismatch" >&2; exit 65; }
+  id="${actual:0:20}"
+  target="$RELEASES/$id"
+  stage="$RELEASES/.stage-$id-$$"
+  rm -rf "$stage"
+  mkdir -p "$stage"
+  tar -xzf "$archive" -C "$stage"
+  test -f "$stage/index.html" || { rm -rf "$stage"; echo "invalid artifact: index.html absent" >&2; exit 65; }
+  printf '%s\n' "$actual" > "$stage/ARTIFACT_SHA256"
+  chmod -R a-w "$stage"
+  if test ! -d "$target"; then mv "$stage" "$target"; else rm -rf "$stage"; fi
+  old="$(readlink "$CURRENT" 2>/dev/null || true)"
+  test -z "$old" || ln -sfn "$old" "$PREVIOUS"
+  ln -sfn "$target" "$CURRENT.new"
+  mv -Tf "$CURRENT.new" "$CURRENT"
+  systemctl reload-or-restart foundation-intelligence-web.service
+  sleep 1
+  curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8080/healthz >/dev/null || {
+    echo "health check failed; rolling back" >&2
+    test -z "$old" || { ln -sfn "$old" "$CURRENT.new"; mv -Tf "$CURRENT.new" "$CURRENT"; systemctl reload-or-restart foundation-intelligence-web.service; }
+    exit 70
+  }
+  status
+}
+
+rollback() {
+  local old current
+  old="$(readlink "$PREVIOUS" 2>/dev/null || true)"
+  test -n "$old" || { echo "no previous release" >&2; exit 69; }
+  current="$(readlink "$CURRENT" 2>/dev/null || true)"
+  ln -sfn "$old" "$CURRENT.new"
+  mv -Tf "$CURRENT.new" "$CURRENT"
+  test -z "$current" || ln -sfn "$current" "$PREVIOUS"
+  systemctl reload-or-restart foundation-intelligence-web.service
+  curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8080/healthz >/dev/null
+  status
+}
+
+case "${1:-}" in
+  activate) test "$#" -eq 3 || usage; activate "$2" "$3" ;;
+  rollback) test "$#" -eq 1 || usage; rollback ;;
+  status) status ;;
+  *) usage ;;
+esac
