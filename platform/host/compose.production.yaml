@@ -17,7 +17,7 @@ services:
     cap_drop:
       - ALL
     networks:
-      - foundation
+      - foundation-internal
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/healthz"]
       interval: 30s
@@ -48,8 +48,12 @@ services:
     cap_add:
       - NET_BIND_SERVICE
     networks:
-      - foundation
+      - edge-public
+      - foundation-internal
 
 networks:
-  foundation:
+  edge-public:
     driver: bridge
+  foundation-internal:
+    driver: bridge
+    internal: true
