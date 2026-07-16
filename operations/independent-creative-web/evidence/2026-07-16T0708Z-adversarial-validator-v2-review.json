@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "team": "Independent Creative Web Team",
+  "reviewed_branch": "preview",
+  "implementation_commit": "0d8bde139e52cdc34e66b10bae608323c301d0b2",
+  "test_commit": "85c29eae2d3d38f73ffd5412424af08d7d0fc626",
+  "publication_decision": "block",
+  "checkpoints": [
+    {
+      "checkpoint": "pre_publication",
+      "claim_or_design": "The existing adversarial review validator safely prevents publication records from authorizing protected experiments or weak evidence.",
+      "challenge_method": "Construct counterexamples using normalized variants of protected scopes and unstructured commit-evidence labels.",
+      "evidence": [
+        "operations/independent-creative-web/ADVERSARIAL_REVIEW_PROTOCOL.md",
+        "operations/independent-creative-web/validateAdversarialReviewRecord.v1.cjs",
+        "commit 4e19edee7c8f82e2375e0ef208dbadcb2d5038e1"
+      ],
+      "findings": [
+        "Version 1 compares forbidden experiment scopes by exact string equality, permitting variants such as production_deployment, Live-DNS, and mixed-case forms.",
+        "Version 1 accepts any nonempty commit_matched_evidence array, including an unstructured passed label that proves no commit binding."
+      ],
+      "repairs": [
+        "Selected an additive version 2 validator so existing version 1 consumers are not silently broken.",
+        "Defined normalized protected-token matching and structured exact-commit evidence requirements."
+      ],
+      "remaining_uncertainty": [
+        "Repository-wide version 1 consumer inventory is incomplete.",
+        "No runtime test execution evidence exists for version 2."
+      ],
+      "robustness_increased": true,
+      "rollback_route": "Revert commits 85c29eae2d3d38f73ffd5412424af08d7d0fc626 and 0d8bde139e52cdc34e66b10bae608323c301d0b2 on preview.",
+      "evidence_required_before_publication": [
+        "Exact-commit Node test output",
+        "Consumer migration inventory",
+        "Commit-bound preview and accessibility evidence for any public artifact"
+      ],
+      "next_falsifiable_step": "Execute the version 2 Node suite at its exact commit and retain the output."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design": "Version 2 closes the identified bypasses without touching protected runtime surfaces.",
+      "challenge_method": "Add reversible negative fixtures for scope separator variants, case variation, mismatched commits, unstructured evidence, malformed findings, and a permitted disposable fixture.",
+      "evidence": [
+        "operations/independent-creative-web/validateAdversarialReviewRecord.v2.cjs",
+        "operations/independent-creative-web/validateAdversarialReviewRecord.v2.test.cjs",
+        "commits 0d8bde139e52cdc34e66b10bae608323c301d0b2 and 85c29eae2d3d38f73ffd5412424af08d7d0fc626"
+      ],
+      "findings": [
+        "Protected-scope matching now normalizes underscores, slashes, dots, backslashes, hyphens, case, and repeated whitespace.",
+        "Publication evidence now requires commit_sha, locator, claim, and observed_at, with commit_sha equal to artifact_commit.",
+        "The experiments are source fixtures only and do not mutate deployments, schedules, automations, shared state, DNS, credentials, or user data."
+      ],
+      "repairs": [
+        "Added normalized substring guards for protected scope families.",
+        "Added structured exact-commit evidence validation.",
+        "Added typed string-array validation for findings, repairs, evidence, and uncertainty."
+      ],
+      "remaining_uncertainty": [
+        "Substring protection may conservatively reject a benign fixture name containing a protected token.",
+        "The suite is committed but not executed through the connector."
+      ],
+      "robustness_increased": true,
+      "rollback_route": "Revert commits 85c29eae2d3d38f73ffd5412424af08d7d0fc626 and 0d8bde139e52cdc34e66b10bae608323c301d0b2 on preview.",
+      "evidence_required_before_publication": [
+        "Passing exact-commit test output",
+        "A deliberate benign-token false-positive fixture to calibrate protection breadth"
+      ],
+      "next_falsifiable_step": "Test whether a benign scope containing a protected word is rejected too broadly and refine with explicit namespaces if necessary."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design": "The implementation is verified and ready to become the publication gate.",
+      "challenge_method": "Separate source existence, test design, runtime test passage, integration, preview behavior, accessibility, and publication readiness into independent claims.",
+      "evidence": [
+        "GitHub commits for source and test files",
+        "No retained runtime output",
+        "No preview deployment evidence",
+        "No integration-consumer inventory"
+      ],
+      "findings": [
+        "Source and negative controls are durably committed.",
+        "Runtime test passage is unproven.",
+        "Version 2 is not proven to be invoked by any publication path.",
+        "No public artifact was implemented or deployed in this run."
+      ],
+      "repairs": [
+        "Kept version 1 intact and treated version 2 as non-canonical until execution and integration evidence exist.",
+        "Blocked publication rather than inferring success from committed tests."
+      ],
+      "remaining_uncertainty": [
+        "Runtime behavior under Node remains unverified.",
+        "Downstream schema compatibility is unknown.",
+        "No browser, mobile, accessibility, performance, privacy, or preview evidence exists for publication."
+      ],
+      "robustness_increased": true,
+      "rollback_route": "Revert this evidence commit, then 85c29eae2d3d38f73ffd5412424af08d7d0fc626 and 0d8bde139e52cdc34e66b10bae608323c301d0b2 on preview.",
+      "evidence_required_before_publication": [
+        "Passing Node test output bound to exact commit 85c29eae2d3d38f73ffd5412424af08d7d0fc626",
+        "Inventory and migration plan for every version 1 consumer",
+        "Proof that the publication path invokes version 2 fail closed",
+        "Artifact-specific preview, accessibility, performance, privacy, and rollback evidence"
+      ],
+      "next_falsifiable_step": "Run node --test operations/independent-creative-web/validateAdversarialReviewRecord.v2.test.cjs at the exact test commit and retain the output before considering integration."
+    }
+  ]
+}
