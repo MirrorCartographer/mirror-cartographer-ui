@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "source_branch": "preview",
   "target_branch": "main",
   "expected_deployment_identity": {
@@ -23,8 +23,9 @@
     "preview_deployment_state": "ready",
     "unresolved_critical_risks": 0,
     "rollback_route_recorded": true,
-    "evidence_commit_matches_preview": true
+    "evidence_commit_matches_preview": true,
+    "max_deployment_evidence_age_ms": 900000
   },
   "deployment_states": ["queued", "building", "ready", "failed", "canceled", "skipped", "superseded", "rate_limited", "stale"],
-  "rule": "Queued, canceled, skipped, superseded, rate-limited, stale, commit-mismatched, repository-mismatched, or project-mismatched deployments are never counted as successful verification."
+  "rule": "Queued, canceled, skipped, superseded, rate-limited, stale, commit-mismatched, repository-mismatched, project-mismatched, or observation-stale deployments are never counted as successful verification."
 }
