@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "owner": "vercel_studio",
+  "queue_item": "V-001",
+  "branch": "preview",
+  "implementation_commit": "3f70b0e86f1e6bd708efa6e7c215b99ded91c1de",
+  "artifact": "operations/deployment/validate-promotion-evidence.v1.mjs",
+  "test_artifact": "operations/deployment/validate-promotion-evidence.v1.test.mjs",
+  "local_test": {
+    "command": "node --test validate-promotion-evidence.v1.test.mjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "controls": [
+      "complete commit-bound READY evidence accepted",
+      "canceled state rejected",
+      "required-check commit mismatch rejected",
+      "missing rollback route rejected",
+      "unresolved critical risk rejected"
+    ]
+  },
+  "exact_commit_fetch_verified": true,
+  "github_commit_status": {
+    "context": "Vercel",
+    "state": "success",
+    "interpretation": "limited_status_evidence_only",
+    "promotion_eligible": false,
+    "reason": "A successful commit status does not establish immutable deployment id, generated hostname, READY deployment object, or gitSource.sha equality."
+  },
+  "preview_deployment": {
+    "url": null,
+    "state": "unverified",
+    "immutable_deployment_id": null,
+    "commit_match_verified": false
+  },
+  "adversarial_phases": [
+    {
+      "checkpoint": "pre_implementation",
+      "findings": [
+        "The policy and checklist were declarative and could be satisfied by prose without an independent fail-closed assessment.",
+        "A provider success status can be a skipped or suppressed build and is not immutable deployment evidence."
+      ],
+      "repairs": [
+        "Implemented an independent assessor requiring READY state, generated HTTPS URL, exact commit agreement, zero critical risk, rollback evidence, and every required check bound to the same commit."
+      ],
+      "remaining_uncertainty": [
+        "No authenticated Vercel deployment object was available for this commit."
+      ],
+      "design_stronger": true
+    },
+    {
+      "checkpoint": "post_implementation",
+      "findings": [
+        "The first implementation could falsely accept a green provider status if it were treated as deployment identity; the validator intentionally has no status-only success path.",
+        "Non-success states include queued, building, failed, canceled, skipped, and superseded."
+      ],
+      "repairs": [
+        "Added deterministic negative controls for canceled state, commit mismatch, rollback omission, and unresolved critical risk."
+      ],
+      "remaining_uncertainty": [
+        "The validator is not yet wired into package scripts or hosted CI because changing application configuration would trigger a provider build while capacity and deployment identity remain uncertain."
+      ],
+      "design_stronger": true
+    },
+    {
+      "checkpoint": "verification",
+      "findings": [
+        "All five local Node tests passed.",
+        "The committed test artifact was fetched by exact commit SHA.",
+        "GitHub reports Vercel status success, but immutable deployment identity remains absent."
+      ],
+      "repairs": [],
+      "remaining_uncertainty": [
+        "Preview hostname, deployment id, deployment READY state, and deployment gitSource.sha are still unverified.",
+        "Browser, mobile, accessibility, audio, performance, privacy, and rollback checks were not run against a live preview."
+      ],
+      "design_stronger": true
+    }
+  ],
+  "promotion_decision": "blocked",
+  "rollback_route": "Revert commits 3f70b0e86f1e6bd708efa6e7c215b99ded91c1de and 57b3fa811cd93439357ecf8cc42e7321afd6473b, or reset preview to c0d1f1066e678f5c7e7c44d70a7c83015402cb1f.",
+  "peer_trigger_outcome": "No new trigger requests created; existing V-001, R-020, R-021, and R-022 handoffs already cover exhaustive workflow and immutable deployment evidence, so another request would be duplicative.",
+  "next_action": "When provider capacity is available, obtain the authenticated Vercel deployment object for one exact application commit, verify immutable identity and READY state, run all required preview checks, then feed the complete evidence envelope through the new validator."
+}
