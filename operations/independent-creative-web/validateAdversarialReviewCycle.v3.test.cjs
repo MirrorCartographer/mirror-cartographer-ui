@@ -130,3 +130,15 @@ test('rejects malformed evidence requirement metadata on a publishing cycle', ()
   assert.equal(result.valid, false);
   assert(result.errors.includes('phase_1:invalid_evidence_required_before_publication'));
 });
+
+test('rejects publication when a checkpoint omits the evidence requirement inventory', () => {
+  const pre = phase('pre_publication', {
+    robustness_verdict: 'stronger',
+    repairs: ['Resolved direction risks.'],
+  });
+  delete pre.evidence_required_before_publication;
+  const subject = cycle([pre, phase('post_implementation'), publishVerification()], 'publish');
+  const result = validateAdversarialReviewCycle(subject);
+  assert.equal(result.valid, false);
+  assert(result.errors.includes('phase_1:invalid_evidence_required_before_publication'));
+});
