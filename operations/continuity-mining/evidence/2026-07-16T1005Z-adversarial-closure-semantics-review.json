@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "cycle_id": "CM-2026-07-16-07",
+  "target": "continuity uncertainty closure semantics",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Cycle v3 prevents false closure of recovered-knowledge uncertainty.",
+      "challenge_method": [
+        "Constructed a repaired disposition whose repair string contains the uncertainty only inside negating prose.",
+        "Compared additive composition against destructive replacement and duplicate phase-schema changes."
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v2.cjs uses repair.includes(uncertainty)",
+        "operations/continuity-mining/validateAdversarialCycle.v3.cjs composes v2 without strengthening repair linkage"
+      ],
+      "findings": [
+        "Substring coincidence can satisfy the repair trace while conveying that no repair occurred.",
+        "Rejected dispositions also rely on unconstrained prose evidence."
+      ],
+      "repairs": [
+        "Selected an additive v4 wrapper requiring exact explicit closure references."
+      ],
+      "remaining_uncertainty": [
+        "A textual resolution convention is stronger than substring matching but is not semantic proof that the implementation works."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Direct source inspection and a deterministic counterexample; runtime execution not yet retained.",
+      "rollback_route": "Revert the additive v4 implementation commit.",
+      "next_falsifiable_step": "Create negative controls for negating repair prose, absent repair references, and weak rejection evidence."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The additive v4 validator closes the substring false-positive without breaking legitimate carried, repaired, or rejected transitions.",
+      "challenge_method": [
+        "Added disposable in-memory fixtures for invalid and valid closure paths.",
+        "Kept v3 composition intact to preserve prior order, target, evidence, and transition checks."
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v4.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v4.test.cjs"
+      ],
+      "findings": [
+        "Exact repair_reference membership is needed in addition to an explicit RESOLVED prefix.",
+        "Rejected uncertainty needs an explicit counterevidence marker rather than generic prose."
+      ],
+      "repairs": [
+        "Required repaired dispositions to reference an exact next-phase repair beginning RESOLVED <uncertainty> ::.",
+        "Required rejected dispositions to provide evidence beginning REJECTED <uncertainty> ::."
+      ],
+      "remaining_uncertainty": [
+        "The convention can still carry incorrect human-authored claims.",
+        "Existing v3 producers and consumers have not been inventoried."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Immutable source and deterministic fixtures committed on preview; tests not represented as executed.",
+      "rollback_route": "Revert test commit 10c28dcc1ab5b1794cd7b30f7d5c2b1f8e091ac2 and implementation commit fd55509371953d85c485caefecbd676395fbce8f.",
+      "next_falsifiable_step": "Execute the exact Node test suite and retain stdout, stderr, exit code, and commit SHA."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The committed artifact is sufficient to declare continuity closure enforcement successful.",
+      "challenge_method": [
+        "Re-read the implementation and fixtures from the preview branch.",
+        "Separated committed test existence from executed test evidence and canonical invocation evidence."
+      ],
+      "evidence": [
+        "Implementation commit fd55509371953d85c485caefecbd676395fbce8f",
+        "Test commit 10c28dcc1ab5b1794cd7b30f7d5c2b1f8e091ac2"
+      ],
+      "findings": [
+        "Source-level closure semantics are stronger.",
+        "Runtime passage and canonical Continuity Mining invocation remain unproven."
+      ],
+      "repairs": [
+        "Kept canonicalization and recovered-knowledge publication blocked.",
+        "Documented exact rollback and the next falsifiable execution step."
+      ],
+      "remaining_uncertainty": [
+        "Node tests have not been executed in retained commit-matched evidence.",
+        "No canonical command is proven to invoke v4 fail-closed.",
+        "Textual explicitness does not independently verify the truth of a repair or rejection."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Direct immutable repository evidence, bounded to source-level enforcement; no runtime claim.",
+      "rollback_route": "Revert this evidence commit, then 10c28dcc1ab5b1794cd7b30f7d5c2b1f8e091ac2, then fd55509371953d85c485caefecbd676395fbce8f.",
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialCycle.v4.test.cjs at exact preview head and then prove the canonical continuity path rejects the negating-substring fixture."
+    }
+  ],
+  "strongest_surviving_proposal": "Use additive cycle validator v4 to require explicit exact closure references while preserving all v3 transition-integrity controls.",
+  "rejected_alternatives": [
+    "Retain substring-based repair matching.",
+    "Treat generic rejection prose as counterevidence.",
+    "Replace v3 destructively before consumer inventory.",
+    "Declare success from committed but unexecuted tests."
+  ],
+  "publication_decision": "blocked",
+  "design_stronger": true
+}
