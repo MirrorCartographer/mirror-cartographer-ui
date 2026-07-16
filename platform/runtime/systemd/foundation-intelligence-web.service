@@ -1,0 +1,36 @@
+[Unit]
+Description=Foundation Intelligence static web runtime
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/var/lib/foundation-intelligence/current/index.html
+
+[Service]
+Type=notify
+User=fia-web
+Group=fia-web
+ExecStart=/usr/bin/caddy run --config /etc/foundation-intelligence/Caddyfile --adapter caddyfile
+ExecReload=/usr/bin/caddy reload --config /etc/foundation-intelligence/Caddyfile --adapter caddyfile --force
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=10s
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+ReadOnlyPaths=/var/lib/foundation-intelligence/current
+ReadWritePaths=/var/lib/caddy /var/log/foundation-intelligence
+StateDirectory=caddy
+LogsDirectory=foundation-intelligence
+
+[Install]
+WantedBy=multi-user.target
