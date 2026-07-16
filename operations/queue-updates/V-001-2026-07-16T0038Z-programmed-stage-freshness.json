@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:38:00Z",
+  "state": "in_progress_blocked",
+  "completed_slice": "Added a mandatory fail-closed freshness boundary for programmed-stage receipts so a previous hourly edition cannot be described as current; activation, deployment, and side-effect claims remain prohibited.",
+  "evidence": "operations/evidence/V-001-programmed-stage-freshness-boundary-2026-07-16T0038Z.json",
+  "verification": {
+    "source_write_confirmed": true,
+    "tests_specified": 5,
+    "tests_executed": false,
+    "claim_boundary": "committed source and static tests only"
+  },
+  "acceptance_remaining": [
+    "Run npm run test:vercel-repertory in an authenticated checkout and retain exact output.",
+    "Generate a commit-bound programmed-stage receipt from the canonical repertory and pass it through the freshness verifier within its programmed UTC hour.",
+    "Execute both exhaustive workflow clients against one exact commit and preserve raw outputs plus reconciliation.",
+    "Observe operations-only Vercel suppression after provider capacity returns.",
+    "Bind the tested application commit to an immutable successful Vercel deployment.",
+    "Perform bounded physical iPhone Safari audibility verification."
+  ],
+  "shared_state_policy": "Additive queue projection only; operations/ACTIVE_QUEUE.json was not overwritten.",
+  "specialist_registry_change": null,
+  "safe_next_action": "Execute the canonical repertory test command, then generate and verify a fresh commit-bound programmed-stage receipt without activating or deploying the repertory."
+}
