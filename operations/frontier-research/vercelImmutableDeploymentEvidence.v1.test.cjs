@@ -63,7 +63,7 @@ test('fails closed for deleted or retention-only records', () => {
 
 test('fails closed when creation or readiness chronology is impossible', () => {
   const result = validateImmutableDeploymentEvidence(fixture({
-    createdAt: 1784098320000,
+    createdAt: 1784098800000,
     ready: 1784098140000
   }));
   assert.equal(result.verified, false);
