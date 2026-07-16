@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import process from 'node:process';
+import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 
@@ -7,6 +8,11 @@ const require = createRequire(import.meta.url);
 const { validateImmutableDeploymentEvidence } = require('../frontier-research/vercelImmutableDeploymentEvidence.v1.cjs');
 
 const NON_SUCCESS_STATES = new Set(['queued','building','failed','canceled','skipped','superseded','rate_limited','stale']);
+const CHECK_ID_PATTERN = /^[a-z][a-z0-9_]*$/;
+
+export function requiredCheckProfileDigest(requiredChecks) {
+  return createHash('sha256').update(JSON.stringify([...requiredChecks].sort())).digest('hex');
+}
 
 export function assessPromotion(checklist, evidence, options = {}) {
   const failures = [];
@@ -14,9 +20,20 @@ export function assessPromotion(checklist, evidence, options = {}) {
   const checks = evidence?.checks && typeof evidence.checks === 'object' ? evidence.checks : {};
   const expectedState = checklist?.promotion_requires?.preview_deployment_state ?? 'ready';
   const expectedIdentity = checklist?.expected_deployment_identity ?? {};
+  const requiredCheckProfile = checklist?.required_check_profile ?? {};
   const nowMs = Number.isFinite(options.nowMs) ? options.nowMs : Date.now();
   const maxEvidenceAgeMs = checklist?.promotion_requires?.max_deployment_evidence_age_ms;
   const maxRequiredCheckAgeMs = checklist?.promotion_requires?.max_required_check_age_ms;
+
+  if (!Array.isArray(checklist?.required_checks) || requiredChecks.length === 0) failures.push('required_checks_missing_or_empty');
+  const malformedCheckIds = requiredChecks.filter((name) => typeof name !== 'string' || !CHECK_ID_PATTERN.test(name));
+  if (malformedCheckIds.length > 0) failures.push('required_check_identifier_invalid');
+  if (new Set(requiredChecks).size !== requiredChecks.length) failures.push('required_checks_duplicate');
+  if (typeof requiredCheckProfile.id !== 'string' || requiredCheckProfile.id.trim() === '') failures.push('required_check_profile_id_missing');
+  if (!Number.isInteger(requiredCheckProfile.version) || requiredCheckProfile.version <= 0) failures.push('required_check_profile_version_invalid');
+  const calculatedRequiredCheckProfileDigest = requiredCheckProfileDigest(requiredChecks);
+  if (!/^[0-9a-f]{64}$/i.test(requiredCheckProfile.sha256 ?? '')) failures.push('required_check_profile_digest_missing_or_invalid');
+  else if (requiredCheckProfile.sha256.toLowerCase() !== calculatedRequiredCheckProfileDigest) failures.push('required_check_profile_digest_mismatch');
 
   if (evidence?.source_branch !== checklist?.source_branch) failures.push('source_branch_mismatch');
   if (evidence?.target_branch !== checklist?.target_branch) failures.push('target_branch_mismatch');
@@ -90,11 +107,15 @@ export function assessPromotion(checklist, evidence, options = {}) {
   }
 
   return {
-    schema_version: 6,
+    schema_version: 7,
     promotable: failures.length === 0,
     failures,
     assessed_preview_commit: evidence?.preview_commit ?? null,
     preview_deployment_state: evidence?.preview_deployment_state ?? null,
+    required_check_profile_id: requiredCheckProfile.id ?? null,
+    required_check_profile_version: requiredCheckProfile.version ?? null,
+    required_check_profile_declared_sha256: requiredCheckProfile.sha256 ?? null,
+    required_check_profile_calculated_sha256: calculatedRequiredCheckProfileDigest,
     immutable_deployment_identity_verified: immutableDeployment.verified,
     immutable_deployment_identity_digest: immutableDeployment.sha256,
     immutable_deployment_identity_claim_boundary: immutableDeployment.claim_boundary,
