@@ -1,0 +1,6 @@
+wal_level = replica
+archive_mode = on
+archive_command = '/opt/foundation/pitr/archive-wal.sh "%p" "%f"'
+full_page_writes = on
+archive_timeout = '5min'
+# Base backup procedure: pg_basebackup --checkpoint=fast --wal-method=none --manifest-checksums=SHA256
