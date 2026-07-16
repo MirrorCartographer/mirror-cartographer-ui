@@ -36,13 +36,20 @@ export function assessPromotion(checklist, evidence) {
     failures.push('immutable_deployment_expected_commit_mismatch');
   }
 
+  const deploymentRef = immutableDeployment.normalized?.deployment?.gitSource?.ref;
+  if (!deploymentRef) failures.push('immutable_deployment_git_ref_missing');
+  else if (deploymentRef !== checklist?.source_branch) failures.push('immutable_deployment_source_branch_mismatch');
+
+  const deploymentTarget = immutableDeployment.normalized?.deployment?.target;
+  if (deploymentTarget === 'production') failures.push('production_target_cannot_serve_as_preview_evidence');
+
   for (const name of requiredChecks) {
     if (checks[name]?.status !== 'pass') failures.push(`required_check_not_pass:${name}`);
     if (checks[name]?.commit !== evidence?.preview_commit) failures.push(`required_check_commit_mismatch:${name}`);
   }
 
   return {
-    schema_version: 2,
+    schema_version: 3,
     promotable: failures.length === 0,
     failures,
     assessed_preview_commit: evidence?.preview_commit ?? null,
@@ -50,6 +57,8 @@ export function assessPromotion(checklist, evidence) {
     immutable_deployment_identity_verified: immutableDeployment.verified,
     immutable_deployment_identity_digest: immutableDeployment.sha256,
     immutable_deployment_identity_claim_boundary: immutableDeployment.claim_boundary,
+    immutable_deployment_git_ref: deploymentRef ?? null,
+    immutable_deployment_target: deploymentTarget ?? null,
     required_check_count: requiredChecks.length,
     passed_required_check_count: requiredChecks.filter((name) => checks[name]?.status === 'pass' && checks[name]?.commit === evidence?.preview_commit).length
   };
