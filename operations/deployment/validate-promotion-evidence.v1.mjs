@@ -13,6 +13,7 @@ export function assessPromotion(checklist, evidence) {
   const requiredChecks = Array.isArray(checklist?.required_checks) ? checklist.required_checks : [];
   const checks = evidence?.checks && typeof evidence.checks === 'object' ? evidence.checks : {};
   const expectedState = checklist?.promotion_requires?.preview_deployment_state ?? 'ready';
+  const expectedIdentity = checklist?.expected_deployment_identity ?? {};
 
   if (evidence?.source_branch !== checklist?.source_branch) failures.push('source_branch_mismatch');
   if (evidence?.target_branch !== checklist?.target_branch) failures.push('target_branch_mismatch');
@@ -43,13 +44,26 @@ export function assessPromotion(checklist, evidence) {
   const deploymentTarget = immutableDeployment.normalized?.deployment?.target;
   if (deploymentTarget === 'production') failures.push('production_target_cannot_serve_as_preview_evidence');
 
+  const deploymentRepoId = immutableDeployment.normalized?.deployment?.gitSource?.repoId;
+  if (expectedIdentity.github_repo_id == null) failures.push('expected_github_repo_id_missing');
+  else if (String(deploymentRepoId) !== String(expectedIdentity.github_repo_id)) failures.push('immutable_deployment_github_repo_mismatch');
+
+  const deploymentProjectName = immutableDeployment.normalized?.deployment?.name;
+  if (!expectedIdentity.vercel_project_name) failures.push('expected_vercel_project_name_missing');
+  else if (deploymentProjectName !== expectedIdentity.vercel_project_name) failures.push('immutable_deployment_project_name_mismatch');
+
+  if (expectedIdentity.vercel_project_id) {
+    const deploymentProjectId = immutableDeployment.normalized?.deployment?.projectId;
+    if (deploymentProjectId !== expectedIdentity.vercel_project_id) failures.push('immutable_deployment_project_id_mismatch');
+  }
+
   for (const name of requiredChecks) {
     if (checks[name]?.status !== 'pass') failures.push(`required_check_not_pass:${name}`);
     if (checks[name]?.commit !== evidence?.preview_commit) failures.push(`required_check_commit_mismatch:${name}`);
   }
 
   return {
-    schema_version: 3,
+    schema_version: 4,
     promotable: failures.length === 0,
     failures,
     assessed_preview_commit: evidence?.preview_commit ?? null,
@@ -59,6 +73,8 @@ export function assessPromotion(checklist, evidence) {
     immutable_deployment_identity_claim_boundary: immutableDeployment.claim_boundary,
     immutable_deployment_git_ref: deploymentRef ?? null,
     immutable_deployment_target: deploymentTarget ?? null,
+    immutable_deployment_github_repo_id: deploymentRepoId ?? null,
+    immutable_deployment_project_name: deploymentProjectName ?? null,
     required_check_count: requiredChecks.length,
     passed_required_check_count: requiredChecks.filter((name) => checks[name]?.status === 'pass' && checks[name]?.commit === evidence?.preview_commit).length
   };
