@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-022",
+  "recorded_at": "2026-07-15T20:02:00-04:00",
+  "finding": "The prior immutable deployment validator accepted any syntactically valid hostname and did not enforce temporal coherence between observation, creation, and readiness timestamps.",
+  "source_status": {
+    "repository_validator": "primary_project_source",
+    "repository_tests": "primary_project_source",
+    "external_documentation_search": "inconclusive_no_load_bearing_claim_adopted"
+  },
+  "implementation": {
+    "validator_commit": "b4c3ccbb1f7a09fb6f9761cd08af717fe2774403",
+    "test_commit": "d845ce64f557f34be82762b35768e02bf6658b40",
+    "changes": [
+      "Require deployment.url to be a generated single-label *.vercel.app hostname rather than a custom alias.",
+      "Reject observations more than five minutes in the future.",
+      "Reject non-positive creation and readiness timestamps.",
+      "Reject creation or readiness materially after observation.",
+      "Reject readiness before creation.",
+      "Advance normalized evidence schema to version 2."
+    ]
+  },
+  "evidence_strength": "committed_implementation_and_adversarial_tests_static_verified",
+  "verification": {
+    "exact_commit_refetch": true,
+    "test_execution": false,
+    "reason_test_not_executed": "No authenticated repository checkout or workflow execution surface was available in this run."
+  },
+  "uncertainty": [
+    "The five-minute skew allowance is an explicit engineering tolerance and may require calibration against retained provider responses.",
+    "The generated-hostname rule is intentionally narrow; a future Vercel API contract change could require a versioned migration.",
+    "No deployment, route, alias, audio, or physical-device behavior is inferred."
+  ],
+  "falsification_route": [
+    "Run node --test operations/frontier-research/vercelImmutableDeploymentEvidence.v1.test.cjs in an authenticated checkout.",
+    "Validate the rule against a retained authenticated Vercel v13 get-deployment response.",
+    "Reject or revise the rule if Vercel returns a documented immutable generated hostname outside the bounded *.vercel.app form."
+  ],
+  "privacy_class": "public_repository_metadata_only"
+}
