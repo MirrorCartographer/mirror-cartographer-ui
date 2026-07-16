@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "team": "independent_creative_web",
+  "run_type": "adversarial_protocol_implementation_and_verification",
+  "protocol_commit": "a6e0b5011d145a4725deaf5bfc5a9e6b712d59bd",
+  "branch": "preview",
+  "phases": [
+    {
+      "checkpoint": "before_publishing",
+      "claim_under_test": "A generic adversarial instruction is sufficient to govern creative publication safely.",
+      "challenge_method": [
+        "Searched repository-visible evidence for an existing team-specific protocol.",
+        "Compared publication needs against current fail-closed deployment and shared-state constraints.",
+        "Constructed misuse and rollback counterexamples."
+      ],
+      "findings": [
+        "No repository-visible Independent Creative Web Team protocol was found by targeted code search.",
+        "A generic instruction does not define publication-specific claim boundaries, protected surfaces, or evidence requirements.",
+        "Creative success, deployment success, accessibility, privacy, and physical-device behavior can be falsely collapsed into one claim."
+      ],
+      "repairs": [
+        "Added a dedicated pre-publication checkpoint.",
+        "Added fail-closed publication criteria and explicit protected surfaces.",
+        "Separated technical and experiential claims."
+      ],
+      "remaining_uncertainty": [
+        "Repository code-search coverage may not prove absolute absence of similarly named protocols.",
+        "No specific creative release candidate was available for surface-level testing in this run."
+      ],
+      "evidence_required_before_publication": [
+        "Exact-commit or immutable-artifact evidence for technical claims.",
+        "Accessibility, privacy, performance, interaction, and rollback evidence appropriate to the release."
+      ],
+      "rollback_route": "Revert commit a6e0b5011d145a4725deaf5bfc5a9e6b712d59bd from preview.",
+      "robustness_verdict": "stronger"
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_under_test": "The implemented protocol covers the requested challenge classes without enabling unsafe destabilization.",
+      "challenge_method": [
+        "Reviewed the committed protocol against contradiction, drift, assumptions, evidence, duplication, edge cases, misuse, rollback, and counterexample requirements.",
+        "Tested the language against unsafe interpretations involving automations, production, DNS, credentials, and user data."
+      ],
+      "findings": [
+        "The protocol includes all requested challenge classes.",
+        "Unsafe experiments are explicitly excluded and reversible isolation is required.",
+        "The first implementation needed a precise distinction between build, deployment identity, route, interaction, accessibility, performance, privacy, and device claims; this distinction is now included."
+      ],
+      "repairs": [
+        "Defined permitted and prohibited failure experiments.",
+        "Required exact rollback references.",
+        "Added mandatory significant-challenge records and publication gates."
+      ],
+      "remaining_uncertainty": [
+        "The protocol is documentary and not yet enforced by an executable schema validator.",
+        "No negative-control fixture has yet demonstrated machine rejection of an incomplete phase record."
+      ],
+      "rollback_route": "Revert commit a6e0b5011d145a4725deaf5bfc5a9e6b712d59bd from preview.",
+      "robustness_verdict": "stronger"
+    },
+    {
+      "checkpoint": "during_verification",
+      "claim_under_test": "The adversarial protocol exists immutably on preview and is ready to govern future creative work.",
+      "challenge_method": [
+        "Fetched the file by exact commit SHA rather than branch alias.",
+        "Inspected the exact-commit content for protected surfaces, three checkpoints, evidence rules, rollback, and fail-closed publication criteria.",
+        "Avoided treating repository commit success as deployment or publication success."
+      ],
+      "findings": [
+        "The file is retrievable at exact commit a6e0b5011d145a4725deaf5bfc5a9e6b712d59bd.",
+        "No application surface, production deployment, automation schedule, or shared state was modified.",
+        "No preview deployment claim can be made from repository evidence alone."
+      ],
+      "repairs": [
+        "Recorded commit-bound evidence and bounded the verification claim to repository presence.",
+        "Blocked publication and deployment claims until separate evidence exists."
+      ],
+      "remaining_uncertainty": [
+        "No executable enforcement exists.",
+        "No commit-matched Vercel preview or browser/device verification was attempted because this was operations-only work and provider capacity remains documented as blocked."
+      ],
+      "evidence_required_before_publication": [
+        "A specific release candidate.",
+        "Exact-commit preview identity and READY state.",
+        "Required accessibility, mobile, performance, privacy, no-autoplay, interaction, and rollback checks."
+      ],
+      "rollback_route": "Revert commit a6e0b5011d145a4725deaf5bfc5a9e6b712d59bd from preview.",
+      "robustness_verdict": "stronger"
+    }
+  ],
+  "publication_decision": "not_applicable_operations_only_no_release_candidate",
+  "deployment_claim": "none",
+  "next_falsifiable_step": "Add a machine-checkable phase-record schema and prove it accepts one complete fixture while rejecting missing rollback, missing evidence boundary, unsafe experiment scope, and unsupported publication claims."
+}
