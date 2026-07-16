@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source_branch": "preview",
+  "target_branch": "main",
+  "required_checks": [
+    "build",
+    "smoke",
+    "mobile",
+    "accessibility",
+    "interaction",
+    "audio",
+    "deployment_identity",
+    "rollback",
+    "adversarial_review"
+  ],
+  "promotion_requires": {
+    "preview_deployment_state": "ready",
+    "unresolved_critical_risks": 0,
+    "rollback_route_recorded": true,
+    "evidence_commit_matches_preview": true
+  },
+  "deployment_states": ["queued", "building", "ready", "failed", "canceled", "skipped", "superseded"],
+  "rule": "Canceled, skipped, or superseded deployments are never counted as successful verification."
+}
