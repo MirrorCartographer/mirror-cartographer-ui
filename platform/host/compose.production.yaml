@@ -16,6 +16,11 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: ${FOUNDATION_LOG_MAX_SIZE:-10m}
+        max-file: ${FOUNDATION_LOG_MAX_FILES:-5}
     networks:
       - foundation-internal
     healthcheck:
@@ -47,6 +52,11 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+    logging:
+      driver: json-file
+      options:
+        max-size: ${FOUNDATION_LOG_MAX_SIZE:-10m}
+        max-file: ${FOUNDATION_LOG_MAX_FILES:-5}
     networks:
       - edge-public
       - foundation-internal
