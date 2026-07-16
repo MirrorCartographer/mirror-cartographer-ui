@@ -52,6 +52,8 @@ chmod 0600 "$FOUNDATION_ROOT/.env"
 
 cp "$FOUNDATION_ROOT/repository/platform/host/compose.production.yaml" "$FOUNDATION_ROOT/compose.yaml"
 cp "$FOUNDATION_ROOT/repository/platform/host/Caddyfile.edge" "$FOUNDATION_ROOT/Caddyfile"
+install -m 0750 "$FOUNDATION_ROOT/repository/platform/host/backup.sh" "$FOUNDATION_ROOT/backup.sh"
+install -m 0750 "$FOUNDATION_ROOT/repository/platform/host/restore-backup.sh" "$FOUNDATION_ROOT/restore-backup.sh"
 
 cat > "$FOUNDATION_ROOT/deploy.sh" <<'EOF'
 #!/usr/bin/env bash
@@ -70,6 +72,8 @@ cp -a "$ROOT/repository/." "$RELEASE/source"
 printf '%s\n' "$IMAGE" > "$RELEASE/image"
 cp "$ROOT/repository/platform/host/compose.production.yaml" "$ROOT/compose.yaml"
 cp "$ROOT/repository/platform/host/Caddyfile.edge" "$ROOT/Caddyfile"
+install -m 0750 "$ROOT/repository/platform/host/backup.sh" "$ROOT/backup.sh"
+install -m 0750 "$ROOT/repository/platform/host/restore-backup.sh" "$ROOT/restore-backup.sh"
 cd "$ROOT"
 export FOUNDATION_DOMAIN FOUNDATION_COMMIT="$COMMIT" FOUNDATION_IMAGE="$IMAGE"
 docker compose config --quiet
@@ -115,7 +119,13 @@ RequiresMountsFor=/srv/foundation/data
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -lc 'set -euo pipefail; stamp=$(date -u +%%Y%%m%%dT%%H%%M%%SZ); tmp=$(mktemp /var/lib/foundation/backups/.foundation-${stamp}.XXXXXX); tar -C / -czf "$tmp" var/lib/foundation/current-commit var/lib/foundation/current-image srv/foundation/data; mv "$tmp" "/var/lib/foundation/backups/foundation-${stamp}.tar.gz"; find /var/lib/foundation/backups -type f -name "foundation-*.tar.gz" -mtime +14 -delete'
+ExecStart=/opt/foundation/backup.sh
+User=root
+Group=root
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/foundation/backups /srv/foundation/data
 EOF
 
 cat > /etc/systemd/system/foundation-backup.timer <<'EOF'
@@ -135,4 +145,13 @@ systemctl daemon-reload
 systemctl enable foundation-deploy.service foundation-backup.timer
 systemctl start foundation-backup.timer
 
-echo "Host prepared. Ensure DNS A/AAAA records point to this machine, then run: sudo /opt/foundation/deploy.sh"
+# Prove the backup path works even before the first application deployment.
+systemctl start foundation-backup.service
+latest_backup=$(find /var/lib/foundation/backups -maxdepth 1 -type f -name 'foundation-*.tar.gz' -printf '%T@ %p\n' | sort -nr | head -n1 | cut -d' ' -f2-)
+[[ -n "$latest_backup" ]] || { echo "Backup verification produced no archive" >&2; exit 1; }
+(
+  cd "$(dirname "$latest_backup")"
+  sha256sum -c "$(basename "$latest_backup.sha256")"
+)
+
+echo "Host prepared and backup path verified. Ensure DNS A/AAAA records point to this machine, then run: sudo /opt/foundation/deploy.sh"
