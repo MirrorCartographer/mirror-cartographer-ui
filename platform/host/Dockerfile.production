@@ -1,0 +1,14 @@
+FROM node:22-alpine AS build
+WORKDIR /src
+COPY package*.json ./
+RUN npm ci
+COPY . .
+ARG FOUNDATION_COMMIT=unknown
+ENV VITE_FOUNDATION_COMMIT=$FOUNDATION_COMMIT
+RUN npm run build
+
+FROM caddy:2.10-alpine
+COPY --from=build /src/dist /srv
+COPY platform/host/Caddyfile.app /etc/caddy/Caddyfile
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider http://127.0.0.1/healthz || exit 1
