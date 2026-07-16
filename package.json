@@ -13,7 +13,7 @@
     "vercel:changed-paths": "node tools/vercel-ops/changed-paths-from-git.mjs",
     "test:vercel-repertory": "node operations/vercel-studio/repertory/runRepertoryTests.v1.mjs",
     "test:cloudflare-research": "node operations/cloudflare-research/runCloudflareResearchTests.v1.mjs",
-    "test:independent-creative-web-adversarial": "node --test operations/independent-creative-web/validateAdversarialReviewCycle.v2.test.cjs",
+    "test:independent-creative-web-adversarial": "node --test operations/independent-creative-web/validateAdversarialReviewCycle.v3.test.cjs",
     "deploy:vercel:sentinel": "node tools/vercel-ops/deployment-invocation.mjs --state operations/CURRENT_STATE.json --paths operations/changed-paths.json --exact-commit false -- npx vercel",
     "deploy:vercel:exact": "node tools/vercel-ops/deployment-invocation.mjs --state operations/CURRENT_STATE.json --paths operations/changed-paths.json --exact-commit true -- npx vercel",
     "test:vercel-changed-paths": "node --test tools/vercel-ops/changed-paths-from-git.test.mjs",
