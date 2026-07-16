@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-16T00:46:00Z",
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "title": "Automation completion claims are leads, not repository truth",
+  "durable_memory": {
+    "observed": [
+      "A prior automation completion report claimed that operations/continuity/state-precedence-policy.v1.json existed at commit cc1ba83854b30beb962738578bc01a56ba3210be.",
+      "The current default-branch contents API returned Not Found for that path.",
+      "The repository commit API returned no commit for that SHA.",
+      "The canonical queue already classifies automation completion prose as a lead-only provenance source for M-RECONCILE-002."
+    ],
+    "inferred": [
+      "A completion report can contain useful search leads while still failing immutable provenance requirements.",
+      "Repository paths, commit identifiers, deployment claims, test claims, and peer-run claims in prose must be independently resolved before entering canonical continuity state."
+    ],
+    "proposed": [
+      "Treat automation completion prose as source_class=lead_only until every material claim resolves to an accessible immutable object or retained execution artifact.",
+      "Quarantine unresolvable identifiers without recreating files, commits, queue IDs, or historical assignments."
+    ],
+    "superseded": [
+      "The assumption that a detailed automation completion report is sufficient evidence that named files or commits exist."
+    ],
+    "unresolved": [
+      "Whether the claimed policy existed on an inaccessible branch, was reported before a failed write, or was generated only in prose.",
+      "Whether other completion reports contain additional unverified immutable identifiers."
+    ]
+  },
+  "admission_rule": {
+    "required_for_repository_truth": [
+      "accessible immutable repository object",
+      "matching owner and namespace",
+      "matching semantic role",
+      "temporal precedence consistent with the claimed history",
+      "no contradictory stronger source"
+    ],
+    "failure_state": "unresolved_quarantined",
+    "reconstruction_permitted": false
+  },
+  "evidence": [
+    {
+      "source_class": "canonical_queue",
+      "locator": "operations/ACTIVE_QUEUE.json#M-RECONCILE-002",
+      "status": "observed"
+    },
+    {
+      "source_class": "repository_path_lookup",
+      "locator": "operations/continuity/state-precedence-policy.v1.json",
+      "result": "not_found",
+      "status": "observed"
+    },
+    {
+      "source_class": "repository_commit_lookup",
+      "locator": "cc1ba83854b30beb962738578bc01a56ba3210be",
+      "result": "no_commit_found",
+      "status": "observed"
+    }
+  ],
+  "privacy_boundary": {
+    "included": [
+      "repository paths",
+      "commit identifiers",
+      "abstract provenance findings"
+    ],
+    "excluded": [
+      "private chat text beyond the minimum claim locator",
+      "health or pet-health information",
+      "credentials",
+      "personal identifiers",
+      "unreviewed uploaded-file content"
+    ]
+  },
+  "falsification_route": "Locate the exact claimed commit or file on an accessible branch or retained immutable repository object, verify its content and temporal role, then issue an additive superseding continuity record without deleting this observation.",
+  "canonical_files_overwritten": false
+}
