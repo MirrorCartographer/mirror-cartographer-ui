@@ -7,6 +7,7 @@ const REQUIRED_REPERTORY_TESTS = Object.freeze([
   'repertoryTestInventory.v1.test.cjs',
   'verifyProgrammedStageFreshness.v1.test.cjs',
   'verifyProgrammedStageReceipt.v1.test.cjs',
+  'verifySelectionRule.v1.test.cjs',
   'vercelRepertoryOidcWorkflowContract.v1.test.cjs',
 ]);
 
