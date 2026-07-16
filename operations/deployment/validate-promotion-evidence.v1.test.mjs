@@ -16,7 +16,7 @@ function immutableDeploymentEvidence() {
     source: 'vercel_api_v13_get_deployment',
     deployment: {
       id: 'dpl_Valid123', url: 'mirror-preview-abc.vercel.app', projectId: 'prj_123', name: 'mirror-cartographer-ui',
-      readyState: 'READY', status: 'READY', createdAt: now - 2000, ready: now - 1000,
+      readyState: 'READY', status: 'READY', target: null, createdAt: now - 2000, ready: now - 1000,
       gitSource: { type: 'github', sha, ref: 'preview', repoId: 1003910384 }
     }
   };
@@ -32,10 +32,11 @@ function evidence() {
   };
 }
 
-test('accepts complete commit-bound ready evidence with immutable deployment proof', () => {
+test('accepts complete commit-bound ready evidence with immutable preview deployment proof', () => {
   const result = assessPromotion(checklist,evidence());
   assert.equal(result.promotable,true);
   assert.equal(result.immutable_deployment_identity_verified,true);
+  assert.equal(result.immutable_deployment_git_ref,'preview');
 });
 test('rejects canceled state', () => { const e=evidence(); e.preview_deployment_state='canceled'; assert.equal(assessPromotion(checklist,e).promotable,false); });
 test('rejects check commit mismatch', () => { const e=evidence(); e.checks.smoke.commit='b'.repeat(40); assert.ok(assessPromotion(checklist,e).failures.includes('required_check_commit_mismatch:smoke')); });
@@ -60,3 +61,21 @@ test('rejects an alias or unrelated HTTPS URL despite valid deployment identity'
   assert.ok(result.failures.includes('preview_url_not_immutable_deployment_hostname'));
 });
 test('rejects stale deployment state', () => { const e=evidence(); e.preview_deployment_state='stale'; assert.equal(assessPromotion(checklist,e).promotable,false); });
+test('rejects a READY deployment for the same commit from main', () => {
+  const e=evidence(); e.deployment_identity_evidence.deployment.gitSource.ref='main';
+  const result=assessPromotion(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('immutable_deployment_source_branch_mismatch'));
+});
+test('rejects a production-target deployment as preview evidence', () => {
+  const e=evidence(); e.deployment_identity_evidence.deployment.target='production';
+  const result=assessPromotion(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('production_target_cannot_serve_as_preview_evidence'));
+});
+test('rejects immutable deployment evidence with no git ref', () => {
+  const e=evidence(); delete e.deployment_identity_evidence.deployment.gitSource.ref;
+  const result=assessPromotion(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('immutable_deployment_git_ref_missing'));
+});
