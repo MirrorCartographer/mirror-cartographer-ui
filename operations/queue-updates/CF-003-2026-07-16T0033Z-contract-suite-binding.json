@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "queue_item": "CF-003",
+  "owner": "cloudflare_research",
+  "priority": "highest_available",
+  "state": "completed_handoff_ready",
+  "objective": "Make critical Cloudflare publication safety contracts mandatory and fail-closed in canonical repository gates.",
+  "completed_slices": [
+    "Added a canonical Cloudflare research contract runner with an explicit required-test inventory.",
+    "Bound the runner to package.json as test:cloudflare-research.",
+    "Inserted the canonical command into test:local-gate and test:pages-preview.",
+    "Retained source-level evidence without claiming CI or deployment execution."
+  ],
+  "acceptance_remaining": [
+    "Execute npm run test:cloudflare-research in an authenticated checkout and retain exact output.",
+    "Observe the command inside a GitHub Actions run and retain run, job, step, and exact commit identity.",
+    "Integrate publication enforcement into the actual Cloudflare static-build and Worker response entrypoints.",
+    "Obtain a resolving immutable Cloudflare deployment URL before making any live deployment claim."
+  ],
+  "safe_next_action": "Run the canonical contract command, retain exact output, then add a bypass test proving no Cloudflare publication path can emit content without publicationEnforcement.v1.",
+  "evidence": "operations/evidence/CF-003-cloudflare-contract-suite-binding-2026-07-16T0033Z.json",
+  "specialist_registry_change": null,
+  "created_at": "2026-07-16T00:33:14Z"
+}
