@@ -19,6 +19,7 @@ function phase(checkpoint, challengeOutcome = 'stronger_supporting_evidence') {
     next_falsifiable_step: 'run the next negative control',
     evidence_required_before_publication: [],
     challenge_outcome: challengeOutcome,
+    challenge_outcome_detail: 'the retained fixture directly supports the stated outcome',
   };
 }
 
@@ -47,6 +48,14 @@ test('rejects a phase with no recognized challenge outcome', () => {
   const result = validateRecord(record);
   assert.equal(result.valid, false);
   assert.match(result.errors.join('\n'), /challenge_outcome must be one of/);
+});
+
+test('rejects a challenge outcome with no explicit rationale', () => {
+  const record = validRecord();
+  record.phases[0].challenge_outcome_detail = '   ';
+  const result = validateRecord(record);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join('\n'), /challenge_outcome_detail must be a non-empty string/);
 });
 
 test('rejects refined design without a repair', () => {
