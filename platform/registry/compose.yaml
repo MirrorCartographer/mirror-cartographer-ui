@@ -7,13 +7,12 @@ services:
       - "127.0.0.1:5001:5001"
     environment:
       OTEL_TRACES_EXPORTER: none
-      REGISTRY_HTTP_SECRET_FILE: /run/secrets/registry_http_secret
+      REGISTRY_HTTP_SECRET: ${REGISTRY_HTTP_SECRET:?set REGISTRY_HTTP_SECRET in a protected environment file}
     volumes:
       - ./config.yml:/etc/distribution/config.yml:ro
       - ${FIA_REGISTRY_DATA:-./data}:/var/lib/registry
     secrets:
       - registry_htpasswd
-      - registry_http_secret
     read_only: true
     tmpfs:
       - /tmp:size=64m,noexec,nosuid,nodev
@@ -31,5 +30,3 @@ services:
 secrets:
   registry_htpasswd:
     file: ./secrets/htpasswd
-  registry_http_secret:
-    file: ./secrets/http-secret
