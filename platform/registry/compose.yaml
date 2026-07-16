@@ -1,0 +1,35 @@
+services:
+  registry:
+    image: registry:3
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:5001:5001"
+    environment:
+      OTEL_TRACES_EXPORTER: none
+      REGISTRY_HTTP_SECRET_FILE: /run/secrets/registry_http_secret
+    volumes:
+      - ./config.yml:/etc/distribution/config.yml:ro
+      - ${FIA_REGISTRY_DATA:-./data}:/var/lib/registry
+    secrets:
+      - registry_htpasswd
+      - registry_http_secret
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid,nodev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5001/debug/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+secrets:
+  registry_htpasswd:
+    file: ./secrets/htpasswd
+  registry_http_secret:
+    file: ./secrets/http-secret
