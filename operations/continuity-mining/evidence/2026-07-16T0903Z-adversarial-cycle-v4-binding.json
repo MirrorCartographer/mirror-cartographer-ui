@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "cycle_id": "CM-2026-07-16-05",
+  "target": "Bind continuity adversarial-cycle enforcement to structured phase evidence",
+  "publication_or_resolution_decision": "blocked",
+  "claim_boundary": "This record proves additive source and fixture commits exist on preview. It does not prove runtime test passage, canonical command invocation, exhaustive history coverage, deployment state, or recovered provenance.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "The existing cycle validator enforces the strongest current phase-record contract.",
+      "challenge_method": [
+        "Compared validateAdversarialCycle.v1.cjs imports against available phase-validator versions.",
+        "Searched for architecture drift, duplicate enforcement, evidence substitution, rollback hazards, and protected-system side effects."
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v1.cjs imports validateAdversarialPhaseRecord.v3.cjs",
+        "operations/continuity-mining/validateAdversarialPhaseRecord.v4.cjs adds structured immutable-or-retained evidence validation"
+      ],
+      "failures_or_counterexamples_found": [
+        "A cycle can pass v1 while its verification phase uses prose-only evidence that phase validator v4 would reject.",
+        "A cycle can pass v1 while its verification evidence is mutable and unretained."
+      ],
+      "repairs_made": [
+        "Selected an additive v2 cycle validator that composes v4 instead of destructively replacing v1.",
+        "Preserved checkpoint order, target continuity, uncertainty dispositions, and rollback requirements."
+      ],
+      "remaining_uncertainty": [
+        "No canonical command or producer inventory proves that cycle v2 will be invoked.",
+        "Runtime compatibility with all existing consumers is unknown."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Direct repository-file evidence; commit identity available for the additive implementation.",
+      "rollback_route": "Revert implementation commit 1ea7f3d3ab02ab7f0e226fb9812d21ab021680f6.",
+      "next_falsifiable_step": "Construct v4-shaped passing and evidence-substitution failing fixtures."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "Cycle v2 closes the phase-validator version drift without weakening v1 cycle invariants.",
+      "challenge_method": [
+        "Added disposable in-memory fixtures for prose-only evidence, mutable unretained evidence, target drift, missing phases, silent uncertainty loss, and lead-only verified evidence.",
+        "Reviewed the implementation for duplicated phase rules and retained composition instead of reimplementation."
+      ],
+      "evidence": [
+        "Implementation commit 1ea7f3d3ab02ab7f0e226fb9812d21ab021680f6",
+        "Negative-control commit 6dfa0a824d9a2bc8719333402df196db44748012"
+      ],
+      "failures_or_counterexamples_found": [
+        "Local repository test execution could not start because the runtime lacks the gh executable.",
+        "The implementation is additive and therefore does not establish canonical use."
+      ],
+      "repairs_made": [
+        "Bound cycle v2 directly to validateAdversarialPhaseRecord.v4.cjs.",
+        "Advanced the cycle schema to version 2 so v1-shaped records cannot silently acquire v2 authority.",
+        "Added deterministic negative controls specifically for v4 evidence requirements."
+      ],
+      "remaining_uncertainty": [
+        "Tests are committed but runtime passage is not established.",
+        "Existing v1 consumers and producers are not exhaustively inventoried.",
+        "No canonical continuity path is proven to invoke cycle v2 fail-closed."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Commit-matched source and deterministic fixtures; no retained runtime output.",
+      "rollback_route": "Revert test commit 6dfa0a824d9a2bc8719333402df196db44748012, then implementation commit 1ea7f3d3ab02ab7f0e226fb9812d21ab021680f6.",
+      "next_falsifiable_step": "Execute the exact committed suite in a Node-capable checkout and retain stdout, stderr, exit code, and commit SHA."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The completed work can be declared successfully verified and ready for canonical adoption.",
+      "challenge_method": [
+        "Attempted exact-suite execution from a disposable local checkout.",
+        "Applied fail-closed verification rules to missing runtime output, missing consumer inventory, and missing canonical invocation evidence."
+      ],
+      "evidence": [
+        "The attempted command failed before checkout because gh was not installed.",
+        "Repository commits establish source presence but not executed behavior."
+      ],
+      "failures_or_counterexamples_found": [
+        "Committed tests are not equivalent to executed tests.",
+        "An additive validator can remain inert if no canonical path imports it.",
+        "Migration without a consumer inventory could create schema-version breakage."
+      ],
+      "repairs_made": [
+        "Kept the resolution and canonicalization decision blocked.",
+        "Documented the exact runtime and integration evidence required before promotion.",
+        "Preserved v1 as the rollback-safe prior contract."
+      ],
+      "remaining_uncertainty": [
+        "Runtime test outcome is unknown.",
+        "Canonical invocation is unknown.",
+        "Consumer and producer compatibility is unknown.",
+        "Historical provenance claims remain outside this implementation's claim boundary."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Strong source-level evidence, weak runtime evidence, absent canonical-integration evidence.",
+      "rollback_route": "Revert this evidence commit, then 6dfa0a824d9a2bc8719333402df196db44748012, then 1ea7f3d3ab02ab7f0e226fb9812d21ab021680f6.",
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialCycle.v2.test.cjs at the exact preview head, retain the output, then inventory all v1 imports before wiring v2 into the canonical continuity verification command."
+    }
+  ],
+  "strongest_surviving_proposal": "Use additive cycle schema v2 to compose the structured-evidence phase validator v4 while retaining all cycle-order and uncertainty-continuity invariants. Do not make it canonical until exact-commit tests pass and all v1 consumers are inventoried.",
+  "rejected_alternatives": [
+    "Continue using cycle v1 with phase validator v3.",
+    "Patch v1 destructively and silently change its evidence contract.",
+    "Duplicate v4 evidence rules inside the cycle validator.",
+    "Treat committed fixtures as runtime verification.",
+    "Modify automations, schedules, deployments, production, shared state, credentials, or irreversible user data to obtain evidence."
+  ],
+  "unresolved_risks": [
+    "Runtime test passage is absent.",
+    "Canonical integration is absent.",
+    "v1 consumer and producer migration scope is unknown.",
+    "Schema-version compatibility has not been tested against real retained cycle records."
+  ],
+  "design_became_stronger": true,
+  "required_before_publication_or_canonicalization": [
+    "Retained exact-commit Node test output with zero failures.",
+    "Exhaustive inventory of v1 imports and cycle-record producers.",
+    "A fail-closed canonical-path test proving prose-only and mutable unretained verification evidence are rejected.",
+    "A documented rollback execution or dry-run against a disposable branch."
+  ]
+}
