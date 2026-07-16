@@ -1,0 +1,41 @@
+{
+  "schema": "foundation.secrets-identity.policy.v1",
+  "trust_domain": "foundation.internal",
+  "root_recovery": {
+    "threshold": 2,
+    "shares": 3,
+    "online_root_key": false,
+    "independent_failure_domains": 2
+  },
+  "workload_identity": {
+    "provider": "spiffe-spire",
+    "workload_api_transport": "unix",
+    "max_svid_ttl_seconds": 3600,
+    "static_tokens_allowed": false,
+    "selector_binding_required": true
+  },
+  "secret_broker": {
+    "provider": "openbao",
+    "storage": "integrated-raft",
+    "high_availability_nodes": 3,
+    "audit_devices_minimum": 2,
+    "default_lease_ttl_seconds": 900,
+    "maximum_lease_ttl_seconds": 3600,
+    "kv_version": 2,
+    "kv_cas_required": true,
+    "response_wrapping_required_for_bootstrap": true
+  },
+  "deployment": {
+    "plaintext_secret_files_allowed": false,
+    "environment_secret_injection_allowed": false,
+    "release_worker_may_read_production_secrets": false,
+    "secret_material_in_artifacts_allowed": false,
+    "break_glass_ttl_seconds": 900
+  },
+  "recovery": {
+    "offline_root_bundle_copies": 3,
+    "restore_test_interval_days": 90,
+    "revocation_test_interval_days": 30,
+    "requires_clean_host_restore": true
+  }
+}
