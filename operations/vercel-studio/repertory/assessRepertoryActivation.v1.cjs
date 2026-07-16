@@ -1,6 +1,7 @@
 'use strict';
 
 const { validateDurableRepertoryProvenance } = require('./validateDurableRepertoryProvenance.v1.cjs');
+const { verifySelectionRule } = require('./verifySelectionRule.v1.cjs');
 const { validateDeploymentContextBinding } = require('../../frontier-research/vercelDeploymentContextBinding.v1.cjs');
 
 function assessRepertoryActivation(input) {
@@ -10,6 +11,7 @@ function assessRepertoryActivation(input) {
   const expectedContext = input?.expected_deployment_context;
 
   const provenance = validateDurableRepertoryProvenance(repertory);
+  const selectionRule = verifySelectionRule(repertory);
   const deployment = validateDeploymentContextBinding({
     expected_commit_sha: expectedCommitSha,
     expected_context: expectedContext,
@@ -21,6 +23,7 @@ function assessRepertoryActivation(input) {
   const violations = [];
 
   if (!provenance.valid) violations.push('repertory_provenance_invalid');
+  if (!selectionRule.verified) violations.push('selection_rule_unverified');
   if (provenance.activation_claimed) violations.push('repertory_already_claims_activation');
   if (provenance.deployment_claimed) violations.push('repertory_already_claims_deployment');
   if (repertory?.activation_boundary?.runtime_integration !== 'not_performed') {
@@ -32,20 +35,23 @@ function assessRepertoryActivation(input) {
   if (!deployment.verified) violations.push('deployment_context_binding_unverified');
 
   return {
-    schema_version: 2,
+    schema_version: 3,
     promotable: violations.length === 0,
     expected_commit_sha: expectedCommitSha || null,
     expected_deployment_context: deployment.normalized.expected_context,
     production_count: provenance.production_count,
     repertory_valid: provenance.valid,
+    selection_rule_verified: selectionRule.verified,
+    selection_rule_claim_boundary: selectionRule.claim_boundary,
     deployment_context_verified: deployment.verified,
     deployment_claim_boundary: deployment.claim_boundary,
     violations,
     claim_boundary: violations.length === 0
-      ? 'repertory_activation_preconditions_and_deployment_context_verified_only'
+      ? 'repertory_activation_preconditions_selection_rule_and_deployment_context_verified_only'
       : 'repertory_activation_prohibited',
     evidence: {
       repertory_violations: provenance.violations,
+      selection_rule_violations: selectionRule.violations,
       deployment_violations: deployment.violations,
       deployment_sha256: deployment.sha256,
     },
