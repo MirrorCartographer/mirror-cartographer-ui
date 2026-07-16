@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "provisional_fail_closed",
   "artifact_commit_binding": "required_at_verification",
   "canonical_surface": "Mirror Cartographer UI",
@@ -65,7 +65,10 @@
     "branch_mismatched",
     "repository_mismatched",
     "project_mismatched",
-    "authority_unresolved"
+    "authority_unresolved",
+    "failed",
+    "error",
+    "unknown"
   ],
   "precedence_rule": "No provider may publish the canonical surface until exactly one provider has explicit authority or a documented multi-provider design defines precedence, domain ownership, evidence equivalence, and rollback semantics.",
   "current_decision": "block_publication_and_promotion",
