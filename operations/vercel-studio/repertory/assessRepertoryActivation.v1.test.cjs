@@ -41,13 +41,14 @@ function assess(overrides = {}) {
   });
 }
 
-test('promotes only when canonical repertory and deployment context both verify', () => {
+test('promotes only when canonical repertory, selection rule, and deployment context verify', () => {
   const result = assess();
 
   assert.equal(result.promotable, true, JSON.stringify(result.violations));
   assert.equal(result.repertory_valid, true);
+  assert.equal(result.selection_rule_verified, true);
   assert.equal(result.deployment_context_verified, true);
-  assert.equal(result.claim_boundary, 'repertory_activation_preconditions_and_deployment_context_verified_only');
+  assert.equal(result.claim_boundary, 'repertory_activation_preconditions_selection_rule_and_deployment_context_verified_only');
 });
 
 test('fails closed when deployment evidence is absent', () => {
@@ -102,7 +103,31 @@ test('fails closed when the repertory activation boundary is weakened', () => {
   weakened.activation_boundary.runtime_integration = 'performed';
 
   const result = assess({ repertory: weakened });
-
   assert.equal(result.promotable, false);
   assert.equal(result.violations.includes('runtime_boundary_not_fail_closed'), true);
+});
+
+test('fails closed when the superseded modulo selection rule is substituted', () => {
+  const weakened = structuredClone(repertory);
+  weakened.selection_rule.type = 'deterministic_modulo';
+  weakened.selection_rule.expression = 'productions[utc_hour % productions.length]';
+
+  const result = assess({ repertory: weakened });
+
+  assert.equal(result.promotable, false);
+  assert.equal(result.selection_rule_verified, false);
+  assert.equal(result.violations.includes('selection_rule_unverified'), true);
+  assert.equal(result.evidence.selection_rule_violations.includes('unsupported_selection_rule_type'), true);
+  assert.equal(result.evidence.selection_rule_violations.includes('unsupported_selection_expression'), true);
+});
+
+test('fails closed when duplicate hourly editions preserve superficial 24-hour coverage', () => {
+  const weakened = structuredClone(repertory);
+  weakened.hour_slots[23].edition_id = weakened.hour_slots[22].edition_id;
+
+  const result = assess({ repertory: weakened });
+
+  assert.equal(result.promotable, false);
+  assert.equal(result.selection_rule_verified, false);
+  assert.equal(result.evidence.selection_rule_violations.includes('duplicate_edition_id'), true);
 });
