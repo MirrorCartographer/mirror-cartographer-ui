@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "cycle_id": "CM-2026-07-16-08",
+  "target": "continuity evidence-bound closure enforcement",
+  "publication_or_canonicalization_decision": "blocked",
+  "protected_systems_changed": [],
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Cycle v4 prevents false uncertainty closure.",
+      "challenge_method": [
+        "constructed a repaired disposition with syntactically valid RESOLVED prose but no retained evidence object",
+        "constructed a rejected disposition with explicit counterevidence prose that could not be independently located",
+        "compared transition semantics with the structured evidence contract already enforced by phase validator v4"
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v4.cjs",
+        "operations/continuity-mining/validateAdversarialPhaseRecord.v4.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v4.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "A closure statement could satisfy v4 through exact prose while referencing no evidence_inspected object.",
+        "A fabricated or stale closure claim had no required locator binding to the next checkpoint."
+      ],
+      "repairs_made": [
+        "Selected an additive v5 cycle wrapper that binds repaired and rejected dispositions to retained evidence in the next phase.",
+        "Rejected duplicating the full evidence-object validator; v5 relies on phase validator v4 for object validity."
+      ],
+      "remaining_uncertainty": [
+        "Canonical Continuity Mining invocation of v5 is not established.",
+        "Claim-to-evidence semantic matching remains prefix-based rather than tied to a stable claim identifier."
+      ],
+      "evidence_quality": "direct repository source inspection; counterexamples are deterministic but not yet runtime-executed",
+      "rollback_route": "revert the additive v5 implementation, test, and evidence commits on preview",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Implement v5 and attempt missing-reference, unretained-locator, mismatched-claim, and lead-only fixtures."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The additive v5 wrapper closes the prose-only evidence gap without weakening v4.",
+      "challenge_method": [
+        "added disposable negative controls for missing references, absent locators, claim mismatch, and lead-only evidence",
+        "retained carried-uncertainty and valid repaired/rejected controls",
+        "inspected compatibility normalization from schema v5 to v4"
+      ],
+      "evidence": [
+        "commit 73b37b35c064ddecb8be321a4f063c5265722181",
+        "commit 8def3fbc90ee1cb25cd2027f30d32392ed258e9f",
+        "operations/continuity-mining/validateAdversarialCycle.v5.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v5.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "No source-level bypass was found for repaired or rejected closure without a next-phase evidence locator.",
+        "The design still permits semantically misleading evidence when claim_supported begins with the expected closure label."
+      ],
+      "repairs_made": [
+        "Required evidence_reference_locator for repaired and rejected dispositions.",
+        "Required the locator to resolve inside the next phase evidence_inspected collection.",
+        "Required claim_supported to begin with the outcome and exact uncertainty label.",
+        "Rejected lead_only evidence for closure."
+      ],
+      "remaining_uncertainty": [
+        "Runtime test passage is unproven.",
+        "Canonical invocation remains unproven.",
+        "Prefix claim matching may need a future stable claim_id contract."
+      ],
+      "evidence_quality": "immutable repository commits and deterministic disposable fixtures; no executed test output",
+      "rollback_route": "revert 8def3fbc90ee1cb25cd2027f30d32392ed258e9f, then 73b37b35c064ddecb8be321a4f063c5265722181",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Execute the exact v5 Node suite and retain stdout, stderr, exit code, runtime version, and commit SHA."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The committed v5 source and tests are present on preview and justify canonical adoption.",
+      "challenge_method": [
+        "re-read committed source objects from preview",
+        "separated committed test fixtures from executed test evidence",
+        "attempted to identify canonical command integration and consumer coverage"
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v5.cjs at commit 73b37b35c064ddecb8be321a4f063c5265722181",
+        "operations/continuity-mining/validateAdversarialCycle.v5.test.cjs at commit 8def3fbc90ee1cb25cd2027f30d32392ed258e9f"
+      ],
+      "failures_or_counterexamples_found": [
+        "No retained runtime output proves that the Node suite passes.",
+        "No evidence proves that the canonical Continuity Mining path invokes v5 fail-closed.",
+        "Existing v4 producers and consumers have not been exhaustively inventoried."
+      ],
+      "repairs_made": [
+        "Blocked canonicalization and publication claims.",
+        "Documented source-contract strength separately from runtime and integration evidence."
+      ],
+      "remaining_uncertainty": [
+        "Runtime suite passage remains unproven.",
+        "Canonical integration remains unproven.",
+        "A stable claim identifier may be stronger than prefix matching."
+      ],
+      "evidence_quality": "direct immutable repository objects; runtime and canonical-integration evidence absent",
+      "rollback_route": "revert this evidence commit, then 8def3fbc90ee1cb25cd2027f30d32392ed258e9f, then 73b37b35c064ddecb8be321a4f063c5265722181",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialCycle.v5.test.cjs at exact preview head and then prove the canonical entrypoint rejects the missing-reference fixture."
+    }
+  ],
+  "strongest_surviving_design": "A repaired or rejected uncertainty may leave the active-risk set only when its disposition references a retained next-phase evidence object whose supported claim matches the exact outcome and uncertainty and is stronger than lead-only evidence.",
+  "rejected_alternatives": [
+    "retain explicit prose as sufficient closure evidence",
+    "duplicate phase evidence validation inside the cycle validator",
+    "destructively replace v4 before consumer inventory and runtime verification",
+    "treat committed tests as executed evidence"
+  ],
+  "unresolved_risks": [
+    "runtime test passage is unproven",
+    "canonical command integration is unproven",
+    "v4 producer and consumer inventory is incomplete",
+    "prefix-based semantic binding may permit cleverly worded but misleading evidence"
+  ],
+  "next_falsifiable_step": "Execute and retain the exact v5 suite output, then integrate v5 fail-closed into the canonical Continuity Mining command and demonstrate rejection of a repaired disposition with no retained evidence reference."
+}
