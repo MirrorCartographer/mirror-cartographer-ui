@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "team": "frontier_research",
+  "recorded_at": "2026-07-16T00:19:00Z",
+  "finding": "Exact commit equality alone does not exclude deployment-context substitution. A deployment record must also match the intended Vercel project identity, immutable GitHub repository ID, and optional Vercel team scope before it can support a commit-bound deployment claim.",
+  "source_status": {
+    "primary_sources": [
+      {
+        "source": "Vercel REST API v13 get-deployment response contract",
+        "url": "https://vercel.com/docs/rest-api/reference/endpoints/deployments/get-a-deployment",
+        "status": "current endpoint contract referenced by predecessor R-022; live documentation retrieval was not independently retained in this run"
+      },
+      {
+        "source": "GitHub REST repository metadata",
+        "url": "https://docs.github.com/en/rest/repos/repos#get-a-repository",
+        "status": "current primary API contract for numeric repository identity"
+      }
+    ],
+    "repository_sources": [
+      "operations/CURRENT_STATE.json",
+      "operations/ACTIVE_QUEUE.json",
+      "operations/SPECIALIST_REGISTRY.json",
+      "operations/TRIGGER_REQUESTS.json",
+      "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.cjs",
+      "recent repository commits through 862f1a932b15dda9dd5825746d7e25f02f3bc73c"
+    ]
+  },
+  "evidence_strength": "committed implementation and deterministic test specification; tests not executed in this connector-only run",
+  "implementation": {
+    "module": "operations/frontier-research/vercelDeploymentContextBinding.v1.cjs",
+    "test": "operations/frontier-research/vercelDeploymentContextBinding.v1.test.cjs",
+    "required_bindings": [
+      "expected_commit_sha",
+      "expected_context.project_id",
+      "expected_context.project_name",
+      "expected_context.repository_id"
+    ],
+    "optional_binding": "expected_context.team_id becomes mandatory when supplied",
+    "claim_boundary": "immutable deployment identity and expected context only; does not prove route reachability, alias promotion, application correctness, audio behavior, or physical-device behavior"
+  },
+  "adversarial_cases": [
+    "same commit SHA from a different GitHub repository",
+    "same repository and commit under a different Vercel project",
+    "same project and repository under a different Vercel team scope",
+    "missing expected context that would otherwise be inferred from observed evidence"
+  ],
+  "falsification_route": [
+    "Run node --test operations/frontier-research/vercelDeploymentContextBinding.v1.test.cjs in an authenticated checkout.",
+    "Fetch one authenticated Vercel v13 deployment object and compare its projectId, name, teamId, gitSource.repoId, and gitSource.sha against independently configured expected values.",
+    "Reject this design if Vercel's authenticated response does not expose the required fields with stable semantics; replace the field with an independently fetched immutable mapping rather than weakening the gate."
+  ],
+  "uncertainty": [
+    "Vercel teamId presence may vary by account context, so team binding is optional unless an expected team ID is configured.",
+    "The test suite was committed but not executed in this run.",
+    "No live Vercel deployment was fetched and no deployment was initiated."
+  ],
+  "privacy_boundary": "No credentials, private source text, personal data, or deployment token was persisted.",
+  "specialist_registry_change": null
+}
