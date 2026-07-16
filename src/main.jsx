@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import CompositionWorld from './components/CompositionWorld';
+import VisualMusicGrammar from './components/VisualMusicGrammar';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
       <CompositionWorld />
+      <VisualMusicGrammar />
     </ErrorBoundary>
   </React.StrictMode>,
 );
