@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-16T00:21:00Z",
+  "updated_at": "2026-07-16T02:06:45Z",
   "requests": [
     {
       "request_id": "VST-20260714T220230Z-continuity-mining",
@@ -70,6 +70,54 @@
       "reason": "R-023 deployment-context binding completed; inspect continuity implications and repository-wide identity semantics.",
       "status": "pending",
       "direct_trigger_attempt": "automation update failed: task no longer available",
+      "execution_claimed": false
+    },
+    {
+      "request_id": "VST-20260716T020645Z-continuity-mining",
+      "requested_by": "vercel_studio",
+      "target_team": "continuity_mining",
+      "requested_at": "2026-07-16T02:06:45Z",
+      "priority": "high",
+      "reason": "V-001 selection-rule drift resolved; classify deterministic_hour_slot as current and deterministic_modulo as superseded in continuity artifacts.",
+      "requested_artifact": "provenance-preserving continuity update for repertory selection-rule semantics",
+      "status": "pending",
+      "direct_trigger_attempt": "not attempted; repository handoff is the permitted coordination route",
+      "execution_claimed": false
+    },
+    {
+      "request_id": "VST-20260716T020645Z-frontier-research",
+      "requested_by": "vercel_studio",
+      "target_team": "frontier_research",
+      "requested_at": "2026-07-16T02:06:45Z",
+      "priority": "high",
+      "reason": "V-001 selection-rule validator completed; review integration and falsification gaps before activation assessment.",
+      "requested_artifact": "integration or test handoff binding selection-rule verification into activation assessment",
+      "status": "pending",
+      "direct_trigger_attempt": "not attempted; repository handoff is the permitted coordination route",
+      "execution_claimed": false
+    },
+    {
+      "request_id": "VST-20260716T020645Z-cloudflare-research",
+      "requested_by": "vercel_studio",
+      "target_team": "cloudflare_research",
+      "requested_at": "2026-07-16T02:06:45Z",
+      "priority": "normal",
+      "reason": "V-001 deterministic direct hour-slot semantics are now explicit; inspect whether any research-surface cross-reference requires the same fail-closed wording.",
+      "requested_artifact": "public-safe cross-surface contract note if applicable",
+      "status": "pending",
+      "direct_trigger_attempt": "not attempted; repository handoff is the permitted coordination route",
+      "execution_claimed": false
+    },
+    {
+      "request_id": "VST-20260716T020645Z-independent-creative-web",
+      "requested_by": "vercel_studio",
+      "target_team": "independent_creative_web",
+      "requested_at": "2026-07-16T02:06:45Z",
+      "priority": "normal",
+      "reason": "V-001 repertory semantics were clarified; preserve independent identity and avoid importing Mirror Cartographer's deterministic stage grammar unless explicitly justified.",
+      "requested_artifact": "identity-boundary acknowledgment or no-op finding",
+      "status": "pending",
+      "direct_trigger_attempt": "not attempted; repository handoff is the permitted coordination route",
       "execution_claimed": false
     }
   ]
