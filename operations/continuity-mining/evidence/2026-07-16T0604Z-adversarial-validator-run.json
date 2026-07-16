@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "target": "machine enforcement of continuity adversarial phase records",
+  "branch": "preview",
+  "implementation_commits": [
+    "61465ec77761eea481ca5eb57c5454d1bd385e97",
+    "8f8cba0c501b1c12984de0fba8a722aa5f8c048f"
+  ],
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "The documentary protocol alone is sufficient to prevent incomplete adversarial records from acquiring authority.",
+      "challenge_method": [
+        "searched the active protocol for executable enforcement",
+        "constructed counterexamples with missing rollback, partial coverage, and unsafe experiment scope",
+        "compared the protocol requirements with the current M-RECONCILE-002 evidence boundary"
+      ],
+      "findings": [
+        "The protocol defines required fields but does not mechanically reject malformed records.",
+        "A record could claim verified while reporting partial coverage unless a consumer independently notices the contradiction.",
+        "Safe-experiment boundaries were prose-only and therefore vulnerable to omission."
+      ],
+      "repairs": [
+        "implemented a fail-closed CommonJS validator",
+        "required checkpoint, target, attacks, findings, repairs, uncertainty, rollback, evidence quality, strength verdict, and next falsifiable step",
+        "added stricter requirements for verified status and intentional failure experiments"
+      ],
+      "remaining_uncertainty": [
+        "No repository-wide workflow currently invokes this validator automatically.",
+        "The full branch and commit traversal required to resolve M-004, M-005, and M-006 remains incomplete."
+      ],
+      "evidence_quality": "direct inspection of canonical queue and active protocol; implementation retained at immutable commits",
+      "rollback_route": "revert 8f8cba0c501b1c12984de0fba8a722aa5f8c048f then 61465ec77761eea481ca5eb57c5454d1bd385e97 on preview",
+      "design_stronger": true,
+      "strength_reason": "record completeness and claim-boundary contradictions now have a deterministic rejection path",
+      "next_falsifiable_step": "execute the Node test file in an authenticated checkout and retain exact output"
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The validator rejects the highest-risk malformed records without touching protected systems.",
+      "challenge_method": [
+        "created reversible negative controls for missing rollback",
+        "created a partial-coverage verified claim",
+        "created verified status outside the verification checkpoint",
+        "created an unsafe intentional failure scope",
+        "created a safe reversible failure fixture"
+      ],
+      "findings": [
+        "The validator has explicit rejection codes for each negative control.",
+        "The implementation mutates no automation, schedule, canonical shared state, production system, deployment, or user data.",
+        "Static review found no success path that converts partial coverage into verified status."
+      ],
+      "repairs": [
+        "added duplicate guards for both generic verified coverage and explicit partial coverage",
+        "required verified records to include evidence, negative controls, and a bounded claim statement",
+        "restricted intentional failure experiments to reversible fixtures"
+      ],
+      "remaining_uncertainty": [
+        "Tests are committed but were not executed through the connector.",
+        "Existing historical phase records may not yet include the newly required evidence_quality and next_falsifiable_step fields."
+      ],
+      "evidence_quality": "source-level deterministic tests retained; runtime execution not yet evidenced",
+      "rollback_route": "revert 8f8cba0c501b1c12984de0fba8a722aa5f8c048f then 61465ec77761eea481ca5eb57c5454d1bd385e97 on preview",
+      "design_stronger": true,
+      "strength_reason": "the design now distinguishes documentary intent from executable acceptance",
+      "next_falsifiable_step": "run node --test operations/continuity-mining/validateAdversarialPhaseRecord.v1.test.cjs"
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The new artifacts are sufficient to declare continuity provenance resolved.",
+      "challenge_method": [
+        "applied the protocol claim-boundary test",
+        "compared implementation scope against M-RECONCILE-002 acceptance criteria",
+        "attempted to infer M-004, M-005, or M-006 provenance from validator existence"
+      ],
+      "findings": [
+        "The validator proves only adversarial-record structure and selected semantic gates.",
+        "It does not provide exhaustive repository coverage or immutable provenance for M-004, M-005, or M-006.",
+        "Continuity provenance must remain unresolved and coverage-bounded."
+      ],
+      "repairs": [
+        "recorded an explicit non-resolution claim boundary",
+        "retained M-RECONCILE-002 as in progress",
+        "withheld any verified or exhaustive claim"
+      ],
+      "remaining_uncertainty": [
+        "Whether all branches and historical commits are accessible through the current connector.",
+        "Whether originating decision logs or private source objects exist outside repository coverage.",
+        "Whether validator integration should be a test script, CI check, or continuity-specific CLI gate."
+      ],
+      "evidence_quality": "coverage-bounded repository evidence; no exhaustive provenance traversal",
+      "rollback_route": "revert this evidence commit, then the test and validator commits, on preview",
+      "design_stronger": true,
+      "strength_reason": "the system gained enforcement while preserving uncertainty instead of laundering it into resolved history",
+      "next_falsifiable_step": "execute tests, then integrate the validator into the continuity verification command without modifying automations or deployment state"
+    }
+  ],
+  "claim_status_after_review": "coverage_bounded",
+  "canonical_shared_state_modified": false,
+  "automations_modified": false,
+  "deployments_modified": false,
+  "production_modified": false,
+  "irreversible_user_data_modified": false
+}
