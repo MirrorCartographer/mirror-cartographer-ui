@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T02:06:45Z",
+  "evidence_class": "operations_only_repertory_contract_verification",
+  "finding": {
+    "status": "resolved",
+    "previous_drift": "The canonical repertory declared deterministic_hour_slot while prior validation language expected deterministic_modulo.",
+    "current_contract": {
+      "type": "deterministic_hour_slot",
+      "expression": "hour_slots[utc_hour]"
+    },
+    "superseded_contract_rejected": "deterministic_modulo"
+  },
+  "source": {
+    "repertory_path": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+    "repertory_blob_sha": "01da25cda6014d14fd31c70ae69ec1410e0b4a93",
+    "validator_path": "operations/vercel-studio/repertory/verifySelectionRule.v1.cjs",
+    "validator_blob_sha": "6d9809481c276c271da1b1ab72d35f93cd5b09f5"
+  },
+  "verification": {
+    "route": "byte-identical local Node test execution followed by authenticated default-branch source fetch",
+    "command": "node --test verifySelectionRule.v1.test.cjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "canonical deterministic direct hour-slot acceptance",
+      "superseded deterministic_modulo rejection",
+      "duplicate and incomplete hourly coverage rejection",
+      "randomness and continuity-boundary weakening rejection"
+    ]
+  },
+  "production_currently_programmed": {
+    "utc_hour": 2,
+    "edition_id": "quiet-machine-02",
+    "production_id": "quiet-machine",
+    "title": "Quiet Machine",
+    "edition_cue": "low-signal-panel",
+    "claim_boundary": "programmed repertory identity only"
+  },
+  "claims": {
+    "runtime_activation_claimed": false,
+    "deployment_claimed": false,
+    "browser_execution_claimed": false,
+    "audio_playback_claimed": false,
+    "physical_device_verification_claimed": false,
+    "side_effects_performed": false
+  },
+  "safety_boundary": {
+    "audio": "explicit_user_gesture_only",
+    "motion": "honor_prefers_reduced_motion",
+    "mobile": "viewport_safe_and_touch_safe",
+    "accessibility": "keyboard_operable_with_nonvisual_status_equivalent",
+    "privacy": "no_private_source_material",
+    "commerce": "no_payments_or_conversion_logic"
+  },
+  "rollback": "Revert the validator, test, inventory, evidence, and queue-update commits. No application runtime or deployment state is affected."
+}
