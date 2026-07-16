@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-test-inventory-hardening-2026-07-16T0030Z",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:30:00Z",
+  "finding": "The canonical repertory runner auto-discovered all .test.cjs files, but its pre-execution required inventory named only three gates. Removing the inventory self-test, continuity handoff test, or programmed-stage receipt test could therefore contract the suite without the runner's inventory assessor failing before execution.",
+  "change": {
+    "type": "operations_only_reversible_test_harness_hardening",
+    "files": [
+      "operations/vercel-studio/repertory/repertoryTestInventory.v1.cjs",
+      "operations/vercel-studio/repertory/repertoryTestInventory.v1.test.cjs"
+    ],
+    "required_gates": [
+      "assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs",
+      "assessRepertoryActivation.v1.test.cjs",
+      "buildContinuityHandoff.v1.test.cjs",
+      "repertoryTestInventory.v1.test.cjs",
+      "verifyProgrammedStageReceipt.v1.test.cjs",
+      "vercelRepertoryOidcWorkflowContract.v1.test.cjs"
+    ]
+  },
+  "verification": {
+    "method": "byte-equivalent local Node reconstruction of the committed inventory logic",
+    "command": "node --test /tmp/repertory-verify/verify.test.cjs",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "covered": [
+      "exact required inventory",
+      "complete inventory acceptance",
+      "fail-closed removal of each of six critical gates"
+    ],
+    "claim_boundary": "This proves the inventory contract logic under a local reconstruction. It does not prove the full repository repertory suite passes in an authenticated checkout."
+  },
+  "runtime_constraints": {
+    "deployment_attempted": false,
+    "repertory_activated": false,
+    "payments_added": false,
+    "private_source_exposed": false
+  },
+  "rollback": [
+    "Revert commit c2a89fd247ef5abb105a72b6891bef6d8daac13e",
+    "Revert commit d193eaa32feb8680b6bb4ba2a51b480bda3b0ca6"
+  ],
+  "limits": [
+    "No authenticated repository checkout was available for npm run test:vercel-repertory.",
+    "No Vercel deployment or public runtime request was performed.",
+    "This slice prevents silent critical-suite contraction but does not establish deployment, browser, mobile Safari, audio, accessibility, or physical-device behavior."
+  ]
+}
