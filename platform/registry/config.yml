@@ -1,0 +1,42 @@
+version: 0.1
+
+log:
+  level: info
+  formatter: json
+
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    enabled: false
+  cache:
+    blobdescriptor: inmemory
+
+http:
+  addr: 0.0.0.0:5000
+  secret: ${REGISTRY_HTTP_SECRET}
+  headers:
+    X-Content-Type-Options: [nosniff]
+  debug:
+    addr: 0.0.0.0:5001
+    prometheus:
+      enabled: true
+      path: /metrics
+
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+
+auth:
+  htpasswd:
+    realm: Foundation Intelligence Artifact Registry
+    path: /run/secrets/registry_htpasswd
+
+notifications:
+  events:
+    includereferences: true
+
+validation:
+  disabled: false
