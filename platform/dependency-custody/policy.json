@@ -1,0 +1,14 @@
+{
+  "schema": "foundation.dependency-custody.policy.v1",
+  "lockfileVersionMinimum": 3,
+  "requiredIntegrityAlgorithm": "sha512",
+  "allowedResolvedProtocols": ["https:"],
+  "allowedRegistryHosts": ["registry.npmjs.org"],
+  "rejectGitDependencies": true,
+  "rejectLocalDependencies": true,
+  "rejectMissingIntegrity": true,
+  "rejectWeakIntegrity": true,
+  "requireImmutableVault": true,
+  "vaultLayout": "blobs/sha512/<hex>.tgz",
+  "indexSchema": "foundation.dependency-vault.index.v1"
+}
