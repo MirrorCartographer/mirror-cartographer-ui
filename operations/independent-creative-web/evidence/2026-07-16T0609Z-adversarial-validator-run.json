@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "team": "Independent Creative Web Team",
+  "scope": "adversarial review record enforcement",
+  "branch": "preview",
+  "implementation_commit": "4e19edee7c8f82e2375e0ef208dbadcb2d5038e1",
+  "test_commit": "0ec887b22d0c201305f0d483b5609e32c03a095a",
+  "publication_decision": "block",
+  "phases": [
+    {
+      "checkpoint": "pre_publication",
+      "claim_or_design": "The documentary adversarial protocol is sufficient to prevent unsupported publication claims.",
+      "challenge_method": "Construct incomplete and contradictory review records that still appear polished to a human reader.",
+      "evidence": [
+        "operations/independent-creative-web/ADVERSARIAL_REVIEW_PROTOCOL.md",
+        "absence of a machine-enforced record validator before this run"
+      ],
+      "findings": [
+        "The protocol defines correct gates but cannot itself reject malformed records.",
+        "A record could claim publication readiness outside verification or without commit-matched evidence.",
+        "A safe-experiment statement could omit isolation, restoration, or scope boundaries."
+      ],
+      "repairs": [
+        "Designed a fail-closed validator with checkpoint, evidence, rollback, risk, and experiment-safety invariants."
+      ],
+      "remaining_uncertainty": [
+        "No repository command currently requires this validator before publication."
+      ],
+      "rollback_route": "Revert implementation commit 4e19edee7c8f82e2375e0ef208dbadcb2d5038e1 on preview.",
+      "robustness_verdict": "stronger",
+      "evidence_required_before_publication": [
+        "Executed validator tests at the exact candidate commit",
+        "Integration of validation into the publication evidence path"
+      ],
+      "next_falsifiable_step": "Execute the Node test file and retain exact-commit output."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design": "The validator rejects the most dangerous false-positive review records while permitting safe reversible fixture failures.",
+      "challenge_method": "Add deterministic negative controls for wrong checkpoint, missing commit evidence, critical risk, forbidden experiment scope, and unsupported stronger verdict.",
+      "evidence": [
+        "operations/independent-creative-web/validateAdversarialReviewRecord.v1.cjs",
+        "operations/independent-creative-web/validateAdversarialReviewRecord.v1.test.cjs"
+      ],
+      "findings": [
+        "Publication is now structurally limited to verification records.",
+        "Publication requires zero critical risks, commit-matched evidence, and reversed experiments.",
+        "Forbidden infrastructure scopes are rejected while disposable restored fixtures remain permitted."
+      ],
+      "repairs": [
+        "Added fail-closed invariants and seven deterministic test cases."
+      ],
+      "remaining_uncertainty": [
+        "Tests were authored but not executed through the GitHub connector.",
+        "String-enumerated forbidden scopes could miss semantically equivalent novel labels."
+      ],
+      "rollback_route": "Revert test commit 0ec887b22d0c201305f0d483b5609e32c03a095a and implementation commit 4e19edee7c8f82e2375e0ef208dbadcb2d5038e1.",
+      "robustness_verdict": "stronger",
+      "evidence_required_before_publication": [
+        "Passing node:test output",
+        "Review of scope vocabulary or migration to capability-based experiment permissions"
+      ],
+      "next_falsifiable_step": "Run node --test operations/independent-creative-web/validateAdversarialReviewRecord.v1.test.cjs."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design": "This run establishes publication readiness.",
+      "challenge_method": "Separate code existence, test authorship, test execution, deployment identity, and publication readiness into independent claims.",
+      "evidence": [
+        "GitHub commit receipts for implementation and test files"
+      ],
+      "findings": [
+        "Code and tests exist on preview at identified commits.",
+        "No executed test output, preview deployment object, accessibility evidence, performance evidence, or publication artifact was obtained.",
+        "Therefore publication readiness is not established."
+      ],
+      "repairs": [
+        "Blocked publication and bounded the claim to committed implementation plus authored negative controls."
+      ],
+      "remaining_uncertainty": [
+        "Runtime behavior remains unverified.",
+        "No publication-path integration has been proven."
+      ],
+      "rollback_route": "Revert this evidence commit, then 0ec887b22d0c201305f0d483b5609e32c03a095a and 4e19edee7c8f82e2375e0ef208dbadcb2d5038e1 on preview.",
+      "robustness_verdict": "stronger",
+      "evidence_required_before_publication": [
+        "Exact-commit passing test output",
+        "Validator invocation from the publication verification path",
+        "Commit-matched preview and user-facing verification evidence for the actual creative surface"
+      ],
+      "next_falsifiable_step": "Execute tests, then wire the validator into the publication evidence command and prove an incomplete record fails closed."
+    }
+  ]
+}
