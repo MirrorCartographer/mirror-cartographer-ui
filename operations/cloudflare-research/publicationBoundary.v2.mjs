@@ -18,14 +18,18 @@ function normalizedLocator(value) {
   return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
+function resolveVerificationTime(options) {
+  if (Object.hasOwn(options, 'now')) {
+    return options.now instanceof Date ? options.now.getTime() : Number.NaN;
+  }
+  if (Object.hasOwn(options, 'nowMs')) return options.nowMs;
+  return Date.now();
+}
+
 export function assessPublicationPacket(packet, options = {}) {
   const base = assessV1(packet);
   const reasons = [...base.reasons];
-  const nowMs = options.now instanceof Date
-    ? options.now.getTime()
-    : Number.isFinite(options.nowMs)
-      ? options.nowMs
-      : Date.now();
+  const nowMs = resolveVerificationTime(options);
 
   if (!Number.isFinite(nowMs)) reasons.push('verification_time_invalid');
 
