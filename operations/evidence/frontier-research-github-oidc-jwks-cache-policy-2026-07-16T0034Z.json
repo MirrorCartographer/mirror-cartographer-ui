@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-024",
+  "owner": "frontier_research",
+  "recorded_at": "2026-07-16T00:34:00Z",
+  "finding": "A verifier must not treat a previously valid JWKS as indefinitely reusable. Cache freshness must be bounded, an unknown token kid must trigger one synchronous refresh, and stale or non-matching keys must fail closed when refresh cannot produce one unique RSA key.",
+  "source_status": [
+    {
+      "source": "https://docs.github.com/en/actions/concepts/security/openid-connect",
+      "class": "primary_provider_documentation",
+      "supports": "GitHub Actions issues OIDC tokens for workload identity and provider-side validation."
+    },
+    {
+      "source": "https://openid.net/specs/openid-connect-discovery-1_0.html",
+      "class": "primary_standard",
+      "supports": "The provider metadata jwks_uri identifies the JWK Set used to validate signatures."
+    },
+    {
+      "source": "https://www.rfc-editor.org/rfc/rfc9111",
+      "class": "primary_standard",
+      "supports": "HTTP cache freshness is finite and stale responses require explicit handling or successful validation."
+    },
+    {
+      "source": "https://www.rfc-editor.org/rfc/rfc7517",
+      "class": "primary_standard",
+      "supports": "JWK Sets carry keys and kid values used to select among keys during rotation."
+    }
+  ],
+  "artifact": "operations/frontier-research/githubOidcJwksCachePolicy.v1.cjs",
+  "tests": "operations/frontier-research/githubOidcJwksCachePolicy.v1.test.cjs",
+  "verification": {
+    "method": "byte-equivalent local Node test execution",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "coverage": [
+      "fresh bounded cache hit",
+      "unknown kid requires refresh",
+      "rotated key accepted after refresh",
+      "unknown kid outage rejection",
+      "stale cache outage rejection",
+      "hard maximum age enforcement",
+      "duplicate refreshed kid rejection"
+    ]
+  },
+  "evidence_strength": "implemented_contract_with_local_deterministic_test_evidence",
+  "uncertainty": [
+    "No live GitHub JWKS response headers were retained in this run.",
+    "The one-hour hard maximum is a conservative project policy, not a GitHub guarantee.",
+    "The artifact selects an eligible JWKS but does not perform network retrieval, TLS validation, JWT signature verification, replay prevention, or workflow authorization."
+  ],
+  "falsification_route": [
+    "Retain live discovery and JWKS response headers from token.actions.githubusercontent.com.",
+    "Exercise a controlled key-rotation fixture where a new kid appears after the cache was populated.",
+    "Demonstrate that any stale-key fallback can accept a token that the refreshed key set rejects; such a result confirms fail-closed outage behavior is required.",
+    "Run the committed Node test file in an authenticated repository checkout and retain exact output."
+  ]
+}
