@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "review_id": "CF-004-canonical-gate-drift-2026-07-16T1311Z",
+  "target": {
+    "repository": "MirrorCartographer/mirror-cartographer-ui",
+    "branch": "main",
+    "implementation_commit": "ef8f8959e890f558679b54418f8003295a931b7d",
+    "test_commit": "47820c63ef95d761be00de3ec847271891480039"
+  },
+  "protected_systems_changed": [],
+  "checkpoints": [
+    {
+      "checkpoint": "before_architectural_commitment",
+      "claim_or_design_tested": "The canonical Cloudflare research runner remains mandatory because package.json currently invokes it from test:local-gate and test:pages-preview.",
+      "challenge_method": "Compared the runner's executable assertions with the package scripts and constructed a counterfactual package edit that removes the Cloudflare step from a canonical gate while preserving the test:cloudflare-research alias.",
+      "evidence": [
+        "operations/cloudflare-research/runCloudflareResearchTests.v1.mjs at pre-change blob 01ec3e4d3b91c2d2e27fa04a84b50fd703ef1da3",
+        "package.json blob f09312db2e28a4b03935c941474f041924c80088"
+      ],
+      "failures_or_counterexamples_found": [
+        "The runner validated only its direct package alias and required test files.",
+        "Removing the Cloudflare step from test:local-gate or test:pages-preview would not be detected by the runner itself.",
+        "A substring-only repair could be bypassed by echoing or embedding the command without executing it fail-closed."
+      ],
+      "repairs_made": [
+        "Selected an additive package-binding validator that requires the Cloudflare npm step exactly once as a discrete &&-delimited command in both canonical gates."
+      ],
+      "remaining_uncertainty": [
+        "Other publication or deployment entrypoints may exist outside the two currently designated package gates.",
+        "Shell semantics more complex than the repository's current && command chains are intentionally unsupported and fail closed."
+      ],
+      "rollback_route": "Revert implementation commit ef8f8959e890f558679b54418f8003295a931b7d.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Use disposable package fixtures to prove removal, duplication, and non-executing textual inclusion are rejected."
+    },
+    {
+      "checkpoint": "immediately_after_implementation",
+      "claim_or_design_tested": "The new binding check detects canonical-gate drift without recursion, destructive repository changes, or false acceptance of echoed commands.",
+      "challenge_method": "Added in-memory fixtures for missing local-gate binding, missing pages-preview binding, echoed command text, duplicate command steps, malformed scripts metadata, and a valid control.",
+      "evidence": [
+        "implementation commit ef8f8959e890f558679b54418f8003295a931b7d",
+        "test commit 47820c63ef95d761be00de3ec847271891480039",
+        "test blob 57a5cd3b94deef9ffd41af230efb50e14129aab8"
+      ],
+      "failures_or_counterexamples_found": [
+        "The pre-change design accepted canonical-gate removal by omission.",
+        "A naive substring design would accept 'echo npm run test:cloudflare-research'.",
+        "Duplicate invocation could obscure gate structure and inflate apparent enforcement."
+      ],
+      "repairs_made": [
+        "Exported validatePackageBindings for pure fixture testing.",
+        "Added exact discrete-step cardinality checks for both required gates.",
+        "Added explicit spawn startup-error handling.",
+        "Added the runner contract test to the runner's required-test inventory."
+      ],
+      "remaining_uncertainty": [
+        "The tests are committed but were not executed in an authenticated checkout during this connector-only run.",
+        "The runner still proves source-level gate composition, not that a deployment workflow actually invoked the gate."
+      ],
+      "rollback_route": "Revert test commit 47820c63ef95d761be00de3ec847271891480039, then implementation commit ef8f8959e890f558679b54418f8003295a931b7d.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Execute npm run test:cloudflare-research at exact commit 47820c63ef95d761be00de3ec847271891480039 and retain stdout, stderr, exit code, and Node version."
+    },
+    {
+      "checkpoint": "verification_before_success",
+      "claim_or_design_tested": "The committed artifact is present at the stated commit and is sufficient to declare operational Cloudflare publication enforcement.",
+      "challenge_method": "Re-fetched the implementation and test files by exact commit and separated source identity from runtime, workflow, provider, deployment, and rollback evidence.",
+      "evidence": [
+        "implementation blob d446a8124278596a4652104b37a59f78d9038203 fetched at commit 47820c63ef95d761be00de3ec847271891480039",
+        "test blob 57a5cd3b94deef9ffd41af230efb50e14129aab8 fetched at commit 47820c63ef95d761be00de3ec847271891480039"
+      ],
+      "failures_or_counterexamples_found": [
+        "No retained exact-commit test execution exists.",
+        "No GitHub Actions run proves canonical invocation.",
+        "No authenticated Cloudflare deployment identity, branch mapping, quota state, cancellation state, immutable URL, DNS mapping, or executed rollback evidence exists."
+      ],
+      "repairs_made": [
+        "Classified the result as source-contract hardening only.",
+        "Kept deployment and publication status fail-closed."
+      ],
+      "remaining_uncertainty": [
+        "Direct workflow or provider commands may bypass package gates.",
+        "Vercel, GitHub Pages, and Cloudflare provider authority remains unresolved.",
+        "Queued, canceled, skipped, superseded, rate-limited, stale, or commit-mismatched deployment states have not been observed for an authenticated Cloudflare project."
+      ],
+      "rollback_route": "Revert this evidence commit, then 47820c63ef95d761be00de3ec847271891480039, then ef8f8959e890f558679b54418f8003295a931b7d.",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Run the exact-commit suite, then inspect every workflow and deploy script for a path that can publish without first executing test:cloudflare-research."
+    }
+  ],
+  "strongest_surviving_cloudflare_design": "Cloudflare remains non-authoritative and publication remains blocked. The canonical source gates now fail closed if the Cloudflare contract step is removed, duplicated, or represented only as non-executing text. Promotion requires exact-commit runtime evidence plus authenticated provider identity and a reconciled single-publisher authority model.",
+  "rejected_alternatives": [
+    "Trusting current package.json composition without executable drift detection.",
+    "Using substring matching for command presence.",
+    "Treating committed tests as executed verification.",
+    "Triggering a deployment to discover configuration or authority.",
+    "Inferring Cloudflare authority from research-team ownership."
+  ],
+  "unresolved_risks": [
+    "Canonical gate invocation is not proven in CI.",
+    "Direct publication paths may bypass package scripts.",
+    "Provider authority and rollback semantics remain unreconciled.",
+    "No authenticated Cloudflare deployment evidence exists."
+  ],
+  "deployment_evidence_status": "absent_non_success",
+  "publication_or_promotion_decision": "blocked",
+  "created_at": "2026-07-16T13:11:06Z"
+}
