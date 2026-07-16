@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { basename, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const args = new Map(process.argv.slice(2).map((v, i, a) => v.startsWith('--') ? [v, a[i + 1] && !a[i + 1].startsWith('--') ? a[i + 1] : true] : [String(i), v]));
-const root = resolve(args.get('--root') || process.cwd());
-const input = resolve(root, args.get('--input') || 'dist');
-const outRoot = resolve(root, args.get('--out') || '.fia');
-const sourceDateEpoch = String(process.env.SOURCE_DATE_EPOCH || args.get('--source-date-epoch') || '0');
-const skipCompile = args.has('--skip-compile');
-const allowUnlocked = args.has('--allow-unlocked');
+const argv = process.argv.slice(2);
+const has = (name) => argv.includes(name);
+const value = (name, fallback) => { const index = argv.indexOf(name); return index >= 0 && argv[index + 1] && !argv[index + 1].startsWith('--') ? argv[index + 1] : fallback; };
+const root = resolve(value('--root', process.cwd()));
+const input = resolve(root, value('--input', 'dist'));
+const outRoot = resolve(root, value('--out', '.fia'));
+const sourceDateEpoch = String(process.env.SOURCE_DATE_EPOCH || value('--source-date-epoch', '0'));
+const skipCompile = has('--skip-compile');
+const allowUnlocked = has('--allow-unlocked');
 
 const sha256 = (data) => createHash('sha256').update(data).digest('hex');
-const canonical = (value) => `${JSON.stringify(value, Object.keys(value).sort(), 2)}\n`;
+const sortDeep = (value) => Array.isArray(value)
+  ? value.map(sortDeep)
+  : value && typeof value === 'object'
+    ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, sortDeep(value[key])]))
+    : value;
+const canonical = (data) => `${JSON.stringify(sortDeep(data), null, 2)}\n`;
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -43,7 +50,7 @@ function run(command, commandArgs, log) {
 }
 
 async function main() {
-  const started = new Date(Number(sourceDateEpoch) * 1000).toISOString();
+  const normalizedTime = new Date(Number(sourceDateEpoch) * 1000).toISOString();
   const logs = [];
   const dependency = await dependencyState();
   await rm(outRoot, { recursive: true, force: true });
@@ -51,16 +58,16 @@ async function main() {
   if (!skipCompile) run('npm', ['run', 'build'], logs);
   if (!await exists(input)) throw new Error(`Build input does not exist: ${input}`);
 
-  const sourceFiles = await walk(input);
   const files = [];
-  for (const file of sourceFiles) {
+  for (const file of await walk(input)) {
     const path = relative(input, file).split('\\').join('/');
     const bytes = await readFile(file);
     files.push({ path, bytes: bytes.length, sha256: sha256(bytes) });
   }
   files.sort((a, b) => a.path.localeCompare(b.path));
+  if (!files.length) throw new Error(`Build input is empty: ${input}`);
 
-  const identity = sha256(Buffer.from(files.map((f) => `${f.sha256}  ${f.path}\n`).join('')));
+  const identity = sha256(Buffer.from(files.map((file) => `${file.sha256}  ${file.path}\n`).join('')));
   const artifactDir = join(outRoot, 'artifacts', identity);
   const payloadDir = join(artifactDir, 'payload');
   await mkdir(payloadDir, { recursive: true });
@@ -68,31 +75,21 @@ async function main() {
 
   const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
   const manifest = {
-    schema: 'fia.artifact-manifest.v1',
-    artifactId: `sha256:${identity}`,
-    project: pkg.name,
-    version: pkg.version,
-    sourceDateEpoch,
-    reproducible: dependency.locked,
-    input: basename(input),
-    files,
+    schema: 'fia.artifact-manifest.v1', artifactId: `sha256:${identity}`, project: pkg.name,
+    version: pkg.version, sourceDateEpoch, reproducible: dependency.locked, input: basename(input), files,
   };
   const sbom = {
-    bomFormat: 'CycloneDX',
-    specVersion: '1.5',
+    bomFormat: 'CycloneDX', specVersion: '1.5',
     serialNumber: `urn:uuid:${identity.slice(0,8)}-${identity.slice(8,12)}-${identity.slice(12,16)}-${identity.slice(16,20)}-${identity.slice(20,32)}`,
-    version: 1,
-    metadata: { component: { type: 'application', name: pkg.name, version: pkg.version } },
-    components: Object.entries({ ...pkg.dependencies, ...pkg.devDependencies }).sort(([a],[b]) => a.localeCompare(b)).map(([name, version]) => ({ type: 'library', name, version }))
+    version: 1, metadata: { component: { type: 'application', name: pkg.name, version: pkg.version } },
+    components: Object.entries({ ...pkg.dependencies, ...pkg.devDependencies })
+      .sort(([a], [b]) => a.localeCompare(b)).map(([name, version]) => ({ type: 'library', name, version })),
   };
   const provenance = {
-    schema: 'fia.provenance.v1',
-    artifactId: manifest.artifactId,
+    schema: 'fia.provenance.v1', artifactId: manifest.artifactId,
     builder: { id: 'foundation-intelligence-build-engine', version: '1' },
-    invocation: { sourceDateEpoch, skipCompile, allowUnlocked },
-    materials: dependency.lockfiles,
-    started,
-    finished: started,
+    invocation: { sourceDateEpoch, skipCompile, allowUnlocked }, materials: dependency.lockfiles,
+    started: normalizedTime, finished: normalizedTime,
   };
   const rollback = { schema: 'fia.rollback.v1', artifactId: manifest.artifactId, activate: `artifacts/${identity}/payload`, previous: null };
 
