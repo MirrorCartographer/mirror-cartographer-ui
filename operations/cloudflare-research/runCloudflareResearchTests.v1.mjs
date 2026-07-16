@@ -9,7 +9,9 @@ const CANONICAL_NPM_STEP = 'npm run test:cloudflare-research';
 
 export const REQUIRED_TESTS = Object.freeze([
   'operations/cloudflare-research/publicationBoundary.v1.test.mjs',
+  'operations/cloudflare-research/publicationBoundary.v2.test.mjs',
   'operations/cloudflare-research/publicationEnforcement.v1.test.mjs',
+  'operations/cloudflare-research/publicationEnforcement.v2.test.mjs',
   'operations/cloudflare-research/runCloudflareResearchTests.v1.test.mjs'
 ]);
 
