@@ -1,7 +1,13 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source_branch": "preview",
   "target_branch": "main",
+  "expected_deployment_identity": {
+    "github_repo_id": 1003910384,
+    "github_repository": "MirrorCartographer/mirror-cartographer-ui",
+    "vercel_project_name": "mirror-cartographer-ui",
+    "vercel_project_id": null
+  },
   "required_checks": [
     "build",
     "smoke",
@@ -19,6 +25,6 @@
     "rollback_route_recorded": true,
     "evidence_commit_matches_preview": true
   },
-  "deployment_states": ["queued", "building", "ready", "failed", "canceled", "skipped", "superseded"],
-  "rule": "Canceled, skipped, or superseded deployments are never counted as successful verification."
+  "deployment_states": ["queued", "building", "ready", "failed", "canceled", "skipped", "superseded", "rate_limited", "stale"],
+  "rule": "Queued, canceled, skipped, superseded, rate-limited, stale, commit-mismatched, repository-mismatched, or project-mismatched deployments are never counted as successful verification."
 }
