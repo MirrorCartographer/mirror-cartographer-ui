@@ -15,9 +15,13 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y ca-certificates curl git gnupg ufw fail2ban unattended-upgrades
 install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
 chmod a+r /etc/apt/keyrings/docker.gpg
 . /etc/os-release
+if [[ ${ID:-} != ubuntu ]]; then
+  echo "Unsupported distribution: ${ID:-unknown}; this bootstrap currently requires Ubuntu." >&2
+  exit 1
+fi
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${VERSION_CODENAME} stable" > /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -28,9 +32,10 @@ ufw default allow outgoing
 ufw allow OpenSSH
 ufw allow 80/tcp
 ufw allow 443/tcp
+ufw allow 443/udp
 ufw --force enable
 
-mkdir -p "$FOUNDATION_ROOT" /var/lib/foundation/releases /var/lib/foundation/backups
+mkdir -p "$FOUNDATION_ROOT" /var/lib/foundation/releases /var/lib/foundation/backups /srv/foundation/data/caddy /srv/foundation/data/caddy-config
 if [[ ! -d "$FOUNDATION_ROOT/repository/.git" ]]; then
   git clone --branch "$FOUNDATION_REF" "$FOUNDATION_REPOSITORY" "$FOUNDATION_ROOT/repository"
 else
@@ -43,6 +48,7 @@ cat > "$FOUNDATION_ROOT/.env" <<EOF
 FOUNDATION_DOMAIN=$FOUNDATION_DOMAIN
 FOUNDATION_REF=$FOUNDATION_REF
 EOF
+chmod 0600 "$FOUNDATION_ROOT/.env"
 
 cp "$FOUNDATION_ROOT/repository/platform/host/compose.production.yaml" "$FOUNDATION_ROOT/compose.yaml"
 cp "$FOUNDATION_ROOT/repository/platform/host/Caddyfile.edge" "$FOUNDATION_ROOT/Caddyfile"
@@ -56,20 +62,31 @@ git -C "$ROOT/repository" fetch origin "$FOUNDATION_REF"
 git -C "$ROOT/repository" checkout "$FOUNDATION_REF"
 git -C "$ROOT/repository" reset --hard "origin/$FOUNDATION_REF"
 COMMIT=$(git -C "$ROOT/repository" rev-parse HEAD)
-mkdir -p "/var/lib/foundation/releases/$COMMIT"
-cp -a "$ROOT/repository/." "/var/lib/foundation/releases/$COMMIT/source"
-ln -sfn "/var/lib/foundation/releases/$COMMIT" /var/lib/foundation/current
+IMAGE="foundation-ui:$COMMIT"
+RELEASE="/var/lib/foundation/releases/$COMMIT"
+mkdir -p "$RELEASE"
+rm -rf "$RELEASE/source"
+cp -a "$ROOT/repository/." "$RELEASE/source"
+printf '%s\n' "$IMAGE" > "$RELEASE/image"
+cp "$ROOT/repository/platform/host/compose.production.yaml" "$ROOT/compose.yaml"
+cp "$ROOT/repository/platform/host/Caddyfile.edge" "$ROOT/Caddyfile"
 cd "$ROOT"
-FOUNDATION_DOMAIN="$FOUNDATION_DOMAIN" FOUNDATION_COMMIT="$COMMIT" docker compose build --pull
-FOUNDATION_DOMAIN="$FOUNDATION_DOMAIN" FOUNDATION_COMMIT="$COMMIT" docker compose up -d --remove-orphans
-for _ in $(seq 1 30); do
+export FOUNDATION_DOMAIN FOUNDATION_COMMIT="$COMMIT" FOUNDATION_IMAGE="$IMAGE"
+docker compose config --quiet
+docker compose build --pull app
+docker image inspect "$IMAGE" --format '{{.Id}}' > "$RELEASE/image-id"
+docker compose up -d --remove-orphans
+for _ in $(seq 1 60); do
   if curl -fsS --max-time 5 "https://$FOUNDATION_DOMAIN/healthz" >/dev/null; then
+    ln -sfn "$RELEASE" /var/lib/foundation/current
     printf '%s\n' "$COMMIT" > /var/lib/foundation/current-commit
+    printf '%s\n' "$IMAGE" > /var/lib/foundation/current-image
     exit 0
   fi
   sleep 2
 done
-echo "Health verification failed" >&2
+echo "Health verification failed; release was not promoted" >&2
+docker compose ps >&2 || true
 exit 1
 EOF
 chmod 0755 "$FOUNDATION_ROOT/deploy.sh"
@@ -84,6 +101,7 @@ Wants=network-online.target
 Type=oneshot
 EnvironmentFile=/opt/foundation/.env
 ExecStart=/opt/foundation/deploy.sh
+TimeoutStartSec=30min
 RemainAfterExit=yes
 
 [Install]
@@ -93,10 +111,11 @@ EOF
 cat > /etc/systemd/system/foundation-backup.service <<'EOF'
 [Unit]
 Description=Foundation Intelligence backup
+RequiresMountsFor=/srv/foundation/data
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -lc 'set -euo pipefail; stamp=$(date -u +%%Y%%m%%dT%%H%%M%%SZ); tar -C /var/lib -czf /var/lib/foundation/backups/foundation-$stamp.tar.gz foundation/current foundation/current-commit 2>/dev/null || true; find /var/lib/foundation/backups -type f -mtime +14 -delete'
+ExecStart=/bin/bash -lc 'set -euo pipefail; stamp=$(date -u +%%Y%%m%%dT%%H%%M%%SZ); tmp=$(mktemp /var/lib/foundation/backups/.foundation-${stamp}.XXXXXX); tar -C / -czf "$tmp" var/lib/foundation/current-commit var/lib/foundation/current-image srv/foundation/data; mv "$tmp" "/var/lib/foundation/backups/foundation-${stamp}.tar.gz"; find /var/lib/foundation/backups -type f -name "foundation-*.tar.gz" -mtime +14 -delete'
 EOF
 
 cat > /etc/systemd/system/foundation-backup.timer <<'EOF'
