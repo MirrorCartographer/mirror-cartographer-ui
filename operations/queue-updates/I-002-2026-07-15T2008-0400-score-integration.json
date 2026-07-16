@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "I-002",
+  "owner": "independent_creative_web",
+  "priority": "highest_available",
+  "state": "in_progress_score_integrated_verification_pending",
+  "objective": "Advance The Fourth Room as a self-contained authored web place whose deterministic score coordinates narrative, space, threshold, and optional sound without becoming a product or Mirror Cartographer surface.",
+  "selection_basis": "ACTIVE_QUEUE.json contains no canonical independent_creative_web item. The latest additive I-002 record is therefore the highest-priority owned work and names score integration as its safe next action.",
+  "completed_slices": [
+    "Integrated scoreVisit into the production HTML as a local ES module.",
+    "Bound line, door label, count label, room mode, field geometry, and audio parameters to one deterministic visit score.",
+    "Preserved explicit audio activation and close-on-disable behavior.",
+    "Preserved session-only visit memory and reset semantics.",
+    "Preserved a requestAnimationFrame-free reduced-motion path.",
+    "Extended the browser harness to serve the local module and assert deterministic modes, scored audio, mobile control reachability, and local-only network requests.",
+    "Refetched the committed integration from its exact creating commit and retained an additive evidence boundary."
+  ],
+  "acceptance_remaining": [
+    "Run node --test independent/fourth-room/room-score.test.mjs and retain exact output.",
+    "Run the Playwright harness in Chromium and WebKit and retain exact output or traces.",
+    "Inspect the accessibility tree and representative mobile performance behavior.",
+    "Publish only to an isolated independent preview after hosting identity and rollback are verified."
+  ],
+  "artifact_paths": [
+    "independent/fourth-room/index.html",
+    "independent/fourth-room/browser.spec.js",
+    "operations/evidence/I-002-fourth-room-score-integration-2026-07-15T2008-0400.json"
+  ],
+  "artifact_commits": [
+    "9e14f84902fefa4c31d320357a20a9564e35ba3d",
+    "af209a95e818022a2540957e9a6f609e14b90108",
+    "db736ee58b8b857c32fa9d47a17e608152ceb3b1"
+  ],
+  "rollback": "Revert af209a95e818022a2540957e9a6f609e14b90108, then 9e14f84902fefa4c31d320357a20a9564e35ba3d. No persistent data migration is required.",
+  "safe_next_action": "Execute the deterministic Node suite and the Playwright harness in Chromium and WebKit; retain evidence and do not publish a preview unless all safety and interaction assertions pass."
+}
