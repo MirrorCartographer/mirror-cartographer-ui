@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "purpose": "Require explicit, durable adversarial review before recovered knowledge is committed, immediately after implementation, and during verification.",
+  "safety_boundary": {
+    "allowed": [
+      "read-only repository inspection",
+      "disposable in-memory fixtures",
+      "preview-only or test-only configuration",
+      "reversible additive records",
+      "intentional negative controls that cannot affect production or shared state"
+    ],
+    "prohibited": [
+      "destabilizing automations or schedules",
+      "mutating production deployments or DNS",
+      "credential experiments",
+      "destructive shared-state tests",
+      "irreversible user-data changes",
+      "representing committed source as executed runtime evidence"
+    ]
+  },
+  "required_checkpoints": [
+    {
+      "checkpoint": "before_knowledge_commit",
+      "timing": "After candidate recovery and before canonical or durable knowledge commitment.",
+      "required_challenges": [
+        "contradictory evidence",
+        "architecture drift",
+        "hidden assumptions",
+        "weak or mutable evidence",
+        "duplicate or superseded knowledge",
+        "privacy-boundary violations",
+        "edge cases and counterexamples",
+        "rollback feasibility"
+      ]
+    },
+    {
+      "checkpoint": "post_implementation",
+      "timing": "Immediately after producing an implementation or durable artifact and before treating it as adopted.",
+      "required_challenges": [
+        "schema and consumer compatibility",
+        "duplicate enforcement",
+        "misuse and false-closure paths",
+        "silent omission semantics",
+        "rollback failure",
+        "counterexamples that satisfy syntax while violating intent"
+      ]
+    },
+    {
+      "checkpoint": "verification",
+      "timing": "During verification and before declaring canonicalization, publication, or success.",
+      "required_challenges": [
+        "commit mismatch",
+        "stale evidence",
+        "unexecuted tests represented as passing",
+        "branch or artifact mismatch",
+        "non-reproducible evidence",
+        "remaining uncertainty inconsistent with success"
+      ]
+    }
+  ],
+  "required_record_fields": [
+    "checkpoint",
+    "claim_or_design_tested",
+    "challenge_method",
+    "evidence",
+    "failures_or_counterexamples_found",
+    "repairs_made",
+    "remaining_uncertainty",
+    "robustness_increased",
+    "evidence_quality",
+    "rollback_route",
+    "next_falsifiable_step"
+  ],
+  "decision_rules": {
+    "missing_checkpoint": "block",
+    "missing_required_field": "block",
+    "material_unresolved_contradiction": "block",
+    "weak_or_non_commit_matched_evidence": "cannot_verify_success",
+    "safe_negative_control_failure": "repair_or_document_before_adoption",
+    "rollback_route_unavailable": "block_irreversible_adoption"
+  },
+  "adoption_boundary": "This protocol is an additive governance artifact. It does not by itself prove that every Continuity Mining entrypoint invokes it, that any test has executed, or that recovered knowledge is canonical.",
+  "rollback_route": "Revert the commit that introduced this file. No production, deployment, automation, schedule, credential, DNS, or shared-state rollback is required.",
+  "next_falsifiable_step": "Create a disposable three-checkpoint record with one omitted required field and prove the intended validator or canonical review path rejects it fail-closed."
+}
