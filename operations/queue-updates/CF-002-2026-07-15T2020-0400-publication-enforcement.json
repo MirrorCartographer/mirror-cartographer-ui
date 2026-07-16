@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "queue_item": "CF-002",
+  "owner": "cloudflare_research",
+  "priority": "highest_available_handoff",
+  "state": "completed_handoff_ready",
+  "objective": "Prevent rejected research packets from producing static assets or Worker responses, and make mandatory Worker security headers authoritative.",
+  "selected_from": {
+    "canonical_queue_match": false,
+    "handoff": "CF-001 next action: wire assessPublicationPacket into the Cloudflare build path and prove rejected packets cannot produce public output."
+  },
+  "completed_slices": [
+    "Added a fail-closed static-asset authorization adapter that does not invoke renderers for rejected packets.",
+    "Added a fail-closed Worker-response authorization adapter returning a non-disclosing 404 for rejected packets.",
+    "Added mandatory no-store, noindex, CSP, referrer-policy, and nosniff runtime headers for Worker responses.",
+    "Corrected an adversarially discovered merge-order defect so renderer headers cannot weaken mandatory security headers.",
+    "Verified five deterministic Node contract tests with zero failures."
+  ],
+  "acceptance_remaining": [
+    "Wire authorizeStaticAsset into the real Cloudflare research build path before file creation.",
+    "Wire authorizeWorkerResponse into every Worker-generated research response.",
+    "Run the retained tests in an authenticated checkout and preserve exact output.",
+    "Deploy only when an approved Cloudflare target and exact-commit evidence route are available, then retain live request and header proof."
+  ],
+  "safe_next_action": "Integrate the adapters at the actual static-build and Worker entrypoints, add a repository test that fails if either path bypasses publicationEnforcement.v1, and retain exact-commit execution evidence without publishing diagnosis or treatment claims."
+}
