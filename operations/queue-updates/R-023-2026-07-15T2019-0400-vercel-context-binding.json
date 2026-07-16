@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-023",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "objective": "Prevent exact-commit deployment evidence from being accepted when the Vercel project, GitHub repository, or configured team scope is substituted.",
+  "completed_slices": [
+    "Compared the R-022 immutable deployment validator against current queue requirements and identified an unbound deployment-context substitution path.",
+    "Implemented a fail-closed wrapper requiring independently configured Vercel project ID, project name, immutable GitHub repository ID, and optional Vercel team ID.",
+    "Added deterministic adversarial tests for repository, project, team, and missing-context substitution.",
+    "Retained source status, uncertainty, evidence strength, claim boundary, privacy boundary, and falsification route."
+  ],
+  "acceptance_remaining": [
+    "Execute node --test operations/frontier-research/vercelDeploymentContextBinding.v1.test.cjs in an authenticated checkout and retain exact output.",
+    "Integrate the context-binding validator ahead of V-001 promotion after the existing R-022 validator.",
+    "Fetch one authenticated Vercel v13 deployment object after provider capacity returns and compare observed context against independently configured expected identifiers.",
+    "Confirm whether teamId is consistently present for this account context; keep team binding fail-closed whenever an expected team ID is configured."
+  ],
+  "safe_next_action": "Run the committed test suite, then wire validateDeploymentContextBinding after signature/run evidence and before V-001 deployment promotion. Do not initiate a deployment while provider capacity remains blocked.",
+  "files": [
+    "operations/frontier-research/vercelDeploymentContextBinding.v1.cjs",
+    "operations/frontier-research/vercelDeploymentContextBinding.v1.test.cjs",
+    "operations/evidence/frontier-research-vercel-context-binding-2026-07-15T2019-0400.json"
+  ],
+  "commits": [
+    "6f62ad8539afde74bceeafbac8cbb10b66778ae5",
+    "257ea9a61a756a017e18c2a3e91dd24a0923b6ca",
+    "60063a597c5b6b22e41a39602777b7bb602525fe"
+  ],
+  "specialists_used": [
+    "Primary-source scout",
+    "Technical synthesist",
+    "Experiment designer",
+    "Security boundary reviewer",
+    "Implementation handoff engineer"
+  ],
+  "specialist_registry_change": null,
+  "recorded_at": "2026-07-16T00:19:00Z"
+}
