@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "cycle_id": "CM-2026-07-16-08",
+  "target": "continuity evidence-bound closure enforcement",
+  "publication_decision": "blocked",
+  "checkpoints": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Explicit RESOLVED or REJECTED prose is sufficient to close an uncertainty.",
+      "challenge_method": [
+        "Construct a counterexample with syntactically valid closure prose but no retained evidence object.",
+        "Inspect v4 transition and phase evidence contracts for composition drift and duplicate enforcement."
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v4.cjs",
+        "operations/continuity-mining/validateAdversarialPhaseRecord.v4.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v4.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "v4 accepts closure text without requiring a locator that resolves to evidence_inspected in the next phase.",
+        "A well-formed closure statement can therefore imply factual resolution without inspectable support."
+      ],
+      "repairs_made": [
+        "Selected an additive v5 wrapper that binds repaired and rejected dispositions to next-phase evidence by locator.",
+        "Reused the phase v4 evidence validator rather than duplicating its structural rules."
+      ],
+      "remaining_uncertainty": [
+        "Canonical Continuity Mining invocation of v5 is unproven.",
+        "Runtime test passage is unproven."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Direct immutable repository-file inspection; counterexample is deterministic and disposable.",
+      "rollback_route": "Revert the v5 source hardening commit on preview.",
+      "next_falsifiable_step": "Attempt closure using a malformed evidence object with a matching locator and claim."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "Locator and claim matching alone prevent unsupported closure.",
+      "challenge_method": [
+        "Construct a referenced evidence object missing type, timestamp, strength, and immutability.",
+        "Probe claim substitution and lead-only evidence paths."
+      ],
+      "evidence": [
+        "operations/continuity-mining/validateAdversarialCycle.v5.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v5.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "The initial v5 implementation matched locator and claim but did not call validateEvidenceItem; malformed evidence could still support closure."
+      ],
+      "repairs_made": [
+        "Composed validateEvidenceItem from phase validator v4 into closure validation.",
+        "Retained explicit rejection of lead-only evidence and mismatched claims."
+      ],
+      "remaining_uncertainty": [
+        "The existing v5 suite does not yet contain a dedicated malformed-evidence negative control.",
+        "Evidence truth is not established merely by structural validity."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Direct source comparison and safe fixture reasoning; runtime output absent.",
+      "rollback_route": "Revert commit 393285cb25d06a15d3db23b919aba0d6c8053542.",
+      "next_falsifiable_step": "Add and execute a malformed-evidence negative control at the exact preview head."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The implemented source contract is sufficient to declare Continuity Mining closure enforcement successful.",
+      "challenge_method": [
+        "Re-read the exact preview files after mutation.",
+        "Separate committed source evidence from executed runtime evidence and canonical integration evidence."
+      ],
+      "evidence": [
+        "commit:393285cb25d06a15d3db23b919aba0d6c8053542",
+        "operations/continuity-mining/validateAdversarialCycle.v5.cjs",
+        "operations/continuity-mining/validateAdversarialCycle.v5.test.cjs"
+      ],
+      "failures_or_counterexamples_found": [
+        "No retained Node test output exists for the exact preview commit.",
+        "No canonical command is proven to invoke v5 fail-closed.",
+        "The malformed-evidence branch is implemented but not yet covered by a committed dedicated test."
+      ],
+      "repairs_made": [
+        "Success and publication remain blocked.",
+        "The claim boundary is limited to source-level hardening."
+      ],
+      "remaining_uncertainty": [
+        "Runtime compatibility with existing v5 producers and consumers.",
+        "Canonical invocation and fail-closed behavior.",
+        "Factual adequacy of structurally valid closure evidence."
+      ],
+      "robustness_increased": true,
+      "evidence_quality": "Commit-matched source evidence; no executed test or canonical-path evidence.",
+      "rollback_route": "Revert the evidence commit, then revert 393285cb25d06a15d3db23b919aba0d6c8053542.",
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialCycle.v5.test.cjs at the exact preview head, retain stdout, stderr, exit code, runtime version, and SHA, then add the malformed-evidence fixture and prove rejection."
+    }
+  ],
+  "strongest_surviving_design": "A repaired or rejected uncertainty may close only when its disposition references a structurally valid, retained next-phase evidence object whose supported claim matches the exact uncertainty and whose strength is not lead-only.",
+  "rejected_alternatives": [
+    "Accept explicit closure prose without an evidence locator.",
+    "Accept locator and claim matching without validating the evidence object.",
+    "Duplicate the phase evidence schema inside the cycle validator.",
+    "Claim runtime success from committed source and fixtures."
+  ],
+  "unresolved_risks": [
+    "Canonical invocation remains unproven.",
+    "Runtime tests are unexecuted.",
+    "Structurally valid evidence can still be factually weak or misleading.",
+    "v4 and earlier consumers have not been exhaustively inventoried."
+  ],
+  "next_falsifiable_step": "Execute the exact v5 suite, add a malformed-evidence negative control, and prove the canonical continuity path rejects it fail-closed."
+}
