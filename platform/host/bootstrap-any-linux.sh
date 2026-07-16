@@ -61,8 +61,17 @@ set -euo pipefail
 ROOT=/opt/foundation
 STATE=/var/lib/foundation
 EVIDENCE="$STATE/deployment-evidence"
+LOCK=/run/lock/foundation-deploy.lock
 source "$ROOT/.env"
-mkdir -p "$EVIDENCE"
+mkdir -p "$EVIDENCE" "$(dirname "$LOCK")"
+
+# All deployment triggers share one non-blocking lock. Concurrent or duplicate
+# triggers fail closed before mutating repository, containers, or release state.
+exec 9>"$LOCK"
+if ! flock -n 9; then
+  echo "A Foundation deployment is already in progress; refusing concurrent mutation." >&2
+  exit 75
+fi
 
 health_ok() {
   curl -fsS --max-time 5 "https://$FOUNDATION_DOMAIN/healthz" >/dev/null
@@ -161,7 +170,9 @@ Type=oneshot
 EnvironmentFile=/opt/foundation/.env
 ExecStart=/opt/foundation/deploy.sh
 TimeoutStartSec=30min
-RemainAfterExit=yes
+# Do not retain an active state after completion: every explicit start must
+# execute a fresh deployment attempt and pass through the script-level lock.
+RemainAfterExit=no
 
 [Install]
 WantedBy=multi-user.target
