@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "owner": "continuity_mining",
+  "queue_item": "M-RECONCILE-002",
+  "review_scope": "scheduled adversarial checkpoints for recovered knowledge and continuity artifacts",
+  "protected_surfaces": [
+    "automations",
+    "schedules",
+    "canonical shared state",
+    "deployments and production systems",
+    "repository history",
+    "irreversible user data"
+  ],
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "target": "M-004, M-005, and M-006 provenance claims",
+      "attacks": [
+        "searched for contradictions between reported identifiers and repository-owned continuity records",
+        "challenged suffix and semantic similarity as identity evidence",
+        "constructed the counterexample that similarly named artifacts belong to another namespace",
+        "tested the hidden assumption that missing expected files justify reconstruction",
+        "challenged branch and history coverage as non-exhaustive"
+      ],
+      "findings": [
+        "No immutable locator was established for M-004, M-005, or M-006.",
+        "Existing similarity evidence remains compatible with namespace collision.",
+        "Coverage remains bounded because exhaustive branch and commit traversal is incomplete."
+      ],
+      "repairs": [
+        "Retained unresolved and coverage-bounded status.",
+        "Rejected reconstruction of historical identifiers from summaries or similarity.",
+        "Preserved the existing provenance-gap ledger as the authority boundary."
+      ],
+      "remaining_uncertainty": [
+        "An immutable source object may exist on an untraversed branch or earlier commit.",
+        "The originating decision log, lexicon, project document, or chat-history source remains unidentified."
+      ],
+      "evidence_quality": "bounded_repository_and_protocol_evidence",
+      "claim_status_after_review": "coverage_bounded",
+      "rollback_route": "delete this evidence record by reverting its creation commit; no canonical state was modified",
+      "design_stronger": true,
+      "strength_reason": "The phase prevented plausible but unsupported continuity from acquiring authority.",
+      "next_falsifiable_step": "Enumerate every accessible branch and traverse commit history for exact identifiers and semantic-role predecessors."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "target": "Continuity Mining Adversarial Review Protocol and phase-record enforcement",
+      "attacks": [
+        "checked for architecture drift from the repository truth hierarchy",
+        "searched for duplicate checkpoint definitions and conflicting status vocabularies",
+        "tested misuse where a well-formed record is mistaken for verified provenance",
+        "tested rollback isolation by limiting this run to an additive evidence artifact",
+        "checked that no automation or shared-state mutation was required"
+      ],
+      "findings": [
+        "The protocol already defines pre-commit, post-implementation, and verification checkpoints.",
+        "A phase record can document review quality but cannot itself prove recovered provenance.",
+        "The additive evidence path avoids queue-owner conflict and destructive shared-state edits."
+      ],
+      "repairs": [
+        "Recorded claim boundaries explicitly.",
+        "Separated protocol compliance from provenance verification.",
+        "Used an additive, reversible evidence file rather than rewriting canonical queue state."
+      ],
+      "remaining_uncertainty": [
+        "Repository-wide duplicate protocol detection is not exhaustive.",
+        "Executable validator results for the latest preview head were not available in this connector-only run."
+      ],
+      "evidence_quality": "direct_protocol_inspection_with_execution_gap",
+      "claim_status_after_review": "coverage_bounded",
+      "rollback_route": "revert the evidence-file creation commit",
+      "design_stronger": true,
+      "strength_reason": "The implementation boundary now states what the record proves and what it does not prove.",
+      "next_falsifiable_step": "Run the continuity phase-record validator and all negative-control fixtures at the exact preview commit, retaining output."
+    },
+    {
+      "checkpoint": "verification",
+      "target": "claim that continuity recovery is complete or authoritative",
+      "attacks": [
+        "attempted independent-path verification using current state, active queue, and the active protocol",
+        "executed a negative-control reasoning test using cross-namespace similarity",
+        "removed exhaustive coverage from the hypothetical evidence set and required failure closed",
+        "tested whether newer summaries could outrank earlier immutable objects",
+        "tested the claim boundary between protocol presence and recovered-knowledge verification"
+      ],
+      "findings": [
+        "Current state and active queue both preserve the unresolved recovery objective.",
+        "The negative control remains rejected as a collision rather than accepted provenance.",
+        "Without exhaustive coverage and immutable locators, verified or complete status is unsupported."
+      ],
+      "repairs": [
+        "No success claim was made.",
+        "Verification remained fail closed.",
+        "The next action was narrowed to exact branch/history traversal plus immutable-locator reconciliation."
+      ],
+      "remaining_uncertainty": [
+        "Exact provenance may still exist outside currently inspected coverage.",
+        "No independent exhaustive traversal artifact is retained for this run."
+      ],
+      "evidence_quality": "corroborated_but_non_exhaustive",
+      "claim_status_after_review": "coverage_bounded",
+      "rollback_route": "revert the evidence-file creation commit",
+      "design_stronger": true,
+      "strength_reason": "The verification phase resisted overclaiming and preserved falsifiability.",
+      "next_falsifiable_step": "Produce and retain an exhaustive branch inventory and exact-identifier history search, then rerun immutable-locator reconciliation."
+    }
+  ],
+  "overall_outcome": {
+    "findings": "The scheduled adversarial phases are already defined; this run supplied a durable execution record without altering protected surfaces.",
+    "repairs_made": "Explicit claim boundaries, evidence quality, rollback routes, and next falsifiable steps were recorded for all three phases.",
+    "remaining_uncertainty": "M-004, M-005, and M-006 remain unresolved until exhaustive repository coverage and immutable provenance are obtained.",
+    "design_became_stronger": true,
+    "promotion_or_resolution_decision": "blocked"
+  }
+}
