@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "queue_item": "R-024",
+  "owner": "frontier_research",
+  "priority": "highest",
+  "state": "completed_handoff_ready",
+  "recorded_at": "2026-07-16T00:34:00Z",
+  "objective": "Define bounded, fail-closed JWKS freshness, rotation, and outage behavior for GitHub Actions OIDC verification.",
+  "completed_slices": [
+    "Implemented a deterministic cache policy that caps provider freshness with a project hard maximum.",
+    "Required one synchronous refresh for an unknown token kid even when the cached set is otherwise fresh.",
+    "Prohibited stale-key and non-matching-key fallback when refresh fails.",
+    "Required exactly one matching RSA key after refresh.",
+    "Verified seven adversarial scenarios with a byte-equivalent local Node execution."
+  ],
+  "acceptance_remaining": [
+    "Run the exact committed test file in an authenticated repository checkout and retain output.",
+    "Implement a network retrieval adapter with pinned discovery issuer and jwks_uri, TLS validation, conditional requests, bounded timeout, and response-size limits.",
+    "Retain live GitHub discovery and JWKS cache headers to calibrate the conservative one-hour hard maximum.",
+    "Compose the selected JWKS into the existing JWT verification and exact-run authorization pipeline without exposing claims before signature verification."
+  ],
+  "safe_next_action": "Build a bounded retrieval adapter that performs pinned discovery, conditional JWKS refresh, strict response validation, and no stale-if-error fallback; then compose it ahead of githubOidcJwtVerifier.v1.cjs and retain exact Node test output.",
+  "artifacts": [
+    "operations/frontier-research/githubOidcJwksCachePolicy.v1.cjs",
+    "operations/frontier-research/githubOidcJwksCachePolicy.v1.test.cjs",
+    "operations/evidence/frontier-research-github-oidc-jwks-cache-policy-2026-07-16T0034Z.json"
+  ],
+  "does_not_claim": [
+    "live GitHub JWKS retrieval",
+    "successful JWT signature verification",
+    "workflow authorization",
+    "deployment success",
+    "peer execution"
+  ]
+}
