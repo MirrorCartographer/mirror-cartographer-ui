@@ -1,6 +1,7 @@
 'use strict';
 
 const { validateAdversarialCycle: validateV4 } = require('./validateAdversarialCycle.v4.cjs');
+const { validateEvidenceItem } = require('./validateAdversarialPhaseRecord.v4.cjs');
 
 function nonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
@@ -32,6 +33,10 @@ function validateClosureEvidence(transition, toPhase, violations) {
       violations.push(`closure_evidence_reference_not_in_next_phase:${boundary}`);
       continue;
     }
+
+    validateEvidenceItem(referenced).forEach((violation) => {
+      violations.push(`closure_evidence_invalid:${boundary}:${violation}`);
+    });
 
     const expectedClaim = `${item.outcome.toUpperCase()} ${item.uncertainty}`;
     if (!nonEmptyString(referenced.claim_supported) || !referenced.claim_supported.startsWith(expectedClaim)) {
