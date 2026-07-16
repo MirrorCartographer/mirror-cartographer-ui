@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "team": "continuity_mining",
+  "work_item": "M-RECONCILE-002",
+  "target": "Adversarial review continuity across one substantive work cycle",
+  "implementation_commit": "b267d94bda913d80d0283bfb0f7149c7dfecba49",
+  "test_commit": "c726cb66c810489d5bf4d2833186d20c8bd22881",
+  "claim_boundary": "Source-level cycle enforcement and negative-control fixtures are committed. Runtime test passage, exhaustive repository coverage, and provenance resolution for M-004, M-005, and M-006 are not claimed.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Existing phase-record validation proves that every substantive cycle performs all three adversarial checkpoints.",
+      "challenge_method": [
+        "Inspected the canonical v3 phase validator and its deterministic fixtures.",
+        "Constructed counterexamples containing only one or two individually valid phase records.",
+        "Checked for target drift, checkpoint reordering, duplicate phases, and uncertainty disappearance between checkpoints."
+      ],
+      "findings": [
+        "The v3 validator validates one record at a time and cannot prove cycle completeness or checkpoint order.",
+        "Individually valid records can describe different targets while appearing to belong to one work cycle.",
+        "Material uncertainty can disappear between phases without an explicit repair, rejection, or carry-forward disposition."
+      ],
+      "repairs": [
+        "Selected a cycle-envelope validator rather than adding overlapping fields to the phase validator.",
+        "Kept the existing v3 phase validator canonical for field-level integrity."
+      ],
+      "remaining_uncertainty": [
+        "No runtime invocation path currently requires the cycle validator.",
+        "The Node test suite has not been executed in this connector-backed run."
+      ],
+      "evidence_quality": "Direct source inspection on preview plus deterministic disposable counterexample design.",
+      "rollback_route": "Revert b267d94bda913d80d0283bfb0f7149c7dfecba49 and subsequent cycle-enforcement commits from preview.",
+      "design_stronger": true,
+      "strength_reason": "The design direction now addresses the demonstrated cycle-level gap without duplicating phase-level policy.",
+      "next_falsifiable_step": "Implement the cycle envelope and attempt to pass missing, reordered, drifting-target, and silently-dropped-uncertainty fixtures."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The new cycle validator rejects incomplete cycles and preserves unresolved uncertainty across transitions.",
+      "challenge_method": [
+        "Added disposable in-memory fixtures for a missing checkpoint, wrong order, target drift, dropped uncertainty, absent carry-forward, and an invalid nested phase.",
+        "Composed the canonical v3 phase validator instead of copying its rules.",
+        "Required exactly two explicit transition records between the three ordered checkpoints."
+      ],
+      "findings": [
+        "Cycle completeness, order, target consistency, and transition accounting are now machine-checkable at source level.",
+        "A repaired uncertainty requires a repair trace; a carried uncertainty must remain in the next phase.",
+        "Rejected uncertainties remain evidence-dependent and are not automatically treated as resolved historical claims."
+      ],
+      "repairs": [
+        "Added operations/continuity-mining/validateAdversarialCycle.v1.cjs.",
+        "Added seven deterministic negative-control tests.",
+        "Kept all experiments confined to disposable objects with no repository, automation, deployment, schedule, shared-state, or user-data mutation."
+      ],
+      "remaining_uncertainty": [
+        "Runtime execution is unproven.",
+        "No canonical command or workflow currently invokes the cycle validator.",
+        "Rejected-disposition semantics may need stronger evidence constraints after real records exist."
+      ],
+      "evidence_quality": "Commit-matched source and test fixtures; execution evidence absent.",
+      "rollback_route": "Revert c726cb66c810489d5bf4d2833186d20c8bd22881, then b267d94bda913d80d0283bfb0f7149c7dfecba49.",
+      "design_stronger": true,
+      "strength_reason": "A complete work cycle can no longer be represented by disconnected valid records without explicit transition accounting.",
+      "next_falsifiable_step": "Execute the Node tests and attempt a false-positive cycle with a rejected uncertainty lacking evidence."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "Committed source and fixtures are sufficient to declare continuity adversarial-cycle enforcement operational.",
+      "challenge_method": [
+        "Separated source presence from runtime passage and integration-path invocation.",
+        "Rechecked the active queue acceptance conditions for M-RECONCILE-002.",
+        "Attempted to infer provenance progress from process-enforcement work and rejected that inference."
+      ],
+      "findings": [
+        "Operational enforcement is not yet proven because the tests were not executed and no canonical runner invokes the validator.",
+        "M-004, M-005, and M-006 remain unresolved with coverage-bounded provenance.",
+        "This work strengthens review continuity but does not increase historical-source coverage."
+      ],
+      "repairs": [
+        "Kept the resolution and publication decision fail-closed.",
+        "Recorded an explicit source-level claim boundary and exact rollback route.",
+        "Preserved the active queue's exhaustive-history requirement without modifying canonical shared state."
+      ],
+      "remaining_uncertainty": [
+        "Exact runtime test output is absent.",
+        "Canonical integration and consumer compatibility are unverified.",
+        "Exhaustive branch and commit-history traversal remains outstanding."
+      ],
+      "evidence_quality": "High for committed source identity; low for runtime and integration; bounded for historical provenance.",
+      "rollback_route": "Revert this evidence commit, c726cb66c810489d5bf4d2833186d20c8bd22881, and b267d94bda913d80d0283bfb0f7149c7dfecba49 from preview.",
+      "design_stronger": true,
+      "strength_reason": "The process now distinguishes phase validity from cycle completeness and prevents silent uncertainty loss, while retaining fail-closed status where evidence is missing.",
+      "evidence_required_before_publication": [
+        "Exact retained output from node --test operations/continuity-mining/validateAdversarialCycle.v1.test.cjs.",
+        "Proof that the canonical continuity verification command invokes the cycle validator fail-closed.",
+        "A consumer inventory showing no incompatible cycle-envelope assumptions."
+      ],
+      "next_falsifiable_step": "Run and retain the cycle-validator test output, then integrate it into the continuity verification command and prove a two-phase cycle is rejected."
+    }
+  ],
+  "strongest_surviving_proposal": "Use the v3 validator for individual phase integrity and the new v1 cycle-envelope validator for exact checkpoint order, target consistency, and explicit uncertainty disposition across transitions.",
+  "rejected_alternatives": [
+    "Add more fields to individual phase records and infer cycle completeness.",
+    "Treat three files with similar names as proof of one coherent cycle.",
+    "Allow uncertainty to disappear when a later phase omits it.",
+    "Declare runtime enforcement from committed tests alone."
+  ],
+  "unresolved_risks": [
+    "The test suite is unexecuted.",
+    "The cycle validator is not yet wired into a canonical runner.",
+    "M-004, M-005, and M-006 provenance remains unresolved."
+  ],
+  "publication_decision": "blocked",
+  "robustness_increased": true,
+  "next_falsifiable_step": "Execute node --test operations/continuity-mining/validateAdversarialCycle.v1.test.cjs at the exact preview head, retain output, and integrate the validator fail-closed before any recovered-knowledge commit is classified as verified."
+}
