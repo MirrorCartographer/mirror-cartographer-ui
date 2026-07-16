@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "authority": "foundation-intelligence-release-root",
+  "requiredDigestAlgorithm": "sha256",
+  "requiredPredicateType": "https://slsa.dev/provenance/v1",
+  "allowedBuilderIds": [
+    "https://foundation.invalid/builders/owned-worker/v1"
+  ],
+  "maxEnvelopeAgeHours": 168,
+  "requireSourceCommit": true,
+  "requireSbomDigest": true,
+  "requireProvenanceDigest": true,
+  "requireImmutableImageReference": true,
+  "minimumIndependentBundleCopies": 2
+}
