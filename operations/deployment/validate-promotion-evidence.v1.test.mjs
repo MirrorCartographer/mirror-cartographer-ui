@@ -13,7 +13,11 @@ const checklist = {
     vercel_project_id: null
   },
   required_checks: ['build','smoke','mobile','accessibility','interaction','audio','deployment_identity','rollback','adversarial_review'],
-  promotion_requires: { preview_deployment_state: 'ready', max_deployment_evidence_age_ms: 900000 }
+  promotion_requires: {
+    preview_deployment_state: 'ready',
+    max_deployment_evidence_age_ms: 900000,
+    max_required_check_age_ms: 900000
+  }
 };
 function immutableDeploymentEvidence() {
   return {
@@ -34,19 +38,21 @@ function evidence() {
     deployment_commit:sha, evidence_commit:sha, unresolved_critical_risks:0,
     rollback_route_recorded:true, rollback_route:'revert '+sha,
     deployment_identity_evidence: immutableDeploymentEvidence(),
-    checks:Object.fromEntries(checklist.required_checks.map((name)=>[name,{status:'pass',commit:sha}]))
+    checks:Object.fromEntries(checklist.required_checks.map((name)=>[name,{status:'pass',commit:sha,observed_at:new Date(nowMs - 1000).toISOString()}]))
   };
 }
 const assess = (c, e) => assessPromotion(c, e, { nowMs });
 
-test('accepts complete commit-bound ready evidence with a fresh immutable preview deployment proof', () => {
+test('accepts complete commit-bound ready evidence with fresh deployment and check observations', () => {
   const result = assess(checklist,evidence());
   assert.equal(result.promotable,true);
+  assert.equal(result.schema_version,6);
   assert.equal(result.immutable_deployment_identity_verified,true);
   assert.equal(result.immutable_deployment_git_ref,'preview');
   assert.equal(result.immutable_deployment_github_repo_id,1003910384);
   assert.equal(result.immutable_deployment_project_name,'mirror-cartographer-ui');
   assert.equal(result.deployment_evidence_age_ms,1000);
+  assert.equal(result.passed_required_check_count,checklist.required_checks.length);
 });
 test('rejects canceled state', () => { const e=evidence(); e.preview_deployment_state='canceled'; assert.equal(assess(checklist,e).promotable,false); });
 test('rejects check commit mismatch', () => { const e=evidence(); e.checks.smoke.commit='b'.repeat(40); assert.ok(assess(checklist,e).failures.includes('required_check_commit_mismatch:smoke')); });
@@ -114,8 +120,8 @@ test('rejects structurally valid deployment evidence observed outside the freshn
   assert.equal(result.promotable,false);
   assert.ok(result.failures.includes('deployment_evidence_stale'));
 });
-test('rejects a checklist that omits an evidence freshness policy', () => {
-  const weakChecklist={...checklist,promotion_requires:{preview_deployment_state:'ready'}};
+test('rejects a checklist that omits a deployment evidence freshness policy', () => {
+  const weakChecklist={...checklist,promotion_requires:{...checklist.promotion_requires}}; delete weakChecklist.promotion_requires.max_deployment_evidence_age_ms;
   const result=assess(weakChecklist,evidence());
   assert.equal(result.promotable,false);
   assert.ok(result.failures.includes('deployment_evidence_freshness_policy_missing'));
@@ -125,4 +131,28 @@ test('rejects deployment evidence whose observation is after the promotion asses
   const result=assess(checklist,e);
   assert.equal(result.promotable,false);
   assert.ok(result.failures.includes('deployment_evidence_observed_in_future'));
+});
+test('rejects a pass check without an observation timestamp', () => {
+  const e=evidence(); delete e.checks.smoke.observed_at;
+  const result=assess(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_observed_at_invalid:smoke'));
+});
+test('rejects a pass check observed outside the freshness window', () => {
+  const e=evidence(); e.checks.accessibility.observed_at=new Date(nowMs - 900001).toISOString();
+  const result=assess(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_stale:accessibility'));
+});
+test('rejects a pass check observed after the promotion assessment', () => {
+  const e=evidence(); e.checks.rollback.observed_at=new Date(nowMs + 1).toISOString();
+  const result=assess(checklist,e);
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_observed_in_future:rollback'));
+});
+test('fails closed when the required-check freshness policy is absent', () => {
+  const weakChecklist={...checklist,promotion_requires:{...checklist.promotion_requires}}; delete weakChecklist.promotion_requires.max_required_check_age_ms;
+  const result=assess(weakChecklist,evidence());
+  assert.equal(result.promotable,false);
+  assert.ok(result.failures.includes('required_check_freshness_policy_missing'));
 });
