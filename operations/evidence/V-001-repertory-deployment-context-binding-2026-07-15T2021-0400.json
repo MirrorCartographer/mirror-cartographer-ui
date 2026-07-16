@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "evidence_id": "V-001-repertory-deployment-context-binding-2026-07-15T2021-0400",
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:21:00Z",
+  "finding": "Immutable deployment identity alone does not prevent a READY deployment from another Vercel project or GitHub repository from being substituted into repertory activation evidence.",
+  "implemented_slice": {
+    "assessor": "operations/vercel-studio/repertory/assessRepertoryActivation.v1.cjs",
+    "test": "operations/vercel-studio/repertory/assessRepertoryActivation.v1.test.cjs",
+    "change": "Replaced immutable-identity-only activation assessment with fail-closed deployment context binding requiring expected Vercel project id, project name, and immutable GitHub repository id.",
+    "schema_change": "activation assessor result schema_version advanced from 1 to 2"
+  },
+  "verification": {
+    "method": "Focused local Node reconstruction of the committed assessor contract and dependencies",
+    "command": "node --test /tmp/mc-test/operations/vercel-studio/repertory/focused.test.cjs",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "covered": [
+      "matching deployment context accepted",
+      "cross-project substitution rejected",
+      "cross-repository substitution rejected",
+      "missing expected context rejected"
+    ],
+    "limitations": [
+      "The full repository test inventory was not executed because no authenticated checkout was available in the runtime.",
+      "No Vercel deployment was initiated or claimed.",
+      "No browser, mobile Safari, audio, or public route behavior was tested."
+    ]
+  },
+  "claim_boundary": "source_contract_and_focused_adversarial_verification_only",
+  "rollback": [
+    "Revert test commit 95733181708a896317f3a4f84109c4ac39dda589",
+    "Revert implementation commit 53e31b0dd70d1564400397009b7456bc6665ea21"
+  ]
+}
