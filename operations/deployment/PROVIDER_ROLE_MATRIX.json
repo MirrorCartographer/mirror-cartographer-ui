@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "provisional_fail_closed",
+  "artifact_commit_binding": "required_at_verification",
+  "canonical_surface": "Mirror Cartographer UI",
+  "providers": {
+    "vercel": {
+      "declared_role": "preview_verification_and_promotion_evidence_authority",
+      "publication_authority": "declared_but_not_runtime_verified",
+      "allowed_branches": ["preview", "main"],
+      "success_requires": [
+        "immutable_deployment_id",
+        "exact_repository_match",
+        "exact_project_match",
+        "exact_commit_match",
+        "exact_branch_match",
+        "generated_hostname_match",
+        "ready_state",
+        "fresh_observation",
+        "quota_and_cancellation_state_clear",
+        "rollback_route_recorded"
+      ]
+    },
+    "github_pages": {
+      "declared_role": "unreconciled_main_branch_publisher",
+      "publication_authority": "blocked_pending_reconciliation",
+      "observed_trigger": "push_to_main_and_workflow_dispatch",
+      "conflict": "A main-branch push can trigger publication outside the declared Vercel-owned preview promotion evidence path.",
+      "success_requires": [
+        "explicit_canonical_authority_assignment",
+        "promotion_gate_integration",
+        "exact_commit_matched_workflow_run",
+        "successful_pages_deployment_identity",
+        "hostname_and_domain_authority",
+        "cancellation_and_supersession_state_clear",
+        "tested_rollback_route"
+      ]
+    },
+    "cloudflare": {
+      "declared_role": "none",
+      "publication_authority": "blocked",
+      "allowed_actions": ["read_only_research", "disposable_non_production_fixtures_after_authority_reconciliation"],
+      "success_requires": [
+        "explicit_non_overlapping_role",
+        "authenticated_project_identity",
+        "repository_and_branch_mapping",
+        "build_and_output_mapping",
+        "quota_and_cancellation_state",
+        "hostname_and_dns_authority",
+        "immutable_commit_matched_deployment_evidence",
+        "tested_rollback_route"
+      ]
+    }
+  },
+  "global_non_success_states": [
+    "absent",
+    "queued",
+    "building",
+    "canceled",
+    "skipped",
+    "superseded",
+    "rate_limited",
+    "stale",
+    "commit_mismatched",
+    "branch_mismatched",
+    "repository_mismatched",
+    "project_mismatched",
+    "authority_unresolved"
+  ],
+  "precedence_rule": "No provider may publish the canonical surface until exactly one provider has explicit authority or a documented multi-provider design defines precedence, domain ownership, evidence equivalence, and rollback semantics.",
+  "current_decision": "block_publication_and_promotion",
+  "rollback_route": "Revert the commit adding this policy file; no provider, workflow, DNS, credential, deployment, automation, schedule, or shared-state mutation is performed by this artifact."
+}
