@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "recorded_at": "2026-07-16T06:11:00Z",
+  "scope": "promotion gate composition with immutable Vercel deployment identity",
+  "protected_surfaces_changed": [],
+  "checkpoints": [
+    {
+      "checkpoint": "before_research_direction",
+      "claim_or_design_tested": "The existing promotion validator's deployment_identity check and HTTPS preview URL are sufficient evidence of an immutable, exact-commit Vercel Preview deployment.",
+      "challenge_method": "Compared the promotion validator's accepted evidence fields against the existing immutable deployment evidence contract and constructed the counterexample of a pass-labeled check plus arbitrary HTTPS URL.",
+      "evidence": [
+        "operations/deployment/validate-promotion-evidence.v1.mjs previously checked only a status label, commit label, and HTTPS URL.",
+        "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.cjs already requires Vercel deployment id, generated hostname, READY state, project identity, approved API source, timestamps, and gitSource.sha agreement."
+      ],
+      "counterexample_or_failure_found": "A self-asserted https://example.vercel.app URL and deployment_identity pass label could make the gate promotable without any deployment object, stable deployment id, project binding, or generated-hostname binding.",
+      "repair_or_refinement": "Selected composition, rather than duplicated validation logic, as the strongest direction.",
+      "remaining_uncertainty": "No authenticated Vercel deployment object is available in this run.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Implement composition and prove that the former shortcut is rejected."
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_or_design_tested": "Calling the canonical immutable deployment validator inside the promotion gate closes the false-positive path without introducing policy duplication.",
+      "challenge_method": "Added reversible deterministic fixtures for absent immutable evidence, another-commit deployment evidence, unrelated alias URL, and stale deployment state.",
+      "evidence": [
+        "Implementation commit 4018f91919839174da31a0e1e1a4b23469e1c754.",
+        "Negative-control test commit b1789edc9d43c8eb49c678829cc8ca7939c89a3c."
+      ],
+      "counterexample_or_failure_found": "A valid immutable deployment object can still be paired with an unrelated HTTPS URL unless the gate binds preview_url to the generated deployment hostname.",
+      "repair_or_refinement": "Required immutable deployment verification, exact expected-commit agreement, and exact preview URL equality with the generated Vercel hostname. Added stale and rate_limited to explicit non-success states.",
+      "remaining_uncertainty": "Downstream evidence producers must add deployment_identity_evidence; schema compatibility has not been repository-wide verified.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Run the Node tests and inspect all promotion evidence producers for schema-version and field compatibility."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The updated promotion gate is verified and ready for promotion use.",
+      "challenge_method": "Applied claim-boundary review: distinguished committed source and deterministic fixtures from executed runtime tests and live provider evidence.",
+      "evidence": [
+        "Source and tests are committed on preview.",
+        "No test-run artifact or authenticated Vercel API response was produced in this connector-only run."
+      ],
+      "counterexample_or_failure_found": "Committed tests are not evidence that tests executed; a READY-shaped fixture is not evidence of a live READY deployment.",
+      "repair_or_refinement": "Kept promotion blocked and limited the claim to implementation-complete, runtime-unverified composition.",
+      "remaining_uncertainty": "Node module interoperability, complete test passage, evidence-producer migration, and live exact-commit deployment identity remain unverified.",
+      "outcome": "documented_unresolved_question",
+      "robustness_increased": true,
+      "next_falsifiable_step": "Execute node --test operations/deployment/validate-promotion-evidence.v1.test.mjs at exact commit b1789edc9d43c8eb49c678829cc8ca7939c89a3c and retain output."
+    }
+  ],
+  "strongest_surviving_proposal": "Promotion must compose the canonical immutable Vercel deployment validator and bind the public preview URL to that exact deployment's generated hostname; a check label, provider status, alias, or arbitrary HTTPS URL is insufficient.",
+  "rejected_alternatives": [
+    "Trust the deployment_identity check label without its underlying evidence.",
+    "Duplicate the immutable deployment validation rules inside the promotion validator.",
+    "Accept any HTTPS preview or alias URL as deployment identity.",
+    "Treat committed tests as executed verification."
+  ],
+  "unresolved_risks": [
+    "Runtime tests have not been executed and retained.",
+    "Existing promotion evidence producers may not yet emit deployment_identity_evidence.",
+    "No live commit-matched Vercel deployment object is available.",
+    "No repository-wide consumer compatibility scan was possible through the unindexed connector search."
+  ],
+  "promotion_decision": "blocked",
+  "rollback_route": "Revert b1789edc9d43c8eb49c678829cc8ca7939c89a3c and 4018f91919839174da31a0e1e1a4b23469e1c754 on preview.",
+  "next_falsifiable_step": "Run and retain the exact-commit Node test output, then migrate and test every promotion evidence producer before using the schema-2 gate."
+}
