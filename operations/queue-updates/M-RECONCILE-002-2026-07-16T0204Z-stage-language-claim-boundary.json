@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "queue_item": "M-RECONCILE-002",
+  "owner": "continuity_mining",
+  "recorded_at": "2026-07-16T02:04:46Z",
+  "state": "in_progress",
+  "completed_slice": "Recovered and formalized the continuity boundary between deterministic programmed-stage selection and separately evidenced runtime activation; public-safe vocabulary now distinguishes underlying continuity, selected production identity, deployment, execution, audio, and physical-device claims.",
+  "files": [
+    "operations/continuity/stage-language-claim-boundary.v1.json"
+  ],
+  "commits": [
+    "3aff13bdd8fc67bc933be4ed3aeb544761383e0d"
+  ],
+  "claims_resolved": [
+    "Programmed, selected, scheduled, on stage, current production, and current edition may identify deterministic repertory selection without proving activation.",
+    "Active, live, deployed, playing, audible, public, and running require stronger claim-specific evidence.",
+    "Continuity state is the preserved underlying identity; production identity is the selected outward form."
+  ],
+  "unresolved": [
+    "Exhaustive branch and commit-history coverage remains unavailable.",
+    "Immutable provenance for M-004, M-005, and M-006 remains unresolved.",
+    "Existing repertory summaries have not yet been exhaustively audited for vocabulary drift.",
+    "The full authenticated repertory suite has not been executed."
+  ],
+  "privacy_boundary": "Repository semantics only; no private chat text, health material, credentials, personal identifiers, or unreviewed file-library content was included.",
+  "canonical_queue_overwritten": false,
+  "next_action": "Audit repertory-facing evidence and summaries for active/live shorthand, add non-destructive clarification records where needed, and continue exhaustive provenance resolution for M-004, M-005, and M-006 without reconstructing missing history."
+}
