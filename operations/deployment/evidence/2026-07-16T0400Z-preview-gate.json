@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-07-16T04:00:56Z",
+  "branch": "preview",
+  "tested_commit": "b740963fa6cf6d2c3dc7a069c36e0645685b1928",
+  "baseline_relation": {
+    "main": "b740963fa6cf6d2c3dc7a069c36e0645685b1928",
+    "preview": "b740963fa6cf6d2c3dc7a069c36e0645685b1928",
+    "status": "identical_before_evidence_commit"
+  },
+  "provider_evidence": {
+    "vercel_status": "failure",
+    "vercel_target_class": "build-rate-limit-upgrade",
+    "immutable_preview_deployment_id": null,
+    "generated_preview_hostname": null,
+    "deployment_state": "unverified"
+  },
+  "checks": {
+    "preview_branch_exists": "pass",
+    "preview_isolated_from_main_after_this_commit": "pass",
+    "commit_bound_vercel_identity": "fail",
+    "ready_preview": "fail",
+    "accessibility": "not_run",
+    "mobile_safety": "not_run",
+    "performance": "not_run",
+    "no_autoplay": "not_run",
+    "privacy_boundary": "not_run",
+    "rollback_route": "pass"
+  },
+  "adversarial_findings": [
+    {
+      "severity": "critical",
+      "finding": "No immutable READY Vercel preview deployment is bound to the tested commit; provider status points to build-rate limiting.",
+      "effect": "Promotion must fail closed."
+    },
+    {
+      "severity": "high",
+      "finding": "The preview branch was identical to main before this evidence-only commit, so it had not yet become an isolated integration surface.",
+      "effect": "This evidence commit establishes divergence without modifying application runtime."
+    },
+    {
+      "severity": "medium",
+      "finding": "Multiple deployment systems are present, including Vercel and GitHub Pages, increasing duplicate-build and contradictory-status risk.",
+      "effect": "A later authenticated workflow inventory must identify and consolidate overlapping deployment triggers."
+    }
+  ],
+  "promotion_decision": "blocked",
+  "production_evidence": null,
+  "rollback_route": {
+    "method": "Reset or revert preview branch to b740963fa6cf6d2c3dc7a069c36e0645685b1928; main remains unchanged.",
+    "production_impact": "none"
+  },
+  "peer_trigger_outcomes": {
+    "new_trigger_created": false,
+    "duplicate_trigger_avoided": true,
+    "reason": "Existing V-001, R-020, R-021, and R-022 acceptance work already covers exhaustive workflow enumeration and immutable deployment identity."
+  },
+  "next_action": "After Vercel build capacity returns, make one bounded application change on preview, verify a READY immutable deployment whose gitSource.sha matches the new commit, then run the promotion checklist. Separately perform an authenticated inventory of all GitHub Actions deployment workflows and disable no automation without explicit evidence."
+}
