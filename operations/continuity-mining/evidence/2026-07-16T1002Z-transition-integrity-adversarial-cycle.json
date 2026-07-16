@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "cycle_id": "CM-2026-07-16-06",
+  "target": "continuity transition-integrity enforcement",
+  "publication_decision": "blocked",
+  "claim_boundary": "Source-level additive enforcement and committed deterministic fixtures only; runtime test passage and canonical invocation are not claimed.",
+  "phases": [
+    {
+      "checkpoint": "pre_commit",
+      "claim_or_design_tested": "Cycle v2 fully accounts for uncertainty changes between phases.",
+      "challenge_method": ["construct orphan disposition", "mark an uncertainty repaired while retaining it", "mark an uncertainty rejected while retaining it", "inspect for duplicated controls and destructive migration risk"],
+      "evidence": ["operations/continuity-mining/validateAdversarialCycle.v2.cjs", "operations/continuity-mining/validateAdversarialCycle.v2.test.cjs"],
+      "failures_or_counterexamples_found": ["Disposition entries need not correspond to uncertainty in the prior phase.", "Repaired and rejected uncertainty may remain active in the next phase."],
+      "repairs_made": ["Selected an additive v3 wrapper that composes v2 and adds transition-integrity checks."],
+      "remaining_uncertainty": ["Canonical continuity invocation remains unproven.", "Rejected dispositions still rely on free-text evidence quality."],
+      "robustness_increased": true,
+      "evidence_quality": "Direct immutable repository source inspection; no runtime execution.",
+      "rollback_route": "Revert commit c8ff422aa44c0e80e5f41363515e43ccdac6e407.",
+      "next_falsifiable_step": "Attempt orphan, repaired-still-active, and rejected-still-active fixtures against v3."
+    },
+    {
+      "checkpoint": "post_implementation",
+      "claim_or_design_tested": "The additive v3 enforcement rejects transition substitution without regressing valid carried and repaired flows.",
+      "challenge_method": ["add deterministic negative controls", "retain a positive carried control", "retain a positive repaired-and-removed control", "check compatibility composition with v2"],
+      "evidence": ["commit c8ff422aa44c0e80e5f41363515e43ccdac6e407", "commit 7dec41e18c3662932cfd4e0f81e9ea05d85b4aba"],
+      "failures_or_counterexamples_found": ["No source-level counterexample survived the added fixtures; runtime status remains unknown."],
+      "repairs_made": ["Added explicit rejection of orphan dispositions.", "Added explicit rejection when repaired or rejected uncertainty remains in the next phase."],
+      "remaining_uncertainty": ["Tests are committed but not executed.", "Canonical consumers may still invoke v1 or v2."],
+      "robustness_increased": true,
+      "evidence_quality": "Commit-addressed source and disposable in-memory fixtures.",
+      "rollback_route": "Revert 7dec41e18c3662932cfd4e0f81e9ea05d85b4aba, then c8ff422aa44c0e80e5f41363515e43ccdac6e407.",
+      "next_falsifiable_step": "Execute the exact v3 test suite and retain stdout, stderr, exit code, and commit SHA."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_tested": "The committed artifact is present at preview head and can support a bounded source-level claim.",
+      "challenge_method": ["re-read implementation and tests from preview", "refuse to equate committed tests with passing tests", "check rollback sequence", "preserve unresolved canonical-invocation risk"],
+      "evidence": ["operations/continuity-mining/validateAdversarialCycle.v3.cjs", "operations/continuity-mining/validateAdversarialCycle.v3.test.cjs"],
+      "failures_or_counterexamples_found": ["Runtime test execution evidence is absent.", "Canonical invocation evidence is absent."],
+      "repairs_made": ["Publication and canonicalization remain blocked.", "Claim restricted to source-level enforcement."],
+      "remaining_uncertainty": ["Node suite passage unproven.", "v1/v2 importer inventory incomplete.", "Rejected-disposition evidence semantics may need a structured evidence contract."],
+      "robustness_increased": true,
+      "evidence_quality": "Immutable Git commits and direct file reads; bounded because execution output is unavailable.",
+      "rollback_route": "Revert this evidence commit, then 7dec41e18c3662932cfd4e0f81e9ea05d85b4aba, then c8ff422aa44c0e80e5f41363515e43ccdac6e407.",
+      "next_falsifiable_step": "Run node --test operations/continuity-mining/validateAdversarialCycle.v3.test.cjs at exact preview head, retain output, then inventory every cycle-validator importer before canonical integration."
+    }
+  ],
+  "strongest_surviving_proposal": "Compose existing v2 safeguards and require every uncertainty disposition to bind to a prior uncertainty; repaired or rejected uncertainty must not remain active in the next phase.",
+  "rejected_alternatives": ["Trust arbitrary disposition rows.", "Treat a repair trace as sufficient while the risk remains active.", "Replace v2 destructively.", "Claim verification from committed but unexecuted tests."],
+  "unresolved_risks": ["Runtime passage is unproven.", "Canonical invocation is unproven.", "Consumer migration is incomplete.", "Rejected-disposition evidence remains free text."],
+  "next_falsifiable_step": "Execute and retain the v3 test result, then prove the canonical continuity command rejects an orphan disposition fail-closed."
+}
