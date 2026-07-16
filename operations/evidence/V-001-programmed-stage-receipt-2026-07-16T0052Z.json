@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:52:19Z",
+  "evidence_class": "operations_only_programmed_stage_identity",
+  "source": {
+    "path": "operations/vercel-studio/repertory/HOURLY_REPERTORY.v1.json",
+    "blob_sha": "01da25cda6014d14fd31c70ae69ec1410e0b4a93",
+    "contract_id": "vercel-studio-hourly-repertory-v1"
+  },
+  "selection": {
+    "timezone": "UTC",
+    "utc_hour": 0,
+    "edition_id": "residual-comet-00",
+    "edition_cue": "long-tail-entry",
+    "production_id": "residual-comet",
+    "production_title": "Residual Comet",
+    "production_form": "particle_cinematography",
+    "continuity_role": "companion_signal"
+  },
+  "continuity": {
+    "preserved_across_productions": true,
+    "state_key": "mirror-cartographer-public-continuity-v1"
+  },
+  "safety_boundary": {
+    "audio": "explicit_user_gesture_only",
+    "motion": "honor_prefers_reduced_motion",
+    "mobile": "viewport_safe_and_touch_safe",
+    "accessibility": "keyboard_operable_with_nonvisual_status_equivalent",
+    "privacy": "no_private_source_material",
+    "commerce": "no_payments_or_conversion_logic"
+  },
+  "claims": {
+    "runtime_activation_claimed": false,
+    "deployment_claimed": false,
+    "browser_execution_claimed": false,
+    "audio_playback_claimed": false,
+    "physical_device_verification_claimed": false,
+    "side_effects_performed": false
+  },
+  "verification": {
+    "method": "authenticated repository file fetch plus deterministic UTC-hour lookup",
+    "source_fetch_confirmed": true,
+    "hour_slot_present": true,
+    "production_present": true,
+    "runtime_test_executed": false,
+    "deployment_test_executed": false,
+    "claim_boundary": "programmed stage identity only"
+  },
+  "contract_drift_observed": {
+    "status": "unresolved",
+    "detail": "The current canonical repertory declares selection_rule.type=deterministic_hour_slot, while an existing safety verifier requires deterministic_modulo. This receipt does not treat that unresolved validator mismatch as activation evidence."
+  },
+  "rollback": "Revert the commit that adds this evidence record; application runtime and deployment state are unaffected."
+}
