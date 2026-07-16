@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "team": "frontier_research",
+  "recorded_at": "2026-07-16T05:06:36Z",
+  "trigger_request": "VST-20260716T020645Z-frontier-research",
+  "research_direction": "Bind the canonical repertory selection-rule verifier into the activation assessor before activation assessment.",
+  "checkpoint_reviews": [
+    {
+      "checkpoint": "before_direction_adoption",
+      "claim_under_test": "Existing provenance and deployment-context checks are sufficient to prevent invalid repertory activation.",
+      "method": "Inspected the activation assessor and selection-rule verifier as separate trust boundaries; constructed a counterexample with valid deployment identity and weakened selection semantics.",
+      "evidence": [
+        "operations/vercel-studio/repertory/assessRepertoryActivation.v1.cjs@a080c99dfc58b9be4ffaac7218eb95a164de1f74",
+        "operations/vercel-studio/repertory/verifySelectionRule.v1.cjs@6d9809481c276c271da1b1ab72d35f93cd5b09f5"
+      ],
+      "failure_found": "The activation assessor did not invoke verifySelectionRule, so selection-rule drift was outside its promotion decision.",
+      "repair": "Adopted direct fail-closed composition rather than duplicating selection-rule logic.",
+      "remaining_uncertainty": "Whether other activation gates bypass this assessor remains unverified.",
+      "outcome": "refined_design",
+      "robustness_increased": true
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_under_test": "Adding selection-rule verification closes the identified promotion gap without weakening existing boundaries.",
+      "method": "Added selection_rule_unverified as a promotion violation, exposed verifier evidence and claim boundary, and preserved provenance, runtime-boundary, deployment-constraint, and immutable deployment-context checks.",
+      "evidence": [
+        "operations/vercel-studio/repertory/assessRepertoryActivation.v1.cjs@4cadf8403de05cb797830a42ba143223c30a45f5",
+        "commit:da84e5e91d3f75dc3013173ffa21eed11e7b1422"
+      ],
+      "failure_found": null,
+      "repair": "Bumped assessor schema_version from 2 to 3 and narrowed the success claim boundary to include verified selection semantics.",
+      "remaining_uncertainty": "Downstream consumers may assume schema_version 2 or the previous success claim-boundary string.",
+      "outcome": "stronger_supporting_evidence",
+      "robustness_increased": true
+    },
+    {
+      "checkpoint": "verification",
+      "claim_under_test": "The revised assessor rejects plausible selection-rule regressions.",
+      "method": "Added reversible negative tests for a superseded deterministic-modulo rule and duplicate edition IDs hidden inside nominal 24-hour coverage; performed local node --check syntax validation of the revised assessor.",
+      "evidence": [
+        "operations/vercel-studio/repertory/assessRepertoryActivation.v1.test.cjs@647dcb82fd50985a13a0a33039bc8f984f849594",
+        "commit:493cdd6169add2c5e513d32d2761b4e9851c9f7b",
+        "local-static-check:node --check passed"
+      ],
+      "counterexamples": [
+        "selection_rule.type=deterministic_modulo with modulo expression",
+        "hour_slots[23].edition_id duplicated from hour_slots[22]"
+      ],
+      "repair": "Both counterexamples are now required to produce promotable=false and explicit selection-rule evidence violations.",
+      "remaining_uncertainty": "The complete npm run test:vercel-repertory suite was not executable through the GitHub connector and therefore is not claimed as passed.",
+      "outcome": "refined_design",
+      "robustness_increased": true
+    }
+  ],
+  "strongest_surviving_proposal": "Use one composed activation assessor that requires durable repertory provenance, canonical deterministic direct-hour selection semantics, fail-closed runtime boundaries, and immutable exact-context deployment evidence. Do not activate from any subset of those proofs.",
+  "rejected_alternatives": [
+    {
+      "alternative": "Rely on repertory provenance validation to imply selection-rule correctness.",
+      "reason": "The validators have different contracts; implication was neither encoded nor evidenced."
+    },
+    {
+      "alternative": "Copy selection-rule checks into the activation assessor.",
+      "reason": "Would create duplicated policy logic and future drift risk."
+    },
+    {
+      "alternative": "Treat 24 slot records as sufficient hourly uniqueness evidence.",
+      "reason": "Duplicate edition IDs can preserve superficial slot count while violating distinct-edition semantics."
+    }
+  ],
+  "unresolved_risks": [
+    "Full repertory test suite output is not retained for commit 493cdd6169add2c5e513d32d2761b4e9851c9f7b.",
+    "Potential downstream compatibility with assessor schema_version 3 and the revised claim boundary is unverified.",
+    "Repository-wide search for alternate activation paths was coverage-limited by unavailable code search indexing."
+  ],
+  "rollback_route": "Revert commits 493cdd6169add2c5e513d32d2761b4e9851c9f7b and da84e5e91d3f75dc3013173ffa21eed11e7b1422 on preview; no deployment, automation, schedule, shared-state mutation, or user data change was performed.",
+  "promotion_decision": "blocked_pending_full_suite_and_consumer_compatibility_verification",
+  "next_falsifiable_step": "Run npm run test:vercel-repertory at the exact preview commit, retain complete output, then search all callers of assessRepertoryActivation for schema or claim-boundary assumptions and add a compatibility test before any activation or deployment claim."
+}
