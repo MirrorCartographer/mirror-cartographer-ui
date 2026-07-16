@@ -92,6 +92,8 @@ function validateRecord(record) {
     return { valid: false, errors };
   }
 
+  let previousRecordedAt = isIsoDate(record.started_at) ? Date.parse(record.started_at) : null;
+
   record.phases.forEach((phase, phaseIndex) => {
     if (!isObject(phase)) return;
 
@@ -103,8 +105,11 @@ function validateRecord(record) {
       }
     }
 
-    if (!isIsoDate(phase.recorded_at)) {
+    const recordedAt = isIsoDate(phase.recorded_at) ? Date.parse(phase.recorded_at) : null;
+    if (recordedAt === null) {
       errors.push(`phase ${phaseIndex} field recorded_at must be an ISO-compatible timestamp`);
+    } else if (previousRecordedAt !== null && recordedAt < previousRecordedAt) {
+      errors.push(`phase ${phaseIndex} recorded_at must not precede the cycle start or prior checkpoint`);
     }
 
     if (Array.isArray(phase.evidence)) {
@@ -113,6 +118,22 @@ function validateRecord(record) {
       }
       phase.evidence.forEach((item, evidenceIndex) => {
         errors.push(...validateEvidenceItem(item, phaseIndex, evidenceIndex));
+        if (isObject(item)) {
+          if (
+            isNonEmptyString(item.supported_claim) &&
+            isNonEmptyString(phase.claim_or_design_tested) &&
+            item.supported_claim !== phase.claim_or_design_tested
+          ) {
+            errors.push(`phase ${phaseIndex} evidence ${evidenceIndex} supported_claim must exactly match claim_or_design_tested`);
+          }
+          if (
+            isIsoDate(item.observed_at) &&
+            recordedAt !== null &&
+            Date.parse(item.observed_at) > recordedAt
+          ) {
+            errors.push(`phase ${phaseIndex} evidence ${evidenceIndex} observed_at must not follow recorded_at`);
+          }
+        }
       });
     }
 
@@ -124,6 +145,8 @@ function validateRecord(record) {
         errors.push(`phase ${phaseIndex} contains lead_only evidence incompatible with decision ${record.decision}`);
       }
     }
+
+    if (recordedAt !== null) previousRecordedAt = recordedAt;
   });
 
   return { valid: errors.length === 0, errors };
