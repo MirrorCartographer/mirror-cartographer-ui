@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "run": "frontier-research-deployment-evidence-freshness",
+  "artifact_commit": "c0c15b74874009ffb194cab2f34e7eba52b4a55a",
+  "publication_decision": "blocked",
+  "deployment_evidence_status": "absent",
+  "protected_systems_changed": [],
+  "checkpoints": [
+    {
+      "checkpoint": "before_research_direction",
+      "claim_or_design_under_test": "A structurally valid READY deployment object remains sufficient evidence for promotion regardless of when it was observed.",
+      "method": "Constructed the counterexample of an old but otherwise valid immutable deployment object reused for a current promotion decision; inspected the promotion assessor and immutable evidence validator for an observation-age bound.",
+      "evidence": [
+        "operations/deployment/validate-promotion-evidence.v1.mjs@preview before a1448dc821b66041a4584dea7b5c5b72a64a4427",
+        "operations/frontier-research/vercelImmutableDeploymentEvidence.v1.cjs@preview"
+      ],
+      "counterexample_or_failure_found": "The immutable validator rejected future timestamps but imposed no maximum age. The promotion gate could therefore accept stale observation evidence if the deployment object still reported READY.",
+      "repair_or_refinement": "Adopt a promotion-level freshness contract with an explicit maximum observation age; keep deployment identity validation and decision freshness as separate concerns.",
+      "remaining_uncertainty": "The correct operational freshness window may differ if provider metadata propagation or verification jobs routinely exceed fifteen minutes.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "rollback_route": "Revert c0c15b74874009ffb194cab2f34e7eba52b4a55a, dcf99ee23ad3fc4b1d40302c477b03ca00810cef, and a1448dc821b66041a4584dea7b5c5b72a64a4427 in reverse order.",
+      "next_falsifiable_step": "Prove a structurally valid observation older than the configured window is rejected while a recent observation is accepted."
+    },
+    {
+      "checkpoint": "after_implementation",
+      "claim_or_design_under_test": "A freshness check based directly on Date.now is adequate and reliably testable.",
+      "method": "Challenged deterministic replay, clock-boundary behavior, missing-policy handling, and future-observation behavior using disposable in-memory fixtures.",
+      "evidence": [
+        "a1448dc821b66041a4584dea7b5c5b72a64a4427",
+        "dcf99ee23ad3fc4b1d40302c477b03ca00810cef",
+        "c0c15b74874009ffb194cab2f34e7eba52b4a55a"
+      ],
+      "counterexample_or_failure_found": "A wall-clock-only implementation would make boundary tests timing-sensitive and difficult to replay exactly.",
+      "repair_or_refinement": "Added an optional injected nowMs to assessPromotion for deterministic fixtures, retained Date.now as the CLI default, required a positive configured maximum age, and exposed observed time and computed age in the result.",
+      "remaining_uncertainty": "The imported immutable validator still evaluates its own five-minute future-skew rule using Date.now rather than the injected assessment time; current fixtures avoid that conflict, but a unified clock abstraction may be preferable later.",
+      "outcome": "refined_design",
+      "robustness_increased": true,
+      "rollback_route": "Revert c0c15b74874009ffb194cab2f34e7eba52b4a55a, dcf99ee23ad3fc4b1d40302c477b03ca00810cef, and a1448dc821b66041a4584dea7b5c5b72a64a4427 in reverse order.",
+      "next_falsifiable_step": "Execute the deterministic suite and confirm fresh, stale, missing-policy, and future-observation fixtures produce the expected outcomes."
+    },
+    {
+      "checkpoint": "verification",
+      "claim_or_design_under_test": "The committed source and fixtures establish that promotion now fails closed on stale deployment observations.",
+      "method": "Re-read the exact preview files after commit, checked schema and policy agreement, and bounded the success claim to source-level enforcement because the Node suite was not executable through this connector run.",
+      "evidence": [
+        "operations/deployment/validate-promotion-evidence.v1.mjs@c0c15b74874009ffb194cab2f34e7eba52b4a55a",
+        "operations/deployment/PROMOTION_CHECKLIST.json@c0c15b74874009ffb194cab2f34e7eba52b4a55a",
+        "operations/deployment/validate-promotion-evidence.v1.test.mjs@c0c15b74874009ffb194cab2f34e7eba52b4a55a"
+      ],
+      "counterexample_or_failure_found": "Committed tests are not runtime evidence. No authenticated, fresh, commit-matched Vercel deployment object was available, so promotion cannot be declared successful.",
+      "repair_or_refinement": "Kept publication blocked and documented the exact claim boundary, rollback route, and required runtime evidence.",
+      "remaining_uncertainty": "Runtime test passage, downstream result-schema compatibility, appropriate production freshness threshold, live provider identity, browser verification, accessibility, mobile behavior, audio, privacy, performance, and executed rollback remain unverified.",
+      "outcome": "documented_unresolved_question",
+      "robustness_increased": true,
+      "rollback_route": "Revert this evidence commit, then c0c15b74874009ffb194cab2f34e7eba52b4a55a, dcf99ee23ad3fc4b1d40302c477b03ca00810cef, and a1448dc821b66041a4584dea7b5c5b72a64a4427 in reverse order.",
+      "next_falsifiable_step": "Run node --test operations/deployment/validate-promotion-evidence.v1.test.mjs at exact preview head, retain output, then assess one authenticated deployment object observed within fifteen minutes."
+    }
+  ],
+  "strongest_surviving_proposal": "Promotion requires a provider-authenticated immutable deployment object whose repository, project, branch, commit, role, state, hostname, and observation freshness all match the preview decision. Structural validity without a bounded observation age is insufficient.",
+  "rejected_alternatives": [
+    "Treat READY as timeless evidence.",
+    "Infer freshness from deployment creation time rather than provider observation time.",
+    "Hard-code freshness only in tests without a canonical checklist policy.",
+    "Add a second deployment identity validator instead of composing the existing one.",
+    "Treat committed negative controls as executed verification."
+  ],
+  "unresolved_risks": [
+    "Runtime tests not executed in this run.",
+    "Fifteen-minute freshness threshold lacks operational latency evidence.",
+    "Downstream consumers of promotion result schema version 4 have not been inventoried for schema version 5 compatibility.",
+    "No authenticated Vercel project ID or fresh immutable deployment object was available.",
+    "No live preview, browser, mobile, accessibility, interaction, audio, privacy, performance, or rollback evidence exists."
+  ],
+  "next_falsifiable_step": "Execute and retain the exact Node test output at preview head; then compare the fifteen-minute threshold against observed provider and verification latency before promotion use."
+}
