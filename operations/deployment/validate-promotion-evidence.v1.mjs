@@ -16,6 +16,7 @@ export function assessPromotion(checklist, evidence, options = {}) {
   const expectedIdentity = checklist?.expected_deployment_identity ?? {};
   const nowMs = Number.isFinite(options.nowMs) ? options.nowMs : Date.now();
   const maxEvidenceAgeMs = checklist?.promotion_requires?.max_deployment_evidence_age_ms;
+  const maxRequiredCheckAgeMs = checklist?.promotion_requires?.max_required_check_age_ms;
 
   if (evidence?.source_branch !== checklist?.source_branch) failures.push('source_branch_mismatch');
   if (evidence?.target_branch !== checklist?.target_branch) failures.push('target_branch_mismatch');
@@ -70,13 +71,26 @@ export function assessPromotion(checklist, evidence, options = {}) {
     if (deploymentProjectId !== expectedIdentity.vercel_project_id) failures.push('immutable_deployment_project_id_mismatch');
   }
 
+  if (!Number.isFinite(maxRequiredCheckAgeMs) || maxRequiredCheckAgeMs <= 0) {
+    failures.push('required_check_freshness_policy_missing');
+  }
+
   for (const name of requiredChecks) {
-    if (checks[name]?.status !== 'pass') failures.push(`required_check_not_pass:${name}`);
-    if (checks[name]?.commit !== evidence?.preview_commit) failures.push(`required_check_commit_mismatch:${name}`);
+    const check = checks[name];
+    if (check?.status !== 'pass') failures.push(`required_check_not_pass:${name}`);
+    if (check?.commit !== evidence?.preview_commit) failures.push(`required_check_commit_mismatch:${name}`);
+    const checkObservedAtMs = Date.parse(check?.observed_at || '');
+    if (Number.isNaN(checkObservedAtMs)) {
+      failures.push(`required_check_observed_at_invalid:${name}`);
+    } else if (Number.isFinite(maxRequiredCheckAgeMs) && maxRequiredCheckAgeMs > 0) {
+      const checkAgeMs = nowMs - checkObservedAtMs;
+      if (checkAgeMs < 0) failures.push(`required_check_observed_in_future:${name}`);
+      if (checkAgeMs > maxRequiredCheckAgeMs) failures.push(`required_check_stale:${name}`);
+    }
   }
 
   return {
-    schema_version: 5,
+    schema_version: 6,
     promotable: failures.length === 0,
     failures,
     assessed_preview_commit: evidence?.preview_commit ?? null,
@@ -91,8 +105,13 @@ export function assessPromotion(checklist, evidence, options = {}) {
     deployment_evidence_observed_at: immutableDeployment.normalized?.observed_at ?? null,
     deployment_evidence_max_age_ms: Number.isFinite(maxEvidenceAgeMs) ? maxEvidenceAgeMs : null,
     deployment_evidence_age_ms: Number.isNaN(observedAtMs) ? null : nowMs - observedAtMs,
+    required_check_max_age_ms: Number.isFinite(maxRequiredCheckAgeMs) ? maxRequiredCheckAgeMs : null,
     required_check_count: requiredChecks.length,
-    passed_required_check_count: requiredChecks.filter((name) => checks[name]?.status === 'pass' && checks[name]?.commit === evidence?.preview_commit).length
+    passed_required_check_count: requiredChecks.filter((name) => {
+      const check = checks[name];
+      const checkObservedAtMs = Date.parse(check?.observed_at || '');
+      return check?.status === 'pass' && check?.commit === evidence?.preview_commit && !Number.isNaN(checkObservedAtMs) && Number.isFinite(maxRequiredCheckAgeMs) && maxRequiredCheckAgeMs > 0 && nowMs - checkObservedAtMs >= 0 && nowMs - checkObservedAtMs <= maxRequiredCheckAgeMs;
+    }).length
   };
 }
 
