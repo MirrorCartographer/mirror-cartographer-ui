@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "queue_item": "V-001",
+  "owner": "vercel_studio",
+  "recorded_at": "2026-07-16T00:38:00Z",
+  "finding": "A deterministic repertory receipt can identify the programmed production yet still become stale across an hourly boundary. Current-stage language therefore requires a separate bounded freshness check and must remain distinct from deployment or runtime activation claims.",
+  "implementation": {
+    "policy": "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.cjs",
+    "tests": "operations/vercel-studio/repertory/verifyProgrammedStageFreshness.v1.test.cjs",
+    "mandatory_inventory": "operations/vercel-studio/repertory/repertoryTestInventory.v1.cjs",
+    "max_age_ms": 3600000,
+    "fail_closed_conditions": [
+      "invalid receipt or clock",
+      "future-dated receipt",
+      "receipt age at or beyond one hour",
+      "UTC programmed-hour mismatch",
+      "runtime activation claim",
+      "deployment claim",
+      "side-effect claim",
+      "configured age longer than one hour"
+    ]
+  },
+  "verification": {
+    "source_write_confirmed": true,
+    "test_execution_confirmed": false,
+    "reason": "GitHub connector provided repository writes and source retrieval but no authenticated command runner in this run.",
+    "claim_strength": "committed_source_and_static_test_specification"
+  },
+  "production_currently_programmed_at_record_time": {
+    "status": "unresolved_without_canonical_repertory_content_and_executed_receipt",
+    "runtime_activation_claimed": false
+  },
+  "privacy_boundary": "No private source material, credentials, health material, or user-identifying content was used or committed.",
+  "deployment_claimed": false,
+  "rollback": "Revert commits 370c9a5db3d711dedf8341fa7ae461651db627d5, 1e0cdaa648d64c9aa01d80be5cddf5a5a2528cf7, and b77db01ff58ff683a000d0cc3f2e7ec7dd719763 without deleting history."
+}
