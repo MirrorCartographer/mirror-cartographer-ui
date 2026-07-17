@@ -21,23 +21,33 @@ resource "hcloud_firewall" "foundation" {
   name = "${var.name}-firewall"
 
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "22"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "22"
     source_ips = var.ssh_source_cidrs
   }
 
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "80"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "80"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 
   rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "443"
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "443"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+
+  # Caddy publishes HTTP/3 over QUIC on UDP 443. Keep the provisioned
+  # firewall congruent with compose.production.yaml so the declared edge
+  # capability is reachable on a newly created host.
+  rule {
+    direction  = "in"
+    protocol   = "udp"
+    port       = "443"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 }
@@ -50,11 +60,11 @@ resource "hcloud_volume" "foundation_data" {
 }
 
 resource "hcloud_server" "foundation" {
-  name        = var.name
-  image       = "ubuntu-24.04"
-  server_type = var.server_type
-  location    = var.location
-  ssh_keys    = [hcloud_ssh_key.foundation.id]
+  name         = var.name
+  image        = "ubuntu-24.04"
+  server_type  = var.server_type
+  location     = var.location
+  ssh_keys     = [hcloud_ssh_key.foundation.id]
   firewall_ids = [hcloud_firewall.foundation.id]
   user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
     admin_user = var.admin_user
@@ -72,7 +82,7 @@ resource "hcloud_server" "foundation" {
 resource "hcloud_volume_attachment" "foundation_data" {
   volume_id = hcloud_volume.foundation_data.id
   server_id = hcloud_server.foundation.id
-  automount = true
+  automount  = true
 }
 
 output "ipv4" {
