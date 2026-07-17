@@ -18,11 +18,11 @@
 
   @health path /healthz
   handle @health {
-    reverse_proxy app:80
+    reverse_proxy app:8080
   }
 
   handle {
-    reverse_proxy app:80
+    reverse_proxy app:8080
   }
 
   log {
