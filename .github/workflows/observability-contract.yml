@@ -1,0 +1,38 @@
+name: Observability Contract
+
+on:
+  pull_request:
+    paths:
+      - 'platform/observability/**'
+      - '.github/workflows/observability-contract.yml'
+  push:
+    branches: [preview]
+    paths:
+      - 'platform/observability/**'
+      - '.github/workflows/observability-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout admitted source
+        uses: actions/checkout@v4
+      - name: Record toolchain
+        run: |
+          set -euo pipefail
+          node --version
+          sha256sum \
+            platform/observability/policy.json \
+            platform/observability/otel-collector.yaml \
+            platform/observability/prometheus.yml \
+            platform/observability/verify-observability-contract.mjs \
+            platform/observability/test.mjs
+      - name: Verify observability contract
+        run: node platform/observability/verify-observability-contract.mjs
+      - name: Run adversarial mutation controls
+        run: node platform/observability/test.mjs
