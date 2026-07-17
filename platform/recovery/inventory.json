@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {"id":"local-zfs","failure_domain":"site-a","operator":"project","offline":false,"immutable":true,"encrypted":true},
+    {"id":"remote-borg","failure_domain":"site-b","operator":"project","offline":false,"immutable":true,"encrypted":true},
+    {"id":"offline-media","failure_domain":"offline-vault","operator":"project","offline":true,"immutable":true,"encrypted":true}
+  ],
+  "keys":{"stored_outside_repositories":true,"recovery_key_copies":2},
+  "postgres":{"base_backup":true,"wal_archive":true,"backup_manifest":"sha256","pitr":true},
+  "integrity_scan":{"interval_days":7},
+  "bootstrap_documented":true,
+  "restore_dependencies":["linux-amd64","node-22","postgresql-18","borg-1.4"],
+  "dns_independent_access":true
+}
