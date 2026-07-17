@@ -1,0 +1,12 @@
+{
+  "dispatcher": "foundation-ci-dispatcher",
+  "adapters": ["github-actions"],
+  "worker_image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "failure_domains": ["site-a", "site-b"],
+  "capacity_workers": 2,
+  "isolation": "microvm",
+  "job_network": "deny-by-default",
+  "artifact_source": "project-custody",
+  "evidence_store": "project-object-store",
+  "drill_age_days": 20
+}
