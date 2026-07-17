@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_network_policy": true,
+    "provider_load_balancer_authoritative": false,
+    "provider_tls_state_authoritative": false,
+    "dns_provider_authoritative": false,
+    "proxy_adapter_replaceable": true,
+    "canonical_route_table_exportable": true
+  },
+  "ingress": {
+    "minimum_ingress_nodes": 2,
+    "minimum_failure_domains": 2,
+    "anycast_required": false,
+    "shared_state_required_for_basic_routing": false,
+    "connection_draining_required": true,
+    "atomic_config_activation": true,
+    "last_known_good_retained": true,
+    "configuration_validation_required": true,
+    "runtime_socket_not_public": true
+  },
+  "routing": {
+    "default_deny_unknown_hosts": true,
+    "host_and_path_allowlist": true,
+    "upstream_identity_verification": true,
+    "hop_by_hop_header_sanitization": true,
+    "forwarded_header_trust_boundary": true,
+    "request_size_limits": true,
+    "header_size_limits": true,
+    "timeout_budget_required": true,
+    "retry_budget_required": true,
+    "websocket_explicit": true
+  },
+  "tls": {
+    "minimum_version": "1.2",
+    "tls13_enabled": true,
+    "zero_rtt_disabled": true,
+    "weak_ciphers_disabled": true,
+    "private_keys_nonexportable_preferred": true,
+    "certificate_and_key_atomic_reload": true,
+    "ocsp_stapling_monitored": true,
+    "certificate_expiry_alert_days": 21,
+    "private_certificate_max_hours": 24,
+    "public_certificate_max_days": 100
+  },
+  "pki": {
+    "offline_root_required": true,
+    "minimum_root_copies": 3,
+    "minimum_root_failure_domains": 2,
+    "online_intermediate_separate": true,
+    "public_and_private_pki_separate": true,
+    "internal_acme_required": true,
+    "root_distribution_offline_capable": true,
+    "intermediate_rotation_overlap_required": true,
+    "provider_kms_may_be_sole_key_path": false
+  },
+  "public_certificates": {
+    "acme_required": true,
+    "minimum_ca_accounts": 2,
+    "minimum_challenge_methods": 2,
+    "dns_api_credentials_on_ingress_forbidden": true,
+    "certificate_cache_project_controlled": true,
+    "renewal_without_original_ca_required": true,
+    "wildcard_default": false
+  },
+  "network": {
+    "default_deny_east_west": true,
+    "management_plane_separate": true,
+    "out_of_band_access_required": true,
+    "public_dns_required_for_internal_recovery": false,
+    "proxy_hosts_hold_release_keys": false,
+    "source_ip_policy_explicit": true,
+    "ipv6_policy_explicit": true,
+    "mtu_policy_explicit": true
+  },
+  "resilience": {
+    "one_ingress_loss_tested": true,
+    "one_site_loss_tested": true,
+    "certificate_renewal_failure_tested": true,
+    "dns_failure_tested": true,
+    "ca_failure_tested": true,
+    "config_rollback_tested": true,
+    "provider_lb_loss_tested": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_config_digest": true,
+    "contains_route_digest": true,
+    "contains_certificate_chain_digest": true,
+    "contains_tls_scan": true,
+    "contains_failover_result": true,
+    "contains_external_probe_result": true,
+    "contains_operator_signatures": true,
+    "retention_days": 2555
+  }
+}
