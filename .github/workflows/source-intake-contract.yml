@@ -1,0 +1,24 @@
+name: Source Intake Contract
+on:
+  push:
+    branches: [main]
+    paths:
+      - "platform/source-intake/**"
+      - ".github/workflows/source-intake-contract.yml"
+  pull_request:
+    paths:
+      - "platform/source-intake/**"
+      - ".github/workflows/source-intake-contract.yml"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: node platform/source-intake/verify-source-intake-contract.mjs
+      - run: node platform/source-intake/test.mjs
