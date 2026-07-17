@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "authority": {
+    "project_controls_namespace": true,
+    "hosted_registry_authoritative": false,
+    "canonical_index_exportable": true
+  },
+  "content": {
+    "digest_algorithm": "sha256",
+    "deploy_by_digest_only": true,
+    "mutable_tags_authoritative": false,
+    "verify_bytes_on_ingest": true,
+    "verify_bytes_on_read": true,
+    "preserve_manifest_bytes": true,
+    "referrers_preserved": true
+  },
+  "custody": {
+    "copies": 3,
+    "failure_domains": 2,
+    "offline_copy": true,
+    "immutable_copy": true,
+    "project_controlled_copy": true
+  },
+  "oci": {
+    "distribution_spec": "1.1",
+    "deletion_default": false,
+    "gc_requires_read_only": true,
+    "gc_dry_run": true,
+    "gc_protected_digests": true,
+    "registry_export_format": "oci-layout"
+  },
+  "packages": {
+    "lockfile_required": true,
+    "tarball_integrity_required": true,
+    "metadata_snapshot_required": true,
+    "install_from_project_mirror": true,
+    "upstream_network_in_canonical_build": false,
+    "lifecycle_scripts_default": "deny",
+    "mirror_exportable": true
+  },
+  "access": {
+    "tls": true,
+    "workload_identity": true,
+    "least_privilege": true,
+    "anonymous_push": false,
+    "release_keys_present": false,
+    "short_lived_credentials_minutes": 15
+  },
+  "recovery": {
+    "clean_host_restore_days": 30,
+    "signed_evidence": true,
+    "reconstruct_without_public_dns": true,
+    "reconstruct_without_upstream_registries": true,
+    "cross_implementation_restore": true
+  },
+  "operations": {
+    "capacity_alert_percent": 75,
+    "integrity_scan_days": 7,
+    "audit_deletes": true,
+    "two_operator_destructive_actions": true,
+    "retention_manifest_required": true
+  }
+}
