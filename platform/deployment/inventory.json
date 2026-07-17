@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "controller": "foundation-deployer-v1",
+    "project_owned": true,
+    "provider_authoritative": false,
+    "scheduler_authoritative": false
+  },
+  "release": {
+    "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sequence": 42,
+    "signature_verified": true,
+    "artifact_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "artifact_verified_on_host": true,
+    "policy_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "policy_verified": true
+  },
+  "desired_state": {
+    "source_controlled": true,
+    "exportable": true,
+    "immutable_revision": "deploy-000042",
+    "adapter": "nomad",
+    "adapter_replaceable": true,
+    "image_reference": "registry.internal/app@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "configuration_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "contains_secret_values": false
+  },
+  "admission": {
+    "sequence_monotonic": true,
+    "schema_compatible": true,
+    "capacity_available": true,
+    "failure_domains_available": 2,
+    "time_uncertainty_within_policy": true
+  },
+  "strategy": {
+    "mode": "canary-then-rolling",
+    "canary_count": 1,
+    "manual_promotion": true,
+    "minimum_healthy_seconds": 180,
+    "progress_deadline_seconds": 900,
+    "maximum_parallel_fraction": 0.25,
+    "automatic_revert": true,
+    "old_revision_retained": true,
+    "traffic_shift_atomic": true,
+    "connection_draining": true
+  },
+  "health": {
+    "startup": true,
+    "readiness": true,
+    "liveness": true,
+    "semantic": true,
+    "external": true,
+    "error_budget_gate": true,
+    "dependencies": true,
+    "all_evidence_present": true
+  },
+  "rollback": {
+    "signed_decision": true,
+    "target_release_admitted": true,
+    "database_compatible": true,
+    "requires_dns_change": false,
+    "requires_registry": false,
+    "artifact_in_project_custody": true,
+    "observed_seconds": 112
+  },
+  "runtime": {
+    "failure_domains": ["site-a", "site-b"],
+    "ready_replicas": 2,
+    "rootless": true,
+    "read_only_rootfs": true,
+    "host_runtime_socket": false,
+    "default_deny_network": true,
+    "resource_limits": true,
+    "workload_identity": true,
+    "host_drift_clear": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "release_digest": true,
+    "runtime_state_digest": true,
+    "health_results": true,
+    "traffic_shift_record": true,
+    "operator_identity": true,
+    "rollback_point": true,
+    "retention_days": 2555
+  },
+  "continuity": {
+    "provider_independent_path": true,
+    "public_dns_required": false,
+    "github_required": false,
+    "original_registry_required": false,
+    "last_clean_host_reconstruction_age_days": 14,
+    "trained_operators": 2
+  }
+}
