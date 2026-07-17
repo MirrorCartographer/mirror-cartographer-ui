@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "canonical_topology_owned_by_project": true,
+    "broker_is_replaceable_mechanism": true,
+    "hosted_broker_may_be_sole_authority": false
+  },
+  "delivery": {
+    "minimum_semantics": "at-least-once",
+    "publisher_confirmation_required": true,
+    "manual_consumer_ack_required": true,
+    "ack_after_side_effect_commit": true,
+    "idempotency_required": true,
+    "transactional_outbox_required": true,
+    "distributed_2pc_required": false
+  },
+  "durability": {
+    "minimum_replicas": 3,
+    "minimum_failure_domains": 3,
+    "quorum_commit_required": true,
+    "persistent_storage_required": true,
+    "fsync_or_equivalent_required": true,
+    "single_node_allowed_in_production": false
+  },
+  "flow_control": {
+    "bounded_queue_bytes": true,
+    "discard_policy": "reject-new",
+    "producer_backpressure_required": true,
+    "consumer_prefetch_bounded": true,
+    "capacity_alerting_required": true
+  },
+  "failure_handling": {
+    "maximum_delivery_attempts": 12,
+    "dead_letter_required": true,
+    "dead_letter_transfer_semantics": "at-least-once",
+    "poison_message_retention_days": 30,
+    "retry_jitter_required": true,
+    "operator_replay_audited": true
+  },
+  "custody": {
+    "stream_export_required": true,
+    "configuration_export_required": true,
+    "offline_recovery_copy_required": true,
+    "minimum_backup_copies": 3,
+    "minimum_backup_failure_domains": 2,
+    "restore_drill_max_age_days": 30
+  },
+  "security": {
+    "tls_required": true,
+    "workload_identity_required": true,
+    "default_deny_authorization": true,
+    "tenant_isolation_required": true,
+    "payload_secrets_forbidden": true,
+    "audit_log_required": true
+  },
+  "operations": {
+    "schema_versioning_required": true,
+    "backward_compatible_window_required": true,
+    "lag_metrics_required": true,
+    "redelivery_metrics_required": true,
+    "oldest_message_age_metric_required": true,
+    "two_operator_destructive_replay": true
+  }
+}
