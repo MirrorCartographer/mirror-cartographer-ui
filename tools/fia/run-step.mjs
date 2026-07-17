@@ -24,7 +24,8 @@ function sanitizeEnv(env){
   return Object.fromEntries(allowed.filter(key => env[key] !== undefined).sort().map(key => [key, String(env[key])]));
 }
 function validateAdmission(admission,name,command){
-  if(!admission || admission.schema !== 'fia.execution-admission.v1') fail(`missing execution admission: ${name}`);
+  if(admission === null) return null;
+  if(!admission || admission.schema !== 'fia.execution-admission.v1') fail(`invalid execution admission: ${name}`);
   if(admission.step !== name) fail(`execution admission step mismatch: ${name}`);
   if(admission.command !== sha256(Buffer.from(command))) fail(`execution admission command mismatch: ${name}`);
   if(!/^sha256:[0-9a-f]{64}$/.test(admission.admission || '')) fail(`invalid execution admission identity: ${name}`);
