@@ -1,0 +1,32 @@
+{
+  "artifact_ref": "registry.internal/foundation/app@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "release_admitted": true,
+  "local_artifact_present": true,
+  "runtime": {
+    "engine": "podman-rootless",
+    "manager": "systemd-quadlet",
+    "rootless": true,
+    "read_only_rootfs": true,
+    "no_new_privileges": true,
+    "cap_drop": ["ALL"],
+    "memory_limit_mib": 512,
+    "cpu_quota_percent": 100
+  },
+  "hosts": [
+    {"id": "host-a", "failure_domain": "site-a", "slots": ["blue", "green"], "ready_replicas": 1, "backend_bind": "127.0.0.1:18080"},
+    {"id": "host-b", "failure_domain": "site-b", "slots": ["blue", "green"], "ready_replicas": 1, "backend_bind": "10.20.0.12:18080"}
+  ],
+  "deployment": {
+    "strategy": "blue-green",
+    "health_gate": true,
+    "promotion_approvals": ["operator-a", "operator-b"],
+    "max_unavailable": 0,
+    "automatic_rollback": true,
+    "previous_digest_cached": true,
+    "rollback_requires_registry": false,
+    "rollback_requires_public_dns": false
+  },
+  "network": {"public_entrypoint": "reverse-proxy", "application_public_bind": false},
+  "state": {"ephemeral_workload": true, "persistent_state_externalized": true},
+  "operations": {"evidence_signed": true, "drift_detection": true, "break_glass_audited": true}
+}
