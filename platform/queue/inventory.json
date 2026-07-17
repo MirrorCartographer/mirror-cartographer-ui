@@ -1,0 +1,33 @@
+{
+  "implementation": "nats-jetstream",
+  "topology_source": "platform/queue/topology.json",
+  "provider_authoritative": false,
+  "nodes": [
+    {"id":"queue-a","failure_domain":"site-a","persistent":true},
+    {"id":"queue-b","failure_domain":"site-b","persistent":true},
+    {"id":"queue-c","failure_domain":"site-c","persistent":true}
+  ],
+  "replication_factor": 3,
+  "quorum_commit": true,
+  "fsync_or_equivalent": true,
+  "publisher_confirms": true,
+  "manual_consumer_ack": true,
+  "ack_after_commit": true,
+  "transactional_outbox": true,
+  "distributed_2pc": false,
+  "idempotency_store": "postgresql-consumer-inbox",
+  "queue_limits": {"bounded_bytes":true,"discard_policy":"reject-new","producer_backpressure":true,"prefetch_bounded":true,"capacity_alerting":true},
+  "retry": {"max_attempts":12,"jitter":true},
+  "dead_letter": {"enabled":true,"transfer_semantics":"at-least-once","retention_days":30,"audited_replay":true},
+  "exports": {"stream":true,"configuration":true,"offline_copy":true,"format":"broker-neutral-envelope-v1"},
+  "backups": [
+    {"id":"queue-backup-a","failure_domain":"site-a"},
+    {"id":"queue-backup-b","failure_domain":"site-b"},
+    {"id":"queue-backup-offline","failure_domain":"offline-vault"}
+  ],
+  "restore_evidence": {"age_days":7,"signed":true,"clean_host":true,"replay_verified":true},
+  "security": {"tls":true,"workload_identity":true,"default_deny":true,"tenant_isolation":true,"payload_secrets":false,"audit_log":true},
+  "schema": {"versioned":true,"backward_compatible_window":true},
+  "metrics": {"lag":true,"redelivery":true,"oldest_message_age":true},
+  "destructive_replay": {"minimum_operators":2}
+}
