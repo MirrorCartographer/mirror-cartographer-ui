@@ -1,0 +1,9 @@
+{
+  "completed_at":"2026-07-17T03:30:00Z",
+  "clean_host":true,
+  "application_smoke_test":true,
+  "signed":true,
+  "measured_rpo_minutes":9,
+  "measured_rto_minutes":74,
+  "operators":["operator-a","operator-b"]
+}
