@@ -1,0 +1,23 @@
+{
+  "provider_authoritative": false,
+  "data_classes": {"declared": true, "durable_on_ephemeral": false, "database_native_durability": true},
+  "implementation": "zfs-replicated-primary-plus-portable-object-custody",
+  "volumes": [
+    {"name": "site-a", "failure_domain": "site-a", "persistent": true},
+    {"name": "site-b", "failure_domain": "site-b", "persistent": true},
+    {"name": "site-c", "failure_domain": "site-c", "persistent": true}
+  ],
+  "integrity": {"checksums": "sha256-or-native-strong", "scrub_enabled": true, "last_scrub_age_days": 2, "repair_only_with_redundancy": true, "corruption_alerts": true},
+  "capacity": {"free_percent": 31, "hard_reservations": true, "thin_fail_mode": "error", "metadata_alerts": true, "rebuild_headroom": true},
+  "snapshots": {"crash_consistent": true, "application_consistent_stateful": true, "treated_as_backup": false, "retention_manifest": true},
+  "exports": {"portable": true, "format": "tar-plus-manifest-v1", "cross_implementation_verified": true},
+  "backups": [
+    {"id": "a", "failure_domain": "site-a", "offline": false, "immutable": false},
+    {"id": "b", "failure_domain": "site-b", "offline": false, "immutable": true},
+    {"id": "c", "failure_domain": "offline-vault", "offline": true, "immutable": true}
+  ],
+  "restore_evidence": {"signed": true, "clean_host": true, "semantic_verified": true, "age_days": 8, "without_dns": true},
+  "security": {"at_rest": true, "in_transit": true, "workload_identity": true, "default_deny": true, "keys_separate": true},
+  "metrics": {"device_health": true, "latency": true, "capacity": true, "rebuild": true},
+  "destructive_actions": {"minimum_operators": 2}
+}
