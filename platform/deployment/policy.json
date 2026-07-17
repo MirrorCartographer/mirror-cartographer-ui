@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_deployment_controller": true,
+    "provider_deployment_state_authoritative": false,
+    "scheduler_state_authoritative": false,
+    "release_manifest_digest_required": true,
+    "mutable_tags_authorize_deployment": false,
+    "build_may_self_promote": false
+  },
+  "desired_state": {
+    "source_controlled": true,
+    "exportable": true,
+    "immutable_revision": true,
+    "runtime_adapter_replaceable": true,
+    "image_digest_required": true,
+    "configuration_digest_required": true,
+    "secret_values_forbidden": true
+  },
+  "admission": {
+    "release_signature_verified": true,
+    "release_sequence_monotonic": true,
+    "artifact_digest_verified_on_host": true,
+    "policy_digest_verified": true,
+    "schema_compatibility_required": true,
+    "capacity_check_required": true,
+    "failure_domain_check_required": true,
+    "time_uncertainty_check_required": true
+  },
+  "strategy": {
+    "critical_default": "canary-then-rolling",
+    "canary_required": true,
+    "manual_promotion_required": true,
+    "minimum_healthy_seconds": 120,
+    "progress_deadline_seconds": 900,
+    "maximum_parallel_fraction": 0.25,
+    "automatic_revert_on_health_failure": true,
+    "old_revision_retained_until_acceptance": true,
+    "traffic_shift_atomic": true,
+    "connection_draining_required": true
+  },
+  "health": {
+    "startup_probe_required": true,
+    "readiness_probe_required": true,
+    "liveness_probe_required": true,
+    "semantic_probe_required": true,
+    "external_probe_required": true,
+    "error_budget_gate_required": true,
+    "dependency_health_required": true,
+    "missing_evidence_fails_closed": true
+  },
+  "rollback": {
+    "new_signed_decision_required": true,
+    "previous_release_must_be_admitted": true,
+    "database_compatibility_required": true,
+    "dns_change_not_required": true,
+    "registry_availability_not_required": true,
+    "rollback_artifact_local_or_project_custody": true,
+    "maximum_target_seconds": 300
+  },
+  "runtime": {
+    "minimum_failure_domains": 2,
+    "critical_minimum_ready_replicas": 2,
+    "rootless_execution": true,
+    "read_only_rootfs": true,
+    "no_host_runtime_socket": true,
+    "default_deny_network": true,
+    "resource_limits_required": true,
+    "workload_identity_required": true,
+    "host_drift_blocks_deployment": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_release_digest": true,
+    "contains_runtime_state_digest": true,
+    "contains_health_results": true,
+    "contains_traffic_shift": true,
+    "contains_operator_identity": true,
+    "contains_rollback_point": true,
+    "retention_days": 2555
+  },
+  "continuity": {
+    "provider_independent_deploy_path": true,
+    "public_dns_required": false,
+    "github_required": false,
+    "original_registry_required": false,
+    "clean_host_reconstruction_days": 30,
+    "minimum_trained_operators": 2
+  }
+}
