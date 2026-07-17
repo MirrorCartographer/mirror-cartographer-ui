@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "authority": {
+    "project_controls_primary_election": true,
+    "provider_failover_is_not_authoritative": true,
+    "canonical_schema_source": "repository",
+    "canonical_migration_ledger": "database-and-signed-export"
+  },
+  "topology": {
+    "engine": "postgresql",
+    "minimum_nodes": 3,
+    "minimum_failure_domains": 3,
+    "synchronous_standbys_required": 1,
+    "automatic_failover": true,
+    "fencing_required": true,
+    "single_writer": true,
+    "maximum_data_loss_seconds": 30,
+    "maximum_failover_seconds": 120
+  },
+  "durability": {
+    "data_checksums": true,
+    "full_page_writes": true,
+    "wal_archive": true,
+    "replication_slots_bounded": true,
+    "maximum_slot_retained_bytes": 10737418240,
+    "disk_headroom_percent": 25
+  },
+  "migrations": {
+    "immutable_ids": true,
+    "checksummed_files": true,
+    "transactional_by_default": true,
+    "expand_contract_required": true,
+    "backward_compatibility_window_releases": 2,
+    "destructive_changes_require_two_operators": true,
+    "rollback_or_forward_fix_documented": true,
+    "application_and_schema_compatibility_tested": true
+  },
+  "upgrades": {
+    "pg_upgrade_check_required": true,
+    "rehearsal_on_restored_copy": true,
+    "old_cluster_preserved_until_acceptance": true,
+    "link_mode_forbidden_for_first_production_upgrade": true,
+    "logical_replication_exit_path": true,
+    "sequence_reconciliation_required": true,
+    "ddl_synchronization_required": true
+  },
+  "recovery": {
+    "pg_rewind_enabled": true,
+    "wal_log_hints_or_checksums": true,
+    "clean_host_restore_max_age_days": 30,
+    "signed_restore_evidence": true,
+    "dns_independent_admin_path": true
+  },
+  "security": {
+    "tls_required": true,
+    "workload_identity_required": true,
+    "superuser_for_application_forbidden": true,
+    "default_deny_network": true,
+    "audit_ddl_and_role_changes": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "records_timeline_and_lsn": true,
+    "records_schema_digest": true,
+    "records_failover_and_rejoin": true
+  }
+}
