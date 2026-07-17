@@ -1,0 +1,27 @@
+name: Registry Contract
+
+on:
+  pull_request:
+    paths:
+      - 'platform/registry/**'
+      - '.github/workflows/registry-contract.yml'
+  push:
+    branches: [main, preview]
+    paths:
+      - 'platform/registry/**'
+      - '.github/workflows/registry-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node platform/registry/verify-registry-contract.mjs platform/registry/policy.json platform/registry/inventory.json
+      - run: node platform/registry/test.mjs
