@@ -10,5 +10,12 @@ RUN npm run build
 FROM caddy:2.10-alpine
 COPY --from=build /src/dist /srv
 COPY platform/host/Caddyfile.app /etc/caddy/Caddyfile
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider http://127.0.0.1/healthz || exit 1
+
+# The static application server needs no root privileges. It listens on an
+# unprivileged port and writes any transient Caddy state beneath the tmpfs-backed
+# /tmp hierarchy supplied by the production composition.
+ENV XDG_CONFIG_HOME=/tmp/caddy-config \
+    XDG_DATA_HOME=/tmp/caddy-data
+USER 65534:65534
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider http://127.0.0.1:8080/healthz || exit 1
