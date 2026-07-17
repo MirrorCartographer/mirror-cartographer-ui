@@ -8,6 +8,7 @@ fi
 
 archive=${1:?Usage: restore-backup.sh /path/to/foundation-*.tar.gz}
 checksum="$archive.sha256"
+LOCK=${FOUNDATION_DATA_LOCK:-/run/lock/foundation-data.lock}
 [[ -f "$archive" ]] || { echo "Backup not found: $archive" >&2; exit 1; }
 [[ -f "$checksum" ]] || { echo "Checksum not found: $checksum" >&2; exit 1; }
 
@@ -23,6 +24,17 @@ case "$(tar -tzf "$archive")" in
     exit 1
     ;;
 esac
+
+# Restore owns the data tree exclusively from shutdown through final sync. This
+# is the exclusive counterpart to backup.sh's shared lock and prevents backups,
+# peer-triggered reads, or duplicate restore attempts from observing a partially
+# replaced persistent state.
+install -d -m 0755 "$(dirname "$LOCK")"
+exec 9>"$LOCK"
+if ! flock -x -w 30 9; then
+  echo "Foundation data is busy; refusing concurrent restore mutation." >&2
+  exit 75
+fi
 
 if systemctl is-active --quiet foundation-deploy.service; then
   systemctl stop foundation-deploy.service
