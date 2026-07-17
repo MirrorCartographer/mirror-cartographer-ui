@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "authority": {
+    "canonical_policy": "project-repository",
+    "provider_time_authoritative": false,
+    "exportable": true,
+    "two_operator_policy_changes": true
+  },
+  "sources": {
+    "minimum_total": 4,
+    "minimum_independent_operators": 3,
+    "minimum_network_paths": 2,
+    "nts_sources": 2,
+    "unauthenticated_sources_max": 1,
+    "gnss_allowed_not_sole": true,
+    "local_holdover_source": true,
+    "public_pool_sole_source": false
+  },
+  "servers": {
+    "minimum_internal_servers": 3,
+    "failure_domains": 3,
+    "orphan_mode": true,
+    "clients_use_internal_servers": true,
+    "clients_contact_public_ntp": false
+  },
+  "discipline": {
+    "maximum_normal_offset_ms": 250,
+    "maximum_root_distance_ms": 1000,
+    "maximum_frequency_error_ppm": 100,
+    "startup_step_max_seconds": 5,
+    "runtime_backward_step": false,
+    "quarantine_on_excess_offset": true,
+    "quarantine_on_no_majority": true,
+    "holdover_max_hours": 24
+  },
+  "application": {
+    "durations_use_monotonic_clock": true,
+    "wall_clock_used_for_expiry_only_with_uncertainty": true,
+    "signed_evidence_records_time_uncertainty": true,
+    "database_ordering_not_derived_from_wall_clock": true,
+    "lease_safety_accounts_for_clock_error": true
+  },
+  "security": {
+    "nts_required": true,
+    "nts_tls_minimum": "1.3",
+    "time_service_no_release_keys": true,
+    "default_deny_network": true,
+    "time_change_audited": true,
+    "manual_step_two_operators": true
+  },
+  "continuity": {
+    "boot_without_public_dns": true,
+    "boot_without_internet": true,
+    "cached_trust_material": true,
+    "rtc_seed": true,
+    "offline_time_recovery_procedure": true,
+    "clean_host_restore_days": 30
+  },
+  "evidence": {
+    "source_inventory": true,
+    "source_operator_map": true,
+    "network_path_map": true,
+    "offset_and_root_distance": true,
+    "frequency_and_holdover": true,
+    "leap_status": true,
+    "quarantine_events": true,
+    "boot_without_network_test": true,
+    "signed": true,
+    "operator_signatures": 2
+  }
+}
