@@ -54,6 +54,7 @@ cp "$FOUNDATION_ROOT/repository/platform/host/compose.production.yaml" "$FOUNDAT
 cp "$FOUNDATION_ROOT/repository/platform/host/Caddyfile.edge" "$FOUNDATION_ROOT/Caddyfile"
 install -m 0750 "$FOUNDATION_ROOT/repository/platform/host/backup.sh" "$FOUNDATION_ROOT/backup.sh"
 install -m 0750 "$FOUNDATION_ROOT/repository/platform/host/restore-backup.sh" "$FOUNDATION_ROOT/restore-backup.sh"
+install -m 0750 "$FOUNDATION_ROOT/repository/platform/host/capture-runtime-identity.sh" "$FOUNDATION_ROOT/capture-runtime-identity.sh"
 
 cat > "$FOUNDATION_ROOT/deploy.sh" <<'EOF'
 #!/usr/bin/env bash
@@ -114,24 +115,36 @@ cp "$ROOT/repository/platform/host/compose.production.yaml" "$ROOT/compose.yaml"
 cp "$ROOT/repository/platform/host/Caddyfile.edge" "$ROOT/Caddyfile"
 install -m 0750 "$ROOT/repository/platform/host/backup.sh" "$ROOT/backup.sh"
 install -m 0750 "$ROOT/repository/platform/host/restore-backup.sh" "$ROOT/restore-backup.sh"
+install -m 0750 "$ROOT/repository/platform/host/capture-runtime-identity.sh" "$ROOT/capture-runtime-identity.sh"
 cd "$ROOT"
 export FOUNDATION_DOMAIN FOUNDATION_COMMIT="$COMMIT" FOUNDATION_IMAGE="$IMAGE"
 docker compose config --quiet
 docker compose build --pull app
 docker image inspect "$IMAGE" --format '{{.Id}}' > "$RELEASE/image-id"
 docker compose up -d --remove-orphans
+IDENTITY_CAPTURE_FAILED=0
 for _ in $(seq 1 60); do
   if health_ok; then
-    ln -sfn "$RELEASE" "$STATE/current"
-    printf '%s\n' "$COMMIT" > "$STATE/current-commit"
-    printf '%s\n' "$IMAGE" > "$STATE/current-image"
-    record_evidence promoted "$COMMIT" "$IMAGE" "$COMMIT" "$IMAGE"
-    exit 0
+    # Health is necessary but not sufficient for promotion. Capture the exact
+    # host, application image, edge digest, and active configuration identity.
+    # Any missing identity evidence rejects the candidate and enters rollback.
+    if "$ROOT/capture-runtime-identity.sh" "$RELEASE/runtime-identity.env"; then
+      ln -sfn "$RELEASE" "$STATE/current"
+      printf '%s\n' "$COMMIT" > "$STATE/current-commit"
+      printf '%s\n' "$IMAGE" > "$STATE/current-image"
+      record_evidence promoted "$COMMIT" "$IMAGE" "$COMMIT" "$IMAGE"
+      exit 0
+    fi
+    IDENTITY_CAPTURE_FAILED=1
+    echo "Candidate health passed but immutable runtime identity capture failed; refusing promotion" >&2
+    break
   fi
   sleep 2
 done
 
-echo "Candidate health verification failed; release was not promoted" >&2
+if [[ "$IDENTITY_CAPTURE_FAILED" -eq 0 ]]; then
+  echo "Candidate health verification failed; release was not promoted" >&2
+fi
 docker compose ps >&2 || true
 
 # Rollback is release-complete, not image-only. Restore the exact prior Compose
