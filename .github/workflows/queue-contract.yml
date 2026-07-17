@@ -1,0 +1,27 @@
+name: Queue sovereignty contract
+
+on:
+  pull_request:
+    paths:
+      - 'platform/queue/**'
+      - '.github/workflows/queue-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'platform/queue/**'
+      - '.github/workflows/queue-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node platform/queue/verify-queue-contract.mjs platform/queue/policy.json platform/queue/inventory.json
+      - run: node platform/queue/test.mjs
