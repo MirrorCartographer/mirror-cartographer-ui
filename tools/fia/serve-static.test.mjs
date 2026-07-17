@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createStaticRuntime } from './serve-static.mjs';
 
+const ARTIFACT = `sha256:${'0'.repeat(64)}`;
+
 async function fixture() {
   const root = await mkdtemp(join(tmpdir(), 'fia-static-runtime-'));
   await mkdir(join(root, 'assets'));
@@ -15,13 +17,10 @@ async function fixture() {
 }
 
 async function withRuntime(options, fn) {
-  const runtime = await createStaticRuntime({ ...options, host: '127.0.0.1', port: 0 });
+  const runtime = await createStaticRuntime({ artifact: ARTIFACT, ...options, host: '127.0.0.1', port: 0 });
   const { port } = runtime.address;
-  try {
-    await fn(`http://127.0.0.1:${port}`);
-  } finally {
-    await runtime.close();
-  }
+  try { await fn(`http://127.0.0.1:${port}`); }
+  finally { await runtime.close(); }
 }
 
 test('serves files with privacy and security headers', async () => {
@@ -83,9 +82,7 @@ test('does not follow symlinks outside the static root', async () => {
 
 test('SPA fallback is explicit and disabled by default', async () => {
   const root = await fixture();
-  await withRuntime({ root }, async base => {
-    assert.equal((await fetch(`${base}/route/unknown`)).status, 404);
-  });
+  await withRuntime({ root }, async base => { assert.equal((await fetch(`${base}/route/unknown`)).status, 404); });
   await withRuntime({ root, spa: true }, async base => {
     const response = await fetch(`${base}/route/unknown`);
     assert.equal(response.status, 200);
