@@ -5,6 +5,18 @@ BACKUP_ROOT=${FOUNDATION_BACKUP_ROOT:-/var/lib/foundation/backups}
 DATA_ROOT=${FOUNDATION_DATA_ROOT:-/srv/foundation/data}
 STATE_ROOT=${FOUNDATION_STATE_ROOT:-/var/lib/foundation}
 RETENTION_DAYS=${FOUNDATION_BACKUP_RETENTION_DAYS:-14}
+LOCK=${FOUNDATION_DATA_LOCK:-/run/lock/foundation-data.lock}
+
+# Backups take a shared lock so multiple read-only backup consumers may coexist,
+# while restore takes the exclusive side of the same lock. Refuse to snapshot a
+# data tree while a restore is replacing it; a mixed-generation archive is not
+# valid recovery evidence.
+install -d -m 0755 "$(dirname "$LOCK")"
+exec 9>"$LOCK"
+if ! flock -s -w 30 9; then
+  echo "Foundation data is under exclusive mutation; refusing inconsistent backup." >&2
+  exit 75
+fi
 
 install -d -m 0700 "$BACKUP_ROOT"
 stamp=$(date -u +%Y%m%dT%H%M%SZ)
