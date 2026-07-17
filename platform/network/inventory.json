@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "policy": "foundation-network-policy-v1",
+    "project_owned": true,
+    "provider_load_balancer_authoritative": false,
+    "provider_tls_authoritative": false,
+    "dns_provider_authoritative": false,
+    "proxy_adapter": "haproxy",
+    "adapter_replaceable": true,
+    "route_table_exportable": true
+  },
+  "ingress": {
+    "nodes": [
+      {"id": "edge-a", "domain": "site-a", "address_family": ["ipv4", "ipv6"]},
+      {"id": "edge-b", "domain": "site-b", "address_family": ["ipv4", "ipv6"]}
+    ],
+    "connection_draining": true,
+    "atomic_activation": true,
+    "last_known_good": true,
+    "config_validation": true,
+    "runtime_socket_public": false
+  },
+  "routing": {
+    "default_deny_unknown_hosts": true,
+    "allowlisted_hosts_paths": true,
+    "upstream_mtls": true,
+    "hop_by_hop_sanitized": true,
+    "forwarded_headers_from_trusted_proxies_only": true,
+    "request_size_limit_bytes": 16777216,
+    "header_size_limit_bytes": 32768,
+    "connect_timeout_ms": 3000,
+    "client_timeout_ms": 30000,
+    "server_timeout_ms": 30000,
+    "retry_budget": 1,
+    "websocket_routes_explicit": true
+  },
+  "tls": {
+    "minimum_version": "1.2",
+    "tls13": true,
+    "zero_rtt": false,
+    "weak_ciphers": false,
+    "private_key_storage": "tpm-or-restricted-file",
+    "atomic_reload": true,
+    "ocsp_monitored": true,
+    "expiry_alert_days": 21,
+    "private_max_hours": 24,
+    "public_max_days": 90
+  },
+  "pki": {
+    "offline_root": true,
+    "root_copies": [
+      {"id": "root-a", "domain": "vault-a"},
+      {"id": "root-b", "domain": "vault-b"},
+      {"id": "root-c", "domain": "operator-quorum"}
+    ],
+    "online_intermediate_separate": true,
+    "public_private_separate": true,
+    "internal_acme": true,
+    "root_distribution_offline": true,
+    "intermediate_overlap": true,
+    "provider_kms_sole_path": false
+  },
+  "public_certificates": {
+    "acme": true,
+    "ca_accounts": ["ca-a", "ca-b"],
+    "challenge_methods": ["dns-01", "tls-alpn-01"],
+    "dns_api_credentials_on_ingress": false,
+    "certificate_cache_project_controlled": true,
+    "renewal_without_original_ca": true,
+    "wildcard_default": false
+  },
+  "network": {
+    "default_deny_east_west": true,
+    "management_plane_separate": true,
+    "out_of_band_access": true,
+    "public_dns_required_for_internal_recovery": false,
+    "release_keys_present": false,
+    "source_ip_policy": "proxy-protocol-from-allowlisted-upstreams",
+    "ipv6_policy": "fully-filtered-and-tested",
+    "mtu_policy": "path-mtu-discovery-plus-explicit-overlay-budget"
+  },
+  "resilience": {
+    "one_ingress_loss": true,
+    "one_site_loss": true,
+    "certificate_renewal_failure": true,
+    "dns_failure": true,
+    "ca_failure": true,
+    "config_rollback": true,
+    "provider_lb_loss": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "config_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "route_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "certificate_chain_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "tls_scan": true,
+    "failover_result": true,
+    "external_probe_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
