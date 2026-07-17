@@ -1,0 +1,50 @@
+{
+  "schema": "foundation.observability-policy.v1",
+  "signals": {
+    "metrics": {"canonical": "prometheus", "minimum_replicas": 2, "retention_days": 30, "remote_mirror_required": true},
+    "logs": {"canonical": "loki-tsdb", "object_store_required": true, "retention_days": 30},
+    "traces": {"canonical": "tempo", "sampling": "tail", "retention_days": 7},
+    "synthetics": {"minimum_external_failure_domains": 2, "raw_result_custody": true}
+  },
+  "collection": {
+    "protocol": "otlp",
+    "local_agent_required": true,
+    "gateway_replicas": 2,
+    "memory_limiter_required": true,
+    "batching_required": true,
+    "persistent_queue_required": true,
+    "telemetry_redaction_required": true,
+    "direct_vendor_export_forbidden": true
+  },
+  "alerting": {
+    "alertmanager_replicas": 3,
+    "prometheus_sends_to_all_alertmanagers": true,
+    "load_balancer_between_prometheus_and_alertmanager": false,
+    "minimum_notification_routes": 2,
+    "deadman_alert_required": true,
+    "notification_delivery_evidence_required": true
+  },
+  "custody": {
+    "raw_data_export_required": true,
+    "signed_daily_evidence_manifest": true,
+    "independent_backup_copies": 2,
+    "hosted_dashboard_as_sole_copy_forbidden": true,
+    "hosted_alerting_as_sole_authority_forbidden": true,
+    "clean_host_restore_drill_days": 90
+  },
+  "security": {
+    "public_ingest_forbidden": true,
+    "workload_identity_required": true,
+    "tenant_isolation_required": true,
+    "secret_fields_in_telemetry_forbidden": true,
+    "audit_log_for_policy_changes": true
+  },
+  "failure": {
+    "collector_backpressure_must_not_crash_workload": true,
+    "disk_full_alert_required": true,
+    "telemetry_loss_counter_required": true,
+    "clock_skew_alert_required": true,
+    "single_backend_loss_tolerated": true,
+    "single_external_probe_loss_tolerated": true
+  }
+}
