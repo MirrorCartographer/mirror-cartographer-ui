@@ -1,0 +1,36 @@
+{
+  "authority": {
+    "reader": "foundation-reader-v1",
+    "provider_checkout_authoritative": false
+  },
+  "reader": {
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "runtime": "node-24",
+    "policy": "platform/source-intake/policy.json"
+  },
+  "source": {
+    "uri": "git+https://example.invalid/project.git",
+    "revision": "cccccccccccccccccccccccccccccccccccccccc",
+    "raw_retained": true
+  },
+  "normalization": {
+    "unicode": "NFC",
+    "line_endings": "LF",
+    "symlinks": "reject",
+    "special_files": "reject",
+    "case_collisions": "reject"
+  },
+  "evidence": {
+    "two_runs_identical": true,
+    "cross_filesystem": true,
+    "signed": true,
+    "clean_host_restore_age_days": 0
+  },
+  "custody": {
+    "raw_copies": 2,
+    "normalized_copies": 3,
+    "failure_domains": ["site-a", "site-b"],
+    "offline_raw": true,
+    "exportable_bundle": true
+  }
+}
