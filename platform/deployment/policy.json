@@ -1,0 +1,49 @@
+{
+  "schema": "foundation.deployment-policy.v1",
+  "artifact": {
+    "digest_required": true,
+    "mutable_tags_forbidden": true,
+    "release_admission_required": true,
+    "local_custody_before_start": true
+  },
+  "runtime": {
+    "canonical": "podman-rootless",
+    "orchestrator": "systemd-quadlet",
+    "rootless_required": true,
+    "read_only_rootfs_required": true,
+    "no_new_privileges_required": true,
+    "capability_drop_all_required": true,
+    "resource_limits_required": true
+  },
+  "topology": {
+    "minimum_hosts": 2,
+    "minimum_failure_domains": 2,
+    "minimum_ready_replicas": 2,
+    "single_host_loss_tolerated": true
+  },
+  "deployment": {
+    "strategy": "blue-green",
+    "slots_per_host": 2,
+    "health_gate_required": true,
+    "promotion_quorum": 2,
+    "max_unavailable": 0,
+    "automatic_rollback_required": true,
+    "rollback_registry_independent": true,
+    "rollback_dns_independent": true
+  },
+  "network": {
+    "application_public_bind_forbidden": true,
+    "reverse_proxy_only_ingress": true,
+    "backend_loopback_or_private_only": true
+  },
+  "state": {
+    "workload_ephemeral": true,
+    "persistent_state_externalized": true
+  },
+  "operations": {
+    "deployment_evidence_required": true,
+    "operator_quorum": 2,
+    "drift_detection_required": true,
+    "break_glass_logged": true
+  }
+}
