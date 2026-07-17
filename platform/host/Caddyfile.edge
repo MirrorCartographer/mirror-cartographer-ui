@@ -16,13 +16,34 @@
     -Server
   }
 
+  # Foundation currently exposes a static artifact and health endpoint. Bound
+  # request bodies at the edge so an unauthenticated client cannot force Caddy
+  # to accept arbitrarily large uploads that the application does not need.
+  request_body {
+    max_size 1MiB
+  }
+
   @health path /healthz
   handle @health {
-    reverse_proxy app:8080
+    reverse_proxy app:8080 {
+      transport http {
+        dial_timeout 3s
+        response_header_timeout 15s
+        max_response_header 1MiB
+        max_conns_per_host 256
+      }
+    }
   }
 
   handle {
-    reverse_proxy app:8080
+    reverse_proxy app:8080 {
+      transport http {
+        dial_timeout 3s
+        response_header_timeout 15s
+        max_response_header 1MiB
+        max_conns_per_host 256
+      }
+    }
   }
 
   log {
