@@ -1,0 +1,25 @@
+name: Network, reverse proxy, and TLS contract
+
+on:
+  push:
+    paths:
+      - "platform/network/**"
+      - ".github/workflows/network-contract.yml"
+  pull_request:
+    paths:
+      - "platform/network/**"
+      - ".github/workflows/network-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node platform/network/verify-network-contract.mjs platform/network/policy.json platform/network/inventory.json
+      - run: node platform/network/test.mjs
