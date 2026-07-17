@@ -1,0 +1,22 @@
+{
+  "plane": "host-bootstrap",
+  "status": "design-fixture",
+  "implementation": {
+    "os_family": "Fedora CoreOS-compatible immutable host",
+    "first_boot": "Ignition generated from pinned Butane",
+    "update_engine": "A/B transactional image update",
+    "configuration": "project-owned signed declarative host manifest"
+  },
+  "copies": {
+    "os_images": ["site-a-online", "site-b-online", "offline-media"],
+    "bootstrap_configs": ["site-a-online", "offline-media"],
+    "keys": ["operator-a-offline", "operator-b-offline"]
+  },
+  "failure_domains": ["site-a", "site-b"],
+  "last_clean_rebuild_days": 12,
+  "different_hardware_verified": true,
+  "provider_independent_path": true,
+  "public_dns_required": false,
+  "metadata_service_required": false,
+  "evidence_signed": true
+}
