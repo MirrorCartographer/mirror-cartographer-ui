@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "authority": {"canonical_inventory_owned_by_project": true, "storage_implementation_replaceable": true, "provider_may_be_sole_authority": false},
+  "data_classes": {"explicit_classification_required": true, "ephemeral_state_forbidden_for_durable_data": true, "database_uses_database_native_durability": true},
+  "integrity": {"end_to_end_checksums_required": true, "scrub_required": true, "scrub_max_age_days": 7, "repair_requires_healthy_redundancy": true, "silent_corruption_alerting_required": true},
+  "topology": {"minimum_online_replicas": 3, "minimum_failure_domains": 3, "single_chassis_production_allowed": false, "failure_domain_mapping_required": true},
+  "capacity": {"minimum_free_percent": 25, "hard_reservation_required": true, "thin_provisioning_fail_mode": "error", "metadata_capacity_alerting_required": true, "rebuild_headroom_required": true},
+  "snapshots": {"crash_consistent_required": true, "application_consistent_for_stateful_services": true, "snapshot_is_backup": false, "retention_manifest_required": true},
+  "custody": {"portable_export_required": true, "minimum_backup_copies": 3, "minimum_backup_failure_domains": 2, "offline_copy_required": true, "immutable_copy_required": true, "cross_implementation_restore_required": true, "restore_drill_max_age_days": 30},
+  "security": {"encryption_at_rest_required": true, "encryption_in_transit_required": true, "workload_identity_required": true, "default_deny_required": true, "key_separation_required": true},
+  "operations": {"device_health_required": true, "latency_metrics_required": true, "capacity_metrics_required": true, "rebuild_metrics_required": true, "two_operator_destructive_actions": true, "dns_independent_recovery": true}
+}
