@@ -1,0 +1,44 @@
+{
+  "schema": "foundation.identity-secrets-policy.v1",
+  "trust": {
+    "project_owned_root_required": true,
+    "environment_trust_domains_separate": true,
+    "minimum_root_key_copies": 2,
+    "offline_root_copy_required": true,
+    "provider_identity_as_root_forbidden": true
+  },
+  "workloads": {
+    "spiffe_ids_required": true,
+    "x509_svid_preferred": true,
+    "maximum_svid_ttl_minutes": 60,
+    "local_workload_api_required": true,
+    "static_bootstrap_secret_forbidden": true,
+    "workload_attestation_required": true
+  },
+  "secrets": {
+    "dynamic_credentials_preferred": true,
+    "maximum_runtime_secret_ttl_minutes": 60,
+    "lease_revocation_required": true,
+    "plaintext_secret_in_source_forbidden": true,
+    "encrypted_config_threshold": 2,
+    "secret_manager_as_sole_recovery_path_forbidden": true
+  },
+  "authorization": {
+    "default_deny": true,
+    "identity_to_policy_mapping_required": true,
+    "wildcard_admin_forbidden": true,
+    "production_human_quorum": 2
+  },
+  "audit": {
+    "identity_issuance_logged": true,
+    "secret_access_logged": true,
+    "policy_changes_logged": true,
+    "secret_values_in_logs_forbidden": true
+  },
+  "recovery": {
+    "break_glass_documented": true,
+    "break_glass_offline": true,
+    "quarterly_recovery_drill_required": true,
+    "dns_independent_bootstrap_required": true
+  }
+}
