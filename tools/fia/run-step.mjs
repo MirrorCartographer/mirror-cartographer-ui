@@ -23,11 +23,21 @@ function sanitizeEnv(env){
   const allowed = ['CI','LANG','LC_ALL','SOURCE_DATE_EPOCH','TZ'];
   return Object.fromEntries(allowed.filter(key => env[key] !== undefined).sort().map(key => [key, String(env[key])]));
 }
+function validateAdmission(admission,name,command){
+  if(!admission || admission.schema !== 'fia.execution-admission.v1') fail(`missing execution admission: ${name}`);
+  if(admission.step !== name) fail(`execution admission step mismatch: ${name}`);
+  if(admission.command !== sha256(Buffer.from(command))) fail(`execution admission command mismatch: ${name}`);
+  if(!/^sha256:[0-9a-f]{64}$/.test(admission.admission || '')) fail(`invalid execution admission identity: ${name}`);
+  const core={...admission}; delete core.admission;
+  if(sha256(Buffer.from(canonical(core))) !== admission.admission) fail(`execution admission identity mismatch: ${name}`);
+  return admission.admission;
+}
 
-export async function runStep({name, command, cwd='.', output, timeoutMs=300000, maxBytes=1048576, env=process.env}){
+export async function runStep({name, command, cwd='.', output, timeoutMs=300000, maxBytes=1048576, env=process.env, admission=null}){
   if(!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(name || '')) fail('invalid step name');
   if(typeof command !== 'string' || !command.trim()) fail('invalid command');
   if(!output) fail('missing output path');
+  const executionAdmission=validateAdmission(admission,name,command);
   timeoutMs = positiveInt(timeoutMs, 'timeout', 300000);
   maxBytes = positiveInt(maxBytes, 'max bytes', 1048576);
   const started = new Date().toISOString();
@@ -63,6 +73,7 @@ export async function runStep({name, command, cwd='.', output, timeoutMs=300000,
     step: name,
     command,
     commandSha256: sha256(Buffer.from(command)),
+    executionAdmission,
     cwd: path.resolve(cwd),
     environment: sanitizeEnv(env),
     started,
