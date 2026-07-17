@@ -1,0 +1,38 @@
+{
+  "schema": "foundation.release-policy.v1",
+  "release_authority": {
+    "signature_algorithm": "ed25519",
+    "minimum_signatures": 2,
+    "minimum_distinct_operators": 2,
+    "online_key_may_satisfy_threshold_alone": false,
+    "rollback_requires_new_signed_release": true,
+    "mutable_tags_are_authoritative": false
+  },
+  "artifact_custody": {
+    "digest_algorithm": "sha256",
+    "minimum_independent_copies": 3,
+    "minimum_failure_domains": 2,
+    "canonical_record_is_project_owned": true,
+    "hosted_registry_as_sole_copy_forbidden": true,
+    "source_host_as_sole_release_ledger_forbidden": true
+  },
+  "provenance": {
+    "source_commit_required": true,
+    "build_recipe_digest_required": true,
+    "builder_identity_required": true,
+    "reproducibility_status_required": true
+  },
+  "promotion": {
+    "environments": ["candidate", "staging", "production"],
+    "monotonic_sequence_required": true,
+    "previous_manifest_chain_required": true,
+    "expiry_required": true,
+    "maximum_validity_days": 30
+  },
+  "recovery": {
+    "offline_root_copy_required": true,
+    "clean_host_restore_drill_days": 90,
+    "registry_rebuild_from_artifact_store_required": true,
+    "release_ledger_export_required": true
+  }
+}
