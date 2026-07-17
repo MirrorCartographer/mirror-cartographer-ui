@@ -71,6 +71,7 @@ resource "hcloud_server" "foundation" {
     domain     = var.domain
     repo_url   = var.repo_url
     repo_ref   = var.repo_ref
+    volume_id  = hcloud_volume.foundation_data.id
   })
 
   public_net {
@@ -82,7 +83,7 @@ resource "hcloud_server" "foundation" {
 resource "hcloud_volume_attachment" "foundation_data" {
   volume_id = hcloud_volume.foundation_data.id
   server_id = hcloud_server.foundation.id
-  automount  = true
+  automount  = false
 }
 
 output "ipv4" {
