@@ -1,0 +1,26 @@
+{
+  "implementation": "chrony",
+  "sources": [
+    {"id":"nts-a","operator":"operator-a","path":"isp-a","authenticated":"nts","kind":"network"},
+    {"id":"nts-b","operator":"operator-b","path":"isp-b","authenticated":"nts","kind":"network"},
+    {"id":"ntp-c","operator":"operator-c","path":"isp-a","authenticated":"none","kind":"network"},
+    {"id":"oscillator-a","operator":"project","path":"local","authenticated":"local","kind":"holdover"}
+  ],
+  "internal_servers": [
+    {"id":"time-a","failure_domain":"site-a"},
+    {"id":"time-b","failure_domain":"site-b"},
+    {"id":"time-c","failure_domain":"site-c"}
+  ],
+  "observed": {
+    "normal_offset_ms": 12,
+    "root_distance_ms": 45,
+    "frequency_error_ppm": 8,
+    "holdover_test_hours": 24,
+    "majority_available": true,
+    "boot_without_public_dns": true,
+    "boot_without_internet": true,
+    "restore_age_days": 1,
+    "signed": true,
+    "operator_signatures": 2
+  }
+}
