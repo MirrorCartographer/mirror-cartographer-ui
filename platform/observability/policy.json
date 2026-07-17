@@ -1,0 +1,105 @@
+{
+  "authority": {
+    "canonical_policy": "project-repository",
+    "provider_observability_authoritative": false,
+    "exportable": true,
+    "two_operator_policy_changes": true
+  },
+  "collection": {
+    "open_protocol": "otlp",
+    "host_agents_required": true,
+    "gateway_replicas_min": 2,
+    "gateway_failure_domains_min": 2,
+    "local_buffering_required": true,
+    "buffer_disk_backed": true,
+    "buffer_capacity_minutes_min": 30,
+    "backpressure_required": true,
+    "telemetry_drop_visible": true,
+    "collector_self_telemetry_required": true,
+    "direct_vendor_sdk_forbidden": true
+  },
+  "metrics": {
+    "canonical_query_language": "promql",
+    "local_wal_required": true,
+    "independent_scrapers_min": 2,
+    "scraper_failure_domains_min": 2,
+    "remote_copies_min": 2,
+    "remote_failure_domains_min": 2,
+    "recording_rules_source_controlled": true,
+    "cardinality_budgets_required": true,
+    "missing_data_alerts_required": true,
+    "raw_export_required": true
+  },
+  "logs": {
+    "structured_model": "opentelemetry",
+    "source_and_observed_timestamps_required": true,
+    "trace_correlation_required": true,
+    "secret_redaction_required": true,
+    "high_cardinality_labels_forbidden": true,
+    "object_storage_required": true,
+    "object_copies_min": 3,
+    "object_failure_domains_min": 2,
+    "immutable_copy_required": true,
+    "retention_manifest_required": true,
+    "wal_corruption_alert_required": true,
+    "wal_disk_full_alert_required": true,
+    "portable_export_required": true
+  },
+  "traces": {
+    "open_protocol": "otlp",
+    "sampling_policy_source_controlled": true,
+    "head_sampling_floor": true,
+    "tail_sampling_optional": true,
+    "tail_sampling_requires_trace_affinity": true,
+    "error_and_high_latency_retention_required": true,
+    "portable_export_required": true
+  },
+  "alerting": {
+    "rule_source_controlled": true,
+    "evaluators_min": 2,
+    "evaluator_failure_domains_min": 2,
+    "alertmanagers_min": 3,
+    "alertmanager_failure_domains_min": 3,
+    "send_to_all_alertmanagers": true,
+    "load_balancer_between_evaluator_and_alertmanager": false,
+    "at_least_once_notifications": true,
+    "duplicate_notifications_accepted": true,
+    "external_deadman_probe_required": true,
+    "independent_notification_paths_min": 2,
+    "silence_expiry_required": true,
+    "two_operator_global_silence": true
+  },
+  "continuity": {
+    "main_stack_monitors_itself": true,
+    "independent_meta_monitor_required": true,
+    "meta_monitor_separate_failure_domain": true,
+    "provider_outage_visibility_required": true,
+    "public_dns_independent_admin": true,
+    "offline_config_copy_required": true,
+    "clean_host_restore_days": 30,
+    "cross_implementation_restore_required": true
+  },
+  "security": {
+    "tls_required": true,
+    "workload_identity_required": true,
+    "default_deny_ingest": true,
+    "tenant_separation_required": true,
+    "release_keys_forbidden": true,
+    "secret_values_forbidden": true,
+    "query_access_audited": true,
+    "destructive_retention_two_operators": true
+  },
+  "evidence": {
+    "config_digests": true,
+    "collector_drop_counters": true,
+    "buffer_depth": true,
+    "scrape_health": true,
+    "wal_health": true,
+    "cardinality": true,
+    "retention_execution": true,
+    "alert_delivery_receipts": true,
+    "deadman_receipt": true,
+    "restore_results": true,
+    "operator_signatures": 2
+  }
+}
