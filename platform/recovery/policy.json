@@ -1,0 +1,9 @@
+{
+  "schema": "foundation.recovery-policy.v1",
+  "objectives": {"rpo_minutes": 15, "rto_minutes": 120, "restore_drill_days": 30},
+  "custody": {"minimum_copies": 3, "minimum_failure_domains": 2, "offline_copy_required": true, "immutable_copy_required": true, "provider_copy_as_sole_copy_forbidden": true},
+  "cryptography": {"encrypted_at_rest_required": true, "key_outside_backup_repository_required": true, "recovery_key_copies": 2},
+  "databases": {"postgres_base_backup_required": true, "wal_archive_required": true, "backup_manifest_required": true, "point_in_time_restore_required": true},
+  "verification": {"scheduled_integrity_scan_required": true, "clean_host_restore_required": true, "application_smoke_test_required": true, "restore_evidence_signed_required": true},
+  "operations": {"single_operator_restore_forbidden": true, "documented_bootstrap_required": true, "dependency_bill_of_materials_required": true, "dns_independent_recovery_access_required": true}
+}
