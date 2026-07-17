@@ -8,6 +8,11 @@ services:
         FOUNDATION_COMMIT: ${FOUNDATION_COMMIT:?FOUNDATION_COMMIT is required}
     restart: unless-stopped
     read_only: true
+    init: true
+    pids_limit: ${FOUNDATION_APP_PIDS_LIMIT:-128}
+    mem_limit: ${FOUNDATION_APP_MEMORY_LIMIT:-512m}
+    cpus: ${FOUNDATION_APP_CPU_LIMIT:-1.0}
+    stop_grace_period: 30s
     tmpfs:
       - /tmp:size=32m,mode=1777
       - /config:size=16m,mode=0700
@@ -33,6 +38,11 @@ services:
   edge:
     image: caddy:2.10-alpine
     restart: unless-stopped
+    init: true
+    pids_limit: ${FOUNDATION_EDGE_PIDS_LIMIT:-128}
+    mem_limit: ${FOUNDATION_EDGE_MEMORY_LIMIT:-256m}
+    cpus: ${FOUNDATION_EDGE_CPU_LIMIT:-1.0}
+    stop_grace_period: 30s
     depends_on:
       app:
         condition: service_healthy
