@@ -1,0 +1,49 @@
+{
+  "fixture": true,
+  "controller": {
+    "canonical": "project-capacity-controller",
+    "adapter": "systemd-podman-or-kubernetes-hpa",
+    "provider_authoritative": false,
+    "desired_state_exportable": true
+  },
+  "workloads": [
+    {
+      "name": "web",
+      "class": "stateless-sync",
+      "min_ready": 2,
+      "max_replicas": 12,
+      "failure_domains": ["site-a", "site-b"],
+      "signals": ["inflight_requests", "p95_latency", "cpu_saturation"],
+      "scale_to_zero": false,
+      "downstream_budgets": {"database_connections": 40, "external_api_concurrency": 20}
+    },
+    {
+      "name": "worker",
+      "class": "stateless-async",
+      "min_ready": 2,
+      "max_replicas": 16,
+      "failure_domains": ["site-a", "site-b"],
+      "signals": ["oldest_message_age", "backlog", "consumer_saturation"],
+      "scale_to_zero": false,
+      "downstream_budgets": {"database_connections": 32, "queue_consumers": 16}
+    }
+  ],
+  "overload": {
+    "admission_control": true,
+    "load_shedding": true,
+    "backpressure": true,
+    "bounded_queues": true,
+    "priority_classes": ["critical", "interactive", "background"]
+  },
+  "evidence": {
+    "signed": true,
+    "age_days": 0,
+    "load_test": true,
+    "failure_domain_loss": true,
+    "metric_loss": true,
+    "thundering_herd": true,
+    "cold_start_benchmark": true,
+    "provider_outage_scale_path": true,
+    "dns_independent_manual_scale": true
+  }
+}
