@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "authority": {"project_dispatcher": true, "hosted_ci_is_adapter_only": true, "canonical_evidence_project_custody": true},
+  "workers": {"ephemeral": true, "one_job_max": true, "clean_root_per_job": true, "runner_autoupdate": false, "pinned_runner_digest": true, "min_failure_domains": 2, "min_capacity_workers": 2},
+  "isolation": {"microvm_or_equivalent": true, "rootless_job": true, "no_host_docker_socket": true, "no_cloud_metadata": true, "default_network": "deny", "resource_limits": true, "workspace_destroyed": true},
+  "supply_chain": {"actions_pinned_by_commit": true, "toolchain_from_admitted_artifact": true, "dependency_mirror_only": true},
+  "secrets": {"fork_jobs_receive_secrets": false, "short_lived_credentials": true, "credentials_max_minutes": 15, "release_keys_on_workers": false},
+  "orchestration": {"test_graph_project_owned": true, "job_spec_exportable": true, "retry_is_new_attempt": true, "quorum_rebuilds": 2, "fail_closed_on_missing_evidence": true},
+  "evidence": {"signed": true, "external_log_custody": true, "records_worker_image_digest": true, "records_source_digest": true, "records_exit_code": true, "records_test_manifest_digest": true, "retention_days": 365},
+  "recovery": {"offline_worker_image": true, "bootstrap_without_public_dns": true, "hosted_ci_not_sole_path": true, "quarterly_clean_host_drill": true},
+  "operations": {"two_operator_release_jobs": true, "patch_sla_days": 14, "critical_patch_sla_hours": 24, "capacity_alerting": true}
+}
