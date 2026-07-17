@@ -1,0 +1,27 @@
+name: Database sovereignty contract
+
+on:
+  pull_request:
+    paths:
+      - 'platform/database/**'
+      - '.github/workflows/database-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'platform/database/**'
+      - '.github/workflows/database-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node platform/database/verify-database-contract.mjs platform/database/policy.json platform/database/inventory.json
+      - run: node platform/database/test.mjs
