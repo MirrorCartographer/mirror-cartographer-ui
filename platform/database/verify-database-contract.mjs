@@ -1,0 +1,43 @@
+import fs from 'node:fs';
+
+const [policyPath, inventoryPath] = process.argv.slice(2);
+if (!policyPath || !inventoryPath) throw new Error('usage: verify-database-contract.mjs POLICY INVENTORY');
+const p = JSON.parse(fs.readFileSync(policyPath, 'utf8'));
+const i = JSON.parse(fs.readFileSync(inventoryPath, 'utf8'));
+const checks = [];
+const requireCheck = (condition, message) => { checks.push(message); if (!condition) throw new Error(`REJECT ${message}`); };
+const domains = new Set(i.nodes?.map(n => n.failure_domain));
+
+requireCheck(i.authority?.primary_election === 'project-controller' && !i.authority?.provider_authoritative, 'project controls primary election');
+requireCheck(i.authority?.schema_source === 'repository' && i.authority?.migration_ledger_exported, 'schema and migration ledger are project controlled');
+requireCheck((i.nodes?.length ?? 0) >= p.topology.minimum_nodes, 'minimum database node count');
+requireCheck(domains.size >= p.topology.minimum_failure_domains, 'independent database failure domains');
+requireCheck(i.nodes.every(n => n.persistent), 'all database nodes use persistent storage');
+requireCheck(i.replication?.synchronous_standbys >= p.topology.synchronous_standbys_required, 'synchronous replication floor');
+requireCheck(i.replication?.automatic_failover && Boolean(i.replication?.fencing), 'automatic failover is fenced');
+requireCheck(i.replication?.single_writer, 'single writer prevents split brain');
+requireCheck(i.replication?.measured_rpo_seconds <= p.topology.maximum_data_loss_seconds, 'measured database RPO');
+requireCheck(i.replication?.measured_failover_seconds <= p.topology.maximum_failover_seconds, 'measured failover time');
+requireCheck(i.replication?.data_checksums && i.replication?.full_page_writes, 'rewind-safe page-change tracking');
+requireCheck(i.replication?.wal_archive, 'continuous WAL archive');
+requireCheck(i.replication?.replication_slots_bounded && i.replication.maximum_slot_retained_bytes <= p.durability.maximum_slot_retained_bytes, 'bounded replication-slot retention');
+requireCheck(i.replication?.disk_headroom_percent >= p.durability.disk_headroom_percent, 'database disk headroom');
+requireCheck(i.migrations?.immutable_ids && i.migrations?.checksummed_files, 'immutable checksummed migrations');
+requireCheck(i.migrations?.transactional_default, 'transactional migrations by default');
+requireCheck(i.migrations?.expand_contract && i.migrations.compatibility_window_releases >= p.migrations.backward_compatibility_window_releases, 'expand-contract compatibility window');
+requireCheck(i.migrations?.destructive_change_operators >= 2, 'two-person destructive schema authority');
+requireCheck(i.migrations?.rollback_or_forward_fix && i.migrations?.compatibility_tests, 'migration recovery and compatibility evidence');
+requireCheck(i.upgrades?.pg_upgrade_check && i.upgrades?.restored_copy_rehearsal, 'major upgrade preflight and rehearsal');
+requireCheck(i.upgrades?.old_cluster_preserved && i.upgrades?.mode !== 'link', 'reversible first production major upgrade');
+requireCheck(i.upgrades?.logical_replication_exit, 'logical replication migration exit path');
+requireCheck(i.upgrades?.sequence_reconciliation && i.upgrades?.ddl_synchronization, 'logical migration sequence and DDL controls');
+requireCheck(i.recovery?.pg_rewind && i.recovery?.wal_log_hints_or_checksums, 'diverged-primary rewind capability');
+requireCheck(i.recovery?.clean_host_restore_age_days <= p.recovery.clean_host_restore_max_age_days && i.recovery?.signed_restore_evidence, 'fresh signed clean-host restore evidence');
+requireCheck(i.recovery?.dns_independent_admin, 'DNS-independent database administration');
+requireCheck(i.security?.tls && i.security?.workload_identity, 'encrypted workload-authenticated database access');
+requireCheck(!i.security?.application_superuser && i.security?.default_deny_network, 'least privilege and deny-default network');
+requireCheck(i.security?.audit_ddl_and_roles, 'DDL and role-change audit');
+requireCheck(i.evidence?.machine_generated && i.evidence?.signed, 'machine-generated signed database evidence');
+requireCheck(i.evidence?.timeline_and_lsn && i.evidence?.schema_digest && i.evidence?.failover_and_rejoin, 'database state and failover evidence completeness');
+
+console.log(`ACCEPT ${checks.length} database invariants`);
