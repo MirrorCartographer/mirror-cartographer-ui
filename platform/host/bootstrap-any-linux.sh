@@ -98,6 +98,7 @@ record_evidence() {
 
 PREVIOUS_COMMIT=$(cat "$STATE/current-commit" 2>/dev/null || true)
 PREVIOUS_IMAGE=$(cat "$STATE/current-image" 2>/dev/null || true)
+PREVIOUS_RELEASE="$STATE/releases/$PREVIOUS_COMMIT"
 
 git -C "$ROOT/repository" fetch origin "$FOUNDATION_REF"
 git -C "$ROOT/repository" checkout "$FOUNDATION_REF"
@@ -133,28 +134,42 @@ done
 echo "Candidate health verification failed; release was not promoted" >&2
 docker compose ps >&2 || true
 
-if [[ -n "$PREVIOUS_COMMIT" && -n "$PREVIOUS_IMAGE" ]] && docker image inspect "$PREVIOUS_IMAGE" >/dev/null 2>&1; then
-  echo "Rolling back to promoted image $PREVIOUS_IMAGE" >&2
+# Rollback is release-complete, not image-only. Restore the exact prior Compose
+# topology and edge policy before starting the prior immutable application image.
+if [[ -n "$PREVIOUS_COMMIT" && -n "$PREVIOUS_IMAGE" ]] \
+  && [[ -f "$PREVIOUS_RELEASE/source/platform/host/compose.production.yaml" ]] \
+  && [[ -f "$PREVIOUS_RELEASE/source/platform/host/Caddyfile.edge" ]] \
+  && docker image inspect "$PREVIOUS_IMAGE" >/dev/null 2>&1; then
+  echo "Rolling back complete release $PREVIOUS_COMMIT using $PREVIOUS_IMAGE" >&2
+  cp "$PREVIOUS_RELEASE/source/platform/host/compose.production.yaml" "$ROOT/compose.yaml"
+  cp "$PREVIOUS_RELEASE/source/platform/host/Caddyfile.edge" "$ROOT/Caddyfile"
   export FOUNDATION_COMMIT="$PREVIOUS_COMMIT" FOUNDATION_IMAGE="$PREVIOUS_IMAGE"
+  if ! docker compose config --quiet; then
+    record_evidence rollback-failed "$COMMIT" "$IMAGE" "$PREVIOUS_COMMIT" "$PREVIOUS_IMAGE"
+    docker compose down --remove-orphans || true
+    echo "CRITICAL: previous release runtime definition failed validation; public runtime stopped" >&2
+    exit 2
+  fi
   docker compose up -d --no-build --remove-orphans
   for _ in $(seq 1 30); do
     if health_ok; then
       record_evidence rolled-back "$COMMIT" "$IMAGE" "$PREVIOUS_COMMIT" "$PREVIOUS_IMAGE"
-      echo "Rollback verified; previous promoted release is healthy" >&2
+      echo "Rollback verified; previous complete release is healthy" >&2
       exit 1
     fi
     sleep 2
   done
   record_evidence rollback-failed "$COMMIT" "$IMAGE" "$PREVIOUS_COMMIT" "$PREVIOUS_IMAGE"
-  echo "CRITICAL: candidate and rollback health verification both failed" >&2
+  echo "CRITICAL: candidate and complete-release rollback health verification both failed" >&2
   docker compose ps >&2 || true
+  docker compose down --remove-orphans || true
   exit 2
 fi
 
-# No promoted image exists, so leave no unverified public runtime running.
+# No complete promoted release exists, so leave no unverified public runtime running.
 docker compose down --remove-orphans || true
 record_evidence rejected-no-rollback "$COMMIT" "$IMAGE" UNDEPLOYED UNDEPLOYED
-echo "No previous promoted image was available; unverified runtime stopped" >&2
+echo "No complete previous promoted release was available; unverified runtime stopped" >&2
 exit 1
 EOF
 chmod 0755 "$FOUNDATION_ROOT/deploy.sh"
