@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_controls_ingress_policy": true,
+    "provider_is_not_routing_authority": true,
+    "dns_provider_is_replaceable": true,
+    "public_ca_is_replaceable": true
+  },
+  "topology": {
+    "ingress_nodes": 2,
+    "failure_domains": 2,
+    "reverse_proxy_only_public_ingress": true,
+    "backend_public_bind_forbidden": true,
+    "health_checked_upstreams": true,
+    "atomic_config_reload": true
+  },
+  "dns": {
+    "zone_exportable": true,
+    "secondary_authoritative_copy": true,
+    "registrar_lock_enabled": true,
+    "registry_lock_supported_or_documented": true,
+    "dnssec_enabled": true,
+    "ds_recovery_documented": true,
+    "ttl_seconds": 300,
+    "out_of_band_origin_access": true
+  },
+  "tls": {
+    "minimum_version": "1.2",
+    "tls_1_3_enabled": true,
+    "automatic_renewal": true,
+    "renewal_window_days": 30,
+    "two_acme_issuers": true,
+    "acme_account_key_separate_from_certificate_key": true,
+    "acme_account_key_backed_up": true,
+    "certificate_storage_persistent": true,
+    "certificate_storage_encrypted": true,
+    "certificate_storage_not_single_host": true,
+    "caa_restricts_issuers": true,
+    "on_demand_tls_disabled": true,
+    "private_key_permissions": "0600"
+  },
+  "continuity": {
+    "cached_unexpired_certificate_survives_ca_outage": true,
+    "proxy_restart_survives_ca_outage": true,
+    "local_internal_pki_available": true,
+    "public_dns_not_required_for_rollback": true,
+    "certificate_expiry_alert_days": 21,
+    "dns_resolution_probed_externally": true,
+    "tls_handshake_probed_externally": true
+  },
+  "evidence": {
+    "config_digest_recorded": true,
+    "certificate_chain_verified": true,
+    "dns_zone_digest_recorded": true,
+    "failover_test_signed": true,
+    "two_operators_for_dns_or_tls_root_changes": true
+  }
+}
