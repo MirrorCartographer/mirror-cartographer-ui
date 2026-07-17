@@ -34,7 +34,10 @@ services:
       start_period: 15s
 
   edge:
-    image: caddy:2.10-alpine
+    # Pin the exact edge release so a future caddy:2.10-alpine retag cannot
+    # silently change the production TLS/runtime substrate between deployments.
+    image: caddy:2.10.0-alpine
+    pull_policy: always
     restart: unless-stopped
     init: true
     pids_limit: ${FOUNDATION_EDGE_PIDS_LIMIT:-128}
