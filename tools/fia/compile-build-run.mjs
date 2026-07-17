@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+import { createHash } from 'node:crypto';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const PLAN_SCHEMA = 'fia.build-plan.v1';
+const LOG_SCHEMA = 'fia.build-step-log.v1';
+const RUN_SCHEMA = 'fia.build-run.v1';
+const sha256 = bytes => `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+function sort(value){
+  if(Array.isArray(value)) return value.map(sort);
+  if(value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, sort(value[key])]));
+  return value;
+}
+const canonical = value => JSON.stringify(sort(value));
+function fail(message){ throw new Error(message); }
+function validIdentity(value){ return /^sha256:[0-9a-f]{64}$/.test(value || ''); }
+async function readJson(file, label){
+  let bytes;
+  try { bytes = await readFile(file); } catch { fail(`cannot read ${label}: ${file}`); }
+  let value;
+  try { value = JSON.parse(bytes); } catch { fail(`invalid ${label} JSON: ${file}`); }
+  return {value, bytes};
+}
+function validatePlan(plan){
+  if(plan?.schema !== PLAN_SCHEMA) fail('unsupported build plan schema');
+  if(!Array.isArray(plan.steps) || plan.steps.length === 0) fail('build plan has no steps');
+  const names = new Set();
+  return plan.steps.map((step, index) => {
+    if(!step || typeof step !== 'object') fail(`invalid plan step at index ${index}`);
+    if(!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(step.name || '')) fail(`invalid plan step name at index ${index}`);
+    if(names.has(step.name)) fail(`duplicate plan step: ${step.name}`);
+    names.add(step.name);
+    if(step.required === false) fail(`optional steps are unsupported: ${step.name}`);
+    if(step.commandSha256 !== undefined && !validIdentity(step.commandSha256)) fail(`invalid command identity for step: ${step.name}`);
+    return {name: step.name, commandSha256: step.commandSha256 ?? null};
+  });
+}
+function validateLog(log, expected){
+  if(log?.schema !== LOG_SCHEMA) fail(`unsupported step log schema: ${expected.name}`);
+  if(log.step !== expected.name) fail(`step order mismatch: expected ${expected.name}, received ${log.step}`);
+  if(!validIdentity(log.log)) fail(`invalid log identity: ${expected.name}`);
+  if(!validIdentity(log.commandSha256)) fail(`invalid command identity: ${expected.name}`);
+  if(expected.commandSha256 && log.commandSha256 !== expected.commandSha256) fail(`command identity mismatch: ${expected.name}`);
+  if(!log.exit || log.exit.code !== 0 || log.exit.signal !== null || log.exit.timedOut !== false || log.exit.overflow !== null) fail(`unsuccessful step log: ${expected.name}`);
+  for(const stream of ['stdout','stderr']){
+    const item = log[stream];
+    if(!item || !Number.isSafeInteger(item.bytes) || item.bytes < 0 || !validIdentity(item.sha256) || typeof item.text !== 'string') fail(`invalid ${stream} evidence: ${expected.name}`);
+    const bytes = Buffer.from(item.text, 'utf8');
+    if(bytes.length !== item.bytes || sha256(bytes) !== item.sha256) fail(`${stream} evidence mismatch: ${expected.name}`);
+  }
+  const identityCore = {...log, log: undefined, started: null, finished: null};
+  delete identityCore.log;
+  if(sha256(Buffer.from(canonical(identityCore))) !== log.log) fail(`step log identity mismatch: ${expected.name}`);
+}
+
+export async function compileBuildRun({plan: planPath, logs, output, sourceCommit=null}){
+  if(!planPath) fail('missing build plan');
+  if(!Array.isArray(logs) || logs.length === 0) fail('missing step logs');
+  if(!output) fail('missing output path');
+  if(sourceCommit !== null && !/^[0-9a-f]{40}$/.test(sourceCommit)) fail('invalid source commit');
+  const planInput = await readJson(planPath, 'build plan');
+  const steps = validatePlan(planInput.value);
+  if(logs.length !== steps.length) fail(`step log count mismatch: expected ${steps.length}, received ${logs.length}`);
+  const seenPaths = new Set();
+  const nodes = [];
+  for(let index=0; index<steps.length; index++){
+    const resolved = path.resolve(logs[index]);
+    if(seenPaths.has(resolved)) fail(`duplicate step log path: ${logs[index]}`);
+    seenPaths.add(resolved);
+    const input = await readJson(logs[index], `step log ${steps[index].name}`);
+    validateLog(input.value, steps[index]);
+    nodes.push({
+      order: index + 1,
+      step: steps[index].name,
+      command: input.value.commandSha256,
+      log: input.value.log,
+      file: sha256(input.bytes),
+      stdout: input.value.stdout.sha256,
+      stderr: input.value.stderr.sha256
+    });
+  }
+  const core = {
+    schema: RUN_SCHEMA,
+    sourceCommit,
+    plan: sha256(Buffer.from(canonical(planInput.value))),
+    planFile: sha256(planInput.bytes),
+    status: 'succeeded',
+    steps: nodes
+  };
+  const record = {...core, run: sha256(Buffer.from(canonical(core)))};
+  await mkdir(path.dirname(output), {recursive:true});
+  await writeFile(output, canonical(record)+'\n', {flag:'wx', mode:0o600});
+  return record;
+}
+function args(argv){
+  const out={logs:[]};
+  for(let i=0;i<argv.length;i++){
+    const token=argv[i];
+    if(!token.startsWith('--')) fail(`unexpected argument: ${token}`);
+    const key=token.slice(2);
+    const value=argv[++i];
+    if(key === 'log') out.logs.push(value); else out[key]=value;
+  }
+  return {plan:out.plan, logs:out.logs, output:out.output, sourceCommit:out.commit ?? null};
+}
+if(import.meta.url === `file://${process.argv[1]}`) compileBuildRun(args(process.argv.slice(2))).then(value=>console.log(canonical(value))).catch(error=>{console.error(error.message);process.exitCode=1;});
