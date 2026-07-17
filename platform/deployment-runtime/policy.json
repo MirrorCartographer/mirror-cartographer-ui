@@ -1,0 +1,53 @@
+{
+  "schema": "foundation.deployment-runtime.policy.v1",
+  "runtime": {
+    "executor": "podman-quadlet",
+    "rootless_required": true,
+    "digest_only_images": true,
+    "mutable_tags_allowed": false,
+    "privileged_containers_allowed": false,
+    "host_network_allowed": false,
+    "read_only_root_filesystem_required": true,
+    "no_new_privileges_required": true,
+    "capabilities_drop_all_required": true
+  },
+  "admission": {
+    "release_envelope_required": true,
+    "offline_signature_verification_required": true,
+    "semantic_policy_verification_required": true,
+    "registry_digest_resolution_required": true,
+    "runtime_digest_match_required": true,
+    "release_worker_may_switch_traffic": false
+  },
+  "deployment": {
+    "strategy": "blue-green",
+    "active_slot_pointer": "atomic-symlink",
+    "candidate_must_be_healthy_before_switch": true,
+    "health_successes_required": 5,
+    "health_interval_seconds": 2,
+    "health_timeout_seconds": 2,
+    "stabilization_seconds": 30,
+    "automatic_rollback_on_stabilization_failure": true,
+    "retain_previous_slots": 2,
+    "concurrent_deployments_allowed": false
+  },
+  "rollback": {
+    "digest_must_have_prior_admission_record": true,
+    "rollback_may_not_bypass_signature_policy": true,
+    "database_backward_compatibility_required": true,
+    "destructive_schema_change_in_same_release_allowed": false
+  },
+  "network": {
+    "application_ports_loopback_only": true,
+    "reverse_proxy_is_only_public_ingress": true,
+    "control_socket_publicly_exposed": false
+  },
+  "evidence": {
+    "append_only_deployment_journal_required": true,
+    "record_release_digest": true,
+    "record_previous_digest": true,
+    "record_health_evidence": true,
+    "record_operator_identity": true,
+    "record_rollback_result": true
+  }
+}
