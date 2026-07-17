@@ -64,6 +64,17 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+    healthcheck:
+      # Probe the actual HTTPS edge route, not merely the Caddy process. The
+      # Host header selects the configured virtual host; certificate checking is
+      # intentionally disabled because the loopback address cannot match the
+      # public certificate. A successful probe still requires Caddy to terminate
+      # TLS, route /healthz, reach the internal app, and receive a 2xx response.
+      test: ["CMD-SHELL", "wget -q --spider --no-check-certificate --header=\"Host: $${FOUNDATION_DOMAIN}\" https://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     logging:
       driver: json-file
       options:
