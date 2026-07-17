@@ -1,0 +1,13 @@
+{
+  "canonical_index": {"owner": "project", "exportable": true, "format": "jsonl-sha256"},
+  "stores": [
+    {"id": "registry-a", "domain": "site-a", "kind": "online-oci", "project_controlled": true, "immutable": false},
+    {"id": "registry-b", "domain": "site-b", "kind": "online-oci", "project_controlled": true, "immutable": false},
+    {"id": "vault-c", "domain": "offline-custody", "kind": "oci-layout-and-package-bundle", "project_controlled": true, "immutable": true, "offline": true}
+  ],
+  "oci": {"implementation": "distribution-compatible", "spec": "1.1", "gc_mode": "read-only-dry-run-protected-set", "export": "oci-layout"},
+  "packages": {"ecosystem": "npm", "lockfile": "package-lock.json", "mirror": "project-controlled", "metadata_snapshot": true, "tarball_integrity": "sha512", "canonical_build_network": "deny", "lifecycle_scripts": "deny-by-default"},
+  "access": {"tls": true, "workload_identity": true, "anonymous_push": false, "credential_ttl_minutes": 10, "release_keys_present": false},
+  "evidence": {"signed": true, "clean_host": true, "age_days": 7, "without_public_dns": true, "without_upstreams": true, "cross_implementation": true},
+  "operations": {"capacity_alert_percent": 70, "integrity_scan_days": 7, "audit_deletes": true, "destructive_operators": 2, "retention_manifest": true}
+}
