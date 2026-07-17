@@ -1,0 +1,68 @@
+{
+  "authority": {
+    "primary_election": "project-controller",
+    "provider_authoritative": false,
+    "schema_source": "repository",
+    "migration_ledger_exported": true
+  },
+  "nodes": [
+    {"id":"db-a","failure_domain":"site-a","persistent":true},
+    {"id":"db-b","failure_domain":"site-b","persistent":true},
+    {"id":"db-c","failure_domain":"site-c","persistent":true}
+  ],
+  "replication": {
+    "mode":"physical-streaming",
+    "synchronous_standbys":1,
+    "automatic_failover":true,
+    "fencing":"lease-plus-node-isolation",
+    "single_writer":true,
+    "measured_rpo_seconds":15,
+    "measured_failover_seconds":75,
+    "data_checksums":true,
+    "full_page_writes":true,
+    "wal_archive":true,
+    "replication_slots_bounded":true,
+    "maximum_slot_retained_bytes":5368709120,
+    "disk_headroom_percent":30
+  },
+  "migrations": {
+    "immutable_ids":true,
+    "checksummed_files":true,
+    "transactional_default":true,
+    "expand_contract":true,
+    "compatibility_window_releases":2,
+    "destructive_change_operators":2,
+    "rollback_or_forward_fix":true,
+    "compatibility_tests":true
+  },
+  "upgrades": {
+    "pg_upgrade_check":true,
+    "restored_copy_rehearsal":true,
+    "old_cluster_preserved":true,
+    "mode":"copy",
+    "logical_replication_exit":true,
+    "sequence_reconciliation":true,
+    "ddl_synchronization":true
+  },
+  "recovery": {
+    "pg_rewind":true,
+    "wal_log_hints_or_checksums":true,
+    "clean_host_restore_age_days":14,
+    "signed_restore_evidence":true,
+    "dns_independent_admin":true
+  },
+  "security": {
+    "tls":true,
+    "workload_identity":true,
+    "application_superuser":false,
+    "default_deny_network":true,
+    "audit_ddl_and_roles":true
+  },
+  "evidence": {
+    "machine_generated":true,
+    "signed":true,
+    "timeline_and_lsn":true,
+    "schema_digest":true,
+    "failover_and_rejoin":true
+  }
+}
