@@ -1,0 +1,52 @@
+{
+  "schema": "foundation.ingress-policy.v1",
+  "public_ingress": {
+    "only_public_ports": [80, 443],
+    "application_bind": "127.0.0.1",
+    "proxy": "caddy",
+    "config_validation_required": true,
+    "atomic_reload_required": true,
+    "post_reload_ingress_probe_required": true,
+    "minimum_ingress_cells": 2
+  },
+  "tls": {
+    "automation": true,
+    "on_demand_tls": false,
+    "minimum_remaining_validity_hours": 168,
+    "certificate_storage_canonical": false,
+    "certificate_inventory_export_required": true,
+    "independent_private_key_backup": true,
+    "minimum_issuers": 2,
+    "issuer_failure_must_not_interrupt_existing_certificate_service": true,
+    "renewal_failure_alert_hours": 336,
+    "internal_emergency_ca": true,
+    "public_ca_is_sole_recovery_path": false
+  },
+  "dns": {
+    "minimum_authoritative_providers": 2,
+    "zone_source_of_truth": "project-owned-zone-manifest",
+    "registrar_is_zone_authority": false,
+    "dnssec": "required-where-supported",
+    "ttl_seconds": 300,
+    "prechange_ttl_reduction_required": true,
+    "authoritative_and_recursive_probes_required": true,
+    "provider_export_required": true,
+    "registrar_recovery_record_required": true
+  },
+  "failure_containment": {
+    "proxy_reload_failure_preserves_old_config": true,
+    "certificate_renewal_failure_preserves_existing_cert": true,
+    "single_ingress_host_loss_tolerated": true,
+    "single_dns_provider_loss_tolerated": true,
+    "stale_dns_detected_before_cutover": true,
+    "ca_outage_runbook_required": true,
+    "registrar_lockout_runbook_required": true
+  },
+  "evidence": {
+    "signed_zone_manifest": true,
+    "proxy_config_digest": true,
+    "certificate_inventory_digest": true,
+    "external_probe_results": true,
+    "rollback_record": true
+  }
+}
