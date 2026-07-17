@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "authority": {
+    "canonical_reader": "project-owned",
+    "provider_checkout_authoritative": false,
+    "raw_source_retained": true
+  },
+  "inputs": {
+    "allowed_roots": ["workspace"],
+    "accepted_types": ["regular-file", "directory"],
+    "reject_symlinks": true,
+    "reject_devices": true,
+    "reject_sockets": true,
+    "reject_fifos": true
+  },
+  "paths": {
+    "separator": "/",
+    "unicode_normalization": "NFC",
+    "case_collision_detection": true,
+    "reject_absolute": true,
+    "reject_parent_traversal": true,
+    "reject_nul": true,
+    "reject_backslash": true,
+    "max_path_bytes": 1024
+  },
+  "content": {
+    "text_encoding": "UTF-8",
+    "text_line_endings": "LF",
+    "preserve_final_newline_state": true,
+    "binary_bytes_preserved": true,
+    "max_file_bytes": 10485760,
+    "reject_utf8_bom": true
+  },
+  "metadata": {
+    "canonical_file_mode": "0644",
+    "canonical_executable_mode": "0755",
+    "executable_allowlist": ["scripts/**", "bin/**"],
+    "ignore_uid_gid": true,
+    "ignore_mtime": true,
+    "ignore_ctime": true,
+    "ignore_xattrs": true
+  },
+  "manifest": {
+    "algorithm": "SHA-256",
+    "sorted_by": "utf8-path-bytes",
+    "include": ["path", "type", "mode", "size", "digest"],
+    "self_digest": true
+  },
+  "security": {
+    "secret_scan_required": true,
+    "archive_bomb_limits": true,
+    "max_files": 10000,
+    "max_total_bytes": 104857600,
+    "quarantine_on_reject": true
+  },
+  "provenance": {
+    "record_source_uri": true,
+    "record_source_revision": true,
+    "record_reader_digest": true,
+    "record_policy_digest": true,
+    "record_normalization_changes": true
+  },
+  "reproducibility": {
+    "two_reader_runs": true,
+    "cross_filesystem_test": true,
+    "byte_identical_manifest": true
+  },
+  "custody": {
+    "raw_input_copies": 2,
+    "normalized_copies": 3,
+    "failure_domains": 2,
+    "offline_raw_copy": true,
+    "exportable_bundle": true
+  },
+  "operations": {
+    "two_operators_for_policy_change": true,
+    "signed_admission_evidence": true,
+    "clean_host_restore_days": 30,
+    "dns_independent_bootstrap": true
+  }
+}
