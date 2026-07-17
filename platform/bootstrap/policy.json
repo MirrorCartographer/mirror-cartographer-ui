@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "authority": {
+    "canonical_desired_state": "project-repository",
+    "provider_userdata_authoritative": false,
+    "exportable": true,
+    "two_operator_production_changes": true
+  },
+  "machine_identity": {
+    "stable_project_id": true,
+    "provider_instance_id_authoritative": false,
+    "hardware_inventory_recorded": true,
+    "tpm_optional_not_sole_recovery": true
+  },
+  "bootstrap": {
+    "first_boot_only": true,
+    "noninteractive": true,
+    "network_optional": true,
+    "public_dns_required": false,
+    "metadata_service_required": false,
+    "offline_bundle": true,
+    "signed_configuration": true,
+    "configuration_digest_verified": true,
+    "secrets_embedded": false
+  },
+  "operating_system": {
+    "image_digest_pinned": true,
+    "image_mirrored": true,
+    "verified_boot_required": true,
+    "immutable_or_transactional_root": true,
+    "ab_updates": true,
+    "automatic_rollback": true,
+    "previous_image_retained": true,
+    "security_update_sla_days": 7
+  },
+  "configuration": {
+    "declarative": true,
+    "idempotent": true,
+    "drift_detection": true,
+    "drift_fail_closed_for_security_controls": true,
+    "runtime_mutation_logged": true,
+    "package_install_during_boot": false,
+    "arbitrary_remote_scripts": false,
+    "host_specific_overlays_bounded": true
+  },
+  "access": {
+    "ssh_password_auth": false,
+    "root_remote_login": false,
+    "short_lived_operator_credentials": true,
+    "out_of_band_path": true,
+    "break_glass_offline": true,
+    "two_operator_destructive_reimage": true
+  },
+  "recovery": {
+    "clean_host_rebuild_days": 30,
+    "signed_evidence": true,
+    "different_hardware_verified": true,
+    "provider_independent_path": true,
+    "offline_image_copy": true,
+    "offline_config_copy": true,
+    "bootstrap_key_copies": 2
+  },
+  "evidence": {
+    "image_digest": true,
+    "config_digest": true,
+    "boot_measurements": true,
+    "disk_layout": true,
+    "network_policy": true,
+    "enabled_units": true,
+    "package_inventory": true,
+    "drift_report": true,
+    "operator_signatures": 2
+  }
+}
