@@ -1,0 +1,22 @@
+name: Release authority contract
+on:
+  push:
+    paths:
+      - 'platform/release/**'
+      - '.github/workflows/release-authority-contract.yml'
+  pull_request:
+    paths:
+      - 'platform/release/**'
+      - '.github/workflows/release-authority-contract.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node platform/release/verify-release-contract.mjs
+      - run: node platform/release/test.mjs
