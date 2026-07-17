@@ -1,0 +1,47 @@
+{
+  "source": {
+    "reader_normalization_required": true,
+    "normalized_tree_digest_required": true,
+    "unpinned_git_forbidden": true
+  },
+  "dependencies": {
+    "lockfile_required": true,
+    "frozen_install_required": true,
+    "integrity_hashes_required": true,
+    "project_mirror_required": true,
+    "public_registry_during_build_forbidden": true,
+    "install_scripts_default_denied": true
+  },
+  "toolchain": {
+    "runtime_version_pinned": true,
+    "package_manager_version_pinned": true,
+    "builder_image_digest_pinned": true,
+    "host_toolchain_forbidden": true
+  },
+  "execution": {
+    "clean_workspace": true,
+    "fixed_locale": "C.UTF-8",
+    "fixed_timezone": "UTC",
+    "source_date_epoch_required": true,
+    "randomness_seeded": true,
+    "parallelism_pinned": true
+  },
+  "graph": {
+    "declared_inputs_only": true,
+    "build_graph_digest_required": true,
+    "undeclared_output_forbidden": true
+  },
+  "verification": {
+    "independent_rebuilds": 2,
+    "byte_identical_required": true,
+    "artifact_sha256_required": true,
+    "provenance_required": true,
+    "sbom_required": true
+  },
+  "custody": {
+    "dependency_mirror_copies": 2,
+    "independent_failure_domains": 2,
+    "mirror_export_required": true,
+    "hosted_registry_sole_source_forbidden": true
+  }
+}
