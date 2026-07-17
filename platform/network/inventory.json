@@ -1,0 +1,22 @@
+{
+  "reverse_proxy": "caddy",
+  "ingress_nodes": [
+    {"id":"edge-a","failure_domain":"site-a","public":true,"backend_bind":"127.0.0.1"},
+    {"id":"edge-b","failure_domain":"site-b","public":true,"backend_bind":"10.77.0.12"}
+  ],
+  "dns": {
+    "primary":"project-zone-source",
+    "secondary":"replaceable-authoritative-secondary",
+    "zone_export_format":"RFC 1035 master file",
+    "out_of_band_origin":"10.77.0.10"
+  },
+  "tls": {
+    "issuers":["acme-primary","acme-secondary"],
+    "storage_copies":["site-a-encrypted","site-b-encrypted"],
+    "account_key_copies":["online-sealed","offline-recovery"]
+  },
+  "evidence": {
+    "signed": true,
+    "operators":["operator-a","operator-b"]
+  }
+}
