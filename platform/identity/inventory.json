@@ -1,0 +1,54 @@
+{
+  "schema": "foundation.identity-secrets-inventory.v1",
+  "trust_domains": [
+    {"name":"prod.foundation.internal","environment":"production","root_operator":"project","provider_derived":false},
+    {"name":"stage.foundation.internal","environment":"staging","root_operator":"project","provider_derived":false}
+  ],
+  "root_keys": {
+    "copies": 2,
+    "offline_copies": 1,
+    "locations": ["operator-a-offline", "operator-b-recovery"]
+  },
+  "workload_identity": {
+    "standard":"spiffe",
+    "implementation":"spire",
+    "svid_type":"x509",
+    "svid_ttl_minutes":30,
+    "workload_api_endpoint":"unix:///run/spire/sockets/agent.sock",
+    "attestation":"unix-kernel-and-deployment-digest",
+    "bootstrap_secret":false
+  },
+  "secret_broker": {
+    "implementation":"replaceable-vault-compatible",
+    "auth_source":"x509-svid",
+    "runtime_secret_ttl_minutes":30,
+    "dynamic_database_credentials":true,
+    "leases_revocable":true,
+    "sole_recovery_path":false
+  },
+  "encrypted_configuration": {
+    "format":"sops-age",
+    "plaintext_committed":false,
+    "recipient_groups":2,
+    "threshold":2,
+    "recovery_export_offline":true
+  },
+  "authorization": {
+    "default_deny":true,
+    "identity_policy_mapping":true,
+    "wildcard_admin_bindings":0,
+    "production_human_quorum":2
+  },
+  "audit": {
+    "identity_issuance":true,
+    "secret_access":true,
+    "policy_changes":true,
+    "redacts_secret_values":true
+  },
+  "recovery": {
+    "break_glass_documented":true,
+    "offline_material":true,
+    "last_drill":"2026-07-01T12:00:00Z",
+    "dns_independent_bootstrap":true
+  }
+}
