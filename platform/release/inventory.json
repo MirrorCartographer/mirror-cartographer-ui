@@ -1,0 +1,50 @@
+{
+  "release_sequence": 16,
+  "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "policy_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "independent_rebuild_match": true,
+  "test_result_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "sbom_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "provenance_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "vulnerability_decision": "admit",
+  "deployment_policy_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "normalized_source_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "build_graph_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "signer_keyids": [
+    "operator-a",
+    "operator-b"
+  ],
+  "tuf_metadata_versions": {
+    "root": 4,
+    "targets": 21,
+    "snapshot": 21,
+    "timestamp": 88
+  },
+  "copies": [
+    {
+      "domain": "site-a",
+      "immutable": false,
+      "offline": false
+    },
+    {
+      "domain": "site-b",
+      "immutable": true,
+      "offline": false
+    },
+    {
+      "domain": "offline-custody",
+      "immutable": true,
+      "offline": true
+    }
+  ],
+  "restore": {
+    "clean_host": true,
+    "age_days": 12,
+    "cross_implementation": true,
+    "without_dns": true,
+    "without_github": true,
+    "without_registry": true
+  },
+  "evidence_signed": true
+}
