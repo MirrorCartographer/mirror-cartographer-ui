@@ -1,0 +1,36 @@
+import fs from 'node:fs';
+const [policyPath, inventoryPath] = process.argv.slice(2);
+if (!policyPath || !inventoryPath) { console.error('usage: node verify-storage-contract.mjs <policy.json> <inventory.json>'); process.exit(2); }
+const p=JSON.parse(fs.readFileSync(policyPath,'utf8')); const i=JSON.parse(fs.readFileSync(inventoryPath,'utf8'));
+const checks=[]; const req=(name,ok)=>checks.push({name,ok:Boolean(ok)});
+const domains=new Set((i.volumes||[]).map(v=>v.failure_domain)); const backupDomains=new Set((i.backups||[]).map(b=>b.failure_domain));
+req('project owns canonical inventory',p.authority.canonical_inventory_owned_by_project&&!i.provider_authoritative);
+req('storage implementation is replaceable',p.authority.storage_implementation_replaceable);
+req('data classes declared',p.data_classes.explicit_classification_required&&i.data_classes.declared);
+req('durable data avoids ephemeral storage',p.data_classes.ephemeral_state_forbidden_for_durable_data&&!i.data_classes.durable_on_ephemeral);
+req('database native durability preserved',p.data_classes.database_uses_database_native_durability&&i.data_classes.database_native_durability);
+req('end-to-end integrity',p.integrity.end_to_end_checksums_required&&typeof i.integrity.checksums==='string'&&i.integrity.checksums.length>0);
+req('fresh scrub',p.integrity.scrub_required&&i.integrity.scrub_enabled&&i.integrity.last_scrub_age_days<=p.integrity.scrub_max_age_days);
+req('safe repair and corruption alerts',i.integrity.repair_only_with_redundancy&&i.integrity.corruption_alerts);
+req('three online persistent replicas',i.volumes?.length>=p.topology.minimum_online_replicas&&i.volumes.every(v=>v.persistent));
+req('three failure domains',domains.size>=p.topology.minimum_failure_domains);
+req('capacity headroom',i.capacity.free_percent>=p.capacity.minimum_free_percent&&i.capacity.rebuild_headroom);
+req('hard reservations',p.capacity.hard_reservation_required&&i.capacity.hard_reservations);
+req('thin provisioning fails visibly',i.capacity.thin_fail_mode===p.capacity.thin_provisioning_fail_mode);
+req('metadata capacity alerts',p.capacity.metadata_capacity_alerting_required&&i.capacity.metadata_alerts);
+req('crash and application consistent snapshots',i.snapshots.crash_consistent&&i.snapshots.application_consistent_stateful);
+req('snapshots not treated as backups',!p.snapshots.snapshot_is_backup&&!i.snapshots.treated_as_backup);
+req('snapshot retention manifest',p.snapshots.retention_manifest_required&&i.snapshots.retention_manifest);
+req('portable export',p.custody.portable_export_required&&i.exports.portable&&typeof i.exports.format==='string');
+req('cross implementation restore',p.custody.cross_implementation_restore_required&&i.exports.cross_implementation_verified);
+req('three backups across two domains',i.backups?.length>=p.custody.minimum_backup_copies&&backupDomains.size>=p.custody.minimum_backup_failure_domains);
+req('offline immutable custody',i.backups.some(b=>b.offline)&&i.backups.some(b=>b.immutable));
+req('fresh signed clean-host restore',i.restore_evidence.signed&&i.restore_evidence.clean_host&&i.restore_evidence.semantic_verified&&i.restore_evidence.age_days<=p.custody.restore_drill_max_age_days);
+req('DNS-independent recovery',p.operations.dns_independent_recovery&&i.restore_evidence.without_dns);
+req('encryption and workload identity',i.security.at_rest&&i.security.in_transit&&i.security.workload_identity);
+req('default deny and key separation',i.security.default_deny&&i.security.keys_separate);
+req('storage telemetry',i.metrics.device_health&&i.metrics.latency&&i.metrics.capacity&&i.metrics.rebuild);
+req('two-operator destructive authority',i.destructive_actions.minimum_operators>=2);
+const failed=checks.filter(c=>!c.ok); for(const c of checks) console.log(`${c.ok?'PASS':'FAIL'} ${c.name}`);
+if(failed.length){console.error(`REJECT ${failed.length}/${checks.length} storage invariants failed`);process.exit(1);}
+console.log(`ACCEPT ${checks.length} storage invariants`);
