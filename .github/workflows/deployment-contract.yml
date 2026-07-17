@@ -1,0 +1,25 @@
+name: Deployment and rollback contract
+
+on:
+  push:
+    paths:
+      - "platform/deployment/**"
+      - ".github/workflows/deployment-contract.yml"
+  pull_request:
+    paths:
+      - "platform/deployment/**"
+      - ".github/workflows/deployment-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node platform/deployment/verify-deployment-contract.mjs platform/deployment/policy.json platform/deployment/inventory.json
+      - run: node platform/deployment/test.mjs
