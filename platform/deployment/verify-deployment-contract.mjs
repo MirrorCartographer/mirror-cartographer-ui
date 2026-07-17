@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+const [policyPath='platform/deployment/policy.json', inventoryPath='platform/deployment/inventory.json'] = process.argv.slice(2);
+const p=JSON.parse(fs.readFileSync(policyPath,'utf8')); const i=JSON.parse(fs.readFileSync(inventoryPath,'utf8'));
+const checks=[]; const check=(name,ok)=>checks.push({name,ok:Boolean(ok)}); const digest=/^.+@sha256:[a-f0-9]{64}$/;
+check('digest-pinned artifact',p.artifact.digest_required&&digest.test(i.artifact_ref));
+check('mutable tags forbidden',p.artifact.mutable_tags_forbidden&&!i.artifact_ref.split('@')[0].split('/').at(-1).includes(':'));
+check('release admitted',p.artifact.release_admission_required&&i.release_admitted);
+check('artifact local before start',p.artifact.local_custody_before_start&&i.local_artifact_present);
+check('rootless runtime',p.runtime.rootless_required&&i.runtime.rootless);
+check('canonical engine',i.runtime.engine===p.runtime.canonical); check('canonical manager',i.runtime.manager===p.runtime.orchestrator);
+check('read-only rootfs',p.runtime.read_only_rootfs_required&&i.runtime.read_only_rootfs);
+check('no new privileges',p.runtime.no_new_privileges_required&&i.runtime.no_new_privileges);
+check('drop all capabilities',p.runtime.capability_drop_all_required&&i.runtime.cap_drop.includes('ALL'));
+check('memory limit',p.runtime.resource_limits_required&&i.runtime.memory_limit_mib>0); check('cpu limit',p.runtime.resource_limits_required&&i.runtime.cpu_quota_percent>0);
+check('minimum hosts',i.hosts.length>=p.topology.minimum_hosts); check('failure domains',new Set(i.hosts.map(h=>h.failure_domain)).size>=p.topology.minimum_failure_domains);
+check('ready replicas',i.hosts.reduce((n,h)=>n+h.ready_replicas,0)>=p.topology.minimum_ready_replicas); check('two slots per host',i.hosts.every(h=>h.slots.length>=p.deployment.slots_per_host));
+check('blue-green strategy',i.deployment.strategy===p.deployment.strategy); check('health gate',p.deployment.health_gate_required&&i.deployment.health_gate);
+check('promotion quorum',new Set(i.deployment.promotion_approvals).size>=p.deployment.promotion_quorum); check('zero unavailable',i.deployment.max_unavailable<=p.deployment.max_unavailable);
+check('automatic rollback',p.deployment.automatic_rollback_required&&i.deployment.automatic_rollback); check('previous digest cached',i.deployment.previous_digest_cached);
+check('registry-independent rollback',p.deployment.rollback_registry_independent&&!i.deployment.rollback_requires_registry); check('dns-independent rollback',p.deployment.rollback_dns_independent&&!i.deployment.rollback_requires_public_dns);
+check('reverse proxy ingress',p.network.reverse_proxy_only_ingress&&i.network.public_entrypoint==='reverse-proxy'); check('application not public',p.network.application_public_bind_forbidden&&!i.network.application_public_bind);
+check('backend non-public',i.hosts.every(h=>h.backend_bind.startsWith('127.')||h.backend_bind.startsWith('10.')||h.backend_bind.startsWith('192.168.')||/^172\.(1[6-9]|2\d|3[01])\./.test(h.backend_bind)));
+check('ephemeral workload',p.state.workload_ephemeral&&i.state.ephemeral_workload); check('externalized state',p.state.persistent_state_externalized&&i.state.persistent_state_externalized);
+check('signed deployment evidence',p.operations.deployment_evidence_required&&i.operations.evidence_signed); check('drift detection',p.operations.drift_detection_required&&i.operations.drift_detection); check('break-glass audited',p.operations.break_glass_logged&&i.operations.break_glass_audited);
+for(const c of checks) console.log(`${c.ok?'PASS':'FAIL'} ${c.name}`); const failed=checks.filter(c=>!c.ok); if(failed.length){console.error(`REJECT ${failed.length} deployment invariants failed`);process.exit(1)} console.log(`ACCEPT ${checks.length} deployment invariants`);
