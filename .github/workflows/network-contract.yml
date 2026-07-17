@@ -1,0 +1,24 @@
+name: network-contract
+on:
+  pull_request:
+    paths:
+      - 'platform/network/**'
+      - '.github/workflows/network-contract.yml'
+  push:
+    branches: [preview]
+    paths:
+      - 'platform/network/**'
+      - '.github/workflows/network-contract.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node platform/network/verify-network-contract.mjs
+      - run: node platform/network/test.mjs
