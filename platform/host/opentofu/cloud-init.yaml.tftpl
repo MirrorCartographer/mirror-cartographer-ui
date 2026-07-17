@@ -35,6 +35,36 @@ write_files:
       maxretry = 5
       findtime = 10m
       bantime = 1h
+  - path: /etc/systemd/system/srv-foundation.mount
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Foundation persistent data volume
+      Requires=dev-disk-by\x2did-scsi\x2d0HC_Volume_${volume_id}.device
+      After=dev-disk-by\x2did-scsi\x2d0HC_Volume_${volume_id}.device
+      Before=docker.service
+
+      [Mount]
+      What=/dev/disk/by-id/scsi-0HC_Volume_${volume_id}
+      Where=/srv/foundation
+      Type=ext4
+      Options=defaults,noatime
+
+      [Install]
+      WantedBy=multi-user.target
+  - path: /etc/systemd/system/srv-foundation.automount
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Automount Foundation persistent data volume
+      Before=docker.service
+
+      [Automount]
+      Where=/srv/foundation
+      TimeoutIdleSec=0
+
+      [Install]
+      WantedBy=multi-user.target
   - path: /opt/foundation/.env
     permissions: '0600'
     content: |
@@ -47,6 +77,10 @@ write_files:
       #!/usr/bin/env bash
       set -Eeuo pipefail
       source /opt/foundation/.env
+      mountpoint -q /srv/foundation || {
+        echo "Foundation persistent volume is not mounted; refusing deployment" >&2
+        exit 1
+      }
       install -d -m 0755 /opt/foundation/src /srv/foundation/releases /srv/foundation/data /srv/foundation/backups
       if [ ! -d /opt/foundation/src/.git ]; then
         git clone --branch "$FOUNDATION_REF" --single-branch "$FOUNDATION_REPO" /opt/foundation/src
@@ -73,6 +107,10 @@ write_files:
     content: |
       #!/usr/bin/env bash
       set -Eeuo pipefail
+      mountpoint -q /srv/foundation || {
+        echo "Foundation persistent volume is not mounted; refusing backup" >&2
+        exit 1
+      }
       stamp="$(date -u +%Y%m%dT%H%M%SZ)"
       tar --xattrs --acls -C /srv/foundation -czf "/srv/foundation/backups/foundation-$stamp.tar.gz" data current releases
       find /srv/foundation/backups -type f -mtime +14 -delete
@@ -81,6 +119,7 @@ write_files:
     content: |
       [Unit]
       Description=Foundation Intelligence backup
+      RequiresMountsFor=/srv/foundation
       [Service]
       Type=oneshot
       ExecStart=/opt/foundation/backup.sh
@@ -104,6 +143,12 @@ runcmd:
   - 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" > /etc/apt/sources.list.d/docker.list'
   - apt-get update
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - install -d -m 0755 /srv/foundation
+  - systemctl daemon-reload
+  - 'for attempt in $(seq 1 60); do test -b /dev/disk/by-id/scsi-0HC_Volume_${volume_id} && exit 0; sleep 2; done; echo "Foundation volume device did not appear" >&2; exit 1'
+  - systemctl enable --now srv-foundation.automount
+  - 'ls -la /srv/foundation >/dev/null'
+  - 'findmnt --mountpoint /srv/foundation --source /dev/disk/by-id/scsi-0HC_Volume_${volume_id} >/dev/null || { echo "Foundation volume identity mismatch" >&2; exit 1; }'
   - systemctl enable --now docker fail2ban unattended-upgrades
   - systemctl enable --now foundation-backup.timer
   - ufw default deny incoming
@@ -111,7 +156,8 @@ runcmd:
   - ufw allow OpenSSH
   - ufw allow 80/tcp
   - ufw allow 443/tcp
+  - ufw allow 443/udp
   - ufw --force enable
   - chown -R ${admin_user}:${admin_user} /opt/foundation /srv/foundation
 
-final_message: "Foundation host bootstrap complete. Set DNS, then run /opt/foundation/deploy.sh."
+final_message: "Foundation host bootstrap complete with verified persistent volume. Set DNS, then run /opt/foundation/deploy.sh."
