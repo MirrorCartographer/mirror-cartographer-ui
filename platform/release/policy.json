@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "authority": "project",
+  "canonical_release_object": "signed immutable release manifest",
+  "artifact_identity": {
+    "algorithm": "sha256",
+    "digest_only": true,
+    "mutable_tags_forbidden": true
+  },
+  "admission": {
+    "requires": [
+      "normalized_source_digest",
+      "build_graph_digest",
+      "artifact_digest",
+      "independent_rebuild_match",
+      "test_result_digest",
+      "sbom_digest",
+      "provenance_digest",
+      "vulnerability_decision",
+      "deployment_policy_digest"
+    ],
+    "fail_closed_on_missing_evidence": true,
+    "evidence_immutable": true,
+    "provenance_format": "in-toto Statement v1 with SLSA provenance v1"
+  },
+  "signing": {
+    "format": "DSSE",
+    "release_threshold": 2,
+    "distinct_operators": 2,
+    "offline_root_threshold": 2,
+    "offline_root_keys": 3,
+    "online_release_keys": 0,
+    "release_keys_on_ci_workers": false,
+    "key_rotation_test_days": 90
+  },
+  "metadata": {
+    "framework": "TUF",
+    "consistent_snapshots": true,
+    "root_threshold": 2,
+    "targets_threshold": 2,
+    "snapshot_threshold": 1,
+    "timestamp_threshold": 1,
+    "root_offline": true,
+    "targets_offline": true,
+    "timestamp_max_age_hours": 24,
+    "snapshot_max_age_days": 7,
+    "rollback_protection": true,
+    "freeze_protection": true
+  },
+  "publication": {
+    "canonical_store_project_controlled": true,
+    "copies": 3,
+    "failure_domains": 2,
+    "immutable_copy": true,
+    "offline_copy": true,
+    "hosted_release_page_authoritative": false,
+    "public_registry_authoritative": false,
+    "exportable": true
+  },
+  "promotion": {
+    "two_person": true,
+    "separation_from_build": true,
+    "separation_from_registry": true,
+    "deployment_consumes_manifest_digest": true,
+    "rollback_is_new_signed_decision": true,
+    "emergency_bypass_audited": true
+  },
+  "continuity": {
+    "public_dns_required": false,
+    "public_ca_required": false,
+    "github_required": false,
+    "registry_required_for_verification": false,
+    "clean_host_restore_days": 30,
+    "cross_implementation_verification": true
+  },
+  "evidence": {
+    "signed": true,
+    "includes": [
+      "release_sequence",
+      "artifact_digest",
+      "source_digest",
+      "policy_digest",
+      "signer_keyids",
+      "attestation_digests",
+      "tuf_metadata_versions",
+      "verification_result"
+    ]
+  }
+}
