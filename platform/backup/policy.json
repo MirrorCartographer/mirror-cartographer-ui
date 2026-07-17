@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "canonical_recovery_catalog_owned_by_project": true,
+    "backup_implementation_replaceable": true,
+    "provider_may_be_sole_recovery_authority": false,
+    "replication_is_backup": false,
+    "snapshot_is_backup": false
+  },
+  "scope": {
+    "all_durable_datasets_classified": true,
+    "dependency_order_recorded": true,
+    "recovery_tiers_required": true,
+    "maximum_tolerable_data_loss_defined": true,
+    "maximum_tolerable_downtime_defined": true
+  },
+  "capture": {
+    "application_consistent_for_stateful_services": true,
+    "database_native_backup_required": true,
+    "continuous_database_wal_archive_required": true,
+    "configuration_and_schema_captured": true,
+    "identity_and_trust_roots_captured_separately": true,
+    "backup_success_requires_catalog_commit": true
+  },
+  "custody": {
+    "minimum_complete_copies": 3,
+    "minimum_failure_domains": 2,
+    "immutable_copy_required": true,
+    "offline_copy_required": true,
+    "project_controlled_copy_required": true,
+    "same_credentials_may_delete_all_copies": false,
+    "public_dns_required_for_restore": false,
+    "original_provider_required_for_restore": false
+  },
+  "integrity": {
+    "cryptographic_manifest_required": true,
+    "manifest_signed": true,
+    "full_data_read_check_max_age_days": 30,
+    "sample_restore_max_age_days": 7,
+    "corruption_injection_required": true,
+    "repair_may_modify_only_noncanonical_copy": true
+  },
+  "retention": {
+    "source_controlled_policy": true,
+    "dry_run_before_deletion": true,
+    "two_operator_destructive_authority": true,
+    "append_only_writer_credentials": true,
+    "maintenance_credentials_separate": true,
+    "legal_or_incident_hold_supported": true
+  },
+  "restore": {
+    "clean_host_required": true,
+    "cross_implementation_required": true,
+    "semantic_validation_required": true,
+    "dependency_order_enforced": true,
+    "restore_evidence_signed": true,
+    "restore_drill_max_age_days": 30,
+    "bare_catalog_reconstruction_required": true
+  },
+  "disaster_recovery": {
+    "total_site_loss_tested": true,
+    "control_plane_loss_tested": true,
+    "credential_loss_tested": true,
+    "dns_and_ca_loss_tested": true,
+    "communications_runbook_offline": true,
+    "minimum_trained_operators": 2,
+    "decision_log_required": true
+  },
+  "security": {
+    "encryption_at_rest_required": true,
+    "encryption_in_transit_required": true,
+    "backup_keys_separate_from_storage_admin": true,
+    "release_keys_forbidden_on_backup_workers": true,
+    "restore_environment_isolated": true,
+    "secret_values_redacted_from_evidence": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "contains_object_digests": true,
+    "contains_restore_point": true,
+    "contains_observed_rpo_rto": true,
+    "contains_operator_signatures": true,
+    "retention_days": 2555
+  }
+}
