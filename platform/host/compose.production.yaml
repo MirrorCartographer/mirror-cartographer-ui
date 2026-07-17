@@ -34,10 +34,9 @@ services:
       start_period: 15s
 
   edge:
-    # Pin the Caddy semantic release instead of following the floating 2.10
-    # channel. The deployment evidence must still record the resolved image ID;
-    # a registry digest pin is the remaining step for byte-level immutability.
-    image: caddy:2.10.0-alpine
+    # Keep the semantic default pinned while allowing deployment to export and
+    # record the exact configured reference and its resolved registry digest.
+    image: ${FOUNDATION_EDGE_IMAGE:-caddy:2.10.0-alpine}
     pull_policy: always
     restart: unless-stopped
     init: true
