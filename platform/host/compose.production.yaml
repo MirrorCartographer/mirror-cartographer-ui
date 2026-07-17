@@ -34,8 +34,9 @@ services:
       start_period: 15s
 
   edge:
-    # Pin the exact edge release so a future caddy:2.10-alpine retag cannot
-    # silently change the production TLS/runtime substrate between deployments.
+    # Pin the Caddy semantic release instead of following the floating 2.10
+    # channel. The deployment evidence must still record the resolved image ID;
+    # a registry digest pin is the remaining step for byte-level immutability.
     image: caddy:2.10.0-alpine
     pull_policy: always
     restart: unless-stopped
