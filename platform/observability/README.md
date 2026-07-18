@@ -1,46 +1,46 @@
-# Sovereign observability authority
+# Sovereign Observability Plane
 
-## Scope
+## Authority
 
-This plane defines project authority over metrics, logs, traces, alerting, telemetry retention, and evidence. External monitoring services may receive mirrored telemetry, but they are not canonical policy, sole custody, or the only outage-detection path.
+The project owns telemetry schemas, collection policy, retention, alert semantics, silences, evidence, and recovery. OpenTelemetry, Prometheus, Loki, Tempo, Grafana, and hosted backends are replaceable mechanisms.
 
-## Strongest surviving design
+Dashboards are views, not canonical evidence. A green dashboard cannot overrule missing telemetry, failed collectors, stale rules, or lost alert delivery.
 
-1. Host-local OpenTelemetry agents buffer telemetry to disk.
-2. At least two gateway collectors in separate failure domains apply source-controlled processing and export policy.
-3. Two independent Prometheus-compatible scrapers retain local WALs and write to two project-controlled metric stores.
-4. Structured logs retain event and observed timestamps, trace context, and redaction state; Loki-compatible object data is held in three copies including one immutable copy.
-5. Trace sampling policy is source-controlled. Tail sampling is admitted only with trace-affinity routing.
-6. Two alert evaluators send every alert directly to all three Alertmanagers. Duplicate notifications during partitions are accepted rather than suppressing an outage.
-7. An independent deadman and meta-monitor path lives outside the main observability failure domain.
-8. Configurations, rules, retention manifests, raw exports, and clean-host restoration evidence remain project-controlled and portable.
+## Initial architecture
 
-## False sovereignty rejected
+Applications and hosts emit OTLP or approved native formats to host-local OpenTelemetry Collectors. Collectors apply resource identity, schema validation, redaction, cardinality controls, buffering, and explicit drop accounting before forwarding to two gateway collectors.
 
-- Provider dashboards as the only telemetry record.
-- One collector gateway.
-- Memory-only buffering.
-- Metrics without WAL or raw export.
-- A single alert evaluator or notification path.
-- Sending alerts through one load balancer to Alertmanager.
-- Logs stored only on one filesystem or one object-storage account.
-- Tail sampling without ensuring all spans for a trace reach one sampling decision point.
-- High-cardinality values promoted into indexed log labels.
-- Observability services holding release-signing keys.
-- Monitoring a monitoring stack only from inside that same stack.
+Metrics are independently scraped by two Prometheus servers in separate failure domains. Each keeps local TSDB data and remote-writes to two project-custodied long-term targets. Logs use Loki TSDB with versioned object storage. Traces remain exportable as OTLP and use source-controlled sampling.
+
+## Failure semantics
+
+Telemetry loss must be measurable. Collector queue saturation, exporter failure, remote-write backlog, WAL corruption, disk-full behavior, rejected records, and sampling decisions are first-class signals.
+
+The observability plane monitors itself and is also checked from outside its failure domain. Missing telemetry is modeled explicitly rather than interpreted as healthy.
+
+## Alert authority
+
+Alert rules, recording rules, inhibition, and routing are source controlled and tested. Two independent evaluators execute critical alerts. Silences require identity, reason, scope, and expiry. A deadman alert proves the evaluation and delivery path remains active.
+
+## Privacy
+
+Telemetry is treated as potentially sensitive production data. Attribute allowlists, secret redaction, PII default-deny, raw payload prohibition, tenant isolation, and deletion separation are mandatory.
+
+## Continuity
+
+Recovery must work without Grafana or the original telemetry backend. Raw portable exports, configuration digests, rules, dashboards, object manifests, and alert-routing state are retained in project custody.
 
 ## Ownership boundary
 
-Project-owned: telemetry schema, labels, sampling, redaction, SLOs, alert rules, silence policy, retention manifests, storage indexes, evidence, restoration procedures, and admission logic.
+### Project-owned
+Telemetry schema, resource identity, redaction, cardinality budgets, collector configuration, rules, alert semantics, retention, evidence, and recovery acceptance.
 
-Replaceable: OpenTelemetry Collector, Prometheus-compatible engines, Loki-compatible log stores, Tempo/Jaeger-compatible trace stores, Alertmanager, Grafana, object storage, VMs, and notification relays.
+### Replaceable
+OpenTelemetry Collector, Prometheus, Loki, Tempo, Grafana, Mimir, Thanos, VictoriaMetrics, object stores, hosted observability services, VMs, and physical hosts.
 
-Not physically owned: CPU and disk fabrication, datacenter power, ISP and transit networks, DNS registries, public CAs, telephone/email carrier delivery, and external time standards.
+### Not physically owned
+CPU and disk fabrication, firmware, facilities, power, public networks, DNS roots, public CAs, third-party notification networks, and upstream software supply chains.
 
 ## Production evidence still required
 
-The checked-in inventory is a design fixture. Production admission must derive evidence from collector queue/drop counters, WAL health, scrape target state, label cardinality, object hashes, retention execution, alert receipts, external deadman receipts, provider-outage tests, and cross-implementation restore results. Evidence must be signed by two operators.
-
-## Next destructive laboratory
-
-Deploy two agents, two gateways, two scrapers, three Alertmanagers, metric/log/trace stores, and an independent deadman. Saturate collector queues, fill a WAL disk, corrupt a log WAL, remove one site, disconnect the hosted mirror, break public DNS, and destroy the principal observability stores. Rebuild from offline configuration and object custody; verify that outage detection, alert delivery, raw telemetry reconciliation, and historical queries survive.
+Live collector saturation, exporter outage, remote-write backlog, WAL corruption, disk-full behavior, cardinality overflow, privacy redaction, multi-evaluator alert delivery, deadman failure, hosted-backend loss, query reconciliation, raw export, and clean-host cross-backend restoration.
