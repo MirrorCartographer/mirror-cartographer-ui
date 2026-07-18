@@ -1,0 +1,12 @@
+{
+  "schema": "foundation.restore.graph.v1",
+  "nodes": [
+    {"id":"identity-roots","depends_on":[],"verify":["trust-bundle-hash","threshold-custody"]},
+    {"id":"secrets-broker","depends_on":["identity-roots"],"verify":["lease-smoke-test","policy-digest"]},
+    {"id":"platform-config","depends_on":["identity-roots"],"verify":["config-tree-digest"]},
+    {"id":"postgres-primary","depends_on":["identity-roots","secrets-broker"],"verify":["system-id","timeline","schema-digest","semantic-queries"]},
+    {"id":"event-history","depends_on":["identity-roots","postgres-primary"],"verify":["event-range-digest","consumer-idempotency"]},
+    {"id":"artifact-catalog","depends_on":["identity-roots"],"verify":["oci-dag","referrer-graph"]},
+    {"id":"runtime","depends_on":["platform-config","secrets-broker","postgres-primary","event-history","artifact-catalog"],"verify":["external-semantic-probe"]}
+  ]
+}
