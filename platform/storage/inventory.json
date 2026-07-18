@@ -1,23 +1,117 @@
 {
-  "provider_authoritative": false,
-  "data_classes": {"declared": true, "durable_on_ephemeral": false, "database_native_durability": true},
-  "implementation": "zfs-replicated-primary-plus-portable-object-custody",
-  "volumes": [
-    {"name": "site-a", "failure_domain": "site-a", "persistent": true},
-    {"name": "site-b", "failure_domain": "site-b", "persistent": true},
-    {"name": "site-c", "failure_domain": "site-c", "persistent": true}
+  "schema_version": 1,
+  "authority": {
+    "catalog": "foundation-storage-catalog-v1",
+    "project_owned": true,
+    "ceph_authoritative": false,
+    "zfs_authoritative": false,
+    "cloud_volume_authoritative": false,
+    "adapters": ["openzfs-local", "ceph-rados-rgw"],
+    "replaceable": true,
+    "catalog_exportable": true
+  },
+  "datasets": [
+    {"id":"postgres-data","class":"block-local","durability":"application-replicated","shared_block":false,"ephemeral":false},
+    {"id":"queue-data","class":"block-local","durability":"application-replicated","shared_block":false,"ephemeral":false},
+    {"id":"registry-objects","class":"object-shared","durability":"rados-replicated","shared_block":false,"ephemeral":false},
+    {"id":"build-scratch","class":"local-ephemeral","durability":"none","shared_block":false,"ephemeral":true}
   ],
-  "integrity": {"checksums": "sha256-or-native-strong", "scrub_enabled": true, "last_scrub_age_days": 2, "repair_only_with_redundancy": true, "corruption_alerts": true},
-  "capacity": {"free_percent": 31, "hard_reservations": true, "thin_fail_mode": "error", "metadata_alerts": true, "rebuild_headroom": true},
-  "snapshots": {"crash_consistent": true, "application_consistent_stateful": true, "treated_as_backup": false, "retention_manifest": true},
-  "exports": {"portable": true, "format": "tar-plus-manifest-v1", "cross_implementation_verified": true},
-  "backups": [
-    {"id": "a", "failure_domain": "site-a", "offline": false, "immutable": false},
-    {"id": "b", "failure_domain": "site-b", "offline": false, "immutable": true},
-    {"id": "c", "failure_domain": "offline-vault", "offline": true, "immutable": true}
-  ],
-  "restore_evidence": {"signed": true, "clean_host": true, "semantic_verified": true, "age_days": 8, "without_dns": true},
-  "security": {"at_rest": true, "in_transit": true, "workload_identity": true, "default_deny": true, "keys_separate": true},
-  "metrics": {"device_health": true, "latency": true, "capacity": true, "rebuild": true},
-  "destructive_actions": {"minimum_operators": 2}
+  "local_storage": {
+    "filesystem":"openzfs",
+    "pools":[
+      {"id":"db-a-pool","mirror_width":2,"checksums":"on","hardware_raid":false,"encrypted":true,"capacity_percent":42,"free_percent":58},
+      {"id":"queue-a-pool","mirror_width":2,"checksums":"on","hardware_raid":false,"encrypted":true,"capacity_percent":37,"free_percent":63}
+    ],
+    "ecc_memory":true,
+    "last_scrub_age_days":8,
+    "smart_monitoring":true,
+    "key_recovery_separate":true,
+    "protected_snapshot_holds":true
+  },
+  "shared_object": {
+    "implementation":"ceph-rados-rgw",
+    "hosts":[
+      {"id":"storage-a","domain":"site-a","osds":2},
+      {"id":"storage-b","domain":"site-b","osds":2},
+      {"id":"storage-c","domain":"site-c","osds":2}
+    ],
+    "osd_count":6,
+    "pool_size":3,
+    "pool_min_size":2,
+    "crush_failure_domain":"host",
+    "one_raw_device_per_osd":true,
+    "shared_filesystem_under_osds":false,
+    "pg_autoscaler":"on",
+    "last_deep_scrub_age_days":6,
+    "nearfull_percent":70,
+    "backfillfull_percent":75,
+    "full_percent":80,
+    "recovery_capacity_reserve_percent":20,
+    "erasure_coding":false,
+    "canonical_bucket_versioning":true,
+    "immutable_bucket_object_lock":true
+  },
+  "capacity": {
+    "growth_forecast":true,
+    "days_headroom":94,
+    "largest_failure_recovery_headroom":true,
+    "automatic_expansion_without_admission":false,
+    "critical_thin_overcommit":false,
+    "silent_eviction":false,
+    "recovery_bandwidth_mbps":500,
+    "estimated_single_host_rebuild_hours":7.4
+  },
+  "integrity": {
+    "zfs_scrub_scheduled":true,
+    "ceph_deep_scrub_scheduled":true,
+    "last_full_manifest_scan_age_days":12,
+    "latent_corruption_injection":true,
+    "mismatch_quarantines_copy":true,
+    "independent_good_copy_required":true,
+    "post_repair_semantic_restore":true
+  },
+  "lifecycle": {
+    "device_inventory":true,
+    "firmware_inventory":true,
+    "burn_in":true,
+    "safe_to_destroy_check":true,
+    "destructive_operator_count":2,
+    "secure_erasure_evidence":true,
+    "old_device_retained_until_verified":true,
+    "replacement_runbook":true
+  },
+  "security": {
+    "storage_admin_separate_release":true,
+    "storage_admin_separate_backup_delete":true,
+    "cephx":true,
+    "bucket_credentials_scoped":true,
+    "management_network_separate":true,
+    "public_admin_endpoints":false,
+    "encryption_in_transit":true,
+    "release_keys_present":false,
+    "audit_externalized":true
+  },
+  "continuity": {
+    "original_vendor_required":false,
+    "original_cloud_required":false,
+    "public_dns_required":false,
+    "ceph_required_for_restore":false,
+    "zfs_required_for_object_restore":false,
+    "portable_object_export":true,
+    "last_clean_host_reconstruction_age_days":11,
+    "trained_operators":2
+  },
+  "evidence": {
+    "machine_generated":true,
+    "signed":true,
+    "storage_catalog_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "device_map_digest":"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "crush_map_digest":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "scrub_results":true,
+    "capacity_recovery_model":true,
+    "corruption_test":true,
+    "rebuild_result":true,
+    "operator_signatures":2,
+    "retention_days":2555
+  }
 }
