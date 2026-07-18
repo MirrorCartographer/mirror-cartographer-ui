@@ -1,0 +1,25 @@
+name: Release and deployment contract
+
+on:
+  push:
+    paths:
+      - "platform/release-deployment/**"
+      - ".github/workflows/release-deployment-contract.yml"
+  pull_request:
+    paths:
+      - "platform/release-deployment/**"
+      - ".github/workflows/release-deployment-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node platform/release-deployment/verify-release-deployment-contract.mjs platform/release-deployment/policy.json platform/release-deployment/inventory.json
+      - run: node platform/release-deployment/test.mjs
