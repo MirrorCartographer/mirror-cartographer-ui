@@ -76,7 +76,6 @@ function sanitizedEnvironment(workspace, allowlist) {
 }
 function runProcess(command, options) {
   return new Promise((resolve, reject) => {
-    const started = Date.now();
     const child = spawn(command[0], command.slice(1), { cwd: options.cwd, env: options.env, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe'] });
     const stdout = []; const stderr = []; let timedOut = false;
     const timer = setTimeout(() => {
@@ -87,7 +86,7 @@ function runProcess(command, options) {
     child.on('error', (error) => { clearTimeout(timer); reject(error); });
     child.on('close', (code, signal) => {
       clearTimeout(timer);
-      resolve({ code, signal, timedOut, durationMs: Date.now() - started, stdout: Buffer.concat(stdout), stderr: Buffer.concat(stderr) });
+      resolve({ code, signal, timedOut, stdout: Buffer.concat(stdout), stderr: Buffer.concat(stderr) });
     });
   });
 }
@@ -133,7 +132,7 @@ export async function runSelfHostedWorker(options) {
       input: { identity: beforeIdentity, inventory: before },
       output: { identity: afterIdentity, inventory: after },
       execution: {
-        exitCode: result.code, signal: result.signal, timedOut: result.timedOut, durationMs: result.durationMs,
+        exitCode: result.code, signal: result.signal, timedOut: result.timedOut,
         stdout: { bytes: result.stdout.length, sha256: sha256(result.stdout) },
         stderr: { bytes: result.stderr.length, sha256: sha256(result.stderr) },
       },
