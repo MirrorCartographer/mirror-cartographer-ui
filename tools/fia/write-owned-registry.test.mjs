@@ -26,6 +26,8 @@ test('writes content-addressed objects and verifies clean restore',async()=>{con
 
 test('equivalent independent registries produce identical evidence identities',async()=>{const a=await fixture(),b=await fixture();assert.equal(run(a.root).status,0);assert.equal(run(b.root).status,0);const ea=JSON.parse(await fs.readFile(path.join(a.root,'evidence.json'))),eb=JSON.parse(await fs.readFile(path.join(b.root,'evidence.json')));assert.equal(ea.identity,eb.identity);assert.equal(ea.catalog.digest,eb.catalog.digest);});
 
+test('idempotent re-import into an existing registry preserves evidence identity',async()=>{const {root}=await fixture();assert.equal(run(root).status,0);const first=JSON.parse(await fs.readFile(path.join(root,'evidence.json')));await fs.rm(path.join(root,'evidence.json'));assert.equal(run(root).status,0);const second=JSON.parse(await fs.readFile(path.join(root,'evidence.json')));assert.equal(first.identity,second.identity);});
+
 test('rejects source object substitution',async()=>{const {root}=await fixture();await fs.writeFile(path.join(root,'runtime.bin'),'changed');const x=run(root);assert.notEqual(x.status,0);assert.match(x.stderr,/size mismatch|digest mismatch/);});
 
 test('rejects incomplete export closure',async()=>{const {root,r}=await fixture();r.export.objectDigests.pop();r.identity=identity(r);await fs.writeFile(path.join(root,'registered.json'),JSON.stringify(r));const x=run(root);assert.notEqual(x.status,0);assert.match(x.stderr,/export manifest is not complete/);});
