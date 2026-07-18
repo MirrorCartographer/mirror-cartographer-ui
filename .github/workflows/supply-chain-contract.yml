@@ -1,0 +1,17 @@
+name: Dependency supply-chain contract
+on:
+  push:
+    paths: ["platform/supply-chain/**", ".github/workflows/supply-chain-contract.yml"]
+  pull_request:
+    paths: ["platform/supply-chain/**", ".github/workflows/supply-chain-contract.yml"]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: node platform/supply-chain/verify-supply-chain-contract.mjs platform/supply-chain/policy.json platform/supply-chain/inventory.json
+      - run: node platform/supply-chain/test.mjs
