@@ -1,43 +1,60 @@
-# Sovereign Queue and Event Delivery Contract
-
-This directory defines the project-owned admission contract for durable asynchronous work, event publication, retries, replay, and broker recovery.
+# Sovereign Queue and Event Transport Plane
 
 ## Surviving architecture
 
-The initial mechanism is a three-node NATS JetStream cluster across three independently failing sites. Applications commit business state and an outbox row in one PostgreSQL transaction. A relay publishes each outbox event with a stable message identifier and waits for broker acknowledgement. Consumers use durable pull subscriptions, bounded batches, explicit acknowledgements, and a PostgreSQL inbox/idempotency record committed in the same transaction as their side effects.
+The project owns a canonical event catalog, message envelope, subject policy, schema compatibility rules, consumer contracts, retention policy, replay procedure, and evidence. NATS JetStream is the initial durable transport adapter; RabbitMQ quorum queues and Kafka-compatible logs are comparison and migration targets.
 
-The reliable claim is **at-least-once delivery with idempotent effects**. The project does not claim universal end-to-end exactly-once execution. Network ambiguity, lost acknowledgements, process termination, replay, and external side effects can all produce duplicate delivery attempts.
+Three JetStream nodes span three failure domains. Critical streams use file storage on independent local SSDs, three replicas, publish acknowledgements, `DiscardNew`, bounded storage, explicit pull consumers, and project-controlled snapshots and portable event exports.
 
-## Authority boundary
+## Delivery semantics
 
-The project owns topology source, subject and schema definitions, retention and saturation rules, retry policy, dead-letter custody, replay authorization, evidence, exports, and recovery procedures. NATS, RabbitMQ, Kafka, hosted brokers, VMs, disks, and networks are replaceable mechanisms.
+Broker-level exactly-once features do not prove exactly-once application effects. JetStream publication deduplication is bounded by a configured rolling window and consumer double acknowledgements prove receipt of the acknowledgement. A database commit can still succeed while the process dies before acknowledging, so handlers require stable event IDs and an idempotency ledger or a transactionally coupled inbox/outbox.
 
-The project does not physically own CPU fabrication, disk firmware, datacenter power, ISP transit, BGP, DNS registries, or public network paths merely by operating the queue software.
+The application contract is:
 
-## Operational decisions
+1. Producer commits state and an outbox record in one database transaction.
+2. Relay publishes with stable event ID and waits for broker acknowledgement.
+3. Consumer writes its event ID to an idempotency/inbox table in the same transaction as its side effect.
+4. Consumer acknowledges only after that transaction commits.
+5. Redelivery becomes a verified no-op.
 
-- Reject new publications when a critical stream reaches its admitted capacity. Never silently discard the oldest unprocessed critical message.
-- Require publisher acknowledgements and explicit consumer acknowledgements.
-- Acknowledge only after durable side effects and idempotency state commit.
-- Bound retries, add jitter, retain poison messages, and audit replay.
-- Keep broker-neutral envelopes and exportable topology so a second implementation can be reconstructed.
-- Maintain three backup copies across at least two failure domains, including an offline copy.
-- Prohibit credentials and secret values in message payloads.
-- Require schema versioning and an explicit compatibility window.
+## Ordering
+
+No global ordering claim is admitted. Ordering is defined per project-selected key, with a producer sequence and consumer gap detection. Wall-clock time is evidence, not sequence authority.
+
+## Capacity and poison messages
+
+Critical streams reject new publishes visibly when their configured capacity is exhausted rather than deleting unconsumed old messages. Pull consumers have bounded batches, bytes, pending acknowledgements, retry delays, and delivery attempts. Exhausted messages move through an at-least-once dead-letter path and remain tied to their original event identity and failure evidence.
+
+## Ownership boundary
+
+### Project-owned
+
+Event envelope and catalog, schemas, subject namespace, ordering keys, idempotency semantics, retention, dead-letter rules, replay authority, portable export, evidence, and recovery acceptance.
+
+### Replaceable
+
+NATS JetStream, RabbitMQ quorum queues, Kafka-compatible brokers, object stores, SSDs, VMs, physical servers, and hosted queue services.
+
+### Not physically owned
+
+CPU and disk fabrication, firmware, facilities, power, network transit, DNS, BGP, public CAs, and upstream broker supply chains.
 
 ## Rejected directions
 
-- Core NATS for durable business events: it is at-most-once and loses messages when subscribers are absent.
-- Redis lists or Pub/Sub as the canonical durable queue: insufficient recovery and delivery evidence for critical work.
-- One hosted broker account: provider suspension, billing, API, region, credential, or export failure becomes loss of authority.
-- Distributed two-phase commit between application database and broker: increases coupling and does not remove operational failure modes.
-- Infinite retry: poison messages consume capacity and hide permanent incompatibility.
-- Automatic acknowledgement before side effects: worker death can lose accepted work.
-- “Exactly once” as a blanket system claim: broker deduplication windows cannot prove that arbitrary external side effects happened once.
+- Core NATS for durable business events.
+- One hosted queue account as canonical event custody.
+- Broker deduplication described as universal exactly-once execution.
+- Global ordering claims across independent subjects or partitions.
+- Acknowledgement before side-effect commit.
+- Infinite retries or silent poison-message deletion.
+- `DiscardOld` for critical unconsumed work.
+- Shared network storage beneath JetStream.
+- Broker-native snapshots as the only portable recovery format.
 
-## Production evidence still required
+## Unproven production evidence
 
-The checked-in inventory is a design fixture. Production admission must derive evidence from live cluster membership, replica placement, server configuration, storage flush settings, publish acknowledgements, consumer redelivery, queue limits, network partitions, exported message envelopes, backup hashes, clean-host restore, schema compatibility tests, and signed replay records.
+The inventory is a design fixture. Production admission still requires live quorum persistence, duplicate publication during lost acknowledgements, consumer crash after side-effect commit, poison-message dead lettering, capacity exhaustion, one-site loss, disk-full behavior, stream snapshot restoration, portable replay into another broker, and application-level idempotency evidence.
 
 ## Commands
 
@@ -48,4 +65,4 @@ node platform/queue/test.mjs
 
 ## Next destructive laboratory
 
-Start three pinned broker nodes, publish through a transactional outbox, terminate publishers before and after confirmation, kill consumers before and after database commit, partition the leader from one and then two replicas, saturate the stream, inject poison messages, restore from an offline export onto clean hosts, and compare all accepted business effects against unique event identifiers.
+Start three pinned JetStream nodes on independent local SSDs; publish through a transactional outbox; terminate publishers before and after confirmation; kill consumers before and after database commit; partition the stream leader from one and then two replicas; fill the stream to its byte limit; inject poison messages; snapshot and export the event range; restore onto clean hosts; replay the canonical envelopes through RabbitMQ quorum queues; and compare every accepted application effect against stable event IDs and per-key sequence numbers.
