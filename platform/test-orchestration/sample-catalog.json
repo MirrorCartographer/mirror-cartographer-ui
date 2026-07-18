@@ -1,0 +1,13 @@
+{
+  "schema": "foundation.test.catalog.v1",
+  "seed": 741839,
+  "shards": 4,
+  "tests": [
+    {"id":"unit.reader.path-collision","owner":"foundation","requirements":["SRC-12"],"class":"unit","risk":"critical"},
+    {"id":"contract.release.manifest","owner":"foundation","requirements":["REL-3"],"class":"contract","risk":"critical"},
+    {"id":"property.action-key.stability","owner":"foundation","requirements":["BLD-8"],"class":"property","risk":"critical"},
+    {"id":"security.ingress.forwarded-header","owner":"foundation","requirements":["NET-4"],"class":"security","risk":"high"},
+    {"id":"integration.database.failover","owner":"foundation","requirements":["DB-7"],"class":"integration","risk":"critical"},
+    {"id":"performance.reader.throughput","owner":"foundation","requirements":["SRC-20"],"class":"performance","risk":"medium"}
+  ]
+}
