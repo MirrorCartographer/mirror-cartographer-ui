@@ -1,0 +1,25 @@
+name: Build graph and determinism contract
+
+on:
+  push:
+    paths:
+      - "platform/build/**"
+      - ".github/workflows/build-contract.yml"
+  pull_request:
+    paths:
+      - "platform/build/**"
+      - ".github/workflows/build-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node platform/build/verify-build-contract.mjs platform/build/policy.json platform/build/inventory.json platform/build/graph.json
+      - run: node platform/build/test.mjs
