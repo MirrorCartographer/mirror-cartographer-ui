@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_artifact_catalog": true,
+    "project_owned_retention_policy": true,
+    "registry_authoritative": false,
+    "tag_authoritative": false,
+    "cloud_registry_authoritative": false,
+    "canonical_catalog_exportable": true,
+    "registry_adapters_replaceable": true
+  },
+  "identity": {
+    "digest_only_release_identity": true,
+    "sha256_minimum": true,
+    "tag_resolution_recorded": true,
+    "multi_platform_index_required": true,
+    "platform_manifest_closure_required": true,
+    "config_and_layer_closure_required": true,
+    "media_types_preserved": true,
+    "sizes_verified": true
+  },
+  "referrers": {
+    "oci_11_subject_required": true,
+    "referrers_api_required": true,
+    "fallback_tag_reconciliation_required": true,
+    "sbom_required": true,
+    "provenance_required": true,
+    "signature_required": true,
+    "vulnerability_evidence_required": true,
+    "referrer_graph_digest_required": true,
+    "unknown_artifact_types_preserved": true
+  },
+  "custody": {
+    "minimum_online_registries": 2,
+    "minimum_registry_implementations": 2,
+    "minimum_failure_domains": 2,
+    "object_store_project_custody": true,
+    "offline_oci_layout_export_required": true,
+    "portable_oras_copy_required": true,
+    "registry_gc_not_authoritative": true,
+    "deletion_replication_default_forbidden": true,
+    "complete_graph_reconciliation_required": true
+  },
+  "publication": {
+    "quarantine_namespace_required": true,
+    "release_namespace_append_only": true,
+    "immutable_release_tags_required": true,
+    "mutable_convenience_tags_non_authoritative": true,
+    "writer_cannot_delete": true,
+    "release_authority_separate": true,
+    "two_operator_destructive_change": true,
+    "promotion_by_digest_required": true,
+    "copy_before_publish_required": true
+  },
+  "retention": {
+    "source_controlled": true,
+    "release_hold_required": true,
+    "legal_incident_hold_required": true,
+    "minimum_deletion_grace_hours": 48,
+    "reachability_analysis_required": true,
+    "referrer_reachability_required": true,
+    "rollback_window_required": true,
+    "recent_restore_required_before_delete": true,
+    "tombstone_manifest_required": true
+  },
+  "security": {
+    "short_lived_workload_identity_required": true,
+    "repository_scoped_tokens_required": true,
+    "admin_api_public_forbidden": true,
+    "release_signing_keys_on_registry_forbidden": true,
+    "backup_deletion_keys_on_registry_forbidden": true,
+    "content_digest_recomputed_on_read": true,
+    "manifest_schema_validation_required": true,
+    "decompression_bomb_limits_required": true,
+    "malware_scan_advisory_only": true
+  },
+  "continuity": {
+    "original_registry_required": false,
+    "original_object_store_required": false,
+    "public_dns_required": false,
+    "github_required": false,
+    "cross_implementation_restore_required": true,
+    "clean_host_restore_max_age_days": 30,
+    "minimum_trained_operators": 2,
+    "offline_catalog_required": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_catalog_digest": true,
+    "contains_graph_reconciliation": true,
+    "contains_cross_registry_copy": true,
+    "contains_gc_survival_test": true,
+    "contains_clean_host_restore": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
