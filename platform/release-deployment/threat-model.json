@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "assets": [
+    "release ledger",
+    "release signing keys",
+    "verification policy",
+    "deployment desired state",
+    "promotion credentials",
+    "rollback manifests",
+    "traffic-shift evidence"
+  ],
+  "critical_abuse_cases": [
+    {
+      "id": "R1",
+      "threat": "Compromised CI publishes and deploys its own artifact",
+      "controls": ["builder cannot release", "two release signers", "digest-only artifact", "external verification summary"]
+    },
+    {
+      "id": "R2",
+      "threat": "Old valid release is replayed after a vulnerability fix",
+      "controls": ["monotonic release sequence", "rollback protection", "explicit emergency downgrade manifest"]
+    },
+    {
+      "id": "R3",
+      "threat": "Canary appears healthy but corrupts data",
+      "controls": ["semantic probes", "schema compatibility", "shadow reads", "automatic rollback forbidden for data changes"]
+    },
+    {
+      "id": "R4",
+      "threat": "Metrics outage is interpreted as successful deployment",
+      "controls": ["missing metrics fail closed", "deadman and stage completeness", "manual hold"]
+    },
+    {
+      "id": "R5",
+      "threat": "Automatic rollback repeats irreversible external effects",
+      "controls": ["side-effect classification", "traffic rollback separate from data rollback", "forward fix"]
+    },
+    {
+      "id": "R6",
+      "threat": "Registry or transparency outage prevents emergency verification",
+      "controls": ["offline signature bundle", "project artifact custody", "cached trust roots and policy"]
+    },
+    {
+      "id": "R7",
+      "threat": "One operator signs, deploys, promotes, and conceals evidence",
+      "controls": ["role separation", "two signers", "separate promotion credential", "external signed evidence"]
+    }
+  ]
+}
