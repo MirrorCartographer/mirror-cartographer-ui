@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_zone_source": true,
+    "registrar_authoritative_for_zone_content": false,
+    "dns_provider_authoritative_for_zone_content": false,
+    "canonical_zone_exportable": true,
+    "provider_adapter_replaceable": true,
+    "domain_registration_unavoidably_external": true
+  },
+  "domain": {
+    "registrant_identity_project_controlled": true,
+    "registrar_lock_required": true,
+    "registry_lock_preferred": true,
+    "auto_renew_required": true,
+    "expiry_alert_days": 90,
+    "payment_failure_path_documented": true,
+    "transfer_auth_offline_custody": true,
+    "minimum_registrar_accounts": 2,
+    "two_operator_transfer_authority": true
+  },
+  "zone": {
+    "source_controlled": true,
+    "serial_monotonic": true,
+    "lint_before_publish": true,
+    "unknown_record_types_preserved": true,
+    "ttl_policy_explicit": true,
+    "minimum_authoritative_servers": 4,
+    "minimum_dns_operators": 2,
+    "minimum_failure_domains": 3,
+    "hidden_primary_required": true,
+    "zone_transfer_authenticated": true,
+    "dynamic_updates_limited": true
+  },
+  "dnssec": {
+    "enabled": true,
+    "offline_ksk_or_equivalent": true,
+    "online_zsk_separate": true,
+    "minimum_ksk_copies": 3,
+    "minimum_ksk_failure_domains": 2,
+    "prepublication_rollover": true,
+    "signature_expiry_alert_hours": 72,
+    "parent_ds_verified": true,
+    "cds_cdnskey_continuity_checked": true,
+    "algorithm_migration_tested": true
+  },
+  "publishing": {
+    "atomic_generation_required": true,
+    "multi_provider_publish_required": true,
+    "provider_api_credentials_separated": true,
+    "writer_cannot_transfer_domain": true,
+    "last_known_good_zone_retained": true,
+    "rollback_without_registrar_required": true,
+    "provider_loss_tested": true
+  },
+  "resilience": {
+    "one_authoritative_server_loss": true,
+    "one_dns_operator_loss": true,
+    "registrar_outage": true,
+    "dnssec_signer_loss": true,
+    "bad_zone_rejected": true,
+    "bad_ds_rejected": true,
+    "expired_signature_tested": true,
+    "public_dns_not_required_for_internal_recovery": true
+  },
+  "security": {
+    "mfa_required": true,
+    "phishing_resistant_mfa_preferred": true,
+    "shared_email_as_sole_recovery_forbidden": true,
+    "dns_api_credentials_on_edge_forbidden": true,
+    "release_keys_on_dns_hosts_forbidden": true,
+    "audit_log_externalized": true,
+    "least_privilege_updates": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "zone_digest": true,
+    "served_rrset_digest": true,
+    "delegation_digest": true,
+    "dnssec_chain_validation": true,
+    "multi_vantage_probe": true,
+    "registrar_status": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
