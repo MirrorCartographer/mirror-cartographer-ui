@@ -1,47 +1,111 @@
 {
-  "collectors": [
-    {"id":"agent-a","role":"agent","failure_domain":"site-a","disk_buffer":true,"buffer_minutes":60},
-    {"id":"agent-b","role":"agent","failure_domain":"site-b","disk_buffer":true,"buffer_minutes":60},
-    {"id":"gateway-a","role":"gateway","failure_domain":"site-a","disk_buffer":true,"buffer_minutes":60},
-    {"id":"gateway-b","role":"gateway","failure_domain":"site-b","disk_buffer":true,"buffer_minutes":60}
-  ],
-  "scrapers": [
-    {"id":"prom-a","failure_domain":"site-a","wal":true},
-    {"id":"prom-b","failure_domain":"site-b","wal":true}
-  ],
-  "metric_copies": [
-    {"id":"metrics-a","failure_domain":"site-a","project_controlled":true},
-    {"id":"metrics-b","failure_domain":"site-b","project_controlled":true}
-  ],
-  "log_copies": [
-    {"id":"logs-a","failure_domain":"site-a","immutable":false},
-    {"id":"logs-b","failure_domain":"site-b","immutable":false},
-    {"id":"logs-offline","failure_domain":"offline-vault","immutable":true}
-  ],
-  "evaluators": [
-    {"id":"eval-a","failure_domain":"site-a"},
-    {"id":"eval-b","failure_domain":"site-b"}
-  ],
-  "alertmanagers": [
-    {"id":"am-a","failure_domain":"site-a"},
-    {"id":"am-b","failure_domain":"site-b"},
-    {"id":"am-c","failure_domain":"site-c"}
-  ],
-  "notification_paths": ["email-relay-a","sms-relay-b"],
-  "observed": {
-    "telemetry_drop_visible": true,
-    "collector_self_telemetry": true,
-    "cardinality_budget_enforced": true,
-    "missing_data_alerts": true,
+  "schema_version": 1,
+  "authority": {
+    "telemetry_schema": "foundation-telemetry-v1",
+    "project_owned": true,
+    "alert_policy_owned": true,
+    "hosted_authoritative": false,
+    "dashboard_authoritative": false,
+    "backends": ["prometheus", "loki", "tempo"],
+    "replaceable": true,
+    "evidence_exportable": true
+  },
+  "collection": {
+    "otel_collector": true,
+    "distribution_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "agent_gateway_layers": true,
+    "local_buffering": true,
+    "backpressure": true,
+    "drop_counters": true,
+    "receiver_authentication": true,
+    "admin_public": false,
+    "config_source_controlled": true,
+    "config_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "signals": {
+    "metrics": true,
+    "logs": true,
+    "traces": true,
+    "events": true,
+    "stable_resource_identity": true,
+    "schema_version": "1.0.0",
+    "trace_log_correlation": true,
+    "clock_uncertainty_recorded": true,
+    "unknown_service_rejected": true
+  },
+  "privacy": {
+    "attribute_allowlist": true,
+    "secret_redaction": true,
+    "pii_default_deny": true,
+    "cardinality_budget": 500000,
+    "raw_payload_default": false,
+    "tenant_isolation": true,
+    "deletion_authority_separate": true
+  },
+  "metrics": {
+    "prometheus_replicas": [
+      {"id":"prom-a","domain":"site-a","independent_scrape":true},
+      {"id":"prom-b","domain":"site-b","independent_scrape":true}
+    ],
+    "local_tsdb": true,
+    "remote_write_targets": ["metrics-store-a", "metrics-store-b"],
+    "remote_write_backlog_alert": true,
+    "recording_rules_source_controlled": true,
+    "rule_tests": true,
+    "cardinality_limits": true,
+    "tsdb_on_nfs": false
+  },
+  "logs": {
+    "loki_tsdb": true,
+    "object_storage_project_custody": true,
+    "object_versioning": true,
+    "retention_source_controlled": true,
+    "deletion_cancel_window_hours": 24,
     "wal_corruption_alert": true,
     "wal_disk_full_alert": true,
-    "external_deadman_received": true,
-    "provider_outage_visible": true,
-    "meta_monitor_separate": true,
-    "restore_age_days": 7,
-    "cross_implementation_restore": true,
-    "boot_without_public_dns": true,
+    "label_cardinality_limits": true,
+    "full_text_index_authoritative": false
+  },
+  "traces": {
+    "portable_otlp_export": true,
+    "sampling_policy_source_controlled": true,
+    "tail_sampling_failure_mode": "fail-open-with-measured-loss",
+    "error_and_high_latency_keep": true,
+    "sampling_rate_recorded": true,
+    "storage_project_custody": true
+  },
+  "alerting": {
+    "evaluators": [
+      {"id":"alert-a","domain":"site-a"},
+      {"id":"alert-b","domain":"site-b"}
+    ],
+    "rules_source_controlled": true,
+    "silence_audit": true,
+    "silence_expiry": true,
+    "missing_data_explicit": true,
+    "deadman_switch": true,
+    "channels": ["local-pager", "external-email"],
+    "external_blackbox": true,
+    "meta_monitoring": true
+  },
+  "continuity": {
+    "original_backend_required": false,
+    "grafana_required": false,
+    "public_dns_required_for_internal_diagnosis": false,
+    "portable_raw_export": true,
+    "last_clean_host_restore_age_days": 14,
+    "trained_operators": 2,
+    "offline_runbook": true
+  },
+  "evidence": {
+    "machine_generated": true,
     "signed": true,
-    "operator_signatures": 2
+    "config_digests": true,
+    "ingest_loss_measurement": true,
+    "query_reconciliation": true,
+    "alert_delivery_test": true,
+    "restore_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
   }
 }
