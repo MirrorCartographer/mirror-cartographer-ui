@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "critical_threats": [
+    {
+      "id": "A1",
+      "threat": "Mutable tag is redeployed after retargeting",
+      "controls": ["digest-only release identity", "tag-resolution receipts", "immutable release tags"],
+      "unresolved": "Convenience tags remain socially misleading."
+    },
+    {
+      "id": "A2",
+      "threat": "Registry GC removes a signature, SBOM, or platform manifest that is weakly referenced",
+      "controls": ["project graph catalog", "referrer reachability", "GC survival test", "offline OCI layout"],
+      "unresolved": "Registry implementations differ in referrer GC semantics."
+    },
+    {
+      "id": "A3",
+      "threat": "Primary registry compromise replaces manifests or serves bytes inconsistent with digest",
+      "controls": ["read-time rehash", "second implementation", "signed catalog", "offline custody"],
+      "unresolved": "Compromise of both project signing and custody authorities remains catastrophic."
+    },
+    {
+      "id": "A4",
+      "threat": "Replication copies manifests but omits referrers or unknown artifact types",
+      "controls": ["OCI 1.1 referrers reconciliation", "unknown type preservation", "graph digest comparison"],
+      "unresolved": "Some registry copy tools still have incomplete referrer support."
+    },
+    {
+      "id": "A5",
+      "threat": "Deletion propagates to every registry and object-store copy",
+      "controls": ["deletion replication disabled", "writer cannot delete", "two-person deletion", "offline copy"],
+      "unresolved": "Object-store administrator compromise can bypass registry policy."
+    },
+    {
+      "id": "A6",
+      "threat": "Multi-platform index is retained but one architecture manifest or layer is missing",
+      "controls": ["recursive descriptor closure", "size and digest verification", "clean-host pull by platform"],
+      "unresolved": "Rare platform variants increase retention and validation burden."
+    },
+    {
+      "id": "A7",
+      "threat": "Scanner labels a malicious image safe",
+      "controls": ["scanner advisory only", "release policy independent", "provenance and reproducible build evidence"],
+      "unresolved": "Semantic maliciousness cannot be fully decided automatically."
+    }
+  ]
+}
