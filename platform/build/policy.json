@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_graph_schema": true,
+    "provider_build_definition_authoritative": false,
+    "ci_workflow_authoritative": false,
+    "builder_may_self_authorize_release": false,
+    "runtime_adapter_replaceable": true,
+    "canonical_action_keys_exportable": true
+  },
+  "graph": {
+    "acyclic_required": true,
+    "all_inputs_digest_pinned": true,
+    "all_toolchains_digest_pinned": true,
+    "all_outputs_declared": true,
+    "undeclared_output_rejected": true,
+    "environment_allowlist_required": true,
+    "working_directory_fixed": true,
+    "locale_fixed": "C.UTF-8",
+    "timezone_fixed": "UTC",
+    "source_date_epoch_required": true
+  },
+  "execution": {
+    "network_disabled": true,
+    "sandbox_required": true,
+    "sandbox_fallback_allowed": false,
+    "host_filesystem_access_forbidden": true,
+    "host_toolchain_access_forbidden": true,
+    "rootless_worker_required": true,
+    "ephemeral_worker_required": true,
+    "worker_reuse_between_trust_domains": false,
+    "resource_limits_required": true,
+    "timeout_required": true
+  },
+  "dependencies": {
+    "fetch_separate_from_build": true,
+    "fixed_output_fetches_only": true,
+    "lockfile_required": true,
+    "mirror_required": true,
+    "public_network_during_canonical_build": false,
+    "dependency_closure_manifest_required": true
+  },
+  "reproducibility": {
+    "independent_builders_required": 2,
+    "minimum_failure_domains": 2,
+    "byte_identical_required": true,
+    "diffoscope_on_mismatch": true,
+    "nondeterminism_quarantine": true,
+    "cache_hit_not_reproducibility_evidence": true,
+    "rebuild_from_empty_cache_required": true
+  },
+  "cache": {
+    "content_addressed": true,
+    "signature_verification_required": true,
+    "cache_write_separate_from_cache_read": true,
+    "untrusted_cache_result_rehashed": true,
+    "cache_not_canonical_artifact_store": true,
+    "poisoning_test_required": true
+  },
+  "provenance": {
+    "slsa_v1_2_statement_required": true,
+    "builder_generated": true,
+    "signed_outside_build_action": true,
+    "complete_materials_required": true,
+    "action_graph_digest_required": true,
+    "worker_image_digest_required": true,
+    "build_log_digest_required": true
+  },
+  "continuity": {
+    "github_required": false,
+    "hosted_ci_required": false,
+    "original_cache_required": false,
+    "public_dns_required": false,
+    "offline_toolchain_bundle_required": true,
+    "clean_host_rebuild_max_age_days": 30,
+    "minimum_trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_graph_digest": true,
+    "contains_action_keys": true,
+    "contains_input_output_digests": true,
+    "contains_independent_builder_ids": true,
+    "contains_reproducibility_result": true,
+    "retention_days": 2555
+  }
+}
