@@ -1,0 +1,18 @@
+name: Test orchestration contract
+on:
+  push:
+    paths: ["platform/test-orchestration/**", ".github/workflows/test-orchestration-contract.yml"]
+  pull_request:
+    paths: ["platform/test-orchestration/**", ".github/workflows/test-orchestration-contract.yml"]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: node platform/test-orchestration/verify-test-orchestration-contract.mjs platform/test-orchestration/policy.json platform/test-orchestration/inventory.json
+      - run: node platform/test-orchestration/test.mjs
+      - run: node platform/test-orchestration/compile-plan.mjs platform/test-orchestration/sample-catalog.json /tmp/test-plan.json
