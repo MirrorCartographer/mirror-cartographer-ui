@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned": true,
+    "provider_authoritative": false,
+    "ci_authoritative": false,
+    "adapter": "nix-local",
+    "adapter_replaceable": true,
+    "action_keys_exportable": true
+  },
+  "graph": {
+    "acyclic": true,
+    "inputs_digest_pinned": true,
+    "toolchains_digest_pinned": true,
+    "outputs_declared": true,
+    "undeclared_outputs_rejected": true,
+    "environment_allowlist": ["PATH", "HOME", "TMPDIR", "SOURCE_DATE_EPOCH", "TZ", "LANG", "LC_ALL"],
+    "working_directory": "/build/work",
+    "locale": "C.UTF-8",
+    "timezone": "UTC",
+    "source_date_epoch": 1767225600
+  },
+  "execution": {
+    "network_disabled": true,
+    "sandbox": true,
+    "sandbox_fallback": false,
+    "host_filesystem_access": false,
+    "host_toolchain_access": false,
+    "rootless": true,
+    "ephemeral": true,
+    "cross_trust_reuse": false,
+    "cpu_limit": 2,
+    "memory_mb": 2048,
+    "timeout_seconds": 900
+  },
+  "dependencies": {
+    "fetch_separate": true,
+    "fixed_output_only": true,
+    "lockfile": true,
+    "mirror": true,
+    "public_network": false,
+    "closure_manifest": true
+  },
+  "reproducibility": {
+    "builders": [
+      {"id": "builder-a", "domain": "site-a", "empty_cache": true},
+      {"id": "builder-b", "domain": "site-b", "empty_cache": true}
+    ],
+    "byte_identical": true,
+    "diffoscope_on_mismatch": true,
+    "quarantine_on_mismatch": true,
+    "cache_hit_used_as_evidence": false
+  },
+  "cache": {
+    "content_addressed": true,
+    "signature_verified": true,
+    "read_write_separated": true,
+    "untrusted_rehashed": true,
+    "canonical_artifact_store": false,
+    "poisoning_test": true
+  },
+  "provenance": {
+    "predicate_type": "https://slsa.dev/provenance/v1",
+    "builder_generated": true,
+    "signed_outside_action": true,
+    "complete_materials": true,
+    "graph_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "worker_image_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "build_log_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "continuity": {
+    "github_required": false,
+    "hosted_ci_required": false,
+    "original_cache_required": false,
+    "public_dns_required": false,
+    "offline_toolchain_bundle": true,
+    "last_clean_host_rebuild_age_days": 12,
+    "trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "graph_digest": true,
+    "action_keys": true,
+    "input_output_digests": true,
+    "independent_builder_ids": true,
+    "reproducibility_result": true,
+    "retention_days": 2555
+  }
+}
