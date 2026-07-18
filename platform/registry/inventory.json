@@ -1,13 +1,117 @@
 {
-  "canonical_index": {"owner": "project", "exportable": true, "format": "jsonl-sha256"},
-  "stores": [
-    {"id": "registry-a", "domain": "site-a", "kind": "online-oci", "project_controlled": true, "immutable": false},
-    {"id": "registry-b", "domain": "site-b", "kind": "online-oci", "project_controlled": true, "immutable": false},
-    {"id": "vault-c", "domain": "offline-custody", "kind": "oci-layout-and-package-bundle", "project_controlled": true, "immutable": true, "offline": true}
-  ],
-  "oci": {"implementation": "distribution-compatible", "spec": "1.1", "gc_mode": "read-only-dry-run-protected-set", "export": "oci-layout"},
-  "packages": {"ecosystem": "npm", "lockfile": "package-lock.json", "mirror": "project-controlled", "metadata_snapshot": true, "tarball_integrity": "sha512", "canonical_build_network": "deny", "lifecycle_scripts": "deny-by-default"},
-  "access": {"tls": true, "workload_identity": true, "anonymous_push": false, "credential_ttl_minutes": 10, "release_keys_present": false},
-  "evidence": {"signed": true, "clean_host": true, "age_days": 7, "without_public_dns": true, "without_upstreams": true, "cross_implementation": true},
-  "operations": {"capacity_alert_percent": 70, "integrity_scan_days": 7, "audit_deletes": true, "destructive_operators": 2, "retention_manifest": true}
+  "schema_version": 1,
+  "authority": {
+    "catalog": "foundation-artifact-catalog-v1",
+    "project_owned": true,
+    "registry_db_authoritative": false,
+    "provider_authoritative": false,
+    "digest_only_release": true,
+    "tags_authoritative": false,
+    "adapter": "harbor",
+    "adapter_replaceable": true,
+    "oci_portable": true
+  },
+  "custody": {
+    "copies": [
+      {
+        "id": "registry-a",
+        "domain": "site-a",
+        "complete": true,
+        "project_controlled": true,
+        "implementation": "harbor"
+      },
+      {
+        "id": "registry-b",
+        "domain": "site-b",
+        "complete": true,
+        "project_controlled": true,
+        "implementation": "zot"
+      }
+    ],
+    "offline_export": true,
+    "signed_catalog": true,
+    "referrers_included": true,
+    "original_registry_required": false
+  },
+  "publication": {
+    "prepush_rehash": true,
+    "postpull_rehash": true,
+    "manifest_bytes_preserved": true,
+    "immutable_release_tags": true,
+    "mutable_tags_non_authoritative": true,
+    "promotion_reference": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "push_can_delete": false,
+    "delete_credentials_separate": true
+  },
+  "replication": {
+    "digest_reconciliation": true,
+    "copy_referrers": true,
+    "replicate_deletions": false,
+    "bandwidth_limit_mib_s": 100,
+    "observed_lag_seconds": 34,
+    "cross_product": true,
+    "retry_partial_failures": true
+  },
+  "gc": {
+    "retention_in_source": true,
+    "dry_run": true,
+    "grace_hours": 72,
+    "reachability_graph": true,
+    "offline_copy_verified": true,
+    "delete_operator_count": 2,
+    "writer_can_gc": false,
+    "deletion_evidence_signed": true,
+    "only_copy_targeted": false
+  },
+  "security": {
+    "credential_ttl_minutes": 30,
+    "least_privilege_scope": true,
+    "anonymous_push": false,
+    "release_keys_present": false,
+    "scanner_can_promote": false,
+    "default_deny_network": true,
+    "storage_key_separation": true,
+    "audit_externalized": true
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "size_verified": true,
+    "complete_dag_walk": true,
+    "orphan_detection": true,
+    "full_read_age_days": 8,
+    "sample_restore_age_days": 3,
+    "cross_implementation_restore": true
+  },
+  "continuity": {
+    "github_required": false,
+    "public_dns_required": false,
+    "public_ca_required": false,
+    "hosted_registry_required": false,
+    "clean_host_restore_age_days": 12,
+    "trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "catalog_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "manifest_blob_digest_set": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "referrer_graph_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "replication_receipts": true,
+    "gc_candidate_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "restore_receipt": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  },
+  "packages": {
+    "ecosystem": "npm",
+    "lockfile": "package-lock.json",
+    "tarball_integrity": "sha512",
+    "metadata_snapshot": true,
+    "complete_transitive_closure": true,
+    "mirror": "project-controlled",
+    "canonical_build_network": "deny",
+    "lifecycle_scripts": "deny-by-default",
+    "exportable": true,
+    "upstream_yank_survivable": true
+  }
 }
