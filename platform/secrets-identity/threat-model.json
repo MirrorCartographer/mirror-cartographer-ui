@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "assets": [
+    "offline identity roots",
+    "SPIFFE trust bundles",
+    "workload registration policy",
+    "OpenBao seal and recovery material",
+    "dynamic-secret engines",
+    "authorization policy",
+    "audit evidence",
+    "offline encrypted recovery export"
+  ],
+  "adversaries": [
+    "compromised workload",
+    "compromised node administrator",
+    "malicious identity administrator",
+    "malicious secret-broker administrator",
+    "cloud account takeover",
+    "supply-chain compromised SPIRE/OpenBao binary",
+    "ransomware operator",
+    "single insider with partial recovery material"
+  ],
+  "critical_abuse_cases": [
+    {
+      "id": "T1",
+      "threat": "Workload obtains a more privileged SPIFFE ID through weak selectors",
+      "controls": ["multi-signal workload attestation", "image-digest selector", "registration-policy digest", "negative selector tests"],
+      "unresolved": "Kernel or runtime compromise can falsify local workload properties."
+    },
+    {
+      "id": "T2",
+      "threat": "Compromised SPIRE server signs arbitrary identities",
+      "controls": ["short SVID TTL", "separate trust domains", "offline root/upstream authority", "bundle rotation", "registration audit"],
+      "unresolved": "Online issuer compromise remains valid until bundle change propagates."
+    },
+    {
+      "id": "T3",
+      "threat": "OpenBao compromise reveals static secrets or issues dynamic credentials",
+      "controls": ["dynamic secrets", "short leases", "least privilege", "external audit", "separate root authority", "rapid revocation"],
+      "unresolved": "A live privileged broker can issue valid credentials until isolated."
+    },
+    {
+      "id": "T4",
+      "threat": "Cloud KMS or account loss prevents unseal and recovery",
+      "controls": ["project threshold key", "offline recovery shares", "portable Raft snapshot", "clean-host recovery"],
+      "unresolved": "Hardware-backed threshold signing implementation not yet selected."
+    },
+    {
+      "id": "T5",
+      "threat": "Audit storage outage silently removes accountability",
+      "controls": ["two audit devices", "externalized signed stream", "failure-mode test", "deadman monitor"],
+      "unresolved": "Fail-closed audit can intentionally make the broker unavailable."
+    },
+    {
+      "id": "T6",
+      "threat": "Mass rotation causes platform-wide outage",
+      "controls": ["dependency order", "dual-key overlap", "rate limits", "consumer compatibility", "rollback"],
+      "unresolved": "Legacy consumers may not support overlap or hot reload."
+    },
+    {
+      "id": "T7",
+      "threat": "One operator reconstructs roots or authorizes break-glass access",
+      "controls": ["5 shares", "3-share threshold", "three domains", "two-person privilege changes", "ceremony evidence"],
+      "unresolved": "Collusion among threshold holders remains possible."
+    }
+  ]
+}
