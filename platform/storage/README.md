@@ -1,35 +1,120 @@
-# Sovereign storage control plane
+# Sovereign Storage Substrate
 
-This contract defines project-owned authority for persistent block, file, and object storage. Storage products and hosting sites are replaceable mechanisms; the project owns the canonical data-class inventory, integrity rules, capacity policy, retention manifests, portable exports, destructive-action authority, and restore acceptance.
+## Surviving architecture
 
-## Surviving design
+The storage plane is deliberately split by semantics rather than forcing every workload onto one distributed filesystem.
 
-Use checksummed hot storage with three persistent replicas across three independently failing domains for workloads that require online continuity. Keep database durability inside PostgreSQL rather than presenting a shared filesystem as a substitute for WAL, replication, and PITR. Produce portable, checksummed exports into three recovery copies across at least two administrative domains, including one immutable and one offline copy. Restore onto a clean host and a different compatible implementation at least every 30 days.
+```text
+stateful database and queue nodes
+        ↓
+local mirrored OpenZFS pools
+        ↓
+application-native replication
+        ↓
+database/queue-native backup and recovery
 
-Snapshots are operational rollback points, not backups. Replicas are availability copies, not independent recovery custody. Repair is admitted only while healthy redundancy exists, because an automatic repair process can otherwise overwrite the last good copy with corrupted state.
+registries, evidence, exports, and large immutable objects
+        ↓
+Ceph RADOS + RGW
+        ↓
+three replicated copies across three hosts
+        ↓
+portable object catalog and offline export
+```
 
-## Initial mechanisms
+The project owns the storage catalog, dataset classification, placement intent, capacity model, device inventory, encryption policy, object manifests, lifecycle authority, and recovery acceptance. OpenZFS and Ceph execute these rules but do not define canonical storage truth.
 
-OpenZFS is the preferred first local storage mechanism for snapshots, strong checksums, scrubbing, quotas, reservations, and send/receive replication. Ceph is deferred until capacity, object count, or multi-host access justifies its distributed control-plane burden. Standard tar plus SHA-256 manifests and OCI image layouts remain the portable exit formats; database data uses database-native backup and recovery formats.
+## Why the architecture is split
 
-## Rejected directions
+Shared distributed block storage beneath PostgreSQL, queues, or consensus systems compounds failure modes: the application replication layer and storage replication layer can disagree about durability, fencing, ordering, and recovery. The initial design therefore gives each stateful service direct local mirrored storage and relies on its native replication protocol.
 
-- RAID or replication presented as backup.
-- One distributed storage cluster as both primary and sole recovery path.
-- Thin provisioning that queues writes indefinitely at exhaustion.
-- Capacity plans without rebuild headroom.
-- Snapshots stored only beside the source dataset.
-- Provider snapshots as canonical custody.
-- Automatic repair when no independently verified healthy replica exists.
-- Ceph as the first implementation before a smaller replicated ZFS laboratory is benchmarked.
+Ceph is used first for object workloads whose semantics are naturally shared, content-addressed, replicated, and exportable. CephFS and general RBD are deferred until a measured workload proves they are necessary.
 
-## Production evidence required
+## Local durable storage
 
-The checked-in inventory is a design fixture. Production admission requires machine-derived device identities, pool topology, active failure-domain mapping, checksum and scrub results, capacity and metadata-space measurements, snapshot and export manifests, corruption-injection results, encrypted-copy custody receipts, clean-host restore logs, semantic application checks, and two operator signatures for destructive actions.
+Each admitted host pool uses:
+
+- OpenZFS on direct-attached devices,
+- mirrored vdevs,
+- end-to-end checksums,
+- native encryption,
+- ECC memory on new project-owned hardware,
+- direct HBA/JBOD rather than hardware RAID,
+- monthly or more frequent scrubs,
+- SMART/NVMe health monitoring,
+- independent key recovery,
+- explicit capacity thresholds,
+- held snapshots for local rollback points.
+
+Snapshots remain local temporal references, not independent backups.
+
+## Shared object storage
+
+The initial Ceph object cluster requires:
+
+- three storage hosts in three real failure domains,
+- six OSDs minimum,
+- one raw device per OSD,
+- replicated pools with size 3 and min_size 2,
+- host-level CRUSH placement,
+- PG autoscaling,
+- regular deep scrubbing,
+- object versioning for canonical buckets,
+- object lock for immutable custody,
+- at least 20 percent recovery capacity reserve,
+- no erasure coding in the first six-OSD deployment.
+
+Erasure coding is deferred because small clusters have poor failure-domain geometry, higher recovery fan-out, more complex capacity math, and greater operational burden. It can be reconsidered when the cluster has enough hosts and disks to survive the selected k+m profile while rebuilding.
+
+## Capacity authority
+
+Usable capacity is not raw disk capacity. Admission accounts for:
+
+- mirror or replication amplification,
+- filesystem and object-store metadata,
+- snapshots and retained versions,
+- largest admitted host/device failure,
+- recovery and backfill space,
+- workload growth,
+- scrub and rebuild bandwidth,
+- temporary migration copies,
+- offline export requirements.
+
+The storage plane fails writes visibly before silent eviction or unsafe emergency reclamation.
+
+## Integrity and repair
+
+A scrub verifies storage-layer checksums. It does not establish application correctness. Repair acceptance requires:
+
+1. preserve the damaged evidence;
+2. identify an independent good copy;
+3. quarantine the damaged copy or device;
+4. reconstruct onto a noncanonical target;
+5. verify byte digests;
+6. run an application-semantic restore;
+7. admit the repaired copy only after signed evidence.
+
+## Device lifecycle
+
+Every device is bound to serial, model, firmware, host, slot, purchase batch, burn-in record, error history, and secure-erasure receipt. Device replacement requires capacity admission and a safe-to-destroy result. The removed device remains retained until redundancy, scrub, and restore validation complete.
 
 ## Ownership boundary
 
-The project owns storage policy, data classification, integrity verification, allocation and retention rules, encryption and key-separation requirements, exports, restore acceptance, and migration procedures. It may rent servers, disks, object stores, and network links. It does not physically own CPU or drive fabrication, firmware, datacenter power, ISP transit, BGP, DNS registries, or public certificate infrastructure unless it separately acquires and operates those physical resources.
+### Project-owned
+
+Storage catalog, dataset classes, placement rules, CRUSH intent, ZFS dataset properties, capacity policy, encryption policy, device inventory, scrub policy, repair authority, destruction authority, object manifests, portable exports, and recovery evidence.
+
+### Replaceable
+
+OpenZFS, Ceph, object gateways, HBAs, SSDs/HDDs, VMs, physical hosts, cloud disks, cloud object storage, and colocation facilities.
+
+### Not physically owned
+
+Drive and controller fabrication, firmware supply chains, semiconductor manufacturing, utility power, building and fire protection, internet transit, BGP, DNS roots, public CAs, and commodity shipping networks.
+
+## Unproven production evidence
+
+The repository fixture does not prove real hardware independence, flush durability, scrub detection, Ceph quorum behavior, CRUSH placement, capacity reserve, rebuild time, encryption-key recovery, object-lock enforcement, disk replacement, or cross-implementation restoration.
 
 ## Run
 
