@@ -1,68 +1,95 @@
 {
+  "schema_version": 1,
   "authority": {
-    "primary_election": "project-controller",
-    "provider_authoritative": false,
-    "schema_source": "repository",
-    "migration_ledger_exported": true
+    "policy": "foundation-postgres-v1",
+    "project_owned": true,
+    "patroni_authoritative": false,
+    "cloud_database_authoritative": false,
+    "schema_registry_owned": true,
+    "migration_ledger_owned": true,
+    "adapter": "patroni-postgresql",
+    "adapter_replaceable": true
   },
-  "nodes": [
-    {"id":"db-a","failure_domain":"site-a","persistent":true},
-    {"id":"db-b","failure_domain":"site-b","persistent":true},
-    {"id":"db-c","failure_domain":"site-c","persistent":true}
-  ],
-  "replication": {
-    "mode":"physical-streaming",
-    "synchronous_standbys":1,
-    "automatic_failover":true,
-    "fencing":"lease-plus-node-isolation",
-    "single_writer":true,
-    "measured_rpo_seconds":15,
-    "measured_failover_seconds":75,
-    "data_checksums":true,
-    "full_page_writes":true,
-    "wal_archive":true,
-    "replication_slots_bounded":true,
-    "maximum_slot_retained_bytes":5368709120,
-    "disk_headroom_percent":30
+  "topology": {
+    "nodes": [
+      {"id":"db-a","domain":"site-a","role":"primary"},
+      {"id":"db-b","domain":"site-b","role":"sync-standby"},
+      {"id":"db-c","domain":"site-c","role":"async-standby"}
+    ],
+    "single_writer": true,
+    "synchronous_mode": "strict",
+    "synchronous_node_count": 1,
+    "dcs_nodes": 3,
+    "watchdog": true,
+    "fencing": true,
+    "application_superuser": false
+  },
+  "durability": {
+    "data_checksums": true,
+    "full_page_writes": true,
+    "wal_archiving": true,
+    "replication_slots_bounded": true,
+    "max_slot_wal_keep_size_mb": 8192,
+    "critical_sync_commit": "on",
+    "client_override_forbidden": true,
+    "maximum_failover_lag_bytes": 0,
+    "acknowledged_loss_tested": true
+  },
+  "failover": {
+    "automatic": true,
+    "manual_operator_count": 2,
+    "data_loss_override_separate": true,
+    "timeline_check": true,
+    "candidate_lag_check": true,
+    "old_primary_fenced": true,
+    "pg_rewind": true,
+    "fresh_base_backup_fallback": true,
+    "dcs_loss_tested": true
   },
   "migrations": {
-    "immutable_ids":true,
-    "checksummed_files":true,
-    "transactional_default":true,
-    "expand_contract":true,
-    "compatibility_window_releases":2,
-    "destructive_change_operators":2,
-    "rollback_or_forward_fix":true,
-    "compatibility_tests":true
+    "source_controlled": true,
+    "immutable_ids": true,
+    "checksummed": true,
+    "expand_contract": true,
+    "backward_compatible_window": true,
+    "lock_timeout_ms": 2000,
+    "statement_timeout_ms": 30000,
+    "destructive_operator_count": 2,
+    "backfill_batched": true,
+    "backfill_resumable": true,
+    "backfill_rate_limited": true,
+    "schema_drift_clear": true,
+    "down_migration_assumed_safe": false
   },
-  "upgrades": {
-    "pg_upgrade_check":true,
-    "restored_copy_rehearsal":true,
-    "old_cluster_preserved":true,
-    "mode":"copy",
-    "logical_replication_exit":true,
-    "sequence_reconciliation":true,
-    "ddl_synchronization":true
+  "logical_migration": {
+    "ddl_replication_assumed": false,
+    "sequence_replication_assumed": false,
+    "schema_applied_before_data": true,
+    "replica_identity": true,
+    "source_version": 18,
+    "cutover_write_fence": true,
+    "source_retained": true
   },
-  "recovery": {
-    "pg_rewind":true,
-    "wal_log_hints_or_checksums":true,
-    "clean_host_restore_age_days":14,
-    "signed_restore_evidence":true,
-    "dns_independent_admin":true
-  },
-  "security": {
-    "tls":true,
-    "workload_identity":true,
-    "application_superuser":false,
-    "default_deny_network":true,
-    "audit_ddl_and_roles":true
+  "continuity": {
+    "original_provider_required": false,
+    "public_dns_required": false,
+    "patroni_required_for_restore": false,
+    "cross_implementation_export": true,
+    "last_clean_host_restore_age_days": 12,
+    "trained_operators": 2
   },
   "evidence": {
-    "machine_generated":true,
-    "signed":true,
-    "timeline_and_lsn":true,
-    "schema_digest":true,
-    "failover_and_rejoin":true
+    "machine_generated": true,
+    "signed": true,
+    "cluster_system_identifier": "7612345678901234567",
+    "timeline": 7,
+    "primary_lsn": "0/5000000",
+    "replica_flush_lsn": "0/5000000",
+    "schema_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "migration_ledger_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "failover_result": true,
+    "data_loss_bytes": 0,
+    "operator_signatures": 2,
+    "retention_days": 2555
   }
 }
