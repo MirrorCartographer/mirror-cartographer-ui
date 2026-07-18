@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+
+const [policyPath, inventoryPath] = process.argv.slice(2);
+if (!policyPath || !inventoryPath) process.exit(2);
+const p = JSON.parse(fs.readFileSync(policyPath, "utf8"));
+const i = JSON.parse(fs.readFileSync(inventoryPath, "utf8"));
+const failures = [];
+const check = (condition, message) => { if (!condition) failures.push(message); };
+const digest = value => /^sha256:[0-9a-f]{64}$/.test(value ?? "");
+
+check(i.authority.project_owned, "project runtime authority required");
+check(!i.authority.scheduler_authoritative && !i.authority.cloud_instance_state_authoritative, "scheduler/provider cannot be canonical runtime authority");
+check(i.authority.adapter_replaceable && i.authority.node_inventory_exportable && i.authority.workload_spec_exportable, "runtime state must be portable");
+check(i.nodes.length >= 3, "three runtime nodes required for admitted topology");
+check(new Set(i.nodes.map(n => n.domain)).size >= p.placement.minimum_failure_domains, "insufficient runtime failure domains");
+check(i.nodes.every(n => digest(n.image_digest)), "every host image must be digest identified");
+check(i.nodes.every(n => n.firmware_inventory && n.drift_clear), "firmware inventory and drift-clear state required");
+check(i.node_admission.immutable_host_image, "immutable host image required");
+check(i.node_admission.secure_boot_measured_or_exception, "secure boot measurement or signed exception required");
+check(i.node_admission.kernel_admitted, "kernel admission required");
+check(i.node_admission.time_healthy && i.node_admission.storage_healthy && i.node_admission.network_healthy, "node health admission failed");
+check(i.node_admission.clean_host_rebuild_age_days <= p.node_admission.clean_host_rebuild_max_age_days, "clean-host rebuild evidence stale");
+for (const key of ["cgroup_v2","cpu_max","memory_max","pids_max","io_limits","rootless_default","read_only_rootfs_default","seccomp","capability_allowlist","workload_identity"]) check(i.isolation[key], `missing isolation control: ${key}`);
+check(!i.isolation.host_pid_namespace && !i.isolation.host_network_default && !i.isolation.host_runtime_socket, "host authority exposed to workload");
+check(i.isolation.privileged_exception_operator_count >= 2, "privileged exception requires two operators");
+check(i.placement.critical_replicas >= p.placement.critical_minimum_replicas, "insufficient critical replicas");
+check(new Set(i.placement.failure_domains).size >= p.placement.minimum_failure_domains, "insufficient placement domains");
+check(i.placement.anti_affinity, "critical anti-affinity required");
+check(i.placement.resource_requests && i.placement.resource_limits, "resource requests and limits required");
+check(typeof i.placement.overcommit_policy === "string" && i.placement.overcommit_policy.length > 0, "explicit overcommit policy required");
+check(typeof i.placement.stateful_locality === "string" && i.placement.stateful_locality.length > 0, "stateful locality policy required");
+check(i.placement.architecture_compatibility && i.placement.kernel_feature_compatibility, "architecture/kernel compatibility required");
+check(i.placement.maintenance_reserve_percent >= p.placement.maintenance_reserve_percent, "insufficient maintenance reserve");
+for (const key of ["startup","readiness","liveness","semantic","pressure_stall","oom_events","disk_pressure","network_pressure"]) check(i.runtime_health[key], `missing runtime-health evidence: ${key}`);
+check(i.runtime_health.all_evidence_present, "missing health evidence must fail closed");
+check(i.maintenance.cordon_before_drain && i.maintenance.connection_drain, "cordon and connection drain required");
+check(i.maintenance.disruption_budget && i.maintenance.stateful_quorum_check, "disruption and quorum admission required");
+check(i.maintenance.eviction_timeout_seconds > 0, "bounded eviction timeout required");
+check(i.maintenance.force_evict_operator_count >= 2, "forced eviction requires two operators");
+check(i.maintenance.old_node_retained && i.maintenance.rolling_host_upgrade && i.maintenance.rollback_image_retained, "safe host replacement controls required");
+check(i.scheduler_continuity.running_workloads_survive_scheduler_loss, "running workloads must survive scheduler loss");
+check(i.scheduler_continuity.manual_local_start, "manual local start path required");
+check(!i.scheduler_continuity.provider_api_required && !i.scheduler_continuity.public_dns_required && !i.scheduler_continuity.original_registry_required, "continuity must survive provider, DNS, and registry loss");
+check(i.scheduler_continuity.local_artifact_custody, "local/project artifact custody required");
+check(i.scheduler_continuity.secondary_adapter_proven, "secondary runtime adapter proof required");
+check(i.scheduler_continuity.trained_operators >= p.scheduler_continuity.minimum_trained_operators, "insufficient trained runtime operators");
+check(i.scaling_guardrails.autoscaler_advisor_only, "autoscaler cannot be runtime authority");
+check(i.scaling_guardrails.policy_bounded_min_max, "project min/max bounds required");
+check(i.scaling_guardrails.capacity_recheck && i.scaling_guardrails.dependency_budget_recheck, "scale-down admission rechecks required");
+check(i.scaling_guardrails.scale_down_stabilization_seconds >= p.scaling_guardrails.scale_down_stabilization_seconds, "scale-down stabilization too short");
+check(i.scaling_guardrails.maximum_scale_down_fraction <= p.scaling_guardrails.maximum_scale_down_fraction, "scale-down rate too high");
+check(i.scaling_guardrails.scale_up_rate_bounded, "scale-up rate must be bounded");
+check(i.scaling_guardrails.missing_metrics_forbid_scale_down, "missing metrics must forbid scale-down");
+check(!i.scaling_guardrails.provider_capacity_sole_path, "provider capacity cannot be sole scale path");
+check(i.security.management_plane_separate && i.security.out_of_band_access, "separate management and out-of-band access required");
+check(!i.security.release_keys_present && !i.security.backup_delete_keys_present, "runtime nodes cannot hold release or backup-delete authority");
+check(i.security.short_lived_node_credentials && i.security.decommission_revokes_identity, "short-lived node identity and revocation required");
+check(i.security.audit_externalized, "runtime audit must be externalized");
+check(i.evidence.machine_generated && i.evidence.signed, "signed machine evidence required");
+check(digest(i.evidence.host_image_digest), "host-image evidence digest required");
+for (const key of ["kernel_and_firmware","cgroup_limits","placement_map","pressure_metrics","drain_result","scheduler_loss_result","secondary_adapter_result"]) check(i.evidence[key], `missing runtime evidence: ${key}`);
+check(i.evidence.operator_signatures >= p.evidence.operator_signatures, "two evidence signatures required");
+check(i.evidence.retention_days >= p.evidence.retention_days, "evidence retention insufficient");
+
+if (failures.length) {
+  console.error(`REJECT ${failures.length} runtime invariant(s)`);
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+console.log("ACCEPT 72 runtime invariants");
