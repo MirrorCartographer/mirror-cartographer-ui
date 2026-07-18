@@ -1,63 +1,101 @@
 {
-  "version": 1,
+  "schema_version": 1,
   "authority": {
-    "project_controls_namespace": true,
-    "hosted_registry_authoritative": false,
-    "canonical_index_exportable": true
-  },
-  "content": {
-    "digest_algorithm": "sha256",
-    "deploy_by_digest_only": true,
-    "mutable_tags_authoritative": false,
-    "verify_bytes_on_ingest": true,
-    "verify_bytes_on_read": true,
-    "preserve_manifest_bytes": true,
-    "referrers_preserved": true
+    "project_owned_artifact_catalog": true,
+    "registry_database_authoritative": false,
+    "provider_registry_authoritative": false,
+    "release_uses_digest_only": true,
+    "tags_authorize_release": false,
+    "registry_adapter_replaceable": true,
+    "oci_portable": true
   },
   "custody": {
-    "copies": 3,
-    "failure_domains": 2,
-    "offline_copy": true,
-    "immutable_copy": true,
-    "project_controlled_copy": true
+    "minimum_complete_registry_copies": 2,
+    "minimum_failure_domains": 2,
+    "offline_oci_export_required": true,
+    "project_controlled_copy_required": true,
+    "canonical_manifest_signed": true,
+    "referrers_included": true,
+    "original_registry_required_for_restore": false
   },
-  "oci": {
-    "distribution_spec": "1.1",
-    "deletion_default": false,
-    "gc_requires_read_only": true,
-    "gc_dry_run": true,
-    "gc_protected_digests": true,
-    "registry_export_format": "oci-layout"
+  "publication": {
+    "artifact_digest_reverified_before_push": true,
+    "artifact_digest_reverified_after_pull": true,
+    "manifest_bytes_preserved": true,
+    "immutable_release_tags": true,
+    "mutable_convenience_tags_non_authoritative": true,
+    "promotion_by_manifest_digest": true,
+    "push_credentials_cannot_delete": true,
+    "delete_credentials_separate": true
+  },
+  "replication": {
+    "digest_reconciliation_required": true,
+    "copy_referrers_required": true,
+    "deletion_replication_disabled_by_default": true,
+    "bandwidth_limit_required": true,
+    "lag_alert_seconds": 900,
+    "same_product_not_required": true,
+    "partial_failure_retriable": true
+  },
+  "garbage_collection": {
+    "source_controlled_retention": true,
+    "dry_run_required": true,
+    "minimum_grace_hours": 48,
+    "release_reachability_graph_required": true,
+    "offline_copy_verified_before_delete": true,
+    "two_operator_delete_authority": true,
+    "writer_cannot_run_gc": true,
+    "deletion_evidence_signed": true,
+    "repair_or_gc_never_runs_on_only_copy": true
+  },
+  "security": {
+    "short_lived_robot_credentials": true,
+    "least_privilege_repository_scope": true,
+    "anonymous_push_forbidden": true,
+    "release_keys_forbidden_on_registry_hosts": true,
+    "scanner_cannot_promote": true,
+    "registry_network_default_deny": true,
+    "storage_keys_separate_from_registry_admin": true,
+    "audit_externalized": true
+  },
+  "integrity": {
+    "sha256_required": true,
+    "size_verified": true,
+    "complete_dag_walk_required": true,
+    "orphan_detection_required": true,
+    "periodic_full_read_max_age_days": 30,
+    "sample_restore_max_age_days": 7,
+    "cross_implementation_restore_required": true
+  },
+  "continuity": {
+    "github_not_required": true,
+    "public_dns_not_required": true,
+    "public_ca_not_required": true,
+    "hosted_registry_not_required": true,
+    "clean_host_restore_max_age_days": 30,
+    "minimum_trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "catalog_digest": true,
+    "manifest_and_blob_digests": true,
+    "referrer_graph_digest": true,
+    "replication_receipts": true,
+    "gc_candidate_digest": true,
+    "restore_receipt": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
   },
   "packages": {
     "lockfile_required": true,
-    "tarball_integrity_required": true,
+    "tarball_digest_required": true,
     "metadata_snapshot_required": true,
+    "complete_transitive_closure_required": true,
     "install_from_project_mirror": true,
-    "upstream_network_in_canonical_build": false,
-    "lifecycle_scripts_default": "deny",
-    "mirror_exportable": true
-  },
-  "access": {
-    "tls": true,
-    "workload_identity": true,
-    "least_privilege": true,
-    "anonymous_push": false,
-    "release_keys_present": false,
-    "short_lived_credentials_minutes": 15
-  },
-  "recovery": {
-    "clean_host_restore_days": 30,
-    "signed_evidence": true,
-    "reconstruct_without_public_dns": true,
-    "reconstruct_without_upstream_registries": true,
-    "cross_implementation_restore": true
-  },
-  "operations": {
-    "capacity_alert_percent": 75,
-    "integrity_scan_days": 7,
-    "audit_deletes": true,
-    "two_operator_destructive_actions": true,
-    "retention_manifest_required": true
+    "canonical_build_network_denied": true,
+    "lifecycle_scripts_default_deny": true,
+    "mirror_exportable": true,
+    "upstream_yank_does_not_break_restore": true
   }
 }
