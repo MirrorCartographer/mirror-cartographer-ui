@@ -1,59 +1,10 @@
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import {spawnSync} from 'node:child_process';
-
-const root = path.dirname(new URL(import.meta.url).pathname);
-const policy = JSON.parse(fs.readFileSync(path.join(root, 'policy.json'), 'utf8'));
-const inventory = JSON.parse(fs.readFileSync(path.join(root, 'inventory.json'), 'utf8'));
-const verifier = path.join(root, 'verify-queue-contract.mjs');
-
-const cases = [
-  ['baseline', () => {}, true],
-  ['reject-hosted-authority', x => { x.inventory.provider_authoritative = true; }],
-  ['reject-no-confirms', x => { x.inventory.publisher_confirms = false; }],
-  ['reject-auto-ack', x => { x.inventory.manual_consumer_ack = false; }],
-  ['reject-ack-before-commit', x => { x.inventory.ack_after_commit = false; }],
-  ['reject-no-outbox', x => { x.inventory.transactional_outbox = false; }],
-  ['reject-no-idempotency', x => { x.inventory.idempotency_store = ''; }],
-  ['reject-two-replicas', x => { x.inventory.nodes.pop(); x.inventory.replication_factor = 2; }],
-  ['reject-one-domain', x => { x.inventory.nodes.forEach(n => n.failure_domain = 'site-a'); }],
-  ['reject-no-quorum', x => { x.inventory.quorum_commit = false; }],
-  ['reject-no-fsync', x => { x.inventory.fsync_or_equivalent = false; }],
-  ['reject-unbounded-queue', x => { x.inventory.queue_limits.bounded_bytes = false; }],
-  ['reject-discard-old', x => { x.inventory.queue_limits.discard_policy = 'discard-old'; }],
-  ['reject-no-backpressure', x => { x.inventory.queue_limits.producer_backpressure = false; }],
-  ['reject-unbounded-prefetch', x => { x.inventory.queue_limits.prefetch_bounded = false; }],
-  ['reject-infinite-retry', x => { x.inventory.retry.max_attempts = 999999; }],
-  ['reject-no-jitter', x => { x.inventory.retry.jitter = false; }],
-  ['reject-no-dead-letter', x => { x.inventory.dead_letter.enabled = false; }],
-  ['reject-lossy-dead-letter', x => { x.inventory.dead_letter.transfer_semantics = 'at-most-once'; }],
-  ['reject-short-poison-retention', x => { x.inventory.dead_letter.retention_days = 1; }],
-  ['reject-no-portable-export', x => { x.inventory.exports.stream = false; }],
-  ['reject-no-offline-copy', x => { x.inventory.exports.offline_copy = false; }],
-  ['reject-one-backup-domain', x => { x.inventory.backups.forEach(b => b.failure_domain = 'site-a'); }],
-  ['reject-stale-restore', x => { x.inventory.restore_evidence.age_days = 31; }],
-  ['reject-unsigned-restore', x => { x.inventory.restore_evidence.signed = false; }],
-  ['reject-payload-secrets', x => { x.inventory.security.payload_secrets = true; }],
-  ['reject-no-schema-window', x => { x.inventory.schema.backward_compatible_window = false; }],
-  ['reject-no-lag-metric', x => { x.inventory.metrics.lag = false; }],
-  ['reject-one-replay-operator', x => { x.inventory.destructive_replay.minimum_operators = 1; }]
+#!/usr/bin/env node
+import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path'; import {spawnSync} from 'node:child_process';
+const here=path.dirname(new URL(import.meta.url).pathname), policy=path.join(here,'policy.json'), base=JSON.parse(fs.readFileSync(path.join(here,'inventory.json'),'utf8')), verifier=path.join(here,'verify-queue-contract.mjs');
+const mutations=[
+['reject-broker-authority',x=>x.authority.broker_authoritative=true],['reject-cloud-authority',x=>x.authority.cloud_queue_authoritative=true],['reject-fixed-adapter',x=>x.authority.adapter_replaceable=false],['reject-two-nodes',x=>x.topology.nodes=x.topology.nodes.slice(0,2)],['reject-one-domain',x=>x.topology.nodes.forEach(n=>n.domain='site-a')],['reject-shared-storage',x=>x.topology.shared_storage=true],['reject-r1-stream',x=>x.topology.stream_replicas=1],['reject-no-quorum-ack',x=>x.topology.publish_requires_quorum=false],['reject-no-event-id',x=>x.message.stable_event_id=false],['reject-no-schema',x=>x.message.schema_id=false],['reject-no-causation',x=>x.message.causation_id=false],['reject-no-payload-digest',x=>x.message.payload_digest=''],['reject-unbounded-message',x=>x.message.maximum_size_bytes=0],['reject-no-publish-ack',x=>x.delivery.publisher_ack=false],['reject-no-dedup',x=>x.delivery.publisher_deduplication=false],['reject-short-dedup-window',x=>x.delivery.dedup_window_seconds=60],['reject-plain-ack',x=>x.delivery.consumer_ack_sync=false],['reject-no-idempotency',x=>x.delivery.application_idempotency=false],['reject-exactly-once-claim',x=>x.delivery.claims_exactly_once_side_effects=true],['reject-ack-before-commit',x=>x.delivery.ack_after_side_effect_commit=false],['reject-unbounded-retries',x=>x.delivery.maximum_delivery_attempts=0],['reject-no-dlq',x=>x.delivery.dead_letter_stream=false],['reject-lossy-dlq',x=>x.delivery.dead_letter_at_least_once=false],['reject-global-order',x=>x.ordering.claims_global_order=true],['reject-no-partition-key',x=>x.ordering.partition_key=false],['reject-clock-order',x=>x.ordering.uses_clock_for_order=true],['reject-push-workers',x=>x.flow_control.pull_consumers=false],['reject-unbounded-pending',x=>x.flow_control.max_ack_pending=0],['reject-discard-old',x=>x.flow_control.critical_discard_policy='old'],['reject-no-capacity-alert',x=>x.flow_control.capacity_alerting=false],['reject-no-retention',x=>x.retention.max_age_seconds=0],['reject-unconsumed-deletion',x=>x.retention.unconsumed_protected=false],['reject-one-delete-operator',x=>x.retention.deletion_operator_count=1],['reject-open-subjects',x=>x.security.default_deny_subjects=false],['reject-public-admin',x=>x.security.admin_api_public=true],['reject-release-key',x=>x.security.release_keys_present=true],['reject-no-snapshot',x=>x.continuity.stream_snapshots=false],['reject-broker-required',x=>x.continuity.original_broker_required=true],['reject-github-required',x=>x.continuity.github_required=true],['reject-no-cross-replay',x=>x.continuity.cross_implementation_replay=false],['reject-stale-restore',x=>x.continuity.last_clean_host_restore_age_days=31],['reject-one-operator',x=>x.continuity.trained_operators=1],['reject-unsigned-evidence',x=>x.evidence.signed=false],['reject-no-loss-test',x=>x.evidence.loss_test=false]
 ];
-
-for (const [name, mutate, shouldPass = false] of cases) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'queue-contract-'));
-  const state = {policy: structuredClone(policy), inventory: structuredClone(inventory)};
-  mutate(state);
-  const pp = path.join(dir, 'policy.json');
-  const ip = path.join(dir, 'inventory.json');
-  fs.writeFileSync(pp, JSON.stringify(state.policy, null, 2));
-  fs.writeFileSync(ip, JSON.stringify(state.inventory, null, 2));
-  const result = spawnSync(process.execPath, [verifier, pp, ip], {encoding:'utf8'});
-  const passed = result.status === 0;
-  if (passed !== shouldPass) {
-    console.error(`FAIL ${name}\n${result.stdout}${result.stderr}`);
-    process.exit(1);
-  }
-  console.log(`PASS ${name}`);
-}
+function run(inv){const d=fs.mkdtempSync(path.join(os.tmpdir(),'queue-contract-')),f=path.join(d,'inventory.json');fs.writeFileSync(f,JSON.stringify(inv,null,2));const r=spawnSync(process.execPath,[verifier,policy,f],{encoding:'utf8'});fs.rmSync(d,{recursive:true,force:true});return r}
+let r=run(base);if(r.status!==0){console.error(r.stdout,r.stderr);process.exit(1)}console.log('PASS baseline');
+for(const [name,mutate] of mutations){const x=structuredClone(base);mutate(x);r=run(x);if(r.status===0){console.error(`FAIL ${name}`);process.exit(1)}console.log(`PASS ${name}`)}
 console.log('PASS adversarial queue controls');
