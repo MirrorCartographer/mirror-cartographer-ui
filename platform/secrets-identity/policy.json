@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_identity_schema": true,
+    "project_owned_secret_policy": true,
+    "openbao_authoritative": false,
+    "spire_authoritative": false,
+    "cloud_iam_authoritative": false,
+    "canonical_policy_exportable": true,
+    "broker_and_identity_adapters_replaceable": true
+  },
+  "roots": {
+    "offline_root_required": true,
+    "minimum_root_shares": 5,
+    "minimum_root_threshold": 3,
+    "minimum_root_failure_domains": 3,
+    "single_operator_root_recovery_forbidden": true,
+    "provider_kms_sole_path_forbidden": true,
+    "online_root_key_forbidden": true,
+    "root_rotation_overlap_required": true,
+    "recovery_ceremony_max_age_days": 180
+  },
+  "workload_identity": {
+    "spiffe_ids_required": true,
+    "trust_domains_separated_by_security_boundary": true,
+    "node_attestation_required": true,
+    "workload_attestation_required": true,
+    "join_tokens_production_default_forbidden": true,
+    "x509_svid_preferred": true,
+    "jwt_svid_bounded_audience_required": true,
+    "maximum_x509_svid_ttl_minutes": 60,
+    "maximum_jwt_svid_ttl_minutes": 10,
+    "private_keys_exported_to_app_forbidden": true,
+    "bundle_rotation_overlap_required": true,
+    "identity_revocation_tested": true
+  },
+  "secret_broker": {
+    "dynamic_secrets_preferred": true,
+    "static_secret_exception_requires_expiry": true,
+    "maximum_default_lease_minutes": 60,
+    "lease_renewal_bounded": true,
+    "revocation_required": true,
+    "response_wrapping_for_bootstrap_required": true,
+    "unwrap_single_use_required": true,
+    "secret_values_in_ci_forbidden": true,
+    "secret_values_in_git_forbidden": true,
+    "secret_values_in_images_forbidden": true,
+    "secret_values_in_scheduler_state_forbidden": true
+  },
+  "openbao": {
+    "minimum_nodes": 3,
+    "minimum_failure_domains": 3,
+    "integrated_storage_required": true,
+    "autounseal_with_project_key_allowed": true,
+    "cloud_kms_autounseal_sole_recovery_forbidden": true,
+    "minimum_audit_devices": 2,
+    "audit_externalized": true,
+    "audit_failure_behavior_tested": true,
+    "raft_snapshot_required": true,
+    "snapshot_restore_tested": true,
+    "root_token_persistent_use_forbidden": true,
+    "administrative_breakglass_two_operator": true
+  },
+  "authorization": {
+    "default_deny": true,
+    "identity_to_policy_mapping_source_controlled": true,
+    "least_privilege": true,
+    "deny_overrides_allow": true,
+    "environment_separation": true,
+    "human_and_workload_identity_separate": true,
+    "production_write_requires_strong_auth": true,
+    "privileged_change_two_operator": true,
+    "time_bounded_elevation": true
+  },
+  "rotation": {
+    "rotation_schedule_source_controlled": true,
+    "consumer_compatibility_window_required": true,
+    "dual_key_overlap_required": true,
+    "old_credential_revocation_verified": true,
+    "rotation_failure_rollback_required": true,
+    "mass_rotation_rate_limited": true,
+    "dependency_order_required": true
+  },
+  "recovery": {
+    "openbao_not_required_to_recover_roots": true,
+    "spire_not_required_to_recover_roots": true,
+    "public_dns_not_required": true,
+    "original_cloud_required": false,
+    "offline_policy_copy_required": true,
+    "offline_encrypted_secret_export_required": true,
+    "clean_host_recovery_max_age_days": 30,
+    "minimum_trained_operators": 2,
+    "identity_before_secret_broker_restore": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_policy_digests": true,
+    "contains_trust_bundle_digest": true,
+    "contains_attestation_result": true,
+    "contains_lease_and_revocation_result": true,
+    "contains_audit_continuity_result": true,
+    "contains_rotation_result": true,
+    "contains_recovery_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
