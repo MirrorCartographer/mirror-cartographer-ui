@@ -1,33 +1,104 @@
 {
-  "implementation": "nats-jetstream",
-  "topology_source": "platform/queue/topology.json",
-  "provider_authoritative": false,
-  "nodes": [
-    {"id":"queue-a","failure_domain":"site-a","persistent":true},
-    {"id":"queue-b","failure_domain":"site-b","persistent":true},
-    {"id":"queue-c","failure_domain":"site-c","persistent":true}
-  ],
-  "replication_factor": 3,
-  "quorum_commit": true,
-  "fsync_or_equivalent": true,
-  "publisher_confirms": true,
-  "manual_consumer_ack": true,
-  "ack_after_commit": true,
-  "transactional_outbox": true,
-  "distributed_2pc": false,
-  "idempotency_store": "postgresql-consumer-inbox",
-  "queue_limits": {"bounded_bytes":true,"discard_policy":"reject-new","producer_backpressure":true,"prefetch_bounded":true,"capacity_alerting":true},
-  "retry": {"max_attempts":12,"jitter":true},
-  "dead_letter": {"enabled":true,"transfer_semantics":"at-least-once","retention_days":30,"audited_replay":true},
-  "exports": {"stream":true,"configuration":true,"offline_copy":true,"format":"broker-neutral-envelope-v1"},
-  "backups": [
-    {"id":"queue-backup-a","failure_domain":"site-a"},
-    {"id":"queue-backup-b","failure_domain":"site-b"},
-    {"id":"queue-backup-offline","failure_domain":"offline-vault"}
-  ],
-  "restore_evidence": {"age_days":7,"signed":true,"clean_host":true,"replay_verified":true},
-  "security": {"tls":true,"workload_identity":true,"default_deny":true,"tenant_isolation":true,"payload_secrets":false,"audit_log":true},
-  "schema": {"versioned":true,"backward_compatible_window":true},
-  "metrics": {"lag":true,"redelivery":true,"oldest_message_age":true},
-  "destructive_replay": {"minimum_operators":2}
+  "schema_version": 1,
+  "authority": {
+    "catalog": "foundation-event-catalog-v1",
+    "project_owned": true,
+    "broker_authoritative": false,
+    "cloud_queue_authoritative": false,
+    "adapter": "nats-jetstream",
+    "adapter_replaceable": true,
+    "envelope_exportable": true
+  },
+  "topology": {
+    "nodes": [
+      {"id":"queue-a","domain":"site-a","storage":"local-ssd"},
+      {"id":"queue-b","domain":"site-b","storage":"local-ssd"},
+      {"id":"queue-c","domain":"site-c","storage":"local-ssd"}
+    ],
+    "stream_replicas": 3,
+    "publish_requires_quorum": true,
+    "shared_storage": false
+  },
+  "message": {
+    "stable_event_id": true,
+    "schema_id": true,
+    "producer_identity": true,
+    "causation_id": true,
+    "correlation_id": true,
+    "occurred_at": true,
+    "observed_at": true,
+    "payload_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "maximum_size_bytes": 1048576,
+    "schema_compatible": true
+  },
+  "delivery": {
+    "publisher_ack": true,
+    "publisher_deduplication": true,
+    "dedup_window_seconds": 3600,
+    "consumer_explicit_ack": true,
+    "consumer_ack_sync": true,
+    "application_idempotency": true,
+    "claims_exactly_once_side_effects": false,
+    "ack_after_side_effect_commit": true,
+    "retry_backoff": [5,30,300],
+    "maximum_delivery_attempts": 8,
+    "dead_letter_stream": true,
+    "dead_letter_at_least_once": true
+  },
+  "ordering": {
+    "claims_global_order": false,
+    "partition_key": true,
+    "per_key_sequence": true,
+    "gap_detection": true,
+    "uses_clock_for_order": false
+  },
+  "flow_control": {
+    "pull_consumers": true,
+    "max_ack_pending": 500,
+    "max_batch": 100,
+    "max_bytes": 8388608,
+    "producer_backpressure": true,
+    "critical_discard_policy": "new",
+    "capacity_alerting": true
+  },
+  "retention": {
+    "source_controlled": true,
+    "max_age_seconds": 604800,
+    "max_bytes": 53687091200,
+    "unconsumed_protected": true,
+    "hold_supported": true,
+    "deletion_operator_count": 2
+  },
+  "security": {
+    "short_lived_identity": true,
+    "subject_level_authorization": true,
+    "default_deny_subjects": true,
+    "tls": true,
+    "release_keys_present": false,
+    "admin_api_public": false,
+    "payload_secret_policy": "references-only",
+    "audit_externalized": true
+  },
+  "continuity": {
+    "stream_snapshots": true,
+    "portable_event_export": true,
+    "original_broker_required": false,
+    "public_dns_required": false,
+    "github_required": false,
+    "cross_implementation_replay": true,
+    "last_clean_host_restore_age_days": 9,
+    "trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "stream_config_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "message_range_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "consumer_state": true,
+    "duplicate_test": true,
+    "loss_test": true,
+    "replay_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
 }
