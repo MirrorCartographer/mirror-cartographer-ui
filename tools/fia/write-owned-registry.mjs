@@ -137,8 +137,8 @@ async function main() {
     if (bytes.length !== o.size) fail(`object size mismatch: ${o.sourcePath}`);
     if (sha256(bytes) !== o.digest) fail(`object digest mismatch: ${o.sourcePath}`);
     const target = path.join(registryDir,'objects','sha256',o.digest.slice(0,2),o.digest);
-    const result = await atomicWrite(target,bytes);
-    operations.push({digest:o.digest,role:o.role,size:o.size,objectPath:path.relative(registryDir,target).replaceAll('\\','/'),result});
+    await atomicWrite(target,bytes);
+    operations.push({digest:o.digest,role:o.role,size:o.size,objectPath:path.relative(registryDir,target).replaceAll('\\','/')});
   }
   const catalog = {
     schema:'fia.owned-registry-catalog.v1', registeredBuildIdentity:registered.identity,
