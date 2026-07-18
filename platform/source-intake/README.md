@@ -1,30 +1,21 @@
 # Sovereign Source Intake and Reader Normalization
 
-This plane turns untrusted source material into one canonical, content-addressed tree before any compiler, package manager, CI worker, or release process receives it.
+This plane accepts untrusted source material, preserves its exact bytes as canonical evidence, and derives a deterministic Reader projection for indexing, comparison, semantic mapping, and tool consumption.
 
 ## Authority boundary
 
-The project owns the Reader policy, canonical-path rules, normalized-byte rules, manifest format, admission evidence, and raw/normalized custody. Git providers, archive formats, filesystems, checkout clients, and transfer services are replaceable intake mechanisms.
+Raw source bytes are canonical. The Reader projection is derived and may not silently replace compiler input. This distinction prevents Unicode, line-ending, BOM, path, or metadata normalization from changing string literals, cryptographic fixtures, byte-sensitive parsers, generated files, signatures, or language semantics.
 
-The Reader does not rewrite arbitrary source semantics. It normalizes only declared transport-level variation: path Unicode to NFC, text line endings to LF, and executable modes to an allowlisted canonical set. Binary bytes are preserved. Inputs that cannot be normalized without ambiguity are rejected.
-
-## Threats addressed
-
-- archive traversal and absolute paths
-- symlink escapes and special files
-- case-insensitive and Unicode-equivalent path collisions
-- CRLF/LF drift
-- timestamp, owner, group, xattr, and host-mode drift
-- executable-bit injection
-- UTF-8 BOM ambiguity
-- secret material entering canonical source
-- archive bombs and capacity exhaustion
-- provider checkout metadata being mistaken for source identity
-- loss of raw evidence after normalization
+The project owns the raw-source catalog, origin records, path policy, Reader schema, normalization policy, collision rules, classification policy, evidence, and recovery. Git providers, archive formats, filesystems, checkout clients, Unicode libraries, and parser implementations are replaceable mechanisms.
 
 ## Prototype
 
-`reader.mjs` walks a directory without following symlinks, enforces limits, canonicalizes permitted metadata, normalizes declared text formats, preserves binary content, and emits a sorted SHA-256 manifest with a self-digest.
+`reader.mjs` now emits two identities:
+
+- `raw_tree_digest`: exact source bytes plus canonical path and mode metadata.
+- `reader_tree_digest`: the deterministic derived projection.
+
+Every record retains `raw_digest`; text records add `projection_digest`, BOM and normalization-change evidence, and line mapping. Unknown binary files remain opaque and byte exact.
 
 ```sh
 node platform/source-intake/verify-source-intake-contract.mjs
@@ -32,30 +23,58 @@ node platform/source-intake/test.mjs
 node platform/source-intake/reader.mjs ./some-source-tree
 ```
 
+## Normalization rules
+
+Paths use NFC and `/`, but normalization collisions and case-fold collisions are rejected rather than merged. Absolute paths, parent traversal, backslashes, control characters, trailing dots/spaces, Windows reserved names, symlinks, hardlinks, and special files are rejected.
+
+Declared text must be valid UTF-8. The Reader projection records and removes a UTF-8 BOM, converts CRLF or CR to LF, applies NFC, and never applies NFKC or invents a final newline. These transformations affect only the derived Reader representation.
+
+## Adversarial findings
+
+### Normalizing source in place
+
+Rejected. Canonically equivalent Unicode can still occur inside byte-sensitive language constructs. Even line-ending conversion may change fixtures, generated outputs, or signed content.
+
+### Using Git checkout as normalization authority
+
+Rejected. Git line-ending behavior depends on attributes, configuration, platform, and working-tree policy. Git is an intake mechanism, not the Reader authority.
+
+### Lowercasing paths
+
+Rejected. It destroys distinctions on case-sensitive filesystems. The safe behavior is to preserve spelling and reject collisions that would alias on another supported platform.
+
+### Applying NFKC
+
+Rejected. Compatibility normalization erases distinctions and is unsafe for arbitrary source text.
+
+### Trusting filename extensions
+
+Rejected. Extensions are hints. Production intake must reconcile declared media type, filename, content validation, and sandboxed parser results. Ambiguous material is quarantined.
+
 ## Production evidence still required
 
-The checked-in inventory is a design fixture. Production admission must derive evidence from exact raw-bundle hashes, Reader binary digest, policy digest, normalization change log, two independent Reader executions, cross-filesystem results, secret-scan output, rejected-entry quarantine records, canonical bundle hash, custody challenges, and two operator signatures.
+The checked-in implementation handles regular directory trees. Production admission still requires:
 
-## Strongest surviving design
+- isolated archive extraction with traversal and decompression-ratio enforcement,
+- MIME and declared-type reconciliation,
+- sandboxed complex-document parsers,
+- macro and embedded-object suppression,
+- malware and secret-scan receipts,
+- exact raw transport-object custody,
+- two independent Reader executions,
+- cross-filesystem and cross-runtime equivalence,
+- signed clean-host reconstruction evidence.
 
-1. Acquire raw source into quarantine without execution.
-2. Hash and retain the exact raw transport object.
-3. Decode through a format-specific sandbox with path and expansion limits.
-4. Run the project Reader.
-5. Reject ambiguous paths, special files, symlinks, secrets, unsupported encodings, and policy violations.
-6. Emit canonical bytes plus a sorted manifest.
-7. Repeat on another clean host/filesystem.
-8. Admit only byte-identical manifests.
-9. Store raw evidence twice, including one offline copy.
-10. Store normalized source three times across two failure domains.
+## Ownership boundary
 
-## Rejected alternatives
+### Project-owned
 
-- treating `git checkout` as canonical normalization
-- preserving host timestamps, uid/gid, xattrs, or arbitrary permission bits
-- following symlinks during intake
-- lowercasing all paths
-- applying NFKC to arbitrary source text
-- normalizing binary files
-- deleting raw intake after successful normalization
-- accepting provider-generated archives without independent traversal checks
+Raw-source identity, Reader schema, normalization semantics, path portability rules, classification policy, parser admission, evidence, and recovery acceptance.
+
+### Replaceable
+
+Git, GitHub, archive libraries, MIME databases, Unicode implementations, malware scanners, secret scanners, object stores, VMs, and physical hosts.
+
+### Not physically owned
+
+Upstream source publication, domain registration, internet transit, processor and storage fabrication, firmware, facilities, power, public certificate authorities, and Unicode standard governance.
