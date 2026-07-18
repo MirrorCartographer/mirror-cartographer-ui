@@ -1,64 +1,99 @@
 {
   "schema_version": 1,
   "authority": {
-    "canonical_topology_owned_by_project": true,
-    "broker_is_replaceable_mechanism": true,
-    "hosted_broker_may_be_sole_authority": false
+    "project_owned_event_catalog": true,
+    "broker_state_authoritative": false,
+    "cloud_queue_authoritative": false,
+    "stream_adapter_replaceable": true,
+    "canonical_envelope_exportable": true
+  },
+  "topology": {
+    "minimum_broker_nodes": 3,
+    "minimum_failure_domains": 3,
+    "stream_replicas": 3,
+    "quorum_required_for_publish": true,
+    "shared_storage_forbidden": true,
+    "local_ssd_required": true
+  },
+  "message": {
+    "stable_event_id_required": true,
+    "schema_id_required": true,
+    "producer_identity_required": true,
+    "causation_id_required": true,
+    "correlation_id_required": true,
+    "occurred_at_and_observed_at_required": true,
+    "payload_digest_required": true,
+    "maximum_size_required": true,
+    "schema_compatibility_required": true
   },
   "delivery": {
-    "minimum_semantics": "at-least-once",
-    "publisher_confirmation_required": true,
-    "manual_consumer_ack_required": true,
+    "publisher_ack_required": true,
+    "publisher_deduplication_required": true,
+    "dedup_window_seconds_minimum": 900,
+    "consumer_explicit_ack_required": true,
+    "consumer_ack_sync_required": true,
+    "application_idempotency_required": true,
+    "exactly_once_side_effects_claim_forbidden": true,
     "ack_after_side_effect_commit": true,
-    "idempotency_required": true,
-    "transactional_outbox_required": true,
-    "distributed_2pc_required": false
+    "retry_backoff_required": true,
+    "maximum_delivery_attempts_required": true,
+    "dead_letter_required": true,
+    "dead_letter_at_least_once_required": true
   },
-  "durability": {
-    "minimum_replicas": 3,
-    "minimum_failure_domains": 3,
-    "quorum_commit_required": true,
-    "persistent_storage_required": true,
-    "fsync_or_equivalent_required": true,
-    "single_node_allowed_in_production": false
+  "ordering": {
+    "global_order_claim_forbidden": true,
+    "partition_key_required_when_order_matters": true,
+    "per_key_sequence_required": true,
+    "consumer_gap_detection_required": true,
+    "clock_ordering_forbidden": true
   },
   "flow_control": {
-    "bounded_queue_bytes": true,
-    "discard_policy": "reject-new",
+    "pull_consumers_required_for_workers": true,
+    "bounded_ack_pending_required": true,
+    "bounded_batch_required": true,
+    "bounded_bytes_required": true,
     "producer_backpressure_required": true,
-    "consumer_prefetch_bounded": true,
+    "discard_old_for_critical_forbidden": true,
     "capacity_alerting_required": true
   },
-  "failure_handling": {
-    "maximum_delivery_attempts": 12,
-    "dead_letter_required": true,
-    "dead_letter_transfer_semantics": "at-least-once",
-    "poison_message_retention_days": 30,
-    "retry_jitter_required": true,
-    "operator_replay_audited": true
-  },
-  "custody": {
-    "stream_export_required": true,
-    "configuration_export_required": true,
-    "offline_recovery_copy_required": true,
-    "minimum_backup_copies": 3,
-    "minimum_backup_failure_domains": 2,
-    "restore_drill_max_age_days": 30
+  "retention": {
+    "source_controlled": true,
+    "explicit_max_age_required": true,
+    "explicit_max_bytes_required": true,
+    "work_queue_limits_cannot_delete_unconsumed": true,
+    "legal_or_incident_hold_supported": true,
+    "deletion_two_operator": true
   },
   "security": {
+    "short_lived_workload_identity": true,
+    "subject_level_authorization": true,
+    "default_deny_subjects": true,
     "tls_required": true,
-    "workload_identity_required": true,
-    "default_deny_authorization": true,
-    "tenant_isolation_required": true,
-    "payload_secrets_forbidden": true,
-    "audit_log_required": true
+    "release_keys_forbidden": true,
+    "admin_api_not_public": true,
+    "payload_secret_policy_required": true,
+    "audit_externalized": true
   },
-  "operations": {
-    "schema_versioning_required": true,
-    "backward_compatible_window_required": true,
-    "lag_metrics_required": true,
-    "redelivery_metrics_required": true,
-    "oldest_message_age_metric_required": true,
-    "two_operator_destructive_replay": true
+  "continuity": {
+    "stream_snapshots_required": true,
+    "portable_event_export_required": true,
+    "original_broker_required": false,
+    "public_dns_required": false,
+    "github_required": false,
+    "cross_implementation_replay_required": true,
+    "clean_host_restore_max_age_days": 30,
+    "minimum_trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_stream_config_digest": true,
+    "contains_message_range_digest": true,
+    "contains_consumer_state": true,
+    "contains_duplicate_test": true,
+    "contains_loss_test": true,
+    "contains_replay_result": true,
+    "contains_operator_signatures": true,
+    "retention_days": 2555
   }
 }
