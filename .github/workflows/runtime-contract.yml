@@ -1,0 +1,25 @@
+name: Hosting runtime contract
+
+on:
+  push:
+    paths:
+      - "platform/runtime/**"
+      - ".github/workflows/runtime-contract.yml"
+  pull_request:
+    paths:
+      - "platform/runtime/**"
+      - ".github/workflows/runtime-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node platform/runtime/verify-runtime-contract.mjs platform/runtime/policy.json platform/runtime/inventory.json
+      - run: node platform/runtime/test.mjs
