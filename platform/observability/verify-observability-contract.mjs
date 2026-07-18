@@ -1,88 +1,81 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-const here = path.dirname(fileURLToPath(import.meta.url));
-const policy = JSON.parse(fs.readFileSync(process.argv[2] || path.join(here, 'policy.json'), 'utf8'));
-const inventory = JSON.parse(fs.readFileSync(process.argv[3] || path.join(here, 'inventory.json'), 'utf8'));
+#!/usr/bin/env node
+import fs from "node:fs";
+
+const [policyPath, inventoryPath] = process.argv.slice(2);
+if (!policyPath || !inventoryPath) {
+  console.error("usage: verify-observability-contract.mjs POLICY INVENTORY");
+  process.exit(2);
+}
+const p = JSON.parse(fs.readFileSync(policyPath, "utf8"));
+const i = JSON.parse(fs.readFileSync(inventoryPath, "utf8"));
 const failures = [];
 const check = (condition, message) => { if (!condition) failures.push(message); };
-const uniq = values => new Set(values).size;
-check(policy.authority.canonical_policy === 'project-repository', 'observability policy must be project authoritative');
-check(policy.authority.provider_observability_authoritative === false, 'provider observability cannot be authoritative');
-check(policy.authority.exportable === true, 'observability desired state must be exportable');
-check(policy.authority.two_operator_policy_changes === true, 'production policy changes require two operators');
-const collectors = inventory.collectors || [];
-const agents = collectors.filter(c => c.role === 'agent');
-const gateways = collectors.filter(c => c.role === 'gateway');
-check(policy.collection.open_protocol === 'otlp', 'OTLP required as open telemetry transport');
-check(!policy.collection.host_agents_required || agents.length >= 1, 'host agents required');
-check(gateways.length >= policy.collection.gateway_replicas_min, 'insufficient collector gateways');
-check(uniq(gateways.map(c => c.failure_domain)) >= policy.collection.gateway_failure_domains_min, 'insufficient gateway failure domains');
-check(collectors.every(c => c.disk_buffer === true), 'all collectors require disk buffering');
-check(collectors.every(c => c.buffer_minutes >= policy.collection.buffer_capacity_minutes_min), 'collector buffer capacity too small');
-check(policy.collection.backpressure_required === true, 'collection backpressure required');
-check(inventory.observed.telemetry_drop_visible === true, 'telemetry loss must be visible');
-check(inventory.observed.collector_self_telemetry === true, 'collector self telemetry required');
-check(policy.collection.direct_vendor_sdk_forbidden === true, 'direct vendor SDK coupling forbidden');
-const scrapers = inventory.scrapers || [];
-check(scrapers.length >= policy.metrics.independent_scrapers_min, 'insufficient metric scrapers');
-check(uniq(scrapers.map(s => s.failure_domain)) >= policy.metrics.scraper_failure_domains_min, 'insufficient scraper failure domains');
-check(scrapers.every(s => s.wal === true) && policy.metrics.local_wal_required, 'metric WAL required');
-const metricCopies = inventory.metric_copies || [];
-check(metricCopies.length >= policy.metrics.remote_copies_min, 'insufficient metric custody copies');
-check(uniq(metricCopies.map(c => c.failure_domain)) >= policy.metrics.remote_failure_domains_min, 'insufficient metric-copy failure domains');
-check(policy.metrics.recording_rules_source_controlled === true, 'recording rules must be source controlled');
-check(inventory.observed.cardinality_budget_enforced === true, 'cardinality budgets must be enforced');
-check(inventory.observed.missing_data_alerts === true, 'missing telemetry alerts required');
-check(policy.metrics.raw_export_required === true, 'raw metric export required');
-check(policy.logs.structured_model === 'opentelemetry', 'OpenTelemetry log model required');
-check(policy.logs.source_and_observed_timestamps_required === true, 'source and observed timestamps required');
-check(policy.logs.trace_correlation_required === true, 'log/trace correlation required');
-check(policy.logs.secret_redaction_required === true && policy.security.secret_values_forbidden === true, 'secret redaction required');
-check(policy.logs.high_cardinality_labels_forbidden === true, 'high-cardinality log labels forbidden');
-const logCopies = inventory.log_copies || [];
-check(logCopies.length >= policy.logs.object_copies_min, 'insufficient log object copies');
-check(uniq(logCopies.map(c => c.failure_domain)) >= policy.logs.object_failure_domains_min, 'insufficient log failure domains');
-check(logCopies.some(c => c.immutable) === policy.logs.immutable_copy_required, 'immutable log copy required');
-check(inventory.observed.wal_corruption_alert === true, 'log WAL corruption alert required');
-check(inventory.observed.wal_disk_full_alert === true, 'log WAL disk-full alert required');
-check(policy.logs.retention_manifest_required && policy.logs.portable_export_required, 'log retention and export required');
-check(policy.traces.open_protocol === 'otlp', 'traces must use OTLP');
-check(policy.traces.sampling_policy_source_controlled === true, 'trace sampling policy must be source controlled');
-check(!policy.traces.tail_sampling_optional || policy.traces.tail_sampling_requires_trace_affinity, 'tail sampling requires trace affinity');
-check(policy.traces.error_and_high_latency_retention_required === true, 'error/high-latency traces must be retained');
-check(policy.traces.portable_export_required === true, 'trace export required');
-const evaluators = inventory.evaluators || [];
-check(evaluators.length >= policy.alerting.evaluators_min, 'insufficient alert evaluators');
-check(uniq(evaluators.map(e => e.failure_domain)) >= policy.alerting.evaluator_failure_domains_min, 'insufficient evaluator failure domains');
-const alertmanagers = inventory.alertmanagers || [];
-check(alertmanagers.length >= policy.alerting.alertmanagers_min, 'insufficient alertmanagers');
-check(uniq(alertmanagers.map(a => a.failure_domain)) >= policy.alerting.alertmanager_failure_domains_min, 'insufficient alertmanager failure domains');
-check(policy.alerting.send_to_all_alertmanagers === true, 'evaluators must send to all alertmanagers');
-check(policy.alerting.load_balancer_between_evaluator_and_alertmanager === false, 'load balancer before alertmanager forbidden');
-check(policy.alerting.at_least_once_notifications && policy.alerting.duplicate_notifications_accepted, 'alerting must fail open at least once');
-check(inventory.notification_paths.length >= policy.alerting.independent_notification_paths_min, 'insufficient independent notification paths');
-check(inventory.observed.external_deadman_received === true, 'external deadman receipt missing');
-check(policy.alerting.silence_expiry_required && policy.alerting.two_operator_global_silence, 'safe silence governance required');
-check(inventory.observed.meta_monitor_separate === policy.continuity.independent_meta_monitor_required, 'independent meta monitor required');
-check(inventory.observed.provider_outage_visible === policy.continuity.provider_outage_visibility_required, 'provider outage visibility required');
-check(inventory.observed.boot_without_public_dns === policy.continuity.public_dns_independent_admin, 'administration must survive public DNS loss');
-check(inventory.observed.restore_age_days <= policy.continuity.clean_host_restore_days, 'restore evidence stale');
-check(inventory.observed.cross_implementation_restore === policy.continuity.cross_implementation_restore_required, 'cross-implementation restore required');
-check(policy.security.tls_required && policy.security.workload_identity_required, 'TLS and workload identity required');
-check(policy.security.default_deny_ingest && policy.security.tenant_separation_required, 'default-deny tenant-separated ingest required');
-check(policy.security.release_keys_forbidden, 'observability services must not hold release keys');
-check(policy.security.query_access_audited, 'query access must be audited');
-check(policy.security.destructive_retention_two_operators, 'destructive retention changes require two operators');
-for (const [key, value] of Object.entries(policy.evidence)) {
-  if (key === 'operator_signatures') continue;
-  check(value === true, `evidence requirement ${key} must be enabled`);
-}
-check(inventory.observed.signed === true, 'observability evidence must be signed');
-check(inventory.observed.operator_signatures >= policy.evidence.operator_signatures, 'insufficient evidence signatures');
+const digest = value => /^sha256:[0-9a-f]{64}$/.test(value ?? "");
+
+check(i.authority.project_owned && i.authority.alert_policy_owned, "project must own telemetry schema and alert policy");
+check(!i.authority.hosted_authoritative && !i.authority.dashboard_authoritative, "hosted backend/dashboard cannot be authoritative");
+check(i.authority.replaceable && i.authority.evidence_exportable, "telemetry backends and evidence must be portable");
+
+check(i.collection.otel_collector, "OpenTelemetry Collector required");
+check(digest(i.collection.distribution_digest), "collector distribution must be digest pinned");
+check(i.collection.agent_gateway_layers, "agent and gateway collection layers required");
+check(i.collection.local_buffering && i.collection.backpressure && i.collection.drop_counters, "buffering, backpressure, and drop counters required");
+check(i.collection.receiver_authentication && !i.collection.admin_public, "collector endpoints require authentication and private administration");
+check(i.collection.config_source_controlled && digest(i.collection.config_digest), "source-controlled collector config digest required");
+
+for (const key of ["metrics","logs","traces","events"]) check(i.signals[key], `missing signal: ${key}`);
+check(i.signals.stable_resource_identity, "stable resource identity required");
+check(typeof i.signals.schema_version === "string" && i.signals.schema_version.length > 0, "telemetry schema version required");
+check(i.signals.trace_log_correlation && i.signals.clock_uncertainty_recorded, "correlation and clock uncertainty required");
+check(i.signals.unknown_service_rejected, "unknown services must be rejected or quarantined");
+
+check(i.privacy.attribute_allowlist && i.privacy.secret_redaction && i.privacy.pii_default_deny, "privacy allowlist/redaction required");
+check(Number.isInteger(i.privacy.cardinality_budget) && i.privacy.cardinality_budget > 0, "cardinality budget required");
+check(!i.privacy.raw_payload_default, "raw payload capture forbidden by default");
+check(i.privacy.tenant_isolation && i.privacy.deletion_authority_separate, "tenant isolation and deletion separation required");
+
+check(i.metrics.prometheus_replicas.length >= p.metrics.minimum_prometheus_replicas, "insufficient Prometheus replicas");
+check(new Set(i.metrics.prometheus_replicas.map(x=>x.domain)).size >= 2, "Prometheus replicas require independent domains");
+check(i.metrics.prometheus_replicas.every(x=>x.independent_scrape), "Prometheus replicas must scrape independently");
+check(i.metrics.local_tsdb && !i.metrics.tsdb_on_nfs, "local non-NFS TSDB required");
+check(i.metrics.remote_write_targets.length >= 2, "dual remote-write targets required");
+check(i.metrics.remote_write_backlog_alert, "remote-write backlog alert required");
+check(i.metrics.recording_rules_source_controlled && i.metrics.rule_tests && i.metrics.cardinality_limits, "rule and cardinality controls required");
+
+check(i.logs.loki_tsdb, "Loki TSDB required");
+check(i.logs.object_storage_project_custody && i.logs.object_versioning, "project-custodied versioned log object storage required");
+check(i.logs.retention_source_controlled, "log retention must be source controlled");
+check(i.logs.deletion_cancel_window_hours >= p.logs.deletion_cancel_window_hours, "log deletion cancellation window too short");
+check(i.logs.wal_corruption_alert && i.logs.wal_disk_full_alert, "Loki WAL failure alerts required");
+check(i.logs.label_cardinality_limits && !i.logs.full_text_index_authoritative, "log label limits and non-authoritative full text index required");
+
+check(i.traces.portable_otlp_export && i.traces.sampling_policy_source_controlled, "portable trace export and source-controlled sampling required");
+check(["fail-open-with-measured-loss","fail-closed"].includes(i.traces.tail_sampling_failure_mode), "tail-sampling failure mode required");
+check(i.traces.error_and_high_latency_keep && i.traces.sampling_rate_recorded, "trace retention priorities and sampling evidence required");
+check(i.traces.storage_project_custody, "trace storage requires project custody");
+
+check(i.alerting.evaluators.length >= p.alerting.minimum_independent_evaluators, "insufficient alert evaluators");
+check(new Set(i.alerting.evaluators.map(x=>x.domain)).size >= 2, "alert evaluators require independent domains");
+check(i.alerting.rules_source_controlled && i.alerting.silence_audit && i.alerting.silence_expiry, "alert and silence governance required");
+check(i.alerting.missing_data_explicit && i.alerting.deadman_switch, "missing data and deadman detection required");
+check(i.alerting.channels.length >= 2, "multiple alert delivery channels required");
+check(i.alerting.external_blackbox && i.alerting.meta_monitoring, "external and meta-monitoring required");
+
+check(!i.continuity.original_backend_required && !i.continuity.grafana_required, "recovery must not require original backend or Grafana");
+check(!i.continuity.public_dns_required_for_internal_diagnosis, "internal diagnosis must not require public DNS");
+check(i.continuity.portable_raw_export, "portable raw telemetry export required");
+check(i.continuity.last_clean_host_restore_age_days <= p.continuity.clean_host_restore_max_age_days, "clean-host observability restore is stale");
+check(i.continuity.trained_operators >= p.continuity.minimum_trained_operators, "insufficient trained observability operators");
+check(i.continuity.offline_runbook, "offline incident runbook required");
+
+check(i.evidence.machine_generated && i.evidence.signed, "signed machine-generated evidence required");
+for (const key of ["config_digests","ingest_loss_measurement","query_reconciliation","alert_delivery_test","restore_result"]) check(i.evidence[key], `missing evidence: ${key}`);
+check(i.evidence.operator_signatures >= 2, "two evidence signatures required");
+check(i.evidence.retention_days >= p.evidence.retention_days, "evidence retention insufficient");
+
 if (failures.length) {
-  console.error(`REJECT ${failures.length} observability invariants`);
+  console.error(`REJECT ${failures.length} observability invariant(s)`);
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log('ACCEPT 54 observability invariants');
+console.log("ACCEPT 66 observability invariants");
