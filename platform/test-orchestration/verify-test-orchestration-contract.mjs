@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+const [pp,ip]=process.argv.slice(2); if(!pp||!ip) process.exit(2);
+const p=JSON.parse(fs.readFileSync(pp,"utf8")), i=JSON.parse(fs.readFileSync(ip,"utf8"));
+const f=[]; const c=(x,m)=>{if(!x)f.push(m)}; const d=x=>/^sha256:[0-9a-f]{64}$/.test(x??"");
+c(i.authority.project_owned,"project test authority required");
+c(!i.authority.ci_provider_authoritative&&!i.authority.test_dashboard_authoritative&&!i.authority.framework_state_authoritative,"CI/dashboard/framework cannot be authoritative");
+c(i.authority.results_exportable&&i.authority.replaceable,"results and runners must be portable");
+for(const k of ["stable_test_ids","owner","requirement_links","test_class","risk_tier","environment_contract","resource_budget","expected_outcome","quarantine_metadata"]) c(i.catalog[k],`catalog missing ${k}`);
+c(d(i.catalog.fixture_digest),"fixture digest required"); c(typeof i.catalog.oracle_version==="string","oracle version required");
+c(i.catalog.timeout_seconds>0,"timeout required"); c(["ephemeral-container-or-microvm","microvm","dedicated-host"].includes(i.catalog.isolation_class),"isolation class invalid");
+c(i.execution.runner_implementations.length>=p.execution.minimum_runner_implementations,"two runner implementations required");
+c(new Set(i.execution.runner_implementations.map(x=>x.domain)).size>=p.execution.minimum_failure_domains,"runner failure domains insufficient");
+c(i.execution.immutable_runner_image,"immutable runner image required"); c(i.execution.network_policy==="deny-unless-test-declared","test network policy unsafe");
+for(const k of ["ephemeral_environment","environment_reset_verified","test_order_randomization","seed_recorded","clock_control","resource_limits","infrastructure_failure_separate","undeclared_output_capture"]) c(i.execution[k],`execution missing ${k}`);
+c(i.execution.locale_timezone_matrix.length>=2,"locale/timezone perturbation matrix required");
+for(const k of ["deterministic_assignment","support_handshake","coverage_reconciliation","missing_shard_fails","duplicate_execution_detected","duration_balancing_preserves_identity"]) c(i.sharding[k],`sharding missing ${k}`);
+c(d(i.sharding.manifest_digest),"shard manifest digest required"); c(i.results.canonical_schema==="foundation.test.result.v1","canonical result schema required");
+for(const k of ["raw_framework_output_retained","stdout_stderr_digest","artifact_digest","runner_identity","attempt_history","signed"]) c(i.results[k],`results missing ${k}`);
+c(d(i.results.environment_digest),"result environment digest required"); c(i.results.sample_count>=1,"sample count required"); c(i.results.retention_days>=p.results.result_retention_days,"result retention insufficient");
+c(!i.flaky.retry_can_convert_to_pass,"retry cannot erase failure"); c(i.flaky.maximum_diagnostic_retries<=p.flaky.maximum_diagnostic_retries,"too many retries");
+for(const k of ["retry_seed_changes","first_failure_retained","flake_state_expiry","owner_and_issue","xpass_fails"]) c(i.flaky[k],`flake control missing ${k}`);
+c(i.flaky.maximum_quarantine_days<=p.flaky.maximum_quarantine_days,"quarantine too long"); c(i.flaky.quarantined_release_gate==="explicit-risk-acceptance","quarantine gate must be explicit");
+c(i.flaky.flake_budget_percent>0&&i.flaky.flake_budget_percent<=1,"flake budget invalid"); c(i.flaky.historical_rate_window_days>=7,"flake history window too short");
+c(i.gates.missing_results_fail_closed&&!i.gates.infrastructure_error_is_pass,"missing/infra results gate incorrectly"); c(i.gates.required_tests_all_pass&&!i.gates.quarantined_tests_silently_ignored,"required/quarantine gate unsafe");
+for(const k of ["coverage_threshold_source_controlled","property_tests_critical","contract_tests","security_tests","release_replay","signed_decision"]) c(i.gates[k],`gate missing ${k}`);
+c(i.gates.mutation_threshold_percent>=50,"mutation threshold too weak"); c(i.gates.performance_regression_budget_percent>0&&i.gates.performance_regression_budget_percent<=10,"performance budget unsafe");
+for(const k of ["dedicated_pool","hardware_fingerprint","warmup_policy","confidence_interval","absolute_and_relative_limits","noisy_neighbor_detection"]) c(i.performance[k],`performance missing ${k}`);
+c(i.performance.sample_size>=30,"benchmark sample size insufficient"); c(d(i.performance.baseline_digest),"benchmark baseline digest required");
+c(!i.continuity.original_ci_required&&!i.continuity.original_test_dashboard_required&&!i.continuity.original_runner_required&&!i.continuity.public_network_required,"recovery depends on external test service");
+for(const k of ["offline_catalog","offline_fixtures","local_replay"]) c(i.continuity[k],`continuity missing ${k}`);
+c(i.continuity.last_clean_host_replay_age_days<=p.continuity.clean_host_replay_max_age_days,"clean-host replay stale"); c(i.continuity.trained_operators>=p.continuity.minimum_trained_operators,"insufficient trained operators");
+c(i.evidence.machine_generated&&i.evidence.signed,"signed machine evidence required"); for(const k of ["catalog_digest","plan_digest","environment_digest"]) c(d(i.evidence[k]),`invalid evidence digest ${k}`);
+for(const k of ["attempt_history","flake_decision","gate_decision","cross_runner_result","clean_host_replay"]) c(i.evidence[k],`missing evidence ${k}`);
+c(i.evidence.operator_signatures>=p.evidence.operator_signatures,"two evidence signers required");
+if(f.length){console.error(`REJECT ${f.length} test-orchestration invariant(s)`);for(const x of f)console.error(`- ${x}`);process.exit(1)}
+console.log("ACCEPT 79 test-orchestration invariants");
