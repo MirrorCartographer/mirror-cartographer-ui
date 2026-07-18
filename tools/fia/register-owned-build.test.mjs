@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+const tool=new URL('./register-owned-build.mjs',import.meta.url).pathname;
+const canonical=v=>Array.isArray(v)?v.map(canonical):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,canonical(v[k])])):v;
+const dig=b=>'sha256:'+crypto.createHash('sha256').update(b).digest('hex');
+const ident=d=>dig(Buffer.from(JSON.stringify(canonical(Object.fromEntries(Object.entries(d).filter(([k])=>k!=='identity'))))));
+function fixture(){
+ const d=fs.mkdtempSync(path.join(os.tmpdir(),'fia-reg-'));
+ const tx={schema:'fia.owned-build-transaction.v1',artifacts:[],bindings:[]};
+ tx.identity=ident(tx);
+ fs.writeFileSync(path.join(d,'tx.json'),JSON.stringify(tx));
+ const mk=(name,role,extra={})=>{const b=Buffer.from(name);fs.writeFileSync(path.join(d,name),b);return {path:name,digest:dig(b),size:b.length,mediaType:'application/octet-stream',role,...extra};};
+ const runtime=mk('runtime.bin','runtime');
+ const sbom=mk('sbom.json','sbom',{subject:runtime.digest});
+ const prov=mk('prov.json','provenance',{subject:runtime.digest});
+ const sig=mk('sig.json','signature',{subject:runtime.digest});
+ const rb=mk('rollback.json','rollback',{references:[runtime.digest]});
+ const spec={schema:'fia.registry-admission-objects.v1',roots:[runtime.digest,rb.digest],objects:[runtime,sbom,prov,sig,rb]};
+ fs.writeFileSync(path.join(d,'objects.json'),JSON.stringify(spec));
+ return {d,spec};
+}
+const run=(d,out='out.json')=>spawnSync(process.execPath,[tool,'--transaction',path.join(d,'tx.json'),'--objects','objects.json','--output',path.join(d,out)],{encoding:'utf8'});
+test('equivalent admissions are deterministic',()=>{const a=fixture(),b=fixture();assert.equal(run(a.d).status,0);assert.equal(run(b.d).status,0);assert.equal(JSON.parse(fs.readFileSync(path.join(a.d,'out.json'))).identity,JSON.parse(fs.readFileSync(path.join(b.d,'out.json'))).identity);});
+test('digest substitution fails',()=>{const f=fixture();fs.writeFileSync(path.join(f.d,'runtime.bin'),'changed');assert.notEqual(run(f.d).status,0);});
+test('missing closure fails',()=>{const f=fixture();f.spec.objects[0].references=['sha256:'+'0'.repeat(64)];fs.writeFileSync(path.join(f.d,'objects.json'),JSON.stringify(f.spec));assert.notEqual(run(f.d).status,0);});
+test('unreachable surplus object fails',()=>{const f=fixture();const b=Buffer.from('surplus');fs.writeFileSync(path.join(f.d,'surplus'),b);f.spec.objects.push({path:'surplus',digest:dig(b),size:b.length,mediaType:'application/octet-stream'});fs.writeFileSync(path.join(f.d,'objects.json'),JSON.stringify(f.spec));assert.notEqual(run(f.d).status,0);});
+test('referrer subject mismatch fails',()=>{const f=fixture();f.spec.objects.find(o=>o.role==='sbom').subject=f.spec.objects.find(o=>o.role==='rollback').digest;fs.writeFileSync(path.join(f.d,'objects.json'),JSON.stringify(f.spec));assert.notEqual(run(f.d).status,0);});
+test('rollback without runtime reference fails',()=>{const f=fixture();f.spec.objects.find(o=>o.role==='rollback').references=[];fs.writeFileSync(path.join(f.d,'objects.json'),JSON.stringify(f.spec));assert.notEqual(run(f.d).status,0);});
+test('existing evidence is immutable',()=>{const f=fixture();fs.writeFileSync(path.join(f.d,'out.json'),'keep');assert.notEqual(run(f.d).status,0);assert.equal(fs.readFileSync(path.join(f.d,'out.json'),'utf8'),'keep');});
