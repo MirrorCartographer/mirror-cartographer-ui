@@ -1,12 +1,118 @@
 {
   "schema_version": 1,
-  "authority": {"canonical_inventory_owned_by_project": true, "storage_implementation_replaceable": true, "provider_may_be_sole_authority": false},
-  "data_classes": {"explicit_classification_required": true, "ephemeral_state_forbidden_for_durable_data": true, "database_uses_database_native_durability": true},
-  "integrity": {"end_to_end_checksums_required": true, "scrub_required": true, "scrub_max_age_days": 7, "repair_requires_healthy_redundancy": true, "silent_corruption_alerting_required": true},
-  "topology": {"minimum_online_replicas": 3, "minimum_failure_domains": 3, "single_chassis_production_allowed": false, "failure_domain_mapping_required": true},
-  "capacity": {"minimum_free_percent": 25, "hard_reservation_required": true, "thin_provisioning_fail_mode": "error", "metadata_capacity_alerting_required": true, "rebuild_headroom_required": true},
-  "snapshots": {"crash_consistent_required": true, "application_consistent_for_stateful_services": true, "snapshot_is_backup": false, "retention_manifest_required": true},
-  "custody": {"portable_export_required": true, "minimum_backup_copies": 3, "minimum_backup_failure_domains": 2, "offline_copy_required": true, "immutable_copy_required": true, "cross_implementation_restore_required": true, "restore_drill_max_age_days": 30},
-  "security": {"encryption_at_rest_required": true, "encryption_in_transit_required": true, "workload_identity_required": true, "default_deny_required": true, "key_separation_required": true},
-  "operations": {"device_health_required": true, "latency_metrics_required": true, "capacity_metrics_required": true, "rebuild_metrics_required": true, "two_operator_destructive_actions": true, "dns_independent_recovery": true}
+  "authority": {
+    "project_owned_storage_catalog": true,
+    "ceph_cluster_state_authoritative": false,
+    "zfs_pool_state_authoritative": false,
+    "cloud_volume_authoritative": false,
+    "storage_adapters_replaceable": true,
+    "canonical_dataset_and_object_map_exportable": true
+  },
+  "classification": {
+    "every_durable_dataset_classified": true,
+    "block_file_object_semantics_explicit": true,
+    "application_native_replication_preferred": true,
+    "shared_block_for_databases_forbidden": true,
+    "snapshots_are_backups": false,
+    "replicas_are_backups": false,
+    "ephemeral_storage_explicit": true
+  },
+  "local_storage": {
+    "filesystem": "openzfs",
+    "minimum_mirror_width": 2,
+    "end_to_end_checksums_required": true,
+    "data_checksums_disabled_forbidden": true,
+    "hardware_raid_forbidden": true,
+    "ecc_memory_required_for_new_hardware": true,
+    "monthly_scrub_max_age_days": 35,
+    "smart_monitoring_required": true,
+    "pool_capacity_alert_percent": 70,
+    "pool_emergency_percent": 80,
+    "minimum_free_percent_for_replacement": 20,
+    "encryption_required": true,
+    "key_recovery_separate_from_host": true,
+    "snapshot_holds_required_for_protected_state": true
+  },
+  "shared_object": {
+    "implementation": "ceph-rados-rgw",
+    "minimum_storage_hosts": 3,
+    "minimum_osds": 6,
+    "minimum_failure_domains": 3,
+    "replicated_pool_size": 3,
+    "replicated_pool_min_size": 2,
+    "crush_failure_domain": "host",
+    "osd_one_raw_device_each": true,
+    "shared_filesystem_under_osds_forbidden": true,
+    "pg_autoscaler_required": true,
+    "deep_scrub_max_age_days": 14,
+    "recovery_capacity_reserve_percent": 20,
+    "nearfull_max_percent": 70,
+    "backfillfull_max_percent": 75,
+    "full_max_percent": 80,
+    "erasure_coding_initially_forbidden": true,
+    "object_versioning_for_canonical_buckets": true,
+    "object_lock_for_immutable_buckets": true
+  },
+  "capacity": {
+    "growth_forecast_required": true,
+    "thirty_day_headroom_required": true,
+    "largest_failure_recovery_headroom_required": true,
+    "automatic_expansion_without_admission_forbidden": true,
+    "thin_provisioning_overcommit_for_critical_state_forbidden": true,
+    "write_failure_preferred_over_silent_eviction": true,
+    "recovery_bandwidth_budget_required": true
+  },
+  "integrity": {
+    "scheduled_zfs_scrub_required": true,
+    "scheduled_ceph_deep_scrub_required": true,
+    "full_object_manifest_scan_max_age_days": 30,
+    "latent_corruption_injection_required": true,
+    "checksum_mismatch_quarantines_copy": true,
+    "repair_requires_independent_good_copy": true,
+    "post_repair_semantic_restore_required": true
+  },
+  "lifecycle": {
+    "device_inventory_required": true,
+    "firmware_inventory_required": true,
+    "burn_in_required": true,
+    "safe_to_destroy_check_required": true,
+    "two_operator_destructive_device_action": true,
+    "secure_erasure_evidence_required": true,
+    "old_device_retained_until_rebuild_verified": true,
+    "device_replacement_runbook_required": true
+  },
+  "security": {
+    "storage_admin_separate_from_release_authority": true,
+    "storage_admin_separate_from_backup_delete_authority": true,
+    "cephx_or_equivalent_required": true,
+    "bucket_credentials_scoped": true,
+    "management_network_separate": true,
+    "public_admin_endpoints_forbidden": true,
+    "encryption_in_transit_required": true,
+    "release_keys_on_storage_hosts_forbidden": true,
+    "audit_logs_externalized": true
+  },
+  "continuity": {
+    "original_storage_vendor_required": false,
+    "original_cloud_required": false,
+    "public_dns_required": false,
+    "ceph_required_for_restore": false,
+    "zfs_required_for_object_restore": false,
+    "portable_object_export_required": true,
+    "clean_host_reconstruction_max_age_days": 30,
+    "minimum_trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_storage_catalog_digest": true,
+    "contains_device_map_digest": true,
+    "contains_crush_map_digest": true,
+    "contains_scrub_results": true,
+    "contains_capacity_and_recovery_model": true,
+    "contains_corruption_test": true,
+    "contains_rebuild_result": true,
+    "contains_operator_signatures": true,
+    "retention_days": 2555
+  }
 }
