@@ -1,4 +1,4 @@
-name: Backup and disaster-recovery contract
+name: Backup, restore, and disaster-recovery contract
 
 on:
   push:
@@ -21,5 +21,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: node platform/backup/verify-backup-contract.mjs platform/backup/policy.json platform/backup/inventory.json
+      - run: node platform/backup/verify-backup-contract.mjs platform/backup/policy.json platform/backup/inventory.json platform/backup/restore-graph.json
       - run: node platform/backup/test.mjs
