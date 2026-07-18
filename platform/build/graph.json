@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "source_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "policy_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "toolchains": {
+    "node": {
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "executable": "node"
+    }
+  },
+  "actions": [
+    {
+      "id": "normalize-metadata",
+      "deps": [],
+      "toolchain": "node",
+      "command": ["scripts/write-metadata.mjs"],
+      "env": {
+        "SOURCE_DATE_EPOCH": "1767225600",
+        "TZ": "UTC",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "inputs": [
+        {
+          "path": "input/message.txt",
+          "digest": "sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447"
+        }
+      ],
+      "outputs": ["out/metadata.json"],
+      "network": false,
+      "timeout_seconds": 30
+    },
+    {
+      "id": "package",
+      "deps": ["normalize-metadata"],
+      "toolchain": "node",
+      "command": ["scripts/package.mjs"],
+      "env": {
+        "SOURCE_DATE_EPOCH": "1767225600",
+        "TZ": "UTC",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "inputs": [
+        {
+          "path": "out/metadata.json",
+          "from_action": "normalize-metadata"
+        }
+      ],
+      "outputs": ["dist/artifact.json"],
+      "network": false,
+      "timeout_seconds": 30
+    }
+  ]
+}
