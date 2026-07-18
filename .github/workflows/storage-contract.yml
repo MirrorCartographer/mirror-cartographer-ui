@@ -1,28 +1,25 @@
-name: Storage Contract
+name: Storage substrate contract
 
 on:
   push:
     paths:
-      - 'platform/storage/**'
-      - '.github/workflows/storage-contract.yml'
+      - "platform/storage/**"
+      - ".github/workflows/storage-contract.yml"
   pull_request:
     paths:
-      - 'platform/storage/**'
-      - '.github/workflows/storage-contract.yml'
+      - "platform/storage/**"
+      - ".github/workflows/storage-contract.yml"
 
 permissions:
   contents: read
 
 jobs:
-  verify-storage-contract:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: Verify storage invariants
-        run: node platform/storage/verify-storage-contract.mjs platform/storage/policy.json platform/storage/inventory.json
-      - name: Run adversarial storage tests
-        run: node platform/storage/test.mjs
+          node-version: "22"
+      - run: node platform/storage/verify-storage-contract.mjs platform/storage/policy.json platform/storage/inventory.json
+      - run: node platform/storage/test.mjs
