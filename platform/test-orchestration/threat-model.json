@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "assets": ["test catalog", "test oracle", "fixtures", "runner images", "result ledger", "flake decisions", "release gate decisions"],
+  "threats": [
+    {"id":"T1","threat":"CI provider marks missing jobs successful","controls":["missing-result fail closed","canonical plan reconciliation","signed gate decision"]},
+    {"id":"T2","threat":"Automatic reruns hide deterministic failures","controls":["first failure retained","retry cannot become pass","attempt history","changed seeds"]},
+    {"id":"T3","threat":"Sharding silently skips tests","controls":["deterministic manifest","runner handshake","coverage reconciliation","missing shard failure"]},
+    {"id":"T4","threat":"Quarantine becomes permanent bypass","controls":["14-day expiry","owner and issue","xpass failure","flake budget","explicit release risk acceptance"]},
+    {"id":"T5","threat":"Benchmark noise authorizes regression","controls":["dedicated pool","hardware fingerprint","30 samples","confidence intervals","absolute and relative limits"]},
+    {"id":"T6","threat":"Compromised runner fabricates results","controls":["two implementations","two domains","signed environment digest","cross-runner replay","raw evidence custody"]},
+    {"id":"T7","threat":"Test oracle changes without visibility","controls":["oracle version","catalog digest","requirement links","release replay"]}
+  ]
+}
