@@ -1,0 +1,17 @@
+name: DNS and domain continuity contract
+on:
+  push:
+    paths: ["platform/dns/**", ".github/workflows/dns-contract.yml"]
+  pull_request:
+    paths: ["platform/dns/**", ".github/workflows/dns-contract.yml"]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: node platform/dns/verify-dns-contract.mjs platform/dns/policy.json platform/dns/inventory.json
+      - run: node platform/dns/test.mjs
