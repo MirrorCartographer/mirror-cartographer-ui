@@ -1,0 +1,17 @@
+name: Compiler and deterministic build contract
+on:
+  push:
+    paths: ["platform/build-execution/**", ".github/workflows/build-execution-contract.yml"]
+  pull_request:
+    paths: ["platform/build-execution/**", ".github/workflows/build-execution-contract.yml"]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: node platform/build-execution/verify-build-execution-contract.mjs platform/build-execution/policy.json platform/build-execution/inventory.json
+      - run: node platform/build-execution/test.mjs
