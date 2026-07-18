@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "catalog": "foundation.artifacts.v1",
+    "project_owned": true,
+    "retention_policy_owned": true,
+    "registry_authoritative": false,
+    "tag_authoritative": false,
+    "cloud_registry_authoritative": false,
+    "exportable": true,
+    "adapters": ["zot", "harbor"],
+    "replaceable": true
+  },
+  "identity": {
+    "release_reference": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sha256": true,
+    "tag_resolution_recorded": true,
+    "multi_platform_index": true,
+    "platform_manifest_closure": true,
+    "config_layer_closure": true,
+    "media_types_preserved": true,
+    "sizes_verified": true
+  },
+  "referrers": {
+    "oci_11_subject": true,
+    "referrers_api": true,
+    "fallback_tag_reconciliation": true,
+    "types": ["sbom", "provenance", "signature", "vulnerability"],
+    "graph_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "unknown_types_preserved": true
+  },
+  "custody": {
+    "registries": [
+      {"id": "registry-a", "implementation": "zot", "domain": "site-a"},
+      {"id": "registry-b", "implementation": "harbor", "domain": "site-b"}
+    ],
+    "object_store_project_custody": true,
+    "offline_oci_layout_export": true,
+    "portable_oras_copy": true,
+    "registry_gc_authoritative": false,
+    "deletion_replication_default": false,
+    "complete_graph_reconciliation": true
+  },
+  "publication": {
+    "quarantine_namespace": true,
+    "release_namespace_append_only": true,
+    "immutable_release_tags": true,
+    "mutable_convenience_tags_authoritative": false,
+    "writer_can_delete": false,
+    "release_authority_separate": true,
+    "destructive_operator_count": 2,
+    "promotion_reference": "digest",
+    "copy_before_publish": true
+  },
+  "retention": {
+    "source_controlled": true,
+    "release_hold": true,
+    "legal_incident_hold": true,
+    "deletion_grace_hours": 72,
+    "reachability_analysis": true,
+    "referrer_reachability": true,
+    "rollback_window": true,
+    "recent_restore_before_delete": true,
+    "tombstone_manifest": true
+  },
+  "security": {
+    "short_lived_workload_identity": true,
+    "repository_scoped_tokens": true,
+    "admin_api_public": false,
+    "release_signing_keys_on_registry": false,
+    "backup_deletion_keys_on_registry": false,
+    "content_digest_recomputed_on_read": true,
+    "manifest_schema_validation": true,
+    "decompression_bomb_limits": true,
+    "malware_scan_authoritative": false
+  },
+  "continuity": {
+    "original_registry_required": false,
+    "original_object_store_required": false,
+    "public_dns_required": false,
+    "github_required": false,
+    "cross_implementation_restore": true,
+    "last_clean_host_restore_age_days": 12,
+    "trained_operators": 2,
+    "offline_catalog": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "catalog_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "graph_reconciliation": true,
+    "cross_registry_copy": true,
+    "gc_survival_test": true,
+    "clean_host_restore": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
