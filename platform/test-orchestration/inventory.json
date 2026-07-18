@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned": true,
+    "ci_provider_authoritative": false,
+    "test_dashboard_authoritative": false,
+    "framework_state_authoritative": false,
+    "results_exportable": true,
+    "adapters": ["bazel-test", "pytest"],
+    "replaceable": true
+  },
+  "catalog": {
+    "stable_test_ids": true,
+    "owner": true,
+    "requirement_links": true,
+    "test_class": true,
+    "risk_tier": true,
+    "environment_contract": true,
+    "fixture_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "oracle_version": "foundation.oracle.v1",
+    "timeout_seconds": 600,
+    "resource_budget": true,
+    "isolation_class": "ephemeral-container-or-microvm",
+    "expected_outcome": true,
+    "quarantine_metadata": true
+  },
+  "execution": {
+    "runner_implementations": [
+      {"id": "bazel", "domain": "site-a"},
+      {"id": "direct-harness", "domain": "site-b"}
+    ],
+    "immutable_runner_image": true,
+    "network_policy": "deny-unless-test-declared",
+    "ephemeral_environment": true,
+    "environment_reset_verified": true,
+    "test_order_randomization": true,
+    "seed_recorded": true,
+    "clock_control": true,
+    "locale_timezone_matrix": ["C.UTF-8/UTC", "en_US.UTF-8/America_New_York"],
+    "resource_limits": true,
+    "infrastructure_failure_separate": true,
+    "undeclared_output_capture": true
+  },
+  "sharding": {
+    "deterministic_assignment": true,
+    "manifest_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "support_handshake": true,
+    "coverage_reconciliation": true,
+    "missing_shard_fails": true,
+    "duplicate_execution_detected": true,
+    "duration_balancing_preserves_identity": true
+  },
+  "results": {
+    "canonical_schema": "foundation.test.result.v1",
+    "raw_framework_output_retained": true,
+    "stdout_stderr_digest": true,
+    "artifact_digest": true,
+    "environment_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "runner_identity": true,
+    "attempt_history": true,
+    "sample_count": 1000,
+    "signed": true,
+    "retention_days": 2555
+  },
+  "flaky": {
+    "retry_can_convert_to_pass": false,
+    "maximum_diagnostic_retries": 3,
+    "retry_seed_changes": true,
+    "first_failure_retained": true,
+    "flake_state_expiry": true,
+    "maximum_quarantine_days": 14,
+    "owner_and_issue": true,
+    "quarantined_release_gate": "explicit-risk-acceptance",
+    "xpass_fails": true,
+    "flake_budget_percent": 0.5,
+    "historical_rate_window_days": 30
+  },
+  "gates": {
+    "missing_results_fail_closed": true,
+    "infrastructure_error_is_pass": false,
+    "required_tests_all_pass": true,
+    "quarantined_tests_silently_ignored": false,
+    "coverage_threshold_source_controlled": true,
+    "mutation_threshold_percent": 75,
+    "property_tests_critical": true,
+    "contract_tests": true,
+    "security_tests": true,
+    "performance_regression_budget_percent": 5,
+    "release_replay": true,
+    "signed_decision": true
+  },
+  "performance": {
+    "dedicated_pool": true,
+    "hardware_fingerprint": true,
+    "warmup_policy": true,
+    "sample_size": 30,
+    "confidence_interval": true,
+    "absolute_and_relative_limits": true,
+    "noisy_neighbor_detection": true,
+    "baseline_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "continuity": {
+    "original_ci_required": false,
+    "original_test_dashboard_required": false,
+    "original_runner_required": false,
+    "public_network_required": false,
+    "offline_catalog": true,
+    "offline_fixtures": true,
+    "local_replay": true,
+    "last_clean_host_replay_age_days": 14,
+    "trained_operators": 2
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "catalog_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "plan_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "environment_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "attempt_history": true,
+    "flake_decision": true,
+    "gate_decision": true,
+    "cross_runner_result": true,
+    "clean_host_replay": true,
+    "operator_signatures": 2
+  }
+}
