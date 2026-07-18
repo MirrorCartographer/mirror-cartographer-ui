@@ -2,78 +2,114 @@
   "schema_version": 1,
   "authority": {
     "catalog": "foundation-recovery-catalog-v1",
-    "owned_by_project": true,
-    "provider_authoritative": false
+    "project_owned": true,
+    "backup_tool_authoritative": false,
+    "cloud_snapshot_authoritative": false,
+    "provider_catalog_authoritative": false,
+    "restore_plan_exportable": true,
+    "adapters": ["pgbackrest", "restic", "nats-snapshot", "oras-export"],
+    "adapter_replaceable": true,
+    "evidence_project_custody": true
   },
   "datasets": [
-    {"id":"postgres-primary","tier":"critical","rpo_seconds":30,"rto_seconds":7200,"method":"pg-basebackup-plus-wal","application_consistent":true},
-    {"id":"registry-custody","tier":"critical","rpo_seconds":3600,"rto_seconds":14400,"method":"portable-object-export","application_consistent":true},
-    {"id":"identity-roots","tier":"critical","rpo_seconds":0,"rto_seconds":14400,"method":"threshold-offline-export","application_consistent":true},
-    {"id":"observability-history","tier":"important","rpo_seconds":3600,"rto_seconds":86400,"method":"portable-object-export","application_consistent":true}
+    {"id":"postgres-primary","class":"database","rpo_seconds":60,"rto_seconds":1800,"consistency":"pgbackrest-base-plus-wal","retention":"critical-35d","dependencies":["identity-roots","secrets-broker"]},
+    {"id":"event-history","class":"queue","rpo_seconds":300,"rto_seconds":3600,"consistency":"jetstream-snapshot-plus-portable-export","retention":"critical-35d","dependencies":["identity-roots"]},
+    {"id":"artifact-catalog","class":"object","rpo_seconds":3600,"rto_seconds":7200,"consistency":"content-addressed-inventory","retention":"release-7y","dependencies":["identity-roots"]},
+    {"id":"platform-config","class":"config","rpo_seconds":3600,"rto_seconds":1800,"consistency":"signed-tree-export","retention":"release-7y","dependencies":["identity-roots"]},
+    {"id":"identity-roots","class":"root","rpo_seconds":86400,"rto_seconds":7200,"consistency":"threshold-offline-ceremony","retention":"permanent","dependencies":[]},
+    {"id":"secrets-broker","class":"secrets","rpo_seconds":3600,"rto_seconds":7200,"consistency":"encrypted-snapshot-plus-export","retention":"critical-35d","dependencies":["identity-roots"]}
   ],
-  "copies": [
-    {"id":"copy-a","domain":"site-a","complete":true,"immutable":false,"offline":false,"project_controlled":true,"delete_credential":"writer-a"},
-    {"id":"copy-b","domain":"site-b","complete":true,"immutable":true,"offline":false,"project_controlled":true,"delete_credential":"maint-b"},
-    {"id":"copy-c","domain":"offline-vault","complete":true,"immutable":true,"offline":true,"project_controlled":true,"delete_credential":"physical-quorum"}
-  ],
-  "capture": {
-    "database_native":true,
-    "continuous_wal":true,
-    "config_and_schema":true,
-    "trust_roots_separate":true,
-    "catalog_commit_required":true
+  "custody": {
+    "copies": [
+      {"id":"online-a","failure_domain":"site-a","admin_domain":"ops-a","immutable":false,"implementation":"restic-s3"},
+      {"id":"online-b","failure_domain":"site-b","admin_domain":"ops-b","immutable":true,"implementation":"borg-filesystem"},
+      {"id":"offline-c","failure_domain":"vault-c","admin_domain":"recovery-quorum","immutable":true,"implementation":"portable-tar-manifest"}
+    ],
+    "offline_or_airgapped": true,
+    "cross_implementation": true,
+    "shared_credentials": false,
+    "shared_key_path": false,
+    "original_provider_sole_path": false
   },
   "integrity": {
-    "manifest_algorithm":"sha256",
-    "manifest_signed":true,
-    "last_full_read_check_age_days":7,
-    "last_sample_restore_age_days":2,
-    "corruption_injection":true,
-    "repair_target":"noncanonical-copy"
+    "content_digests": true,
+    "signed_manifests": true,
+    "last_full_read_age_days": 12,
+    "metadata_reconciliation": true,
+    "corruption_injection": true,
+    "partial_restore_rejected": true,
+    "tool_success_not_sufficient": true
   },
-  "retention": {
-    "policy_in_source":true,
-    "deletion_dry_run":true,
-    "destructive_operator_count":2,
-    "writer_append_only":true,
-    "maintenance_separate":true,
-    "hold_supported":true
+  "database": {
+    "physical_base_backup": true,
+    "continuous_wal_archive": true,
+    "wal_continuity_verified": true,
+    "logical_export": true,
+    "timeline_history_retained": true,
+    "pitr_target_tested": true,
+    "restore_without_ha_controller": true
+  },
+  "queue": {
+    "broker_snapshot": true,
+    "portable_event_export": true,
+    "consumer_state_export": true,
+    "cross_broker_replay": true,
+    "event_digest_reconciliation": true
+  },
+  "objects": {
+    "versions": true,
+    "delete_markers": true,
+    "retention_state": true,
+    "referrer_graph": true,
+    "portable_inventory": true
+  },
+  "secrets_identity": {
+    "encrypted_backup": true,
+    "key_recovery_separate": true,
+    "root_material_offline": true,
+    "threshold_recovery": true,
+    "restore_ceremony_tested": true,
+    "release_keys_in_backup_system": false
+  },
+  "deletion": {
+    "writer_can_delete": false,
+    "operator_count": 2,
+    "grace_hours": 72,
+    "hold_check": true,
+    "last_known_good_restore": true,
+    "mass_delete_detection": true
   },
   "restore": {
-    "clean_host":true,
-    "cross_implementation":true,
-    "semantic_validation":true,
-    "dependency_order":["time","identity","secrets","storage","database","queue","registry","runtime","network","observability"],
-    "evidence_signed":true,
-    "last_drill_age_days":12,
-    "bare_catalog_reconstruction":true,
-    "public_dns_required":false,
-    "original_provider_required":false
+    "clean_room": true,
+    "initial_network_isolation": true,
+    "malware_scan": true,
+    "semantic_verification": true,
+    "dependency_order_enforced": true,
+    "partial_restore_scoped": true,
+    "target_noncanonical_until_acceptance": true,
+    "signed_promotion": true
   },
-  "disaster": {
-    "total_site_loss":true,
-    "control_plane_loss":true,
-    "credential_loss":true,
-    "dns_ca_loss":true,
-    "offline_runbook":true,
-    "trained_operators":2,
-    "decision_log":true
-  },
-  "security": {
-    "encrypted_at_rest":true,
-    "encrypted_in_transit":true,
-    "key_separation":true,
-    "release_keys_present":false,
-    "isolated_restore":true,
-    "evidence_redacted":true
+  "dr": {
+    "site_loss": true,
+    "provider_loss": true,
+    "credential_loss": true,
+    "dns_loss": true,
+    "catalog_loss": true,
+    "key_service_loss": true,
+    "operator_unavailability": true,
+    "last_drill_age_days": 32,
+    "trained_operators": 2
   },
   "evidence": {
-    "machine_generated":true,
-    "object_digests":true,
-    "restore_point":true,
-    "observed_rpo_seconds":18,
-    "observed_rto_seconds":4980,
-    "operator_signatures":2,
-    "retention_days":2555
+    "machine_generated": true,
+    "signed": true,
+    "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "backup_manifest_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "restore_graph_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "measured_rpo_seconds": 42,
+    "measured_rto_seconds": 1412,
+    "semantic_verification": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
   }
 }
