@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "project_owned_runtime_contract": true,
+    "scheduler_authoritative": false,
+    "cloud_instance_state_authoritative": false,
+    "runtime_adapter_replaceable": true,
+    "canonical_node_inventory_exportable": true,
+    "canonical_workload_spec_exportable": true
+  },
+  "node_admission": {
+    "immutable_host_image_required": true,
+    "host_image_digest_required": true,
+    "secure_boot_measured_or_exception": true,
+    "kernel_version_admitted": true,
+    "firmware_inventory_required": true,
+    "time_health_required": true,
+    "storage_health_required": true,
+    "network_health_required": true,
+    "drift_blocks_new_placements": true,
+    "clean_host_rebuild_max_age_days": 30
+  },
+  "isolation": {
+    "cgroup_v2_required": true,
+    "cpu_max_required": true,
+    "memory_max_required": true,
+    "pids_max_required": true,
+    "io_limits_required_for_noisy_workloads": true,
+    "rootless_default": true,
+    "read_only_rootfs_default": true,
+    "host_pid_namespace_forbidden": true,
+    "host_network_default_forbidden": true,
+    "host_runtime_socket_forbidden": true,
+    "privileged_workload_two_operator_exception": true,
+    "seccomp_required": true,
+    "capability_allowlist_required": true,
+    "workload_identity_required": true
+  },
+  "placement": {
+    "minimum_failure_domains": 2,
+    "critical_minimum_replicas": 2,
+    "anti_affinity_required": true,
+    "resource_requests_required": true,
+    "resource_limits_required": true,
+    "overcommit_policy_explicit": true,
+    "stateful_locality_explicit": true,
+    "architecture_compatibility_required": true,
+    "kernel_feature_compatibility_required": true,
+    "maintenance_reserve_percent": 25
+  },
+  "runtime_health": {
+    "startup_probe_required": true,
+    "readiness_probe_required": true,
+    "liveness_probe_required": true,
+    "semantic_probe_required": true,
+    "pressure_stall_monitored": true,
+    "oom_events_monitored": true,
+    "disk_pressure_monitored": true,
+    "network_pressure_monitored": true,
+    "missing_health_evidence_fails_closed_for_scale_down": true
+  },
+  "maintenance": {
+    "cordon_before_drain": true,
+    "connection_drain_required": true,
+    "disruption_budget_required": true,
+    "stateful_quorum_checked": true,
+    "eviction_timeout_required": true,
+    "force_evict_requires_two_operators": true,
+    "old_node_retained_until_replacement_verified": true,
+    "rolling_host_upgrade_required": true,
+    "rollback_image_retained": true
+  },
+  "scheduler_continuity": {
+    "scheduler_loss_does_not_stop_running_workloads": true,
+    "manual_local_start_supported": true,
+    "provider_api_not_required": true,
+    "public_dns_not_required": true,
+    "original_registry_not_required": true,
+    "local_project_custody_artifacts_required": true,
+    "secondary_adapter_proven": true,
+    "minimum_trained_operators": 2
+  },
+  "scaling_guardrails": {
+    "autoscaler_is_advisor_not_authority": true,
+    "project_policy_bounds_min_max": true,
+    "scale_down_requires_capacity_recheck": true,
+    "scale_down_requires_dependency_budget_recheck": true,
+    "scale_down_stabilization_seconds": 300,
+    "maximum_scale_down_fraction": 0.1,
+    "scale_up_rate_bounded": true,
+    "missing_metrics_forbid_scale_down": true,
+    "provider_capacity_not_sole_scale_path": true
+  },
+  "security": {
+    "management_plane_separate": true,
+    "out_of_band_access_required": true,
+    "release_keys_forbidden": true,
+    "backup_delete_keys_forbidden": true,
+    "node_credentials_short_lived": true,
+    "node_decommission_revokes_identity": true,
+    "audit_externalized": true
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "contains_host_image_digest": true,
+    "contains_kernel_and_firmware": true,
+    "contains_cgroup_limits": true,
+    "contains_placement_map": true,
+    "contains_pressure_metrics": true,
+    "contains_drain_result": true,
+    "contains_scheduler_loss_result": true,
+    "contains_secondary_adapter_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
