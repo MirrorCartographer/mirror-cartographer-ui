@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "identity_schema": "foundation.identity.v1",
+    "secret_policy": "foundation.secrets.v1",
+    "project_owned": true,
+    "openbao_authoritative": false,
+    "spire_authoritative": false,
+    "cloud_iam_authoritative": false,
+    "exportable": true,
+    "adapters": ["spire", "openbao"],
+    "replaceable": true
+  },
+  "roots": {
+    "offline_root": true,
+    "shares": [
+      {"id":"share-a","domain":"operator-a"},
+      {"id":"share-b","domain":"operator-b"},
+      {"id":"share-c","domain":"vault-site-a"},
+      {"id":"share-d","domain":"vault-site-b"},
+      {"id":"share-e","domain":"offline-custody"}
+    ],
+    "threshold": 3,
+    "single_operator_recovery": false,
+    "provider_kms_sole_path": false,
+    "online_root_key": false,
+    "rotation_overlap": true,
+    "last_recovery_ceremony_age_days": 90
+  },
+  "workload_identity": {
+    "spiffe_ids": true,
+    "trust_domains": ["prod.foundation.internal", "build.foundation.internal", "recovery.foundation.internal"],
+    "security_boundary_separation": true,
+    "node_attestation": "tpm_devid-or-x509pop",
+    "workload_attestation": ["systemd", "unix", "docker-image-digest"],
+    "join_tokens_production_default": false,
+    "preferred_svid": "x509",
+    "jwt_audience_bounded": true,
+    "x509_svid_ttl_minutes": 30,
+    "jwt_svid_ttl_minutes": 5,
+    "app_private_key_export": false,
+    "bundle_rotation_overlap": true,
+    "identity_revocation_tested": true
+  },
+  "secret_broker": {
+    "dynamic_secrets_preferred": true,
+    "static_exception_expiry": true,
+    "default_lease_minutes": 30,
+    "renewal_bounded": true,
+    "revocation": true,
+    "response_wrapping": true,
+    "unwrap_single_use": true,
+    "secrets_in_ci": false,
+    "secrets_in_git": false,
+    "secrets_in_images": false,
+    "secrets_in_scheduler_state": false
+  },
+  "openbao": {
+    "nodes": [
+      {"id":"bao-a","domain":"site-a"},
+      {"id":"bao-b","domain":"site-b"},
+      {"id":"bao-c","domain":"site-c"}
+    ],
+    "integrated_storage": true,
+    "autounseal_key": "project-threshold-key",
+    "cloud_kms_sole_recovery": false,
+    "audit_devices": ["local-append-only", "remote-signed-stream"],
+    "audit_externalized": true,
+    "audit_failure_tested": true,
+    "raft_snapshot": true,
+    "snapshot_restore_tested": true,
+    "persistent_root_token_use": false,
+    "breakglass_operator_count": 2
+  },
+  "authorization": {
+    "default_deny": true,
+    "mapping_source_controlled": true,
+    "least_privilege": true,
+    "deny_overrides_allow": true,
+    "environment_separation": true,
+    "human_workload_separate": true,
+    "production_write_strong_auth": true,
+    "privileged_change_operator_count": 2,
+    "elevation_max_minutes": 30
+  },
+  "rotation": {
+    "schedule_source_controlled": true,
+    "consumer_compatibility_window": true,
+    "dual_key_overlap": true,
+    "old_credential_revocation_verified": true,
+    "rollback": true,
+    "mass_rotation_rate_limit_per_minute": 20,
+    "dependency_order": ["trust-bundle", "issuer", "broker", "consumer", "revoke-old"]
+  },
+  "recovery": {
+    "openbao_required_for_roots": false,
+    "spire_required_for_roots": false,
+    "public_dns_required": false,
+    "original_cloud_required": false,
+    "offline_policy_copy": true,
+    "offline_encrypted_secret_export": true,
+    "last_clean_host_recovery_age_days": 14,
+    "trained_operators": 2,
+    "restore_order": ["identity-roots", "workload-identity", "secret-broker", "consumers"]
+  },
+  "evidence": {
+    "machine_generated": true,
+    "signed": true,
+    "policy_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "identity_registry_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "trust_bundle_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "attestation_result": true,
+    "lease_and_revocation_result": true,
+    "audit_continuity_result": true,
+    "rotation_result": true,
+    "recovery_result": true,
+    "operator_signatures": 2,
+    "retention_days": 2555
+  }
+}
