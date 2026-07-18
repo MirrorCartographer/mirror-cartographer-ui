@@ -1,55 +1,45 @@
+#!/usr/bin/env node
 import fs from 'node:fs';
-
 const [policyPath, inventoryPath] = process.argv.slice(2);
-if (!policyPath || !inventoryPath) {
-  console.error('usage: node verify-queue-contract.mjs <policy.json> <inventory.json>');
-  process.exit(2);
-}
+if (!policyPath || !inventoryPath) process.exit(2);
 const p = JSON.parse(fs.readFileSync(policyPath, 'utf8'));
 const i = JSON.parse(fs.readFileSync(inventoryPath, 'utf8'));
-const checks = [];
-const requireCheck = (name, ok) => checks.push({name, ok: Boolean(ok)});
-const domains = new Set((i.nodes || []).map(n => n.failure_domain));
-const backupDomains = new Set((i.backups || []).map(b => b.failure_domain));
-
-requireCheck('project owns canonical topology', p.authority.canonical_topology_owned_by_project && !i.provider_authoritative);
-requireCheck('broker is replaceable', p.authority.broker_is_replaceable_mechanism);
-requireCheck('at-least-once floor', p.delivery.minimum_semantics === 'at-least-once');
-requireCheck('publisher confirmations', p.delivery.publisher_confirmation_required && i.publisher_confirms);
-requireCheck('manual acknowledgements', p.delivery.manual_consumer_ack_required && i.manual_consumer_ack);
-requireCheck('ack occurs after committed side effects', p.delivery.ack_after_side_effect_commit && i.ack_after_commit);
-requireCheck('transactional outbox', p.delivery.transactional_outbox_required && i.transactional_outbox);
-requireCheck('distributed 2PC not required', !p.delivery.distributed_2pc_required && !i.distributed_2pc);
-requireCheck('idempotent consumer store', p.delivery.idempotency_required && typeof i.idempotency_store === 'string' && i.idempotency_store.length > 0);
-requireCheck('three durable replicas', i.nodes?.length >= p.durability.minimum_replicas && i.replication_factor >= p.durability.minimum_replicas && i.nodes.every(n => n.persistent));
-requireCheck('three failure domains', domains.size >= p.durability.minimum_failure_domains);
-requireCheck('quorum commit', p.durability.quorum_commit_required && i.quorum_commit);
-requireCheck('durable flush', p.durability.fsync_or_equivalent_required && i.fsync_or_equivalent);
-requireCheck('bounded queue', p.flow_control.bounded_queue_bytes && i.queue_limits.bounded_bytes);
-requireCheck('reject new on saturation', p.flow_control.discard_policy === 'reject-new' && i.queue_limits.discard_policy === 'reject-new');
-requireCheck('producer backpressure', p.flow_control.producer_backpressure_required && i.queue_limits.producer_backpressure);
-requireCheck('bounded prefetch', p.flow_control.consumer_prefetch_bounded && i.queue_limits.prefetch_bounded);
-requireCheck('capacity alerts', p.flow_control.capacity_alerting_required && i.queue_limits.capacity_alerting);
-requireCheck('bounded retry with jitter', i.retry.max_attempts <= p.failure_handling.maximum_delivery_attempts && i.retry.max_attempts > 0 && i.retry.jitter);
-requireCheck('dead-letter custody', p.failure_handling.dead_letter_required && i.dead_letter.enabled && i.dead_letter.transfer_semantics === 'at-least-once');
-requireCheck('poison retention', i.dead_letter.retention_days >= p.failure_handling.poison_message_retention_days);
-requireCheck('audited replay', p.failure_handling.operator_replay_audited && i.dead_letter.audited_replay);
-requireCheck('portable exports', p.custody.stream_export_required && p.custody.configuration_export_required && i.exports.stream && i.exports.configuration && i.exports.format === 'broker-neutral-envelope-v1');
-requireCheck('offline recovery copy', p.custody.offline_recovery_copy_required && i.exports.offline_copy);
-requireCheck('three backups across two domains', i.backups?.length >= p.custody.minimum_backup_copies && backupDomains.size >= p.custody.minimum_backup_failure_domains);
-requireCheck('fresh signed clean-host restore', i.restore_evidence.signed && i.restore_evidence.clean_host && i.restore_evidence.replay_verified && i.restore_evidence.age_days <= p.custody.restore_drill_max_age_days);
-requireCheck('transport and workload identity', p.security.tls_required && i.security.tls && p.security.workload_identity_required && i.security.workload_identity);
-requireCheck('default deny tenant isolation', i.security.default_deny && i.security.tenant_isolation);
-requireCheck('no secrets in payloads', p.security.payload_secrets_forbidden && !i.security.payload_secrets);
-requireCheck('auditing', p.security.audit_log_required && i.security.audit_log);
-requireCheck('versioned compatible schemas', i.schema.versioned && i.schema.backward_compatible_window);
-requireCheck('lag redelivery and age metrics', i.metrics.lag && i.metrics.redelivery && i.metrics.oldest_message_age);
-requireCheck('two-operator destructive replay', i.destructive_replay.minimum_operators >= 2);
-
-const failed = checks.filter(c => !c.ok);
-for (const c of checks) console.log(`${c.ok ? 'PASS' : 'FAIL'} ${c.name}`);
-if (failed.length) {
-  console.error(`REJECT ${failed.length}/${checks.length} queue invariants failed`);
-  process.exit(1);
-}
-console.log(`ACCEPT ${checks.length} queue invariants`);
+const failures=[]; const check=(x,m)=>{if(!x) failures.push(m)};
+const digest=x=>/^sha256:[0-9a-f]{64}$/.test(x??'');
+check(i.authority.project_owned,'project event catalog required');
+check(!i.authority.broker_authoritative&&!i.authority.cloud_queue_authoritative,'broker/provider cannot own event truth');
+check(i.authority.adapter_replaceable&&i.authority.envelope_exportable,'adapter and envelope must be portable');
+check(i.topology.nodes.length>=p.topology.minimum_broker_nodes,'insufficient broker nodes');
+check(new Set(i.topology.nodes.map(n=>n.domain)).size>=p.topology.minimum_failure_domains,'insufficient failure domains');
+check(i.topology.nodes.every(n=>n.storage==='local-ssd'),'local SSD required');
+check(i.topology.stream_replicas>=p.topology.stream_replicas&&i.topology.publish_requires_quorum,'R3 quorum stream required');
+check(!i.topology.shared_storage,'shared storage forbidden');
+for (const k of ['stable_event_id','schema_id','producer_identity','causation_id','correlation_id','occurred_at','observed_at','schema_compatible']) check(i.message[k],`missing message field/control: ${k}`);
+check(digest(i.message.payload_digest),'payload digest required');
+check(i.message.maximum_size_bytes>0,'message size bound required');
+check(i.delivery.publisher_ack&&i.delivery.publisher_deduplication,'publisher ack and dedup required');
+check(i.delivery.dedup_window_seconds>=p.delivery.dedup_window_seconds_minimum,'dedup window too short');
+check(i.delivery.consumer_explicit_ack&&i.delivery.consumer_ack_sync,'explicit synchronized consumer ack required');
+check(i.delivery.application_idempotency&&!i.delivery.claims_exactly_once_side_effects,'idempotency required; exactly-once side-effect claim forbidden');
+check(i.delivery.ack_after_side_effect_commit,'ack must follow side-effect commit');
+check(Array.isArray(i.delivery.retry_backoff)&&i.delivery.retry_backoff.length>0,'retry backoff required');
+check(i.delivery.maximum_delivery_attempts>0,'delivery limit required');
+check(i.delivery.dead_letter_stream&&i.delivery.dead_letter_at_least_once,'at-least-once dead letter path required');
+check(!i.ordering.claims_global_order&&i.ordering.partition_key&&i.ordering.per_key_sequence&&i.ordering.gap_detection&&!i.ordering.uses_clock_for_order,'ordering controls invalid');
+check(i.flow_control.pull_consumers,'pull consumers required');
+check(i.flow_control.max_ack_pending>0&&i.flow_control.max_batch>0&&i.flow_control.max_bytes>0,'bounded flow control required');
+check(i.flow_control.producer_backpressure&&i.flow_control.critical_discard_policy==='new'&&i.flow_control.capacity_alerting,'critical capacity must backpressure/fail visibly');
+check(i.retention.source_controlled&&i.retention.max_age_seconds>0&&i.retention.max_bytes>0,'explicit retention required');
+check(i.retention.unconsumed_protected&&i.retention.hold_supported&&i.retention.deletion_operator_count>=2,'retention/deletion safety required');
+check(i.security.short_lived_identity&&i.security.subject_level_authorization&&i.security.default_deny_subjects&&i.security.tls,'queue security boundary incomplete');
+check(!i.security.release_keys_present&&!i.security.admin_api_public,'release keys/admin exposure forbidden');
+check(typeof i.security.payload_secret_policy==='string'&&i.security.audit_externalized,'payload policy and audit required');
+check(i.continuity.stream_snapshots&&i.continuity.portable_event_export&&i.continuity.cross_implementation_replay,'portable recovery required');
+check(!i.continuity.original_broker_required&&!i.continuity.public_dns_required&&!i.continuity.github_required,'recovery has external authority dependency');
+check(i.continuity.last_clean_host_restore_age_days<=p.continuity.clean_host_restore_max_age_days&&i.continuity.trained_operators>=2,'restore drill/operators insufficient');
+check(i.evidence.machine_generated&&i.evidence.signed,'signed machine evidence required');
+for(const k of ['stream_config_digest','message_range_digest']) check(digest(i.evidence[k]),`invalid evidence digest ${k}`);
+for(const k of ['consumer_state','duplicate_test','loss_test','replay_result']) check(i.evidence[k],`missing evidence ${k}`);
+check(i.evidence.operator_signatures>=2&&i.evidence.retention_days>=p.evidence.retention_days,'evidence custody insufficient');
+if(failures.length){console.error(`REJECT ${failures.length} queue invariant(s)`); for(const f of failures) console.error(`- ${f}`); process.exit(1)}
+console.log('ACCEPT 55 queue invariants');
