@@ -1,84 +1,112 @@
 {
   "schema_version": 1,
   "authority": {
-    "canonical_recovery_catalog_owned_by_project": true,
-    "backup_implementation_replaceable": true,
-    "provider_may_be_sole_recovery_authority": false,
-    "replication_is_backup": false,
-    "snapshot_is_backup": false
+    "project_owned_recovery_catalog": true,
+    "backup_tool_authoritative": false,
+    "cloud_snapshot_authoritative": false,
+    "provider_backup_catalog_authoritative": false,
+    "restore_plan_exportable": true,
+    "backup_adapters_replaceable": true,
+    "canonical_recovery_evidence_project_custody": true
   },
-  "scope": {
+  "classification": {
     "all_durable_datasets_classified": true,
-    "dependency_order_recorded": true,
-    "recovery_tiers_required": true,
-    "maximum_tolerable_data_loss_defined": true,
-    "maximum_tolerable_downtime_defined": true
-  },
-  "capture": {
-    "application_consistent_for_stateful_services": true,
-    "database_native_backup_required": true,
-    "continuous_database_wal_archive_required": true,
-    "configuration_and_schema_captured": true,
-    "identity_and_trust_roots_captured_separately": true,
-    "backup_success_requires_catalog_commit": true
+    "rpo_rto_per_dataset_required": true,
+    "dependency_graph_required": true,
+    "consistency_method_required": true,
+    "retention_class_required": true,
+    "legal_hold_supported": true,
+    "unknown_dataset_fails_closed": true
   },
   "custody": {
-    "minimum_complete_copies": 3,
-    "minimum_failure_domains": 2,
+    "minimum_copies": 3,
+    "minimum_failure_domains": 3,
+    "minimum_administrative_domains": 2,
+    "offline_or_logically_airgapped_copy_required": true,
     "immutable_copy_required": true,
-    "offline_copy_required": true,
-    "project_controlled_copy_required": true,
-    "same_credentials_may_delete_all_copies": false,
-    "public_dns_required_for_restore": false,
-    "original_provider_required_for_restore": false
+    "cross_implementation_copy_required": true,
+    "same_credentials_all_copies_forbidden": true,
+    "same_encryption_key_path_all_copies_forbidden": true,
+    "original_provider_not_sole_recovery_path": true
   },
   "integrity": {
-    "cryptographic_manifest_required": true,
-    "manifest_signed": true,
-    "full_data_read_check_max_age_days": 30,
-    "sample_restore_max_age_days": 7,
+    "content_digests_required": true,
+    "signed_manifests_required": true,
+    "full_read_verification_days": 30,
+    "metadata_reconciliation_required": true,
     "corruption_injection_required": true,
-    "repair_may_modify_only_noncanonical_copy": true
+    "silent_partial_restore_forbidden": true,
+    "backup_success_status_not_sufficient": true
   },
-  "retention": {
-    "source_controlled_policy": true,
-    "dry_run_before_deletion": true,
-    "two_operator_destructive_authority": true,
-    "append_only_writer_credentials": true,
-    "maintenance_credentials_separate": true,
-    "legal_or_incident_hold_supported": true
+  "database": {
+    "physical_base_backup_required": true,
+    "continuous_wal_archive_required": true,
+    "wal_continuity_verified": true,
+    "logical_export_required": true,
+    "timeline_history_retained": true,
+    "pitr_target_tested": true,
+    "restore_without_ha_controller_required": true
+  },
+  "queue": {
+    "broker_snapshot_required": true,
+    "portable_event_export_required": true,
+    "consumer_state_export_required": true,
+    "cross_broker_replay_required": true,
+    "event_digest_reconciliation_required": true
+  },
+  "objects": {
+    "versions_preserved": true,
+    "delete_markers_preserved": true,
+    "retention_state_preserved": true,
+    "referrer_graph_preserved": true,
+    "portable_inventory_required": true
+  },
+  "secrets_identity": {
+    "encrypted_backup_required": true,
+    "key_recovery_separate_from_backup_storage": true,
+    "root_material_offline_required": true,
+    "threshold_recovery_required": true,
+    "restore_ceremony_tested": true,
+    "release_keys_excluded": true
+  },
+  "deletion": {
+    "backup_writer_cannot_delete": true,
+    "two_operator_expiration_required": true,
+    "minimum_grace_hours": 48,
+    "hold_check_required": true,
+    "last_known_good_restore_required_before_expiration": true,
+    "ransomware_mass_delete_detection": true
   },
   "restore": {
-    "clean_host_required": true,
-    "cross_implementation_required": true,
-    "semantic_validation_required": true,
+    "clean_room_required": true,
+    "network_isolation_initially_required": true,
+    "malware_scan_before_promotion": true,
+    "semantic_verification_required": true,
     "dependency_order_enforced": true,
-    "restore_evidence_signed": true,
-    "restore_drill_max_age_days": 30,
-    "bare_catalog_reconstruction_required": true
+    "partial_restore_explicitly_scoped": true,
+    "restore_target_noncanonical_until_acceptance": true,
+    "promotion_requires_signed_decision": true
   },
-  "disaster_recovery": {
-    "total_site_loss_tested": true,
-    "control_plane_loss_tested": true,
+  "dr": {
+    "site_loss_tested": true,
+    "provider_loss_tested": true,
     "credential_loss_tested": true,
-    "dns_and_ca_loss_tested": true,
-    "communications_runbook_offline": true,
-    "minimum_trained_operators": 2,
-    "decision_log_required": true
-  },
-  "security": {
-    "encryption_at_rest_required": true,
-    "encryption_in_transit_required": true,
-    "backup_keys_separate_from_storage_admin": true,
-    "release_keys_forbidden_on_backup_workers": true,
-    "restore_environment_isolated": true,
-    "secret_values_redacted_from_evidence": true
+    "dns_loss_tested": true,
+    "backup_catalog_loss_tested": true,
+    "key_service_loss_tested": true,
+    "operator_unavailability_tested": true,
+    "maximum_drill_age_days": 90,
+    "minimum_trained_operators": 2
   },
   "evidence": {
     "machine_generated": true,
-    "contains_object_digests": true,
-    "contains_restore_point": true,
-    "contains_observed_rpo_rto": true,
+    "signed": true,
+    "contains_catalog_digest": true,
+    "contains_backup_manifest_digests": true,
+    "contains_restore_graph_digest": true,
+    "contains_rpo_measurement": true,
+    "contains_rto_measurement": true,
+    "contains_semantic_verification": true,
     "contains_operator_signatures": true,
     "retention_days": 2555
   }
