@@ -99,7 +99,7 @@ function verifyAuthorization(auth, publicKeyPem) {
   if (key.asymmetricKeyType !== 'ed25519') fail('public key must be Ed25519');
   const valid = verifySignature(null, Buffer.from(canonical(signed)), key, Buffer.from(auth.signature, 'base64'));
   if (!valid) fail('authorization signature invalid');
-  return digest(Buffer.from(canonical(signed)));
+  return { authorizationContentIdentity: digest(Buffer.from(canonical(signed))), publicKeySha256: digest(Buffer.from(publicKeyPem)) };
 }
 function arbitrate(transactions, auth, activeIndexSha256) {
   const byId = new Map(transactions.map((item) => [item.transactionId, item]));
@@ -163,9 +163,9 @@ export async function planStartupRecoveryV2({ registry, authorization, publicKey
   const transactions = []; for (const id of transactionIds) transactions.push(await loadTransaction(registry, id));
   const auth = await readJson(authorization, 'authorization'); validateAuthorization(auth.value);
   const publicKeyBytes = await readFile(publicKey);
-  const authorizationContentIdentity = verifyAuthorization(auth.value, publicKeyBytes);
+  const { authorizationContentIdentity, publicKeySha256 } = verifyAuthorization(auth.value, publicKeyBytes);
   const arbitration = arbitrate(transactions, auth.value, activeIndexSha256);
-  const core = { schema: OUTPUT_SCHEMA, activeIndexSha256, authorizationContentIdentity, keyId: auth.value.keyId, action: arbitration.action, selectedTransactionId: arbitration.selectedTransactionId, orderedTransactionIds: arbitration.orderedTransactionIds, archivedSupersededTransactionIds: arbitration.archivedSupersededTransactionIds, transactions: [...transactions].sort((a,b) => a.transactionId.localeCompare(b.transactionId)), orphanQuarantines: [], policy: POLICY };
+  const core = { schema: OUTPUT_SCHEMA, activeIndexSha256, authorizationContentIdentity, publicKeySha256, keyId: auth.value.keyId, action: arbitration.action, selectedTransactionId: arbitration.selectedTransactionId, orderedTransactionIds: arbitration.orderedTransactionIds, archivedSupersededTransactionIds: arbitration.archivedSupersededTransactionIds, transactions: [...transactions].sort((a,b) => a.transactionId.localeCompare(b.transactionId)), orphanQuarantines: [], policy: POLICY };
   const evidence = { ...core, identity: digest(Buffer.from(canonical(core))) };
   await writeExclusive(output, Buffer.from(canonical(evidence)));
   return evidence;
