@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { promises as fs } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { materialize } from './fia-dependency-materialize.mjs';
+const sri=b=>`sha512-${createHash('sha512').update(b).digest('base64')}`;
+async function fixture(opts={}){const root=await fs.mkdtemp(path.join(os.tmpdir(),'fia-deps-'));const cache=path.join(root,'cache');await fs.mkdir(cache);const tar=Buffer.from(opts.bytes||'package-one');const pkg={version:'1.0.0',resolved:opts.resolved||'https://registry.npmjs.org/pkg/-/pkg-1.0.0.tgz',integrity:opts.integrity||sri(tar),hasInstallScript:!!opts.script};const lock={name:'x',lockfileVersion:3,packages:{'':{},'node_modules/pkg':pkg}};await fs.writeFile(path.join(root,'package-lock.json'),JSON.stringify(lock));if(!opts.missing)await fs.writeFile(path.join(cache,'pkg-1.0.0.tgz'),tar);return {root,cache,lock:path.join(root,'package-lock.json'),out:path.join(root,'out')}}
+test('materializes verified package into content-addressed offline cache',async()=>{const f=await fixture();const e=await materialize({lockfile:f.lock,sourceCache:f.cache,output:f.out,nodeVersion:'v22.0.0',npmVersion:'10.0.0'});assert.equal(e.packages.length,1);assert.equal(e.policy.offlineOnly,true);assert.ok(await fs.readFile(path.join(f.out,'materialization.json'),'utf8'));});
+test('equivalent inputs produce identical identity',async()=>{const a=await fixture(),b=await fixture();const x=await materialize({lockfile:a.lock,sourceCache:a.cache,output:a.out,nodeVersion:'v22',npmVersion:'10'});const y=await materialize({lockfile:b.lock,sourceCache:b.cache,output:b.out,nodeVersion:'v22',npmVersion:'10'});assert.equal(x.identity,y.identity);});
+test('rejects cache poisoning',async()=>{const f=await fixture({integrity:sri(Buffer.from('expected'))});await assert.rejects(()=>materialize({lockfile:f.lock,sourceCache:f.cache,output:f.out}),/integrity mismatch/);assert.equal(await fs.stat(f.out).then(()=>true,()=>false),false)});
+test('rejects network and git authority',async()=>{for(const resolved of ['http://registry.npmjs.org/pkg.tgz','git+https://github.com/x/y.git','https://evil.example/pkg.tgz']){const f=await fixture({resolved});await assert.rejects(()=>materialize({lockfile:f.lock,sourceCache:f.cache,output:f.out}),/unauthorized dependency source/)}});
+test('rejects lifecycle scripts and missing offline objects',async()=>{const a=await fixture({script:true});await assert.rejects(()=>materialize({lockfile:a.lock,sourceCache:a.cache,output:a.out}),/lifecycle script rejected/);const b=await fixture({missing:true});await assert.rejects(()=>materialize({lockfile:b.lock,sourceCache:b.cache,output:b.out}),/offline cache miss/)});
+test('existing output is immutable',async()=>{const f=await fixture();await fs.mkdir(f.out);await fs.writeFile(path.join(f.out,'sentinel'),'keep');await assert.rejects(()=>materialize({lockfile:f.lock,sourceCache:f.cache,output:f.out}),/output exists/);assert.equal(await fs.readFile(path.join(f.out,'sentinel'),'utf8'),'keep')});
