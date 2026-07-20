@@ -47,7 +47,13 @@ test('existing evidence fails before execution',async()=>{
 });
 
 test('verification failure emits no success evidence',async()=>{
- const f=await fixture();
+ const f=await fixture();await fs.mkdir(f.out);
  await assert.rejects(()=>executeAccountedWorker({cgroupDir:f.cg,command:[process.execPath,'-e','process.exit(0)'],outputDir:f.out,evidencePath:f.ev,verifyOutput:async()=>({ok:false}),simulateCgroup:true}),/verification failed/);
+ assert.equal(await fs.stat(f.ev).then(()=>true,()=>false),false);await fs.rm(f.root,{recursive:true,force:true});
+});
+
+test('output mutation during verification is rejected',async()=>{
+ const f=await fixture();await fs.mkdir(f.out);await fs.writeFile(path.join(f.out,'artifact'),'before');
+ await assert.rejects(()=>executeAccountedWorker({cgroupDir:f.cg,command:[process.execPath,'-e','process.exit(0)'],outputDir:f.out,evidencePath:f.ev,simulateCgroup:true,verifyOutput:async()=>{await fs.writeFile(path.join(f.out,'artifact'),'after');return {ok:true}}}),/mutated during verification/);
  assert.equal(await fs.stat(f.ev).then(()=>true,()=>false),false);await fs.rm(f.root,{recursive:true,force:true});
 });
