@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+import { createHash, randomUUID } from 'node:crypto';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+const PLAN='foundation.build.cas-reachability-plan.v1';
+const JOURNAL='foundation.build.cas-reachability-journal.v1';
+const EVIDENCE='foundation.build.cas-reachability-quarantine.v1';
+const hash=b=>`sha256:${createHash('sha256').update(b).digest('hex')}`;
+const canon=v=>JSON.stringify(v,(_,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b))):x);
+async function exists(p){try{await fs.access(p);return true}catch(e){if(e.code==='ENOENT')return false;throw e}}
+async function syncDir(p){const h=await fs.open(p,'r');try{await h.sync()}finally{await h.close()}}
+async function writeExclusive(p,v){await fs.mkdir(path.dirname(p),{recursive:true});const h=await fs.open(p,'wx',0o600);try{await h.writeFile(canon(v)+'\n');await h.sync()}finally{await h.close()}await syncDir(path.dirname(p))}
+function safeDigest(x){if(!/^sha256:[0-9a-f]{64}$/.test(x))throw Error(`invalid digest: ${x}`);return x}
+function objectName(x){return safeDigest(x).slice(7)}
+async function verifyObject(p,digest,size){const s=await fs.lstat(p);if(!s.isFile()||s.isSymbolicLink())throw Error(`invalid CAS object: ${p}`);if(s.nlink!==1)throw Error(`hard-linked CAS object rejected: ${p}`);if(size!=null&&s.size!==size)throw Error(`CAS size mismatch: ${p}`);if(hash(await fs.readFile(p))!==digest)throw Error(`CAS digest mismatch: ${p}`);return s}
+function manifestAuthority(m){return {schema:m.schema,sourceExecutionIdentity:m.sourceExecutionIdentity,sourceOutputIdentity:m.sourceOutputIdentity,files:m.files,objects:m.objects,policy:m.policy}}
+async function loadManifests(dir){if(!await exists(dir))return [];const out=[];for(const n of (await fs.readdir(dir)).filter(x=>x.endsWith('.json')).sort()){const p=path.join(dir,n),m=JSON.parse(await fs.readFile(p,'utf8'));if(m.schema!=='foundation.build.worker-cas-manifest.v1')throw Error(`unsupported manifest: ${n}`);if(m.identity!==hash(Buffer.from(canon(manifestAuthority(m)))))throw Error(`manifest identity mismatch: ${n}`);const seen=new Set();for(const o of m.objects){safeDigest(o.digest);if(seen.has(o.digest))throw Error(`duplicate manifest object: ${o.digest}`);seen.add(o.digest)}out.push({name:n,path:p,manifest:m});}return out}
+async function loadJournalClaims(dir){if(!dir||!await exists(dir))return new Set();const claims=new Set();for(const n of (await fs.readdir(dir)).filter(x=>x.endsWith('.json')).sort()){const j=JSON.parse(await fs.readFile(path.join(dir,n),'utf8'));for(const d of j.claimedObjectDigests||[])claims.add(safeDigest(d));}return claims}
+export async function quarantineUnreachableCas({casRoot,journalDir,evidencePath,quarantineId=`reach-${randomUUID()}`,fault}={}){
+ if(!casRoot||!evidencePath)throw Error('casRoot and evidencePath required');if(await exists(evidencePath))throw Error('evidence exists');
+ const manifestDir=path.join(casRoot,'manifests'),objectDir=path.join(casRoot,'objects','sha256'),qRoot=path.join(casRoot,'quarantine',quarantineId),planPath=path.join(qRoot,'plan.json'),journalPath=path.join(qRoot,'journal.json');
+ if(await exists(qRoot))throw Error('quarantine transaction exists');const manifests=await loadManifests(manifestDir),reachable=new Map();
+ for(const {manifest:m} of manifests)for(const o of m.objects){await verifyObject(path.join(objectDir,objectName(o.digest)),o.digest,o.size);reachable.set(o.digest,o.size)}
+ const claimed=await loadJournalClaims(journalDir),all=[];if(await exists(objectDir))for(const n of (await fs.readdir(objectDir)).sort()){if(!/^[0-9a-f]{64}$/.test(n))throw Error(`unexpected CAS filename: ${n}`);const digest=`sha256:${n}`,s=await verifyObject(path.join(objectDir,n),digest,null);all.push({digest,size:s.size})}
+ const orphan=all.filter(o=>!reachable.has(o.digest)&&!claimed.has(o.digest));const authority={schema:PLAN,manifests:manifests.map(x=>({name:x.name,identity:x.manifest.identity})),reachableDigests:[...reachable.keys()].sort(),claimedDigests:[...claimed].sort(),orphanObjects:orphan,policy:{manifestClosureVerified:true,activeJournalClaimsReserved:true,hardLinksRejected:true,rollbackMapRetained:true,providerNeutral:true}};const plan={...authority,identity:hash(Buffer.from(canon(authority)))};
+ await fs.mkdir(path.join(qRoot,'objects'),{recursive:true});await writeExclusive(planPath,plan);let journal={schema:JOURNAL,planIdentity:plan.identity,phase:'moving',moved:[]};await writeExclusive(journalPath,journal);
+ try{for(const o of orphan){const name=objectName(o.digest),src=path.join(objectDir,name),dst=path.join(qRoot,'objects',name);await fs.rename(src,dst);journal={...journal,moved:[...journal.moved,o.digest]};const t=`${journalPath}.tmp`;await fs.writeFile(t,canon(journal)+'\n');await fs.rename(t,journalPath);await syncDir(objectDir);await syncDir(path.dirname(dst));if(fault==='after-first-move'&&journal.moved.length===1)throw Error('injected failure');}
+  for(const o of orphan)await verifyObject(path.join(qRoot,'objects',objectName(o.digest)),o.digest,o.size);for(const {manifest:m} of manifests)for(const o of m.objects)await verifyObject(path.join(objectDir,objectName(o.digest)),o.digest,o.size);
+  journal={...journal,phase:'committed'};await fs.writeFile(journalPath,canon(journal)+'\n');await syncDir(qRoot);const a={schema:EVIDENCE,planIdentity:plan.identity,quarantineId,quarantinedObjects:orphan,reachableCount:reachable.size,claimedCount:claimed.size,verification:{allManifestsRetainClosure:true,quarantineObjectsVerified:true,rollbackMapRetained:true},policy:authority.policy};const e={...a,contentIdentity:hash(Buffer.from(canon(a))),operationalId:`cas-quarantine-${randomUUID()}`};await writeExclusive(evidencePath,e);return e;
+ }catch(e){for(const d of [...journal.moved].reverse()){const name=objectName(d),src=path.join(qRoot,'objects',name),dst=path.join(objectDir,name);if(await exists(src)&&!await exists(dst))await fs.rename(src,dst)}await fs.rm(qRoot,{recursive:true,force:true});throw e}
+}
+if(import.meta.url===`file://${process.argv[1]}`){const a=Object.fromEntries(process.argv.slice(2).reduce((r,x,i,v)=>x.startsWith('--')?(r.push([x.slice(2),v[i+1]]),r):r,[]));quarantineUnreachableCas({casRoot:a.cas,journalDir:a.journals,evidencePath:a.evidence,quarantineId:a.id}).then(x=>console.log(x.contentIdentity)).catch(e=>{console.error(e.message);process.exit(1)})}
