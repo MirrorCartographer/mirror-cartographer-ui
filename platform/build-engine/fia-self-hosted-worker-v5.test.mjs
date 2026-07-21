@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { promises as fs } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { executeWorkerV5, recoverWorkerStartup } from './fia-self-hosted-worker-v5.mjs';
+const hash=b=>`sha256:${createHash('sha256').update(b).digest('hex')}`;
+const canon=v=>JSON.stringify(v,(_,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b))):x);
+const mk=async()=>{const r=await fs.mkdtemp(path.join(os.tmpdir(),'fia-v5-'));for(const d of ['journals','ev','out','cas'])await fs.mkdir(path.join(r,d),{recursive:true});return r};
+function journal(id,src,manifest=`manifests/${src}.json`){const j={schema:'foundation.build.self-hosted-worker-transaction-journal.v2',transactionId:id,sourceExecutionIdentity:src,manifestPath:manifest,phase:'prepared',workerOutputIdentity:null,workerContentIdentity:null,casManifestIdentity:null,v4ContentIdentity:null,paths:{output:'out',cas:'cas',workerEvidence:'ev/w.json',casEvidence:'ev/c.json',v4Evidence:'ev/v4.json'},policy:{journalBeforeWorker:true,manifestIsCommitBoundary:true,startupRecoveryRequired:true,providerNeutral:true,reversible:true}};j.identity=hash(Buffer.from(canon(j)));return j}
+test('startup recovery is deterministic and ordered',async()=>{const r=await mk();for(const [id,src] of [['b','s2'],['a','s1']])await fs.writeFile(path.join(r,'journals',id+'.json'),canon(journal(id,src)));const e=await recoverWorkerStartup({journalDir:path.join(r,'journals'),rootDir:r,evidencePath:path.join(r,'startup.json'),recover:async o=>{await fs.rm(o.journalPath);return {action:'x',contentIdentity:'y'}}});assert.deepEqual(e.transactions.map(x=>x.transactionId),['a','b'])});
+test('duplicate source identity fails before recovery',async()=>{const r=await mk();for(const id of ['a','b'])await fs.writeFile(path.join(r,'journals',id+'.json'),canon(journal(id,'same',`manifests/${id}.json`)));let calls=0;await assert.rejects(()=>recoverWorkerStartup({journalDir:path.join(r,'journals'),rootDir:r,evidencePath:path.join(r,'s.json'),recover:async()=>{calls++}}),/duplicate source identity/);assert.equal(calls,0)});
+test('duplicate manifest target fails before recovery',async()=>{const r=await mk();for(const [id,src] of [['a','s1'],['b','s2']])await fs.writeFile(path.join(r,'journals',id+'.json'),canon(journal(id,src,'manifests/shared.json')));await assert.rejects(()=>recoverWorkerStartup({journalDir:path.join(r,'journals'),rootDir:r,evidencePath:path.join(r,'s.json'),recover:async()=>{}}),/duplicate manifest target/)});
+test('journal validation rejects substitution',async()=>{const r=await mk(),j=journal('a','s1');j.phase='manifest-committed';await fs.writeFile(path.join(r,'journals','a.json'),canon(j));await assert.rejects(()=>recoverWorkerStartup({journalDir:path.join(r,'journals'),rootDir:r,evidencePath:path.join(r,'s.json'),recover:async()=>{}}),/journal identity mismatch/)});
