@@ -1,0 +1,31 @@
+name: Lyr ARC-AGI-1 Evaluation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'arc1/**'
+      - '.github/workflows/arc1-eval.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch official ARC-AGI-1 benchmark
+        run: git clone --depth 1 https://github.com/fchollet/ARC-AGI.git "$RUNNER_TEMP/ARC-AGI"
+      - name: Run Lyr candidate-program engine
+        run: |
+          python arc1/lyr_arc1_solver.py "$RUNNER_TEMP/ARC-AGI/data/evaluation" --report arc1_report.json | tee arc1_result.txt
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lyr-arc1-evaluation-${{ github.run_number }}
+          path: |
+            arc1_report.json
+            arc1_result.txt
+          retention-days: 90
