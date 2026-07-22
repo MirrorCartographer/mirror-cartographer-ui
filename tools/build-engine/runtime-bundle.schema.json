@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foundation.invalid/schemas/fia.runtime-bundle.v1.json",
+  "title": "Foundation Runtime Bundle Manifest",
+  "type": "object",
+  "required": ["schema", "release", "source_digest", "entrypoint", "files", "runtime", "bundle_digest"],
+  "properties": {
+    "schema": {"const": "fia.runtime-bundle.v1"},
+    "release": {
+      "type": "object",
+      "required": ["id", "provider", "created_epoch"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "provider": {"type": "null"},
+        "created_epoch": {"const": 0}
+      },
+      "additionalProperties": false
+    },
+    "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "entrypoint": {"const": "site/index.html"},
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "size", "mode", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "size": {"type": "integer", "minimum": 0},
+          "mode": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["kind", "base_path", "offline_export", "autoplay"],
+      "properties": {
+        "kind": {"const": "static"},
+        "base_path": {"const": "/"},
+        "offline_export": {"const": true},
+        "autoplay": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "bundle_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
