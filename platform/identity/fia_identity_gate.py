@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import argparse, hashlib, json, pathlib, re
+SHA=re.compile(r'^sha256:[0-9a-f]{64}$')
+HTTPS=re.compile(r'^https://[A-Za-z0-9.-]+(?::[0-9]+)?(?:/[A-Za-z0-9._~!$&\'()*+,;=:@%/-]*)?$')
+def c(v): return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+def d(v): return 'sha256:'+hashlib.sha256(c(v)).hexdigest()
+def stop(m): print(json.dumps({'status':'reject','reason':m},sort_keys=True)); raise SystemExit(1)
+def req(x,m):
+    if not x: stop(m)
+a=argparse.ArgumentParser(); a.add_argument('plan'); p=a.parse_args(); v=json.loads(pathlib.Path(p.plan).read_text())
+req(v.get('schema')=='fia.identity-authority.v1','schema')
+u=dict(v); supplied=u.pop('plan_digest',None); req(supplied==d(u),'plan digest mismatch')
+req(v.get('canonical_authority')=='foundation','canonical authority')
+r=v.get('runtime',{}); req(r.get('implementation')=='keycloak','runtime'); req(r.get('version_major')==26,'version'); req(r.get('database')=='postgresql','database'); req(r.get('nodes',0)>=2,'node redundancy')
+i=v.get('issuer',{}); req(bool(HTTPS.match(i.get('public_url',''))),'fixed HTTPS issuer'); req(i.get('hostname_strict') is True,'hostname strict'); req(i.get('dynamic_issuer') is False,'dynamic issuer'); req(i.get('discovery_path')=='/.well-known/openid-configuration','discovery path'); req(i.get('jwks_path')=='/protocol/openid-connect/certs','jwks path'); req(i.get('admin_public') is False,'public admin'); req(i.get('management_public') is False,'public management')
+p=v.get('reverse_proxy',{}); req(p.get('mode')=='reencrypt','proxy mode'); req(p.get('trusted_addresses_only') is True,'trusted proxies'); req(p.get('overwrite_forwarded_headers') is True,'forwarded headers'); req(p.get('exposes')==['/realms/','/resources/','/.well-known/'],'public path allowlist')
+k=v.get('signing_keys',{}); req(k.get('custody')=='foundation','key custody'); req(k.get('algorithm') in ('ES256','RS256'),'algorithm'); req(k.get('rotation_overlap_seconds',0)>=86400,'rotation overlap'); req(k.get('private_export_allowed') is False,'private export'); req(k.get('recovery_quorum',0)>=2,'recovery quorum')
+e=v.get('exports',{}); req(e.get('database_backup') is True,'database backup'); req(e.get('realm_cli_export') is True,'realm export'); req(e.get('configuration_export') is True,'config export'); req(e.get('client_inventory') is True,'client inventory'); req(e.get('role_mapping_inventory') is True,'role inventory'); req(e.get('credential_migration_plan') is True,'credential migration'); req(e.get('provider_neutral_format')=='fia.identity-export.v1','neutral export'); req(e.get('offline_copy') is True,'offline copy'); req(bool(SHA.match(e.get('export_digest',''))),'export digest')
+b=v.get('backup_restore',{}); req(b.get('database_restore_drill')=='pass','database restore'); req(b.get('realm_import_drill')=='pass','realm import'); req(b.get('issuer_continuity_check')=='pass','issuer continuity'); req(b.get('client_login_probe')=='pass','login probe'); req(b.get('second_operator') is True,'second operator')
+s=v.get('sessions',{}); req(s.get('provider_is_not_canonical') is True,'provider authority'); req(s.get('revocation_strategy')=='short-lived-access-plus-refresh-revocation','revocation'); req(s.get('access_token_max_seconds',10**9)<=900,'access token lifetime'); req(s.get('refresh_rotation') is True,'refresh rotation')
+deps={x.lower() for x in v.get('external_dependencies',[])}; req(not {'auth0','okta','clerk','firebase-auth','cognito'}.intersection(deps),'hosted identity dependency'); req('dns' in deps and 'certificate-authority' in deps,'hidden dependencies')
+print(json.dumps({'status':'accept','plan_digest':supplied,'issuer':i['public_url'],'nodes':r['nodes'],'export_digest':e['export_digest']},sort_keys=True))
