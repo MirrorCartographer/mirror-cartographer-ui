@@ -6,6 +6,10 @@ on:
     paths:
       - 'arc1/**'
       - '.github/workflows/arc1-eval.yml'
+  pull_request:
+    paths:
+      - 'arc1/**'
+      - '.github/workflows/arc1-eval.yml'
 
 permissions:
   contents: read
