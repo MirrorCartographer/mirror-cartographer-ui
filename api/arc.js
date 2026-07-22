@@ -4,15 +4,38 @@ function allowedPath(path) {
   return /^\/api\/(games|scorecard(?:\/.*)?|cmd\/(RESET|ACTION[1-7]))$/.test(path);
 }
 
+function sameOrigin(req) {
+  const origin = req.headers.origin;
+  const host = req.headers.host;
+  if (!origin || !host) return true;
+  try { return new URL(origin).host === host; } catch { return false; }
+}
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'POST only' });
+  res.setHeader('Cache-Control', 'no-store');
+
+  if (req.method === 'GET') {
+    res.status(200).json({
+      configured: Boolean(process.env.ARC_API_KEY),
+      mode: process.env.ARC_API_KEY ? 'server-secret' : 'browser-ephemeral',
+    });
     return;
   }
 
-  const { apiKey, path, method = 'GET', body = null, cookies = '' } = req.body || {};
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'GET or POST only' });
+    return;
+  }
+  if (!sameOrigin(req)) {
+    res.status(403).json({ error: 'Same-origin request required' });
+    return;
+  }
+
+  const { apiKey: ephemeralApiKey, path, method = 'GET', body = null, cookies = '' } = req.body || {};
+  const apiKey = process.env.ARC_API_KEY || ephemeralApiKey;
+
   if (!apiKey || typeof apiKey !== 'string') {
-    res.status(400).json({ error: 'ARC API key required' });
+    res.status(503).json({ error: 'ARC credential is not configured' });
     return;
   }
   if (!path || !allowedPath(path)) {
