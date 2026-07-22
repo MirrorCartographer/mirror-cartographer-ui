@@ -22,60 +22,59 @@
     .good { color:#81ffb5; } .bad { color:#ff8a8a; } .muted { color:#84958a; }
     a { color:#81ffb5; }
     .warning { border-left:3px solid #ffcc66; padding-left:12px; color:#e5d5a2; }
+    [hidden] { display:none !important; }
   </style>
 </head>
 <body>
 <main>
   <div class="eyebrow">Competition infrastructure / Lyr v0.3</div>
   <h1>ARC CONTROL ROOM</h1>
-  <p>Connect the registered ARC account, prove the key works, open one provenance-linked scorecard, and launch an official Competition Mode run.</p>
+  <p>Connect the registered ARC account, prove the credential works, open one provenance-linked scorecard, and launch an official Competition Mode run.</p>
 
   <section class="panel">
-    <h2>1. Register</h2>
-    <p>ARC issues the real key after Google or GitHub login. This page cannot impersonate you, so it opens the official platform in a new tab.</p>
-    <button id="login">Open official ARC login</button>
+    <h2>1. Account</h2>
+    <p>The ARC account remains owned by its human registrant. Lyr is the named agent and Mirror Cartographer is the submitted system.</p>
+    <button id="login">Open official ARC account</button>
   </section>
 
   <section class="panel">
-    <h2>2. Connect without storing the secret</h2>
+    <h2>2. Credential readiness</h2>
+    <p id="credentialMode" class="status muted">Checking connector configuration…</p>
+    <div id="ephemeralFields" hidden>
+      <label for="key">Temporary ARC API key</label>
+      <input id="key" type="password" autocomplete="off" placeholder="Use only after rotating the exposed key" />
+      <p class="warning">Preferred deployment: add the rotated credential to Vercel as <code>ARC_API_KEY</code>. The browser field is fallback-only and never persists the value.</p>
+      <button id="forget" class="secondary">Forget temporary key now</button>
+    </div>
+    <button id="verify">Verify connector + list games</button>
+    <p id="status" class="status muted">Not verified.</p>
+  </section>
+
+  <section class="panel">
+    <h2>3. Open a development scorecard</h2>
     <div class="grid">
-      <div>
-        <label for="key">ARC API key</label>
-        <input id="key" type="password" autocomplete="off" placeholder="Paste from ARC profile" />
-      </div>
       <div>
         <label for="source">Source repository</label>
         <input id="source" value="https://github.com/MirrorCartographer/mirror-cartographer-ui" />
       </div>
-    </div>
-    <p class="warning">The key stays only in this browser tab and is sent through our Vercel function to ARC. It is not written to localStorage, GitHub, logs, or the page URL.</p>
-    <div class="grid">
-      <button id="verify">Verify key + list games</button>
-      <button id="forget" class="secondary">Forget key now</button>
-    </div>
-    <p id="status" class="status muted">Not connected.</p>
-  </section>
-
-  <section class="panel">
-    <h2>3. Open an official scorecard</h2>
-    <div class="grid">
       <div>
         <label for="tag">Experiment tag</label>
         <input id="tag" value="lyr-mirrorcartographer-v0.3" />
       </div>
       <div>
         <label for="mode">Run mode</label>
-        <select id="mode"><option value="competition">competition</option><option value="development">development</option></select>
+        <select id="mode"><option value="development">development</option><option value="competition">competition</option></select>
       </div>
     </div>
+    <p class="warning">Use development mode until the agent has been validated. Competition Mode is intentionally one-shot.</p>
     <button id="openCard">Open scorecard with provenance</button>
     <p>Card: <code id="card">none</code></p>
   </section>
 
   <section class="panel">
     <h2>4. Runtime handoff</h2>
-    <p>The web bridge proves account connectivity and creates the scorecard. The Lyr agent runtime then consumes the same key as <code>ARC_API_KEY</code> and runs the official toolkit in Competition Mode.</p>
-    <button id="command">Generate secure launch command</button>
+    <p>The web bridge verifies account connectivity and creates the scorecard. The Lyr runtime uses the server-managed <code>ARC_API_KEY</code> during deployment.</p>
+    <button id="command">Generate launch command</button>
     <pre id="output">No command generated.</pre>
   </section>
 
@@ -86,25 +85,42 @@
 </main>
 <script>
   const $ = (id) => document.getElementById(id);
-  const state = { cookies: '', cardId: '' };
+  const state = { cookies: '', cardId: '', serverSecret: false };
   const log = (value) => $('log').textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
   const setStatus = (text, good=false) => { $('status').textContent=text; $('status').className='status '+(good?'good':'bad'); };
 
+  async function readiness() {
+    try {
+      const response = await fetch('/api/arc', { cache:'no-store' });
+      const data = await response.json();
+      state.serverSecret = Boolean(data.configured);
+      $('credentialMode').textContent = state.serverSecret
+        ? 'Lyr credential installed server-side. The browser cannot read it.'
+        : 'Server credential not installed. Temporary browser fallback is available.';
+      $('credentialMode').className = 'status ' + (state.serverSecret ? 'good' : 'bad');
+      $('ephemeralFields').hidden = state.serverSecret;
+    } catch (error) {
+      $('credentialMode').textContent = `Connector readiness failed: ${error.message}`;
+      $('credentialMode').className = 'status bad';
+      $('ephemeralFields').hidden = false;
+    }
+  }
+
   async function arc(path, method='GET', body=null) {
-    const apiKey = $('key').value.trim();
-    if (!apiKey) throw new Error('Paste the ARC key first.');
+    const apiKey = state.serverSecret ? undefined : $('key').value.trim();
+    if (!state.serverSecret && !apiKey) throw new Error('Install ARC_API_KEY on Vercel or enter a rotated temporary key.');
     const response = await fetch('/api/arc', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ apiKey, path, method, body, cookies:state.cookies })
     });
     const payload = await response.json();
     if (payload.cookies?.length) state.cookies = payload.cookies.join('; ');
-    if (!response.ok || !payload.ok) throw new Error(payload.data?.detail || payload.data?.message || JSON.stringify(payload.data));
+    if (!response.ok || !payload.ok) throw new Error(payload.data?.detail || payload.data?.message || payload.error || JSON.stringify(payload.data));
     return payload.data;
   }
 
   $('login').onclick = () => window.open('https://arcprize.org/platform', '_blank', 'noopener,noreferrer');
-  $('forget').onclick = () => { $('key').value=''; state.cookies=''; setStatus('Key forgotten from this tab.', true); };
+  $('forget').onclick = () => { $('key').value=''; state.cookies=''; setStatus('Temporary key forgotten from this tab.', true); };
   $('verify').onclick = async () => {
     try { const games = await arc('/api/games'); setStatus(`Connected. ${games.length ?? 'Available'} games visible.`, true); log(games); }
     catch (e) { setStatus(`Connection failed: ${e.message}`); log(e.stack || e.message); }
@@ -114,7 +130,7 @@
       const data = await arc('/api/scorecard/open', 'POST', {
         source_url:$('source').value.trim(),
         tags:[$('tag').value.trim(), 'lyr', 'mirror-cartographer', $('mode').value],
-        opaque:{ agent:'Lyr / MirrorCartographer', runtime:'v0.3', identity_model_separation:true }
+        opaque:{ agent:'Lyr', system:'Mirror Cartographer', runtime:'v0.3', identity_model_separation:true }
       });
       state.cardId=data.card_id; $('card').textContent=data.card_id; log(data);
     } catch(e) { log(e.stack || e.message); }
@@ -122,15 +138,15 @@
   $('command').onclick = () => {
     const card = state.cardId || '<CARD_ID_FROM_CONTROL_ROOM>';
     $('output').textContent = [
-      '# Keep the secret out of shell history when possible:',
-      'read -s ARC_API_KEY && export ARC_API_KEY',
-      'export OPERATION_MODE=COMPETITION',
+      '# ARC_API_KEY is supplied by the deployment secret store.',
       `export LYR_SCORECARD_ID=${card}`,
-      'python play.py --backend native --competition --all-games',
+      `export OPERATION_MODE=${$('mode').value.toUpperCase()}`,
+      'python play.py --backend native --all-games',
       '',
-      '# Never commit .env. Close the scorecard cleanly so it enters leaderboard processing.'
+      '# Close the scorecard cleanly only after all runs and evidence are complete.'
     ].join('\n');
   };
+  readiness();
 </script>
 </body>
 </html>
