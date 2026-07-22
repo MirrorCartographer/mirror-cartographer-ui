@@ -1,0 +1,78 @@
+name: Lyr ARC Operator
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Safe operation to perform
+        required: true
+        default: verify
+        type: choice
+        options:
+          - verify
+          - development
+          - competition-readiness
+      arm_phrase:
+        description: Required only for competition-readiness
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lyr-arc-operator
+  cancel-in-progress: false
+
+jobs:
+  operate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: arc-development
+    env:
+      ARC_API_KEY: ${{ secrets.ARC_API_KEY }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify secret exists without printing it
+        shell: bash
+        run: |
+          if [ -z "$ARC_API_KEY" ]; then
+            echo "ARC_API_KEY is missing from the arc-development environment." >&2
+            exit 1
+          fi
+          echo "ARC credential is installed. Value remains masked."
+
+      - name: Run guarded operator
+        run: |
+          python3 scripts/arc_operator.py "${{ inputs.mode }}" --arm "${{ inputs.arm_phrase }}"
+
+      - name: Upload ARC evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lyr-arc-${{ inputs.mode }}-${{ github.run_id }}
+          path: artifacts/arc
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Write run summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Lyr ARC Operator"
+            echo "- Mode: \`${{ inputs.mode }}\`"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Actor: \`${{ github.actor }}\`"
+            echo "- Secret value: never printed"
+            if [ -f artifacts/arc/verification.json ]; then
+              echo ""
+              echo "### Verification"
+              echo '```json'
+              cat artifacts/arc/verification.json
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
