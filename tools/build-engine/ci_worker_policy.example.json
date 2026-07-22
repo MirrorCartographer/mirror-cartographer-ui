@@ -1,0 +1,40 @@
+{
+  "schema": "fia.ci-worker-policy.v1",
+  "name": "fia-worker-a",
+  "runner_mode": "jit",
+  "jobs_per_worker": 1,
+  "destroy_after_job": true,
+  "fresh_rootfs_per_job": true,
+  "privileged": false,
+  "host_docker_socket": false,
+  "host_network": false,
+  "mount_home": false,
+  "mount_repo_credentials": false,
+  "timeout_seconds": 3600,
+  "network": {
+    "default": "deny",
+    "egress_proxy": "http://127.0.0.1:3128"
+  },
+  "secrets": {
+    "delivery": "job-scoped",
+    "persistence": "none"
+  },
+  "logs": {
+    "external_retention_days": 90,
+    "content_digest": true
+  },
+  "resources": {
+    "cpu_max": "2",
+    "memory_max": "4g",
+    "pids_max": 512
+  },
+  "supply_chain": {
+    "image": "registry.example/fia/worker",
+    "image_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "offline_dependency_cache": true
+  },
+  "recovery": {
+    "second_operator_runbook": true,
+    "quarterly_rebuild_drill": true
+  }
+}
