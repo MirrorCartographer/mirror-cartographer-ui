@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lyr ARC-AGI-1 Browser Evaluator</title>
+<style>
+:root{color-scheme:dark;background:#08090b;color:#f4f4f2;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+body{margin:0;padding:24px;max-width:900px;margin:auto}.card{border:1px solid #34373d;border-radius:18px;padding:20px;background:#111318;margin:14px 0}h1{font-size:clamp(28px,7vw,58px);margin:0 0 8px}button{font:inherit;font-weight:700;padding:14px 18px;border-radius:12px;border:0;background:#f4f4f2;color:#08090b}button:disabled{opacity:.5}.big{font-size:clamp(42px,14vw,110px);font-weight:900}.muted{color:#a9adb5}.bar{height:12px;background:#292c32;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:#f4f4f2;transition:width .15s}pre{white-space:pre-wrap;word-break:break-word;max-height:45vh;overflow:auto}.ok{color:#9ef0ae}.bad{color:#ffadad}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+<h1>Lyr × ARC-AGI-1</h1>
+<p class="muted">Independent browser run. Official public evaluation set. Exact task match. Up to three candidate programs chosen only by training examples.</p>
+<div class="card"><button id="run">Run all 400 tasks</button><p id="status">Ready.</p><div class="bar"><div class="fill" id="fill"></div></div></div>
+<div class="card"><div class="big" id="score">—</div><div id="fraction" class="muted">Not measured yet</div></div>
+<div class="card"><strong>Evidence</strong><pre id="evidence"></pre></div>
+<script>
+const clone=g=>g.map(r=>r.slice());
+const rot=g=>g[0].map((_,x)=>g.map(r=>r[x]).reverse());
+const flipH=g=>g.map(r=>r.slice().reverse());
+const flipV=g=>g.slice().reverse().map(r=>r.slice());
+const transpose=g=>g[0].map((_,x)=>g.map(r=>r[x]));
+const recolor=(g,m)=>g.map(r=>r.map(v=>m.has(v)?m.get(v):v));
+const tile=(g,ry,rx)=>Array.from({length:ry},()=>g.map(r=>Array.from({length:rx},()=>r).flat())).flat();
+const upscale=(g,sy,sx)=>g.flatMap(r=>Array.from({length:sy},()=>r.flatMap(v=>Array(sx).fill(v))));
+function bg(g){const c=new Map;for(const r of g)for(const v of r)c.set(v,(c.get(v)||0)+1);return [...c].sort((a,b)=>b[1]-a[1])[0][0]}
+function cropNonBg(g){const b=bg(g),p=[];g.forEach((r,y)=>r.forEach((v,x)=>{if(v!==b)p.push([y,x])}));if(!p.length)return clone(g);const ys=p.map(q=>q[0]),xs=p.map(q=>q[1]),y0=Math.min(...ys),y1=Math.max(...ys),x0=Math.min(...xs),x1=Math.max(...xs);return g.slice(y0,y1+1).map(r=>r.slice(x0,x1+1))}
+function cropColor(g,c){const p=[];g.forEach((r,y)=>r.forEach((v,x)=>{if(v===c)p.push([y,x])}));if(!p.length)return null;const ys=p.map(q=>q[0]),xs=p.map(q=>q[1]),y0=Math.min(...ys),y1=Math.max(...ys),x0=Math.min(...xs),x1=Math.max(...xs);return g.slice(y0,y1+1).map(r=>r.slice(x0,x1+1))}
+function comps(g){const h=g.length,w=g[0].length,b=bg(g),seen=new Set,out=[],ds=[[1,0],[-1,0],[0,1],[0,-1]];for(let y=0;y<h;y++)for(let x=0;x<w;x++){const k=y+','+x;if(seen.has(k)||g[y][x]===b)continue;const c=g[y][x],q=[[y,x]],pts=[];seen.add(k);while(q.length){const [a,d]=q.pop();pts.push([a,d]);for(const [dy,dx] of ds){const ny=a+dy,nx=d+dx,nk=ny+','+nx;if(ny>=0&&ny<h&&nx>=0&&nx<w&&!seen.has(nk)&&g[ny][nx]===c){seen.add(nk);q.push([ny,nx])}}}out.push([c,pts])}return out}
+function cropComp(g,which){let cs=comps(g);if(!cs.length)return null;cs.sort((a,b)=>a[1].length-b[1].length);const [c,p]=which==='largest'?cs[cs.length-1]:cs[0],ys=p.map(q=>q[0]),xs=p.map(q=>q[1]),y0=Math.min(...ys),y1=Math.max(...ys),x0=Math.min(...xs),x1=Math.max(...xs),b=bg(g),o=Array.from({length:y1-y0+1},()=>Array(x1-x0+1).fill(b));for(const [y,x] of p)o[y-y0][x-x0]=g[y][x];return o}
+function gravity(g,d){const h=g.length,w=g[0].length,b=bg(g),o=Array.from({length:h},()=>Array(w).fill(b));if(d==='up'||d==='down'){for(let x=0;x<w;x++){const vals=[];for(let y=0;y<h;y++)if(g[y][x]!==b)vals.push(g[y][x]);const start=d==='down'?h-vals.length:0;vals.forEach((v,i)=>o[start+i][x]=v)}}else{for(let y=0;y<h;y++){const vals=g[y].filter(v=>v!==b),start=d==='right'?w-vals.length:0;vals.forEach((v,i)=>o[y][start+i]=v)}}return o}
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+function inferMap(train){const merged=new Map;for(const p of train){if(p.input.length!==p.output.length||p.input[0].length!==p.output[0].length)return[];for(let y=0;y<p.input.length;y++)for(let x=0;x<p.input[0].length;x++){const a=p.input[y][x],b=p.output[y][x];if(merged.has(a)&&merged.get(a)!==b)return[];merged.set(a,b)}}return [['recolor',g=>recolor(g,merged)]]}
+function candidates(train){let f=[['identity',g=>clone(g)],['rot90',rot],['rot180',g=>rot(rot(g))],['rot270',g=>rot(rot(rot(g)))],['flip_h',flipH],['flip_v',flipV],['transpose',transpose],['anti_transpose',g=>flipH(transpose(flipH(g)))],['crop_nonbg',cropNonBg],['largest_component',g=>cropComp(g,'largest')],['smallest_component',g=>cropComp(g,'smallest')],['gravity_down',g=>gravity(g,'down')],['gravity_up',g=>gravity(g,'up')],['gravity_left',g=>gravity(g,'left')],['gravity_right',g=>gravity(g,'right')]];
+f=f.concat(inferMap(train));const ratios=new Set;for(const p of train){const ih=p.input.length,iw=p.input[0].length,oh=p.output.length,ow=p.output[0].length;if(oh%ih===0&&ow%iw===0)ratios.add((oh/ih)+','+(ow/iw))}for(const s of ratios){const [sy,sx]=s.split(',').map(Number);if(sy>1||sx>1){f.push([`upscale_${sy}x${sx}`,g=>upscale(g,sy,sx)]);f.push([`tile_${sy}x${sx}`,g=>tile(g,sy,sx)])}}const colors=[...new Set(train.flatMap(p=>p.input.flat()))].sort();for(const c of colors)f.push([`crop_color_${c}`,g=>cropColor(g,c)]);const base=f.slice(),geo=base.slice(0,9);for(const [n1,a] of geo)for(const [n2,b] of base)f.push([n1+'__'+n2,g=>b(a(g))]);return f}
+function safe(fn,g){try{const x=fn(clone(g));return Array.isArray(x)&&x.length&&Array.isArray(x[0])?x:null}catch{return null}}
+function solve(task){const valid=[];for(const [n,f] of candidates(task.train))if(task.train.every(p=>same(safe(f,p.input),p.output)))valid.push([n,f]);const preds=[];for(const [n,f] of valid){const out=task.test.map(p=>safe(f,p.input));if(!preds.some(q=>same(q[1],out)))preds.push([n,out]);if(preds.length>=3)break}return preds}
+async function getZip(){const urls=['https://codeload.github.com/fchollet/ARC-AGI/zip/refs/heads/master','https://github.com/fchollet/ARC-AGI/archive/refs/heads/master.zip'];let last;for(const u of urls){try{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error(r.status+' '+r.statusText);return await r.arrayBuffer()}catch(e){last=e}}throw last}
+const run=document.querySelector('#run'),status=document.querySelector('#status'),score=document.querySelector('#score'),fraction=document.querySelector('#fraction'),fill=document.querySelector('#fill'),evidence=document.querySelector('#evidence');
+run.onclick=async()=>{run.disabled=true;score.textContent='—';fraction.textContent='Running';evidence.textContent='';try{status.textContent='Downloading official ARC-AGI archive…';const buf=await getZip();status.textContent='Unpacking evaluation tasks…';const zip=await JSZip.loadAsync(buf);const names=Object.keys(zip.files).filter(n=>/\/data\/evaluation\/[^/]+\.json$/.test(n)).sort();let solved=0,rows=[];for(let i=0;i<names.length;i++){const n=names[i],task=JSON.parse(await zip.file(n).async('string')),preds=solve(task),truth=task.test.map(p=>p.output),ok=preds.some(p=>same(p[1],truth));if(ok)solved++;rows.push({task:n.split('/').pop().replace('.json',''),solved:ok,programs:preds.map(p=>p[0])});fill.style.width=((i+1)/names.length*100)+'%';status.textContent=`Evaluating ${i+1}/${names.length} — solved ${solved}`;if(i%10===0)await new Promise(r=>setTimeout(r,0))}const pct=names.length?100*solved/names.length:0;score.textContent=pct.toFixed(2)+'%';fraction.textContent=`${solved}/${names.length} exact task matches`;score.className='big '+(pct===100?'ok':'');evidence.textContent=JSON.stringify({system:'Lyr / Mirror Cartographer',benchmark:'ARC-AGI-1 public evaluation',solved,total:names.length,percentage:pct,metric:'exact task match; up to 3 candidates chosen solely by training-pair fit',tasks:rows},null,2);status.textContent='Complete.'}catch(e){status.textContent='Run failed';score.textContent='ERROR';score.className='big bad';fraction.textContent=String(e);evidence.textContent=e&&e.stack?e.stack:String(e)}finally{run.disabled=false}};
+</script>
+</body></html>
