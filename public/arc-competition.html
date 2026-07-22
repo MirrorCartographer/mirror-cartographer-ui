@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lyr / MirrorCartographer — ARC Competition Control Room</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body { margin:0; background:#080b0f; color:#edf6ef; min-height:100vh; }
+    main { max-width:920px; margin:auto; padding:32px 18px 72px; }
+    h1 { font-size:clamp(2rem,6vw,4.6rem); line-height:.95; letter-spacing:-.06em; margin:28px 0 14px; }
+    .eyebrow { color:#81ffb5; letter-spacing:.18em; text-transform:uppercase; font-size:.72rem; }
+    .panel { border:1px solid #26372e; background:#0e1512; padding:20px; margin:16px 0; box-shadow:0 0 50px #0a311b33 inset; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
+    label { display:block; font-size:.78rem; color:#9fb4a5; margin:0 0 6px; }
+    input, select, button { width:100%; box-sizing:border-box; border:1px solid #385044; background:#09100c; color:#edf6ef; padding:12px; font:inherit; }
+    button { cursor:pointer; background:#163522; border-color:#4f8e67; font-weight:700; }
+    button:hover { background:#20502f; }
+    button.secondary { background:#12181a; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; min-height:88px; padding:14px; background:#050806; border:1px solid #1d2b23; color:#b9f7cc; }
+    .status { font-weight:800; }
+    .good { color:#81ffb5; } .bad { color:#ff8a8a; } .muted { color:#84958a; }
+    a { color:#81ffb5; }
+    .warning { border-left:3px solid #ffcc66; padding-left:12px; color:#e5d5a2; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Competition infrastructure / Lyr v0.3</div>
+  <h1>ARC CONTROL ROOM</h1>
+  <p>Connect the registered ARC account, prove the key works, open one provenance-linked scorecard, and launch an official Competition Mode run.</p>
+
+  <section class="panel">
+    <h2>1. Register</h2>
+    <p>ARC issues the real key after Google or GitHub login. This page cannot impersonate you, so it opens the official platform in a new tab.</p>
+    <button id="login">Open official ARC login</button>
+  </section>
+
+  <section class="panel">
+    <h2>2. Connect without storing the secret</h2>
+    <div class="grid">
+      <div>
+        <label for="key">ARC API key</label>
+        <input id="key" type="password" autocomplete="off" placeholder="Paste from ARC profile" />
+      </div>
+      <div>
+        <label for="source">Source repository</label>
+        <input id="source" value="https://github.com/MirrorCartographer/mirror-cartographer-ui" />
+      </div>
+    </div>
+    <p class="warning">The key stays only in this browser tab and is sent through our Vercel function to ARC. It is not written to localStorage, GitHub, logs, or the page URL.</p>
+    <div class="grid">
+      <button id="verify">Verify key + list games</button>
+      <button id="forget" class="secondary">Forget key now</button>
+    </div>
+    <p id="status" class="status muted">Not connected.</p>
+  </section>
+
+  <section class="panel">
+    <h2>3. Open an official scorecard</h2>
+    <div class="grid">
+      <div>
+        <label for="tag">Experiment tag</label>
+        <input id="tag" value="lyr-mirrorcartographer-v0.3" />
+      </div>
+      <div>
+        <label for="mode">Run mode</label>
+        <select id="mode"><option value="competition">competition</option><option value="development">development</option></select>
+      </div>
+    </div>
+    <button id="openCard">Open scorecard with provenance</button>
+    <p>Card: <code id="card">none</code></p>
+  </section>
+
+  <section class="panel">
+    <h2>4. Runtime handoff</h2>
+    <p>The web bridge proves account connectivity and creates the scorecard. The Lyr agent runtime then consumes the same key as <code>ARC_API_KEY</code> and runs the official toolkit in Competition Mode.</p>
+    <button id="command">Generate secure launch command</button>
+    <pre id="output">No command generated.</pre>
+  </section>
+
+  <section class="panel">
+    <h2>Evidence console</h2>
+    <pre id="log">Ready.</pre>
+  </section>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const state = { cookies: '', cardId: '' };
+  const log = (value) => $('log').textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+  const setStatus = (text, good=false) => { $('status').textContent=text; $('status').className='status '+(good?'good':'bad'); };
+
+  async function arc(path, method='GET', body=null) {
+    const apiKey = $('key').value.trim();
+    if (!apiKey) throw new Error('Paste the ARC key first.');
+    const response = await fetch('/api/arc', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ apiKey, path, method, body, cookies:state.cookies })
+    });
+    const payload = await response.json();
+    if (payload.cookies?.length) state.cookies = payload.cookies.join('; ');
+    if (!response.ok || !payload.ok) throw new Error(payload.data?.detail || payload.data?.message || JSON.stringify(payload.data));
+    return payload.data;
+  }
+
+  $('login').onclick = () => window.open('https://arcprize.org/platform', '_blank', 'noopener,noreferrer');
+  $('forget').onclick = () => { $('key').value=''; state.cookies=''; setStatus('Key forgotten from this tab.', true); };
+  $('verify').onclick = async () => {
+    try { const games = await arc('/api/games'); setStatus(`Connected. ${games.length ?? 'Available'} games visible.`, true); log(games); }
+    catch (e) { setStatus(`Connection failed: ${e.message}`); log(e.stack || e.message); }
+  };
+  $('openCard').onclick = async () => {
+    try {
+      const data = await arc('/api/scorecard/open', 'POST', {
+        source_url:$('source').value.trim(),
+        tags:[$('tag').value.trim(), 'lyr', 'mirror-cartographer', $('mode').value],
+        opaque:{ agent:'Lyr / MirrorCartographer', runtime:'v0.3', identity_model_separation:true }
+      });
+      state.cardId=data.card_id; $('card').textContent=data.card_id; log(data);
+    } catch(e) { log(e.stack || e.message); }
+  };
+  $('command').onclick = () => {
+    const card = state.cardId || '<CARD_ID_FROM_CONTROL_ROOM>';
+    $('output').textContent = [
+      '# Keep the secret out of shell history when possible:',
+      'read -s ARC_API_KEY && export ARC_API_KEY',
+      'export OPERATION_MODE=COMPETITION',
+      `export LYR_SCORECARD_ID=${card}`,
+      'python play.py --backend native --competition --all-games',
+      '',
+      '# Never commit .env. Close the scorecard cleanly so it enters leaderboard processing.'
+    ].join('\n');
+  };
+</script>
+</body>
+</html>
