@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foundation.invalid/schemas/fia.deployment-activation.v1.json",
+  "title": "FIA Deployment Activation",
+  "type": "object",
+  "required": ["schema", "canonical_authority", "provider", "activation_mode", "previous", "target", "health", "automatic_rollback", "retain_previous", "plan_digest"],
+  "properties": {
+    "schema": {"const": "fia.deployment-activation.v1"},
+    "canonical_authority": {"const": "foundation"},
+    "provider": {"type": "null"},
+    "activation_mode": {"const": "atomic-pointer"},
+    "proxy_reload": {"const": "caddy-load"},
+    "proxy_admin_transport": {"const": "unix-socket"},
+    "concurrency_control": {"const": "etag-if-match"},
+    "automatic_rollback": {"const": true},
+    "retain_previous": {"const": true},
+    "database_compatibility": {"enum": ["backward-compatible", "none"]},
+    "no_autoplay": {"const": true},
+    "mobile_safe": {"const": true},
+    "accessibility_gate": {"const": true},
+    "receipt_required": {"const": true},
+    "plan_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
