@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://foundation.invalid/schemas/registry-admission.v1.json",
+  "title": "FIA Registry Admission",
+  "type": "object",
+  "required": ["schema", "canonical_authority", "registry", "stores", "promotion", "garbage_collection", "recovery_drill", "plan_digest"],
+  "properties": {
+    "schema": {"const": "fia.registry-admission.v1"},
+    "canonical_authority": {"const": "foundation"},
+    "registry": {"type": "object"},
+    "stores": {"type": "array", "minItems": 2},
+    "promotion": {"type": "object"},
+    "garbage_collection": {"type": "object"},
+    "recovery_drill": {"type": "object"},
+    "plan_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
