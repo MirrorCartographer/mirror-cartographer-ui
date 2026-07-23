@@ -7,11 +7,13 @@ const DEPLOYMENT_IRRELEVANT_PREFIXES = [
   'operations/',
   'foundation-os/',
   'tools/conversation_parallax/runs/',
+  '.github/workflows/',
 ];
 
 const DEPLOYMENT_IRRELEVANT_FILES = new Set([
   'README.md',
   'PREVIEWS.md',
+  'scripts/vercel-ignore-build.mjs',
 ]);
 
 export function isDeploymentIrrelevantPath(path) {
