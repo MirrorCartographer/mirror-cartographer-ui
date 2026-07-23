@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "currency": "USD",
+  "checkout": "https://ko-fi.com/mirrorcartographer/commissions",
+  "delivery": {
+    "mode": "asynchronous-written",
+    "privacy": "private-by-default",
+    "format": "voice-readable document",
+    "claim_policy": "separate fact, interpretation, uncertainty, and recommendation"
+  },
+  "offers": [
+    {
+      "id": "signal-map",
+      "name": "Signal Map",
+      "price": 35,
+      "scope": "one focused question",
+      "deliverables": ["core tension", "hidden assumptions", "three viable paths", "one concrete next move"],
+      "capacity_per_week": 8
+    },
+    {
+      "id": "deep-cartography",
+      "name": "Deep Cartography",
+      "price": 95,
+      "scope": "multi-layer situation",
+      "deliverables": ["pattern map", "contradiction map", "risk and leverage points", "action sequence"],
+      "capacity_per_week": 4
+    },
+    {
+      "id": "system-underneath",
+      "name": "System Underneath",
+      "price": 250,
+      "scope": "project, transition, product, or recurring problem",
+      "deliverables": ["first-principles model", "actors and dependencies", "failure modes", "90-day operating design"],
+      "capacity_per_week": 2
+    }
+  ],
+  "proof_gates": [
+    "checkout-link-present",
+    "price-positive",
+    "deliverables-explicit",
+    "capacity-bounded",
+    "privacy-stated",
+    "scope-boundary-stated"
+  ]
+}
