@@ -1,0 +1,31 @@
+{
+  "schema": "fia.lifecycle.v1",
+  "authority": "foundation",
+  "hardware_ownership_claim": false,
+  "capabilities": [
+    {"id":"source-intake","state":"prototype"},
+    {"id":"reader-normalization","state":"prototype"},
+    {"id":"build-graph","state":"planned"},
+    {"id":"deterministic-build","state":"planned"},
+    {"id":"dependency-custody","state":"prototype"},
+    {"id":"artifact-custody","state":"prototype"},
+    {"id":"ci-workers","state":"planned"},
+    {"id":"test-orchestration","state":"prototype"},
+    {"id":"registries","state":"planned"},
+    {"id":"release-authority","state":"planned"},
+    {"id":"runtime","state":"planned"},
+    {"id":"networking","state":"planned"},
+    {"id":"reverse-proxy","state":"prototype"},
+    {"id":"tls","state":"prototype"},
+    {"id":"observability","state":"planned"},
+    {"id":"storage","state":"prototype"},
+    {"id":"database","state":"prototype"},
+    {"id":"queues","state":"planned"},
+    {"id":"backups-restore","state":"prototype"},
+    {"id":"secrets-identity","state":"prototype"},
+    {"id":"deployment-rollback","state":"planned"},
+    {"id":"scaling","state":"prototype"},
+    {"id":"migration","state":"planned"},
+    {"id":"disaster-recovery","state":"prototype"}
+  ]
+}
