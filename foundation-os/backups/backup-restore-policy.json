@@ -1,0 +1,46 @@
+{
+  "schema": "foundation.backup-restore-policy.v1",
+  "authority": {
+    "schedule": "foundation",
+    "retention": "foundation",
+    "restore_acceptance": "foundation",
+    "external_storage_role": "replaceable-replica"
+  },
+  "objectives": {
+    "recovery_point_seconds": 900,
+    "recovery_time_seconds": 14400,
+    "maximum_unverified_age_seconds": 86400
+  },
+  "copies": {
+    "minimum": 3,
+    "failure_domains_minimum": 2,
+    "independent_write_boundary_minimum": 1,
+    "sites_minimum": 2
+  },
+  "data_classes": [
+    {"id": "postgres", "capture": "base-backup-plus-wal", "verification": "point-in-time-restore"},
+    {"id": "artifacts", "capture": "content-addressed-snapshot", "verification": "digest-and-execution"},
+    {"id": "configuration", "capture": "versioned-snapshot", "verification": "blank-host-rebuild"}
+  ],
+  "gates": {
+    "backup_requires_restore": true,
+    "production_cannot_modify_every_copy": true,
+    "single_account_cannot_modify_every_copy": true,
+    "digest_verification_required": true,
+    "provider_replacement_restore_required": true,
+    "second_operator_required": true,
+    "quarterly_full_restore_required": true
+  },
+  "verification_days": {
+    "repository_check": 7,
+    "sample_restore": 7,
+    "full_restore": 90,
+    "controlled_corruption_test": 90
+  },
+  "transport_exit_paths": [
+    "filesystem",
+    "sftp",
+    "s3-compatible",
+    "removable-media"
+  ]
+}
