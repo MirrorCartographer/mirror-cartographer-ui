@@ -1,0 +1,49 @@
+{
+  "schema": "foundation.tls-continuity-policy.v1",
+  "authority": {
+    "policy_owner": "foundation",
+    "internal_ca": "foundation",
+    "public_ca_role": "replaceable-commodity",
+    "dns_provider_role": "replaceable-commodity",
+    "reverse_proxy_role": "replaceable-implementation"
+  },
+  "pki": {
+    "offline_root": true,
+    "online_intermediate": true,
+    "root_threshold": "2-of-3",
+    "max_internal_leaf_hours": 24,
+    "max_public_leaf_days": 90,
+    "root_backups": 3,
+    "root_failure_domains": 2
+  },
+  "issuance": {
+    "internal_protocol": "ACME",
+    "public_protocol": "ACME",
+    "allowed_public_challenges": ["dns-01", "http-01"],
+    "wildcards_require": "dns-01",
+    "automatic_renewal": true,
+    "renew_before_fraction": 0.33,
+    "staging_before_production": true
+  },
+  "dns": {
+    "canonical_zone_export": true,
+    "provider_count": 2,
+    "credential_scope": "zone-limited",
+    "credential_max_hours": 1,
+    "caa_declared": true
+  },
+  "serving": {
+    "certificate_storage_replication": 2,
+    "atomic_reload": true,
+    "expired_certificate_blocks_deploy": true,
+    "ocsp_stapling": "best-effort-not-authority",
+    "clock_monitoring": true
+  },
+  "recovery": {
+    "independent_certificate_path": true,
+    "second_operator_restore": true,
+    "quarterly_ca_restore_drill": true,
+    "monthly_public_ca_failover_drill": true,
+    "dns_provider_replacement_test": true
+  }
+}
