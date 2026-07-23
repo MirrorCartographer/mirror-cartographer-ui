@@ -3,12 +3,38 @@ name: Smoke Test
 on:
   workflow_dispatch:
   push:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.*'
+      - 'playwright*.config.*'
+      - 'tests/smoke.spec.js'
+      - '.github/workflows/smoke.yml'
   pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.*'
+      - 'playwright*.config.*'
+      - 'tests/smoke.spec.js'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   phone-first-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -17,17 +43,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Chromium
+        run: npx playwright install chromium
 
-      - name: Run phone-first gate
-        run: npm run test:gate
+      - name: Build
+        run: npm run build
 
-      - name: Upload Playwright failure artifacts
+      - name: Run phone-first smoke test
+        run: npm run test:smoke
+
+      - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -36,3 +66,4 @@ jobs:
             test-results/
             playwright-report/
           if-no-files-found: ignore
+          retention-days: 3
