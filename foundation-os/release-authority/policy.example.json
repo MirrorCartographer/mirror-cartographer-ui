@@ -1,0 +1,1 @@
+{"schema":"foundation.release-policy.v1","minimum_sequence":42,"required_evidence":["build","tests"],"require_rollback":true}
