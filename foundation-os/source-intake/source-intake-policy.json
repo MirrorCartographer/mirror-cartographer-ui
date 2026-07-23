@@ -1,0 +1,32 @@
+{
+  "schema": "foundation.source-intake-policy.v1",
+  "authority": {
+    "admission": "foundation",
+    "provider_status_authoritative": false,
+    "required_approvers": 2
+  },
+  "integrity": {
+    "strict_git_verification": true,
+    "record_all_ref_tips": true,
+    "force_push_to_admitted_refs": false
+  },
+  "identity": {
+    "local_signature_verification": true,
+    "provider_badge_sufficient": false
+  },
+  "quarantine": {
+    "network": "deny",
+    "hooks": "disabled",
+    "checkout": false,
+    "submodules": "not-initialized"
+  },
+  "handoff": {
+    "emit_manifest": true,
+    "mutable_branch_name_as_identity": false
+  },
+  "custody": {
+    "verified_bundle_required": true,
+    "bundle_copies": 2,
+    "failure_domains": 2
+  }
+}
