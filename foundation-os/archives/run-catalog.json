@@ -1,0 +1,21 @@
+{
+  "schema": "fia.run-catalog.v1",
+  "policy": {
+    "user_action_required": false,
+    "retain_research_receipts": true,
+    "integrate_surviving_controls": true,
+    "single_living_repository": true
+  },
+  "known_runs": [
+    "database-failover",
+    "source-intake",
+    "scaling",
+    "test-orchestration",
+    "tls",
+    "dependency-custody",
+    "object-custody",
+    "platform-recovery",
+    "dns-authority",
+    "secrets-identity"
+  ]
+}
