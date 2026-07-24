@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:pages": "vite build --base=/mirror-cartographer-ui/",
     "preview": "vite preview",
+    "test:braid": "node scripts/braid-control-plane-check.mjs",
     "test:infrastructure": "node scripts/infrastructure-contract-check.mjs",
     "test:room-world": "node scripts/room-world-contract-check.mjs",
     "vercel:changed-paths": "node tools/vercel-ops/changed-paths-from-git.mjs",
