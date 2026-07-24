@@ -39,6 +39,7 @@
     "test:audibility-outcome": "node scripts/audibility-outcome-contract-check.mjs",
     "test:audio-evidence-export": "node scripts/audio-evidence-export-contract-check.mjs",
     "test:continuity-record": "node scripts/continuity-record-validator.test.mjs",
+    "test:automation-pr": "node --test scripts/validate-automation-pr.test.mjs",
     "test:smoke": "playwright test tests/smoke.spec.js --reporter=line",
     "test:live-wiring": "node scripts/live-wiring-check.mjs",
     "test:live": "playwright test --config=playwright.live.config.js --reporter=line",
