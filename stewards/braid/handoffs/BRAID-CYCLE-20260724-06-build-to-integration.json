@@ -26,31 +26,47 @@
       "reason": "Connector-backed repository mutation did not provide a local checkout runtime."
     },
     "hosted": {
-      "status": "pending",
-      "required_jobs": [
-        "Probe hosted runner and shell",
-        "Validate braid fixtures"
-      ]
+      "status": "failure",
+      "evidence_subject_sha": "50bf10d0cb95ed7c9b145ae89ccf2d8a05a6badf",
+      "workflow_name": "Braid Control Plane",
+      "workflow_run_id": 30086820516,
+      "workflow_conclusion": "failure",
+      "jobs": [
+        {
+          "name": "Probe hosted runner and shell",
+          "job_id": 89460822933,
+          "conclusion": "failure",
+          "steps_available": false,
+          "logs_url_available": false
+        },
+        {
+          "name": "Validate braid fixtures",
+          "job_id": 89460829397,
+          "conclusion": "skipped",
+          "steps_available": false,
+          "logs_url_available": false
+        }
+      ],
+      "diagnostic_boundary": "The shell-only runner probe failed before any step record was exposed. Validator execution did not occur. The evidence rules out npm ci and npm run test:braid as causes of this run, but does not distinguish workflow admission, Actions eligibility, billing, hosted-runner availability, repository or organization policy, or connector visibility limitations."
     }
   },
   "risks": [
-    "A passing runner probe does not prove actions/checkout or actions/setup-node are allowed.",
-    "Step summaries may remain unavailable through the connector even when present in GitHub.",
-    "The validation job is intentionally blocked when the runner probe fails."
+    "A probe job object without step records does not distinguish pre-runner platform failure from missing connector visibility.",
+    "Changing validator or dependency logic would be speculative because validate-braid was skipped.",
+    "The probe remains useful as a stable boundary test but should not be repeated without a new upstream hypothesis."
   ],
-  "rollback": "Revert the three cycle commits or remove the runner-probe job and validate-braid needs edge while retaining prior evidence.",
+  "rollback": "Revert the cycle commits or remove the runner-probe job and validate-braid needs edge while retaining this terminal evidence.",
   "privacy_class": "public-safe",
   "open_contradictions": [
-    "The prior hosted job failed, but the earliest failing phase remains unknown.",
+    "GitHub reports the probe job as completed failure while exposing no step records or logs URL.",
     "The proposal branch is writable for PR repair but the control plane is not active on main."
   ],
-  "acceptance_status": "repair",
+  "acceptance_status": "blocked",
   "acceptance_criteria": [
-    "The exact PR head receives a terminal runner-probe result.",
-    "A pass exposes runner-shell-started or an equivalent phase summary.",
-    "A probe failure is not attributed to dependencies or validator logic.",
-    "The result identifies the next single diagnostic boundary.",
-    "PR #168 remains draft until the isolated validator workflow passes on the exact implementation head."
+    "Integration records the failure boundary as pre-user-step or visibility-limited, not validator or dependency failure.",
+    "The next diagnostic action targets repository or organization Actions eligibility, billing, hosted-runner availability, workflow admission, or direct GitHub UI log visibility.",
+    "No validator or dependency code changes occur until a user-defined step is evidenced.",
+    "PR #168 remains draft until the isolated validator workflow passes on an exact implementation-affecting head."
   ],
   "expires_at": "2026-07-25T10:36:00Z"
 }
