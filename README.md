@@ -1,5 +1,9 @@
 # Mirror Cartographer
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MirrorCartographer/mirror-cartographer-ui?quickstart=1)
+
+**Repository preview:** open the button above to start this exact branch in a disposable GitHub-hosted development environment. The app starts on forwarded port `5173`. See [`PREVIEWS.md`](PREVIEWS.md) for local execution, sharing controls, and the ownership boundary.
+
 **Mirror Cartographer is a human-centered AI continuity atlas for turning scattered conversation, symptoms, symbols, records, research, creative fragments, and tool failures into navigable structure.**
 
 It began as a long-form human-AI collaboration with Charity Sturgell and grew into a system for preserving state across conversations that normally fragment meaning.
