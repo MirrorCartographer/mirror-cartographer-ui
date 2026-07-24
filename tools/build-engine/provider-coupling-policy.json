@@ -1,0 +1,8 @@
+{
+  "schema": "fia.provider-coupling-policy.v1",
+  "allowed": [
+    {"provider":"vercel","path_prefix":"operations/vercel-studio/","scope":"migration-only","exit_gate":"remove before owned-runtime release"},
+    {"provider":"vercel","path_prefix":"tools/vercel-ops/","scope":"migration-only","exit_gate":"remove before owned-runtime release"},
+    {"provider":"cloudflare","path_prefix":"operations/cloudflare-research/","scope":"migration-only","exit_gate":"remove before owned-runtime release"}
+  ]
+}
