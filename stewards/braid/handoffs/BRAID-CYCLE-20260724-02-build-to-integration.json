@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0.0",
+  "cycle_id": "BRAID-CYCLE-20260724-02",
+  "task_id": "BRAID-001",
+  "source_steward": "build",
+  "target_steward": "integration",
+  "relationship": "repairs",
+  "control_plane_ref": "assistant/braid-control-plane-v1",
+  "lease_state": "read-only proposal; no lease acquired",
+  "implementation_summary": "Added a path-scoped GitHub Actions workflow that serializes braid validation per pull request and runs npm run test:braid as an independent hosted check.",
+  "consumed_inputs": [
+    "Research issue #169 acceptance criteria for independent hosted validation",
+    "Existing BRAID-001 validator and 11-fixture test suite",
+    "Existing draft PR #168"
+  ],
+  "unconsumed_inputs": [
+    {
+      "stage": "resources",
+      "reason": "No external dependency was required; GitHub Actions already exists in repository infrastructure."
+    },
+    {
+      "stage": "art",
+      "reason": "No visual or interaction artifact was required for this CI repair."
+    }
+  ],
+  "changed_files": [
+    ".github/workflows/braid-control-plane.yml",
+    "automation/steward/policy-experiments/BRAID-001-hosted-evidence-isolation.json",
+    "stewards/braid/handoffs/BRAID-CYCLE-20260724-02-build-to-integration.json"
+  ],
+  "test_evidence": {
+    "local": {
+      "status": "not_run",
+      "reason": "Connector execution environment does not provide a checked-out repository runtime."
+    },
+    "hosted": {
+      "status": "failure",
+      "workflow": "Braid Control Plane",
+      "run_number": 3,
+      "run_id": 30076286256,
+      "commit": "9d1eeea847da606ca201a20b5b18c7db046d4513",
+      "job": "Validate braid fixtures",
+      "job_id": 89427619124,
+      "diagnostic_boundary": "GitHub returned a failed job with no step summaries; the downloadable job log returned BlobNotFound. The failing command is therefore not yet observable and no validator defect is inferred."
+    }
+  },
+  "risks": [
+    "The hosted failure occurred before observable step evidence, so changing validator code would be speculative",
+    "npm ci may fail before validator execution if package-lock.json is inconsistent",
+    "Path filters require maintenance when braid dependencies change",
+    "Workflow concurrency serializes CI runs but does not replace braid task leases"
+  ],
+  "rollback": "Delete .github/workflows/braid-control-plane.yml and revert the two cycle-02 evidence files; preserve prior validator fixtures.",
+  "privacy_class": "public-safe",
+  "open_contradictions": [
+    "The hosted workflow reached a terminal failure, but GitHub exposed no job steps or usable log artifact.",
+    "A failed hosted job is observable, while the underlying command failure remains unknown.",
+    "The proposal branch is writable for PR repair but is not canonical on main."
+  ],
+  "acceptance_status": "blocked",
+  "acceptance_criteria": [
+    "Braid Control Plane workflow reaches a terminal conclusion on the current PR head",
+    "Hosted job visibly executes npm run test:braid",
+    "All 11 fixtures and baseline validator pass",
+    "Workflow retains contents: read permissions only",
+    "PR remains draft until the isolated hosted check passes"
+  ],
+  "integration_requested_action": "Treat BRAID-001 as blocked on hosted runner diagnostics. Inspect repository Actions availability, billing or runner eligibility, and retry only after step-level evidence becomes observable. Do not modify validator logic based solely on this pre-step failure.",
+  "expires_at": "2026-07-31T07:39:09Z"
+}

@@ -1,0 +1,86 @@
+{
+  "cycle_id": "BRAID-CYCLE-20260724-03",
+  "control_plane_ref": "assistant/braid-control-plane-v1",
+  "control_plane_status": "proposal-only",
+  "evidence_observed_at": "2026-07-24T08:50:08Z",
+  "evidence_commit_sha": "0e2265b9ddc8ce6f2211c80fd1e9e9d9956a2ce4",
+  "policy_experiment": {
+    "id": "BRAID-001-EVIDENCE-FRESHNESS-GATE",
+    "version": "1.0.0",
+    "status": "adopted_for_trial",
+    "weakness": "Queue state remained ready after the same commit's isolated hosted check reached terminal failure.",
+    "hypothesis": "Binding every authoritative decision to a commit SHA, terminal conclusion, and observation timestamp prevents stale status from reaching acceptance review.",
+    "metric": "authoritative_status_contradictions",
+    "baseline": 1,
+    "target": 0,
+    "evaluation_window_cycles": 3
+  },
+  "dependency_graph": [
+    {"stage": "research", "status": "consumed", "reason": "Invariant and hosted-evidence requirements informed the build repair."},
+    {"stage": "resources", "status": "skipped", "reason": "No new external resource was needed to reconcile observed CI state."},
+    {"stage": "art", "status": "independent", "reason": "The visual grammar does not affect validator or CI correctness."},
+    {"stage": "build", "status": "repair", "reason": "The isolated workflow exists but its current-head run failed without step-level diagnostics."},
+    {"stage": "integration", "status": "accepted", "reason": "Authoritative queue status was reconciled with observed terminal evidence."}
+  ],
+  "leases": [],
+  "wip_review": {
+    "implementation_leases": 0,
+    "non_implementation_tasks": 1,
+    "within_limits": true
+  },
+  "duplicates": [],
+  "contradictions": [
+    {
+      "type": "status_parity",
+      "before": "queue=ready; PR=blocked; hosted=failure",
+      "after": "queue=blocked; PR=blocked; hosted=failure",
+      "resolved": true
+    },
+    {
+      "type": "diagnostic_boundary",
+      "statement": "Workflow and job failure are observed; failing step and command remain unknown.",
+      "resolved": false
+    }
+  ],
+  "artifact_verification": {
+    "verified_paths": [
+      "stewards/braid/manifest.json",
+      "stewards/braid/queue.json",
+      "stewards/braid/handoffs/BRAID-CYCLE-20260724-01-build-to-integration.json",
+      "stewards/braid/handoffs/BRAID-CYCLE-20260724-02-build-to-integration.json",
+      ".github/workflows/braid-control-plane.yml",
+      "scripts/braid-control-plane-check.mjs",
+      "scripts/braid-control-plane-check.test.mjs"
+    ],
+    "broken_paths": []
+  },
+  "tests": {
+    "local": {"status": "not_verified"},
+    "hosted": {
+      "workflow": "Braid Control Plane",
+      "run_id": 30076381839,
+      "conclusion": "failure",
+      "job": "Validate braid fixtures",
+      "job_id": 89427925394,
+      "step_level_evidence": "unavailable"
+    }
+  },
+  "task_decisions": [
+    {"task_id": "BRAID-001", "status": "blocked", "reason": "The isolated hosted gate fails on the current reviewed head and does not expose the failing step."}
+  ],
+  "durable_change": {
+    "path": "stewards/braid/queue.json",
+    "commit_sha": "e7f9730e46378b82baa76626310850ced6ea5377",
+    "summary": "Reconciled queue status from ready to blocked and bound the decision to current hosted evidence."
+  },
+  "truthfulness_review": "Observed workflow failure is separated from the unknown root cause. No local pass, validator defect, runner defect, billing defect, or deployment success is claimed.",
+  "privacy_review": "Public-safe architecture, synthetic fixtures, repository paths, commit identifiers, and CI metadata only.",
+  "rollback": "Revert commit e7f9730e46378b82baa76626310850ced6ea5377 and remove this receipt; preserve prior test and workflow evidence.",
+  "next_queue": [
+    "Obtain step-level evidence for hosted job 89427925394.",
+    "Repair only the evidenced failing step.",
+    "Rerun the isolated Braid Control Plane workflow on the new head.",
+    "Keep PR 168 draft and BRAID-001 blocked until hosted validation passes."
+  ],
+  "next_falsifiable_improvement": "Reject any receipt whose evidence_commit_sha differs from the latest reviewed PR head or whose task status conflicts with the latest terminal hosted conclusion."
+}

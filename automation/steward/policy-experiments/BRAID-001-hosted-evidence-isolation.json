@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "BRAID-001-HOSTED-EVIDENCE-ISOLATION",
+  "task_id": "BRAID-001",
+  "relationship": "repairs",
+  "weakness": "Braid-specific validator evidence was hidden inside unrelated broad workflow failures.",
+  "hypothesis": "A path-scoped, serialized workflow that runs only npm run test:braid will reduce time-to-diagnosis and prevent unrelated application failures from being mistaken for braid-validator failure.",
+  "baseline": {
+    "isolated_hosted_check": false,
+    "braid_specific_pass_fail_visible": false,
+    "unrelated_failed_workflows": 5
+  },
+  "expected_metrics": {
+    "isolated_hosted_check": true,
+    "braid_specific_pass_fail_visible": true,
+    "maximum_runtime_minutes": 5,
+    "duplicate_in_progress_runs_per_pr": 0
+  },
+  "evaluation_window": "next 3 pull-request revisions touching braid paths",
+  "adoption_gate": [
+    "Braid Control Plane check reports an independent conclusion",
+    "npm run test:braid command is visible in the hosted job",
+    "superseded runs for the same pull request are cancelled",
+    "no write permissions are granted"
+  ],
+  "risks": [
+    "npm ci can fail before the braid tests if the lockfile is inconsistent",
+    "path filters can omit a future braid dependency unless maintained",
+    "workflow serialization does not replace repository lease validation"
+  ],
+  "rollback": "Delete .github/workflows/braid-control-plane.yml; retain the experiment and test fixtures as decision history.",
+  "status": "testing"
+}

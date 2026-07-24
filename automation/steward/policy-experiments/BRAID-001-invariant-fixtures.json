@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "BRAID-001-INVARIANT-FIRST",
+  "weakness": "The build validator previously proved structural plausibility without testing conflicting lease and dependency states.",
+  "hypothesis": "Requiring one adversarial fixture per coordination invariant will reduce false-positive control-plane acceptance to zero for the ten researched conflict classes.",
+  "baseline": {
+    "explicit_negative_fixtures": 0,
+    "known_conflict_classes_accepted": 10
+  },
+  "target": {
+    "negative_fixtures_rejected": 10,
+    "valid_fixtures_accepted": 1
+  },
+  "evaluation_window": "PR #168 hosted and local braid test results",
+  "adoption_rule": "Adopt only when all ten negative fixtures fail closed and the valid fixture passes.",
+  "rollback": "Revert individual invariant enforcement that rejects a documented valid fixture while retaining the fixture and decision history.",
+  "privacy_class": "public-safe"
+}

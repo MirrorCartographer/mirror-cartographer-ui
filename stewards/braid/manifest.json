@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "active_cycle": null,
+  "wip_limits": {
+    "implementation_leases": 1,
+    "non_implementation_tasks": 3,
+    "pull_requests_per_cycle": 1
+  },
+  "leases": [],
+  "task_states": {},
+  "last_updated": "2026-07-24T00:00:00Z"
+}
