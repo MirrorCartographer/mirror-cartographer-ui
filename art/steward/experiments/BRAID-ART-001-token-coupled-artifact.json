@@ -1,0 +1,15 @@
+{
+  "id": "BRAID-ART-001",
+  "version": "1.0.0",
+  "weakness": "Editable visual artifacts lacked machine-readable implementation constraints, allowing design-to-code drift.",
+  "hypothesis": "Pairing every SVG with design tokens and explicit pass/fail criteria will reduce unresolved implementation questions by at least 50 percent across the next three art-to-build handoffs.",
+  "baseline_metric": "unresolved_implementation_questions_per_handoff",
+  "baseline": null,
+  "target": "50% reduction over 3 handoffs",
+  "evaluation_window": "3 completed art-to-build handoffs",
+  "experiment": "Require SVG plus token JSON plus acceptance criteria.",
+  "status": "adopted-for-trial",
+  "risks": ["Token files may duplicate values already represented in CSS", "Premature token rigidity may constrain exploration"],
+  "rollback": "Retain the SVG and remove the token coupling requirement if implementation questions do not decline after three handoffs.",
+  "privacy_class": "public-safe"
+}
