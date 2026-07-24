@@ -14,18 +14,20 @@
         "At most one implementation lease can be active",
         "Every task has an explicit relationship and acceptance criteria",
         "The isolated Braid Control Plane workflow passes on the current PR head",
-        "The authoritative receipt records the exact evidence commit and observation timestamp"
+        "The authoritative receipt records the exact tested commit and observation timestamp"
       ],
       "blocking_evidence": {
-        "commit_sha": "0e2265b9ddc8ce6f2211c80fd1e9e9d9956a2ce4",
+        "evidence_subject_sha": "3856020caae6e9b5eafad09ad00fc1f2caf9fed6",
+        "observed_at": "2026-07-24T09:51:06Z",
         "workflow": "Braid Control Plane",
-        "workflow_run_id": 30076381839,
+        "workflow_run_id": 30080479742,
         "workflow_conclusion": "failure",
         "job": "Validate braid fixtures",
-        "job_id": 89427925394,
-        "diagnostic_boundary": "Workflow and job failure are observed, but step-level cause is unavailable. No validator defect is inferred."
+        "job_id": 89440674821,
+        "job_conclusion": "failure",
+        "diagnostic_boundary": "Workflow and job failure are observed, but step-level cause and job logs are unavailable. No validator, runner, dependency, billing, or repository-policy defect is inferred."
       },
-      "next_action": "Obtain step-level hosted evidence, repair only the evidenced failure, rerun the isolated workflow, and keep the PR draft until hosted validation passes.",
+      "next_action": "Obtain step-level evidence for job 89440674821 or add failure-resilient diagnostics, repair only the evidenced failure, rerun the isolated workflow, and keep the PR draft until hosted validation passes.",
       "privacy_class": "public-safe"
     }
   ]
