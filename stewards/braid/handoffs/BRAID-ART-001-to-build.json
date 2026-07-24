@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "BRAID-ART-001",
+  "source_steward": "art",
+  "target_steward": "build",
+  "relationship": "independent",
+  "semantic_objective": "Make braid execution order and task state legible without relying on color alone.",
+  "artifact_path": "art/braid/braid-state-grammar.svg",
+  "editable_format": "svg",
+  "design_tokens_path": "art/braid/braid-state.tokens.json",
+  "behavior_states": ["queued", "leased", "running", "repair", "accepted", "blocked", "rejected", "deferred", "independent"],
+  "accessibility_criteria": [
+    "Every state has a distinct glyph and text label",
+    "Keyboard focus is visible",
+    "Reduced-motion mode removes nonessential animation",
+    "Normal text contrast is at least 4.5:1",
+    "Touch targets are at least 44 by 44 CSS pixels"
+  ],
+  "implementation_constraints": [
+    "Preserve the 1200 by 720 source viewBox",
+    "Keep SVG groups addressable by steward id",
+    "Do not make this independent artifact deployment-blocking",
+    "Map tokens to CSS variables with the --braid- prefix"
+  ],
+  "acceptance_criteria": [
+    "SVG parses without errors",
+    "All nine states are represented in tokens and implementation",
+    "State meaning remains distinguishable in grayscale",
+    "Layout fits at 320 CSS pixels without horizontal document overflow",
+    "prefers-reduced-motion disables nonessential transitions"
+  ],
+  "rights_status": "original-project-owned",
+  "privacy_class": "public-safe",
+  "rollback": "Remove the UI integration while retaining the standalone SVG and token specification.",
+  "expiry": "2026-08-07T23:59:59Z",
+  "build_target": "non-blocking braid status component"
+}
