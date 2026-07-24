@@ -1,0 +1,92 @@
+{
+  "cycle_id": "BRAID-CYCLE-20260724-04",
+  "control_plane_ref": "assistant/braid-control-plane-v1",
+  "control_plane_status": "proposal-only",
+  "evidence_observed_at": "2026-07-24T09:51:06Z",
+  "evidence_subject_sha": "3856020caae6e9b5eafad09ad00fc1f2caf9fed6",
+  "receipt_commit_resolution": "Resolve from Git history for this receipt path; do not self-embed a commit SHA because changing the file changes its commit.",
+  "policy_experiment": {
+    "id": "BRAID-001-EVIDENCE-SUBJECT-SEPARATION",
+    "version": "1.0.0",
+    "status": "adopted_for_trial",
+    "metric": "receipts_with_ambiguous_tested_commit",
+    "baseline": 1,
+    "target": 0,
+    "evaluation_window_cycles": 3
+  },
+  "dependency_graph": [
+    {"stage": "research", "status": "consumed", "reason": "Invariant and evidence-completeness requirements support fail-closed governance."},
+    {"stage": "resources", "status": "consumed", "reason": "Failure-boundary-first observability recommendation defines the next diagnostic action."},
+    {"stage": "art", "status": "independent", "reason": "No eligible visual objective affects the blocked validator task."},
+    {"stage": "build", "status": "blocked", "reason": "No new implementation repair is justified without step-level evidence."},
+    {"stage": "integration", "status": "accepted", "reason": "Stale queue evidence was repaired and evidence identity semantics were clarified."}
+  ],
+  "leases": [],
+  "wip_review": {
+    "implementation_leases": 0,
+    "non_implementation_tasks": 1,
+    "within_limits": true
+  },
+  "duplicates": [],
+  "contradictions": [
+    {
+      "type": "stale_blocking_evidence",
+      "before": "queue referenced commit 0e2265b and run 30076381839 while newer terminal evidence existed for commit 3856020 and run 30080479742",
+      "after": "queue references evidence subject 3856020 and run 30080479742",
+      "resolved": true
+    },
+    {
+      "type": "evidence_self_reference",
+      "before": "freshness rule implied the receipt-bearing head must equal the tested commit, even when the receipt itself creates a governance-only commit",
+      "after": "evidence_subject_sha and receipt commit identity are separate",
+      "resolved": true
+    },
+    {
+      "type": "diagnostic_boundary",
+      "statement": "Workflow and job failure are observed; steps and logs remain unavailable.",
+      "resolved": false
+    }
+  ],
+  "artifact_verification": {
+    "verified_paths": [
+      "stewards/braid/manifest.json",
+      "stewards/braid/queue.json",
+      "stewards/braid/receipts/BRAID-CYCLE-20260724-03-integration.json",
+      ".github/workflows/braid-control-plane.yml",
+      "scripts/braid-control-plane-check.mjs",
+      "scripts/braid-control-plane-check.test.mjs",
+      "assistant/steward/policy-experiments/BRAID-001-EVIDENCE-SUBJECT-SEPARATION-v1.json"
+    ],
+    "broken_paths": []
+  },
+  "tests": {
+    "local": {"status": "not_verified"},
+    "hosted": {
+      "workflow": "Braid Control Plane",
+      "run_id": 30080479742,
+      "conclusion": "failure",
+      "job": "Validate braid fixtures",
+      "job_id": 89440674821,
+      "job_conclusion": "failure",
+      "step_level_evidence": "unavailable",
+      "job_logs": "unavailable"
+    }
+  },
+  "task_decisions": [
+    {"task_id": "BRAID-001", "status": "blocked", "reason": "The latest observed tested subject fails the required hosted workflow without diagnostic step evidence."}
+  ],
+  "durable_changes": [
+    {"path": "stewards/braid/queue.json", "commit_sha": "d93f141be0e7c0812c1897106a43c8b6df73ec3b", "summary": "Rebound blocked queue state to latest observed tested head."},
+    {"path": "assistant/steward/policy-experiments/BRAID-001-EVIDENCE-SUBJECT-SEPARATION-v1.json", "commit_sha": "dcc283251104c7de235694727aa2a645529b2164", "summary": "Separated tested evidence identity from governance receipt identity."}
+  ],
+  "truthfulness_review": "Observed terminal failure is separated from unknown root cause. Governance-only commits are not described as tested. No local pass or defect diagnosis is claimed.",
+  "privacy_review": "Public-safe architecture, synthetic fixtures, repository paths, commit identifiers, workflow identifiers, and CI metadata only.",
+  "rollback": "Revert commits d93f141be0e7c0812c1897106a43c8b6df73ec3b and dcc283251104c7de235694727aa2a645529b2164, then remove this receipt. Preserve prior hosted evidence and keep force push disabled.",
+  "next_queue": [
+    "Add failure-resilient diagnostic summaries and allowlisted artifacts to the isolated braid workflow.",
+    "Run one deliberate failing fixture and verify phase plus exit-code evidence survives.",
+    "Run the normal fixture suite and require a passing hosted result on the exact implementation head.",
+    "Keep PR 168 draft and BRAID-001 blocked until that pass exists."
+  ],
+  "next_falsifiable_improvement": "Reject acceptance when the latest implementation-affecting PR head is not the evidence_subject_sha of a passing required workflow; permit later governance-only receipt commits without rewriting tested history."
+}
