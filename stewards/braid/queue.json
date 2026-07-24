@@ -7,13 +7,25 @@
       "priority": 100,
       "relationship": "repairs",
       "stage": "integration",
-      "status": "ready",
+      "status": "blocked",
       "dependencies": [],
       "acceptance_criteria": [
         "The manifest and queue pass the braid validator",
         "At most one implementation lease can be active",
-        "Every task has an explicit relationship and acceptance criteria"
+        "Every task has an explicit relationship and acceptance criteria",
+        "The isolated Braid Control Plane workflow passes on the current PR head",
+        "The authoritative receipt records the exact evidence commit and observation timestamp"
       ],
+      "blocking_evidence": {
+        "commit_sha": "0e2265b9ddc8ce6f2211c80fd1e9e9d9956a2ce4",
+        "workflow": "Braid Control Plane",
+        "workflow_run_id": 30076381839,
+        "workflow_conclusion": "failure",
+        "job": "Validate braid fixtures",
+        "job_id": 89427925394,
+        "diagnostic_boundary": "Workflow and job failure are observed, but step-level cause is unavailable. No validator defect is inferred."
+      },
+      "next_action": "Obtain step-level hosted evidence, repair only the evidenced failure, rerun the isolated workflow, and keep the PR draft until hosted validation passes.",
       "privacy_class": "public-safe"
     }
   ]
