@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "artifact": "art/braid/braid-state-grammar.svg",
+  "layout": {"viewBox": "0 0 1200 720", "minimumNodeDiameter": 144, "minimumTouchTarget": 44, "mobileStackBreakpoint": 720},
+  "states": {
+    "queued": {"shape": "circle", "labelRequired": true},
+    "leased": {"shape": "square", "labelRequired": true},
+    "running": {"shape": "triangle", "edgePattern": "14 8", "labelRequired": true},
+    "repair": {"shape": "plus", "labelRequired": true},
+    "accepted": {"shape": "check", "labelRequired": true},
+    "blocked": {"shape": "cross", "labelRequired": true},
+    "rejected": {"shape": "bar", "labelRequired": true},
+    "deferred": {"shape": "pause", "labelRequired": true},
+    "independent": {"shape": "diamond", "labelRequired": true}
+  },
+  "accessibility": {
+    "colorAloneForbidden": true,
+    "reducedMotionRequired": true,
+    "keyboardFocusRequired": true,
+    "minimumTextContrast": 4.5,
+    "minimumLargeTextContrast": 3.0
+  },
+  "implementation": {
+    "cssVariablePrefix": "--braid-",
+    "editableFormat": "svg",
+    "requiredBehaviorStates": ["queued", "leased", "running", "repair", "accepted", "blocked", "rejected", "deferred", "independent"]
+  }
+}
