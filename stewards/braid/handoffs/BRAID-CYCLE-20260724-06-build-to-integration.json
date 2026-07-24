@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "cycle_id": "BRAID-CYCLE-20260724-06",
+  "task_id": "BRAID-001",
+  "source_steward": "build",
+  "target_steward": "integration",
+  "relationship": "repairs",
+  "lease_state": "proposal control plane read-only; no active lease; existing PR repaired",
+  "implementation_summary": "Added a shell-only hosted-runner reachability probe before checkout and validator execution, plus phase and exit-code summaries for npm ci and npm run test:braid.",
+  "consumed_inputs": [
+    "Research diagnostic ladder ordering failures by earliest observable phase",
+    "Resources decision TEST for a zero-action ubuntu-latest shell probe",
+    "Integration decision to keep BRAID-001 blocked until exact-head hosted evidence exists"
+  ],
+  "unconsumed_inputs": [
+    "Independent Art visual grammar; it does not affect the current CI diagnostic boundary"
+  ],
+  "changed_files": [
+    ".github/workflows/braid-control-plane.yml",
+    "automation/steward/policy-experiments/BRAID-001-RUNNER-REACHABILITY-FIRST-v1.json",
+    "stewards/braid/handoffs/BRAID-CYCLE-20260724-06-build-to-integration.json"
+  ],
+  "test_evidence": {
+    "local": {
+      "status": "not_run",
+      "reason": "Connector-backed repository mutation did not provide a local checkout runtime."
+    },
+    "hosted": {
+      "status": "pending",
+      "required_jobs": [
+        "Probe hosted runner and shell",
+        "Validate braid fixtures"
+      ]
+    }
+  },
+  "risks": [
+    "A passing runner probe does not prove actions/checkout or actions/setup-node are allowed.",
+    "Step summaries may remain unavailable through the connector even when present in GitHub.",
+    "The validation job is intentionally blocked when the runner probe fails."
+  ],
+  "rollback": "Revert the three cycle commits or remove the runner-probe job and validate-braid needs edge while retaining prior evidence.",
+  "privacy_class": "public-safe",
+  "open_contradictions": [
+    "The prior hosted job failed, but the earliest failing phase remains unknown.",
+    "The proposal branch is writable for PR repair but the control plane is not active on main."
+  ],
+  "acceptance_status": "repair",
+  "acceptance_criteria": [
+    "The exact PR head receives a terminal runner-probe result.",
+    "A pass exposes runner-shell-started or an equivalent phase summary.",
+    "A probe failure is not attributed to dependencies or validator logic.",
+    "The result identifies the next single diagnostic boundary.",
+    "PR #168 remains draft until the isolated validator workflow passes on the exact implementation head."
+  ],
+  "expires_at": "2026-07-25T10:36:00Z"
+}
