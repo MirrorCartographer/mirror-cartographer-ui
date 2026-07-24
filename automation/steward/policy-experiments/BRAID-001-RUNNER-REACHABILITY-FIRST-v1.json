@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "BRAID-001-RUNNER-REACHABILITY-FIRST",
+  "task_id": "BRAID-001",
+  "relationship": "repairs",
+  "status": "testing",
+  "weakness": "The hosted braid workflow failed without step-level evidence, while prior build changes assumed the job reached checkout, dependency installation, or validator execution.",
+  "hypothesis": "A shell-only hosted-runner probe executed before marketplace actions will classify whether the failure boundary occurs before or after runner and shell startup, reducing speculative implementation edits.",
+  "metric": "implementation_affecting_edits_before_first_evidenced_failure_phase",
+  "baseline": 2,
+  "target": 1,
+  "evaluation_window": "next terminal run of the Braid Control Plane workflow",
+  "adoption_gate": [
+    "The runner probe reaches a terminal conclusion on the exact PR head",
+    "A passing probe includes the runner-shell-started marker or phase summary",
+    "A failing probe is not attributed to validator or dependency behavior",
+    "The result selects exactly one next diagnostic boundary"
+  ],
+  "risks": [
+    "A passing shell probe does not prove marketplace actions are permitted",
+    "GitHub UI or connector limitations may still hide step summaries",
+    "The probe adds one short hosted job per relevant revision"
+  ],
+  "rollback": "Remove the runner-probe job and the validate-braid needs dependency; retain this experiment and terminal run evidence as decision history.",
+  "privacy_class": "public-safe"
+}
