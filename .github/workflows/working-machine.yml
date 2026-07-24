@@ -1,39 +1,42 @@
 name: Working Machine Checks
 
 on:
-  pull_request:
+  workflow_dispatch:
   push:
     branches:
       - main
       - mc-working-machine-v1
+    paths:
+      - 'engines/arc/**'
+      - '.github/workflows/working-machine.yml'
+  pull_request:
+    paths:
+      - 'engines/arc/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: working-machine-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  portal-build:
-    name: Portal build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Build portal
-        run: npm run build
-
   arc-harness-test:
     name: ARC harness tests
     runs-on: ubuntu-latest
+    timeout-minutes: 6
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: pip
+
       - name: Install test dependency
-        run: python -m pip install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Run ARC harness tests
         run: python -m pytest engines/arc/tests -q

@@ -1,0 +1,61 @@
+{
+  "schema": "foundation.ci-worker-policy.v1",
+  "authority": {
+    "scheduler": "foundation",
+    "job_admission": "foundation",
+    "artifact_acceptance": "foundation",
+    "release": "separate-foundation-release-authority"
+  },
+  "runner": {
+    "ephemeral": true,
+    "max_jobs": 1,
+    "registration_ttl_seconds": 600,
+    "destroy_after_job": true,
+    "rootless": true,
+    "user_namespace": "nomap",
+    "privileged": false,
+    "host_network": false,
+    "host_pid": false,
+    "host_ipc": false,
+    "mounts": {
+      "docker_socket": false,
+      "podman_socket": false,
+      "host_root": false,
+      "persistent_workspace": false
+    },
+    "network": {
+      "default": "deny",
+      "allowed_egress_classes": [
+        "source-mirror",
+        "dependency-mirror",
+        "artifact-ingest",
+        "time"
+      ]
+    },
+    "secrets": {
+      "delivery": "job-scoped-file",
+      "max_ttl_seconds": 600,
+      "persist_after_job": false
+    }
+  },
+  "evidence": {
+    "required": [
+      "source_digest",
+      "worker_image_digest",
+      "command_digest",
+      "output_digest",
+      "test_result_digest"
+    ],
+    "signer_role": "ci-attestor",
+    "canonical_store": "foundation-artifact-custody"
+  },
+  "recovery": {
+    "runner_state_canonical": false,
+    "rebuild_from": [
+      "worker-image-digest",
+      "policy",
+      "scheduler-config"
+    ],
+    "second_operator_runbook_required": true
+  }
+}

@@ -5,15 +5,25 @@ import { pathToFileURL } from 'node:url';
 
 const DEPLOYMENT_IRRELEVANT_PREFIXES = [
   'operations/',
+  'foundation-os/',
+  'tools/conversation_parallax/runs/',
+  '.github/workflows/',
 ];
 
+const DEPLOYMENT_IRRELEVANT_FILES = new Set([
+  'README.md',
+  'PREVIEWS.md',
+  'scripts/vercel-ignore-build.mjs',
+]);
+
 export function isDeploymentIrrelevantPath(path) {
-  return DEPLOYMENT_IRRELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix));
+  return DEPLOYMENT_IRRELEVANT_FILES.has(path)
+    || DEPLOYMENT_IRRELEVANT_PREFIXES.some((prefix) => path.startsWith(prefix));
 }
 
 export function requiresVercelBuild(paths) {
   // Suppress a deployment only when the commit has at least one changed path
-  // and every changed path is inside an explicitly deployment-irrelevant area.
+  // and every changed path is explicitly classified as deployment-irrelevant.
   // Unknown paths fail closed and therefore receive a Vercel build.
   return paths.length === 0 || paths.some((path) => !isDeploymentIrrelevantPath(path));
 }

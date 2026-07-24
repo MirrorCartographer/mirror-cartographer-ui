@@ -1,0 +1,143 @@
+version: 1
+program: foundation-full-sovereign-platform
+mode: parallel
+canonical_authorities:
+  intelligence: foundation
+  build: foundation
+  release: foundation
+  artifacts: foundation
+  recovery: foundation
+external_resources:
+  policy: replaceable-commodity-only
+  forbidden_roles:
+    - intelligence
+    - build-authority
+    - release-authority
+    - canonical-artifact-store
+    - sole-recovery-path
+capabilities:
+  - id: source-intake
+    status: planned
+    depends_on: []
+    proof: ingest-and-provenance-test
+  - id: reader-normalization
+    status: planned
+    depends_on: [source-intake]
+    proof: deterministic-normalization-test
+  - id: build-graph
+    status: planned
+    depends_on: [reader-normalization]
+    proof: graph-replay-test
+  - id: deterministic-build
+    status: planned
+    depends_on: [build-graph, dependency-control]
+    proof: cross-worker-digest-test
+  - id: dependency-control
+    status: planned
+    depends_on: []
+    proof: offline-mirror-build-test
+  - id: artifact-custody
+    status: planned
+    depends_on: [deterministic-build]
+    proof: loss-and-restore-test
+  - id: ci-workers
+    status: in-design
+    depends_on: [build-graph, identity, secrets]
+    proof: disposable-worker-compromise-test
+  - id: test-orchestration
+    status: planned
+    depends_on: [ci-workers]
+    proof: deterministic-test-replay
+  - id: package-registry
+    status: planned
+    depends_on: [artifact-custody]
+    proof: registry-export-restore
+  - id: image-registry
+    status: planned
+    depends_on: [artifact-custody]
+    proof: registry-export-restore
+  - id: release-authority
+    status: planned
+    depends_on: [artifact-custody, identity, secrets, policy-engine]
+    proof: unauthorized-release-rejection
+  - id: hosting-runtime
+    status: planned
+    depends_on: [release-authority, networking, identity]
+    proof: provider-replacement-deploy
+  - id: networking
+    status: planned
+    depends_on: []
+    proof: route-and-failover-test
+  - id: reverse-proxy
+    status: planned
+    depends_on: [networking]
+    proof: proxy-replacement-test
+  - id: tls
+    status: planned
+    depends_on: [networking, secrets]
+    proof: certificate-renewal-and-failure-test
+  - id: observability
+    status: planned
+    depends_on: [hosting-runtime]
+    proof: partial-control-plane-observability
+  - id: object-storage
+    status: planned
+    depends_on: []
+    proof: corruption-and-restore-test
+  - id: databases
+    status: planned
+    depends_on: [object-storage]
+    proof: point-in-time-restore-test
+  - id: queues
+    status: in-design
+    depends_on: [databases]
+    proof: total-cluster-loss-replay
+  - id: backups
+    status: planned
+    depends_on: [artifact-custody, databases, object-storage, secrets]
+    proof: destructive-restore-drill
+  - id: secrets
+    status: in-design
+    depends_on: [identity]
+    proof: revocation-and-root-loss-recovery
+  - id: identity
+    status: planned
+    depends_on: []
+    proof: second-operator-recovery
+  - id: deployment
+    status: planned
+    depends_on: [hosting-runtime, release-authority]
+    proof: progressive-rollout-test
+  - id: rollback
+    status: planned
+    depends_on: [deployment, artifact-custody]
+    proof: failed-release-rollback
+  - id: scaling
+    status: planned
+    depends_on: [hosting-runtime, observability]
+    proof: saturation-and-recovery-benchmark
+  - id: migration
+    status: planned
+    depends_on: [backups, deployment]
+    proof: cross-provider-migration
+  - id: disaster-recovery
+    status: planned
+    depends_on:
+      - backups
+      - identity
+      - secrets
+      - artifact-custody
+      - hosting-runtime
+      - databases
+      - queues
+    proof: total-loss-clean-room-restore
+required_gates:
+  - provider-removable
+  - canonical-state-exportable
+  - restore-tested
+  - second-operator-tested
+  - credentials-revocable
+  - corruption-detectable
+  - rollback-exercised
+  - cost-cliff-documented
+  - patch-burden-documented

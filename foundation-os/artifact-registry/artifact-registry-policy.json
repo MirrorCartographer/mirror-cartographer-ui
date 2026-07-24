@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "capability": "artifact-registry",
+  "artifact_acceptance_authority": "foundation",
+  "release_authority": "foundation",
+  "registry_role": "distribution-only",
+  "deployment_reference": "digest-only",
+  "tags_are_authoritative": false,
+  "canonical_inventory_outside_registry": true,
+  "portable_oci_layout_archive": true,
+  "include_referrers": true,
+  "replica_count": 3,
+  "failure_domain_count": 2,
+  "independent_write_boundary": true,
+  "credential_max_minutes": 10,
+  "garbage_collection": {
+    "dry_run": true,
+    "read_only": true,
+    "verified_export": true,
+    "post_collection_graph_audit": true
+  },
+  "recovery": {
+    "different_registry_implementation": true,
+    "verify_manifest_digests": true,
+    "verify_blob_digests": true,
+    "verify_referrer_graph": true,
+    "second_operator": true
+  }
+}

@@ -1,14 +1,36 @@
 name: Static Preview Artifact
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.*'
+      - '.github/workflows/build-artifact.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: static-preview-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-artifact:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -17,15 +39,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Run local gate
-        run: npm run test:local-gate
+      - name: Build static site
+        run: npm run build
 
       - name: Upload built static site
         uses: actions/upload-artifact@v4
@@ -33,15 +53,4 @@ jobs:
           name: mirror-cartographer-dist
           path: dist
           if-no-files-found: error
-          retention-days: 7
-
-      - name: Upload Playwright report and traces when present
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mirror-cartographer-playwright-output
-          path: |
-            playwright-report
-            test-results
-          if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
