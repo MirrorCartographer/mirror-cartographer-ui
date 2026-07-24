@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "tasks": [
+    {
+      "id": "BRAID-001",
+      "title": "Validate braided steward control plane",
+      "priority": 100,
+      "relationship": "repairs",
+      "stage": "integration",
+      "status": "ready",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "The manifest and queue pass the braid validator",
+        "At most one implementation lease can be active",
+        "Every task has an explicit relationship and acceptance criteria"
+      ],
+      "privacy_class": "public-safe"
+    }
+  ]
+}
