@@ -34,13 +34,18 @@
       "reason": "Connector execution environment does not provide a checked-out repository runtime."
     },
     "hosted": {
-      "status": "queued",
+      "status": "failure",
       "workflow": "Braid Control Plane",
-      "run_number": 1,
-      "commit": "98bc508335f814055818f9ec61e573d20df66f64"
+      "run_number": 3,
+      "run_id": 30076286256,
+      "commit": "9d1eeea847da606ca201a20b5b18c7db046d4513",
+      "job": "Validate braid fixtures",
+      "job_id": 89427619124,
+      "diagnostic_boundary": "GitHub returned a failed job with no step summaries; the downloadable job log returned BlobNotFound. The failing command is therefore not yet observable and no validator defect is inferred."
     }
   },
   "risks": [
+    "The hosted failure occurred before observable step evidence, so changing validator code would be speculative",
     "npm ci may fail before validator execution if package-lock.json is inconsistent",
     "Path filters require maintenance when braid dependencies change",
     "Workflow concurrency serializes CI runs but does not replace braid task leases"
@@ -48,10 +53,11 @@
   "rollback": "Delete .github/workflows/braid-control-plane.yml and revert the two cycle-02 evidence files; preserve prior validator fixtures.",
   "privacy_class": "public-safe",
   "open_contradictions": [
-    "The hosted workflow is isolated, but its first conclusion was still pending when this handoff was written.",
+    "The hosted workflow reached a terminal failure, but GitHub exposed no job steps or usable log artifact.",
+    "A failed hosted job is observable, while the underlying command failure remains unknown.",
     "The proposal branch is writable for PR repair but is not canonical on main."
   ],
-  "acceptance_status": "repair",
+  "acceptance_status": "blocked",
   "acceptance_criteria": [
     "Braid Control Plane workflow reaches a terminal conclusion on the current PR head",
     "Hosted job visibly executes npm run test:braid",
@@ -59,5 +65,6 @@
     "Workflow retains contents: read permissions only",
     "PR remains draft until the isolated hosted check passes"
   ],
+  "integration_requested_action": "Treat BRAID-001 as blocked on hosted runner diagnostics. Inspect repository Actions availability, billing or runner eligibility, and retry only after step-level evidence becomes observable. Do not modify validator logic based solely on this pre-step failure.",
   "expires_at": "2026-07-31T07:39:09Z"
 }
