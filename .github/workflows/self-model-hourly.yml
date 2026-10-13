@@ -9,7 +9,20 @@ concurrency:
   group: self-model-hourly
   cancel-in-progress: false
 jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run standard-library regression tests
+        run: python -m unittest discover -s tests/self_model -v
   agent-audit:
+    needs: contract-tests
     strategy:
       fail-fast: false
       matrix:
