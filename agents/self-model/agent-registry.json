@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "purpose": "Five bounded repository agents for the Mirror Cartographer self-model project.",
+  "execution_mode": "deterministic-audit-only-until-provider-adapter-is-configured",
+  "repositories": {
+    "implementation_self": "MirrorCartographer/mirror-cartographer-ui",
+    "evidence_self": "MirrorCartographer/MirrorCartographer"
+  },
+  "claim_statuses": [
+    "observed",
+    "sourced",
+    "inferred",
+    "hypothesized",
+    "contradicted",
+    "unknown"
+  ],
+  "agents": [
+    {
+      "id": "research",
+      "stage": 1,
+      "purpose": "Select one unresolved public-safe question and separate observations, sourced claims, inferences, hypotheses, contradictions, and unknowns.",
+      "outputs": [
+        "evidence-map",
+        "falsifiable-hypothesis",
+        "test-plan"
+      ],
+      "handoff_to": "resources",
+      "acceptance": [
+        "bounded question",
+        "source status explicit",
+        "falsification route"
+      ]
+    },
+    {
+      "id": "resources",
+      "stage": 2,
+      "purpose": "Evaluate one capability that unblocks a queued task.",
+      "outputs": [
+        "compatibility-matrix",
+        "cost-license-record",
+        "integration-spec",
+        "exit-plan"
+      ],
+      "handoff_to": "art-or-build",
+      "acceptance": [
+        "freshness stated",
+        "license and privacy checked",
+        "decision explicit"
+      ]
+    },
+    {
+      "id": "art",
+      "stage": 3,
+      "purpose": "Turn one semantic or usability objective into an editable accessible artifact.",
+      "outputs": [
+        "svg",
+        "css",
+        "design-tokens",
+        "symbolic-grammar",
+        "interaction-spec"
+      ],
+      "handoff_to": "build",
+      "acceptance": [
+        "objective explicit",
+        "accessibility criteria",
+        "rights provenance"
+      ]
+    },
+    {
+      "id": "build",
+      "stage": 4,
+      "purpose": "Implement the smallest testable change that makes an accepted hypothesis or design executable.",
+      "outputs": [
+        "script",
+        "schema",
+        "fixture",
+        "validator",
+        "prototype",
+        "regression-test"
+      ],
+      "handoff_to": "integration",
+      "acceptance": [
+        "artifact path exists",
+        "test command stated",
+        "failure behavior specified"
+      ]
+    },
+    {
+      "id": "integration",
+      "stage": 5,
+      "purpose": "Check cross-repository consistency, duplicate work, evidence quality, privacy, and next action.",
+      "outputs": [
+        "validation-receipt",
+        "contradiction-ledger",
+        "repair-task",
+        "cycle-summary"
+      ],
+      "handoff_to": "research",
+      "acceptance": [
+        "claims labeled",
+        "privacy gate clear",
+        "one next action prioritized"
+      ]
+    }
+  ],
+  "global_rules": {
+    "no_direct_main_writes": true,
+    "no_auto_merge": true,
+    "public_output_must_be_reviewed": true,
+    "raw_private_conversation_publication": false,
+    "platform_limit_evasion": false,
+    "provider_credentials_in_source": false,
+    "hourly_runner_initial_mode": "audit-only"
+  }
+}
