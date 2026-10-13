@@ -1,4 +1,4 @@
-name: Self-model hourly audit
+name: Self-model five-agent hourly cycle
 on:
   schedule:
     - cron: "17 * * * *"
@@ -9,9 +9,15 @@ concurrency:
   group: self-model-hourly
   cancel-in-progress: false
 jobs:
-  audit:
+  agent-audit:
+    strategy:
+      fail-fast: false
+      matrix:
+        agent: [research, resources, art, build, integration]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      MC_AGENT: ${{ matrix.agent }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,11 +25,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate five-agent contracts and emit receipt
+      - name: Validate agent contracts and emit role-specific receipt
         run: python tools/self_model/run_cycle.py
       - uses: actions/upload-artifact@v4
         with:
-          name: self-model-run-receipt
-          path: self-model-run-receipt.json
+          name: self-model-${{ matrix.agent }}-receipt
+          path: self-model-run-receipt-${{ matrix.agent }}.json
           if-no-files-found: error
           retention-days: 14
