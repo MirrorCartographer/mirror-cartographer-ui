@@ -1,84 +1,29 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>The Glasshouse Gate — Mirror Cartographer</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>The Glasshouse Gate — Mirror Cartographer</title>
 <style>
-:root{color-scheme:dark;--night:#0b1112;--glass:#102122;--leaf:#b7e1b4;--amber:#f0c88d;--paper:#f1eee4;--muted:#b5c3bc;--line:rgba(183,225,180,.25);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--paper);background:radial-gradient(ellipse at 50% -10%,#24433d,transparent 55%),linear-gradient(145deg,#0b1112,#101a1b 60%,#151c18);line-height:1.55}
-a{color:var(--leaf);text-underline-offset:.2em}a:focus-visible,button:focus-visible,input:focus-visible+span{outline:3px solid var(--amber);outline-offset:4px}
-.shell{max-width:1120px;margin:auto;padding:clamp(1rem,4vw,3rem)}.mast{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:1rem}
-.eyebrow,.micro{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:700}.mast p{margin:0}.stamp{font-size:.75rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:.3rem .65rem}
-.hero{max-width:760px;padding:clamp(2rem,6vw,4.5rem) 0 2rem}h1{font:400 clamp(2.8rem,7vw,5.4rem)/.98 Georgia,serif;letter-spacing:-.04em;margin:.5rem 0 1rem}h1 em{color:var(--leaf)}.lede{font-size:1.12rem;color:#d2ded6;max-width:58ch}.note{border-left:3px solid var(--amber);padding:.45rem .8rem;color:#f1d6ae;background:#f0c88d0c;display:inline-block}
-.house{border:1px solid #6fa69a88;border-radius:1.3rem;overflow:hidden;background:linear-gradient(140deg,#1f3e39dd,#0c1718f2);box-shadow:0 28px 80px #0004}
-.rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:linear-gradient(90deg,transparent 33.2%,#6fa69a30 33.3%,transparent 33.5%,transparent 66.5%,#6fa69a30 66.6%,transparent 66.8%)}
-.room{padding:clamp(1rem,2.5vw,2rem);min-width:0;border-right:1px solid var(--line)}.room:last-child{border:0}.num{font:2.5rem Georgia,serif;color:var(--amber);margin:0}.room h2{font-size:1.05rem;margin:.4rem 0 .9rem}.card{min-height:210px;padding:1rem;border:1px solid #b7e1b450;background:#050c0dcc;border-radius:.85rem}.source{border-color:#f0c88d88}.lock{display:inline-block;border:1px solid #f0c88d88;border-radius:99px;color:var(--amber);padding:.15rem .5rem;font-size:.7rem}.source blockquote{margin:.8rem 0;font:1.1rem/1.45 Georgia,serif}.method{font:1.2rem/1.5 Georgia,serif;color:var(--leaf)}.small{font-size:.84rem;color:var(--muted)}
-.controls{padding:clamp(1rem,3vw,2rem);border-top:1px solid var(--line);background:#040a0b77}.controls h2{font:400 1.7rem Georgia,serif;margin:.2rem 0 .4rem}.intro{color:var(--muted);max-width:70ch}
-.gate{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:1.5rem;align-items:start}fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:700;margin-bottom:.7rem}.checks{display:grid;gap:.65rem}.check{display:flex;gap:.8rem;align-items:flex-start;padding:.8rem;border:1px solid var(--line);border-radius:.7rem;background:#102122cc;cursor:pointer}.check:has(input:checked){border-color:var(--leaf);background:#4b7a5b2e}.check input{width:1.2rem;height:1.2rem;flex:0 0 auto;margin:.2rem 0 0;accent-color:var(--leaf)}.check strong{display:block}.check small{display:block;color:var(--muted);margin-top:.15rem}
-.panel{border:1px solid var(--line);border-radius:.9rem;padding:1rem;background:#0c1919dd}.panel h3{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .6rem}.status{padding:.65rem .75rem;border:1px solid var(--amber);color:var(--amber);border-radius:.5rem;font-weight:800;font-size:.85rem}.status[data-state="review"]{border-color:var(--leaf);color:var(--leaf)}.artifact{font:1.12rem/1.5 Georgia,serif;margin:.9rem 0 .5rem}.artifact-note{font-size:.82rem;color:var(--muted)}.count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
-button{border:1px solid var(--leaf);border-radius:99px;background:transparent;color:var(--paper);font:inherit;font-weight:700;padding:.6rem 1rem;cursor:pointer;margin-top:1rem}button:hover{background:#b7e1b418}.boundary{border-left:3px solid var(--amber);padding:.7rem .9rem;background:#f0c88d0c;font-size:.86rem;color:#e9ddc9}
-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;padding:1.5rem 0;color:var(--muted);font-size:.85rem}footer p{max-width:65ch;margin:0}
-@media(max-width:800px){.rooms,.gate{grid-template-columns:1fr}.room{border-right:0;border-bottom:1px solid var(--line)}.room:last-child{border-bottom:0}.card{min-height:0}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-</style>
-</head>
-<body><main class="shell">
-<header class="mast"><p class="eyebrow">Mirror Cartographer / Public-safe abstraction lab</p><span class="stamp">Synthetic specimen · No data leaves this page</span></header>
-<section class="hero" aria-labelledby="title"><p class="eyebrow">A small proof about privacy and meaning</p><h1 id="title">The <em>Glasshouse</em> Gate</h1><p class="lede">A private story can teach a public method without becoming the public artifact. Move through the gate and watch what must change before an idea is ready to travel.</p><p class="note">The example is invented. It describes no real person or place.</p></section>
-<section class="house" aria-label="Three stages of public-safe abstraction">
-<div class="rooms">
-<section class="room" aria-labelledby="source-heading"><p class="num" aria-hidden="true">01</p><p class="micro">Source chamber</p><h2 id="source-heading">The private source</h2><div class="card source"><span class="lock">SEALED · SYNTHETIC</span><blockquote>“At 6:40 p.m. on Mossglass Lane, I drew a greenhouse window reflecting the neighboring doorway. The reflection felt like an eye.”</blockquote><p class="small">Specific place · time · recognizable detail · symbolic interpretation</p></div></section>
-<section class="room" aria-labelledby="bridge-heading"><p class="num" aria-hidden="true">02</p><p class="micro">Transformation chamber</p><h2 id="bridge-heading">The method bridge</h2><div class="card"><p class="method">Keep the useful pattern. Leave the source behind.</p><p class="small">Generalize details, remove unnecessary context, convert story to method, and keep the claim at the right evidence level.</p><p class="small">This model does not automatically detect sensitive details.</p></div></section>
+:root{color-scheme:dark;--bg:#0b1112;--leaf:#b7e1b4;--amber:#f0c88d;--paper:#f1eee4;--muted:#b5c3bc;--line:#6fa69a66;font:16px/1.5 system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#24433d,var(--bg) 62%);color:var(--paper)}a{color:var(--leaf)}a:focus-visible,button:focus-visible,input:focus-visible+span{outline:3px solid var(--amber);outline-offset:4px}main{max-width:1100px;margin:auto;padding:clamp(1rem,4vw,3rem)}header,footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:1rem}.eyebrow,.micro{color:var(--leaf);font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}header p{margin:0}.stamp{font-size:.75rem;color:var(--muted)}.hero{max-width:750px;padding:3rem 0 2rem}h1{font:400 clamp(2.8rem,7vw,5rem)/1 Georgia,serif;margin:.4rem 0 1rem}h1 em{color:var(--leaf)}.lede{font-size:1.1rem;color:#d2ded6}.note{border-left:3px solid var(--amber);padding:.4rem .8rem;color:var(--amber)}.house{border:1px solid #6fa69a88;border-radius:1rem;overflow:hidden;background:linear-gradient(140deg,#1f3e39dd,#0c1718f2)}.rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.room{padding:clamp(1rem,2.5vw,2rem);border-right:1px solid var(--line);min-width:0}.room:last-child{border:0}.num{font:2.4rem Georgia,serif;color:var(--amber);margin:0}.room h2{font-size:1rem}.card{min-height:190px;padding:1rem;border:1px solid #b7e1b44a;border-radius:.8rem;background:#050c0dcc}.source{border-color:#f0c88d88}.lock{color:var(--amber);font-size:.7rem;border:1px solid #f0c88d88;border-radius:99px;padding:.1rem .5rem}.source blockquote{font:1.05rem/1.45 Georgia,serif;margin:.8rem 0}.method,.artifact{font:1.12rem/1.5 Georgia,serif;color:var(--leaf)}.small,.artifact-note{font-size:.82rem;color:var(--muted)}.controls{border-top:1px solid var(--line);padding:clamp(1rem,3vw,2rem);background:#040a0b77}.controls h2{font:400 1.6rem Georgia,serif}.intro{color:var(--muted);max-width:70ch}.gate{display:grid;grid-template-columns:1.2fr .8fr;gap:1.3rem}fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:700;margin-bottom:.7rem}.checks{display:grid;gap:.6rem}.check{display:flex;gap:.7rem;padding:.75rem;border:1px solid var(--line);border-radius:.7rem;background:#102122cc;cursor:pointer}.check:has(input:checked){border-color:var(--leaf);background:#4b7a5b2e}.check input{width:1.2rem;height:1.2rem;flex:0 0 auto;margin:.2rem 0 0;accent-color:var(--leaf)}.check strong,.check small{display:block}.check small{color:var(--muted)}.panel{border:1px solid var(--line);border-radius:.8rem;padding:1rem;background:#0c1919dd}.panel h3{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.status{padding:.6rem;border:1px solid var(--amber);color:var(--amber);border-radius:.5rem;font-weight:800;font-size:.84rem}.status[data-state=review]{border-color:var(--leaf);color:var(--leaf)}button{margin-top:1rem;border:1px solid var(--leaf);border-radius:99px;background:transparent;color:var(--paper);font:inherit;padding:.55rem .9rem;cursor:pointer}.count{font-size:.82rem;color:var(--muted);margin-left:.5rem}.boundary{border-left:3px solid var(--amber);padding:.6rem;background:#f0c88d0c;font-size:.84rem}footer{border:0;border-top:1px solid var(--line);padding-top:1.2rem;color:var(--muted);font-size:.84rem}@media(max-width:760px){.rooms,.gate{grid-template-columns:1fr}.room{border-right:0;border-bottom:1px solid var(--line)}.room:last-child{border-bottom:0}.card{min-height:0}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style></head><body><main>
+<header><p class="eyebrow">Mirror Cartographer / Public-safe abstraction lab</p><span class="stamp">Synthetic specimen · No data leaves this page</span></header>
+<section class="hero" aria-labelledby="title"><p class="eyebrow">A small proof about privacy and meaning</p><h1 id="title">The <em>Glasshouse</em> Gate</h1><p class="lede">A private story can teach a public method without becoming the public artifact. Move through the gate and watch what must change before an idea is ready to travel.</p><p class="note">Invented example. No real person or place is described.</p></section>
+<section class="house" aria-label="Three stages of public-safe abstraction"><div class="rooms">
+<section class="room" aria-labelledby="source-heading"><p class="num" aria-hidden="true">01</p><p class="micro">Source chamber</p><h2 id="source-heading">The private source</h2><div class="card source"><span class="lock">SEALED · SYNTHETIC</span><blockquote>“At 6:40 p.m. on Mossglass Lane, I drew a greenhouse window reflecting a neighboring doorway. The reflection felt like an eye.”</blockquote><p class="small">Specific place · time · recognizable detail · symbolic interpretation</p></div></section>
+<section class="room" aria-labelledby="bridge-heading"><p class="num" aria-hidden="true">02</p><p class="micro">Transformation chamber</p><h2 id="bridge-heading">The method bridge</h2><div class="card"><p class="method">Keep the useful pattern. Leave the source behind.</p><p class="small">Generalize details, remove context, convert story to method, and keep the claim at the right evidence level.</p><p class="small">This model does not automatically detect sensitive details.</p></div></section>
 <section class="room" aria-labelledby="public-heading"><p class="num" aria-hidden="true">03</p><p class="micro">Release chamber</p><h2 id="public-heading">The public method</h2><div class="card"><p class="micro">Preview only</p><p class="artifact" id="artifact-copy">No method extracted yet. The source is too close to its original story.</p><p class="artifact-note" id="artifact-note">No public artifact is ready.</p></div></section>
-</div>
-<section class="controls" aria-labelledby="checks-heading"><h2 id="checks-heading">Open the gate by doing the work</h2><p class="intro">Select each transformation to see the release state change. This is a teaching model, not a privacy scanner. Completing the checklist can make a draft ready for human review; it cannot certify that a real artifact is safe.</p>
-<div class="gate">
+</div><section class="controls" aria-labelledby="checks-heading"><h2 id="checks-heading">Open the gate by doing the work</h2><p class="intro">Select each transformation. The checklist is a teaching model, not a safety certification. A complete draft still requires human review.</p><div class="gate">
 <fieldset><legend>Release checks</legend><div class="checks">
-<label class="check"><input type="checkbox" data-transform="generalize"><span><strong>Generalize identifying detail</strong><small>Do not carry the exact location or recognizable subject forward.</small></span></label>
-<label class="check"><input type="checkbox" data-transform="remove-context"><span><strong>Remove unnecessary time and context</strong><small>Keep only what the method needs to be understood.</small></span></label>
-<label class="check"><input type="checkbox" data-transform="convert-method"><span><strong>Convert the story into a method</strong><small>Describe a reusable design move rather than retelling the source.</small></span></label>
+<label class="check"><input type="checkbox" data-transform="generalize"><span><strong>Generalize identifying detail</strong><small>Do not carry the exact place or recognizable subject forward.</small></span></label>
+<label class="check"><input type="checkbox" data-transform="remove-context"><span><strong>Remove unnecessary time and context</strong><small>Keep only what the method needs.</small></span></label>
+<label class="check"><input type="checkbox" data-transform="convert-method"><span><strong>Convert the story into a method</strong><small>Describe a reusable design move, not the source story.</small></span></label>
 <label class="check"><input type="checkbox" data-transform="bound-claim"><span><strong>Keep symbol separate from fact</strong><small>A reflection can evoke being watched; it does not prove anyone was watching.</small></span></label>
-</div><button id="reset-gate" type="button">Reset the gate</button> <span class="count" id="gate-count">0 of 4 transformations selected</span></fieldset>
-<aside class="panel" aria-labelledby="status-heading"><h3 id="status-heading">Release status</h3><p class="status" id="gate-status" data-state="blocked" role="status" aria-live="polite">BLOCKED — 4 release checks remain.</p><p class="small" id="status-explanation">The source remains source-bound until every modeled transformation is selected.</p><p class="boundary">Even when all four checks are selected, the page says “ready for human review,” never “automatically safe” or “published.”</p></aside>
+</div><button id="reset-gate" type="button">Reset the gate</button><span class="count" id="gate-count">0 of 4 transformations selected</span></fieldset>
+<aside class="panel" aria-labelledby="status-heading"><h3 id="status-heading">Release status</h3><p class="status" id="gate-status" data-state="blocked" role="status" aria-live="polite">BLOCKED — 4 release checks remain.</p><p class="small" id="status-explanation">The source remains source-bound until every modeled transformation is selected.</p><p class="boundary">The final state is “ready for human review,” never “published” or “automatically safe.”</p></aside>
 </div></section></section>
-<footer><p>No text entry, network calls, analytics, cookies, or saved state. Reset at any time. All source material above is fictional.</p><p><a href="https://github.com/MirrorCartographer/MirrorCartographer/blob/creative/public-safe-abstraction-protocol/demonstrations/PUBLIC_SAFE_ABSTRACTION_GATE_PROTOCOL.md">Research protocol ↗</a></p></footer>
-</main>
-<script id="gate-logic">
-const controls = Array.from(document.querySelectorAll('[data-transform]'));
-const gateStatus = document.getElementById('gate-status');
-const gateCount = document.getElementById('gate-count');
-const artifact = document.getElementById('artifact-copy');
-const artifactNote = document.getElementById('artifact-note');
-const explanation = document.getElementById('status-explanation');
-const reset = document.getElementById('reset-gate');
-function renderGate() {
-  const selected = controls.filter((control) => control.checked);
-  const complete = selected.length === controls.length;
-  const methodSelected = controls.some((control) => control.dataset.transform === 'convert-method' && control.checked);
-  gateCount.textContent = selected.length + ' of ' + controls.length + ' transformations selected';
-  if (complete) {
-    gateStatus.textContent = 'READY FOR HUMAN REVIEW — not auto-published.';
-    gateStatus.dataset.state = 'review';
-    explanation.textContent = 'All modeled checks are selected. A human reviewer must still inspect the full artifact and its context.';
-    artifact.textContent = 'Layered reflections can evoke a feeling of observation without identifying a place or person.';
-    artifactNote.textContent = 'Design hypothesis only. This does not establish that anyone was watching or being watched.';
-    return;
-  }
-  gateStatus.textContent = 'BLOCKED — ' + (controls.length - selected.length) + ' release checks remain.';
-  gateStatus.dataset.state = 'blocked';
-  explanation.textContent = 'The source remains source-bound until every modeled transformation is selected.';
-  if (methodSelected) {
-    artifact.textContent = 'Draft method: use layered reflections to evoke observation and distance.';
-    artifactNote.textContent = 'Draft only. The release gate remains blocked until the remaining checks and human review are complete.';
-  } else {
-    artifact.textContent = 'No method extracted yet. The source is too close to its original story.';
-    artifactNote.textContent = 'No public artifact is ready.';
-  }
-}
-controls.forEach((control) => control.addEventListener('change', renderGate));
-reset.addEventListener('click', () => { controls.forEach((control) => { control.checked = false; }); renderGate(); });
-renderGate();
-</script>
-</body></html>
+<footer><p>No text entry, network calls, analytics, cookies, or saved state. Reset at any time. The example is fictional.</p><p><a href="https://github.com/MirrorCartographer/MirrorCartographer/blob/creative/public-safe-abstraction-protocol/demonstrations/glasshouse-gate-protocol.md">Research protocol ↗</a></p></footer>
+</main><script id="gate-logic">
+const controls=Array.from(document.querySelectorAll('[data-transform]'));
+const status=document.getElementById('gate-status'),count=document.getElementById('gate-count'),artifact=document.getElementById('artifact-copy'),note=document.getElementById('artifact-note'),explanation=document.getElementById('status-explanation'),reset=document.getElementById('reset-gate');
+function renderGate(){const selected=controls.filter(c=>c.checked),complete=selected.length===controls.length,method=controls.some(c=>c.dataset.transform==='convert-method'&&c.checked);count.textContent=selected.length+' of '+controls.length+' transformations selected';
+if(complete){status.textContent='READY FOR HUMAN REVIEW — not auto-published.';status.dataset.state='review';explanation.textContent='All modeled checks are selected. A human reviewer must still inspect the full artifact and context.';artifact.textContent='Layered reflections can evoke a feeling of observation without identifying a place or person.';note.textContent='Design hypothesis only. This does not establish that anyone was watching or being watched.';return}
+status.textContent='BLOCKED — '+(controls.length-selected.length)+' release checks remain.';status.dataset.state='blocked';explanation.textContent='The source remains source-bound until every modeled transformation is selected.';artifact.textContent=method?'Draft method: use layered reflections to evoke observation and distance.':'No method extracted yet. The source is too close to its original story.';note.textContent=method?'Draft only. The gate remains blocked until the remaining checks and human review are complete.':'No public artifact is ready.'}
+controls.forEach(c=>c.addEventListener('change',renderGate));reset.addEventListener('click',()=>{controls.forEach(c=>{c.checked=false});renderGate()});renderGate();
+</script></body></html>
