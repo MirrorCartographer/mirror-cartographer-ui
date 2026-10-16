@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>The Lever Beneath the Leaves — Mirror Cartographer</title>
+<style>
+:root{color-scheme:dark;--bg:#091210;--panel:#14251e;--ink:#f1f0df;--muted:#b9c9bc;--line:#729b8266;--mint:#b9efbd;--amber:#f2cc8f;font:16px/1.55 system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 15% 0%,#294b39,transparent 38rem),radial-gradient(ellipse at 90% 30%,#243b48,transparent 34rem),var(--bg)}
+main{max-width:1080px;margin:auto;padding:clamp(1rem,4vw,3rem)}header,footer{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:1rem}
+.eyebrow{margin:0;color:var(--mint);font-size:.75rem;font-weight:750;letter-spacing:.14em;text-transform:uppercase}.muted,.privacy{color:var(--muted)}.privacy{font-size:.84rem}
+.hero{max-width:780px;padding:clamp(2rem,7vw,4.5rem) 0 2rem}h1{max-width:12ch;margin:.5rem 0 1rem;font:400 clamp(2.8rem,8vw,5.8rem)/.96 Georgia,serif;letter-spacing:-.04em}h1 em{color:var(--mint)}.lede{font-size:clamp(1.05rem,2vw,1.25rem);max-width:65ch;color:#d6e1d6}.thesis{display:inline-block;border-left:3px solid var(--amber);padding:.45rem .9rem;color:var(--amber)}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(16rem,.9fr);gap:1rem;align-items:start}.panel{min-width:0;border:1px solid var(--line);border-radius:1.2rem;background:linear-gradient(145deg,#182a22ed,#0c1715f2);overflow:hidden;box-shadow:0 1.2rem 3rem #0003}.inside{padding:clamp(1rem,3vw,1.6rem)}h2{margin:0 0 .6rem;font:400 1.55rem/1.2 Georgia,serif}h3{margin:0 0 .5rem;font-size:1rem}p{margin:.55rem 0 1rem}
+fieldset{min-width:0;margin:1.2rem 0 0;padding:0;border:0}legend{margin-bottom:.7rem;font-weight:750}.control{display:grid;grid-template-columns:4.5rem minmax(5rem,1fr) minmax(6.5rem,.8fr);gap:.7rem;align-items:center;padding:.85rem 0;border-bottom:1px solid #729b8230}.control label{font-weight:700}input[type=range]{width:100%;accent-color:var(--mint);cursor:pointer}output{color:var(--amber);font-size:.85rem;text-align:right;font-variant-numeric:tabular-nums}
+button,a{font:inherit}button{min-height:2.8rem;border:1px solid #9dc8a477;border-radius:999px;padding:.65rem 1rem;background:#21392e;color:var(--ink);font-weight:700;cursor:pointer}button.primary{background:var(--mint);color:#102016;border-color:var(--mint)}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:4px}.actions{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.2rem}
+.specimen{display:grid;place-items:center;min-height:13rem;padding:1rem;background:radial-gradient(ellipse at center,#365d433d,transparent 68%);border-bottom:1px solid var(--line)}svg{width:min(100%,17rem);height:auto}.leaf{fill:#4d7353;opacity:.45;transition:fill .2s,opacity .2s}.stem{stroke:#9dbd83;stroke-width:5;stroke-linecap:round;fill:none}.soil{fill:#b58e62}.glow{fill:#f2cc8f;opacity:0;transition:opacity .2s}#plant[data-state=awake] .leaf{fill:var(--mint);opacity:1}#plant[data-state=awake] .glow{opacity:.75}
+.result{border:1px solid var(--line);border-radius:.9rem;padding:1rem;background:#08130f99}.result-state{display:flex;align-items:center;gap:.7rem}.mark{display:grid;place-items:center;width:2rem;height:2rem;border:1px solid var(--line);border-radius:50%;font-weight:900}#result-heading{margin:0;font-size:1.1rem}#result-copy{margin:.5rem 0 0;color:var(--muted)}
+.comparison{margin-top:1rem;border-left:3px solid var(--amber);padding:.65rem .9rem;background:#f2cc8f0d}.comparison h3{color:var(--amber)}#comparison-copy{margin:0}
+.history{padding-left:1.4rem;margin:.8rem 0 0}.history li{padding:.35rem 0;color:var(--muted)}.history strong{color:var(--ink)}details{margin-top:1rem;border:1px solid var(--line);border-radius:.8rem;padding:.85rem 1rem}summary{color:var(--mint);font-weight:750;cursor:pointer}.boundary{margin:1rem 0 2rem;padding:1rem;border:1px dashed #f2cc8f77;border-radius:.9rem;color:var(--muted)}.boundary strong{color:var(--amber)}footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);border-bottom:0;color:var(--muted);font-size:.85rem}a{color:var(--mint)}
+@media(max-width:740px){.grid{grid-template-columns:1fr}.control{grid-template-columns:4.2rem minmax(5rem,1fr)}output{grid-column:2;text-align:left}.specimen{min-height:9rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body><main>
+<header><p class="eyebrow">Mirror Cartographer · Tiny causal garden</p><p class="privacy">Fictional model · no uploads · no saved state</p></header>
+<section class="hero" aria-labelledby="page-title"><p class="eyebrow">A small experiment in cause and context</p><h1 id="page-title">The lever beneath the <em>leaves.</em></h1><p class="lede">A seed opens. You change the weather around it. Did the outcome change because of one setting, several settings, or a rule you have not tested yet?</p><p class="thesis">A pattern can suggest a question. A controlled comparison can sharpen it.</p></section>
+<section class="grid" aria-label="Interactive seed experiment">
+<section class="panel" aria-labelledby="controls-title"><div class="inside"><h2 id="controls-title">Tune the little world</h2><p class="muted">Move one lever at a time to isolate its effect. Run a trial to record the current conditions.</p>
+<fieldset><legend>Environmental settings</legend>
+<div class="control"><label for="light">Light</label><input id="light" type="range" min="0" max="2" step="1" value="1"><output id="light-value" for="light">1 · filtered</output></div>
+<div class="control"><label for="water">Water</label><input id="water" type="range" min="0" max="2" step="1" value="1"><output id="water-value" for="water">1 · steady</output></div>
+<div class="control"><label for="wind">Wind</label><input id="wind" type="range" min="0" max="2" step="1" value="0"><output id="wind-value" for="wind">0 · still</output></div></fieldset>
+<div class="actions"><button class="primary" id="run-trial" type="button">Run trial</button><button id="reset" type="button">Reset garden</button></div><p class="muted">Only completed trials enter the log. Moving a slider does not change a past result.</p></div></section>
+<section class="panel" aria-labelledby="specimen-title"><div class="specimen"><svg id="plant" data-state="unknown" viewBox="0 0 240 210" role="img" aria-labelledby="plant-title plant-desc"><title id="plant-title">The test seed</title><desc id="plant-desc">No trial has been run yet.</desc><circle class="glow" cx="120" cy="92" r="72"></circle><path class="soil" d="M42 174 Q120 158 198 174 L190 188 Q120 198 50 188 Z"></path><path class="stem" d="M120 174 C119 145 122 118 120 89"></path><path class="leaf" d="M120 132 C81 129 68 102 70 82 C98 83 122 101 120 132 Z"></path><path class="leaf" d="M120 113 C158 111 176 87 173 66 C145 67 119 84 120 113 Z"></path><path class="leaf" d="M120 92 C96 75 101 49 120 37 C139 50 144 74 120 92 Z"></path></svg></div><div class="inside"><h2 id="specimen-title">What happened?</h2><div class="result" aria-live="polite" aria-atomic="true"><div class="result-state"><span class="mark" id="state-mark" aria-hidden="true">?</span><h3 id="result-heading">No trial yet</h3></div><p id="result-copy">Choose conditions and run your first trial. This plant is a diagram of the toy model, not a real organism.</p></div><section class="comparison" aria-labelledby="comparison-title" aria-live="polite"><h3 id="comparison-title">The comparison lens</h3><p id="comparison-copy">A comparison appears after you have at least one earlier trial.</p></section></div></section></section>
+<section class="panel" style="margin-top:1rem" aria-labelledby="history-title"><div class="inside"><h2 id="history-title">Trial trail</h2><p class="muted">The trail exists only in this open page. Reset clears it; reload starts fresh.</p><ol id="trial-log" class="history" aria-label="Completed trials"><li id="empty-history">No trials recorded.</li></ol><details id="rule-details"><summary>Reveal the toy rule</summary><p class="muted">In this deliberately simple model, the seed opens when light is at least 1 <em>and</em> water is at least 1. Wind has no effect. This is code in the demo, not a claim about real plants or human systems.</p></details></div></section>
+<aside class="boundary"><strong>Evidence boundary.</strong> A one-variable comparison helps isolate a difference in this toy model. It does not establish a universal cause, explain a real person's behavior, or prove that the same rule applies outside this little world.</aside>
+<footer><span>Static interaction · no network calls · no browser storage</span><a href="https://github.com/MirrorCartographer/MirrorCartographer/blob/creative/lever-garden-protocol/demonstrations/lever-garden-protocol.md">Read the research protocol</a></footer>
+</main>
+<script>
+(() => {
+ const names=['light','water','wind'];
+ const labels={light:['0 · shade','1 · filtered','2 · bright'],water:['0 · dry','1 · steady','2 · saturated'],wind:['0 · still','1 · breeze','2 · gust']};
+ const trials=[]; const $=id=>document.getElementById(id);
+ const settings=()=>Object.fromEntries(names.map(k=>[k,Number($(k).value)]));
+ const opened=s=>s.light>=1&&s.water>=1;
+ const outcomeName=v=>v?'open':'closed';
+ function readouts(){for(const k of names)$(k+'-value').textContent=labels[k][Number($(k).value)];}
+ function compare(a,b){
+  if(!a)return 'First trial: a starting point, not a cause.';
+  const changed=names.filter(k=>a.settings[k]!==b.settings[k]);
+  if(!changed.length)return 'No setting changed. Repeating the same setup adds no new contrast.';
+  if(changed.length>1)return 'Several settings changed ('+changed.join(', ')+'). This pair cannot isolate one lever. Change one setting and hold the others steady.';
+  const k=changed[0], diff=a.opened!==b.opened;
+  return 'Only '+k+' changed ('+labels[k][a.settings[k]]+' → '+labels[k][b.settings[k]]+'), while the other settings stayed fixed. '+(diff?'The outcome changed from '+outcomeName(a.opened)+' to '+outcomeName(b.opened)+'. This supports a difference for this tested pair, not a universal rule.':'The outcome stayed '+outcomeName(b.opened)+'. No difference appeared in this pair; that does not prove this setting never matters.');
+ }
+ function result(t){
+  $('plant').dataset.state=t.opened?'awake':'resting';$('plant-desc').textContent=t.opened?'The toy seed has opened in this trial.':'The toy seed remains closed in this trial.';
+  $('state-mark').textContent=t.opened?'✓':'—';$('result-heading').textContent=t.opened?'The seed opens.':'The seed stays closed.';
+  $('result-copy').textContent='Trial '+t.number+': light '+t.settings.light+', water '+t.settings.water+', wind '+t.settings.wind+'.';
+ }
+ function history(){
+  const log=$('trial-log');log.replaceChildren();
+  if(!trials.length){const li=document.createElement('li');li.id='empty-history';li.textContent='No trials recorded.';log.append(li);return;}
+  for(const t of trials){const li=document.createElement('li'),strong=document.createElement('strong');strong.textContent='Trial '+t.number+' · '+(t.opened?'seed opened':'seed stayed closed');li.append(strong,document.createTextNode(' — light '+t.settings.light+', water '+t.settings.water+', wind '+t.settings.wind+'.'));log.append(li);}
+ }
+ names.forEach(k=>$(k).addEventListener('input',readouts));
+ $('run-trial').addEventListener('click',()=>{const s=settings(),t={number:trials.length+1,settings:s,opened:opened(s)},prev=trials.at(-1);trials.push(t);result(t);$('comparison-copy').textContent=compare(prev,t);history();});
+ $('reset').addEventListener('click',()=>{$('light').value='1';$('water').value='1';$('wind').value='0';trials.splice(0);readouts();$('plant').dataset.state='unknown';$('plant-desc').textContent='No trial has been run yet.';$('state-mark').textContent='?';$('result-heading').textContent='No trial yet';$('result-copy').textContent='Choose conditions and run your first trial. This plant is a diagram of the toy model, not a real organism.';$('comparison-copy').textContent='A comparison appears after you have at least one earlier trial.';$('rule-details').open=false;history();});
+ readouts();
+})();
+</script>
+</body></html>
