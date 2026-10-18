@@ -37,11 +37,11 @@ export const ANCHORS = Object.freeze([
   }),
   Object.freeze({
     id: "separation",
-    label: "Separability",
+    label: "Interpretive extension",
     forms: Object.freeze({
       symbolic: "the leaves overlap until no single shape is easy to follow",
       neutral: "thoughts are difficult to separate",
-      research: "difficulty distinguishing individual thoughts"
+      research: "possible difficulty distinguishing individual thoughts (added inference)"
     })
   })
 ]);
