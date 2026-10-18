@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Translation Loom — Mirror Cartographer</title>
+  <meta name="description" content="An interactive experiment in translating a fictional metaphor across symbolic, neutral, and research registers without pretending the meanings are identical.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f3efe4;
+      --muted: #b8b7aa;
+      --night: #101611;
+      --panel: #19251d;
+      --line: #536654;
+      --leaf: #a8c79b;
+      --glass: #b9ded0;
+      --gold: #e8c98d;
+      --focus: #ffe5a9;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--night); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 12% 0%, #2a4532 0, transparent 42rem),
+        radial-gradient(ellipse at 95% 80%, #24372d 0, transparent 38rem),
+        var(--night);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--gold); text-underline-offset: .18em; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    .wrap { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 2rem 0 4rem; }
+    .eyebrow { color: var(--leaf); font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { font-size: clamp(2.3rem, 7vw, 5.3rem); line-height: .98; letter-spacing: -.055em; max-width: 12ch; margin: .65rem 0 1rem; }
+    h2 { font-size: 1.15rem; margin: 0 0 .8rem; }
+    p { max-width: 72ch; }
+    .intro { color: var(--muted); font-size: 1.08rem; max-width: 68ch; }
+    .source {
+      margin: 2rem 0; padding: 1.4rem; border: 1px solid var(--line);
+      border-radius: 1.2rem; background: linear-gradient(130deg, #20372a, #18231d 70%);
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, .5fr); gap: 1.2rem; align-items: center;
+    }
+    blockquote { margin: .6rem 0 0; font: italic clamp(1.25rem, 3vw, 1.8rem)/1.35 Georgia, serif; }
+    .fiction { color: var(--gold); font-size: .85rem; }
+    .glasshouse { width: 100%; max-width: 240px; justify-self: center; color: var(--glass); }
+    .layout { display: grid; grid-template-columns: minmax(250px, .8fr) minmax(0, 1.2fr); gap: 1.1rem; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 1.2rem; background: #17221b; padding: 1.2rem; }
+    fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+    legend { font-weight: 700; margin-bottom: .7rem; }
+    .mode-list { display: grid; gap: .55rem; }
+    .mode-option, .anchor-option {
+      display: flex; gap: .7rem; align-items: flex-start; padding: .8rem;
+      border: 1px solid #435647; border-radius: .8rem; cursor: pointer;
+    }
+    .mode-option:has(input:checked), .anchor-option:has(input:checked) {
+      border-color: var(--leaf); background: #26392b;
+    }
+    input { accent-color: var(--leaf); flex: 0 0 auto; margin-top: .28rem; }
+    .option-title { display: block; font-weight: 700; }
+    .option-note { display: block; color: var(--muted); font-size: .88rem; }
+    .anchor-list { display: grid; gap: .55rem; margin-top: 1.5rem; }
+    .preview-head { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: space-between; align-items: center; }
+    .mode-tag { border: 1px solid var(--leaf); color: var(--leaf); border-radius: 99px; padding: .25rem .7rem; font-size: .8rem; }
+    .rendered {
+      min-height: 9rem; margin: 1rem 0; padding: 1.2rem; border-radius: 1rem;
+      background: #0f1711; border: 1px solid #3b4e3d; display: flex; flex-wrap: wrap; align-content: flex-start; gap: .6rem;
+    }
+    .fragment { border: 1px solid #63795f; border-radius: .6rem; padding: .55rem .7rem; color: var(--ink); background: #213226; }
+    .empty { color: var(--muted); font-style: italic; }
+    .status { color: var(--leaf); font-size: .9rem; }
+    .note { color: var(--muted); font-size: .9rem; }
+    .boundary { margin-top: 1.1rem; padding: 1rem; border-left: 3px solid var(--gold); background: #27271d; border-radius: 0 .7rem .7rem 0; }
+    .boundary ul { margin-bottom: 0; }
+    .anchor-table-wrap { overflow-x: auto; margin-top: 2rem; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    caption { text-align: left; font-weight: 700; padding: 0 0 .6rem; }
+    th, td { text-align: left; vertical-align: top; padding: .75rem; border-bottom: 1px solid #435647; }
+    th { color: var(--leaf); font-size: .85rem; }
+    td:first-child { font-weight: 700; }
+    .actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1rem; }
+    button {
+      border: 1px solid var(--leaf); border-radius: 99px; padding: .65rem 1rem;
+      color: var(--ink); background: #293d2e; font: inherit; cursor: pointer;
+    }
+    button:hover { background: #36513b; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    @media (max-width: 700px) {
+      .source, .layout { grid-template-columns: 1fr; }
+      .glasshouse { max-width: 145px; }
+      .wrap { width: min(100% - 1rem, 1120px); padding-top: 1.2rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow">Mirror Cartographer · Meaning without flattening</p>
+    <h1>Translation Loom</h1>
+    <p class="intro">A metaphor can carry information that a neutral description or research note expresses differently. Change the language register and decide which semantic anchors to carry forward. The map shows a proposed alignment—not proof that the meanings are identical.</p>
+
+    <section class="source" aria-labelledby="source-title">
+      <div>
+        <p class="eyebrow" id="source-title">Fictional source fragment</p>
+        <blockquote>“A greenhouse at midnight; every leaf is thinking.”</blockquote>
+        <p class="fiction">Synthetic example only. No personal entry, diagnosis, or hidden profile.</p>
+      </div>
+      <svg class="glasshouse" viewBox="0 0 220 170" role="img" aria-label="A simple greenhouse outline with three leaf-shaped nodes connected by thin lines.">
+        <path d="M22 76 L110 15 L198 76 V151 H22 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M22 76 H198 M110 15 V151 M22 151 H198" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/>
+        <path d="M67 65 C43 48 38 76 66 91 C83 74 83 57 67 65Z" fill="#91b887" fill-opacity=".8"/>
+        <path d="M146 56 C123 42 119 70 145 84 C163 68 162 51 146 56Z" fill="#b8d4a7" fill-opacity=".8"/>
+        <path d="M92 105 C70 90 66 118 92 131 C110 115 109 99 92 105Z" fill="#d5bd83" fill-opacity=".9"/>
+        <path d="M67 91 L92 105 L145 84" fill="none" stroke="#d5bd83" stroke-dasharray="4 4"/>
+      </svg>
+    </section>
+
+    <div class="layout">
+      <section class="panel" aria-labelledby="controls-title">
+        <h2 id="controls-title">Choose a register</h2>
+        <fieldset>
+          <legend class="note">The same sample, expressed differently</legend>
+          <div class="mode-list" id="mode-list">
+            <label class="mode-option">
+              <input type="radio" name="mode" value="symbolic" checked>
+              <span><span class="option-title">Symbolic</span><span class="option-note">Image, texture, metaphor</span></span>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="mode" value="neutral">
+              <span><span class="option-title">Neutral</span><span class="option-note">Plain-language description</span></span>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="mode" value="research">
+              <span><span class="option-title">Research register</span><span class="option-note">Careful, non-diagnostic phrasing</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="anchor-list">
+          <h2>Choose what to preserve</h2>
+          <p class="note">These anchors were selected by the demo author. You can remove any one; the source fragment remains unchanged.</p>
+          <label class="anchor-option"><input type="checkbox" name="anchor" value="context" checked><span><span class="option-title">Context</span><span class="option-note">An evening / nighttime setting</span></span></label>
+          <label class="anchor-option"><input type="checkbox" name="anchor" value="density" checked><span><span class="option-title">Multiplicity</span><span class="option-note">Many thoughts are present</span></span></label>
+          <label class="anchor-option"><input type="checkbox" name="anchor" value="separation" checked><span><span class="option-title">Separability</span><span class="option-note">Individual thoughts are hard to distinguish</span></span></label>
+        </div>
+        <div class="actions"><button type="button" id="reset">Reset the loom</button></div>
+      </section>
+
+      <section class="panel" aria-labelledby="preview-title">
+        <div class="preview-head">
+          <h2 id="preview-title">The woven expression</h2>
+          <span class="mode-tag" id="mode-tag">Symbolic</span>
+        </div>
+        <p id="mode-description" class="note">Metaphorical language can carry felt texture; it does not establish a literal greenhouse or a measurable mechanism.</p>
+        <div class="rendered" id="rendered" aria-live="polite" aria-atomic="true"><span class="fragment">at midnight</span><span class="fragment">every leaf is thinking</span><span class="fragment">the leaves overlap until no single shape is easy to follow</span></div>
+        <p class="status" id="anchor-status">3 of 3 demo-defined anchors are included.</p>
+        <p class="note">This count tracks selected fragments only. It is not a score for meaning, accuracy, or psychological insight.</p>
+        <div class="boundary">
+          <strong>What this translation does not establish</strong>
+          <ul>
+            <li>The cause of the experience.</li>
+            <li>Its duration, frequency, or impact.</li>
+            <li>A diagnosis, trait, or stable fact about a person.</li>
+            <li>That the three registers are perfectly equivalent.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <section class="anchor-table-wrap" aria-labelledby="anchor-map-title">
+      <table>
+        <caption id="anchor-map-title">Anchor map — one proposed alignment across registers</caption>
+        <thead><tr><th scope="col">Anchor</th><th scope="col">Symbolic</th><th scope="col">Neutral</th><th scope="col">Research register</th></tr></thead>
+        <tbody id="anchor-table">
+          <tr><td>Context</td><td>at midnight</td><td>at night</td><td>in an evening context</td></tr>
+          <tr><td>Multiplicity</td><td>every leaf is thinking</td><td>thoughts feel numerous</td><td>self-reported high thought density</td></tr>
+          <tr><td>Separability</td><td>the leaves overlap until no single shape is easy to follow</td><td>thoughts are difficult to separate</td><td>difficulty distinguishing individual thoughts</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p><strong>Evidence boundary:</strong> the anchor alignment is a design hypothesis for a fictional sentence, not a validated semantic-equivalence method. The page stores no selections and sends no data.</p>
+      <p>Research protocol: <a href="https://github.com/MirrorCartographer/MirrorCartographer/blob/creative/translation-loom-protocol-20261018/demonstrations/TRANSLATION_LOOM_PROTOCOL.md">Translation Loom protocol</a> · <a href="https://github.com/MirrorCartographer/MirrorCartographer/blob/main/architecture/ADVERSARIAL_REVIEW_PROTOCOL.md">Adversarial review protocol</a></p>
+    </footer>
+  </main>
+  <script type="module" src="./translation-loom.mjs"></script>
+</body>
+</html>
