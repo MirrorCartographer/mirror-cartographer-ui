@@ -34,6 +34,12 @@ test("selection counting ignores unknown and duplicate IDs", () => {
   assert.equal(getAnchorCount(["context", "context", "not-an-anchor"]), 1);
 });
 
+test("the third anchor is labeled as an added inference, not source evidence", () => {
+  const extension = ANCHORS.find(anchor => anchor.id === "separation");
+  assert.equal(extension.label, "Interpretive extension");
+  assert.match(extension.forms.research, /added inference/i);
+});
+
 test("research-register phrasing does not assert a diagnosis or cause", () => {
   const text = ANCHORS.map(anchor => anchor.forms.research).join(" ").toLowerCase();
   assert.match(text, /self-reported/);
