@@ -13,11 +13,13 @@
     {
       "id": "deterministic_selection",
       "expected": true,
-      "rule": "for each slot, production_id equals productions[utc_hour % productions.length].id"
+      "rule": "for each utc_hour, production_id equals the production referenced by hour_slots[utc_hour].production_id"
     },
     {
-      "id": "current_stage_at_recording_hour",
-      "input": {"utc_hour": 21},
+      "id": "scheduled_stage_at_utc_hour_21",
+      "input": {
+        "utc_hour": 21
+      },
       "expected_production_id": "wordless-room-game"
     },
     {
@@ -48,16 +50,17 @@
   "manual_evaluation": {
     "result": "pass",
     "basis": [
-      "24 distinct utc_hour values are explicitly present",
-      "six productions repeat in stable modulo order",
-      "UTC hour 21 maps to index 3 and wordless-room-game",
+      "24 distinct UTC hour slots are explicitly present and each has a unique edition_id",
+      "selection resolves through the declared hour_slots[utc_hour] entry; production reuse is explicit rather than recomputed",
+      "UTC hour 21 schedules wordless-room-game, but this does not establish that it is the observed runtime stage",
       "global constraints explicitly prohibit autoplay, private source material, payment logic, and unverified deployment claims",
       "activation boundary states runtime integration was not performed"
     ],
     "limits": [
       "No application bundle was built in this run.",
       "No Vercel deployment was attempted.",
-      "No physical iPhone Safari audibility claim is made."
+      "No physical iPhone Safari audibility claim is made.",
+      "No source-backed runtime observation is included; scheduled stage and observed current stage remain distinct."
     ]
   },
   "rollback": "Revert this operations-only contract commit and the repertory contract commit; no application runtime rollback is required."
