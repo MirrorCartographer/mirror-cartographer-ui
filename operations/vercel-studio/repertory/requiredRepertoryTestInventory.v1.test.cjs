@@ -19,9 +19,9 @@ test('verifies when every required repertory test is present', () => {
 });
 
 test('fails closed when activation coverage is omitted', () => {
-  const result = assessRepertoryTestInventory([
-    'assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs',
-  ]);
+  const result = assessRepertoryTestInventory(
+    REQUIRED_REPERTORY_TESTS.filter((name) => name !== 'assessRepertoryActivation.v1.test.cjs'),
+  );
 
   assert.equal(result.verified, false);
   assert.deepEqual(result.missing_required_tests, ['assessRepertoryActivation.v1.test.cjs']);

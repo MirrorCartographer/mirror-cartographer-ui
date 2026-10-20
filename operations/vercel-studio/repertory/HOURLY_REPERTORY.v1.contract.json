@@ -48,7 +48,7 @@
     }
   ],
   "manual_evaluation": {
-    "result": "pass",
+    "result": "not_run",
     "basis": [
       "24 distinct UTC hour slots are explicitly present and each has a unique edition_id",
       "selection resolves through the declared hour_slots[utc_hour] entry; production reuse is explicit rather than recomputed",
@@ -60,7 +60,8 @@
       "No application bundle was built in this run.",
       "No Vercel deployment was attempted.",
       "No physical iPhone Safari audibility claim is made.",
-      "No source-backed runtime observation is included; scheduled stage and observed current stage remain distinct."
+      "No source-backed runtime observation is included; scheduled stage and observed current stage remain distinct.",
+      "The direct-slot selector and updated evidence boundary have not yet passed the complete hosted test suite."
     ]
   },
   "rollback": "Revert this operations-only contract commit and the repertory contract commit; no application runtime rollback is required."

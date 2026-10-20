@@ -80,7 +80,7 @@ test('unknown runtime observation stays unknown; unsupported current-stage claim
 
   const ambiguous = clone(repertory);
   ambiguous.productions[0].status = 'observed_current_stage';
-  ambiguous.productions[0].provenance.observed = ['synthetic-source'];
+  ambiguous.productions[3].status = 'observed_current_stage';
   assert.throws(
     () => verifyRepertorySafetyContract(ambiguous),
     /at most one production may be the observed_current_stage/,

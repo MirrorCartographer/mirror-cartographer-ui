@@ -49,7 +49,7 @@ function validateRepertory(repertory) {
     if (seenHours.has(slot.utc_hour)) throw new Error(`duplicate utc_hour slot: ${slot.utc_hour}`);
     seenHours.add(slot.utc_hour);
     if (typeof slot.edition_id !== 'string' || slot.edition_id.trim() === '') {
-      throw new Error('every hour slot must have a non-empty edition_id');
+      throw new Error('programmed hour slot must declare a non-empty edition_id');
     }
     if (editionIds.has(slot.edition_id)) throw new Error(`duplicate edition_id: ${slot.edition_id}`);
     editionIds.add(slot.edition_id);

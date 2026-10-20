@@ -16,7 +16,9 @@ const criticalTests = Object.freeze([
   'assessRepertoryActivation.v1.test.cjs',
   'buildContinuityHandoff.v1.test.cjs',
   'repertoryTestInventory.v1.test.cjs',
+  'verifyProgrammedStageFreshness.v1.test.cjs',
   'verifyProgrammedStageReceipt.v1.test.cjs',
+  'verifySelectionRule.v1.test.cjs',
   'vercelRepertoryOidcWorkflowContract.v1.test.cjs',
 ]);
 

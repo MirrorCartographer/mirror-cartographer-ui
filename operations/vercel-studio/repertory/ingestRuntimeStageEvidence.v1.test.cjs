@@ -7,8 +7,21 @@ const { ingestRuntimeStageEvidenceV1 } = require('./ingestRuntimeStageEvidence.v
 const productions = ['residual-comet','coordinate-choir','quiet-machine','wordless-room-game','body-constellation','archive-afterimage'].map((id) => ({ id, title: id, form: 'test', continuity_role: 'test', status: 'proposed' }));
 const repertory = {
   contract_id: 'vercel-studio-hourly-repertory-v1',
+  selection_rule: {
+    type: 'deterministic_hour_slot',
+    expression: 'hour_slots[utc_hour]',
+    randomness_permitted: false,
+    distinct_hourly_edition_required: true,
+    base_production_reuse_permitted: true,
+    continuity_state_preserved_across_productions: true,
+  },
   productions,
-  hour_slots: Array.from({ length: 24 }, (_, utc_hour) => ({ utc_hour, production_id: productions[utc_hour % productions.length].id })),
+  hour_slots: Array.from({ length: 24 }, (_, utc_hour) => ({
+    utc_hour,
+    edition_id: `${productions[utc_hour % productions.length].id}-${String(utc_hour).padStart(2, '0')}`,
+    production_id: productions[utc_hour % productions.length].id,
+    edition_cue: `cue-${utc_hour}`,
+  })),
 };
 const stageVerification = {
   contract_id: 'vercel-studio-runtime-stage-verification-v1',
