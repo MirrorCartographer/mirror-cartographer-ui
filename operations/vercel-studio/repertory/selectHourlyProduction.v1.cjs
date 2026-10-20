@@ -13,13 +13,16 @@ function assertIntegerHour(utcHour) {
 }
 
 function validateRepertory(repertory) {
-  if (!repertory || typeof repertory !== 'object') {
+  if (!repertory || typeof repertory !== 'object' || Array.isArray(repertory)) {
     throw new TypeError('repertory must be an object');
+  }
+  if (repertory.selection_rule?.type !== 'deterministic_hour_slot' ||
+      repertory.selection_rule?.expression !== 'hour_slots[utc_hour]') {
+    throw new Error('repertory must use the canonical direct hour-slot rule');
   }
 
   const productions = repertory.productions;
   const slots = repertory.hour_slots;
-
   if (!Array.isArray(productions) || productions.length === 0) {
     throw new Error('repertory.productions must be a non-empty array');
   }
@@ -29,41 +32,35 @@ function validateRepertory(repertory) {
 
   const productionIds = new Set();
   for (const production of productions) {
-    if (!production || typeof production.id !== 'string' || production.id.length === 0) {
+    if (!production || typeof production.id !== 'string' || production.id.trim() === '') {
       throw new Error('every production must have a non-empty string id');
     }
-    if (productionIds.has(production.id)) {
-      throw new Error(`duplicate production id: ${production.id}`);
-    }
+    if (productionIds.has(production.id)) throw new Error(`duplicate production id: ${production.id}`);
     productionIds.add(production.id);
   }
 
   const seenHours = new Set();
+  const editionIds = new Set();
   for (const slot of slots) {
-    assertIntegerHour(slot.utc_hour);
-    if (seenHours.has(slot.utc_hour)) {
-      throw new Error(`duplicate utc_hour slot: ${slot.utc_hour}`);
+    if (!slot || typeof slot !== 'object' || Array.isArray(slot)) {
+      throw new Error('every hour slot must be an object');
     }
+    assertIntegerHour(slot.utc_hour);
+    if (seenHours.has(slot.utc_hour)) throw new Error(`duplicate utc_hour slot: ${slot.utc_hour}`);
+    seenHours.add(slot.utc_hour);
+    if (typeof slot.edition_id !== 'string' || slot.edition_id.trim() === '') {
+      throw new Error('every hour slot must have a non-empty edition_id');
+    }
+    if (editionIds.has(slot.edition_id)) throw new Error(`duplicate edition_id: ${slot.edition_id}`);
+    editionIds.add(slot.edition_id);
     if (!productionIds.has(slot.production_id)) {
       throw new Error(`unknown production_id in hour slot: ${slot.production_id}`);
     }
-    seenHours.add(slot.utc_hour);
   }
 
   for (let hour = 0; hour < 24; hour += 1) {
-    if (!seenHours.has(hour)) {
-      throw new Error(`missing utc_hour slot: ${hour}`);
-    }
-
-    const expectedId = productions[hour % productions.length].id;
-    const actualId = slots.find((slot) => slot.utc_hour === hour).production_id;
-    if (actualId !== expectedId) {
-      throw new Error(
-        `slot ${hour} violates deterministic modulo rule: expected ${expectedId}, received ${actualId}`,
-      );
-    }
+    if (!seenHours.has(hour)) throw new Error(`missing utc_hour slot: ${hour}`);
   }
-
   return true;
 }
 
@@ -72,12 +69,11 @@ function selectHourlyProduction(repertory, utcHour) {
   validateRepertory(repertory);
 
   const slot = repertory.hour_slots.find((candidate) => candidate.utc_hour === utcHour);
-  const production = repertory.productions.find(
-    (candidate) => candidate.id === slot.production_id,
-  );
-
+  const production = repertory.productions.find((candidate) => candidate.id === slot.production_id);
   return Object.freeze({
     utc_hour: utcHour,
+    edition_id: slot.edition_id,
+    edition_cue: slot.edition_cue,
     production_id: production.id,
     title: production.title,
     form: production.form,
@@ -93,8 +89,4 @@ function selectForDate(repertory, date) {
   return selectHourlyProduction(repertory, date.getUTCHours());
 }
 
-module.exports = {
-  selectForDate,
-  selectHourlyProduction,
-  validateRepertory,
-};
+module.exports = { selectForDate, selectHourlyProduction, validateRepertory };
