@@ -39,14 +39,20 @@ export function buildAudioRoutingEvidence({ context, sinkChangeObserved = false,
 
 export function createAudioRoutingEvidenceTracker() {
   const confirmedContexts = new WeakSet();
+  const contextAttemptIds = new WeakMap();
 
   return {
     build({ context, sinkChangeObserved = false, attemptId = null, sampledAt } = {}) {
       if (context && sinkChangeObserved) confirmedContexts.add(context);
+      let boundAttemptId = context ? contextAttemptIds.get(context) : null;
+      if (context && !boundAttemptId) {
+        boundAttemptId = normalizedAttemptId(attemptId);
+        if (boundAttemptId) contextAttemptIds.set(context, boundAttemptId);
+      }
       return buildAudioRoutingEvidence({
         context,
         sinkChangeObserved: Boolean(context && confirmedContexts.has(context)),
-        attemptId,
+        attemptId: boundAttemptId || attemptId,
         sampledAt,
       });
     },

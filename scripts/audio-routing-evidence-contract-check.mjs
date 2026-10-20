@@ -79,4 +79,11 @@ assert.equal(
   'confirmation must remain scoped to the exact AudioContext instance',
 );
 
+const attemptBoundContext = { sinkId: 'speaker-3', setSinkId() {} };
+tracker.build({ context: attemptBoundContext, attemptId: 'attempt-original', sampledAt: '2026-07-12T01:31:00.000Z' });
+tracker.build({ context: attemptBoundContext, sinkChangeObserved: true, attemptId: 'attempt-original', sampledAt: '2026-07-12T01:31:01.000Z' });
+const refreshed = tracker.build({ context: attemptBoundContext, sinkChangeObserved: false, attemptId: 'attempt-diagnostic-refresh', sampledAt: '2026-07-12T01:31:02.000Z' });
+assert.equal(refreshed.status, 'selected-confirmed');
+assert.equal(refreshed.attemptId, 'attempt-original', 'attempt identity remains bound to the context that produced the evidence');
+
 console.log('audio routing evidence contract: ok');
