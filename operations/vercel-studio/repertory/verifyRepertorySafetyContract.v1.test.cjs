@@ -13,7 +13,8 @@ test('verifies the committed operations-only repertory safety contract', () => {
   const result = verifyRepertorySafetyContract(repertory);
   assert.equal(result.verified, true);
   assert.equal(result.deterministic, true);
-  assert.equal(result.current_stage_id, 'wordless-room-game');
+  assert.equal(result.current_stage_id, null);
+  assert.equal(result.observed_stage_status, 'unknown');
   assert.equal(result.privacy_boundary_preserved, true);
   assert.equal(result.commerce_absent, true);
   assert.equal(result.autoplay_absent, true);
@@ -64,20 +65,25 @@ test('fails closed when provenance classes are incomplete', () => {
   );
 });
 
-test('fails closed when current-stage evidence is absent or ambiguous', () => {
-  const absentEvidence = clone(repertory);
-  const current = absentEvidence.productions.find((item) => item.status === 'observed_current_stage');
-  current.provenance.observed = [];
+test('unknown runtime observation stays unknown; unsupported current-stage claims fail closed', () => {
+  const unknown = verifyRepertorySafetyContract(clone(repertory));
+  assert.equal(unknown.current_stage_id, null);
+  assert.equal(unknown.observed_stage_status, 'unknown');
+
+  const unsupported = clone(repertory);
+  unsupported.productions[0].status = 'observed_current_stage';
+  unsupported.productions[0].provenance.observed = [];
   assert.throws(
-    () => verifyRepertorySafetyContract(absentEvidence),
+    () => verifyRepertorySafetyContract(unsupported),
     /cannot be observed_current_stage without observed sources/,
   );
 
   const ambiguous = clone(repertory);
   ambiguous.productions[0].status = 'observed_current_stage';
+  ambiguous.productions[0].provenance.observed = ['synthetic-source'];
   assert.throws(
     () => verifyRepertorySafetyContract(ambiguous),
-    /exactly one production must be the observed_current_stage/,
+    /at most one production may be the observed_current_stage/,
   );
 });
 
