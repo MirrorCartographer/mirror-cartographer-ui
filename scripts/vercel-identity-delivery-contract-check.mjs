@@ -18,9 +18,9 @@ assert.equal(headers['x-content-type-options'], 'nosniff');
 
 assert.ok(
   config.rewrites?.some(
-    (entry) => entry.source === '/(.*)' && entry.destination === '/index.html',
+    (entry) => entry.source === '/((?!api/).*)' && entry.destination === '/index.html',
   ),
-  'SPA fallback rewrite changed unexpectedly',
+  'SPA fallback must preserve client-side routes without rewriting API paths',
 );
 
 console.log('Vercel identity delivery contract passed: 5/5');
