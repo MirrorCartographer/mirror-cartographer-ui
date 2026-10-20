@@ -152,13 +152,34 @@
         "archive-of-borrowed-gravity"
       ],
       "evidence": "direct repository artifact; concept status inferred from page content"
+    },
+    {
+      "id": "private-library-media-collection",
+      "title": "Charity Sturgell / Mirror Cartographer — Private Library Art & Media Collection",
+      "artist": "Charity Sturgell and Mirror Cartographer project archive; individual authorship varies by artifact and remains to be verified",
+      "type": "private media collection / archival source",
+      "status": "multiple image, video, poster, animation, and booklet files located in ChatGPT Library; not imported into public gallery",
+      "source": "https://github.com/MirrorCartographer/MirrorCartographer/blob/assistant/self-model-evidence-map-v1/art/CHARITY_STURGELL_ARTWORK_RECORDS.md",
+      "description": "A private inventory contains visual identity and sigil images, personal identity-map art, dashboard concepts, Mallow animation videos and poster frames, Mirror Cartographer films/music-video/animatic versions, Thunder-Door proof footage, actor-engine/haunted-romance experiments, and animation-technique comparisons. Exact source files remain private pending selection and provenance review.",
+      "related": [
+        "afterimage-arcade",
+        "afterimage-arcade-echo-room",
+        "archive-of-borrowed-gravity",
+        "department-of-lost-moons",
+        "afterimage",
+        "afterimage-orchard",
+        "mallow-the-slug",
+        "mallow-three-minute-anime"
+      ],
+      "evidence": "private Library metadata inventory; individual files not yet linked into public catalog",
+      "visibility": "private; do not publish source binaries without explicit selection"
     }
   ],
   "missingSources": [
     {
       "id": "personal-originals-not-yet-imported",
       "title": "Charity's personal original art / iCloud album",
-      "status": "source path described in docs, but no image files or stable asset links are currently connected in the inspected repository tree",
+      "status": "multiple original and generated media assets located in the user's private Library, but not individually imported or connected to public asset paths",
       "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/docs/ICLOUD_ARTIST_GALLERY_BRIDGE.md",
       "nextStep": "Import user-selected originals into permanent storage, retain original filenames and metadata, then add exact asset paths and checksums here.",
       "evidence": "documented source bridge; individual artworks not available in this repository snapshot"
