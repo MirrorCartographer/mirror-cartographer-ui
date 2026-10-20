@@ -43,7 +43,7 @@ It includes:
 
 ## Public/private boundary
 
-This repository contains the prototype and public-safe architecture. Sensitive medical, veterinary, financial, and raw conversation details should remain private unless explicitly reviewed and redacted.
+**Repository visibility is currently public.** Treat every committed file and reachable history as potentially public. Documentation does not make content private. Sensitive medical, veterinary, financial, and raw conversation details must not be committed unless explicitly reviewed and redacted; if private hosting is required, repository visibility and access controls must be changed separately and verified.
 
 Public-safe content:
 
@@ -97,13 +97,17 @@ See `docs/BARTER_VALUE_EXCHANGE_LANE.md` and `docs/PUBLIC_MONEY_PATH.md`.
 
 ## What is needed next
 
-- Make the repository public after reviewing sensitive content.
+- Audit committed files and reachable history for sensitive content; the repository is already public, so this is a review/remediation task, not a future-publication step.
 - Add payment links or sponsor links.
 - Deploy the standalone fallback while Vercel build-rate limit clears.
 - Build upload/import flow for vet records.
 - Build public demo packets.
 - Create three paid offer pages.
 - Publish one proof film / visual demo.
+
+## Competing interpretations and time
+
+The UI contract for competing claims is documented in [COMPETING_TRUTHS_UX_CONTRACT.md](docs/COMPETING_TRUTHS_UX_CONTRACT.md). The interface should preserve alternative interpretations, source availability, valid time versus recorded time, correction history, and unresolved contradictions without silently choosing a winner. The contract is a design target, not a claim that every behavior is already implemented.
 
 ## Integrity rules
 
