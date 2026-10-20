@@ -1,0 +1,173 @@
+{
+  "schema": "mirror-cartographer.artists.v1",
+  "title": "Charity Sturgell — Artwork and Co-Creation Index",
+  "status": "Initial repository-linked catalog; not a complete inventory of all artwork.",
+  "credit_policy": "Credit each artifact according to its actual provenance. Use 'Charity Sturgell + Mirror Cartographer co-creation' only for collaborative project work; do not imply that an AI-generated or code-generated artifact was solely hand-made by Charity. Personal originals not yet imported remain unindexed rather than invented.",
+  "records": [
+    {
+      "id": "afterimage-arcade",
+      "title": "Afterimage Arcade",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "interactive generative artwork",
+      "status": "source present in repository; source code, not a hosted preview verified here",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/independent/afterimage-arcade/index.html",
+      "repositoryPath": "independent/afterimage-arcade/index.html",
+      "description": "A full-screen canvas piece where pointer movement bends luminous paths and user input creates pulses.",
+      "related": [
+        "afterimage-arcade-echo-room",
+        "afterimage",
+        "archive-of-borrowed-gravity"
+      ],
+      "conversationContext": [
+        {
+          "index": 312,
+          "title": "AI and art creation",
+          "role": "archival context only"
+        },
+        {
+          "index": 75,
+          "title": "Visualizing AI Mind Art",
+          "role": "archival context only"
+        }
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "afterimage-arcade-echo-room",
+      "title": "Afterimage Arcade — Echo Room",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "interactive generative artwork / variant",
+      "status": "source present in repository preview folder; standalone preview file",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/operations/previews/independent/afterimage-arcade-echo-room.html",
+      "repositoryPath": "operations/previews/independent/afterimage-arcade-echo-room.html",
+      "description": "A related echo-room variant; treated as a sibling artifact, not assumed identical to the arcade.",
+      "related": [
+        "afterimage-arcade",
+        "afterimage"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "archive-of-borrowed-gravity",
+      "title": "Archive of Borrowed Gravity",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "independent interactive generative artwork",
+      "status": "source present in repository; described as a self-contained artwork",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/independent/archive-of-borrowed-gravity/index.html",
+      "repositoryPath": "independent/archive-of-borrowed-gravity/index.html",
+      "description": "A dark, interactive canvas artwork with its own visual and interaction contract.",
+      "related": [
+        "afterimage",
+        "afterimage-arcade",
+        "department-of-lost-moons"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "department-of-lost-moons",
+      "title": "The Department of Lost Moons",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "interactive generative artwork / creative-web preview",
+      "status": "source present as a repository preview; standalone deployment not verified",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/operations/independent_creative_web/previews/department-of-lost-moons.html",
+      "repositoryPath": "operations/independent_creative_web/previews/department-of-lost-moons.html",
+      "description": "A nocturnal, full-screen canvas work with a moon/archive premise and direct interaction.",
+      "related": [
+        "archive-of-borrowed-gravity",
+        "afterimage-orchard"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "afterimage",
+      "title": "Afterimage",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "independent generative web artwork",
+      "status": "source present in the main repository; explicitly independent of the MC product interface",
+      "source": "https://github.com/MirrorCartographer/MirrorCartographer/blob/assistant/self-model-evidence-map-v1/independent/afterimage/index.html",
+      "repositoryPath": "MirrorCartographer/independent/afterimage/index.html",
+      "description": "A self-contained generative artwork in which explicit visitor action changes the world; reduced-motion and optional sound are part of its design contract.",
+      "related": [
+        "afterimage-orchard",
+        "afterimage-arcade",
+        "archive-of-borrowed-gravity"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "afterimage-orchard",
+      "title": "Afterimage Orchard",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "independent generative web artwork",
+      "status": "source present in the main repository; separate identity from the MC product",
+      "source": "https://github.com/MirrorCartographer/MirrorCartographer/blob/assistant/self-model-evidence-map-v1/independent-web/afterimage-orchard/index.html",
+      "repositoryPath": "MirrorCartographer/independent-web/afterimage-orchard/index.html",
+      "description": "A nocturnal field where pointer gestures plant temporary organisms of light; marks grow, fruit, and disappear.",
+      "related": [
+        "afterimage",
+        "department-of-lost-moons"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "mallow-the-slug",
+      "title": "Mallow the Slug",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "story / screenplay seed",
+      "status": "screenplay source present; finished film not verified",
+      "source": "https://github.com/MirrorCartographer/MirrorCartographer/blob/assistant/self-model-evidence-map-v1/Creative_Universe/03_Stories/Mallow_The_Slug/screenplay.md",
+      "repositoryPath": "Creative_Universe/03_Stories/Mallow_The_Slug/screenplay.md",
+      "description": "A narrative artifact connected to the Mallow Three-Minute Anime development path.",
+      "related": [
+        "mallow-three-minute-anime"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "mallow-three-minute-anime",
+      "title": "Mallow — Three-Minute Anime",
+      "artist": "Charity Sturgell + Mirror Cartographer project co-creation",
+      "type": "animation project / animatic engine",
+      "status": "an engine note exists; finished animation not verified",
+      "source": "https://github.com/MirrorCartographer/MirrorCartographer/blob/assistant/self-model-evidence-map-v1/Creative_Universe/04_Films/Mallow_Three_Min_Anime/animatic/ENGINE.md",
+      "repositoryPath": "Creative_Universe/04_Films/Mallow_Three_Min_Anime/animatic/ENGINE.md",
+      "description": "A film-development record related to the Mallow screenplay; catalogued as development, not a completed film.",
+      "related": [
+        "mallow-the-slug"
+      ],
+      "evidence": "direct repository artifact"
+    },
+    {
+      "id": "artist-gallery-concept-rooms",
+      "title": "Artist Gallery Concept Rooms",
+      "artist": "Mirror Cartographer design concept; not a finished artwork collection",
+      "type": "gallery concept / art direction",
+      "status": "the existing page contains fictional concept identities and graph values, not a connected inventory of actual image files",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/public/artists.html",
+      "repositoryPath": "public/artists.html",
+      "description": "The previous gallery described concepts such as Ocean Static Radio and Static Carnival. They are design concepts unless linked to an actual artifact; do not present them as completed works.",
+      "related": [
+        "afterimage-arcade",
+        "afterimage-orchard",
+        "archive-of-borrowed-gravity"
+      ],
+      "evidence": "direct repository artifact; concept status inferred from page content"
+    }
+  ],
+  "missingSources": [
+    {
+      "id": "personal-originals-not-yet-imported",
+      "title": "Charity's personal original art / iCloud album",
+      "status": "source path described in docs, but no image files or stable asset links are currently connected in the inspected repository tree",
+      "source": "https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/docs/ICLOUD_ARTIST_GALLERY_BRIDGE.md",
+      "nextStep": "Import user-selected originals into permanent storage, retain original filenames and metadata, then add exact asset paths and checksums here.",
+      "evidence": "documented source bridge; individual artworks not available in this repository snapshot"
+    }
+  ],
+  "relationshipRules": [
+    "related means shared project lineage or a plausible creative relationship, not proof that one work inspired another.",
+    "conversationContext is archival context only; conversation titles are not treated as the artwork files themselves.",
+    "Source present means code or a text artifact exists at the linked repository path. It does not mean the piece is deployed, publicly playable, or stored as a rendered image/video.",
+    "Unknown authorship, date, asset location, rights, and original media remain unknown rather than being filled by guess."
+  ]
+}
