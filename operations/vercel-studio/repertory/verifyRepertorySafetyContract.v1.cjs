@@ -50,8 +50,10 @@ function verifyRepertorySafetyContract(repertory) {
   if (repertory.timezone !== 'UTC') {
     throw new Error('repertory timezone must be UTC');
   }
-  if (!repertory.selection_rule || repertory.selection_rule.type !== 'deterministic_modulo') {
-    throw new Error('selection rule must remain deterministic_modulo');
+  if (!repertory.selection_rule ||
+      repertory.selection_rule.type !== 'deterministic_hour_slot' ||
+      repertory.selection_rule.expression !== 'hour_slots[utc_hour]') {
+    throw new Error('selection rule must remain deterministic_hour_slot');
   }
   if (repertory.selection_rule.randomness_permitted !== false) {
     throw new Error('randomness must remain prohibited');
@@ -92,8 +94,8 @@ function verifyRepertorySafetyContract(repertory) {
       }
     }
   }
-  if (currentStages.length !== 1) {
-    throw new Error('exactly one production must be the observed_current_stage');
+  if (currentStages.length > 1) {
+    throw new Error('at most one production may be the observed_current_stage');
   }
 
   const boundary = repertory.activation_boundary;
@@ -113,7 +115,8 @@ function verifyRepertorySafetyContract(repertory) {
     verified: true,
     deterministic: true,
     production_count: repertory.productions.length,
-    current_stage_id: currentStages[0],
+    current_stage_id: currentStages[0] || null,
+    observed_stage_status: currentStages.length === 1 ? 'observed' : 'unknown',
     privacy_boundary_preserved: true,
     commerce_absent: true,
     autoplay_absent: true,
