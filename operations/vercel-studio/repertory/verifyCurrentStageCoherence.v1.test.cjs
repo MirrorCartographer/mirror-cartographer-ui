@@ -8,8 +8,24 @@ const { verifyCurrentStageCoherence } = require('./verifyCurrentStageCoherence.v
 
 const repertory = JSON.parse(fs.readFileSync(path.join(__dirname, 'HOURLY_REPERTORY.v1.json'), 'utf8'));
 
-test('detects scheduled versus observed drift at UTC hour 22', () => {
+function withObservedStage(id) {
+  const altered = structuredClone(repertory);
+  const production = altered.productions.find((item) => item.id === id);
+  production.status = 'observed_current_stage';
+  return altered;
+}
+
+test('does not convert a missing runtime observation into a current-stage fact', () => {
   const report = verifyCurrentStageCoherence(repertory, '2026-07-14T22:32:48Z');
+  assert.equal(report.verified, false);
+  assert.equal(report.classification, 'observed_stage_unknown');
+  assert.equal(report.scheduled_production_id, 'body-constellation');
+  assert.equal(report.observed_production_id, null);
+  assert.equal(report.deployment_claimed, false);
+});
+
+test('detects scheduled versus observed drift when a runtime observation exists', () => {
+  const report = verifyCurrentStageCoherence(withObservedStage('wordless-room-game'), '2026-07-14T22:32:48Z');
   assert.equal(report.verified, false);
   assert.equal(report.classification, 'scheduled_observed_drift');
   assert.equal(report.scheduled_production_id, 'body-constellation');
@@ -18,14 +34,15 @@ test('detects scheduled versus observed drift at UTC hour 22', () => {
   assert.equal(report.side_effects_performed, false);
 });
 
-test('accepts a timestamp whose scheduled production matches the observed marker', () => {
-  const report = verifyCurrentStageCoherence(repertory, '2026-07-14T21:10:00Z');
+test('accepts an explicit observed marker when it matches the scheduled slot', () => {
+  const report = verifyCurrentStageCoherence(withObservedStage('wordless-room-game'), '2026-07-14T21:10:00Z');
   assert.equal(report.verified, true);
   assert.equal(report.classification, 'scheduled_observed_agreement');
 });
 
-test('fails closed when more than one production claims observed_current_stage', () => {
-  const altered = structuredClone(repertory);
+test('fails closed when multiple productions claim observed_current_stage', () => {
+  const altered = withObservedStage('wordless-room-game');
   altered.productions[0].status = 'observed_current_stage';
-  assert.throws(() => verifyCurrentStageCoherence(altered, '2026-07-14T21:10:00Z'), /exactly one/);
+  altered.productions[0].provenance.observed = ['synthetic-source'];
+  assert.throws(() => verifyCurrentStageCoherence(altered, '2026-07-14T21:10:00Z'), /at most one/);
 });
