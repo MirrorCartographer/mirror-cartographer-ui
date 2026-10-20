@@ -48,7 +48,7 @@ const animationFrames = async (page) => page.evaluate(() => window.__mirrorAnima
 const expectAnimationFramesAtLeast = async (page, minimum) => {
   await expect.poll(() => animationFrames(page), {
     timeout: 3000,
-    message: `expected wordless sky to render at least ${minimum} animation frames`,
+    message: `expected wordless room world to render at least ${minimum} animation frames`,
   }).toBeGreaterThanOrEqual(minimum);
 };
 
@@ -76,7 +76,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const sky = page.locator('button.sky');
+    const sky = page.locator('button.world-surface');
     const canvas = page.locator('canvas');
     await expect(sky).toBeVisible();
     await expect(canvas).toBeVisible();
