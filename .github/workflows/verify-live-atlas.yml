@@ -51,10 +51,31 @@ jobs:
                 const missing = required.filter((marker) => !body.includes(marker));
                 if (response.ok && contentType.includes('text/html') && missing.length === 0) {
                   const healthUrl = new URL('/atlas/healthz.txt', response.url);
-                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
                   const healthBody = await health.text();
                   if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
                     throw new Error('HTML passed but health probe failed: HTTP ' + health.status + ' at ' + health.url);
+                  }
+                  const indexUrl = new URL('/atlas/catalog-index.json', response.url);
+                  const indexResponse = await fetch(indexUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+                  if (!indexResponse.ok) throw new Error('Catalog index failed: HTTP ' + indexResponse.status);
+                  const index = await indexResponse.json();
+                  let indexedFiles = 0;
+                  for (const source of index.sources) {
+                    const manifestUrl = new URL('/atlas/' + source.file, response.url);
+                    const manifestResponse = await fetch(manifestUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+                    if (!manifestResponse.ok) throw new Error(source.file + ' failed: HTTP ' + manifestResponse.status);
+                    const manifest = await manifestResponse.json();
+                    if (manifest.repository !== source.repo || manifest.items.length !== source.file_count) {
+                      throw new Error('Catalog metadata mismatch for ' + source.file);
+                    }
+                    if (!/^[0-9a-f]{40}$/i.test(manifest.source_commit) || !/^[0-9a-f]{40}$/i.test(manifest.tree_sha)) {
+                      throw new Error('Invalid provenance for ' + source.file);
+                    }
+                    indexedFiles += manifest.items.length;
+                  }
+                  if (indexedFiles !== index.file_count || indexedFiles < 6000) {
+                    throw new Error('Unexpected catalog total: ' + indexedFiles);
                   }
                   console.log(JSON.stringify({
                     result: 'PASS',
@@ -64,6 +85,8 @@ jobs:
                     htmlMarkersVerified: required.length,
                     healthProbe: health.url,
                     healthStatus: health.status,
+                    catalogFilesVerified: indexedFiles,
+                    catalogRepositories: index.source_count,
                     attempt,
                   }, null, 2));
                   process.exit(0);
