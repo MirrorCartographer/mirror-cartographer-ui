@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#17130f" />
+<title>Afterimage Orchard</title>
+<style>
+:root{color-scheme:dark;--ink:#f2eadf;--soil:#17130f;--glass:rgba(255,255,255,.08);--line:rgba(255,255,255,.18)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--soil);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}
+body{touch-action:none}.stage{position:fixed;inset:0;isolation:isolate}.sky{position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,#684b35 0 15%,transparent 48%),linear-gradient(#111218,#211913 68%,#0f0b08)}
+canvas{position:absolute;inset:0;width:100%;height:100%}.grain{position:absolute;inset:-40%;opacity:.12;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");animation:drift 9s steps(8) infinite}@keyframes drift{to{transform:translate(12%,8%) rotate(4deg)}}
+header{position:absolute;z-index:4;top:max(20px,env(safe-area-inset-top));left:20px;right:20px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;pointer-events:none}.title{max-width:34rem}.title h1{font:600 clamp(1.15rem,3vw,2rem)/1 ui-serif,Georgia,serif;letter-spacing:.08em;margin:0 0 .55rem}.title p{margin:0;max-width:28rem;opacity:.7;font-size:.76rem;line-height:1.45}.counter{font-size:.72rem;opacity:.65;white-space:nowrap}
+.controls{position:absolute;z-index:5;left:20px;right:20px;bottom:max(18px,env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;flex-wrap:wrap}.controls button{appearance:none;border:1px solid var(--line);background:var(--glass);color:var(--ink);padding:.72rem .9rem;min-height:44px;border-radius:999px;font:inherit;font-size:.72rem;backdrop-filter:blur(10px);cursor:pointer}.controls button:focus-visible{outline:2px solid #fff;outline-offset:3px}.hint{margin-left:auto;font-size:.68rem;opacity:.55}
+.seed-note{position:absolute;z-index:6;max-width:18rem;padding:.55rem .7rem;border:1px solid var(--line);background:rgba(18,14,12,.74);backdrop-filter:blur(8px);border-radius:10px;font-size:.68rem;line-height:1.35;pointer-events:none;transform:translate(-50%,-135%);animation:fade 2.8s forwards}@keyframes fade{0%{opacity:0;transform:translate(-50%,-110%)}15%,75%{opacity:1}100%{opacity:0;transform:translate(-50%,-155%)}}
+@media(prefers-reduced-motion:reduce){.grain{animation:none}.seed-note{animation:none;opacity:1}.hint{display:none}}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Afterimage Orchard, an interactive generative artwork">
+<div class="sky"></div><canvas id="orchard" aria-hidden="true"></canvas><div class="grain"></div>
+<header><div class="title"><h1>AFTERIMAGE ORCHARD</h1><p>Plant a light. Each seed remembers your hand, grows once, and bends every nearby organism toward its arrival.</p></div><div class="counter" id="counter" aria-live="polite">0 lights planted</div></header>
+<div class="controls"><button id="storm">Call a small storm</button><button id="clear">Let the field go dark</button><button id="sound" aria-pressed="false">Sound: asleep</button><span class="hint">tap · drag · alter the field</span></div>
+</main>
+<script>
+(()=>{const c=document.querySelector('#orchard'),x=c.getContext('2d',{alpha:true});const count=document.querySelector('#counter');const seeds=[];const rain=[];const echoes=[];let dpr=1,w=0,h=0,last={x:innerWidth/2,y:innerHeight/2},audio=null,soundOn=false,t=0;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';x.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+const notes=['a warm machine remembering rain','a lantern that learned to bend','a tiny weather system with roots','a bruise of light becoming fruit','a signal no one asked to decode','a branch rehearsing its own shadow'];
+function disturb(px,py,hue){let changed=0;for(const s of seeds){const dx=s.x-px,dy=s.y-py,dist=Math.hypot(dx,dy);if(dist>0&&dist<180){const force=(180-dist)/180;s.lean+=Math.sign(dx||1)*force*.9;s.hue=(s.hue+hue*force)/(1+force);s.life+=Math.round(force*90);changed++}}echoes.push({x:px,y:py,r:8,life:70,hue});return changed}
+function plant(px,py,vx=0,vy=-1){const hue=(t*21+px*.08+py*.03)%360;const changed=disturb(px,py,hue);seeds.push({x:px,y:py,vx:vx*.07,vy:vy*.07,age:0,life:360+Math.random()*180,hue,lean:(Math.random()-.5)*.8,fruit:2+Math.floor(Math.random()*5)});count.textContent=`${seeds.length} light${seeds.length===1?'':'s'} planted${changed?` · ${changed} altered`:''}`;if(soundOn)ping(110+seeds.length%12*18,.08);showNote(px,py,changed?`${changed} nearby light${changed===1?'':'s'} changed direction`:notes[Math.floor(Math.random()*notes.length)])}
+function showNote(px,py,text){const n=document.createElement('div');n.className='seed-note';n.textContent=text;n.style.left=px+'px';n.style.top=py+'px';document.body.appendChild(n);setTimeout(()=>n.remove(),2900)}
+function pointer(e){const p=e.touches?e.touches[0]:e;return{x:p.clientX,y:p.clientY}}
+let down=false;c.addEventListener('pointerdown',e=>{down=true;const p=pointer(e);last=p;plant(p.x,p.y)});c.addEventListener('pointermove',e=>{if(!down)return;const p=pointer(e);if(Math.hypot(p.x-last.x,p.y-last.y)>38){plant(p.x,p.y,p.x-last.x,p.y-last.y);last=p}});addEventListener('pointerup',()=>down=false);
+function drawSeed(s){s.age++;s.x+=s.vx;s.y+=s.vy;const q=Math.min(1,s.age/90),fade=Math.max(0,1-(s.age-s.life)/90),stem=60*q,wind=Math.sin(t*.012+s.x*.01+s.age*.02)*14+s.lean*stem;x.save();x.translate(s.x,s.y);x.globalAlpha=Math.min(1,fade);x.lineCap='round';x.strokeStyle=`hsla(${s.hue},70%,72%,.72)`;x.shadowColor=`hsla(${s.hue},90%,65%,.55)`;x.shadowBlur=12;x.lineWidth=1.5;x.beginPath();x.moveTo(0,0);x.quadraticCurveTo(wind*.35,-stem*.45,wind,-stem);x.stroke();for(let i=0;i<s.fruit;i++){const a=i/(s.fruit-1||1);const fy=-stem*(.28+a*.68),fx=wind*a+Math.sin(i*9+s.age*.01)*5;const r=2+5*q*(.5+.5*Math.sin(s.age*.025+i));x.fillStyle=`hsla(${(s.hue+i*19)%360},85%,72%,${.4+.4*q})`;x.beginPath();x.arc(fx,fy,r,0,Math.PI*2);x.fill()}x.restore()}
+function drawEcho(e){e.r+=2.4;e.life--;x.strokeStyle=`hsla(${e.hue},80%,75%,${Math.max(0,e.life/100)})`;x.lineWidth=1;x.beginPath();x.arc(e.x,e.y,e.r,0,Math.PI*2);x.stroke()}
+function frame(){t++;x.clearRect(0,0,w,h);x.fillStyle='rgba(255,245,230,.06)';for(const r of rain){r.y+=r.v;r.x+=r.d;x.fillRect(r.x,r.y,1,8);if(r.y>h){r.y=-10;r.x=Math.random()*w}}for(let i=echoes.length-1;i>=0;i--){drawEcho(echoes[i]);if(echoes[i].life<=0)echoes.splice(i,1)}for(let i=seeds.length-1;i>=0;i--){drawSeed(seeds[i]);if(seeds[i].age>seeds[i].life+90)seeds.splice(i,1)}requestAnimationFrame(frame)}frame();
+function ping(freq,gain){if(!audio)audio=new (AudioContext||webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(freq,audio.currentTime);o.frequency.exponentialRampToValueAtTime(freq*.55,audio.currentTime+.7);g.gain.setValueAtTime(gain,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.8);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.82)}
+document.querySelector('#storm').onclick=()=>{for(let i=0;i<70;i++)rain.push({x:Math.random()*w,y:Math.random()*h-h,v:4+Math.random()*7,d:-.5+Math.random()});for(const s of seeds)s.lean+=(Math.random()-.5)*1.4;setTimeout(()=>rain.splice(0,rain.length),5000);if(soundOn)ping(80,.16)};
+document.querySelector('#clear').onclick=()=>{seeds.length=0;rain.length=0;echoes.length=0;count.textContent='0 lights planted'};
+document.querySelector('#sound').onclick=async e=>{soundOn=!soundOn;e.currentTarget.setAttribute('aria-pressed',String(soundOn));e.currentTarget.textContent=`Sound: ${soundOn?'awake':'asleep'}`;if(soundOn){if(!audio)audio=new (AudioContext||webkitAudioContext)();await audio.resume();ping(220,.06)}};
+for(let i=0;i<7;i++)plant(w*(.15+i*.11),h*(.62+Math.sin(i)*.05),0,-1)
+})();
+</script>
+</body>
+</html>
