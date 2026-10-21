@@ -18,9 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate atlas HTML and navigation
+      - name: Validate HTML, JavaScript, and source catalog
         run: |
-          test -s public/atlas/index.html
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
           const html = readFileSync('public/atlas/index.html', 'utf8');
@@ -33,20 +32,44 @@ jobs:
             'href="#systems"',
             'href="#archive"',
             'id="filter"',
-            'data-search=',
+            'id="catalog-results"',
+            'catalog-index.json',
             'addEventListener',
             'prefers-reduced-motion',
           ];
           const missing = required.filter((token) => !html.includes(token));
-          if (missing.length) {
-            console.error('Atlas source check failed; missing:', missing.join(', '));
-            process.exit(1);
-          }
-          const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
+          if (missing.length) throw new Error('Missing HTML requirements: ' + missing.join(', '));
+          const ids = [...html.matchAll(/\\bid="([^"]+)"/g)].map((m) => m[1]);
           const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
-          if (duplicates.length) {
-            console.error('Duplicate HTML IDs:', [...new Set(duplicates)].join(', '));
-            process.exit(1);
+          if (duplicates.length) throw new Error('Duplicate HTML IDs: ' + [...new Set(duplicates)].join(', '));
+
+          const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map((m) => m[1]);
+          if (scripts.length !== 1) throw new Error('Expected one inline atlas script; found ' + scripts.length);
+          new Function(scripts[0]);
+          console.log('Inline JavaScript syntax passed.');
+
+          const index = JSON.parse(readFileSync('public/atlas/catalog-index.json', 'utf8'));
+          let total = 0;
+          for (const source of index.sources) {
+            const manifest = JSON.parse(readFileSync('public/atlas/' + source.file, 'utf8'));
+            if (manifest.repository !== source.repo) throw new Error('Repository mismatch for ' + source.file);
+            if (manifest.items.length !== source.file_count) throw new Error('File count mismatch for ' + source.file);
+            if (!/^[0-9a-f]{40}$/i.test(manifest.tree_sha)) throw new Error('Invalid tree SHA for ' + source.file);
+            const seen = new Set();
+            for (const item of manifest.items) {
+              if (!item.path || !/^[0-9a-f]{40}$/i.test(item.sha)) throw new Error('Invalid catalog item in ' + source.file);
+              if (seen.has(item.path)) throw new Error('Duplicate path in ' + source.file + ': ' + item.path);
+              seen.add(item.path);
+            }
+            total += manifest.items.length;
           }
-          console.log('Atlas source checks passed:', required.length, 'requirements; no duplicate IDs.');
+          if (total !== index.file_count || total < 6000) throw new Error('Catalog total mismatch or unexpectedly small: ' + total);
+          console.log(JSON.stringify({
+            result: 'PASS',
+            htmlChecks: required.length,
+            duplicateIds: 0,
+            inlineScriptsSyntaxChecked: scripts.length,
+            indexedFiles: total,
+            sourceRepositories: index.source_count,
+          }, null, 2));
           NODE
