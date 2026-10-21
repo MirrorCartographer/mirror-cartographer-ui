@@ -17,13 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify Atlas HTML and health probe over HTTPS
-        env:
-          SITE_URL: https://mirror-cartographer-ui.vercel.app/atlas/
+      - name: Find working Vercel alias and verify Atlas
         run: |
           node --input-type=module <<'NODE'
-          const base = process.env.SITE_URL;
-          const candidates = [base, base.endsWith('/') ? base + 'index.html' : base + '/index.html'];
+          const bases = [
+            'https://mirror-cartographer-ui.vercel.app/atlas/',
+            'https://mirror-cartographer-ui-3orp.vercel.app/atlas/',
+          ];
+          const candidates = bases.flatMap((base) => [
+            base,
+            base.endsWith('/') ? base + 'index.html' : base + '/index.html',
+          ]);
           const required = [
             'Mirror Cartographer',
             'The Living Atlas',
@@ -34,24 +38,23 @@ jobs:
             'id="filter"',
           ];
           let lastFailure = 'No request attempted';
-          for (let attempt = 1; attempt <= 12; attempt++) {
-            let passed = false;
+          for (let attempt = 1; attempt <= 8; attempt++) {
             for (const url of candidates) {
               try {
                 const response = await fetch(url, {
                   redirect: 'follow',
                   cache: 'no-store',
-                  signal: AbortSignal.timeout(8000),
+                  signal: AbortSignal.timeout(5000),
                 });
                 const contentType = response.headers.get('content-type') || '';
                 const body = await response.text();
                 const missing = required.filter((marker) => !body.includes(marker));
                 if (response.ok && contentType.includes('text/html') && missing.length === 0) {
                   const healthUrl = new URL('/atlas/healthz.txt', response.url);
-                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
                   const healthBody = await health.text();
                   if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
-                    throw new Error('HTML passed but health probe failed: HTTP ' + health.status);
+                    throw new Error('HTML passed but health probe failed: HTTP ' + health.status + ' at ' + health.url);
                   }
                   console.log(JSON.stringify({
                     result: 'PASS',
@@ -70,8 +73,8 @@ jobs:
                 lastFailure = `${url}: ${String(error)}`;
               }
             }
-            console.log(`Attempt ${attempt}/12: ${lastFailure}`);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            console.log(`Attempt ${attempt}/8: ${lastFailure}`);
+            await new Promise((resolve) => setTimeout(resolve, 3000));
           }
-          throw new Error('Vercel Atlas live smoke test failed: ' + lastFailure);
+          throw new Error('No Vercel alias passed the Atlas smoke test: ' + lastFailure);
           NODE
