@@ -7,7 +7,7 @@ The Living Atlas is a standalone static website sourced from `public/atlas/`. It
 ## Canonical publication
 
 - Provider: Vercel
-- Public entry route: `https://mirror-cartographer-ui.vercel.app/atlas/`
+- Public entry route: `https://mirror-cartographer-ui-3orp.vercel.app/atlas/`
 - Source entry document: `public/atlas/index.html`
 - Static health probe: `public/atlas/healthz.txt`
 - Route configuration: `vercel.json`
@@ -34,11 +34,11 @@ The workflow `.github/workflows/deploy-github-pages.yml` is source validation on
 
 ## Manual verification
 
-- Open `https://mirror-cartographer-ui.vercel.app/atlas/`.
+- Open `https://mirror-cartographer-ui-3orp.vercel.app/atlas/`.
 - Confirm the title “Mirror Cartographer — The Living Atlas”.
 - Use the navigation anchors for Experiences, Art & play, Systems, and Archive.
 - Type a term such as “veterans” into archive search and confirm the cards filter.
-- Open `https://mirror-cartographer-ui.vercel.app/atlas/healthz.txt`; the response should include `status=ok` and `service=mirror-cartographer-living-atlas`.
+- Open `https://mirror-cartographer-ui-3orp.vercel.app/atlas/healthz.txt`; the response should include `status=ok` and `service=mirror-cartographer-living-atlas`.
 - Review the live-smoke workflow for its explicit PASS output.
 
 ## Scope and provenance
