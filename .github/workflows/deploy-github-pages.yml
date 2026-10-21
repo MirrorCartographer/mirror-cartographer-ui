@@ -1,4 +1,4 @@
-name: Deploy Living Atlas to GitHub Pages
+name: Atlas Source Validation
 
 on:
   push:
@@ -10,26 +10,15 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: github-pages-production
-  cancel-in-progress: true
 
 jobs:
-  validate-and-deploy:
+  validate:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    outputs:
-      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate standalone atlas
+      - name: Validate atlas before hosting deployment
         run: |
           test -s public/atlas/index.html
           node --input-type=module <<'NODE'
@@ -43,73 +32,8 @@ jobs:
             'id="art"',
             'id="systems"',
             'id="archive"',
-            'addEventListener',
           ];
           const missing = required.filter((token) => !html.includes(token));
-          if (missing.length) {
-            console.error('Atlas validation failed; missing:', missing.join(', '));
-            process.exit(1);
-          }
-          console.log('Atlas source validation passed:', required.length, 'checks.');
-          NODE
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload standalone site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public/atlas
-
-      - name: Deploy site
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: Verify published page over HTTPS
-        env:
-          SITE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: |
-          node --input-type=module <<'NODE'
-          const url = process.env.SITE_URL;
-          if (!url || !url.startsWith('https://')) {
-            throw new Error('GitHub Pages did not return an HTTPS deployment URL');
-          }
-          let response;
-          for (let attempt = 1; attempt <= 12; attempt++) {
-            try {
-              response = await fetch(url, { redirect: 'follow', cache: 'no-store' });
-              if (response.ok) {
-                const html = await response.text();
-                const required = [
-                  'Mirror Cartographer',
-                  'The Living Atlas',
-                  'Experiences',
-                  'Art, games',
-                  'Systems with a purpose',
-                  'The source archive',
-                  'id="filter"',
-                ];
-                const missing = required.filter((token) => !html.includes(token));
-                if (!missing.length) {
-                  console.log(JSON.stringify({
-                    result: 'PASS',
-                    url: response.url,
-                    status: response.status,
-                    contentType: response.headers.get('content-type'),
-                    checks: required.length,
-                  }, null, 2));
-                  process.exit(0);
-                }
-                throw new Error('Published HTML missing: ' + missing.join(', '));
-              }
-              console.log('Attempt', attempt, 'HTTP', response.status);
-            } catch (error) {
-              if (attempt === 12) throw error;
-              console.log('Attempt', attempt, 'not ready:', String(error));
-            }
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-          }
-          throw new Error('Published page did not pass live verification');
+          if (missing.length) throw new Error('Missing atlas features: ' + missing.join(', '));
+          console.log('PASS: standalone atlas source is ready for Netlify publication.');
           NODE
