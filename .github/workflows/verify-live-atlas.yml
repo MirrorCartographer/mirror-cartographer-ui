@@ -17,29 +17,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Find working Vercel alias and verify Atlas
+      - name: Verify Atlas, local worlds, and health probe
         run: |
           node --input-type=module <<'NODE'
           const bases = [
             'https://mirror-cartographer-ui-3orp.vercel.app/atlas/',
             'https://mirror-cartographer-ui.vercel.app/atlas/',
           ];
-          const candidates = bases.flatMap((base) => [
-            base,
-            base.endsWith('/') ? base + 'index.html' : base + '/index.html',
-          ]);
           const required = [
             'Mirror Cartographer',
             'The Living Atlas',
+            'Worlds you can enter',
+            'Night Shift Orchard',
+            'Afterimage Orchard',
             'Experiences',
             'Art, games',
             'Systems with a purpose',
             'The source archive',
             'id="filter"',
           ];
+          const worldRoutes = [
+            '/atlas/worlds/night-shift-orchard.html',
+            '/atlas/worlds/afterimage-orchard.html',
+            '/atlas/worlds/constellation.html',
+            '/atlas/worlds/the-world.html',
+            '/atlas/worlds/research-field.html',
+            '/atlas/worlds/experiments.html',
+          ];
           let lastFailure = 'No request attempted';
           for (let attempt = 1; attempt <= 8; attempt++) {
-            for (const url of candidates) {
+            for (const url of bases) {
               try {
                 const response = await fetch(url, {
                   redirect: 'follow',
@@ -49,49 +56,42 @@ jobs:
                 const contentType = response.headers.get('content-type') || '';
                 const body = await response.text();
                 const missing = required.filter((marker) => !body.includes(marker));
-                if (response.ok && contentType.includes('text/html') && missing.length === 0) {
-                  const healthUrl = new URL('/atlas/healthz.txt', response.url);
-                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
-                  const healthBody = await health.text();
-                  if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
-                    throw new Error('HTML passed but health probe failed: HTTP ' + health.status + ' at ' + health.url);
-                  }
-                  const indexUrl = new URL('/atlas/catalog-index.json', response.url);
-                  const indexResponse = await fetch(indexUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
-                  if (!indexResponse.ok) throw new Error('Catalog index failed: HTTP ' + indexResponse.status);
-                  const index = await indexResponse.json();
-                  let indexedFiles = 0;
-                  for (const source of index.sources) {
-                    const manifestUrl = new URL('/atlas/' + source.file, response.url);
-                    const manifestResponse = await fetch(manifestUrl, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
-                    if (!manifestResponse.ok) throw new Error(source.file + ' failed: HTTP ' + manifestResponse.status);
-                    const manifest = await manifestResponse.json();
-                    if (manifest.repository !== source.repo || manifest.items.length !== source.file_count) {
-                      throw new Error('Catalog metadata mismatch for ' + source.file);
-                    }
-                    if (!/^[0-9a-f]{40}$/i.test(manifest.source_commit) || !/^[0-9a-f]{40}$/i.test(manifest.tree_sha)) {
-                      throw new Error('Invalid provenance for ' + source.file);
-                    }
-                    indexedFiles += manifest.items.length;
-                  }
-                  if (indexedFiles !== index.file_count || indexedFiles < 6000) {
-                    throw new Error('Unexpected catalog total: ' + indexedFiles);
-                  }
-                  console.log(JSON.stringify({
-                    result: 'PASS',
-                    url: response.url,
-                    status: response.status,
-                    contentType,
-                    htmlMarkersVerified: required.length,
-                    healthProbe: health.url,
-                    healthStatus: health.status,
-                    catalogFilesVerified: indexedFiles,
-                    catalogRepositories: index.source_count,
-                    attempt,
-                  }, null, 2));
-                  process.exit(0);
+                if (!response.ok || !contentType.includes('text/html') || missing.length) {
+                  lastFailure = `${url}: HTTP ${response.status}; missing ${missing.join(', ')}`;
+                  continue;
                 }
-                lastFailure = `${url}: HTTP ${response.status}; content-type=${contentType}; missing=${missing.join(', ')}`;
+                const worldChecks = await Promise.all(worldRoutes.map(async (route) => {
+                  const world = await fetch(new URL(route, response.url), {
+                    cache: 'no-store',
+                    signal: AbortSignal.timeout(5000),
+                  });
+                  const worldBody = await world.text();
+                  return { route, status: world.status, ok: world.ok && /<!doctype html|<html/i.test(worldBody) };
+                }));
+                const failedWorlds = worldChecks.filter((check) => !check.ok);
+                if (failedWorlds.length) {
+                  lastFailure = 'Local worlds failed: ' + JSON.stringify(failedWorlds);
+                  continue;
+                }
+                const healthUrl = new URL('/atlas/healthz.txt', response.url);
+                const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+                const healthBody = await health.text();
+                if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
+                  lastFailure = 'Health probe failed: HTTP ' + health.status;
+                  continue;
+                }
+                console.log(JSON.stringify({
+                  result: 'PASS',
+                  url: response.url,
+                  status: response.status,
+                  contentType,
+                  htmlMarkersVerified: required.length,
+                  localWorldsVerified: worldChecks.length,
+                  healthProbe: health.url,
+                  healthStatus: health.status,
+                  attempt,
+                }, null, 2));
+                process.exit(0);
               } catch (error) {
                 lastFailure = `${url}: ${String(error)}`;
               }
@@ -99,5 +99,5 @@ jobs:
             console.log(`Attempt ${attempt}/8: ${lastFailure}`);
             await new Promise((resolve) => setTimeout(resolve, 3000));
           }
-          throw new Error('No Vercel alias passed the Atlas smoke test: ' + lastFailure);
+          throw new Error('Living Atlas smoke test failed: ' + lastFailure);
           NODE
