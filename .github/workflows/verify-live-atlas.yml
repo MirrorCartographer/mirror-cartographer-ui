@@ -15,14 +15,15 @@ permissions:
 jobs:
   live-smoke-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 5
     steps:
-      - name: Verify Atlas route over HTTPS
+      - name: Verify Atlas HTML and health probe over HTTPS
         env:
           SITE_URL: https://mirror-cartographer-ui.vercel.app/atlas/
         run: |
           node --input-type=module <<'NODE'
-          const url = process.env.SITE_URL;
+          const base = process.env.SITE_URL;
+          const candidates = [base, base.replace(/\\/$/, '') + '/index.html'];
           const required = [
             'Mirror Cartographer',
             'The Living Atlas',
@@ -33,29 +34,44 @@ jobs:
             'id="filter"',
           ];
           let lastFailure = 'No request attempted';
-          for (let attempt = 1; attempt <= 36; attempt++) {
-            try {
-              const response = await fetch(url, { redirect: 'follow', cache: 'no-store' });
-              const contentType = response.headers.get('content-type') || '';
-              const body = await response.text();
-              const missing = required.filter((marker) => !body.includes(marker));
-              if (response.ok && contentType.includes('text/html') && missing.length === 0) {
-                console.log(JSON.stringify({
-                  result: 'PASS',
-                  url: response.url,
-                  status: response.status,
-                  contentType,
-                  markersVerified: required.length,
-                  attempt,
-                }, null, 2));
-                process.exit(0);
+          for (let attempt = 1; attempt <= 12; attempt++) {
+            let passed = false;
+            for (const url of candidates) {
+              try {
+                const response = await fetch(url, {
+                  redirect: 'follow',
+                  cache: 'no-store',
+                  signal: AbortSignal.timeout(8000),
+                });
+                const contentType = response.headers.get('content-type') || '';
+                const body = await response.text();
+                const missing = required.filter((marker) => !body.includes(marker));
+                if (response.ok && contentType.includes('text/html') && missing.length === 0) {
+                  const healthUrl = new URL('healthz.txt', response.url.endsWith('/') ? response.url : response.url + '/');
+                  const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+                  const healthBody = await health.text();
+                  if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
+                    throw new Error('HTML passed but health probe failed: HTTP ' + health.status);
+                  }
+                  console.log(JSON.stringify({
+                    result: 'PASS',
+                    url: response.url,
+                    status: response.status,
+                    contentType,
+                    htmlMarkersVerified: required.length,
+                    healthProbe: health.url,
+                    healthStatus: health.status,
+                    attempt,
+                  }, null, 2));
+                  process.exit(0);
+                }
+                lastFailure = `${url}: HTTP ${response.status}; content-type=${contentType}; missing=${missing.join(', ')}`;
+              } catch (error) {
+                lastFailure = `${url}: ${String(error)}`;
               }
-              lastFailure = `HTTP ${response.status}; content-type=${contentType}; missing=${missing.join(', ')}`;
-            } catch (error) {
-              lastFailure = String(error);
             }
-            console.log(`Attempt ${attempt}/36: ${lastFailure}`);
-            await new Promise((resolve) => setTimeout(resolve, 10000));
+            console.log(`Attempt ${attempt}/12: ${lastFailure}`);
+            await new Promise((resolve) => setTimeout(resolve, 5000));
           }
-          throw new Error('Vercel Atlas route did not pass live smoke test: ' + lastFailure);
+          throw new Error('Vercel Atlas live smoke test failed: ' + lastFailure);
           NODE
