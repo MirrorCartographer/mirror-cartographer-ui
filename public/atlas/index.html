@@ -41,7 +41,7 @@ footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);f
 <article class="card" data-search="architecture technical systems research evidence knowledge graph"><span class="number">RESEARCH · 02</span><h3>Architecture & research</h3><p>Explore the system maps, evidence, and technical foundations behind the work.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/architecture" target="_blank" rel="noreferrer">Browse architecture ↗</a></article>
 <article class="card" data-search="continuity agents tools memory systems github mind"><span class="number">TOOLS · 03</span><h3>Continuity & tools</h3><p>Infrastructure for connecting artifacts, preserving context, and making a growing body of work navigable.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Open the systems repository ↗</a></article>
 </div></div></section>
-<section id="archive"><div class="wrap"><div class="section-head"><div><div class="eyebrow">04 / Find your way</div><h2>The source archive</h2></div><p>Search this atlas by subject. For exhaustive file-level browsing, the source repositories remain authoritative.</p></div><label class="searchbar"><span aria-hidden="true">⌕</span><input id="filter" type="search" placeholder="Search art, games, research, veterans…" aria-label="Filter atlas cards"></label><div id="empty" class="quiet" hidden>No matching entries. Try a broader term.</div><div class="grid" id="alllinks">
+<section id="archive"><div class="wrap"><div class="section-head"><div><div class="eyebrow">04 / Find your way</div><h2>The source archive</h2></div><p>Search the indexed source catalog across both project repositories. Each result preserves its original path and GitHub provenance.</p></div><label class="searchbar"><span aria-hidden="true">⌕</span><input id="filter" type="search" placeholder="Search art, games, research, veterans…" aria-label="Filter atlas cards"></label><p id="catalog-status" class="quiet" aria-live="polite">Loading the repository catalog…</p><div id="catalog-results" class="grid" aria-live="polite"></div><div id="empty" class="quiet" hidden>No matching entries. Try a broader term.</div><div class="grid" id="alllinks">
 <article class="card" data-search="all files repository source code documentation"><span class="number">SOURCE · A</span><h3>Main repository</h3><p>Full project tree, documentation, code, public pages, and source history.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
 <article class="card" data-search="frontend user interface audio visuals interactive source code"><span class="number">SOURCE · B</span><h3>Interactive UI repository</h3><p>Application source, media, public assets, deployment configuration, and tests.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
 <article class="card" data-search="public games websites html pages"><span class="number">SOURCE · C</span><h3>Published-page source</h3><p>Static public experiences and web pages in the main repository.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public" target="_blank" rel="noreferrer">Browse public files ↗</a></article>
@@ -49,6 +49,89 @@ footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);f
 </main>
 <footer><div class="wrap footrow"><span>✳ Mirror Cartographer · The Living Atlas</span><span>Made from the work of Charity Alessandra Sturgell · <a href="https://github.com/MirrorCartographer">GitHub organization ↗</a></span></div></footer>
 <script>
-const field=document.querySelector('#filter');const cards=[...document.querySelectorAll('[data-search]')];const empty=document.querySelector('#empty');field.addEventListener('input',()=>{const q=field.value.trim().toLowerCase();let shown=0;for(const card of cards){const match=!q||(card.dataset.search+' '+card.innerText).toLowerCase().includes(q);card.hidden=!match;if(match)shown++}empty.hidden=shown!==0});
+const field = document.querySelector('#filter');
+const empty = document.querySelector('#empty');
+const catalogStatus = document.querySelector('#catalog-status');
+const catalogResults = document.querySelector('#catalog-results');
+let sourceFiles = [];
+const displayLimit = 80;
+
+function renderCatalog(query) {
+  const q = query.trim().toLowerCase();
+  let visibleStatic = 0;
+  const staticCards = [...document.querySelectorAll('#alllinks [data-search], #art [data-search], #experience [data-search], #systems [data-search]')];
+  for (const card of staticCards) {
+    const match = !q || (card.dataset.search + ' ' + card.innerText).toLowerCase().includes(q);
+    card.hidden = !match;
+    if (match) visibleStatic++;
+  }
+
+  catalogResults.replaceChildren();
+  if (!q) {
+    catalogStatus.textContent = sourceFiles.length
+      ? `Source catalog ready: ${sourceFiles.length.toLocaleString()} files indexed across both repositories. Search to explore file-level results.`
+      : 'Loading repository catalog…';
+    empty.hidden = true;
+    return;
+  }
+
+  const matches = sourceFiles.filter((item) =>
+    (item.path + ' ' + item.repo + ' ' + item.ext).toLowerCase().includes(q)
+  );
+  const shown = matches.slice(0, displayLimit);
+  for (const item of shown) {
+    const card = document.createElement('article');
+    card.className = 'card catalog-entry';
+    const parts = item.path.split('/');
+    const fileName = parts[parts.length - 1] || item.path;
+    const category = parts.length > 1 ? parts[0].replace(/[-_]/g, ' ') : 'Root file';
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = `${category.toUpperCase()} · ${item.ext ? item.ext.toUpperCase() : 'FILE'}`;
+    const title = document.createElement('h3');
+    title.textContent = fileName;
+    const description = document.createElement('p');
+    const size = Number.isFinite(item.bytes) ? `${(item.bytes / 1024).toFixed(1)} KB` : 'size unavailable';
+    description.textContent = `${item.repo} / ${item.path} · ${size} · blob ${item.sha.slice(0, 8)}`;
+    const link = document.createElement('a');
+    const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
+    link.href = `https://github.com/${item.repo}/blob/main/${encodedPath}`;
+    link.target = '_blank';
+    link.rel = 'noreferrer';
+    link.textContent = 'Open original source ↗';
+    card.append(number, title, description, link);
+    catalogResults.append(card);
+  }
+
+  catalogStatus.textContent = matches.length
+    ? `Found ${matches.length.toLocaleString()} source files; showing ${shown.length}. ${matches.length > displayLimit ? 'Refine your search to narrow the list.' : ''}`
+    : 'No source files matched that search.';
+  empty.hidden = matches.length + visibleStatic !== 0;
+}
+
+async function loadCatalog() {
+  try {
+    const response = await fetch('./catalog-index.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`catalog index returned HTTP ${response.status}`);
+    const index = await response.json();
+    const manifests = await Promise.all(index.sources.map(async (source) => {
+      const manifestResponse = await fetch(`./${source.file}`, { cache: 'no-store' });
+      if (!manifestResponse.ok) throw new Error(`${source.file} returned HTTP ${manifestResponse.status}`);
+      return manifestResponse.json();
+    }));
+    sourceFiles = manifests.flatMap((manifest) => manifest.items.map((item) => ({
+      ...item,
+      repo: manifest.repository,
+    })));
+    catalogStatus.textContent = `Loaded ${sourceFiles.length.toLocaleString()} source files from ${index.source_count} repositories.`;
+    renderCatalog(field.value);
+  } catch (error) {
+    catalogStatus.textContent = 'The file-level catalog could not load. The source repositories remain available below.';
+    console.error('Living Atlas catalog load failed:', error);
+  }
+}
+
+field.addEventListener('input', () => renderCatalog(field.value));
+loadCatalog();
 </script>
 </body></html>
