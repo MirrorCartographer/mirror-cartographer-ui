@@ -3,7 +3,7 @@
   "title": "Mirror Cartographer Source Catalog",
   "generated_on": "2026-10-21",
   "source_count": 2,
-  "file_count": 6536,
+  "file_count": 6537,
   "generated_catalogs_excluded": [
     "public/atlas/catalog-main.json",
     "public/atlas/catalog-ui.json",
@@ -22,9 +22,9 @@
       "repo": "MirrorCartographer/mirror-cartographer-ui",
       "label": "Mirror Cartographer — interactive UI",
       "file": "catalog-ui.json",
-      "file_count": 2394,
-      "source_commit": "07bf0c1060d61544087399c0d810a6563ebb3840",
-      "tree_sha": "da6029fb306ae94c097f6f2cd92932eeac381ba2"
+      "file_count": 2395,
+      "source_commit": "fe42aa59c3978ffa24700975057156e5a1516b04",
+      "tree_sha": "3bbb3de788126f7ad776eea37e32d4c9e47041c7"
     }
   ]
 }
