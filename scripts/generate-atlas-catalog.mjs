@@ -75,7 +75,7 @@ for (const source of REPOSITORIES) {
     source_commit: manifest.source_commit,
     tree_sha: manifest.tree_sha,
   });
-  process.stdout.write(`Indexed ${manifest.file_count} files from ${source.repo} at ${manifest.source_commit}\\n`);
+  process.stdout.write(`Indexed \${manifest.file_count} files from \${source.repo} at \${manifest.source_commit}\n`);
 }
 const index = {
   schema_version: 1,
@@ -86,5 +86,5 @@ const index = {
   generated_catalogs_excluded: [...GENERATED_FILES],
   sources: manifests,
 };
-await writeFile(join(OUTPUT_DIR, 'catalog-index.json'), JSON.stringify(index, null, 2) + '\\n');
-process.stdout.write(`Catalog complete: ${index.file_count} files across ${index.source_count} repositories.\\n`);
+await writeFile(join(OUTPUT_DIR, 'catalog-index.json'), JSON.stringify(index, null, 2) + '\n');
+process.stdout.write(`Catalog complete: \${index.file_count} files across \${index.source_count} repositories.\n`);
