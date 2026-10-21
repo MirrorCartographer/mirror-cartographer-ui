@@ -26,7 +26,7 @@ The live smoke test checks the canonical HTTPS page, ten content/navigation mark
 
 ## Independence boundary
 
-The public-facing experience is hosted by Vercel, not GitHub Pages. The six experiences listed above are mirrored into the Atlas site. The full repository archive is **not yet independent of GitHub**: the source manifests currently index 6,536 files, and most entries still link to their canonical repository source. Full migration requires a durable object store or self-hosted storage, bulk transfer of all file bytes (not just metadata), checksums and provenance records, a backup/restore process, and a host controlled by the project. Do not claim those files have been migrated until each stored byte is verified against its source checksum and a restore test passes.
+The public-facing experience is hosted by Vercel, not GitHub Pages. The six experiences listed above are mirrored into the Atlas site. The full repository archive is **not yet independent of GitHub**: the source manifests currently index 6,537 files, and most entries still link to their canonical repository source. Full migration requires a durable object store or self-hosted storage, bulk transfer of all file bytes (not just metadata), checksums and provenance records, a backup/restore process, and a host controlled by the project. Do not claim those files have been migrated until each stored byte is verified against its source checksum and a restore test passes.
 
 ## Preservation rules
 
