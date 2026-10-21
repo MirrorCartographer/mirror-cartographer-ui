@@ -4,20 +4,27 @@
   "generated_on": "2026-10-21",
   "source_count": 2,
   "file_count": 6536,
+  "generated_catalogs_excluded": [
+    "public/atlas/catalog-main.json",
+    "public/atlas/catalog-ui.json",
+    "public/atlas/catalog-index.json"
+  ],
   "sources": [
     {
       "repo": "MirrorCartographer/MirrorCartographer",
       "label": "Mirror Cartographer — main project",
       "file": "catalog-main.json",
       "file_count": 4142,
-      "tree_sha": "712e4116557d89027bc17bdf43a8cff03218ea34"
+      "source_commit": "712e4116557d89027bc17bdf43a8cff03218ea34",
+      "tree_sha": "30523fc50d644bb8982004de8072a635bb4c2900"
     },
     {
       "repo": "MirrorCartographer/mirror-cartographer-ui",
       "label": "Mirror Cartographer — interactive UI",
       "file": "catalog-ui.json",
       "file_count": 2394,
-      "tree_sha": "50b48adba3733da8cbee9883de2a056afcd816a0"
+      "source_commit": "07bf0c1060d61544087399c0d810a6563ebb3840",
+      "tree_sha": "da6029fb306ae94c097f6f2cd92932eeac381ba2"
     }
   ]
 }
