@@ -21,9 +21,17 @@ footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);f
 </style>
 </head>
 <body>
-<header><div class="wrap nav"><a class="brand" href="#top">✳ Mirror Cartographer</a><nav class="navlinks" aria-label="Main navigation"><a href="#experience">Experience</a><a href="#art">Art & play</a><a href="#systems">Systems</a><a href="#archive">Archive</a></nav></div></header>
+<header><div class="wrap nav"><a class="brand" href="#top">✳ Mirror Cartographer</a><nav class="navlinks" aria-label="Main navigation"><a href="#worlds">Enter a world</a><a href="#experience">Experience</a><a href="#art">Art & play</a><a href="#systems">Systems</a><a href="#archive">Archive</a></nav></div></header>
 <main id="top">
-<div class="wrap hero"><div class="orbit" aria-hidden="true"><i></i></div><div class="eyebrow">A living atlas · Work by Charity Alessandra Sturgell</div><h1>Meaning has<br>a <em>shape.</em></h1><p class="lead">A connected home for the worlds, images, experiments, games, research, and tools we have been making. Not a pile of links: a map through the work, with the original source kept close.</p><div class="hero-actions"><a class="btn" href="#experience">Enter the atlas ↓</a><a class="btn secondary" href="https://github.com/MirrorCartographer/MirrorCartographer">Explore the source repositories ↗</a></div><p class="quiet" style="margin-top:20px;max-width:620px">This is an index and doorway. Individual projects remain in their original locations; links open the source or hosted experience rather than pretending every artifact has already been merged into one application.</p></div>
+<div class="wrap hero"><div class="orbit" aria-hidden="true"><i></i></div><div class="eyebrow">A living atlas · Work by Charity Alessandra Sturgell</div><h1>Meaning has<br>a <em>shape.</em></h1><p class="lead">A connected home for the worlds, images, experiments, games, research, and tools we have been making. Not a pile of links: a map through the work, with the original source kept close.</p><div class="hero-actions"><a class="btn" href="#worlds">Enter the atlas ↓</a><a class="btn secondary" href="#archive">Explore the archive ↘</a></div><p class="quiet" style="margin-top:20px;max-width:620px">This is an index and doorway. Individual projects remain in their original locations; links open the source or hosted experience rather than pretending every artifact has already been merged into one application.</p></div>
+<section id="worlds"><div class="wrap"><div class="section-head"><div><div class="eyebrow">00 / Step inside</div><h2>Worlds you can enter</h2></div><p>These experiences are copied into the Atlas itself. They open here, on this site, without sending you to a repository.</p></div><div class="grid">
+<article class="card wide" data-search="night shift orchard interactive sound visual generative garden night shift"><span class="number">WORLD · 01 / LOCAL MIRROR</span><h3>Night Shift Orchard</h3><p>A nocturnal orchard that grows through motion and generative light. A small world to inhabit, not just inspect.</p><a href="./worlds/night-shift-orchard.html">Enter the orchard ↗</a></article>
+<article class="card wide" data-search="afterimage orchard memory plant afterimage light interactive generative"><span class="number">WORLD · 02 / LOCAL MIRROR</span><h3>Afterimage Orchard</h3><p>An orchard of traces: a quiet interactive study in memory, plant forms, and what remains after an image is gone.</p><a href="./worlds/afterimage-orchard.html">Enter the orchard ↗</a></article>
+<article class="card" data-search="constellation graph stars connected ideas map"><span class="number">WORLD · 03 / LOCAL MIRROR</span><h3>Constellation</h3><p>A navigable field of points and relationships.</p><a href="./worlds/constellation.html">Enter the constellation ↗</a></article>
+<article class="card" data-search="the world foundation intelligence colorful abstract interactive spatial world"><span class="number">WORLD · 04 / LOCAL MIRROR</span><h3>The World</h3><p>A spatial, generative world built from color, movement, and symbolic structure.</p><a href="./worlds/the-world.html">Enter the world ↗</a></article>
+<article class="card" data-search="research field evidence models research uncertainty interactive green"><span class="number">WORLD · 05 / LOCAL MIRROR</span><h3>Research Field</h3><p>A visual field for exploring evidence, models, and the boundary between a theory and what supports it.</p><a href="./worlds/research-field.html">Enter the field ↗</a></article>
+<article class="card" data-search="experiments observatory machine garden echo cathedral carnival of thought ocean blueprint dream library signal forest impossible museum composer"><span class="number">COLLECTION · 06 / LOCAL MIRROR</span><h3>Ten Experiments</h3><p>A directory of experiments: observatory, machine garden, echo cathedral, carnival of thought, ocean, living blueprint, dream library, signal forest, impossible museum, and composer.</p><a href="./worlds/experiments.html">Open the collection ↗</a></article>
+</div><p class="quiet" style="margin-top:18px">Local mirror means the standalone HTML itself is served by this website. The original project remains in the source archive with provenance preserved.</p></div></section>
 <section id="experience"><div class="wrap"><div class="section-head"><div><div class="eyebrow">01 / Enter</div><h2>Experiences</h2></div><p>Places to interact with the work instead of only reading about it.</p></div><div class="grid">
 <article class="card wide" data-search="room world interactive experience movement light sound music composition phrase memory"><span class="number">EXPERIENCE · 01</span><h3>The Room-World</h3><p>A wordless audiovisual environment built around movement, light, sound, and the feeling of returning to a place that remembers.</p><a href="https://mirror-cartographer-ui.vercel.app/" target="_blank" rel="noreferrer">Open the interactive experience ↗</a><p class="quiet">If the host is unavailable, use the source repository below.</p></article>
 <article class="card wide" data-search="mirror cartographer game rooms reflection symbolic emotional self mapping tool"><span class="number">EXPERIENCE · 02</span><h3>Mirror Cartographer</h3><p>The larger project: symbolic emotional mapping, reflection rooms, embodied meaning, and tools for making internal experience easier to see.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Open the UI repository ↗</a></article>
@@ -55,6 +63,14 @@ const catalogStatus = document.querySelector('#catalog-status');
 const catalogResults = document.querySelector('#catalog-results');
 let sourceFiles = [];
 const displayLimit = 80;
+const localCopies = {
+  'MirrorCartographer/MirrorCartographer:independent-creative-web/night-shift-orchard/index.html': './worlds/night-shift-orchard.html',
+  'MirrorCartographer/MirrorCartographer:independent-web/afterimage-orchard/index.html': './worlds/afterimage-orchard.html',
+  'MirrorCartographer/MirrorCartographer:constellation/index.html': './worlds/constellation.html',
+  'MirrorCartographer/MirrorCartographer:public/world/index.html': './worlds/the-world.html',
+  'MirrorCartographer/MirrorCartographer:cloudflare-static/index.html': './worlds/research-field.html',
+  'MirrorCartographer/MirrorCartographer:public/experiments/index.html': './worlds/experiments.html'
+};
 
 function renderCatalog(query) {
   const q = query.trim().toLowerCase();
@@ -95,10 +111,11 @@ function renderCatalog(query) {
     description.textContent = `${item.repo} / ${item.path} · ${size} · blob ${item.sha.slice(0, 8)}`;
     const link = document.createElement('a');
     const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
-    link.href = `https://github.com/${item.repo}/blob/main/${encodedPath}`;
+    const localCopy = localCopies[`${item.repo}:${item.path}`];
+    link.href = localCopy || `https://github.com/${item.repo}/blob/main/${encodedPath}`;
     link.target = '_blank';
     link.rel = 'noreferrer';
-    link.textContent = 'Open original source ↗';
+    link.textContent = localCopy ? 'Open local experience ↗' : 'Open original source ↗';
     card.append(number, title, description, link);
     catalogResults.append(card);
   }
