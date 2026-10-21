@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080910">
+<title>Night Shift Orchard</title>
+<style>
+:root{color-scheme:dark;--ink:#080910;--paper:#f4e8c8;--dim:#afa68f;--line:rgba(244,232,200,.18)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--paper)}
+body{touch-action:none}.stage{position:fixed;inset:0;isolation:isolate}canvas{width:100%;height:100%;display:block}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:screen;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.44'/%3E%3C/svg%3E")}
+header{position:absolute;left:max(18px,env(safe-area-inset-left));top:max(17px,env(safe-area-inset-top));z-index:2;pointer-events:none}h1{font-size:clamp(13px,2.2vw,18px);letter-spacing:.18em;text-transform:uppercase;margin:0;font-weight:500}.sub{font-size:11px;color:var(--dim);margin-top:7px;letter-spacing:.05em}
+.controls{position:absolute;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:3;display:flex;gap:8px}
+button{border:1px solid var(--line);background:rgba(8,9,16,.7);color:var(--paper);min-width:48px;min-height:48px;border-radius:999px;font:inherit;font-size:10px;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}button:focus-visible{outline:2px solid var(--paper);outline-offset:3px}button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+.readout{position:absolute;left:max(18px,env(safe-area-inset-left));bottom:max(20px,env(safe-area-inset-bottom));z-index:2;color:var(--dim);font-size:10px;line-height:1.5;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.sub::after{content:" · still mode"}}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Night Shift Orchard. Touch or click the dark field to grow luminous plants.">
+<canvas id="orchard"></canvas><div class="grain" aria-hidden="true"></div>
+<header><h1>Night Shift Orchard</h1><div class="sub">plant light in the dark</div></header>
+<div class="readout" id="readout" aria-live="polite">0 plants · the field is listening</div>
+<div class="controls">
+<button id="sound" type="button" aria-pressed="false" aria-label="Toggle quiet generative sound">sound</button>
+<button id="clear" type="button" aria-label="Clear the orchard">clear</button>
+</div>
+</main>
+<script>
+(()=>{'use strict';
+const canvas=document.querySelector('#orchard'),ctx=canvas.getContext('2d',{alpha:false});
+const readout=document.querySelector('#readout'),soundBtn=document.querySelector('#sound'),clearBtn=document.querySelector('#clear');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let w=0,h=0,dpr=1,t=0,last=performance.now(),plants=[],stars=[],audio=null,soundOn=false,seed=173;
+const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);stars=Array.from({length:Math.min(150,Math.floor(w*h/7000))},()=>({x:rand()*w,y:rand()*h,a:.08+rand()*.38,r:.3+rand()*1.2,p:rand()*6.28}));}
+function plant(x,y,energy=1){const p={x,y,age:0,life:9+rand()*10,height:34+rand()*110*energy,lean:(rand()-.5)*42,branches:3+Math.floor(rand()*5),hue:32+rand()*44,phase:rand()*6.28};plants.push(p);if(plants.length>90)plants.shift();tone(p);announce();}
+function announce(){readout.textContent=`${plants.length} plant${plants.length===1?'':'s'} · ${plants.length?'the orchard remembers':'the field is listening'}`;}
+function tone(p){if(!soundOn||!audio)return;const now=audio.currentTime,o=audio.createOscillator(),g=audio.createGain(),f=audio.createBiquadFilter();o.type='sine';o.frequency.value=110+[0,55,82.5,110,165][Math.floor(rand()*5)];f.type='lowpass';f.frequency.value=700;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.035,now+.02);g.gain.exponentialRampToValueAtTime(.0001,now+.7);o.connect(f).connect(g).connect(audio.destination);o.start(now);o.stop(now+.72);}
+function drawPlant(p,dt){p.age+=dt;const growth=Math.min(1,p.age/1.8),fade=Math.min(1,(p.life-p.age)/2),alpha=Math.max(0,fade);if(alpha<=0)return false;const sway=reduce?0:Math.sin(t*.0007+p.phase)*4;const topX=p.x+(p.lean+sway)*growth,topY=p.y-p.height*growth;ctx.save();ctx.lineCap='round';ctx.globalAlpha=alpha;ctx.strokeStyle=`hsla(${p.hue},70%,76%,.82)`;ctx.shadowColor=`hsla(${p.hue},88%,66%,.45)`;ctx.shadowBlur=10;ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.quadraticCurveTo(p.x+p.lean*.18,p.y-p.height*.48*growth,topX,topY);ctx.stroke();for(let i=1;i<=p.branches;i++){const q=i/(p.branches+1),side=i%2?1:-1,bx=p.x+(topX-p.x)*q,by=p.y+(topY-p.y)*q,len=(18+rand()*15)*(1-q*.45)*growth;ctx.beginPath();ctx.moveTo(bx,by);ctx.quadraticCurveTo(bx+side*len*.42,by-len*.18,bx+side*len,by-len*.56);ctx.stroke();ctx.fillStyle=`hsla(${p.hue+18},78%,72%,.85)`;ctx.beginPath();ctx.ellipse(bx+side*len,by-len*.56,2.3+q*2,5.5-q*2,side*.65,0,Math.PI*2);ctx.fill();}ctx.fillStyle=`hsla(${p.hue+28},92%,79%,.95)`;ctx.beginPath();ctx.arc(topX,topY,2.8+growth*2.5,0,Math.PI*2);ctx.fill();ctx.restore();return true;}
+function frame(now){const dt=Math.min(.04,(now-last)/1000);last=now;t=now;const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#070811');g.addColorStop(.65,'#10101a');g.addColorStop(1,'#17131a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);for(const s of stars){ctx.globalAlpha=s.a*(reduce?1:.65+.35*Math.sin(now*.001+s.p));ctx.fillStyle='#f4e8c8';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.29);ctx.fill();}ctx.globalAlpha=1;ctx.strokeStyle='rgba(244,232,200,.08)';ctx.beginPath();ctx.moveTo(0,h*.82);ctx.bezierCurveTo(w*.25,h*.79,w*.68,h*.88,w,h*.81);ctx.stroke();plants=plants.filter(p=>drawPlant(p,dt));requestAnimationFrame(frame);}
+function point(e){const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;plant(x,Math.max(y,h*.28),e.pointerType==='touch'?1.15:1);}
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture?.(e.pointerId);point(e)});
+canvas.addEventListener('pointermove',e=>{if(e.buttons===1&&rand()>.72)point(e)});
+soundBtn.addEventListener('click',async()=>{if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();await audio.resume();soundOn=!soundOn;soundBtn.setAttribute('aria-pressed',String(soundOn));if(soundOn)tone({});});
+clearBtn.addEventListener('click',()=>{plants=[];announce()});
+addEventListener('resize',resize,{passive:true});resize();for(let i=0;i<7;i++)plant(w*(.12+rand()*.76),h*(.74+rand()*.18),.55+rand()*.5);requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
