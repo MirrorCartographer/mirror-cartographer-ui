@@ -1,0 +1,4 @@
+status=ok
+service=mirror-cartographer-living-atlas
+schema_version=1
+entrypoint=/atlas/
