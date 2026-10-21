@@ -59,7 +59,22 @@ jobs:
                   if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
                     throw new Error('HTML passed but health probe failed: HTTP ' + health.status + ' at ' + health.url);
                   }
-                  const worldRoutes = [\n                    '/atlas/worlds/night-shift-orchard.html',\n                    '/atlas/worlds/afterimage-orchard.html',\n                    '/atlas/worlds/constellation.html',\n                    '/atlas/worlds/the-world.html',\n                    '/atlas/worlds/research-field.html',\n                    '/atlas/worlds/experiments.html',\n                  ];\n                  const worldChecks = await Promise.all(worldRoutes.map(async (route) => {\n                    const world = await fetch(new URL(route, response.url), { cache: 'no-store', signal: AbortSignal.timeout(5000) });\n                    const text = await world.text();\n                    return { route, status: world.status, ok: world.ok && text.includes('<html') };\n                  }));\n                  const failedWorlds = worldChecks.filter((check) => !check.ok);\n                  if (failedWorlds.length) throw new Error('Local worlds failed: ' + JSON.stringify(failedWorlds));\n                  console.log(JSON.stringify({
+                  const worldRoutes = [
+                    '/atlas/worlds/night-shift-orchard.html',
+                    '/atlas/worlds/afterimage-orchard.html',
+                    '/atlas/worlds/constellation.html',
+                    '/atlas/worlds/the-world.html',
+                    '/atlas/worlds/research-field.html',
+                    '/atlas/worlds/experiments.html',
+                  ];
+                  const worldChecks = await Promise.all(worldRoutes.map(async (route) => {
+                    const world = await fetch(new URL(route, response.url), { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+                    const text = await world.text();
+                    return { route, status: world.status, ok: world.ok && text.includes('<html') };
+                  }));
+                  const failedWorlds = worldChecks.filter((check) => !check.ok);
+                  if (failedWorlds.length) throw new Error('Local worlds failed: ' + JSON.stringify(failedWorlds));
+                  console.log(JSON.stringify({
                     result: 'PASS',
                     url: response.url,
                     status: response.status,
