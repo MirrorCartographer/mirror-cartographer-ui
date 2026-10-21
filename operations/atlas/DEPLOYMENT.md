@@ -2,39 +2,44 @@
 
 ## Purpose
 
-The Living Atlas is a standalone static website sourced from `public/atlas/`. It is intentionally deployable without installing the full Mirror Cartographer application dependencies. This avoids coupling a simple HTML publication to the UI's missing npm lockfile and broad test/build graph.
+The Living Atlas is a standalone static website sourced from `public/atlas/`. It is intentionally deployable without installing the full Mirror Cartographer application dependencies.
 
 ## Canonical publication
 
-- Provider: GitHub Pages
-- Source directory: `public/atlas/`
-- Entry document: `public/atlas/index.html`
-- Canonical project URL: `https://mirrorcartographer.github.io/mirror-cartographer-ui/`
-- Workflow: `.github/workflows/deploy-github-pages.yml`
+- Provider: Vercel
+- Public entry route: `https://mirror-cartographer-ui.vercel.app/atlas/`
+- Source entry document: `public/atlas/index.html`
+- Static health probe: `public/atlas/healthz.txt`
+- Route configuration: `vercel.json`
+- Live smoke test: `.github/workflows/verify-live-atlas.yml`
 
-The publication artifact contains the contents of `public/atlas/` at the website root. Therefore the canonical URL is the repository Pages root, not `/atlas/`.
+Vercel's prior catch-all rewrite sent almost every path to the application `/index.html`. The rewrite now excludes `/atlas` and its descendants so Vercel can serve the static atlas and its health probe.
 
 ## Automated release gates
 
-1. Validate that the entry document exists and contains required navigation, search, and content sections.
-2. Upload the standalone directory as the Pages artifact.
-3. Deploy through GitHub Pages.
-4. Fetch the returned HTTPS URL and assert an HTTP success response plus expected page markers.
-5. Record the exact workflow run and commit SHA as deployment evidence.
+1. Validate that the standalone HTML entry exists and contains the expected navigation, search, and content sections.
+2. Deploy the repository through its existing Vercel Git integration.
+3. Fetch the public HTTPS route and verify the HTML response and expected page markers.
+4. Fetch `/atlas/healthz.txt` and verify the static health response.
+5. Record the exact Git commit and workflow run used as evidence.
 
-The separate `.github/workflows/pages-preview.yml` performs source-only checks and must not publish a competing artifact to the production Pages environment.
+The workflow `.github/workflows/deploy-github-pages.yml` is source validation only. GitHub Pages is not enabled for this repository; attempts to enable it from Actions failed because the workflow token lacks permission to create the Pages site. Do not claim GitHub Pages deployment until an administrator enables it in repository settings.
 
-## Root cause recorded 2026-10-21
+## Root causes recorded 2026-10-21
 
-The prior Pages workflows used `actions/setup-node` with `cache: npm`, which requires a dependency lockfile. This repository has no `package-lock.json`; setup-node failed with “Dependencies lock file is not found” before install, build, or deploy steps could execute. The original Pages workflow also used `npm ci`, which is incompatible with the absent lockfile. The standalone site avoids both failure modes.
+- The earlier GitHub Pages workflows used `actions/setup-node` with `cache: npm`, which requires a dependency lockfile. The repository has no `package-lock.json`; setup failed before installation or deployment. The standalone atlas avoids the full npm build.
+- GitHub Pages was not enabled for the repository, and the workflow token could not enable it.
+- Vercel's catch-all SPA rewrite intercepted `/atlas/`; the rewrite now explicitly excludes the atlas route.
+- The first live-smoke workflow had a malformed regular expression in its URL candidate builder. It was corrected to use `endsWith('/')`, bounded request timeouts, and a separate health probe.
 
 ## Manual verification
 
-- Open the canonical URL above.
+- Open `https://mirror-cartographer-ui.vercel.app/atlas/`.
 - Confirm the title “Mirror Cartographer — The Living Atlas”.
 - Use the navigation anchors for Experiences, Art & play, Systems, and Archive.
-- Type a term such as “veterans” into the archive search and confirm the cards filter.
-- Inspect the workflow's “Verify published page over HTTPS” step for a PASS result.
+- Type a term such as “veterans” into archive search and confirm the cards filter.
+- Open `https://mirror-cartographer-ui.vercel.app/atlas/healthz.txt`; the response should include `status=ok` and `service=mirror-cartographer-living-atlas`.
+- Review the live-smoke workflow for its explicit PASS output.
 
 ## Scope and provenance
 
