@@ -23,7 +23,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const base = process.env.SITE_URL;
-          const candidates = [base, base.replace(/\\/$/, '') + '/index.html'];
+          const candidates = [base, base.endsWith('/') ? base + 'index.html' : base + '/index.html'];
           const required = [
             'Mirror Cartographer',
             'The Living Atlas',
@@ -47,7 +47,7 @@ jobs:
                 const body = await response.text();
                 const missing = required.filter((marker) => !body.includes(marker));
                 if (response.ok && contentType.includes('text/html') && missing.length === 0) {
-                  const healthUrl = new URL('healthz.txt', response.url.endsWith('/') ? response.url : response.url + '/');
+                  const healthUrl = new URL('/atlas/healthz.txt', response.url);
                   const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
                   const healthBody = await health.text();
                   if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
