@@ -18,6 +18,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check catalog generator syntax
+        run: node --check scripts/generate-atlas-catalog.mjs
+
       - name: Validate HTML, JavaScript, and source catalog
         run: |
           node --input-type=module <<'NODE'
