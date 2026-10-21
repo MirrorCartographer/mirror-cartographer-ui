@@ -21,8 +21,8 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const bases = [
-            'https://mirror-cartographer-ui.vercel.app/atlas/',
             'https://mirror-cartographer-ui-3orp.vercel.app/atlas/',
+            'https://mirror-cartographer-ui.vercel.app/atlas/',
           ];
           const candidates = bases.flatMap((base) => [
             base,
