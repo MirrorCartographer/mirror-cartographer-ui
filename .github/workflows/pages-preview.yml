@@ -39,11 +39,11 @@ jobs:
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing HTML requirements: ' + missing.join(', '));
-          const ids = [...html.matchAll(/\\bid="([^"]+)"/g)].map((m) => m[1]);
+          const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
           const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
           if (duplicates.length) throw new Error('Duplicate HTML IDs: ' + [...new Set(duplicates)].join(', '));
 
-          const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map((m) => m[1]);
+          const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
           if (scripts.length !== 1) throw new Error('Expected one inline atlas script; found ' + scripts.length);
           new Function(scripts[0]);
           console.log('Inline JavaScript syntax passed.');
