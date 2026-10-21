@@ -69,6 +69,10 @@ jobs:
                     if (manifest.repository !== source.repo || manifest.items.length !== source.file_count) {
                       throw new Error('Catalog metadata mismatch for ' + source.file);
                     }
+                    if (source.repo === 'MirrorCartographer/mirror-cartographer-ui' &&
+                        !manifest.items.some((item) => item.path === 'scripts/generate-atlas-catalog.mjs')) {
+                      throw new Error('UI catalog is stale: catalog generator is missing');
+                    }
                     if (!/^[0-9a-f]{40}$/i.test(manifest.source_commit) || !/^[0-9a-f]{40}$/i.test(manifest.tree_sha)) {
                       throw new Error('Invalid provenance for ' + source.file);
                     }
