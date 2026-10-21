@@ -41,6 +41,16 @@ The workflow `.github/workflows/deploy-github-pages.yml` is source validation on
 - Open `https://mirror-cartographer-ui-3orp.vercel.app/atlas/healthz.txt`; the response should include `status=ok` and `service=mirror-cartographer-living-atlas`.
 - Review the live-smoke workflow for its explicit PASS output.
 
+## Source catalog and regeneration
+
+The browser-searchable catalog currently indexes 6,537 tracked files across the two repositories. It stores each file path, extension, byte size, and Git blob SHA, alongside the source commit and tree SHA. Search results link to the original GitHub file, preserving provenance rather than copying or misattributing the underlying work. The three generated catalog JSON files are intentionally excluded from the UI repository's own manifest to avoid recursive self-reference.
+
+Regenerate the snapshots from the repository root with:
+
+`node scripts/generate-atlas-catalog.mjs`
+
+The generator uses the public GitHub API, rejects truncated trees and duplicate or invalid entries, and writes `public/atlas/catalog-main.json`, `public/atlas/catalog-ui.json`, and `public/atlas/catalog-index.json`. The source-check workflow validates the generator's syntax, manifest counts, file SHAs, provenance, and embedded website JavaScript. The live workflow verifies the public page, health probe, both manifests, and that the catalog includes the generator.
+
 ## Scope and provenance
 
-The atlas is an index, not a claim that all assets have been copied into one bundle. Each project remains at its original source or deployed experience until a later repository-backed asset catalog imports it explicitly. Preserve source links and authorship/provenance while consolidating.
+The atlas indexes every tracked file in both repositories; it does not claim that every file is a rendered web experience. HTML experiences, images, source code, documentation, and system artifacts remain distinguishable by path and file type. Search results open the original source rather than implying every artifact has already been deployed as a standalone experience.
