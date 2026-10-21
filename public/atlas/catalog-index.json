@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "title": "Mirror Cartographer Source Catalog",
+  "generated_on": "2026-10-21",
+  "source_count": 2,
+  "file_count": 6536,
+  "sources": [
+    {
+      "repo": "MirrorCartographer/MirrorCartographer",
+      "label": "Mirror Cartographer — main project",
+      "file": "catalog-main.json",
+      "file_count": 4142,
+      "tree_sha": "712e4116557d89027bc17bdf43a8cff03218ea34"
+    },
+    {
+      "repo": "MirrorCartographer/mirror-cartographer-ui",
+      "label": "Mirror Cartographer — interactive UI",
+      "file": "catalog-ui.json",
+      "file_count": 2394,
+      "tree_sha": "50b48adba3733da8cbee9883de2a056afcd816a0"
+    }
+  ]
+}
