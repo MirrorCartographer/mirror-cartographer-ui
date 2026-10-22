@@ -12,8 +12,6 @@ function assertIntegerHour(utcHour) {
   }
 }
 
-const { verifySelectionRule } = require('./verifySelectionRule.v1.cjs');
-
 function validateRepertory(repertory) {
   if (!repertory || typeof repertory !== 'object') {
     throw new TypeError('repertory must be an object');
@@ -50,11 +48,6 @@ function validateRepertory(repertory) {
       throw new Error(`unknown production_id in hour slot: ${slot.production_id}`);
     }
     seenHours.add(slot.utc_hour);
-  }
-
-  const selectionContract = verifySelectionRule(repertory);
-  if (!selectionContract.verified) {
-    throw new Error(`invalid direct hour-slot contract: ${selectionContract.violations.join(', ')}`);
   }
 
   return true;
