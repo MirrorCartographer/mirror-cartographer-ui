@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-10-22T17:10:00Z",
+  "updated_at": "2026-10-22T17:40:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_blocked",
-  "observed_blocker": "The live Atlas smoke test returned HTTP 404 from the configured Vercel Atlas URLs on 2026-10-22. The cause is not established. The research atlas source and static checks pass, but public deployment is unverified. A prior operations record also noted provider build-capacity constraints.",
-  "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
+  "observed_blocker": "Route availability has been partially recovered: the live smoke test passed on 2026-10-22 17:24:49 UTC against https://mirror-cartographer-ui-3orp.vercel.app/atlas/ (HTTP 200) and its sibling /research-atlas/ (HTTP 200), verified 10 Living Atlas markers, 5 research-instrument markers, 6 world routes, 6,537 indexed files across 2 manifests, and /atlas/healthz.txt (HTTP 200). The previously checked alias https://mirror-cartographer-ui.vercel.app/atlas/ returned 404. Exact current-source-commit-to-deployment identity remains unverified; do not treat route health as immutable deployment acceptance.",
+  "last_verified_commit": "e3ed3a567aa67c9e80f08f2e427306f7c12f6e28",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
     "Do not delete GitHub files or history.",
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Keep the research atlas source and validation artifacts intact. Do not claim a live deployment. Continue operations-only evidence gathering until the Vercel delivery path is confirmed healthy; then perform one commit-bound deployment verification and test /research-atlas/ plus the existing /atlas/ route."
+  "next_action": "Keep source and interaction checks passing. Before production acceptance, establish the exact deployed commit and immutable Vercel deployment identity for the live route; re-run live route and research-instrument checks against that deployment. Do not claim current source has shipped solely because the older live route responds."
 }
