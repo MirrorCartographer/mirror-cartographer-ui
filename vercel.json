@@ -8,13 +8,25 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "no-referrer" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/((?!api/|atlas(?:/|$)).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/|atlas(?:/|$)|research-atlas(?:/|$)).*)",
+      "destination": "/index.html"
+    }
   ]
 }
