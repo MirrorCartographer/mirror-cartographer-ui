@@ -14,7 +14,6 @@ function repertoryDigest(repertory) {
  * infer deployment, browser activation, audibility, or device verification.
  */
 function buildProgrammedStageReceipt(repertory, date, options = {}) {
-  const safety = verifyRepertorySafetyContract(repertory);
   const selection = selectForDate(repertory, date);
 
   if (!options || typeof options !== 'object' || Array.isArray(options)) {
@@ -39,6 +38,7 @@ function buildProgrammedStageReceipt(repertory, date, options = {}) {
   if (typeof slot.edition_cue !== 'string' || slot.edition_cue.length === 0) {
     throw new Error('programmed hour slot must declare a non-empty edition_cue');
   }
+  const safety = verifyRepertorySafetyContract(repertory);
 
   return Object.freeze({
     schema_version: 1,
