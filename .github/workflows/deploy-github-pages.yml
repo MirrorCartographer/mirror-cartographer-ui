@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'public/atlas/**'\n      - 'public/research-atlas/**'
+      - 'public/atlas/**'
+      - 'public/research-atlas/**'
       - '.github/workflows/deploy-github-pages.yml'
   workflow_dispatch:
 
@@ -18,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate Living Atlas before hosting deployment
+      - name: Validate Living Atlas source
         run: |
           test -s public/atlas/index.html
           node --input-type=module <<'NODE'
@@ -32,8 +33,31 @@ jobs:
             'id="art"',
             'id="systems"',
             'id="archive"',
+            'The Between',
+            'research-atlas/',
           ];
           const missing = required.filter((token) => !html.includes(token));
-          if (missing.length) throw new Error('Missing atlas features: ' + missing.join(', '));
-          console.log('PASS: standalone Living Atlas source is ready for publication.');\n          NODE\n      - name: Validate interactive research atlas\n        run: |\n          test -s public/research-atlas/index.html\n          node --input-type=module <<'NODE'\n          import { readFileSync } from 'node:fs';\n          const html = readFileSync('public/research-atlas/index.html', 'utf8');\n          const required = ['<title>Mirror Cartographer', 'data-route="bio"', 'data-route="access"', 'data-route="evidence"', 'data-route="design"', 'Reveal what this does not establish', 'Turn the phrase', 'va.gov/resources/eligibility-for-community-care-outside-va/'];\n          const missing = required.filter((token) => !html.includes(token));\n          if (missing.length) throw new Error('Missing research atlas features: ' + missing.join(', '));\n          console.log('PASS: research atlas routes, uncertainty control, wordplay, and official VA source link are present.');
+          if (missing.length) throw new Error('Missing Living Atlas features: ' + missing.join(', '));
+          console.log('PASS: Living Atlas navigation and research entry are present.');
+          NODE
+
+      - name: Validate interactive research atlas
+        run: |
+          test -s public/research-atlas/index.html
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const html = readFileSync('public/research-atlas/index.html', 'utf8');
+          const required = [
+            '<title>Mirror Cartographer',
+            'data-route="bio"',
+            'data-route="access"',
+            'data-route="evidence"',
+            'data-route="design"',
+            'Reveal what this does not establish',
+            'Turn the phrase',
+            'va.gov/resources/eligibility-for-community-care-outside-va/',
+          ];
+          const missing = required.filter((token) => !html.includes(token));
+          if (missing.length) throw new Error('Missing research atlas features: ' + missing.join(', '));
+          console.log('PASS: research routes, uncertainty control, wordplay, and official VA source link are present.');
           NODE
