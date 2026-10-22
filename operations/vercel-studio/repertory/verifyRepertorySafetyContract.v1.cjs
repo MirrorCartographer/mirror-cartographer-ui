@@ -50,8 +50,8 @@ function verifyRepertorySafetyContract(repertory) {
   if (repertory.timezone !== 'UTC') {
     throw new Error('repertory timezone must be UTC');
   }
-  if (!repertory.selection_rule || repertory.selection_rule.type !== 'deterministic_modulo') {
-    throw new Error('selection rule must remain deterministic_modulo');
+  if (!repertory.selection_rule || repertory.selection_rule.type !== 'deterministic_hour_slot' || repertory.selection_rule.expression !== 'hour_slots[utc_hour]') {
+    throw new Error('selection rule must remain deterministic_hour_slot');
   }
   if (repertory.selection_rule.randomness_permitted !== false) {
     throw new Error('randomness must remain prohibited');
