@@ -121,7 +121,7 @@ Created through long-form conversation with Charity Sturgell as a real attempt t
 
 ## Interactive research atlas
 
-Explore four evidence-led routes—biomedical mechanisms, veteran access, provenance, and interface evaluation—with source links, explicit unknowns, and follow-on questions.
+Explore a relationship instrument rather than a list of subject summaries. The visitor can change reading lenses, select and traverse connected nodes, reverse the next-step order, turn language into a sharper question, and alter one conceptual condition. The interface keeps source links and explicit boundaries visible; it does not infer causality from the visual map.
 
 - [Atlas source file](research-atlas/index.html)\n- Built static route: `public/research-atlas/index.html` (served as `/research-atlas/` by the Vite build; live deployment must be verified separately)
 - [Research method and source-linked claims](https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research)
