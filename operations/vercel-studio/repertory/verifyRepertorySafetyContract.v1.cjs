@@ -92,8 +92,8 @@ function verifyRepertorySafetyContract(repertory) {
       }
     }
   }
-  if (currentStages.length !== 1) {
-    throw new Error('exactly one production must be the observed_current_stage');
+  if (currentStages.length > 1) {
+    throw new Error('at most one production may be marked observed_current_stage');
   }
 
   const boundary = repertory.activation_boundary;
@@ -113,7 +113,8 @@ function verifyRepertorySafetyContract(repertory) {
     verified: true,
     deterministic: true,
     production_count: repertory.productions.length,
-    current_stage_id: currentStages[0],
+    current_stage_id: currentStages[0] || null,
+    observed_stage_available: currentStages.length === 1,
     privacy_boundary_preserved: true,
     commerce_absent: true,
     autoplay_absent: true,
