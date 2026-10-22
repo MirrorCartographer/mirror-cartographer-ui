@@ -13,7 +13,8 @@ test('verifies the committed operations-only repertory safety contract', () => {
   const result = verifyRepertorySafetyContract(repertory);
   assert.equal(result.verified, true);
   assert.equal(result.deterministic, true);
-  assert.equal(result.current_stage_id, 'wordless-room-game');
+  assert.equal(result.current_stage_id, null);
+  assert.equal(result.observed_stage_available, false);
   assert.equal(result.privacy_boundary_preserved, true);
   assert.equal(result.commerce_absent, true);
   assert.equal(result.autoplay_absent, true);
