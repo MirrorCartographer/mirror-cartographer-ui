@@ -60,12 +60,10 @@ test('rejects continuity state that crosses the public privacy boundary', () => 
   );
 });
 
-test('fails closed when the deterministic hour schedule is altered', () => {
-  const altered = structuredClone(repertory);
-  altered.hour_slots[0].production_id = 'quiet-machine';
-
-  assert.throws(
-    () => verifyHourlyContinuityCycle(altered, seedState),
-    /violates deterministic modulo rule/,
-  );
+test('uses the explicit hour slot as source of truth when the schedule is revised', () => {
+  const revised = structuredClone(repertory);
+  revised.hour_slots[0].production_id = 'quiet-machine';
+  const report = verifyHourlyContinuityCycle(revised, seedState);
+  assert.equal(report.verified, true);
+  assert.equal(report.transitions[0].from_production_id, 'quiet-machine');
 });
