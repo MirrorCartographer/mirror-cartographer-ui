@@ -34,5 +34,6 @@ const wordTurns=[
 ["Correlation → conversation → causation?","A relationship can begin a question. It does not answer the causal question without a design that can test it."]
 ];let wordTurn=0;
 document.querySelector("#turn-word").addEventListener("click",()=>{wordTurn=(wordTurn+1)%wordTurns.length;document.querySelector("#word-line").textContent=wordTurns[wordTurn][0];document.querySelector("#word-note").textContent=wordTurns[wordTurn][1];});
-\ndocument.querySelector("#another").addEventListener("click",()=>{const keys=Object.keys(routes),current=keys.find(k=>routes[k].title===title.textContent),idx=keys.indexOf(current);openRoute(keys[(idx+1)%keys.length]);});
+
+document.querySelector("#another").addEventListener("click",()=>{const keys=Object.keys(routes),current=keys.find(k=>routes[k].title===title.textContent),idx=keys.indexOf(current);openRoute(keys[(idx+1)%keys.length]);});
 </script></body></html>
