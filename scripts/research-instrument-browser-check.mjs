@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
 const fileUrl = pathToFileURL(resolve('public/research-atlas/index.html')).href;
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--no-sandbox'] });
 const errors = [];
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
