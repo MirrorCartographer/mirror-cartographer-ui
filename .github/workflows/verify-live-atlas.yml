@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'public/atlas/**'
+      - 'public/research-atlas/**'
       - 'vercel.json'
       - '.github/workflows/verify-live-atlas.yml'
   workflow_dispatch:
@@ -100,6 +101,8 @@ jobs:
                   status: response.status,
                   contentType,
                   htmlMarkersVerified: required.length,
+                  researchAtlasUrl: researchResponse.url,
+                  researchAtlasMarkersVerified: researchRequired.length,
                   localWorldsVerified: worldChecks.length,
                   catalogFilesVerified: indexedFiles,
                   catalogManifestsVerified: manifestChecks.length,
