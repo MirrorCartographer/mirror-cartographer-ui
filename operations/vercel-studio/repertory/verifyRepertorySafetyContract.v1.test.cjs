@@ -65,21 +65,25 @@ test('fails closed when provenance classes are incomplete', () => {
   );
 });
 
-test('fails closed when current-stage evidence is absent or ambiguous', () => {
-  const absentEvidence = clone(repertory);
-  const current = absentEvidence.productions.find((item) => item.status === 'observed_current_stage');
-  current.provenance.observed = [];
+test('keeps missing runtime observation distinct from an observed current stage', () => {
+  const noObservation = clone(repertory);
+  const result = verifyRepertorySafetyContract(noObservation);
+  assert.equal(result.verified, true);
+  assert.equal(result.current_stage_id, null);
+  assert.equal(result.observed_stage_available, false);
+
+  const unsupported = clone(repertory);
+  unsupported.productions[0].status = 'observed_current_stage';
+  unsupported.productions[0].provenance.observed = [];
   assert.throws(
-    () => verifyRepertorySafetyContract(absentEvidence),
+    () => verifyRepertorySafetyContract(unsupported),
     /cannot be observed_current_stage without observed sources/,
   );
 
   const ambiguous = clone(repertory);
   ambiguous.productions[0].status = 'observed_current_stage';
-  assert.throws(
-    () => verifyRepertorySafetyContract(ambiguous),
-    /exactly one production must be the observed_current_stage/,
-  );
+  ambiguous.productions[3].status = 'observed_current_stage';
+  assert.throws(() => verifyRepertorySafetyContract(ambiguous), /at most one production may be marked observed_current_stage/);
 });
 
 test('fails closed when operations-only activation boundary is removed', () => {
