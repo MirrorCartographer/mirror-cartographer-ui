@@ -12,6 +12,8 @@ function assertIntegerHour(utcHour) {
   }
 }
 
+const { verifySelectionRule } = require('./verifySelectionRule.v1.cjs');
+
 function validateRepertory(repertory) {
   if (!repertory || typeof repertory !== 'object') {
     throw new TypeError('repertory must be an object');
@@ -50,18 +52,9 @@ function validateRepertory(repertory) {
     seenHours.add(slot.utc_hour);
   }
 
-  for (let hour = 0; hour < 24; hour += 1) {
-    if (!seenHours.has(hour)) {
-      throw new Error(`missing utc_hour slot: ${hour}`);
-    }
-
-    const expectedId = productions[hour % productions.length].id;
-    const actualId = slots.find((slot) => slot.utc_hour === hour).production_id;
-    if (actualId !== expectedId) {
-      throw new Error(
-        `slot ${hour} violates deterministic modulo rule: expected ${expectedId}, received ${actualId}`,
-      );
-    }
+  const selectionContract = verifySelectionRule(repertory);
+  if (!selectionContract.verified) {
+    throw new Error(`invalid direct hour-slot contract: ${selectionContract.violations.join(', ')}`);
   }
 
   return true;
