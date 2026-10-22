@@ -18,12 +18,11 @@ test('validates the canonical 24-hour deterministic repertory', () => {
   assert.equal(validateRepertory(repertory), true);
 });
 
-test('maps all UTC hours by the declared modulo sequence', () => {
-  const ids = repertory.productions.map((production) => production.id);
-
+test('maps all UTC hours through their explicit edition slots', () => {
   for (let hour = 0; hour < 24; hour += 1) {
+    const declared = repertory.hour_slots.find((slot) => slot.utc_hour === hour);
     const selected = selectHourlyProduction(repertory, hour);
-    assert.equal(selected.production_id, ids[hour % ids.length]);
+    assert.equal(selected.production_id, declared.production_id);
   }
 });
 
@@ -56,10 +55,11 @@ test('fails closed for unknown production references', () => {
   assert.throws(() => validateRepertory(invalid), /unknown production_id/);
 });
 
-test('fails closed when a slot violates the modulo grammar', () => {
-  const invalid = structuredClone(repertory);
-  invalid.hour_slots[0].production_id = 'coordinate-choir';
-  assert.throws(() => validateRepertory(invalid), /violates deterministic modulo rule/);
+test('uses the declared mapping even when it differs from the old modulo pattern', () => {
+  const revised = structuredClone(repertory);
+  revised.hour_slots[0].production_id = 'coordinate-choir';
+  assert.equal(validateRepertory(revised), true);
+  assert.equal(selectHourlyProduction(revised, 0).production_id, 'coordinate-choir');
 });
 
 test('reference implementation has no activation side effects', () => {
