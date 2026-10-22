@@ -46,7 +46,7 @@ jobs:
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing Living Atlas features: ' + missing.join(', '));
-          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map((match) => match[1]);
+          const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
           scripts.forEach((script, index) => new Script(script, { filename: 'living-atlas-inline-' + index }));
           console.log('PASS: Living Atlas navigation and inline JavaScript syntax are valid.');
           NODE
@@ -71,7 +71,7 @@ jobs:
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing research atlas features: ' + missing.join(', '));
-          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map((match) => match[1]);
+          const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
           if (!scripts.length) throw new Error('No inline JavaScript found in research atlas.');
           scripts.forEach((script, index) => new Script(script, { filename: 'research-atlas-inline-' + index }));
           console.log('PASS: routes, uncertainty control, wordplay, source links, and JavaScript syntax are valid.');
