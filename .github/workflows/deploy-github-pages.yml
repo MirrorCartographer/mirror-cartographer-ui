@@ -6,6 +6,13 @@ on:
     paths:
       - 'public/atlas/**'
       - 'public/research-atlas/**'
+      - 'research-atlas/**'
+      - '.github/workflows/deploy-github-pages.yml'
+  pull_request:
+    paths:
+      - 'public/atlas/**'
+      - 'public/research-atlas/**'
+      - 'research-atlas/**'
       - '.github/workflows/deploy-github-pages.yml'
   workflow_dispatch:
 
@@ -24,6 +31,7 @@ jobs:
           test -s public/atlas/index.html
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
+          import { Script } from 'node:vm';
           const html = readFileSync('public/atlas/index.html', 'utf8');
           const required = [
             '<!doctype html>',
@@ -38,14 +46,18 @@ jobs:
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing Living Atlas features: ' + missing.join(', '));
-          console.log('PASS: Living Atlas navigation and research entry are present.');
+          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map((match) => match[1]);
+          scripts.forEach((script, index) => new Script(script, { filename: 'living-atlas-inline-' + index }));
+          console.log('PASS: Living Atlas navigation and inline JavaScript syntax are valid.');
           NODE
 
       - name: Validate interactive research atlas
         run: |
           test -s public/research-atlas/index.html
+          cmp -s research-atlas/index.html public/research-atlas/index.html
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
+          import { Script } from 'node:vm';
           const html = readFileSync('public/research-atlas/index.html', 'utf8');
           const required = [
             '<title>Mirror Cartographer',
@@ -59,5 +71,8 @@ jobs:
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing research atlas features: ' + missing.join(', '));
-          console.log('PASS: research routes, uncertainty control, wordplay, and official VA source link are present.');
+          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map((match) => match[1]);
+          if (!scripts.length) throw new Error('No inline JavaScript found in research atlas.');
+          scripts.forEach((script, index) => new Script(script, { filename: 'research-atlas-inline-' + index }));
+          console.log('PASS: routes, uncertainty control, wordplay, source links, and JavaScript syntax are valid.');
           NODE
