@@ -123,7 +123,7 @@ Created through long-form conversation with Charity Sturgell as a real attempt t
 
 Explore four evidence-led routes—biomedical mechanisms, veteran access, provenance, and interface evaluation—with source links, explicit unknowns, and follow-on questions.
 
-- [Open The Between: interactive research atlas](research-atlas/index.html)
+- [Atlas source file](research-atlas/index.html)\n- Built static route: `public/research-atlas/index.html` (served as `/research-atlas/` by the Vite build; live deployment must be verified separately)
 - [Research method and source-linked claims](https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research)
 
 The atlas is a standalone HTML experience. Its interactive route changes do not require a backend. It is an exploratory interface, not a clinical, benefits-eligibility, or evidence-validation service.
