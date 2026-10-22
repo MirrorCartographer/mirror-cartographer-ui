@@ -51,6 +51,17 @@ outcome:{label:"Outcome",kind:"Completion ≠ benefit",title:"Did anything impro
 rule:{label:"Rule",kind:"Eligibility ≠ access",title:"What does the rule permit—and what happens next?",intro:"A written rule defines a formal pathway. It does not by itself establish that someone can understand, enter, or complete that pathway.",evidence:["Official guidance can describe general criteria and required steps.","A general rule does not determine an individual's eligibility or prove real-world access.","Check current policy, individual facts, authorizations, exceptions, and the responsible office."],experience:["A person can qualify in principle and still meet practical barriers.","That gap is a question to investigate, not evidence that every case fails.","Record each attempt, response, wait, handoff, and unresolved decision."],systems:["The pathway is a chain of gates, not one yes/no switch.","A failure can occur at interpretation, documentation, referral, scheduling, transport, or follow-up.","Find the earliest broken handoff and design a measurable fix for that stage."],symbol:["Eligible → legible → reachable.","A right must be interpretable; a pathway must be traversable.","Turn the abstract permission into a sequence of observable states."],links:[["VA health-care eligibility","https://www.va.gov/health-care/eligibility/"],["VA community-care guidance","https://www.va.gov/resources/eligibility-for-community-care-outside-va/"]],next:["outcome","record"]},
 next:{label:"Next test",kind:"Make uncertainty productive",title:"What observation could change your mind?",intro:"A useful unknown is not an empty space. It is a place where a better observation could separate competing explanations or improve a decision.",evidence:["A test should discriminate between explanations, not merely collect more information.","Specify the result that would support, weaken, or leave the claim unchanged.","Choose methods and thresholds appropriate to the discipline."],experience:["A next step should respect agency, burden, privacy, and real constraints.","Do not turn every uncertainty into an obligation for the person living with it.","Choose the smallest safe action that can materially clarify the question."],systems:["A proposed fix needs a measurable failure state and a recovery path.","A dashboard can show movement without proving the intervention caused it.","Define baseline, comparison, outcome, failure conditions, and who acts on the result."],symbol:["A question is a hinge: it can swing either way.","A strong next test can disappoint the preferred story and still make the map better.","Name the evidence that would make you revise the route."],links:[["Research method","https://github.com/MirrorCartographer/MirrorCartographer/blob/main/research/METHOD.md"],["Claim register","https://github.com/MirrorCartographer/MirrorCartographer/blob/main/research/claim-register.json"]],next:["signal","interpretation"]}
 };
+const claimAnchors={
+ signal:{claimId:"CL-BIO-001",claimStatus:"qualified"},
+ context:{claimId:"CL-VA-002",claimStatus:"source-checked"},
+ response:{claimId:"CL-BIO-001",claimStatus:"qualified"},
+ record:{claimId:"CL-EPI-001",claimStatus:"qualified"},
+ interpretation:{claimId:"CL-EPI-001",claimStatus:"qualified"},
+ outcome:{claimId:"CL-VA-001",claimStatus:"qualified"},
+ rule:{claimId:"CL-VA-002",claimStatus:"source-checked"},
+ next:{claimId:"CL-HCAI-001",claimStatus:"unreviewed"}
+};
+Object.entries(claimAnchors).forEach(([id,meta])=>Object.assign(points[id],meta));
 const lensNames={evidence:"Evidence lens",experience:"Experience lens",systems:"Systems lens",symbol:"Language lens"};
 const nodes=[...document.querySelectorAll("[data-node]")],edges=[...document.querySelectorAll("[data-edge]")];
 let selected="signal",lens="evidence",history=["signal"],reverse=false,phraseIndex=0,conditionIndex=0;
@@ -65,13 +76,13 @@ const phraseTurns=[
 const el=id=>document.getElementById(id);
 function setText(id,value){el(id).textContent=value}
 function draw(){
- const p=points[selected];setText("reading-kicker","Point "+String(Object.keys(points).indexOf(selected)+1).padStart(2,"0")+" / "+p.label);setText("lens-label",lensNames[lens]);setText("claim-kind",p.kind);setText("reading-title",p.title);setText("reading-intro",p.intro);setText("holds",p[lens][0]);setText("slips",p[lens][1]);setText("move",p[lens][2]);
+ const p=points[selected];setText("reading-kicker","Point "+String(Object.keys(points).indexOf(selected)+1).padStart(2,"0")+" / "+p.label);setText("lens-label",lensNames[lens]);setText("claim-kind",p.kind+" · "+p.claimId+" / "+p.claimStatus);setText("reading-title",p.title);setText("reading-intro",p.intro);setText("holds",p[lens][0]);setText("slips",p[lens][1]);setText("move",p[lens][2]);
  nodes.forEach(n=>n.setAttribute("aria-pressed",String(n.dataset.node===selected)));
  edges.forEach(e=>e.classList.toggle("hot",e.dataset.edge.split("-").includes(selected)));
  const trail=el("trail");trail.replaceChildren();
  const next=(reverse?[...p.next].reverse():p.next);
  next.forEach((id,i)=>{if(i){const arrow=document.createElement("i");arrow.textContent=reverse?"←":"→";trail.append(arrow)}const b=document.createElement("button");b.textContent=points[id].label;b.addEventListener("click",()=>visit(id));trail.append(b)});
- const src=el("source-links");src.replaceChildren();const label=document.createElement("span");label.className="quiet";label.textContent="Open the source trail: ";src.append(label);p.links.forEach(([name,url])=>{const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noreferrer";a.textContent=name+" ↗";src.append(a)});
+ const src=el("source-links");src.replaceChildren();const label=document.createElement("span");label.className="quiet";label.textContent="Open the source trail: ";src.append(label);p.links.forEach(([name,url])=>{const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noreferrer";a.textContent=name+" ↗";src.append(a)});const register=document.createElement("a");register.href="https://github.com/MirrorCartographer/MirrorCartographer/blob/main/research/claim-register.json";register.target="_blank";register.rel="noreferrer";register.textContent=p.claimId+" in claim register ↗";src.append(register);
  setText("map-count",Object.keys(points).length+" points · "+history.length+" visited");setText("word-status","Current lens: "+lensNames[lens]+". Current point: "+p.label+".");
 }
 function visit(id){if(!points[id])return;selected=id;if(history[history.length-1]!==id)history.push(id);draw()}
