@@ -12,6 +12,7 @@ const base = {
   repertory_content_bound: true,
   safety_contract_verified: true,
   continuity_state_preserved: true,
+  generated_at: '2026-07-14T11:10:00.000Z',
   utc_hour: 11,
   programmed_production: {
     id: 'archive-afterimage',
