@@ -6,6 +6,7 @@ const base = {
   schema_version: 1,
   evidence_class: 'commit_and_repertory_bound_programmed_stage_identity_only',
   source_commit: 'a'.repeat(40),
+  repertory_contract_id: 'vercel-studio-hourly-repertory-v1',
   repertory_sha256: 'b'.repeat(64),
   exact_commit_bound: true,
   repertory_content_bound: true,
