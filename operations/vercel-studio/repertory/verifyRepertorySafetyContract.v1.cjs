@@ -1,6 +1,7 @@
 'use strict';
 
 const { validateRepertory } = require('./selectHourlyProduction.v1.cjs');
+const { verifySelectionRule } = require('./verifySelectionRule.v1.cjs');
 
 const REQUIRED_RUNTIME_CONSTRAINTS = Object.freeze({
   audio: 'explicit_user_gesture_only',
@@ -50,8 +51,9 @@ function verifyRepertorySafetyContract(repertory) {
   if (repertory.timezone !== 'UTC') {
     throw new Error('repertory timezone must be UTC');
   }
-  if (!repertory.selection_rule || repertory.selection_rule.type !== 'deterministic_hour_slot' || repertory.selection_rule.expression !== 'hour_slots[utc_hour]') {
-    throw new Error('selection rule must remain deterministic_hour_slot');
+  const selectionRule = verifySelectionRule(repertory);
+  if (!selectionRule.verified) {
+    throw new Error(`selection rule contract invalid: ${selectionRule.violations.join(', ')}`);
   }
   if (repertory.selection_rule.randomness_permitted !== false) {
     throw new Error('randomness must remain prohibited');
