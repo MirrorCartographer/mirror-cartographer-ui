@@ -33,8 +33,8 @@ test('selects Wordless Room Game for UTC hour 21', () => {
     production_id: 'wordless-room-game',
     title: 'Wordless Room Game',
     form: 'interactive_room',
-    continuity_role: 'current_public_screening_surface',
-    status: 'observed_current_stage',
+    continuity_role: 'public_screening_candidate',
+    status: 'repertory_contract_only',
   });
 });
 
