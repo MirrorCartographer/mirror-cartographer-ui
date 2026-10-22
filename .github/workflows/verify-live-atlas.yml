@@ -24,6 +24,7 @@ jobs:
           const bases = [
             'https://mirror-cartographer-ui-3orp.vercel.app/atlas/',
             'https://mirror-cartographer-ui.vercel.app/atlas/',
+            'https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/',
           ];
           const required = [
             'Mirror Cartographer',
@@ -62,7 +63,8 @@ jobs:
                   continue;
                 }
                 const worldChecks = await Promise.all(worldRoutes.map(async (route) => {
-                  const world = await fetch(new URL(route, response.url), {
+                  const relativeRoute = route.replace(/^\\/atlas\\//, '');
+                const world = await fetch(new URL(relativeRoute, response.url), {
                     cache: 'no-store',
                     signal: AbortSignal.timeout(5000),
                   });
@@ -74,19 +76,19 @@ jobs:
                   lastFailure = 'Local worlds failed: ' + JSON.stringify(failedWorlds);
                   continue;
                 }
-                const healthUrl = new URL('/atlas/healthz.txt', response.url);
+                const healthUrl = new URL('healthz.txt', response.url);
                 const health = await fetch(healthUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
                 const healthBody = await health.text();
                 if (!health.ok || !healthBody.includes('service=mirror-cartographer-living-atlas') || !healthBody.includes('status=ok')) {
                   lastFailure = 'Health probe failed: HTTP ' + health.status;
                   continue;
                 }
-                const catalogUrl = new URL('/atlas/catalog-index.json', response.url);
+                const catalogUrl = new URL('catalog-index.json', response.url);
                 const catalogResponse = await fetch(catalogUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
                 if (!catalogResponse.ok) throw new Error('Catalog index failed: HTTP ' + catalogResponse.status);
                 const catalogIndex = await catalogResponse.json();
                 const manifestChecks = await Promise.all(catalogIndex.sources.map(async (source) => {
-                  const manifestResponse = await fetch(new URL('/atlas/' + source.file, response.url), { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+                  const manifestResponse = await fetch(new URL(source.file, response.url), { cache: 'no-store', signal: AbortSignal.timeout(10000) });
                   if (!manifestResponse.ok) throw new Error(source.file + ' failed: HTTP ' + manifestResponse.status);
                   const manifest = await manifestResponse.json();
                   return { file: source.file, expected: source.file_count, actual: manifest.items?.length ?? -1, ok: manifest.items?.length === source.file_count && manifest.repository === source.repo };
