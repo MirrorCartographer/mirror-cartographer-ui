@@ -24,7 +24,7 @@ try {
 
   await page.getByRole('button', { name: 'Systems lens' }).click();
   assert.equal(await page.locator('#lens-label').innerText(), 'Systems lens');
-  assert.match(await page.locator('#holds').innerText(), /designed pathway/i);
+  assert.match(await page.locator('#holds').innerText(), /Rules, staffing/i);
 
   await page.locator('#trail').getByRole('button', { name: 'Rule' }).click();
   assert.match(await page.locator('#reading-kicker').innerText(), /Rule/);
