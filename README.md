@@ -118,3 +118,12 @@ See `docs/BARTER_VALUE_EXCHANGE_LANE.md` and `docs/PUBLIC_MONEY_PATH.md`.
 ## Origin
 
 Created through long-form conversation with Charity Sturgell as a real attempt to preserve dreams, animals, body signals, research, creative identity, and survival needs inside one navigable AI-supported system.
+
+## Interactive research atlas
+
+Explore four evidence-led routes—biomedical mechanisms, veteran access, provenance, and interface evaluation—with source links, explicit unknowns, and follow-on questions.
+
+- [Open The Between: interactive research atlas](research-atlas/index.html)
+- [Research method and source-linked claims](https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research)
+
+The atlas is a standalone HTML experience. Its interactive route changes do not require a backend. It is an exploratory interface, not a clinical, benefits-eligibility, or evidence-validation service.
