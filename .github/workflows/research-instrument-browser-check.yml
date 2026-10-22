@@ -1,0 +1,37 @@
+name: Research Instrument Browser Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research-atlas/**'
+      - 'public/research-atlas/**'
+      - 'scripts/research-instrument-browser-check.mjs'
+      - '.github/workflows/research-instrument-browser-check.yml'
+  pull_request:
+    paths:
+      - 'research-atlas/**'
+      - 'public/research-atlas/**'
+      - 'scripts/research-instrument-browser-check.mjs'
+      - '.github/workflows/research-instrument-browser-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Test the relationship instrument in a real browser
+        run: node scripts/research-instrument-browser-check.mjs
