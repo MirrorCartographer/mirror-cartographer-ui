@@ -24,7 +24,10 @@ test('fails closed when activation coverage is omitted', () => {
   ]);
 
   assert.equal(result.verified, false);
-  assert.deepEqual(result.missing_required_tests, ['assessRepertoryActivation.v1.test.cjs']);
+  assert.deepEqual(
+    result.missing_required_tests,
+    REQUIRED_REPERTORY_TESTS.filter((name) => name !== 'assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs').sort(),
+  );
   assert.equal(result.violations.includes('required_repertory_test_missing'), true);
   assert.equal(result.claim_boundary, 'repertory_test_execution_prohibited');
 });
