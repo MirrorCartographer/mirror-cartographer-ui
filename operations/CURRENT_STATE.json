@@ -5,8 +5,8 @@
   "updated_at": "2026-10-22T17:40:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_blocked",
-  "observed_blocker": "Route availability has been partially recovered: the live smoke test passed on 2026-10-22 17:24:49 UTC against https://mirror-cartographer-ui-3orp.vercel.app/atlas/ (HTTP 200) and its sibling /research-atlas/ (HTTP 200), verified 10 Living Atlas markers, 5 research-instrument markers, 6 world routes, 6,537 indexed files across 2 manifests, and /atlas/healthz.txt (HTTP 200). The previously checked alias https://mirror-cartographer-ui.vercel.app/atlas/ returned 404. Exact current-source-commit-to-deployment identity remains unverified; do not treat route health as immutable deployment acceptance.",
-  "last_verified_commit": "e3ed3a567aa67c9e80f08f2e427306f7c12f6e28",
+  "observed_blocker": "Route availability has been partially recovered: the live smoke test passed on 2026-10-22 17:24:49 UTC against https://mirror-cartographer-ui-3orp.vercel.app/atlas/ (HTTP 200) and its sibling /research-atlas/ (HTTP 200), verified 10 Living Atlas markers, 5 research-instrument markers, 6 world routes, 6,537 indexed files across 2 manifests, and /atlas/healthz.txt (HTTP 200). The previously checked alias https://mirror-cartographer-ui.vercel.app/atlas/ returned 404. The successful smoke-test workflow was running at source commit e3ed3a567aa67c9e80f08f2e427306f7c12f6e28, but it did not establish the deployed artifact's source commit. The last deployment identity previously accepted by the project remains fa4501e3a97aefac632c6e361eae58b59bbb0e48; do not treat route health as immutable deployment acceptance.",
+  "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
     "Do not delete GitHub files or history.",
