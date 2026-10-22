@@ -60,13 +60,17 @@ jobs:
           import { Script } from 'node:vm';
           const html = readFileSync('public/research-atlas/index.html', 'utf8');
           const required = [
-            '<title>Mirror Cartographer',
-            'data-route="bio"',
-            'data-route="access"',
-            'data-route="evidence"',
-            'data-route="design"',
-            'Reveal what this does not establish',
-            'Turn the phrase',
+            '<title>Mirror Cartographer — The Between</title>',
+            'data-node="signal"',
+            'data-node="context"',
+            'data-node="response"',
+            'data-node="record"',
+            'data-lens="evidence"',
+            'data-lens="experience"',
+            'data-lens="systems"',
+            'data-lens="symbol"',
+            'Change one condition',
+            'Facts have edges.',
             'va.gov/resources/eligibility-for-community-care-outside-va/',
           ];
           const missing = required.filter((token) => !html.includes(token));
@@ -74,5 +78,5 @@ jobs:
           const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
           if (!scripts.length) throw new Error('No inline JavaScript found in research atlas.');
           scripts.forEach((script, index) => new Script(script, { filename: 'research-atlas-inline-' + index }));
-          console.log('PASS: routes, uncertainty control, wordplay, source links, and JavaScript syntax are valid.');
+          console.log('PASS: relationship nodes, reading lenses, counterfactual controls, source links, and JavaScript syntax are valid.');
           NODE
