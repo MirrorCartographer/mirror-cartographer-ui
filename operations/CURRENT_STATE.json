@@ -2,10 +2,10 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-07-12T04:16:00Z",
+  "updated_at": "2026-10-22T17:10:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_blocked",
-  "observed_blocker": "Vercel account build-rate limit prevented immutable deployment verification; production acceptance remains fail-closed.",
+  "observed_blocker": "The live Atlas smoke test returned HTTP 404 from the configured Vercel Atlas URLs on 2026-10-22. The cause is not established. The research atlas source and static checks pass, but public deployment is unverified. A prior operations record also noted provider build-capacity constraints.",
   "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
@@ -13,5 +13,5 @@
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Use operations-only changes until Vercel capacity returns, then verify ignoreCommand suppression before one commit-bound deployment check."
+  "next_action": "Keep the research atlas source and validation artifacts intact. Do not claim a live deployment. Continue operations-only evidence gathering until the Vercel delivery path is confirmed healthy; then perform one commit-bound deployment verification and test /research-atlas/ plus the existing /atlas/ route."
 }
