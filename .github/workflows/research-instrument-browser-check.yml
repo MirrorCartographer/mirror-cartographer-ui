@@ -25,10 +25,17 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: MirrorCartographer/MirrorCartographer
+          path: core-research
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Install dependencies
         run: npm install --package-lock=false --no-audit --no-fund
+      - name: Verify claim bindings against the canonical register
+        run: node scripts/validate-claim-ui-bindings.mjs core-research/research/claim-register.json public/research-atlas/index.html
       - name: Test the relationship instrument in a real browser
         run: node scripts/research-instrument-browser-check.mjs
