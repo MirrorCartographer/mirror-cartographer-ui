@@ -11,14 +11,7 @@ const {
 
 const repertoryDirectory = __dirname;
 const runnerPath = join(repertoryDirectory, 'runRepertoryTests.v1.mjs');
-const criticalTests = Object.freeze([
-  'assessCurlBoundRepertoryPublicationReadiness.v1.test.cjs',
-  'assessRepertoryActivation.v1.test.cjs',
-  'buildContinuityHandoff.v1.test.cjs',
-  'repertoryTestInventory.v1.test.cjs',
-  'verifyProgrammedStageReceipt.v1.test.cjs',
-  'vercelRepertoryOidcWorkflowContract.v1.test.cjs',
-]);
+const criticalTests = Object.freeze([...REQUIRED_REPERTORY_TESTS]);
 
 function discoveredTestNames() {
   return readdirSync(repertoryDirectory)
