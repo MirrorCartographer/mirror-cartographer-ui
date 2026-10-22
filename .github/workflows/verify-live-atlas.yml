@@ -38,6 +38,13 @@ jobs:
             'The source archive',
             'id="filter"',
           ];
+          const researchRequired = [
+            'Facts have edges.',
+            'data-node="signal"',
+            'data-lens="evidence"',
+            'Change one condition',
+            'VA community-care guidance',
+          ];
           const worldRoutes = [
             '/atlas/worlds/night-shift-orchard.html',
             '/atlas/worlds/afterimage-orchard.html',
@@ -71,6 +78,17 @@ jobs:
                   const worldBody = await world.text();
                   return { route, status: world.status, ok: world.ok && /<!doctype html|<html/i.test(worldBody) };
                 }));
+                const researchUrl = new URL('../research-atlas/', response.url);
+                const researchResponse = await fetch(researchUrl, {
+                  cache: 'no-store',
+                  signal: AbortSignal.timeout(5000),
+                });
+                const researchBody = await researchResponse.text();
+                const missingResearch = researchRequired.filter((marker) => !researchBody.includes(marker));
+                if (!researchResponse.ok || !(researchResponse.headers.get('content-type') || '').includes('text/html') || missingResearch.length) {
+                  lastFailure = `Research instrument failed: HTTP ${researchResponse.status}; missing ${missingResearch.join(', ')}`;
+                  continue;
+                }
                 const failedWorlds = worldChecks.filter((check) => !check.ok);
                 if (failedWorlds.length) {
                   lastFailure = 'Local worlds failed: ' + JSON.stringify(failedWorlds);
