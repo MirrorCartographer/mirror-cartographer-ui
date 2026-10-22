@@ -13,11 +13,13 @@
     {
       "id": "deterministic_selection",
       "expected": true,
-      "rule": "for each slot, production_id equals productions[utc_hour % productions.length].id"
+      "rule": "hour_slots[utc_hour] explicitly selects the production_id and edition_id for that UTC hour; the mapping is authored per slot and must not be inferred from modulo arithmetic"
     },
     {
       "id": "current_stage_at_recording_hour",
-      "input": {"utc_hour": 21},
+      "input": {
+        "utc_hour": 21
+      },
       "expected_production_id": "wordless-room-game"
     },
     {
@@ -48,15 +50,15 @@
   "manual_evaluation": {
     "result": "pass",
     "basis": [
-      "24 distinct utc_hour values are explicitly present",
-      "six productions repeat in stable modulo order",
-      "UTC hour 21 maps to index 3 and wordless-room-game",
-      "global constraints explicitly prohibit autoplay, private source material, payment logic, and unverified deployment claims",
-      "activation boundary states runtime integration was not performed"
+      "24 distinct utc_hour values are explicitly present, one per UTC hour",
+      "Each hour slot has a distinct edition_id and an explicit production_id; selection uses hour_slots[utc_hour], not modulo arithmetic",
+      "UTC hour 21 maps to wordless-room-game-21 and wordless-room-game",
+      "Global constraints explicitly prohibit autoplay, private source material, payment logic, and unverified deployment claims",
+      "Activation boundary states runtime integration was not performed"
     ],
     "limits": [
-      "No application bundle was built in this run.",
-      "No Vercel deployment was attempted.",
+      "No application bundle was built in the original contract-recording run.",
+      "No Vercel deployment was attempted in the original contract-recording run.",
       "No physical iPhone Safari audibility claim is made."
     ]
   },
