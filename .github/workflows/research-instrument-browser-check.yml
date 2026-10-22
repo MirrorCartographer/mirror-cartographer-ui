@@ -31,6 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm install --package-lock=false --no-audit --no-fund
       - name: Install Chromium
-        run: npx playwright install chromium
+        run: npx playwright install --only-shell chromium
       - name: Test the relationship instrument in a real browser
         run: node scripts/research-instrument-browser-check.mjs
