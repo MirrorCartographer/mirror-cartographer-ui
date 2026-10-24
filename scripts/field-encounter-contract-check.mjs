@@ -3,6 +3,8 @@ import { selectFieldEncounter } from '../src/engine/fieldEncounter.js';
 
 const source = fs.readFileSync('src/engine/fieldEncounter.js', 'utf8');
 const appSource = fs.readFileSync('src/components/App.jsx', 'utf8');
+const liveRoomSource = fs.readFileSync('src/components/RoomWorldValid.jsx', 'utf8');
+const mainSource = fs.readFileSync('src/main.jsx', 'utf8');
 const failures = [];
 const check = (name, ok) => {
   console.log(`${ok ? 'PASS' : 'FAIL'} ${name}`);
@@ -31,6 +33,8 @@ check('wires encounter selector into live app', appSource.includes("from '../eng
 check('observes interaction history on gesture', appSource.includes('encounterRef.current?.observe?.({ now, point })'));
 check('uses encounter future to influence later gestures', appSource.includes('weatherForMood[encounter.selectedFuture.mood]'));
 check('feeds exploration and hesitation into expectation', source.includes('exploration * 0.16') && source.includes('hesitation * 0.12'));
+check('wires encounter into the production room-world component', liveRoomSource.includes("from '../engine/fieldEncounter'") && liveRoomSource.includes('selectFieldEncounter({') && liveRoomSource.includes('encounterRef.current?.observe?.({ now, point: { x, y } })'));
+check('installs possibility-field runtime from production entrypoint', mainSource.includes("installPossibilityFieldRuntime();") && mainSource.includes("import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime.js';"));
 check('does not touch browser globals', !/window\.|document\.|AudioContext|requestAnimationFrame/.test(source));
 check('returns what exists', encounter.exists?.state === 'lightning' && encounter.exists?.section === 'storm');
 check('returns possible futures', Array.isArray(encounter.possibleFutures) && encounter.possibleFutures.length === 4);
