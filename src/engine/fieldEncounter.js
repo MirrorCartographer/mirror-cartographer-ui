@@ -45,15 +45,18 @@ function inferExpectation({ frame, memory = {}, interaction = {} }) {
   const tapVelocity = clamp01(finiteOr(interaction.tapVelocity, 0));
   const dwell = clamp01(finiteOr(interaction.dwellMs, 0) / 12000);
   const repetition = clamp01(finiteOr(interaction.repetition, 0));
+  const exploration = clamp01(finiteOr(interaction.exploration, 0));
+  const hesitation = clamp01(finiteOr(interaction.hesitation, 0));
   const memoryTurn = clamp01(memory.turn);
   const memoryRise = clamp01(memory.rise);
+  const memoryDensity = clamp01(memory.density);
   const weatherMood = WEATHER_BIAS[frame.state] || 'intrigue';
   const sectionMood = SECTION_BIAS[frame.section] || 'intrigue';
 
   return {
     excite: clamp01((weatherMood === 'excite' ? 0.38 : 0.08) + tapVelocity * 0.42 + frame.pulse * 0.2),
-    intrigue: clamp01((weatherMood === 'intrigue' ? 0.3 : 0.12) + memoryTurn * 0.32 + repetition * 0.2 + (sectionMood === 'intrigue' ? 0.18 : 0)),
-    relax: clamp01((weatherMood === 'relax' ? 0.34 : 0.08) + dwell * 0.36 + (1 - frame.density) * 0.22),
+    intrigue: clamp01((weatherMood === 'intrigue' ? 0.3 : 0.12) + memoryTurn * 0.32 + repetition * 0.2 + exploration * 0.16 + (sectionMood === 'intrigue' ? 0.18 : 0)),
+    relax: clamp01((weatherMood === 'relax' ? 0.34 : 0.08) + dwell * 0.36 + hesitation * 0.12 + (1 - frame.density) * 0.22 + (1 - memoryDensity) * 0.08),
     joy: clamp01((weatherMood === 'joy' ? 0.28 : 0.1) + memoryRise * 0.24 + (sectionMood === 'joy' ? 0.2 : 0)),
   };
 }

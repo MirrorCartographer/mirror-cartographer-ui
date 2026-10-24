@@ -10,11 +10,14 @@ import { installAudioEvidenceExportRuntime } from './engine/audioEvidenceExportR
 import { installAudioDeviceEvidenceRuntime } from './engine/audioDeviceEvidenceRuntime';
 import { installDeploymentIdentityRuntime } from './engine/deploymentIdentityRuntime';
 import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
+import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime.js';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/comet-garden.css';
+import './assets/possibility-field.css';
 
 installRuntimeInfrastructure();
+installPossibilityFieldRuntime();
 installDeploymentIdentityRuntime();
 installAudioDeviceEvidenceRuntime({ window, navigator, document });
 installAudioObservabilityRuntime();

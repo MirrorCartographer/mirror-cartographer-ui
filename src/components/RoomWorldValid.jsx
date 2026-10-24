@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ROOMS, LAYERS_PER_ROOM, roomById } from '../world/roomCatalog';
+import { createEncounterState } from '../engine/encounterState';
+import { selectFieldEncounter } from '../engine/fieldEncounter';
 import { createRoomAudio } from '../world/roomAudio';
 import './RoomWorld.css';
 
@@ -60,6 +62,8 @@ export default function RoomWorldValid() {
   const [pulse, setPulse] = useState(0.1);
   const [showMap, setShowMap] = useState(false);
   const [muted, setMuted] = useState(false);
+  const encounterRef = useRef(null);
+  const [encounterMood, setEncounterMood] = useState('intrigue');
   const room = useMemo(() => roomById(roomId), [roomId]);
   const canvasRef = useRef(null);
   const pointRef = useRef({ x: 0.5, y: 0.5, down: false, startX: 0.5, startY: 0.5, startedAt: 0 });
@@ -67,6 +71,7 @@ export default function RoomWorldValid() {
   const audioRef = useRef(null);
 
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
+  useEffect(() => { encounterRef.current = createEncounterState(); }, []);
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId })); }, [progress, roomId]);
   useEffect(() => { const timer = setInterval(() => setPulse((value) => Math.max(0.06, value * 0.96)), 100); return () => clearInterval(timer); }, []);
 
@@ -133,9 +138,41 @@ export default function RoomWorldValid() {
     if (type === 'down') pointRef.current = { ...previous, x, y, down: true, startX: x, startY: y, startedAt: now };
     else if (type === 'move') { pointRef.current = { ...previous, x, y }; gesture = speed > 0.055 ? 'rapid' : Math.abs(x - previous.x) > Math.abs(y - previous.y) ? 'trace' : 'fold'; }
     else { const distance = Math.hypot(x - previous.startX, y - previous.startY); gesture = distance > 0.25 ? 'sweep' : now - previous.startedAt > 650 ? 'hold' : 'tap'; pointRef.current = { ...previous, x, y, down: false }; }
-    const boost = type === 'move' && previous.down ? 0.06 : type === 'down' ? 0.72 : type === 'up' ? 0.4 : 0.01;
+    const baseBoost = type === 'move' && previous.down ? 0.06 : type === 'down' ? 0.72 : type === 'up' ? 0.4 : 0.01;
+    const interaction = encounterRef.current?.observe?.({ now, point: { x, y } }) ?? {
+      count: 1, dwellMs: 0, tapVelocity: 0, repetition: 0, exploration: 0, hesitation: 0, returnCount: 0,
+    };
+    const weather = gesture === 'hold' || gesture === 'fold' ? 'rain'
+      : gesture === 'rapid' ? 'lightning'
+      : gesture === 'sweep' ? 'wind'
+      : gesture === 'trace' || gesture === 'circle' ? 'aurora'
+      : 'cloud';
+    const layer = room.layers[Math.max(0, depth - 1)];
+    const section = depth >= 16 ? 'home' : depth >= 12 ? 'storm' : depth >= 7 ? 'answer' : depth >= 4 ? 'lift' : 'seed';
+    const encounter = selectFieldEncounter({
+      frame: {
+        state: weather,
+        section,
+        beat: interaction.count,
+        phrase: Math.floor(interaction.count / 4),
+        phrasePhase: (interaction.count % 4) / 4,
+        pulse,
+        density: layer?.density ?? 0.5,
+        rhythm: Math.min(12, speed * 30),
+      },
+      memory: {
+        turn: interaction.exploration,
+        rise: pulse,
+        density: layer?.density ?? 0.5,
+      },
+      interaction,
+    });
+    const mood = encounter.selectedFuture.mood;
+    setEncounterMood(mood);
+    const moodBoost = mood === 'excite' ? 0.06 : mood === 'relax' ? -0.025 : mood === 'joy' ? 0.035 : 0;
+    const boost = clamp(baseBoost + moodBoost + encounter.fieldDelta.energy * 0.025, 0.005, 0.8);
     record(boost, gesture);
-    setPulse((value) => Math.min(1, value + boost * 0.3));
+    setPulse((value) => clamp(value + boost * 0.3 + encounter.fieldDelta.energy * 0.025, 0.06, 1));
     signalComet(event, boost, depth === LAYERS_PER_ROOM);
     if (!muted) { audioRef.current?.wake(); gesture === 'hold' ? audioRef.current?.chord(room, room.layers[Math.max(0, depth - 1)], pulse) : audioRef.current?.voice(room, room.layers[Math.max(0, depth - 1)], pulse, x, y); }
     for (let i = 0; i < (type === 'down' ? 15 : 2); i += 1) particlesRef.current.push({ x, y, vx: (Math.random() - 0.5) * 0.006, vy: (Math.random() - 0.5) * 0.006, life: 0.4 + Math.random() * 0.6 });
@@ -147,7 +184,7 @@ export default function RoomWorldValid() {
     enter(progress.unlocked.find((candidate) => !progress.visited.includes(candidate)) || progress.unlocked[(progress.unlocked.indexOf(roomId) + 1) % progress.unlocked.length] || 1);
   };
 
-  return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
+  return <main className={`room-world encounter-${encounterMood}`} style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3], '--encounter-energy': pulse }}>
     <button aria-label="Explore" className="world-surface" onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
     <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
     <button aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>

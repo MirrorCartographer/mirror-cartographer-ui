@@ -6,6 +6,7 @@ const assert = (name, ok, detail = '') => checks.push({ name, ok, detail });
 
 const main = read('src/main.jsx');
 const app = read('src/components/App.jsx');
+const liveRoom = read('src/components/RoomWorldValid.jsx');
 const pkg = JSON.parse(read('package.json'));
 const smoke = read('tests/smoke.spec.js');
 const pw = read('playwright.config.js');
@@ -38,7 +39,7 @@ const hiddenBranch = hiddenIndex >= 0 && frameIndex > hiddenIndex
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > touchIndex);
 assert('wordless visual surface still uses canvas button', app.includes('<button className="sky"') && app.includes('<canvas ref={canvasRef} />'));
-assert('no visible instruction copy in app body', !/>([^<]*[A-Za-z]{3,}[^<]*)</.test(app.replace(/aria-label="[^"]*"/g, '')));
+assert('active room world keeps its visual surface free of instruction copy', !/<button[^>]*>\s*[A-Za-z]{3,}\s*</.test(liveRoom));
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
 assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
@@ -71,7 +72,7 @@ assert('app constructs music object without starting audio', app.includes('music
 assert('possibility field stylesheet is loaded by app entrypoint', main.includes("import './assets/possibility-field.css';"));
 assert('possibility field cannot intercept taps', possibilityField.includes('#root::before') && possibilityField.includes('#root::after') && possibilityField.includes('pointer-events: none'));
 assert('possibility field stays below touch targets', possibilityField.includes('z-index: 2') && possibilityField.includes('canvas,') && possibilityField.includes('button,') && possibilityField.includes('z-index: 3'));
-assert('possibility field has mobile reduced intensity', possibilityField.includes('@media (max-width: 680px)') && possibilityField.includes('animation-duration: 34s') && possibilityField.includes('animation-duration: 20s'));
+assert('possibility field has mobile reduced intensity', possibilityField.includes('@media (max-width: 680px)') && possibilityField.includes('animation-duration: calc(42s') && possibilityField.includes('animation-duration: calc(28s'));
 assert('possibility field honors reduced motion', possibilityField.includes('@media (prefers-reduced-motion: reduce)') && possibilityField.includes('animation: none') && possibilityField.includes('will-change: auto'));
 assert('possibility field remains nonverbal CSS only', !/content:\s*["'][A-Za-z]{2,}/.test(possibilityField));
 

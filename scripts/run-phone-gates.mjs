@@ -20,9 +20,12 @@ checkSyntax('scripts/live-wiring-check.mjs');
 checkSyntax('src/engine/compositionClock.js');
 checkSyntax('src/engine/compositionFrame.js');
 checkSyntax('src/engine/phraseMemory.js');
+checkSyntax('src/engine/encounterState.js');
+checkSyntax('src/engine/fieldEncounter.js');
 checkSyntax('src/engine/skyMusic.js');
 run('phone contract', 'node', ['scripts/phone-contract-check.mjs']);
 run('live smoke wiring', 'node', ['scripts/live-wiring-check.mjs']);
+run('field encounter contract', 'node', ['scripts/field-encounter-contract-check.mjs']);
 run('production build', 'npm', ['run', 'build']);
 
 console.log('\nPhone static gates passed.');
