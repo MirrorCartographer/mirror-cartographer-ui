@@ -1,6 +1,6 @@
-import { createEncounterState } from './encounterState';
-import { selectFieldEncounter } from './fieldEncounter';
-import { SKY_STATES } from './skyState';
+import { createEncounterState } from './encounterState.js';
+import { selectFieldEncounter } from './fieldEncounter.js';
+import { SKY_STATES } from './skyState.js';
 
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 const rounded = (value) => Math.round(clamp01(value) * 1000) / 1000;
