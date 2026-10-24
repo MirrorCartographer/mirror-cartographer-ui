@@ -12,6 +12,8 @@ import { createCompositionClock } from '../engine/compositionClock';
 import { createCompositionFrame, createTapCompositionFrame } from '../engine/compositionFrame';
 import { createPhraseMemory } from '../engine/phraseMemory';
 import storySeed from '../data/reexperience.seed.json';
+import { createEncounterState } from '../engine/encounterState';
+import { selectFieldEncounter } from '../engine/fieldEncounter';
 
 const TAU = Math.PI * 2;
 const clamp01 = (value) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
@@ -414,11 +416,13 @@ export default function App() {
   const musicRef = useRef(null);
   const clockRef = useRef(null);
   const phraseMemoryRef = useRef(null);
+  const encounterRef = useRef(null);
   const canvasRef = useWordlessSky(state, pulse, marks, rhythm, clockSnapshot, phraseContour);
 
   useEffect(() => {
     clockRef.current = createCompositionClock();
     phraseMemoryRef.current = createPhraseMemory();
+    encounterRef.current = createEncounterState();
     musicRef.current = createSkyMusic();
     return () => musicRef.current?.stop?.();
   }, []);
@@ -436,31 +440,77 @@ export default function App() {
   const touch = (event) => {
     const point = normalizePoint(event);
     const now = Date.now();
+    const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
+    const interaction = encounterRef.current?.observe?.({ now, point }) ?? {
+      count: 1,
+      dwellMs: 0,
+      tapVelocity: 0,
+      repetition: 0,
+      exploration: 0,
+      hesitation: 0,
+      returnCount: 0,
+    };
+    const encounter = selectFieldEncounter({
+      frame: clockSnapshot ?? {
+        state,
+        section: 'seed',
+        beat: 0,
+        phrase: 0,
+        phrasePhase: 0,
+        pulse,
+        density: 0.5,
+        rhythm,
+      },
+      memory: phraseContour ?? phraseMemoryRef.current?.contour?.() ?? {},
+      interaction,
+    });
+    const weatherForMood = {
+      excite: 'lightning',
+      intrigue: 'aurora',
+      relax: 'rain',
+      joy: 'dawn',
+    };
+    // The first gesture establishes the encounter; later gestures can be changed
+    // by its accumulated interaction and phrase memory rather than resetting it.
+    const nextState = interaction.count > 1
+      ? (weatherForMood[encounter.selectedFuture.mood] || gesture.kind)
+      : gesture.kind;
+    const nextPulse = Math.max(0, Math.min(1,
+      pulse + gesture.pulseBoost + encounter.fieldDelta.energy * 0.08,
+    ));
+    const nextRhythm = Math.max(0, Math.min(
+      PERFORMANCE_BUDGET.maxRhythm,
+      gesture.rhythm + encounter.fieldDelta.rhythm * 0.5,
+    ));
     setMarks((items) => {
       const cleaned = safeMarks(items);
       const prev = cleaned.at(-1) || null;
-      return [...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks), { ...point, prev, time: now, spin: Math.random() * TAU, kind: state }];
+      return [...cleaned.slice(-PERFORMANCE_BUDGET.maxMarks), {
+        ...point,
+        prev,
+        time: now,
+        spin: Math.random() * TAU,
+        kind: nextState,
+      }];
     });
-    const gesture = evolveWeatherGesture({ now, lastTouch: lastTouch.current, rhythm, pulse, state, point });
-    const nextPulse = Math.min(1, pulse + gesture.pulseBoost);
     const composition = createTapCompositionFrame(clockRef.current, {
       now,
-      state: gesture.kind,
+      state: nextState,
       pulse: nextPulse,
-      rhythm: gesture.rhythm,
+      rhythm: nextRhythm,
     }) ?? {
       beat: 0,
       phase: 0,
       phrase: 0,
       pulse: nextPulse,
-      rhythm: gesture.rhythm,
-      state: gesture.kind,
+      rhythm: nextRhythm,
+      state: nextState,
     };
     phraseMemoryRef.current?.remember?.(composition);
     setPhraseContour(phraseMemoryRef.current?.contour?.() ?? null);
     lastTouch.current = now;
-    setRhythm(gesture.rhythm);
-    setState(gesture.kind);
+    setRhythm(nextRhythm);
+    setState(nextState);
     setPulse(nextPulse);
     setClockSnapshot(composition);
     musicRef.current?.start?.(composition);
