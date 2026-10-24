@@ -13,6 +13,7 @@ import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/comet-garden.css';
+import './assets/possibility-field.css';
 
 installRuntimeInfrastructure();
 installDeploymentIdentityRuntime();
