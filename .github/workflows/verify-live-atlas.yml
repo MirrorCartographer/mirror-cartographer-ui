@@ -1,4 +1,4 @@
-name: Verify Live Living Atlas on Vercel
+name: Verify Live Living Atlas on GitHub Pages
 
 on:
   push:
