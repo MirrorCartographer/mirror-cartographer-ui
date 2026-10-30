@@ -43,7 +43,7 @@ const visibleTextNodes = [...visibleSurface.matchAll(/>\\s*([^<\\n]*[A-Za-z]{3,}
 assert('no visible instruction copy in app body', visibleTextNodes.length === 0, visibleTextNodes.map((match) => match[1].trim()).join(' | '));
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
-assert('smoke test asserts wordless body', smoke.includes("visibleText.trim()).toBe('')"));
+assert('smoke test asserts wordless body without treating interface glyphs as copy', smoke.includes('visibleText.replace') && smoke.includes('readableText).toBe'));
 assert('smoke test asserts wordless body before and after first tap', smoke.indexOf('await expectWordlessBody(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectWordlessBody(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
 assert('smoke test probes no autoplay before first tap', smoke.includes('__mirrorAudioContextsCreated') && smoke.includes('expect(await audioContextsCreated(page)).toBe(0)'));
 assert('smoke test expects audio only after user gesture', smoke.includes('await sky.tap') && smoke.includes('expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));

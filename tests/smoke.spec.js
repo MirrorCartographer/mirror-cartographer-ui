@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test';
 
 const expectWordlessBody = async (page) => {
   const visibleText = await page.locator('body').innerText();
-  expect(visibleText.trim()).toBe('');
+  const readableText = visibleText.replace(/[\\s\\p{P}\\p{S}]/gu, '');
+  expect(readableText).toBe('');
 };
 
 const installAudioContextProbe = async (page) => {
@@ -64,7 +65,7 @@ const expectCanvasHasPixels = async (canvas) => {
 };
 
 test.describe('Mirror Cartographer phone-first smoke', () => {
-  test('renders wordless sky and survives first tap', async ({ page }) => {
+  test('renders wordless room surface and survives first gesture', async ({ page }) => {
     await installAudioContextProbe(page);
     await installAnimationFrameProbe(page);
     const errors = [];
@@ -76,7 +77,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const sky = page.locator('button.sky');
+    const sky = page.locator('button.world-surface');
     const canvas = page.locator('canvas');
     await expect(sky).toBeVisible();
     await expect(canvas).toBeVisible();
