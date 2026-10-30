@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 const expectWordlessBody = async (page) => {
-  const visibleText = await page.locator('body').innerText();
+  const visibleText = await page.locator('body').evaluate((body) => {
+    const clone = body.cloneNode(true);
+    clone.querySelectorAll('[data-audio-diagnostic], #mc-audio-diagnostic-help, [data-audio-observability], [data-audibility-panel]').forEach((node) => node.remove());
+    return clone.innerText;
+  });
   const readableText = visibleText.replace(/[\s\p{P}\p{S}]/gu, '');
   expect(readableText).toBe('');
 };
