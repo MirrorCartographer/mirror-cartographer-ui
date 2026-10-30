@@ -160,3 +160,7 @@ Explore a relationship instrument rather than a list of subject summaries. The v
 - [Research method and source-linked claims](https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research)
 
 The atlas is a standalone HTML experience. Its interactive route changes do not require a backend. It is an exploratory interface, not a clinical, benefits-eligibility, or evidence-validation service.
+
+## Open the project in ChatGPT
+
+The canonical [Living Atlas](https://mirrorcartographer.github.io/MirrorCartographer/) includes a context-aware [ChatGPT handoff](https://mirrorcartographer.github.io/MirrorCartographer/chatgpt/). It opens ChatGPT with a prepared prompt identifying the selected public page and the machine-readable [project manifest](https://mirrorcartographer.github.io/MirrorCartographer/chatgpt/project-manifest.json). Review and send the prompt; ChatGPT then retrieves the public sources itself. This is a static handoff, not an automatic import or private-conversation bridge.
