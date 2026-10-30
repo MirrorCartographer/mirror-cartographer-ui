@@ -38,8 +38,8 @@ const hiddenBranch = hiddenIndex >= 0 && frameIndex > hiddenIndex
 assert('tap-to-start handler is pointer based', app.includes('onPointerDown={touch}'));
 assert('music is started only from interaction path', app.includes('musicRef.current?.start?.') && app.indexOf('musicRef.current?.start?.') > touchIndex);
 assert('wordless visual surface still uses canvas button', app.includes('<button className="sky"') && app.includes('<canvas ref={canvasRef} />'));
-const visibleSurface = app.replace(/<style>[\\s\\S]*?<\\/style>/g, '').replace(/aria-label="[^"]*"/g, '');
-const visibleTextNodes = [...visibleSurface.matchAll(/>\\s*([^<\\n]*[A-Za-z]{3,}[^<\\n]*)</g)];
+const visibleSurface = app.replace(/<style>[\s\S]*?<\/style>/g, '').replace(/aria-label="[^"]*"/g, '');
+const visibleTextNodes = [...visibleSurface.matchAll(/>\s*([^<\n]*[A-Za-z]{3,}[^<\n]*)</g)];
 assert('no visible instruction copy in app body', visibleTextNodes.length === 0, visibleTextNodes.map((match) => match[1].trim()).join(' | '));
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
