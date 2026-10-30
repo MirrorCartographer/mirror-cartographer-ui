@@ -39,7 +39,9 @@ test.describe('audio routing evidence browser contract', () => {
     });
 
     await expect.poll(() => page.evaluate(() => window.__MC_AUDIO_ROUTING__?.status)).toBe('selected-confirmed');
-    await expect.poll(() => page.evaluate(() => window.__MC_AUDIO_ROUTING__?.attemptId)).toBe('browser-regression-attempt');
+    const currentAttemptId = await page.evaluate(() => window.__MC_AUDIO_ATTEMPT_ID__);
+    expect(currentAttemptId).not.toBe('browser-regression-attempt');
+    await expect.poll(() => page.evaluate(() => window.__MC_AUDIO_ROUTING__?.attemptId)).toBe(currentAttemptId);
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.audioRouting)).toBe('selected-confirmed');
   });
 });
