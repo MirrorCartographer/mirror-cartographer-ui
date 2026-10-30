@@ -1,0 +1,45 @@
+name: Publish interactive application to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: mirror-cartographer-ui-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build static application for GitHub Pages
+        run: npm run build:pages
+      - name: Verify hosted routes
+        run: |
+          test -s dist/index.html
+          test -s dist/atlas/index.html
+          test -s dist/research-atlas/index.html
+          touch dist/.nojekyll
+          echo "PASS: application, Living Atlas, and research instrument are present in dist/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: deployment
+        uses: actions/deploy-pages@v4

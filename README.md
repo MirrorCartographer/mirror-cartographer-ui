@@ -1,4 +1,37 @@
-# Mirror Cartographer
+# Mirror Cartographer — Interactive Application
+
+> **[Open the free public application](https://mirrorcartographer.github.io/mirror-cartographer-ui/)** · [Open the Living Atlas hub](https://mirrorcartographer.github.io/MirrorCartographer/) · [Open The Between](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Core repository](https://github.com/MirrorCartographer/MirrorCartographer) · [Continue in ChatGPT](https://chatgpt.com/)
+
+This repository contains the interactive application and creative interface experiments. The core research, architecture, evidence, and public project catalog live in [MirrorCartographer/MirrorCartographer](https://github.com/MirrorCartographer/MirrorCartographer).
+
+## Free hosting
+
+The application is published as a static Vite build through GitHub Pages. No Cloudflare, Vercel, Netlify, paid host, server, or API key is required. The deployment workflow builds with the existing `build:pages` script and publishes `dist/`.
+
+- Application: https://mirrorcartographer.github.io/mirror-cartographer-ui/
+- Living Atlas: https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/
+- Research instrument: https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/
+
+If Pages has not been enabled for this repository, choose **Settings → Pages → Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. The deployment is not considered live until the Actions run succeeds and the URLs are checked.
+
+## Local development
+
+```bash
+npm ci
+npm run dev
+```
+
+Production preview:
+
+```bash
+npm ci
+npm run build:pages
+npm run preview
+```
+
+The project base path is `/mirror-cartographer-ui/`; use `npm run build:pages` for the hosted build.
+
+---
 
 **Mirror Cartographer is a human-centered AI continuity atlas for turning scattered conversation, symptoms, symbols, records, research, creative fragments, and tool failures into navigable structure.**
 
@@ -99,7 +132,7 @@ See `docs/BARTER_VALUE_EXCHANGE_LANE.md` and `docs/PUBLIC_MONEY_PATH.md`.
 
 - Make the repository public after reviewing sensitive content.
 - Add payment links or sponsor links.
-- Deploy the standalone fallback while Vercel build-rate limit clears.
+- Keep the GitHub Pages build and route checks passing; Vercel and Cloudflare are not required for the public application.
 - Build upload/import flow for vet records.
 - Build public demo packets.
 - Create three paid offer pages.
