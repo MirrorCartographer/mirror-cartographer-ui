@@ -21,6 +21,23 @@
           "value": "no-referrer"
         }
       ]
+    },
+    {
+      "source": "/.well-known/mirror-cartographer-deployment.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
     }
   ],
   "rewrites": [
