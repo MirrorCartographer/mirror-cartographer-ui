@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const expectWordlessBody = async (page) => {
   const visibleText = await page.locator('body').innerText();
-  const readableText = visibleText.replace(/[\\s\\p{P}\\p{S}]/gu, '');
+  const readableText = visibleText.replace(/[\s\p{P}\p{S}]/gu, '');
   expect(readableText).toBe('');
 };
 
