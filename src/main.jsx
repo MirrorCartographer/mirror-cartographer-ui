@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import RoomWorldValid from './components/RoomWorldValid';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
+import { installPossibilityFieldRuntime } from './engine/possibilityFieldRuntime';
 import { installAudioObservabilityRuntime } from './engine/audioObservabilityRuntime';
 import { installAudioRoutingEvidenceRuntime } from './engine/audioRoutingEvidenceRuntime';
 import { installAudibilityOutcomeRuntime } from './engine/audibilityOutcomeRuntime';
@@ -13,8 +14,10 @@ import { installRuntimeInfrastructure } from './services/runtimeBootstrap';
 import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/comet-garden.css';
+import './assets/possibility-field.css';
 
 installRuntimeInfrastructure();
+installPossibilityFieldRuntime();
 installDeploymentIdentityRuntime();
 installAudioDeviceEvidenceRuntime({ window, navigator, document });
 installAudioObservabilityRuntime();

@@ -90,12 +90,12 @@ select {
 
   #root::before {
     opacity: calc(0.4 + var(--possibility-pressure) * 0.18);
-    animation-duration: calc(42s - var(--possibility-pressure) * 10s);
+    animation-duration: 34s;
   }
 
   #root::after {
     opacity: calc(0.12 + var(--possibility-tension) * 0.2);
-    animation-duration: calc(28s - var(--possibility-pressure) * 6s);
+    animation-duration: 20s;
   }
 }
 
