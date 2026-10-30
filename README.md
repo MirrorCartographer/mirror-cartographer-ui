@@ -12,7 +12,7 @@ The application is published as a static Vite build through GitHub Pages. No Clo
 - Living Atlas: https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/
 - Research instrument: https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/
 
-If Pages has not been enabled for this repository, choose **Settings → Pages → Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. The deployment is not considered live until the Actions run succeeds and the URLs are checked.
+If Pages has not been enabled for this repository, open [this repository's Pages settings](https://github.com/MirrorCartographer/mirror-cartographer-ui/settings/pages) and choose **Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. The deployment is not considered live until the Actions run succeeds and the URLs are checked.
 
 ## Local development
 
