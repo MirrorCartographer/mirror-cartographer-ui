@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       site_url:
-        description: 'Public deployed URL to test, for example a Vercel, Cloudflare Pages, Netlify, or GitHub Pages preview URL.'
+        description: 'GitHub Pages project URL to test: https://mirrorcartographer.github.io/mirror-cartographer-ui/'
         required: true
         type: string
 
