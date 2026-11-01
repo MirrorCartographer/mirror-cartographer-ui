@@ -67,7 +67,7 @@ try {
 
   const blockedOnly = runPreviewCheck(blocked.url);
   assert(blockedOnly.status !== 0, 'expected blocked preview shell to fail');
-  assert(/Vercel limit\/dashboard page|no reachable preview candidate/i.test(blockedOnly.stderr), `expected blocked-page failure, got: ${blockedOnly.stderr}`);
+  assert(/does not look like the expected Vite React shell|no reachable preview candidate/i.test(blockedOnly.stderr), `expected blocked-page failure, got: ${blockedOnly.stderr}`);
 
   const thinOnly = runPreviewCheck(thin.url);
   assert(thinOnly.status !== 0, 'expected shell without canvas/audio bundle signals to fail');
