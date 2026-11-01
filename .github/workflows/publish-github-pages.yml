@@ -21,14 +21,25 @@ jobs:
       - name: Install locked dependencies
         run: npm install --no-audit --no-fund
       - name: Build static application for GitHub Pages
+        env:
+          VITE_DEPLOYMENT_PROVIDER: github-pages
         run: npm run build:pages
-      - name: Verify hosted routes
+      - name: Verify hosted routes and immutable build identity
         run: |
           test -s dist/index.html
           test -s dist/atlas/index.html
           test -s dist/research-atlas/index.html
+          test -s dist/.well-known/mirror-cartographer-deployment.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const identity = JSON.parse(readFileSync('dist/.well-known/mirror-cartographer-deployment.json', 'utf8'));
+          if (identity.application !== 'mirror-cartographer-ui') throw new Error('Unexpected application identity');
+          if (identity.commit_sha !== process.env.GITHUB_SHA?.toLowerCase()) throw new Error('Build identity does not match GITHUB_SHA');
+          if (identity.deployment_provider !== 'github-pages') throw new Error('Build identity must name github-pages');
+          if (identity.claim_scope !== 'build-identity-only') throw new Error('Unexpected identity claim scope');
+          console.log('PASS: all hosted routes and GitHub Pages build identity match this commit.');
+          NODE
           touch dist/.nojekyll
-          echo "PASS: application, Living Atlas, and research instrument are present in dist/"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
