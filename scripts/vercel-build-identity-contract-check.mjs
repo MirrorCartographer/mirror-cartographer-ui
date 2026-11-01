@@ -32,6 +32,14 @@ const fallback = resolveDeploymentIdentityEnv({
 });
 assert.equal(fallback.VITE_GIT_COMMIT_SHA, sha.toLowerCase());
 
+const pages = resolveDeploymentIdentityEnv({
+  GITHUB_SHA: sha,
+  VITE_DEPLOYMENT_PROVIDER: 'github-pages',
+});
+assert.equal(pages.VITE_GIT_COMMIT_SHA, sha.toLowerCase());
+assert.equal(pages.VITE_DEPLOYMENT_PROVIDER, 'github-pages');
+assert.equal(createDeploymentIdentityManifest(pages).deployment_provider, 'github-pages');
+
 const malformed = resolveDeploymentIdentityEnv({
   VERCEL: '1',
   VERCEL_GIT_COMMIT_SHA: 'main',
