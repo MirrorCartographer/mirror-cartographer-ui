@@ -21,12 +21,14 @@ const resolved = build({
   VITE_VERCEL_URL: 'mirror-cartographer-ui-abc.vercel.app',
   VERCEL: '1',
 });
+const pages = build({ VITE_GIT_COMMIT_SHA: validSha, VITE_DEPLOYMENT_PROVIDER: 'github-pages' });
 const unresolved = build({ VERCEL: '1' });
 const malformed = build({ VITE_GIT_COMMIT_SHA: 'main', VERCEL: '1' });
 
 assert('valid immutable commit is normalized', resolved.commit === validSha);
 assert('valid immutable commit resolves source identity', resolved.verificationState === 'source-identified');
 assert('Vercel provider is classified', resolved.provider === 'vercel');
+assert('GitHub Pages provider is classified', pages.provider === 'github-pages');
 assert('missing commit fails closed', unresolved.commit === null && unresolved.verificationState === 'source-unresolved');
 assert('mutable or malformed ref fails closed', malformed.commit === null && malformed.commitResolved === false);
 assert('runtime exposes browser evidence key', source.includes('window.__MC_DEPLOYMENT_IDENTITY__'));
