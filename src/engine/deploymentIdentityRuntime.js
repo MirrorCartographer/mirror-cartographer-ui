@@ -13,7 +13,8 @@ export function buildDeploymentIdentity(env = {}) {
     env.VERCEL_URL ||
     '',
   ).trim();
-  const provider = deploymentUrl.includes('vercel') || env.VERCEL === '1' ? 'vercel' : 'unknown';
+  const explicitProvider = String(env.VITE_DEPLOYMENT_PROVIDER || '').trim().toLowerCase();
+  const provider = explicitProvider || (deploymentUrl.includes('vercel') || env.VERCEL === '1' ? 'vercel' : 'unknown');
   const commitResolved = SHA_PATTERN.test(commit);
 
   return Object.freeze({
