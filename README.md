@@ -53,26 +53,19 @@ Mirror Cartographer routes fragments into usable lanes:
 - **Body:** human symptoms, labs, posture, autonomic patterns, and clinician questions become structured maps without diagnosis overreach.
 - **Proof:** claims are separated into fact, inference, symbolic/speculative material, and action.
 - **Creative:** music, images, animation, ritual, and visual identity make the system felt instead of merely explained.
-- **Build:** GitHub, Vercel, connectors, files, automations, failures, and workarounds become technical requirements.
+- **Build:** GitHub, files, connectors, automation traces, failures, and workarounds become technical requirements. Public hosting stays on free GitHub Pages.
 - **Money / stability:** the system must connect to rent, animal care, travel, home, and paid value.
 - **Friction:** boredom, anger, tool failure, loading screens, and accessibility constraints become design input.
 
-## Current prototype
+## Current route map
 
-The current site is a React/Vite app in `src/components/App.jsx`.
+The Vite build publishes three distinct experiences under the repository's GitHub Pages project path:
 
-It includes:
+- `/` — the wordless Room-World, mounted by `src/main.jsx` through `src/components/RoomWorldValid.jsx`. A touch changes the visual field and starts the locally generated sound after a user gesture.
+- `/atlas/` — the navigable Living Atlas in `public/atlas/index.html`, with six local world routes, experience/art/systems/archive sections, a repository catalog, and a doorway to The Between.
+- `/research-atlas/` — The Between relationship instrument, sourced from `research-atlas/index.html` and mirrored to `public/research-atlas/index.html`. The source-validation workflow checks that the two copies remain identical.
 
-- full operating-site navigation
-- conversation archive manifest
-- animal health lane
-- vet connector architecture
-- FIV cure/prevention research lane
-- body continuity lane
-- proof rules
-- creative/world layer
-- money/stability lane
-- friction-as-requirement lane
+`src/components/App.jsx` is retained as an earlier prototype; it is not the active React entry point. The static atlas routes do not require a backend or API key.
 
 ## Public/private boundary
 
@@ -130,9 +123,9 @@ See `docs/BARTER_VALUE_EXCHANGE_LANE.md` and `docs/PUBLIC_MONEY_PATH.md`.
 
 ## What is needed next
 
-- Make the repository public after reviewing sensitive content.
+- Keep reviewing the public/private boundary; this repository is already public, so every tracked file must be treated as public.
 - Add payment links or sponsor links.
-- Keep the GitHub Pages build and route checks passing; Vercel and Cloudflare are not required for the public application.
+- Keep the GitHub Pages build and route checks passing; free GitHub Pages is the only approved public hosting target.
 - Build upload/import flow for vet records.
 - Build public demo packets.
 - Create three paid offer pages.
