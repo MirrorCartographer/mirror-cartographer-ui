@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'public/atlas/**'
+      - 'scripts/generate-atlas-catalog.mjs'
+      - 'scripts/validate-atlas-catalog.mjs'
+      - 'scripts/validate-atlas-routes.mjs'
       - '.github/workflows/pages-preview.yml'
   workflow_dispatch:
 
@@ -18,8 +21,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check catalog generator syntax
-        run: node --check scripts/generate-atlas-catalog.mjs
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check catalog and route validator syntax
+        run: |
+          node --check scripts/generate-atlas-catalog.mjs
+          node --check scripts/validate-atlas-catalog.mjs
+          node --check scripts/validate-atlas-routes.mjs
+
+      - name: Generate current cross-repository catalog
+        run: node scripts/generate-atlas-catalog.mjs
+
+      - name: Validate catalog privacy and provenance
+        run: node scripts/validate-atlas-catalog.mjs
+
+      - name: Validate local routes and asset references
+        run: node scripts/validate-atlas-routes.mjs
 
       - name: Validate HTML, JavaScript, and source catalog
         run: |
