@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'public/atlas/**'
+      - 'package.json'
       - 'scripts/generate-atlas-catalog.mjs'
       - 'scripts/validate-atlas-catalog.mjs'
       - 'scripts/validate-atlas-routes.mjs'
