@@ -30,11 +30,11 @@ The live Room-World test must target the active `button.world-surface` control. 
 
 ## Current verification — 2026-11-01
 
-Source commit: [64346495d934bfa2ec1724ec14dc22ae42d1cf94](https://github.com/MirrorCartographer/mirror-cartographer-ui/commit/64346495d934bfa2ec1724ec14dc22ae42d1cf94).
+Source commit: [d5f09fe3314893d51e982f5def6d2d4e4d63300c](https://github.com/MirrorCartographer/mirror-cartographer-ui/commit/d5f09fe3314893d51e982f5def6d2d4e4d63300c).
 
-- [Publish run 41354366039](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41354366039): the Vite build, all three route artifacts, deployment identity, and Pages artifact upload passed. The deploy job failed at `actions/configure-pages@v5` with `Get Pages site failed: Not Found`; `actions/deploy-pages@v4` was skipped.
+- [Publish run 41355797665](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41355797665): the Vite build, all three route artifacts, deployment identity, and Pages artifact upload passed. The deploy job failed at `actions/configure-pages@v5` with `Get Pages site failed: Not Found`; `actions/deploy-pages@v4` was skipped.
 - Repository metadata reports `has_pages: false`. The Pages site has not yet been enabled for this repository.
-- [Phone-first local smoke run 41354366058](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41354366058), [build-artifact run 41354365983](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41354365983), and [working-machine run 41354365897](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41354365897) passed. These verify source/build behavior, not a public deployment.
+- [Phone-first local smoke run 41355797560](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41355797560), [static preview artifact run 41355797636](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41355797636), and [working-machine run 41355797606](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41355797606) passed. These verify source/build behavior, not a public deployment.
 - The live route and browser checks have not been run against a verified Pages deployment.
 
 ## Required one-time activation
