@@ -9,11 +9,11 @@ const GENERATED_FILES = new Set([
   'public/atlas/catalog-index.json',
 ]);
 
-const BLOCKED_PATH = /(^|\\/)(private|secrets?|credentials?|personal-records?|raw-private|raw-conversations?|conversation-exports?|chat-exports?|medical-records?|health-records?|veterinary-records?|pet-records?|financial-records?|bank-records?|private-notes?|raw-notes?)(\\/|$)|(^|\\/)\\.env($|\\.)|(^|\\/)(node_modules|\\.git)(\\/|$)/i;
+const BLOCKED_PATH = /(^|\/)(private|secrets?|credentials?|personal-records?|raw-private|raw-conversations?|conversation-exports?|chat-exports?|medical-records?|health-records?|veterinary-records?|pet-records?|financial-records?|bank-records?|private-notes?|raw-notes?)(\/|$)|(^|\/)\.env($|\.)|(^|\/)(node_modules|\.git)(\/|$)/i;
 const BLOCKED_EXTENSIONS = new Set([
   '.pem', '.key', '.p12', '.pfx', '.sqlite', '.db', '.dump', '.bak', '.kdbx', '.gpg', '.age', '.asc',
 ]);
-const BLOCKED_BASENAME = /^(id_rsa|id_ed25519|authorized_keys|credentials?|secrets?|tokens?|passwords?)(\\..*)?$/i;
+const BLOCKED_BASENAME = /^(id_rsa|id_ed25519|authorized_keys|credentials?|secrets?|tokens?|passwords?)(\..*)?$/i;
 
 function isExcluded(path) {
   return BLOCKED_PATH.test(path)
