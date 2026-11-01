@@ -18,6 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate the checked-in Atlas snapshot before regeneration
+        run: node scripts/validate-atlas-catalog.mjs
+
       - name: Generate and validate the current cross-repository Atlas catalog
         run: |
           node --test scripts/atlas-privacy-policy.test.mjs

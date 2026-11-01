@@ -39,6 +39,9 @@ jobs:
       - name: Test privacy exclusions
         run: node --test scripts/atlas-privacy-policy.test.mjs
 
+      - name: Validate checked-in catalog snapshot before regeneration
+        run: node scripts/validate-atlas-catalog.mjs
+
       - name: Generate current cross-repository catalog
         run: node scripts/generate-atlas-catalog.mjs
 
