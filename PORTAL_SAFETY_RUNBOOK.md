@@ -110,6 +110,8 @@ If a GitHub Pages route fails:
 5. After a successful deploy, open the root, `/atlas/`, and `/research-atlas/` routes. Verify local world links, console errors, and phone layout.
 6. If a route is blank despite a successful deploy, inspect its built HTML, relative asset paths, browser console, and local storage before reverting code.
 
+The automatic push/pull-request smoke workflow runs the local gate only. Use **Run workflow** after a successful GitHub Pages deployment to run the live remote gate against the approved Pages URL.
+
 The following config is retained only as a historical Vercel reference; do not restore it as the public deployment path.
 
 Known-good config:

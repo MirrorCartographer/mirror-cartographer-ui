@@ -24,8 +24,14 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --only-shell chromium
 
-      - name: Run phone-first gate
-        run: npm run test:gate
+      - name: Run local phone-first gate
+        run: npm run test:local-gate
+
+      - name: Run live GitHub Pages gate after manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          SITE_URL: https://mirrorcartographer.github.io/mirror-cartographer-ui/
+        run: npm run test:remote-gate
 
       - name: Upload Playwright failure artifacts
         if: failure()
