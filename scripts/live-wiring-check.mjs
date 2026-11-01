@@ -54,6 +54,19 @@ for (const fragment of requiredRemoteGateFragments) {
   }
 }
 
+if (remoteGate.includes('vercel.app')) {
+  fail(`${remoteGatePath} must not fall back to a Vercel host`);
+}
+
+const previewCheckPath = 'scripts/preview-url-check.mjs';
+const previewCheck = readText(previewCheckPath);
+if (!previewCheck.includes('https://mirrorcartographer.github.io/mirror-cartographer-ui/')) {
+  fail(`${previewCheckPath} must default to the GitHub Pages project URL`);
+}
+if (previewCheck.includes('vercel.app') || previewCheck.includes('netlify.app') || previewCheck.includes('pages.dev')) {
+  fail(`${previewCheckPath} must not use a non-GitHub hosting fallback`);
+}
+
 if (!remoteGate.includes('selectedUrl')) {
   fail(`${remoteGatePath} must select a reachable preview URL before live smoke`);
 }
@@ -71,6 +84,10 @@ const liveConfig = readText(liveConfigPath);
 
 if (!liveConfig.includes('process.env.SITE_URL')) {
   fail('playwright.live.config.js must read SITE_URL');
+}
+
+if (liveConfig.includes('vercel.app') || !liveConfig.includes('mirrorcartographer.github.io/mirror-cartographer-ui/')) {
+  fail('playwright.live.config.js must default to the GitHub Pages project URL');
 }
 
 if (/LIVE_SITE_URL/.test(liveConfig)) {
