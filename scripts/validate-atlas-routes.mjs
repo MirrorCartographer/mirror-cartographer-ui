@@ -63,8 +63,12 @@ const htmlFiles = walk(atlasRoot).filter((file) => extname(file).toLowerCase() =
 let checkedReferences = 0;
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
-  const attributes = [...html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].map((match) => match[1]);
-  const css = [...html.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)].map((match) => match[1]);
+  const tags = [...html.matchAll(/<[a-z][^>]*>/gi)].map((match) => match[0]);
+  const attributes = tags.flatMap((tag) => [...tag.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)]
+    .map((match) => match[1] ?? match[2] ?? match[3]));
+  const styles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map((match) => match[1]);
+  const css = styles.flatMap((style) => [...style.matchAll(/url\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi)]
+    .map((match) => (match[1] ?? match[2] ?? match[3]).trim()));
   for (const value of attributes) {
     if (/^https?:/i.test(value) && legacyHost.test(value)) {
       throw new Error('Legacy hosting URL found in public Atlas route: ' + relative(repoRoot, file));
