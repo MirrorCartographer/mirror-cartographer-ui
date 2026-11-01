@@ -18,6 +18,7 @@ If Pages has not been enabled for this repository, open [this repository's Pages
 
 ```bash
 npm ci
+npm run catalog:build
 npm run dev
 ```
 
@@ -25,11 +26,14 @@ Production preview:
 
 ```bash
 npm ci
+npm run catalog:build
 npm run build:pages
 npm run preview
 ```
 
 The project base path is `/mirror-cartographer-ui/`; use `npm run build:pages` for the hosted build.
+
+`npm run catalog:build` refreshes both public repository manifests from their current Git trees, applies the privacy exclusions, checks source-commit provenance, and validates local Atlas routes/assets before the app is opened or built.
 
 ---
 
