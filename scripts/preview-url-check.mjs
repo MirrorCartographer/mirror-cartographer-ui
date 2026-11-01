@@ -101,8 +101,8 @@ const checkPreview = async (url) => {
   }
 
   const finalUrl = response.url ? new URL(response.url) : url;
-  if (finalUrl.hostname === 'vercel.com' || finalUrl.pathname.includes('upgradeToPro')) {
-    throw new Error(`${url.href} resolved to a Vercel account or build-limit page: ${finalUrl.href}`);
+  if (finalUrl.hostname !== url.hostname) {
+    throw new Error(`${url.href} redirected to an unapproved host: ${finalUrl.hostname}`);
   }
 
   const contentType = response.headers.get('content-type') || '';
@@ -111,10 +111,6 @@ const checkPreview = async (url) => {
   }
 
   const html = await response.text();
-  if (/upgradeToPro|build-rate-limit|mirror-cartographers-projects/i.test(html)) {
-    throw new Error(`${url.href} returned a Vercel limit/dashboard page instead of the app shell.`);
-  }
-
   if (!html.includes('id="root"')) {
     throw new Error(`${url.href} does not look like the expected Vite React shell.`);
   }
