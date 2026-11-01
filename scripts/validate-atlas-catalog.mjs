@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { basename, extname } from 'node:path';
+import { isCredentialLikeFile, isPrivateCatalogPath } from './atlas-privacy-policy.mjs';
 
 const root = new URL('../public/atlas/', import.meta.url);
 const index = JSON.parse(readFileSync(new URL('catalog-index.json', root), 'utf8'));
@@ -12,12 +12,6 @@ const generated = new Set([
   'public/atlas/catalog-ui.json',
   'public/atlas/catalog-index.json',
 ]);
-const blockedPath = /(^|\/)(private|secrets?|credentials?|personal-records?|raw-private|raw-conversations?|conversation-exports?|chat-exports?|medical-records?|health-records?|veterinary-records?|pet-records?|financial-records?|bank-records?|private-notes?|raw-notes?)(\/|$)|(^|\/)\.env($|\.)|(^|\/)(node_modules|\.git)(\/|$)/i;
-const excludedExtensions = new Set([
-  '.pem', '.key', '.p12', '.pfx', '.sqlite', '.db', '.dump', '.bak', '.kdbx', '.gpg', '.age', '.asc',
-]);
-const blockedBasename = /^(id_rsa|id_ed25519|authorized_keys|credentials?|secrets?|tokens?|passwords?)(\..*)?$/i;
-
 function fail(message) {
   throw new Error('Atlas catalog validation failed: ' + message);
 }
@@ -51,8 +45,7 @@ for (const source of index.sources) {
       || !/^[0-9a-f]{40}$/i.test(item.sha)) fail('invalid catalog item');
     if (item.path.startsWith('/') || item.path.includes('\\')
       || item.path.split('/').some((part) => part === '.' || part === '..')) fail('unsafe catalog path');
-    if (blockedPath.test(item.path) || excludedExtensions.has(extname(item.path).toLowerCase())
-      || blockedBasename.test(basename(item.path))) fail('private or credential-like path was indexed');
+    if (isPrivateCatalogPath(item.path) || isCredentialLikeFile(item.path)) fail('private or credential-like path was indexed');
     if (generated.has(item.path)) fail('generated catalog was indexed');
     if (seen.has(item.path)) fail('duplicate catalog path');
     seen.add(item.path);

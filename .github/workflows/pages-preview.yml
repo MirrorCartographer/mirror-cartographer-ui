@@ -7,6 +7,8 @@ on:
       - 'public/atlas/**'
       - 'package.json'
       - 'scripts/generate-atlas-catalog.mjs'
+      - 'scripts/atlas-privacy-policy.mjs'
+      - 'scripts/atlas-privacy-policy.test.mjs'
       - 'scripts/validate-atlas-catalog.mjs'
       - 'scripts/validate-atlas-routes.mjs'
       - '.github/workflows/pages-preview.yml'
@@ -30,8 +32,12 @@ jobs:
       - name: Check catalog and route validator syntax
         run: |
           node --check scripts/generate-atlas-catalog.mjs
+          node --check scripts/atlas-privacy-policy.mjs
           node --check scripts/validate-atlas-catalog.mjs
           node --check scripts/validate-atlas-routes.mjs
+
+      - name: Test privacy exclusions
+        run: node --test scripts/atlas-privacy-policy.test.mjs
 
       - name: Generate current cross-repository catalog
         run: node scripts/generate-atlas-catalog.mjs

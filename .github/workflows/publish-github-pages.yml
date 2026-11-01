@@ -20,6 +20,7 @@ jobs:
           node-version: '22'
       - name: Generate and validate the current cross-repository Atlas catalog
         run: |
+          node --test scripts/atlas-privacy-policy.test.mjs
           node scripts/generate-atlas-catalog.mjs
           node scripts/validate-atlas-catalog.mjs
           node scripts/validate-atlas-routes.mjs

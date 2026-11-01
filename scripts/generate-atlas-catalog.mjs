@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { basename, extname, join } from 'node:path';
+import { extname, join } from 'node:path';
+import { isCredentialLikeFile, isPrivateCatalogPath } from './atlas-privacy-policy.mjs';
 
 const OUTPUT_DIR = fileURLToPath(new URL('../public/atlas/', import.meta.url));
 const GENERATED_FILES = new Set([
@@ -9,17 +10,10 @@ const GENERATED_FILES = new Set([
   'public/atlas/catalog-index.json',
 ]);
 
-const BLOCKED_PATH = /(^|\/)(private|secrets?|credentials?|personal-records?|raw-private|raw-conversations?|conversation-exports?|chat-exports?|medical-records?|health-records?|veterinary-records?|pet-records?|financial-records?|bank-records?|private-notes?|raw-notes?)(\/|$)|(^|\/)\.env($|\.)|(^|\/)(node_modules|\.git)(\/|$)/i;
-const BLOCKED_EXTENSIONS = new Set([
-  '.pem', '.key', '.p12', '.pfx', '.sqlite', '.db', '.dump', '.bak', '.kdbx', '.gpg', '.age', '.asc',
-]);
-const BLOCKED_BASENAME = /^(id_rsa|id_ed25519|authorized_keys|credentials?|secrets?|tokens?|passwords?)(\..*)?$/i;
-
 function isExcluded(path) {
-  return BLOCKED_PATH.test(path)
-    || BLOCKED_EXTENSIONS.has(extname(path).toLowerCase())
-    || BLOCKED_BASENAME.test(basename(path));
+  return isPrivateCatalogPath(path) || isCredentialLikeFile(path);
 }
+
 const REPOSITORIES = [
   { repo: 'MirrorCartographer/MirrorCartographer', label: 'Mirror Cartographer — main project', file: 'catalog-main.json' },
   { repo: 'MirrorCartographer/mirror-cartographer-ui', label: 'Mirror Cartographer — interactive UI', file: 'catalog-ui.json' },
