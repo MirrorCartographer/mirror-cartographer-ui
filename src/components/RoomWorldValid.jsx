@@ -78,26 +78,76 @@ export default function RoomWorldValid() {
     window.dispatchEvent(new CustomEvent('mc:comet-state', { detail: { palette: room.palette, charge, depth, complete: depth === LAYERS_PER_ROOM } }));
   }, [room, depth, pulse]);
 
+  const renderStateRef = useRef({ room, depth, pulse });
+  useEffect(() => {
+    renderStateRef.current = { room, depth, pulse };
+  }, [room, depth, pulse]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return undefined;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return undefined;
     let animation = 0;
     const start = performance.now();
-    const resize = () => { const ratio = Math.min(2, window.devicePixelRatio || 1); const rect = canvas.getBoundingClientRect(); canvas.width = rect.width * ratio; canvas.height = rect.height * ratio; ctx.setTransform(ratio, 0, 0, ratio, 0, 0); };
+    const resize = () => {
+      const ratio = Math.min(2, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * ratio));
+      canvas.height = Math.max(1, Math.round(rect.height * ratio));
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
     const frame = (now) => {
+      const { room: activeRoom, depth: activeDepth, pulse: activePulse } = renderStateRef.current;
+      const point = pointRef.current;
       const rect = canvas.getBoundingClientRect();
       const width = rect.width;
       const height = rect.height;
-      const gradient = ctx.createRadialGradient(width * (0.25 + pointRef.current.x * 0.5), height * (0.2 + pointRef.current.y * 0.5), 0, width / 2, height / 2, Math.max(width, height));
-      gradient.addColorStop(0, room.palette[1]); gradient.addColorStop(0.58, room.palette[0]); gradient.addColorStop(1, '#020207');
-      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
-      room.layers.slice(0, depth).forEach((layer) => drawLayer(ctx, room, layer, width, height, now - start, pointRef.current, pulse));
-      for (let i = particlesRef.current.length - 1; i >= 0; i -= 1) { const particle = particlesRef.current[i]; particle.life -= 0.014; particle.x += particle.vx; particle.y += particle.vy; if (particle.life <= 0) { particlesRef.current.splice(i, 1); continue; } ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = rgba(room.palette[2 + (i % 2)], particle.life); ctx.beginPath(); ctx.arc(particle.x * width, particle.y * height, 1 + particle.life * 7, 0, TAU); ctx.fill(); }
+      const gradient = ctx.createRadialGradient(
+        width * (0.25 + point.x * 0.5),
+        height * (0.2 + point.y * 0.5),
+        0,
+        width / 2,
+        height / 2,
+        Math.max(width, height)
+      );
+      gradient.addColorStop(0, activeRoom.palette[1]);
+      gradient.addColorStop(0.58, activeRoom.palette[0]);
+      gradient.addColorStop(1, '#020207');
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+      activeRoom.layers.slice(0, activeDepth).forEach((layer) => (
+        drawLayer(ctx, activeRoom, layer, width, height, now - start, point, activePulse)
+      ));
+      for (let i = particlesRef.current.length - 1; i >= 0; i -= 1) {
+        const particle = particlesRef.current[i];
+        particle.life -= 0.014;
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        if (particle.life <= 0) {
+          particlesRef.current.splice(i, 1);
+          continue;
+        }
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = rgba(activeRoom.palette[2 + (i % 2)], particle.life);
+        ctx.beginPath();
+        ctx.arc(particle.x * width, particle.y * height, 1 + particle.life * 7, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
       animation = requestAnimationFrame(frame);
     };
-    resize(); window.addEventListener('resize', resize); animation = requestAnimationFrame(frame);
-    return () => { cancelAnimationFrame(animation); window.removeEventListener('resize', resize); };
-  }, [room, depth, pulse]);
+    resize();
+    window.addEventListener('resize', resize);
+    animation = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(animation);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
 
   const record = (boost, gesture) => setProgress((current) => {
     const energy = current.energy + boost;
