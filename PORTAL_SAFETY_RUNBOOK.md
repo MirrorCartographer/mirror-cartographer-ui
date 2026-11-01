@@ -1,10 +1,16 @@
 # Mirror Portal Safety Runbook
 
-This portal is now a connected live system:
+## Current release authority — 2026-11-01
 
-```txt
-ChatGPT -> GitHub main branch -> Vercel deploy -> live site
-```
+The only approved public hosting target for this application is free GitHub Pages:
+
+- Room-World: `https://mirrorcartographer.github.io/mirror-cartographer-ui/`
+- Living Atlas: `https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/`
+- The Between: `https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/`
+
+Do not publish the application through Vercel, Netlify, Cloudflare, or paid hosting. Existing provider configuration and research files are retained as repository history, not as release instructions.
+
+The root route is intentionally a wordless Room-World. The navigable Living Atlas is the separate `/atlas/` route; The Between is `/research-atlas/`.
 
 ## Operating rule
 
@@ -13,10 +19,11 @@ Assume every update can fail.
 Therefore:
 
 1. Prefer data-feed updates over core-app rewrites.
-2. One small commit at a time.
-3. Check Vercel status after each commit.
-4. If a deploy fails, stop feature work and patch the failure first.
-5. Do not make rapid visual/code edits without confirming the last deploy succeeded.
+2. Make one small commit at a time.
+3. Check the `Publish interactive application to GitHub Pages` Actions run after each commit.
+4. Treat a successful build as artifact proof only; deployment is not complete until the deploy job succeeds.
+5. If `configure-pages` or `deploy-pages` fails, stop release work and resolve the GitHub Pages setting before changing application code.
+6. Do not claim the site is live until all three routes have been opened and checked on desktop and mobile.
 
 ## Safer update lanes
 
@@ -47,17 +54,16 @@ Therefore:
 Most likely causes:
 
 - stale `package-lock.json`
-- Vercel detecting the wrong framework
 - import path typo
 - JSX syntax error
 - unsupported package/dependency change
 
 Current mitigations:
 
-- `vercel.json` explicitly sets Vite framework, install command, build command, output directory
-- `.npmrc` disables package-lock usage
-- `netlify.toml` exists for Netlify fallback
-- app is wrapped in `ErrorBoundary`
+- The GitHub Pages workflow runs `npm run build:pages` and verifies the root, `/atlas/`, and `/research-atlas/` artifacts before upload.
+- `.npmrc` preserves the repository's existing npm install behavior.
+- `netlify.toml` and `vercel.json` are legacy configuration only; neither is part of the approved Pages release path.
+- The app is wrapped in `ErrorBoundary`.
 
 ### Runtime blank page
 
@@ -92,13 +98,16 @@ Current mitigations:
 
 ## Recovery protocol
 
-If live site fails:
+If a GitHub Pages route fails:
 
-1. Check latest commit deploy status.
-2. If failure: inspect Vercel logs.
-3. If blank page but deploy succeeded: use portal recovery screen or clear local storage.
-4. If main app is broken: revert latest core-app commit or patch import/syntax error.
-5. If build config breaks: restore known-good Vercel config.
+1. Open the latest `Publish interactive application to GitHub Pages` run and record its source commit.
+2. If the build job fails, inspect the failing build step and fix that source or dependency issue first.
+3. If the build succeeds but `configure-pages` fails, the repository owner must open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions** once.
+4. If `deploy-pages` fails after configuration, inspect the deployment job and environment permissions; do not switch providers.
+5. After a successful deploy, open the root, `/atlas/`, and `/research-atlas/` routes. Verify local world links, console errors, and phone layout.
+6. If a route is blank despite a successful deploy, inspect its built HTML, relative asset paths, browser console, and local storage before reverting code.
+
+The following config is retained only as a historical Vercel reference; do not restore it as the public deployment path.
 
 Known-good config:
 
