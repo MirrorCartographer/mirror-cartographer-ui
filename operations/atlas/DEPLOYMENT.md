@@ -47,7 +47,7 @@ After activation, require all of the following before describing the application
 
 1. The publication workflow's build and deploy jobs both pass for the same commit.
 2. The root, `/atlas/`, and `/research-atlas/` routes open on desktop and phone.
-3. The live Room-World test confirms canvas animation, the first user gesture, audio-context gating, immutable build identity, and no browser console errors.
+3. The live Room-World test confirms canvas animation and painted pixels, the first user gesture, audio-context gating, immutable build identity, and no browser console errors.
 4. The Atlas route test confirms all six local worlds, The Between, the health probe, and catalog manifests.
 
 ## Legacy provider history — not a release target

@@ -125,6 +125,9 @@ if (!activeEntry.includes("import RoomWorldValid from './components/RoomWorldVal
 if (!activeRoomWorld.includes('className="world-surface"')) {
   fail('RoomWorldValid must expose the wordless world-surface interaction control');
 }
+if (!liveSpec.includes('expectCanvasHasPixels')) {
+  fail(`${liveSpecPath} must verify that the deployed canvas paints visible pixels`);
+}
 if (!liveSpec.includes(expectedSurfaceSelector)) {
   fail(`${liveSpecPath} must target the active world-surface interaction control`);
 }

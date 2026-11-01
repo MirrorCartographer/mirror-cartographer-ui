@@ -45,6 +45,27 @@ const expectWordlessBody = async (page) => {
   expect(visibleText.trim()).toBe('');
 };
 
+const expectCanvasHasPixels = async (canvas) => {
+  await expect.poll(async () => canvas.evaluate((node) => {
+    const ctx = node.getContext('2d');
+    if (!ctx || node.width < 1 || node.height < 1) return 0;
+    const positions = [
+      [0.08, 0.08], [0.5, 0.08], [0.92, 0.08],
+      [0.08, 0.5], [0.5, 0.5], [0.92, 0.5],
+      [0.08, 0.92], [0.5, 0.92], [0.92, 0.92],
+    ];
+    return positions.filter(([x, y]) => {
+      const pixelX = Math.min(node.width - 1, Math.floor(node.width * x));
+      const pixelY = Math.min(node.height - 1, Math.floor(node.height * y));
+      const [red, green, blue, alpha] = ctx.getImageData(pixelX, pixelY, 1, 1).data;
+      return alpha > 0 && (red > 0 || green > 0 || blue > 0);
+    }).length;
+  }), {
+    timeout: 3000,
+    message: 'expected deployed room canvas to paint at least three sampled regions',
+  }).toBeGreaterThanOrEqual(3);
+};
+
 const expectAnimationFramesAtLeast = async (page, minimum) => {
   await expect.poll(() => animationFrames(page), {
     timeout: 3000,
@@ -98,6 +119,7 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
     await expect(canvas).toBeVisible();
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, 8);
+    await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBe(0);
 
     const framesBeforeTap = await animationFrames(page);
@@ -107,6 +129,7 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
     await expect(canvas).toBeVisible();
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, framesBeforeTap + 8);
+    await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1);
     expect(errors).toEqual([]);
   });
