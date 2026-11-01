@@ -83,12 +83,14 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
       if (message.type() === 'error') errors.push(message.text());
     });
 
-    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.goto('./', { waitUntil: 'networkidle' });
+
+    const liveUrl = new URL(page.url());
+    expect(liveUrl.hostname).toBe('mirrorcartographer.github.io');
+    expect(liveUrl.pathname).toMatch(/^\/mirror-cartographer-ui(?:\/|$)/);
 
     const identity = await expectResolvedDeploymentIdentity(page);
-    if (new URL(page.url()).hostname.endsWith('.vercel.app')) {
-      expect(identity.provider).toBe('vercel');
-    }
+    expect(identity.provider).toBe('github-pages');
 
     const sky = page.locator('button.sky');
     const canvas = page.locator('canvas');
