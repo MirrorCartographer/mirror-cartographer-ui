@@ -18,6 +18,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Generate and validate the current cross-repository Atlas catalog
+        run: |
+          node scripts/generate-atlas-catalog.mjs
+          node scripts/validate-atlas-catalog.mjs
+          node scripts/validate-atlas-routes.mjs
       - name: Install locked dependencies
         run: npm install --no-audit --no-fund
       - name: Build static application for GitHub Pages
