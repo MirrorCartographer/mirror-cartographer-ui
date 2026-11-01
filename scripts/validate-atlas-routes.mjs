@@ -84,9 +84,9 @@ for (const slug of experimentSlugs) {
 }
 
 const indexHtml = readFileSync(join(atlasRoot, 'index.html'), 'utf8');
-const localCopies = [...indexHtml.matchAll(/:\s*['"](\\.\\/worlds\\/[^'"]+)['"]/g)].map((match) => match[1]);
+const localCopies = [...indexHtml.matchAll(/:\s*['"](\.\/worlds\/[^'"]+)['"]/g)].map((match) => match[1]);
 for (const route of localCopies) {
-  const target = resolve(atlasRoot, route.replace(/^\\.\\//, ''));
+  const target = resolve(atlasRoot, route.replace(/^\.\//, ''));
   if (!existsSync(target)) throw new Error('Missing local mirror target: ' + route);
 }
 
