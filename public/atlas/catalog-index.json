@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "title": "Mirror Cartographer Source Catalog",
-  "generated_on": "2026-10-21",
+  "generated_on": "2026-11-01",
   "source_count": 2,
-  "file_count": 6537,
+  "file_count": 6578,
   "generated_catalogs_excluded": [
     "public/atlas/catalog-main.json",
     "public/atlas/catalog-ui.json",
@@ -14,17 +14,17 @@
       "repo": "MirrorCartographer/MirrorCartographer",
       "label": "Mirror Cartographer — main project",
       "file": "catalog-main.json",
-      "file_count": 4142,
-      "source_commit": "712e4116557d89027bc17bdf43a8cff03218ea34",
-      "tree_sha": "30523fc50d644bb8982004de8072a635bb4c2900"
+      "file_count": 4176,
+      "source_commit": "b469de665639885f82b292720abe79ea9718bb95",
+      "tree_sha": "348f40b59eee09c975b2edbaf7e8db6c27599950"
     },
     {
       "repo": "MirrorCartographer/mirror-cartographer-ui",
       "label": "Mirror Cartographer — interactive UI",
       "file": "catalog-ui.json",
-      "file_count": 2395,
-      "source_commit": "fe42aa59c3978ffa24700975057156e5a1516b04",
-      "tree_sha": "3bbb3de788126f7ad776eea37e32d4c9e47041c7"
+      "file_count": 2402,
+      "source_commit": "4f0c32582ade17fca638bd9130535d41d3f234bb",
+      "tree_sha": "46587ec73c2b7fbca3adec1a7ff750ca8824b740"
     }
   ]
 }
