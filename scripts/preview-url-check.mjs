@@ -1,7 +1,8 @@
 const DEFAULT_SITE_URLS = [
   'https://mirrorcartographer.github.io/mirror-cartographer-ui/',
-  'https://mirror-cartographer-ui.vercel.app',
 ];
+
+const LOCAL_TEST_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 const rawUrls = (process.env.SITE_URLS || process.env.SITE_URL || DEFAULT_SITE_URLS.join(','))
   .split(',')
@@ -23,6 +24,14 @@ const assertValidUrl = (rawUrl) => {
 
   if (!['http:', 'https:'].includes(url.protocol)) {
     fail(`preview candidate must use http or https, received ${url.protocol}`);
+  }
+
+  if (url.hostname !== 'mirrorcartographer.github.io' && !LOCAL_TEST_HOSTS.has(url.hostname)) {
+    fail('only the approved free GitHub Pages host or a local test server may be checked');
+  }
+
+  if (url.hostname === 'mirrorcartographer.github.io' && !url.pathname.startsWith('/mirror-cartographer-ui/')) {
+    fail('GitHub Pages checks must stay inside /mirror-cartographer-ui/');
   }
 
   return url;
