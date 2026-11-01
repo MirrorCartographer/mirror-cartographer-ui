@@ -14,7 +14,7 @@ export function resolveDeploymentIdentityEnv(env = process.env) {
   return Object.freeze({
     VITE_GIT_COMMIT_SHA: commit,
     VITE_VERCEL_URL: deploymentUrl,
-    VITE_DEPLOYMENT_PROVIDER: env.VERCEL === '1' ? 'vercel' : '',
+    VITE_DEPLOYMENT_PROVIDER: String(env.VITE_DEPLOYMENT_PROVIDER || (env.VERCEL === '1' ? 'vercel' : '')).trim(),
   });
 }
 
