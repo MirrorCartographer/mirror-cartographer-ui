@@ -4,7 +4,7 @@ import process from 'node:process';
 
 const appBundle = 'React createRoot wordless sky onPointerDown AudioContext document.createElement("canvas").getContext("2d")';
 const rootShell = '<!doctype html><html><body><div id="root"></div><script type="module" src="./assets/app.js"></script></body></html>';
-const blockedShell = '<!doctype html><html><body>upgradeToPro build-rate-limit mirror-cartographers-projects</body></html>';
+const blockedShell = '<!doctype html><html><body>service unavailable build limit</body></html>';
 const thinShell = '<!doctype html><html><body><div id="root"></div><script type="module" src="./assets/thin.js"></script></body></html>';
 
 const startServer = (handler) => new Promise((resolve, reject) => {
@@ -72,6 +72,10 @@ try {
   const thinOnly = runPreviewCheck(thin.url);
   assert(thinOnly.status !== 0, 'expected shell without canvas/audio bundle signals to fail');
   assert(/no probed bundle looked like the phone sky app|missing expected canvas\/audio\/React signals/i.test(thinOnly.stderr), `expected bundle-signal failure, got: ${thinOnly.stderr}`);
+
+  const disallowedHost = runPreviewCheck('https://mirror-cartographer-ui.vercel.app/');
+  assert(disallowedHost.status !== 0, 'expected non-GitHub hosting provider to be rejected');
+  assert(disallowedHost.stderr.includes('only the approved free GitHub Pages host'), `expected host allowlist failure, got: ${disallowedHost.stderr}`);
 
   const invalid = runPreviewCheck('notaurl');
   assert(invalid.status !== 0, 'expected invalid URL candidate to fail');
