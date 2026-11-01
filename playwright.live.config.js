@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-const DEFAULT_SITE_URL = 'https://mirror-cartographer-ui.vercel.app';
+const DEFAULT_SITE_URL = 'https://mirrorcartographer.github.io/mirror-cartographer-ui/';
 const baseURL = process.env.SITE_URL || DEFAULT_SITE_URL;
 
 export default defineConfig({
