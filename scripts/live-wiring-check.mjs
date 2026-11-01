@@ -127,6 +127,13 @@ if (!liveSpec.includes('AudioContext') || !liveSpec.includes('__mirrorAudioConte
   fail(`${liveSpecPath} must preserve the no-autoplay audio context probe`);
 }
 
+if (!liveSpec.includes("page.goto('./'")) {
+  fail(`${liveSpecPath} must preserve the GitHub Pages project path when navigating`);
+}
+if (!liveSpec.includes("identity.provider).toBe('github-pages')")) {
+  fail(`${liveSpecPath} must require a GitHub Pages runtime identity`);
+}
+
 if (!liveSpec.includes('expectWordlessBody')) {
   fail(`${liveSpecPath} must preserve pre/post interaction wordless body assertions`);
 }
