@@ -24,7 +24,7 @@ footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);f
 <header><div class="wrap nav"><a class="brand" href="#top">✳ Mirror Cartographer</a><nav class="navlinks" aria-label="Main navigation"><a href="#worlds">Enter a world</a><a href="#experience">Experience</a><a href="#art">Art & play</a><a href="#systems">Systems</a><a href="#archive">Archive</a></nav></div></header>
 <main id="top">
 <div class="wrap hero"><div class="orbit" aria-hidden="true"><i></i></div><div class="eyebrow">A living atlas · Work by Charity Alessandra Sturgell</div><h1>Meaning has<br>a <em>shape.</em></h1><p class="lead">A connected home for the worlds, images, experiments, games, research, and tools we have been making. Not a pile of links: a map through the work, with the original source kept close.</p><div class="hero-actions"><a class="btn" href="#worlds">Enter the atlas ↓</a><a class="btn secondary" href="#archive">Explore the archive ↘</a></div><p class="quiet" style="margin-top:20px;max-width:620px">This is an index and doorway. Individual projects remain in their original locations; links open the source or hosted experience rather than pretending every artifact has already been merged into one application.</p></div>
-<section id="worlds"><div class="wrap"><div class="section-head"><div><div class="eyebrow">00 / Step inside</div><h2>Worlds you can enter</h2></div><p>These experiences are copied into the Atlas itself. They open here, on this site, without sending you to a repository.</p></div><div class="grid">
+<section id="worlds"><div class="wrap"><div class="section-head"><div><div class="eyebrow">00 / Step inside</div><h2>Worlds you can enter</h2></div><p>The six entry pages are served directly by this Atlas. The Ten Experiments collection opens its ten interactive routes on the companion core GitHub Pages site.</p></div><div class="grid">
 <article class="card wide" data-search="night shift orchard interactive sound visual generative garden night shift"><span class="number">WORLD · 01 / LOCAL MIRROR</span><h3>Night Shift Orchard</h3><p>A nocturnal orchard that grows through motion and generative light. A small world to inhabit, not just inspect.</p><a href="./worlds/night-shift-orchard.html">Enter the orchard ↗</a></article>
 <article class="card wide" data-search="afterimage orchard memory plant afterimage light interactive generative"><span class="number">WORLD · 02 / LOCAL MIRROR</span><h3>Afterimage Orchard</h3><p>An orchard of traces: a quiet interactive study in memory, plant forms, and what remains after an image is gone.</p><a href="./worlds/afterimage-orchard.html">Enter the orchard ↗</a></article>
 <article class="card" data-search="constellation graph stars connected ideas map"><span class="number">WORLD · 03 / LOCAL MIRROR</span><h3>Constellation</h3><p>A navigable field of points and relationships.</p><a href="./worlds/constellation.html">Enter the constellation ↗</a></article>
@@ -110,14 +110,32 @@ function renderCatalog(query) {
     const description = document.createElement('p');
     const size = Number.isFinite(item.bytes) ? `${(item.bytes / 1024).toFixed(1)} KB` : 'size unavailable';
     description.textContent = `${item.repo} / ${item.path} · ${size} · blob ${item.sha.slice(0, 8)}`;
-    const link = document.createElement('a');
     const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
-    const localCopy = localCopies[`${item.repo}:${item.path}`];
-    link.href = localCopy || `https://github.com/${item.repo}/blob/main/${encodedPath}`;
-    link.target = '_blank';
-    link.rel = 'noreferrer';
-    link.textContent = localCopy ? 'Open local experience ↗' : 'Open original source ↗';
-    card.append(number, title, description, link);
+    const sourceUrl = 'https://github.com/' + item.repo + '/blob/' + item.source_commit + '/' + encodedPath;
+    const localCopy = localCopies[item.repo + ':' + item.path];
+    if (localCopy) {
+      const localLink = document.createElement('a');
+      localLink.href = localCopy;
+      localLink.target = '_blank';
+      localLink.rel = 'noreferrer';
+      localLink.textContent = 'Open local experience ↗';
+
+      const sourceLink = document.createElement('a');
+      sourceLink.href = sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noreferrer';
+      sourceLink.textContent = 'View original source at commit ↗';
+      sourceLink.style.marginTop = '8px';
+      sourceLink.style.fontSize = '.78rem';
+      card.append(number, title, description, localLink, sourceLink);
+    } else {
+      const sourceLink = document.createElement('a');
+      sourceLink.href = sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noreferrer';
+      sourceLink.textContent = 'Open original source at commit ↗';
+      card.append(number, title, description, sourceLink);
+    }
     catalogResults.append(card);
   }
 
@@ -140,6 +158,7 @@ async function loadCatalog() {
     sourceFiles = manifests.flatMap((manifest) => manifest.items.map((item) => ({
       ...item,
       repo: manifest.repository,
+      source_commit: manifest.source_commit,
     })));
     catalogStatus.textContent = `Loaded ${sourceFiles.length.toLocaleString()} source files from ${index.source_count} repositories.`;
     renderCatalog(field.value);
