@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { join } from 'node:path';
+import { basename, extname, join } from 'node:path';
 
 const OUTPUT_DIR = fileURLToPath(new URL('../public/atlas/', import.meta.url));
 const GENERATED_FILES = new Set([
@@ -8,6 +8,18 @@ const GENERATED_FILES = new Set([
   'public/atlas/catalog-ui.json',
   'public/atlas/catalog-index.json',
 ]);
+
+const BLOCKED_PATH = /(^|\\/)(private|secrets?|credentials?|personal-records?|raw-private|raw-conversations?|conversation-exports?|chat-exports?|medical-records?|health-records?|veterinary-records?|pet-records?|financial-records?|bank-records?|private-notes?|raw-notes?)(\\/|$)|(^|\\/)\\.env($|\\.)|(^|\\/)(node_modules|\\.git)(\\/|$)/i;
+const BLOCKED_EXTENSIONS = new Set([
+  '.pem', '.key', '.p12', '.pfx', '.sqlite', '.db', '.dump', '.bak', '.kdbx', '.gpg', '.age', '.asc',
+]);
+const BLOCKED_BASENAME = /^(id_rsa|id_ed25519|authorized_keys|credentials?|secrets?|tokens?|passwords?)(\\..*)?$/i;
+
+function isExcluded(path) {
+  return BLOCKED_PATH.test(path)
+    || BLOCKED_EXTENSIONS.has(extname(path).toLowerCase())
+    || BLOCKED_BASENAME.test(basename(path));
+}
 const REPOSITORIES = [
   { repo: 'MirrorCartographer/MirrorCartographer', label: 'Mirror Cartographer — main project', file: 'catalog-main.json' },
   { repo: 'MirrorCartographer/mirror-cartographer-ui', label: 'Mirror Cartographer — interactive UI', file: 'catalog-ui.json' },
@@ -33,9 +45,10 @@ async function buildManifest(source) {
   }
   const tree = await githubJson(`/repos/${source.repo}/git/trees/${treeSha}?recursive=1`);
   if (tree.truncated) throw new Error(`GitHub returned a truncated tree for ${source.repo}; refusing an incomplete catalog`);
-  const items = tree.tree
-    .filter((entry) => entry.type === 'blob')
+  const blobs = tree.tree.filter((entry) => entry.type === 'blob');
+  const items = blobs
     .filter((entry) => !(source.repo.endsWith('/mirror-cartographer-ui') && GENERATED_FILES.has(entry.path)))
+    .filter((entry) => !isExcluded(entry.path))
     .map((entry) => ({
       path: entry.path,
       ext: (entry.path.match(/\.([^.\/]+)$/)?.[1] || '').toLowerCase(),
@@ -57,6 +70,7 @@ async function buildManifest(source) {
     source_commit: commit.sha,
     tree_sha: treeSha,
     file_count: items.length,
+    excluded_file_count: blobs.length - items.length,
     generated_on: new Date().toISOString().slice(0, 10),
     items,
   };
