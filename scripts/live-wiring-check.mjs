@@ -114,6 +114,26 @@ if (!fs.existsSync(liveSpecPath)) {
 }
 
 const liveSpec = readText(liveSpecPath);
+const activeEntry = readText('src/main.jsx');
+const activeRoomWorld = readText('src/components/RoomWorldValid.jsx');
+const expectedSurfaceSelector = "page.locator('button.world-surface')";
+const legacyLiveSpec = readText('tests/live.spec.js');
+
+if (!activeEntry.includes("import RoomWorldValid from './components/RoomWorldValid'")) {
+  fail('src/main.jsx must keep RoomWorldValid as the active room-world entry point');
+}
+if (!activeRoomWorld.includes('className="world-surface"')) {
+  fail('RoomWorldValid must expose the wordless world-surface interaction control');
+}
+if (!liveSpec.includes(expectedSurfaceSelector)) {
+  fail(`${liveSpecPath} must target the active world-surface interaction control`);
+}
+if (!legacyLiveSpec.includes(expectedSurfaceSelector)) {
+  fail('tests/live.spec.js must target the active world-surface interaction control');
+}
+if (liveSpec.includes("page.locator('button.sky')") || legacyLiveSpec.includes("page.locator('button.sky')")) {
+  fail('live smoke tests must not use the retired button.sky selector');
+}
 
 if (/LIVE_SITE_URL/.test(liveSpec)) {
   fail(`${liveSpecPath} must not use stale LIVE_SITE_URL`);

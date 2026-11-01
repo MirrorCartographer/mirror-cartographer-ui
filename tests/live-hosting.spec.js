@@ -48,7 +48,7 @@ const expectWordlessBody = async (page) => {
 const expectAnimationFramesAtLeast = async (page, minimum) => {
   await expect.poll(() => animationFrames(page), {
     timeout: 3000,
-    message: `expected deployed wordless sky to render at least ${minimum} animation frames`,
+    message: `expected deployed room surface to render at least ${minimum} animation frames`,
   }).toBeGreaterThanOrEqual(minimum);
 };
 
@@ -92,16 +92,16 @@ test.describe('Mirror Cartographer live hosting smoke', () => {
     const identity = await expectResolvedDeploymentIdentity(page);
     expect(identity.provider).toBe('github-pages');
 
-    const sky = page.locator('button.sky');
+    const surface = page.locator('button.world-surface');
     const canvas = page.locator('canvas');
-    await expect(sky).toBeVisible();
+    await expect(surface).toBeVisible();
     await expect(canvas).toBeVisible();
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, 8);
     expect(await audioContextsCreated(page)).toBe(0);
 
     const framesBeforeTap = await animationFrames(page);
-    await sky.tap({ position: { x: 195, y: 422 } });
+    await surface.tap({ position: { x: 195, y: 422 } });
     await page.waitForTimeout(700);
 
     await expect(canvas).toBeVisible();

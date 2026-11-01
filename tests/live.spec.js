@@ -10,15 +10,15 @@ test.describe('Mirror Cartographer live phone-first smoke', () => {
 
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const sky = page.locator('button.sky');
+    const surface = page.locator('button.world-surface');
     const canvas = page.locator('canvas');
-    await expect(sky).toBeVisible();
+    await expect(surface).toBeVisible();
     await expect(canvas).toBeVisible();
 
     const visibleText = await page.locator('body').innerText();
     expect(visibleText.trim()).toBe('');
 
-    await sky.tap({ position: { x: 195, y: 422 } });
+    await surface.tap({ position: { x: 195, y: 422 } });
     await page.waitForTimeout(700);
 
     await expect(canvas).toBeVisible();

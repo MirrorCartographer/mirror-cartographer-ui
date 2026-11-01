@@ -1,6 +1,6 @@
 # Mirror Cartographer — Interactive Application
 
-> **[Open the free public application](https://mirrorcartographer.github.io/mirror-cartographer-ui/)** · [Open the Living Atlas hub](https://mirrorcartographer.github.io/MirrorCartographer/) · [Open The Between](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Core repository](https://github.com/MirrorCartographer/MirrorCartographer) · [Continue in ChatGPT](https://chatgpt.com/)
+> **[GitHub Pages application target — activation pending](https://mirrorcartographer.github.io/mirror-cartographer-ui/)** · [Open the Living Atlas hub](https://mirrorcartographer.github.io/MirrorCartographer/) · [Open The Between](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Core repository](https://github.com/MirrorCartographer/MirrorCartographer) · [Continue in ChatGPT](https://chatgpt.com/)
 
 This repository contains the interactive application and creative interface experiments. The core research, architecture, evidence, and public project catalog live in [MirrorCartographer/MirrorCartographer](https://github.com/MirrorCartographer/MirrorCartographer).
 
@@ -12,7 +12,7 @@ The application is published as a static Vite build through GitHub Pages. No Clo
 - Living Atlas: https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/
 - Research instrument: https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/
 
-If Pages has not been enabled for this repository, open [this repository's Pages settings](https://github.com/MirrorCartographer/mirror-cartographer-ui/settings/pages) and choose **Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. The deployment is not considered live until the Actions run succeeds and the URLs are checked.
+If Pages has not been enabled for this repository, open [this repository's Pages settings](https://github.com/MirrorCartographer/mirror-cartographer-ui/settings/pages) and choose **Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. As of 2026-11-01, repository metadata reports Pages is not enabled: the latest build and artifact upload passed, but `configure-pages` failed because no Pages site exists yet. The intended URLs are not considered live until the Actions deploy job succeeds and the routes are checked. See [the deployment runbook](operations/atlas/DEPLOYMENT.md).
 
 ## Local development
 
