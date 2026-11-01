@@ -104,6 +104,7 @@ If a GitHub Pages route fails:
 2. If the build job fails, inspect the failing build step and fix that source or dependency issue first.
 3. If the build succeeds but `configure-pages` fails, the repository owner must open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions** once.
 4. If `deploy-pages` fails after configuration, inspect the deployment job and environment permissions; do not switch providers.
+   - Observed on 2026-11-01: `configure-pages` returned `Get Pages site failed: Not Found` followed by `Create Pages site failed: Resource not accessible by integration`. The build and route artifact had already passed; this is the one-time repository Pages activation boundary, not an application-code failure.
 5. After a successful deploy, open the root, `/atlas/`, and `/research-atlas/` routes. Verify local world links, console errors, and phone layout.
 6. If a route is blank despite a successful deploy, inspect its built HTML, relative asset paths, browser console, and local storage before reverting code.
 
