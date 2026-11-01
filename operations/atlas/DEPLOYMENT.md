@@ -13,7 +13,7 @@ These are the intended public URLs. A URL is not considered live until the GitHu
 ## Route contract
 
 - `/` — wordless Room-World, mounted by `src/main.jsx` through `src/components/RoomWorldValid.jsx`. The interactive canvas control is `button.world-surface`; a user gesture changes the room field and may start locally generated sound.
-- `/atlas/` — navigable Living Atlas in `public/atlas/index.html`, with six local world routes, experience/art/systems/archive sections, repository catalog, and a doorway to The Between.
+- `/atlas/` — navigable Living Atlas in `public/atlas/index.html`, with six local world routes, experience/art/systems/archive sections, repository catalog, and a doorway to The Between. The Ten Experiments collection links to the ten original static routes published by the core repository at `/experiments/001-observatory/` through `/experiments/010-composer/`.
 - `/research-atlas/` — The Between relationship instrument, sourced from `research-atlas/index.html` and mirrored to `public/research-atlas/index.html`.
 
 The static routes do not require a backend or API key. The Pages build must emit `dist/index.html`, `dist/atlas/index.html`, `dist/research-atlas/index.html`, and the immutable deployment-identity manifest.
@@ -22,7 +22,10 @@ The static routes do not require a backend or API key. The Pages build must emit
 
 - `npm run build:pages` builds the static Vite application with the `/mirror-cartographer-ui/` project path.
 - `.github/workflows/publish-github-pages.yml` builds the three routes and deployment identity, uploads the Pages artifact, then deploys it.
-- `.github/workflows/pages-preview.yml` validates the static Atlas HTML, catalog manifests, and local source catalog.
+- `scripts/generate-atlas-catalog.mjs` regenerates both repository manifests from current Git trees at build time. Private/credential-like paths and key-store file types are excluded; each manifest records its source commit and tree SHA.
+- `scripts/validate-atlas-catalog.mjs` rejects excluded paths, duplicate entries, stale provenance, and mismatched counts.
+- `scripts/validate-atlas-routes.mjs` resolves local HTML/CSS references, checks the six local mirror targets and ten core experiment routes, and rejects retired Vercel/Netlify/Pages.dev links.
+- `.github/workflows/pages-preview.yml` runs the catalog generator and validators before its HTML/JavaScript checks.
 - `.github/workflows/verify-live-atlas.yml` checks the deployed Atlas, six local worlds, The Between, health probe, and catalog manifests.
 - `npm run test:remote-gate` checks the approved public URL and runs the live Room-World browser test after deployment.
 
