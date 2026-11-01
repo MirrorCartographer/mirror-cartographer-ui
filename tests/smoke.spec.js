@@ -61,11 +61,26 @@ const expectCanvasHasPixels = async (canvas) => {
   const sample = await canvas.evaluate((node) => {
     const ctx = node.getContext('2d');
     if (!ctx || node.width < 1 || node.height < 1) return null;
-    const { data } = ctx.getImageData(Math.floor(node.width / 2), Math.floor(node.height / 2), 1, 1);
-    return Array.from(data);
+    const positions = [
+      [0.08, 0.08], [0.5, 0.08], [0.92, 0.08],
+      [0.08, 0.5], [0.5, 0.5], [0.92, 0.5],
+      [0.08, 0.92], [0.5, 0.92], [0.92, 0.92],
+    ];
+    const pixels = positions.map(([x, y]) => {
+      const pixelX = Math.min(node.width - 1, Math.floor(node.width * x));
+      const pixelY = Math.min(node.height - 1, Math.floor(node.height * y));
+      return Array.from(ctx.getImageData(pixelX, pixelY, 1, 1).data);
+    });
+    return { width: node.width, height: node.height, pixels };
   });
   expect(sample).not.toBeNull();
-  expect(sample.some((channel) => channel > 0)).toBe(true);
+  const painted = sample.pixels.filter(([red, green, blue, alpha]) => (
+    alpha > 0 && (red > 0 || green > 0 || blue > 0)
+  ));
+  expect(
+    painted.length,
+    `expected the canvas to paint at least three sampled regions of ${sample.width}x${sample.height}; received ${JSON.stringify(sample.pixels)}`,
+  ).toBeGreaterThanOrEqual(3);
 };
 
 test.describe('Mirror Cartographer phone-first smoke', () => {
