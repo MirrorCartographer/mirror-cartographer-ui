@@ -2,8 +2,9 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { Script } from 'node:vm';
 
-const atlasRoot = resolve('public/atlas');
-const roomsRoot = join(atlasRoot, 'rooms');
+const atlasRoot = resolve('public');
+const atlasDir = join(atlasRoot, 'atlas');
+const roomsRoot = join(atlasDir, 'rooms');
 const experiments = [
   '001-observatory','002-machine-garden','003-echo-cathedral','004-carnival-of-thought',
   '005-ocean','006-living-blueprint','007-dream-library','008-signal-forest',
@@ -18,7 +19,7 @@ const required = [
   'catalog-index.json','catalog-main.json','catalog-ui.json',
 ];
 for (const path of required) {
-  if (!existsSync(join(atlasRoot, path))) throw new Error('Missing room route or dependency: public/atlas/' + path);
+  if (!existsSync(join(atlasDir, path))) throw new Error('Missing room route or dependency: public/atlas/' + path);
 }
 function walk(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -47,7 +48,7 @@ function resolveLocal(file, raw) {
   if (!found) throw new Error('Broken local reference: ' + relative(atlasRoot, file) + ' -> ' + raw);
   return found;
 }
-const htmlFiles = [join(atlasRoot, 'index.html'), join(atlasRoot, 'archive.html'), ...walk(roomsRoot).filter((path) => extname(path).toLowerCase() === '.html')];
+const htmlFiles = [join(atlasDir, 'index.html'), join(atlasDir, 'archive.html'), ...walk(roomsRoot).filter((path) => extname(path).toLowerCase() === '.html')];
 let checkedReferences = 0;
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
@@ -67,7 +68,7 @@ for (const file of htmlFiles) {
 for (const file of walk(roomsRoot).filter((path) => extname(path) === '.js')) {
   new Script(readFileSync(file, 'utf8'), { filename: relative(atlasRoot, file) });
 }
-const home = readFileSync(join(atlasRoot, 'index.html'), 'utf8');
+const home = readFileSync(join(atlasDir, 'index.html'), 'utf8');
 for (const id of ['sound-toggle','surprise','rain','bloom','erase','intensity','still','search','category']) {
   if (!home.includes('id="' + id + '"')) throw new Error('Missing home interaction: ' + id);
 }
