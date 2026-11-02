@@ -169,6 +169,22 @@ test.describe('Playable Atlas rooms', () => {
       const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
       expect(response?.ok(), route + ' should return a successful response').toBeTruthy();
       await expect(page.locator('body')).not.toBeEmpty();
+      const internalLinks = await page.locator('a[href]').evaluateAll(nodes => nodes.map(node => ({
+        href: node.href,
+        raw: node.getAttribute('href'),
+        label: (node.textContent || '').trim().slice(0, 60),
+      })));
+      for (const link of internalLinks) {
+        const target = new URL(link.href);
+        if (target.origin !== new URL(page.url()).origin) continue;
+        if (target.hash && target.pathname === new URL(page.url()).pathname) {
+          const exists = await page.evaluate(hash => Boolean(document.getElementById(decodeURIComponent(hash.slice(1)))), target.hash);
+          expect(exists, route + ' anchor ' + link.raw + ' should have a destination').toBeTruthy();
+          continue;
+        }
+        const linkedResponse = await page.request.get(target.href);
+        expect(linkedResponse.ok(), route + ' link ' + link.raw + ' should resolve').toBeTruthy();
+      }
       const buttons = page.locator('button:visible:not([disabled])');
       const count = await buttons.count();
       for (let i = 0; i < count; i++) {
