@@ -4,9 +4,9 @@ Version: 0.1
 Status: Foundational grammar / build contract
 Purpose: preserve understanding, not merely content.
 
-Mirror Cartographer is a grammar for mapping experience across symbolic, somatic, cognitive, practical, and evidentiary layers. Its central rule is: meaning is allowed; accuracy is required. A symbol may be useful without being proven. A feeling may be real without being literal. A body signal may be important without being an oracle. A pattern may be worth tracking without becoming a command.
+Mirror Cartographer is a grammar for mapping experience across symbolic, somatic, cognitive, practical, and evidentiary layers. Its central rule is: meaning is allowed; accuracy is required. A symbol may be useful without being proven. A feeling may be real without being literal. A body signal may be important without being an oracle. A pattern may be worth tracking without becoming a command. Poetic justice means giving the overlooked a fair hearing—not granting it automatic truth, but refusing to discard it before it can be understood.
 
-This grammar exists because the project drifted from a reflection tool into a continuity system. The durable object is not a chat, a summary, or a single artifact. The durable object is the relationship graph: what connects to what, how it changes, what evidence supports it, and what action is safe.
+This grammar exists because the project grew from a symbolic reflection tool into a continuity system without losing the original need: preserve what an experience meant, how that meaning changed, and what remains unresolved. The durable object is the relationship graph: what connects to what, how it changes, what evidence supports it, and what action is safe.
 
 ## 1. Primitive units
 
