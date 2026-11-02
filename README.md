@@ -14,6 +14,8 @@ The core repository, [MirrorCartographer](https://github.com/MirrorCartographer/
 
 **[Read LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md).** An offline literary and sensory score through Static Carnival, Ocean Terminal, Afterimage Orchard, Signal Funeral, and the door made of thunder. No website or interaction is required.
 
+**[Read The Body Is the First Archive](THE_BODY_IS_THE_FIRST_ARCHIVE.md).** The project's embodied research charter: a testable way to investigate how designed encounters affect attention, language, behavior, and bodily signals—while keeping the human being the storyteller.
+
 **[Follow the Obsession Map](OBSESSION_MAP.md).** It connects the existing rooms, language experiments, creative pieces, and continuity ideas into a set of trails.
 
 **[Open the Cabinet of Real Things](CABINET_OF_REAL_THINGS.md).** See the creative pieces, research instruments, and production plans that already have a shape—and the difference between a plan and a finished experience.
