@@ -141,6 +141,10 @@ It opens because she has finally seen what it is made of.
 
 On the other side there is no finished answer. There is a landscape, and enough room to begin.
 
+## A longer passage: LYR — The Unfinished Door
+
+If you want to follow these symbols as one continuous experience, enter [LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md). It is an offline score in eight movements: a room before language, a carnival of failed explanations, an ocean terminal, an orchard of afterimages, a funeral for inadequate explanations, a faultline, and a door made of thunder. It can be read silently, aloud, or printed. Nothing needs to load.
+
 ## Leave something here
 
 You do not owe this house a confession. You can keep your symbols private. You can make something beautiful without explaining it. You can stop at the color, the sound, the shape. You can reject every word offered and invent one that fits better.
