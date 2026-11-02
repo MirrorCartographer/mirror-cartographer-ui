@@ -1,46 +1,53 @@
-# Mirror Cartographer — The House of Mouths
+# Mirror Cartographer
+### The House of Mouths
 
-> **A word is a room. A question is a door. A contradiction may be a compass.**
+> A word is a room.  
+> A question is a door.  
+> What is missing may matter most.
 
-This repository contains the encounter side of Mirror Cartographer: interactive experiments, symbolic language, creative interfaces, prototypes, and small worlds for approaching a question from more than one angle.
+**Enter:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
 
-The core repository, [MirrorCartographer](https://github.com/MirrorCartographer/MirrorCartographer), holds the research method, architecture, evidence, and systems work. This repository holds the places where those ideas can be explored through interaction, tone, form, and play.
+## What is this place?
 
-## Start with the field guide
+A question enters. It changes shape.
 
-**[Read The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md).** It maps the main experiences, the syntax field, the coined vocabulary, and a way to explore without treating every file as a chore.
+Mirror Cartographer is an experimental world for finding patterns, testing interpretations, making things, and noticing what a neat answer leaves out.
 
-**[Enter the Field Guide to the Living Language](FIELD_GUIDE_TO_THE_LIVING_LANGUAGE.md).** Begin with sensation, give it a temporary name, let it meet something unexpected, and follow the new possibility.
+The encounter lives here: rooms, instruments, strange language, visual experiments, and paths between them.
 
-**[Read LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md).** An offline literary and sensory score through Static Carnival, Ocean Terminal, Afterimage Orchard, Signal Funeral, and the door made of thunder. No website or interaction is required.
+The research and systems work lives in the [other repository](https://github.com/MirrorCartographer/MirrorCartographer).
 
-**[Meet the Self Cartographer](public/self/index.html).** Build a private, local-first map across body, attention, environment, relationships, values, and action.\n\n**[Read The Body Is the First Archive](THE_BODY_IS_THE_FIRST_ARCHIVE.md).** The project's embodied research charter: a testable way to investigate how designed encounters affect attention, language, behavior, and bodily signals—while keeping the human being the storyteller.
+## Find a door
 
-**[Follow the Obsession Map](OBSESSION_MAP.md).** It connects the existing rooms, language experiments, creative pieces, and continuity ideas into a set of trails.
+- **[The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md)** — the rooms, their rules, and how to wander.
+- **[Field Guide to the Living Language](FIELD_GUIDE_TO_THE_LIVING_LANGUAGE.md)** — give a sensation a name; see what the name makes possible.
+- **[LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md)** — an offline journey through five strange territories.
+- **[Self Cartographer](public/self/index.html)** — map body, attention, surroundings, relationships, values, and action. Your map stays local.
+- **[The Body Is the First Archive](THE_BODY_IS_THE_FIRST_ARCHIVE.md)** — investigate what an encounter changes, without taking authorship away from the person.
+- **[Obsession Map](OBSESSION_MAP.md)** — follow the threads.
+- **[Cabinet of Real Things](CABINET_OF_REAL_THINGS.md)** — what exists, what is in progress, and what is still only a promise.
 
-**[Open the Cabinet of Real Things](CABINET_OF_REAL_THINGS.md).** See the creative pieces, research instruments, and production plans that already have a shape—and the difference between a plan and a finished experience.
+## The instruments
 
-## The three main encounters
+| Door | Try this |
+|---|---|
+| **The House** | Enter a sensory-first encounter. |
+| **Living Atlas** | Wander between worlds, works, and archive paths. |
+| **Research Atlas** | Trace relationships between claims, evidence, and open questions. |
+| **Self Cartographer** | Make a private map of an unfolding state. |
+| **Image Organism** | Grow, disturb, and recombine procedural specimens. |
 
-| Experience | What it offers | Source |
-|---|---|---|
-| **Room-World** | A wordless, sensory-first interface experiment | `src/main.jsx`, `src/components/RoomWorldValid.jsx` |
-| **Living Atlas** | A navigable set of worlds, creative work, systems, and archive paths | `public/atlas/index.html` |
-| **The Between** | A relationship instrument for changing lenses and traversing connections | `research-atlas/index.html` |
+## Under the floorboards
 
-The active application is a Vite project. `src/components/App.jsx` is an earlier prototype, not the active React entry point. The research-atlas source and built public copy are intended to remain identical.
+- [Mind](mind/) — memory, continuity, questions, decisions, hypotheses, failures.
+- [Independent creative web](independent-creative-web/) — standalone works.
+- [Media](media/) — sound and image experiments.
+- [Research atlas](research-atlas/) — source-linked relationship instruments.
+- [Operations](operations/) — build and recovery notes.
+- [Tests](tests/) — checks against what the software actually does.
+- [Source autobiography](source-autobiography.html) — a crafted narrative, not an independent factual record.
 
-## Explore by territory
-
-- **[Mind](mind/)** — continuity, memory, hypotheses, questions, decisions, and failures.
-- **[Independent creative web](independent-creative-web/)** — standalone works with their own atmosphere.
-- **[Media](media/)** — sound and image experiments.
-- **[Research atlas](research-atlas/)** — a source-linked relationship instrument.
-- **[Operations](operations/)** — build, deployment, and recovery notes.
-- **[Tests](tests/)** — checks that distinguish intended behavior from actual behavior.
-- **[Source autobiography](source-autobiography.html)** — a creative artifact; read it as a crafted narrative, not an independent factual record.
-
-## Run locally
+## Run it
 
 ```bash
 npm ci
@@ -48,38 +55,27 @@ npm run catalog:build
 npm run dev
 ```
 
-For a production-style local preview:
+For a production-style preview:
 
 ```bash
-npm ci
-npm run catalog:build
 npm run build:pages
 npm run preview
 ```
 
-The hosted project base path is `/mirror-cartographer-ui/`. Use `npm run build:pages` for the GitHub Pages build. The catalog builder refreshes public repository manifests, applies privacy exclusions, checks source provenance, and validates local routes and assets.
+GitHub Pages uses the base path `/mirror-cartographer-ui/`. The catalog builder refreshes public repository manifests, applies privacy exclusions, checks provenance, and validates local routes and assets.
 
-## Hosting status — 2026-11-01
+## The rules of the mirror
 
-The intended public routes are:
-
-- Application: `/mirror-cartographer-ui/`
-- Atlas: `/mirror-cartographer-ui/atlas/`
-- The Between: `/mirror-cartographer-ui/research-atlas/`
-
-**Do not treat those URLs as live until the deployment succeeds and the routes have been checked.** The latest recorded build and artifact upload passed, but the Pages configuration step failed because a Pages site had not yet been enabled. The remaining action and recovery steps are in [the deployment runbook](operations/atlas/DEPLOYMENT.md). This repository does not require Vercel, Netlify, Cloudflare, a server, or a paid host for the intended static GitHub Pages deployment.
-
-## Integrity rules
-
-- Preserve the distinction between fact, interpretation, hypothesis, and symbolic reading.
-- A relationship drawn on a map is not proof of causation.
-- Do not claim medical or veterinary diagnosis or a cure that has not been established.
-- Keep raw private conversations, medical and veterinary records, financial details, credentials, and unreviewed personal material out of public commits.
-- Keep accessibility and clear interaction paths in the work. An interface that fails is a failure to repair, not a metaphor to excuse it.
-- Keep the art alive without letting the language obscure what the software actually does.
+- Fact is not interpretation. Interpretation is not proof.
+- A connection is not causation.
+- A hypothesis is not a finding.
+- No invented diagnosis. No promised cure.
+- Private conversations, health records, financial details, and credentials do not belong in public commits.
+- If an interface fails, repair it. Do not call the failure mysterious.
 
 ---
 
-**The House keeps the question in motion. The Observatory keeps the answer accountable.**
+**The House keeps the question moving.  
+The Observatory keeps the answer honest.**
 
-[Open the research world →](https://github.com/MirrorCartographer/MirrorCartographer)
+[Find the research behind the mirror →](https://github.com/MirrorCartographer/MirrorCartographer)
