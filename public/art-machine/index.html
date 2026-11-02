@@ -7,18 +7,18 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style></head><body><div class="shell">
 <nav class="top"><a class="brand" href="../atlas/">✳ Mirror Cartographer / Image Organism</a><a href="../atlas/">Return to the Living Atlas ↗</a></nav>
-<header class="hero"><div><div class="eyebrow">A procedural image instrument · local-first</div><h1>Make a thing<br>that <em>wasn't there.</em></h1><p>Not a filter. Not a prompt box. A visual organism: branching systems, orbital anatomy, botanical growth, broken symmetry and reflected structures. Change its conditions. Watch its form reorganize.</p></div><div class="eyebrow">01 / Generate · 02 / Disturb · 03 / Keep</div></header>
+<header class="hero"><div><div class="eyebrow">A living image instrument · local-first</div><h1>Give form<br>to what <em>wasn't seen.</em></h1><p>Not a filter. Not a prompt box. A visual organism: branching systems, orbital anatomy, botanical growth, broken symmetry and reflected structures. Change its conditions and watch what was hidden in the pattern take form. The image offers possibilities, not a verdict about what they mean.</p></div><div class="eyebrow">01 / Generate · 02 / Disturb · 03 / Keep</div></header>
 <main class="machine"><section class="stage"><canvas id="art" aria-label="Procedurally generated artwork"></canvas><div class="stamp" id="stamp">MC / ORGANISM 0017 · UNSTABLE SPECIMEN</div></section>
-<aside class="controls"><h2>Conditions of growth</h2>
+<aside class="controls"><h2>Conditions of becoming</h2>
 <div class="control"><label for="form">Organism <output id="formOut">Glassroot</output></label><select id="form"><option value="glassroot">Glassroot / greenhouse</option><option value="carnival">Static carnival</option><option value="anatomy">Invisible anatomy</option><option value="weather">Inner weather</option><option value="hybrid">Unclassified hybrid</option></select></div>
 <div class="control"><label for="density">Density <output id="densityOut">68</output></label><input id="density" type="range" min="12" max="100" value="68"></div>
 <div class="control"><label for="fracture">Fracture <output id="fractureOut">34</output></label><input id="fracture" type="range" min="0" max="100" value="34"></div>
 <div class="control"><label for="symmetry">Symmetry <output id="symmetryOut">52</output></label><input id="symmetry" type="range" min="0" max="100" value="52"></div>
 <div class="control"><label for="seed">Seed <output id="seedOut">0017</output></label><input id="seed" type="range" min="1" max="9999" value="17"></div>
-<div class="actions"><button class="primary" id="grow">Grow another specimen ↗</button><button id="disturb">Disturb</button><button id="download">Export PNG</button><button id="save">Keep recipe</button><button id="recall">Recall last</button></div>
+<div class="actions"><button class="primary" id="grow">Let another form emerge ↗</button><button id="disturb">Disturb</button><button id="download">Export PNG</button><button id="save">Keep recipe</button><button id="recall">Recall last</button></div>
 <div class="saved"><strong id="specimenName">Specimen 0017</strong><span id="status">No network. Your work stays in this browser.</span></div>
-<p class="note">The controls alter geometry, branching, color and interference. Export creates a PNG. Keeping a specimen stores its recipe locally; nothing is uploaded.</p>
-</aside></main><footer class="foot">Mirror Cartographer · An instrument for making structures visible, not assigning meaning to them.</footer></div>
+<p class="note">Change geometry, branching, color and interference; notice what persists and what transforms. Export creates a PNG. Keeping a specimen stores its recipe locally; nothing is uploaded.</p>
+</aside></main><footer class="foot">Mirror Cartographer · Making room for overlooked forms to become visible, without deciding their meaning for them.</footer></div>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),canvas=$('art'),ctx=canvas.getContext('2d');
