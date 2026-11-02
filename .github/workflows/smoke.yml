@@ -25,7 +25,7 @@ jobs:
         run: npx playwright install --only-shell chromium
 
       - name: Run local phone-first gate
-        run: npm run test:local-gate
+        run: npm run test:local-gate && npm run test:rooms
 
       - name: Run live GitHub Pages gate after manual dispatch
         if: github.event_name == 'workflow_dispatch'
