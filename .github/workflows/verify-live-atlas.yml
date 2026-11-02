@@ -147,7 +147,7 @@ jobs:
                   researchAtlasUrl: researchResponse.url,
                   researchAtlasMarkersVerified: researchRequired.length,
                   localWorldsVerified: worldChecks.length,
-        rootExperiencesVerified: rootChecks.length,
+                    rootExperiencesVerified: rootChecks.length,
                   catalogFilesVerified: indexedFiles,
                   catalogManifestsVerified: manifestChecks.length,
                   healthProbe: health.url,
