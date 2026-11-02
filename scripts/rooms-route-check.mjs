@@ -57,7 +57,6 @@ for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   const refs = [
     ...[...html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].map((match) => match[1]),
-    ...[...html.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)].map((match) => match[1]),
   ];
   for (const ref of refs) if (resolveLocal(file, ref)) checkedReferences += 1;
   const ids = [...html.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]);
