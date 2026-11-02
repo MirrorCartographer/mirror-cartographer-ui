@@ -2,7 +2,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { Script } from 'node:vm';
 
-const repoRoot = resolve('.');\nconst atlasRoot = resolve('public');
+const repoRoot = resolve('.');
+const atlasRoot = resolve('public');
 const atlasDir = join(atlasRoot, 'atlas');
 const roomsRoot = join(atlasDir, 'rooms');
 const experiments = [
