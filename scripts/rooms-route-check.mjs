@@ -30,8 +30,8 @@ function walk(directory) {
 }
 function resolveLocal(file, raw) {
   const value = raw.trim();
-  if (!value || value.startsWith('#') || /^(?:[a-z][a-z0-9+.-]*:|\\/\\/)/i.test(value)) return null;
-  const sourceRoute = relative(repoRoot, file).replace(/^public\\//, '').split(sep).join('/');
+  if (!value || value.startsWith('#') || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return null;
+  const sourceRoute = relative(repoRoot, file).replace(/^public\//, '').split(sep).join('/');
   const base = new URL(sourceRoute, 'https://rooms.invalid/');
   const resolved = new URL(value, base);
   if (resolved.origin !== 'https://rooms.invalid') return null;
