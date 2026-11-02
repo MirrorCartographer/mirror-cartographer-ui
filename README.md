@@ -11,6 +11,9 @@ The core repository, [MirrorCartographer](https://github.com/MirrorCartographer/
 **[Read The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md).** It maps the main experiences, the syntax field, the coined vocabulary, and a way to explore without treating every file as a chore.
 **[Follow the Obsession Map](OBSESSION_MAP.md).** It connects the existing rooms, language experiments, creative pieces, and continuity ideas into a set of trails.
 
+
+**[Open the Cabinet of Real Things](CABINET_OF_REAL_THINGS.md).** See the creative pieces, research instruments, and production plans that already have a shape—and the difference between a plan and a finished experience.
+
 ## The three main encounters
 
 | Experience | What it offers | Source |
