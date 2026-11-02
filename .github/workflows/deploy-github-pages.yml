@@ -6,6 +6,7 @@ on:
     paths:
       - 'public/atlas/**'
       - 'public/research-atlas/**'
+      - 'public/self/**'
       - 'research-atlas/**'
       - '.github/workflows/deploy-github-pages.yml'
   pull_request:
@@ -44,6 +45,7 @@ jobs:
             'id="archive"',
             'The Between',
             'research-atlas/',
+            'self/',
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing Living Atlas features: ' + missing.join(', '));
@@ -66,7 +68,10 @@ jobs:
           }
           const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
           scripts.forEach((script, index) => new Script(script, { filename: 'living-atlas-inline-' + index }));
-          console.log('PASS: Living Atlas navigation and inline JavaScript syntax are valid.');
+          if (!html.includes('href="../self/"') || !existsSync('public/self/index.html')) {
+            throw new Error('Self Cartographer route must resolve to the published self instrument.');
+          }
+          console.log('PASS: Living Atlas navigation, Self Cartographer route, and inline JavaScript syntax are valid.');
           NODE
 
       - name: Validate interactive research atlas
