@@ -40,6 +40,7 @@
     "test:audio-evidence-export": "node scripts/audio-evidence-export-contract-check.mjs",
     "test:continuity-record": "node scripts/continuity-record-validator.test.mjs",
     "test:smoke": "playwright test tests/smoke.spec.js --reporter=line",
+    "test:rooms": "node scripts/rooms-route-check.mjs && playwright test tests/rooms.spec.js --reporter=line",
     "test:live-wiring": "node scripts/live-wiring-check.mjs",
     "test:live": "playwright test --config=playwright.live.config.js --reporter=line",
     "test:preview-url": "node scripts/preview-url-check.mjs",

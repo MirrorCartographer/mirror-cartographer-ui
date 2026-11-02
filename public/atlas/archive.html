@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0a0d">
+<meta name="description" content="A living atlas of Mirror Cartographer: symbolic reflection, art, interactive rooms, research, and the relationships that emerge when overlooked things are given room to be seen.">
+<title>Mirror Cartographer — The Living Atlas</title>
+<style>
+:root{color-scheme:dark;--ink:#f2ecdf;--muted:#b8b0a4;--gold:#e5cb98;--green:#8eaa8b;--line:#ffffff20;--panel:#171619;--bg:#0b0a0d;--plum:#2b202d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 78% 0%,#30253a 0,transparent 38rem),radial-gradient(ellipse at 4% 32%,#17251d 0,transparent 34rem),var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:4px}a:hover{color:#fff}button,input{font:inherit}.wrap{width:min(1160px,calc(100% - 36px));margin:auto}
+header{padding:20px 0;border-bottom:1px solid var(--line);position:relative;z-index:2;background:#0b0a0dcc;backdrop-filter:blur(14px)}.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{font-size:.83rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-decoration:none}.navlinks{display:flex;gap:18px;flex-wrap:wrap;font-size:.88rem}.navlinks a{color:var(--muted);text-decoration:none}
+.hero{padding:clamp(64px,11vw,130px) 0 70px;position:relative;overflow:hidden}.eyebrow{text-transform:uppercase;letter-spacing:.23em;font-size:.72rem;color:var(--green);font-weight:700}.hero h1{font:500 clamp(3.1rem,8vw,7.3rem)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.055em;max-width:900px;margin:22px 0}.hero h1 em{color:var(--gold);font-weight:400}.lead{max-width:690px;color:#d0c8bc;font-size:clamp(1.05rem,2vw,1.25rem)}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border:1px solid var(--gold);border-radius:3px;color:var(--bg);background:var(--gold);text-decoration:none;font-weight:700;font-size:.9rem}.btn.secondary{color:var(--ink);background:transparent;border-color:var(--line)}
+.orbit{position:absolute;right:-50px;top:72px;width:min(36vw,360px);aspect-ratio:1;border:1px solid #e5cb9850;border-radius:50%;pointer-events:none;box-shadow:0 0 0 35px #e5cb9809,0 0 0 72px #e5cb9806}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #8eaa8b55;border-radius:50%;inset:18% -12%;transform:rotate(-32deg)}.orbit:after{inset:-10% 25%;transform:rotate(32deg)}.orbit i{position:absolute;width:10px;height:10px;background:var(--gold);box-shadow:0 0 24px var(--gold);border-radius:50%;left:15%;top:26%}
+section{padding:58px 0;border-top:1px solid var(--line)}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:24px;flex-wrap:wrap}.section-head h2{font:500 clamp(2rem,4vw,3.3rem)/1.05 Georgia,serif;letter-spacing:-.035em;margin:8px 0}.section-head p{max-width:480px;color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{grid-column:span 4;border:1px solid var(--line);background:linear-gradient(145deg,#ffffff08,transparent 70%),var(--panel);padding:23px;min-height:205px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-3px);border-color:#e5cb9866}.card.wide{grid-column:span 6}.card.full{grid-column:span 12;min-height:auto}.number{font-size:.72rem;letter-spacing:.16em;color:var(--green)}.card h3{font:500 1.55rem/1.15 Georgia,serif;margin:16px 0 8px}.card p{color:var(--muted);margin:0 0 20px;font-size:.94rem}.card a{margin-top:auto;font-size:.9rem}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.tag{border:1px solid var(--line);border-radius:99px;padding:4px 9px;color:var(--muted);font-size:.75rem}
+.searchbar{display:flex;gap:10px;align-items:center;max-width:620px;margin:0 0 22px}.searchbar input{width:100%;padding:12px 14px;color:var(--ink);background:#ffffff08;border:1px solid var(--line);border-radius:3px;outline-offset:3px}.searchbar input:focus{border-color:var(--gold)}.quiet{color:var(--muted);font-size:.9rem}
+footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}.footrow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:760px){.orbit{opacity:.32;right:-130px;top:35px;width:280px}.card{grid-column:span 6}.card.wide{grid-column:span 12}.hero{padding-top:72px}}@media(max-width:500px){.wrap{width:min(100% - 26px,1160px)}.card{grid-column:span 12;min-height:170px}.navlinks{gap:12px}.navlinks a{font-size:.8rem}.hero h1{font-size:3.5rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Living Atlas — Static Carnival */
+body{background:#09090c}
+.hero{isolation:isolate}.hero:after{content:"";position:absolute;z-index:-1;right:-3%;top:0;width:min(58vw,680px);height:115%;background:url('../art/atlas-carnival.svg') center/contain no-repeat;opacity:.68;mix-blend-mode:screen;pointer-events:none}
+.orbit{display:none}.card{position:relative;overflow:hidden;background:linear-gradient(145deg,#241923e8,#111410e8);border-color:#c6a47b55}.card:before{content:"";position:absolute;inset:0;background:url('../art/atlas-carnival.svg') center/cover;opacity:.11;mix-blend-mode:screen;pointer-events:none}.card>*{position:relative}
+.card:hover{border-color:#d7b77c99;box-shadow:0 18px 50px #0008}.tag{border-radius:2px;border-color:#c6a47b55}
+
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="#top">✳ Mirror Cartographer</a><nav class="navlinks" aria-label="Main navigation"><a href="#worlds">Enter a world</a><a href="#experience">Experience</a><a href="#art">Art & play</a><a href="#systems">Systems</a><a href="#archive">Archive</a><a href="./rooms/">The rooms</a></nav></div></header>
+<main id="top">
+<div class="wrap hero"><div class="orbit" aria-hidden="true"><i></i></div><div class="eyebrow">A living atlas · Work by Charity Alessandra Sturgell</div><h1>Meaning has<br>a <em>shape.</em></h1><p class="lead">A connected home for the worlds, images, experiments, games, research, and tools we have been making. Not a pile of links: a map through the work, with the original source kept close.</p><div class="hero-actions"><a class="btn" href="./rooms/">Enter the rooms ↗</a><a class="btn secondary" href="#worlds">Browse the atlas ↓</a><a class="btn secondary" href="#archive">Explore the archive ↘</a></div><p class="quiet" style="margin-top:20px;max-width:620px">This is an index and doorway. Individual projects remain in their original locations; links open the source or hosted experience rather than pretending every artifact has already been merged into one application.</p></div>
+<section id="worlds"><div class="wrap"><div class="section-head"><div><div class="eyebrow">00 / Step inside</div><h2>Worlds you can enter</h2></div><p>The six entry pages are served directly by this Atlas. The Ten Experiments collection opens its ten interactive routes on the companion core GitHub Pages site.</p></div><div class="grid">
+<article class="card wide" data-search="night shift orchard interactive sound visual generative garden night shift"><span class="number">WORLD · 01 / LOCAL MIRROR</span><h3>Night Shift Orchard</h3><p>A nocturnal orchard that grows through motion and generative light. A small world to inhabit, not just inspect.</p><a href="./worlds/night-shift-orchard.html">Enter the orchard ↗</a></article>
+<article class="card wide" data-search="afterimage orchard memory plant afterimage light interactive generative"><span class="number">WORLD · 02 / LOCAL MIRROR</span><h3>Afterimage Orchard</h3><p>An orchard of traces: a quiet interactive study in memory, plant forms, and what remains after an image is gone.</p><a href="./worlds/afterimage-orchard.html">Enter the orchard ↗</a></article>
+<article class="card" data-search="constellation graph stars connected ideas map"><span class="number">WORLD · 03 / LOCAL MIRROR</span><h3>Constellation</h3><p>A navigable field of points and relationships.</p><a href="./worlds/constellation.html">Enter the constellation ↗</a></article>
+<article class="card" data-search="the world foundation intelligence colorful abstract interactive spatial world"><span class="number">WORLD · 04 / LOCAL MIRROR</span><h3>The World</h3><p>A spatial, generative world built from color, movement, and symbolic structure.</p><a href="./worlds/the-world.html">Enter the world ↗</a></article>
+<article class="card" data-search="research field evidence models research uncertainty interactive green"><span class="number">WORLD · 05 / LOCAL MIRROR</span><h3>Research Field</h3><p>A visual field for exploring evidence, models, and the boundary between a theory and what supports it.</p><a href="./worlds/research-field.html">Enter the field ↗</a></article>
+<article class="card" data-search="experiments observatory machine garden echo cathedral carnival of thought ocean blueprint dream library signal forest impossible museum composer"><span class="number">COLLECTION · 06 / LOCAL MIRROR</span><h3>Ten Experiments</h3><p>A directory of experiments: observatory, machine garden, echo cathedral, carnival of thought, ocean, living blueprint, dream library, signal forest, impossible museum, and composer.</p><a href="./worlds/experiments.html">Open the collection ↗</a></article>
+</div><p class="quiet" style="margin-top:18px">Local mirror means the standalone HTML itself is served by this website. The original project remains in the source archive with provenance preserved.</p></div></section>
+<section id="experience"><div class="wrap"><div class="section-head"><div><div class="eyebrow">01 / Enter</div><h2>Experiences</h2></div><p>Enter the work instead of only reading about it. Follow a symbol, notice what changes, and let a connection become a question.</p></div><div class="grid">
+<article class="card wide" data-search="room world interactive experience movement light sound music composition phrase memory"><span class="number">EXPERIENCE · 01</span><h3>The Room-World</h3><p>A wordless audiovisual environment built around movement, light, sound, and the feeling of returning to a place that remembers.</p><a href="../" target="_blank" rel="noreferrer">Open the interactive experience ↗</a><p class="quiet">If the host is unavailable, use the source repository below.</p></article>
+<article class="card wide" data-search="self cartography understand yourself body attention environment relationships values actions pattern map"><span class="number">EXPERIENCE · 03</span><h3>The Self Cartographer</h3><p>Build a living map of body, attention, environment, relationships, values and action. No personality test; no fixed identity.</p><a href="../self/">Enter the self-mapping instrument ↗</a></article>\n<article class="card wide" data-search="mirror cartographer game rooms reflection symbolic emotional self mapping tool"><span class="number">EXPERIENCE · 02</span><h3>Mirror Cartographer</h3><p>The larger project: symbolic emotional mapping, reflection rooms, embodied meaning, and ways to give difficult-to-name experience a shape without forcing it into a verdict.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Open the UI repository ↗</a></article>
+</div></div></section>
+<section id="art"><div class="wrap"><div class="section-head"><div><div class="eyebrow">02 / Play & look</div><h2>Art, games & experiments</h2></div><p>Creative work is part of the method, not decoration around the software. Image, sound, metaphor, and play can reveal what a plain description leaves out.</p></div><div class="grid">
+<article class="card" data-search="art images visual work creative universe"><span class="number">ART · 01</span><h3>Art archive</h3><p>Start with the project’s art directory and follow each work to its original file and context.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/art" target="_blank" rel="noreferrer">Browse art source ↗</a></article>
+<article class="card" data-search="creative universe generative art writing sound symbolic worlds"><span class="number">ART · 02</span><h3>Creative Universe</h3><p>A growing constellation of creative work and its supporting materials.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/Creative_Universe" target="_blank" rel="noreferrer">Explore the universe ↗</a></article>
+<article class="card" data-search="experiments prototype visual interactive research"><span class="number">EXPERIMENTS · 03</span><h3>Experiments</h3><p>Prototypes and explorations: the places where ideas can remain strange long enough to become something new.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/experiments" target="_blank" rel="noreferrer">Browse experiments ↗</a></article>
+<article class="card" data-search="connections game puzzle"><span class="number">GAME · 04</span><h3>Connections</h3><p>A playable grouping game housed in the public project files.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/games/connections" target="_blank" rel="noreferrer">Open game files ↗</a></article>
+<article class="card" data-search="veteran mission game interactive public game"><span class="number">GAME · 05</span><h3>Veteran Mission</h3><p>A mission-based interactive experience in the veterans project.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/games/veteran-mission" target="_blank" rel="noreferrer">Open game files ↗</a></article>
+<article class="card" data-search="source autobiography language authorship creative process"><span class="number">TEXT · 06</span><h3>Source autobiography</h3><p>A source-level record of the creative and project history.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/source-autobiography.html" target="_blank" rel="noreferrer">Read the source artifact ↗</a></article>
+</div></div></section>
+<section id="systems"><div class="wrap"><div class="section-head"><div><div class="eyebrow">03 / Build & connect</div><h2>Systems with a purpose</h2></div><p>Research, infrastructure, and public-interest tools belong in the same atlas: different ways of making hidden relationships visible while keeping uncertainty in view.</p></div><div class="grid">
+<article class="card" data-search="veterans hub benefits housing health work education records legal mission map"><span class="number">PUBLIC SERVICE · 01</span><h3>Veterans Hub</h3><p>A navigable starting point for benefits, housing, health, education, work, records, and mission planning.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/veterans" target="_blank" rel="noreferrer">Explore the hub files ↗</a></article>
+<article class="card" data-search="architecture technical systems research evidence knowledge graph"><span class="number">RESEARCH · 02</span><h3>Architecture & research</h3><p>Explore the system maps, evidence, and technical foundations behind the work.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/architecture" target="_blank" rel="noreferrer">Browse architecture ↗</a></article>
+<article class="card" data-search="continuity agents tools memory systems github mind"><span class="number">TOOLS · 03</span><h3>Continuity & tools</h3><p>Infrastructure for connecting artifacts, preserving context, and making a growing body of work navigable.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Open the systems repository ↗</a></article>
+<article class="card" data-search="evidence research biology veteran access provenance interactive wordplay unknowns"><span class="number">RESEARCH · 04 / INTERACTIVE</span><h3>The Between</h3><p>Change the lens on a relationship. Trace a signal through context, response, record, interpretation, and outcome; reverse the question, follow a new edge, and see what evidence can—and cannot—carry.</p><a href="../research-atlas/" target="_blank" rel="noreferrer">Enter the research atlas ↗</a> <a href="https://github.com/MirrorCartographer/mirror-cartographer-ui/tree/main/research-atlas" target="_blank" rel="noreferrer">Inspect the source ↗</a></article>
+</div></div></section>
+<section id="archive"><div class="wrap"><div class="section-head"><div><div class="eyebrow">04 / Find your way</div><h2>The source archive</h2></div><p>Search the indexed source catalog across both project repositories. Each result preserves its original path and GitHub provenance.</p></div><label class="searchbar"><span aria-hidden="true">⌕</span><input id="filter" type="search" placeholder="Search art, games, research, veterans…" aria-label="Filter atlas cards"></label><p id="catalog-status" class="quiet" aria-live="polite">Loading the repository catalog…</p><div id="catalog-results" class="grid" aria-live="polite"></div><div id="empty" class="quiet" hidden>No matching entries. Try a broader term.</div><div class="grid" id="alllinks">
+<article class="card" data-search="all files repository source code documentation"><span class="number">SOURCE · A</span><h3>Main repository</h3><p>Full project tree, documentation, code, public pages, and source history.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
+<article class="card" data-search="frontend user interface audio visuals interactive source code"><span class="number">SOURCE · B</span><h3>Interactive UI repository</h3><p>Application source, media, public assets, deployment configuration, and tests.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
+<article class="card" data-search="public games websites html pages"><span class="number">SOURCE · C</span><h3>Published-page source</h3><p>Static public experiences and web pages in the main repository.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public" target="_blank" rel="noreferrer">Browse public files ↗</a></article>
+</div><p class="quiet" style="margin-top:22px">Archive rule: preserve provenance. Each card points back to its source; hosted links are identified as experiences, not proof that every source file is deployed.</p></div></section>
+</main>
+<section id="image-organism" class="wrap"><div class="section-head"><div><div class="eyebrow">A machine inside the atlas</div><h2>Make an image organism.</h2></div><p>Grow a visual specimen from branching systems, orbital anatomy, botanical forms and controlled fracture. Keep the recipe. Disturb it. Make another.</p></div><div class="card wide" style="grid-column:span 12;min-height:150px;background-image:url('../art/main-glasshouse.svg');background-size:cover;background-position:center"><span class="number">01 / PROCEDURAL ART INSTRUMENT</span><h3>The Image Organism</h3><p>Not a prompt box. A small machine for growing forms.</p><a href="../art-machine/">Enter the image machine ↗</a></div></section>
+<footer><div class="wrap footrow"><span>✳ Mirror Cartographer · The Living Atlas
+Poetic justice for what has not yet found its words.</span><span>Made from the work of Charity Alessandra Sturgell · <a href="https://github.com/MirrorCartographer">GitHub organization ↗</a></span></div></footer>
+<script>
+const field = document.querySelector('#filter');
+const empty = document.querySelector('#empty');
+const catalogStatus = document.querySelector('#catalog-status');
+const catalogResults = document.querySelector('#catalog-results');
+let sourceFiles = [];
+const displayLimit = 80;
+const localCopies = {
+  'MirrorCartographer/MirrorCartographer:independent-creative-web/night-shift-orchard/index.html': './worlds/night-shift-orchard.html',
+  'MirrorCartographer/MirrorCartographer:independent-web/afterimage-orchard/index.html': './worlds/afterimage-orchard.html',
+  'MirrorCartographer/MirrorCartographer:constellation/index.html': './worlds/constellation.html',
+  'MirrorCartographer/MirrorCartographer:public/world/index.html': './worlds/the-world.html',
+  'MirrorCartographer/MirrorCartographer:cloudflare-static/index.html': './worlds/research-field.html',
+  'MirrorCartographer/MirrorCartographer:public/experiments/index.html': './worlds/experiments.html'
+};
+
+function renderCatalog(query) {
+  const q = query.trim().toLowerCase();
+  let visibleStatic = 0;
+  const staticCards = [...document.querySelectorAll('#alllinks [data-search], #art [data-search], #experience [data-search], #systems [data-search]')];
+  for (const card of staticCards) {
+    const match = !q || (card.dataset.search + ' ' + card.innerText).toLowerCase().includes(q);
+    card.hidden = !match;
+    if (match) visibleStatic++;
+  }
+
+  catalogResults.replaceChildren();
+  if (!q) {
+    catalogStatus.textContent = sourceFiles.length
+      ? `Source catalog ready: ${sourceFiles.length.toLocaleString()} files indexed across both repositories. Search to explore file-level results.`
+      : 'Loading repository catalog…';
+    empty.hidden = true;
+    return;
+  }
+
+  const matches = sourceFiles.filter((item) =>
+    (item.path + ' ' + item.repo + ' ' + item.ext).toLowerCase().includes(q)
+  );
+  const shown = matches.slice(0, displayLimit);
+  for (const item of shown) {
+    const card = document.createElement('article');
+    card.className = 'card catalog-entry';
+    const parts = item.path.split('/');
+    const fileName = parts[parts.length - 1] || item.path;
+    const category = parts.length > 1 ? parts[0].replace(/[-_]/g, ' ') : 'Root file';
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = `${category.toUpperCase()} · ${item.ext ? item.ext.toUpperCase() : 'FILE'}`;
+    const title = document.createElement('h3');
+    title.textContent = fileName;
+    const description = document.createElement('p');
+    const size = Number.isFinite(item.bytes) ? `${(item.bytes / 1024).toFixed(1)} KB` : 'size unavailable';
+    description.textContent = `${item.repo} / ${item.path} · ${size} · blob ${item.sha.slice(0, 8)}`;
+    const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
+    const sourceUrl = 'https://github.com/' + item.repo + '/blob/' + item.source_commit + '/' + encodedPath;
+    const localCopy = localCopies[item.repo + ':' + item.path];
+    if (localCopy) {
+      const localLink = document.createElement('a');
+      localLink.href = localCopy;
+      localLink.target = '_blank';
+      localLink.rel = 'noreferrer';
+      localLink.textContent = 'Open local experience ↗';
+
+      const sourceLink = document.createElement('a');
+      sourceLink.href = sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noreferrer';
+      sourceLink.textContent = 'View original source at commit ↗';
+      sourceLink.style.marginTop = '8px';
+      sourceLink.style.fontSize = '.78rem';
+      card.append(number, title, description, localLink, sourceLink);
+    } else {
+      const sourceLink = document.createElement('a');
+      sourceLink.href = sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noreferrer';
+      sourceLink.textContent = 'Open original source at commit ↗';
+      card.append(number, title, description, sourceLink);
+    }
+    catalogResults.append(card);
+  }
+
+  catalogStatus.textContent = matches.length
+    ? `Found ${matches.length.toLocaleString()} source files; showing ${shown.length}. ${matches.length > displayLimit ? 'Refine your search to narrow the list.' : ''}`
+    : 'No source files matched that search.';
+  empty.hidden = matches.length + visibleStatic !== 0;
+}
+
+async function loadCatalog() {
+  try {
+    const response = await fetch('./catalog-index.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`catalog index returned HTTP ${response.status}`);
+    const index = await response.json();
+    const manifests = await Promise.all(index.sources.map(async (source) => {
+      const manifestResponse = await fetch(`./${source.file}`, { cache: 'no-store' });
+      if (!manifestResponse.ok) throw new Error(`${source.file} returned HTTP ${manifestResponse.status}`);
+      return manifestResponse.json();
+    }));
+    sourceFiles = manifests.flatMap((manifest) => manifest.items.map((item) => ({
+      ...item,
+      repo: manifest.repository,
+      source_commit: manifest.source_commit,
+    })));
+    catalogStatus.textContent = `Loaded ${sourceFiles.length.toLocaleString()} source files from ${index.source_count} repositories.`;
+    renderCatalog(field.value);
+  } catch (error) {
+    catalogStatus.textContent = 'The file-level catalog could not load. The source repositories remain available below.';
+    console.error('Living Atlas catalog load failed:', error);
+  }
+}
+
+field.addEventListener('input', () => renderCatalog(field.value));
+loadCatalog();
+</script>
+</body></html>

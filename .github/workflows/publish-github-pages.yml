@@ -37,6 +37,15 @@ jobs:
         run: |
           test -s dist/index.html
           test -s dist/atlas/index.html
+          test -s dist/atlas/archive.html
+          test -s dist/atlas/rooms/index.html
+          test -s dist/atlas/rooms/experiments/001-observatory/index.html
+          test -s dist/atlas/rooms/experiments/010-composer/index.html
+          test -s dist/atlas/rooms/music/index.html
+          test -s dist/atlas/rooms/mind/index.html
+          test -s dist/atlas/rooms/chatgpt/index.html
+          test -s dist/atlas/rooms/worlds/unreliable-observatory/index.html
+          test -s dist/atlas/catalog-index.json
           test -s dist/research-atlas/index.html
           test -s dist/self/index.html
           test -s dist/.well-known/mirror-cartographer-deployment.json

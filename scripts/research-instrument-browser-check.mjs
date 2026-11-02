@@ -21,7 +21,9 @@ try {
   await page.locator('[data-node="context"]').click();
   assert.match(await page.locator('#reading-kicker').innerText(), /Context/);
   assert.match(await page.locator('#reading-title').innerText(), /surrounded the observation/i);
-  assert.ok((await page.locator('#claim-kind').innerText()).includes('CL-VA-002 / source-checked'));
+  const claimKind = await page.locator('#claim-kind').innerText();
+  console.log('Context claim metadata:', JSON.stringify(claimKind));
+  assert.match(claimKind, /CL-VA-002\s*\/\s*source-checked/i);
   assert.equal(await page.getByRole('link', { name: /CL-VA-002 in claim register/ }).count(), 1);
 
   await page.getByRole('button', { name: 'Systems lens' }).click();
