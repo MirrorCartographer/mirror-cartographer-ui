@@ -38,37 +38,41 @@ jobs:
           const required = [
             '<!doctype html>',
             '<title>Mirror Cartographer',
-            'id="filter"',
-            'id="experience"',
-            'id="art"',
-            'id="systems"',
-            'id="archive"',
-            'The Between',
-            'research-atlas/',
-            'self/',
+            'The room',
+            'Choose a door.',
+            'Self Cartographer',
+            'The Music Room',
+            'id="sound-toggle"',
+            'id="intensity"',
+            'href="./archive.html"',
+            'href="./rooms/experiments/001-observatory/"',
+            'catalog-index.json',
           ];
           const missing = required.filter((token) => !html.includes(token));
           if (missing.length) throw new Error('Missing Living Atlas features: ' + missing.join(', '));
-          const roomWorldLink = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)]
-            .find(([, href, label]) => label.includes('Open the interactive experience'));
-          if (!roomWorldLink || roomWorldLink[1] !== '../' || !existsSync('index.html')) {
-            throw new Error('Room-World must link to the GitHub Pages app root using ../');
+          if (!existsSync('public/atlas/rooms/experiments/001-observatory/index.html')) {
+            throw new Error('The first playable room route must exist.');
           }
+          const archive = readFileSync('public/atlas/archive.html', 'utf8');
+          if (!archive.includes('id="filter"') || !archive.includes('The source archive')) {
+            throw new Error('The original Atlas archive must remain available.');
+          }
+          
           const forbiddenHostingUrl = /https?:\/\/[^"'<> ]*(?:vercel\.app|netlify\.app|pages\.dev|workers\.dev|cloudflare(?:\.com)?)/i;
           if (forbiddenHostingUrl.test(html)) {
             throw new Error('Living Atlas contains a link to a disallowed hosting provider; use free GitHub Pages.');
           }
-          const worldLinks = [...html.matchAll(/href="(\.\/worlds\/[^"]+)"/g)].map(([, href]) => href);
+          const worldLinks = [...html.matchAll(/href="(\.\/rooms\/worlds\/[^"]+)"/g)].map(([, href]) => href);
           const missingWorlds = worldLinks.filter((href) => !existsSync(resolve('public/atlas', href)));
           if (!worldLinks.length || missingWorlds.length) {
             throw new Error('Missing local Living Atlas world routes: ' + missingWorlds.join(', '));
           }
-          if (!html.includes('href="../research-atlas/"') || !existsSync('public/research-atlas/index.html')) {
+          if (!html.includes('research-atlas/') || !existsSync('public/research-atlas/index.html')) {
             throw new Error('The Between route must resolve to the published research-atlas page.');
           }
           const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map((match) => match[1]);
           scripts.forEach((script, index) => new Script(script, { filename: 'living-atlas-inline-' + index }));
-          if (!html.includes('href="../self/"') || !existsSync('public/self/index.html')) {
+          if (!html.includes('/self/') || !existsSync('public/self/index.html')) {
             throw new Error('Self Cartographer route must resolve to the published self instrument.');
           }
           console.log('PASS: Living Atlas navigation, Self Cartographer route, and inline JavaScript syntax are valid.');
