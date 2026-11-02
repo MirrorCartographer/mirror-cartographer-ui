@@ -1,183 +1,86 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0a0d">
-<meta name="description" content="A living atlas of Mirror Cartographer: symbolic reflection, art, interactive rooms, research, and the relationships that emerge when overlooked things are given room to be seen.">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0b"><meta name="description" content="A collection of rooms, instruments, sounds, and impossible places.">
 <title>Mirror Cartographer — The Living Atlas</title>
 <style>
-:root{color-scheme:dark;--ink:#f2ecdf;--muted:#b8b0a4;--gold:#e5cb98;--green:#8eaa8b;--line:#ffffff20;--panel:#171619;--bg:#0b0a0d;--plum:#2b202d}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 78% 0%,#30253a 0,transparent 38rem),radial-gradient(ellipse at 4% 32%,#17251d 0,transparent 34rem),var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:4px}a:hover{color:#fff}button,input{font:inherit}.wrap{width:min(1160px,calc(100% - 36px));margin:auto}
-header{padding:20px 0;border-bottom:1px solid var(--line);position:relative;z-index:2;background:#0b0a0dcc;backdrop-filter:blur(14px)}.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{font-size:.83rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-decoration:none}.navlinks{display:flex;gap:18px;flex-wrap:wrap;font-size:.88rem}.navlinks a{color:var(--muted);text-decoration:none}
-.hero{padding:clamp(64px,11vw,130px) 0 70px;position:relative;overflow:hidden}.eyebrow{text-transform:uppercase;letter-spacing:.23em;font-size:.72rem;color:var(--green);font-weight:700}.hero h1{font:500 clamp(3.1rem,8vw,7.3rem)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.055em;max-width:900px;margin:22px 0}.hero h1 em{color:var(--gold);font-weight:400}.lead{max-width:690px;color:#d0c8bc;font-size:clamp(1.05rem,2vw,1.25rem)}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border:1px solid var(--gold);border-radius:3px;color:var(--bg);background:var(--gold);text-decoration:none;font-weight:700;font-size:.9rem}.btn.secondary{color:var(--ink);background:transparent;border-color:var(--line)}
-.orbit{position:absolute;right:-50px;top:72px;width:min(36vw,360px);aspect-ratio:1;border:1px solid #e5cb9850;border-radius:50%;pointer-events:none;box-shadow:0 0 0 35px #e5cb9809,0 0 0 72px #e5cb9806}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #8eaa8b55;border-radius:50%;inset:18% -12%;transform:rotate(-32deg)}.orbit:after{inset:-10% 25%;transform:rotate(32deg)}.orbit i{position:absolute;width:10px;height:10px;background:var(--gold);box-shadow:0 0 24px var(--gold);border-radius:50%;left:15%;top:26%}
-section{padding:58px 0;border-top:1px solid var(--line)}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:24px;flex-wrap:wrap}.section-head h2{font:500 clamp(2rem,4vw,3.3rem)/1.05 Georgia,serif;letter-spacing:-.035em;margin:8px 0}.section-head p{max-width:480px;color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{grid-column:span 4;border:1px solid var(--line);background:linear-gradient(145deg,#ffffff08,transparent 70%),var(--panel);padding:23px;min-height:205px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-3px);border-color:#e5cb9866}.card.wide{grid-column:span 6}.card.full{grid-column:span 12;min-height:auto}.number{font-size:.72rem;letter-spacing:.16em;color:var(--green)}.card h3{font:500 1.55rem/1.15 Georgia,serif;margin:16px 0 8px}.card p{color:var(--muted);margin:0 0 20px;font-size:.94rem}.card a{margin-top:auto;font-size:.9rem}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.tag{border:1px solid var(--line);border-radius:99px;padding:4px 9px;color:var(--muted);font-size:.75rem}
-.searchbar{display:flex;gap:10px;align-items:center;max-width:620px;margin:0 0 22px}.searchbar input{width:100%;padding:12px 14px;color:var(--ink);background:#ffffff08;border:1px solid var(--line);border-radius:3px;outline-offset:3px}.searchbar input:focus{border-color:var(--gold)}.quiet{color:var(--muted);font-size:.9rem}
-footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}.footrow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-@media(max-width:760px){.orbit{opacity:.32;right:-130px;top:35px;width:280px}.card{grid-column:span 6}.card.wide{grid-column:span 12}.hero{padding-top:72px}}@media(max-width:500px){.wrap{width:min(100% - 26px,1160px)}.card{grid-column:span 12;min-height:170px}.navlinks{gap:12px}.navlinks a{font-size:.8rem}.hero h1{font-size:3.5rem}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
-
-/* Living Atlas — Static Carnival */
-body{background:#09090c}
-.hero{isolation:isolate}.hero:after{content:"";position:absolute;z-index:-1;right:-3%;top:0;width:min(58vw,680px);height:115%;background:url('../art/atlas-carnival.svg') center/contain no-repeat;opacity:.68;mix-blend-mode:screen;pointer-events:none}
-.orbit{display:none}.card{position:relative;overflow:hidden;background:linear-gradient(145deg,#241923e8,#111410e8);border-color:#c6a47b55}.card:before{content:"";position:absolute;inset:0;background:url('../art/atlas-carnival.svg') center/cover;opacity:.11;mix-blend-mode:screen;pointer-events:none}.card>*{position:relative}
-.card:hover{border-color:#d7b77c99;box-shadow:0 18px 50px #0008}.tag{border-radius:2px;border-color:#c6a47b55}
-
-</style>
-</head>
+:root{color-scheme:dark;--void:#090b0b;--ink:#e8e6d9;--moss:#b6c99b;--line:#354036;--dim:#9ba696;--glow:rgba(177,211,151,.18);--heat:1;--serif:Georgia,'Times New Roman',serif;--mono:ui-monospace,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--void);scroll-padding-top:5rem}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#1b2a20 0,transparent 48%),var(--void);color:var(--ink);font:15px/1.55 system-ui,sans-serif;overflow-x:hidden}button,a,input{font:inherit}a{color:inherit;text-decoration:none}button{color:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #e5f4c8;outline-offset:4px}
+#field{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.8}.grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+header,.wrap,footer{position:relative;z-index:2}.top{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:14px clamp(16px,4vw,56px);border-bottom:1px solid #ffffff16;background:#090b0bd9;backdrop-filter:blur(18px);z-index:8}.brand{font:11px var(--mono);letter-spacing:.18em}.brand span{display:block;color:var(--dim);font-size:9px;margin-top:3px}.nav{display:flex;gap:clamp(10px,2vw,26px);align-items:center;font:10px var(--mono);letter-spacing:.08em;color:#b9c2b1}.nav a:hover{color:var(--moss)}.sound-state{border:1px solid #62745d;background:#172018;padding:8px 12px;font:10px var(--mono);letter-spacing:.1em}
+.wrap{max-width:1440px;margin:auto;padding:0 clamp(18px,5vw,76px)}.hero{min-height:min(90svh,900px);display:grid;grid-template-columns:1fr .9fr;gap:4vw;align-items:center;padding-top:5rem;padding-bottom:5rem}.eyebrow{font:10px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#b5c99b}.hero h1{font:400 clamp(4rem,10vw,10rem)/.78 var(--serif);letter-spacing:-.075em;margin:1.5rem 0 2rem;max-width:8ch}.hero h1 i{font-weight:400;color:var(--moss)}.subtle{color:#aeb9a8;max-width:38rem;font:italic clamp(1rem,1.8vw,1.3rem)/1.5 var(--serif)}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:2rem}.pill{border:1px solid #56634f;background:#111a13b8;padding:11px 16px;font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase;transition:background .2s,border-color .2s,transform .2s}.pill:hover{background:#263626;border-color:var(--moss);transform:translateY(-2px)}.pill.primary{background:#d8e6c0;color:#182018;border-color:#d8e6c0}
+portal-orbit{display:block}.orbit{position:relative;width:min(82vw,590px);aspect-ratio:1;margin:auto;border-radius:50%;border:1px solid #8fa77b55;background:radial-gradient(circle,#25382788,transparent 65%);box-shadow:0 0 120px var(--glow),inset 0 0 90px #829d6b16;touch-action:pan-y}.orbit:before,.orbit:after{content:"";position:absolute;inset:12%;border:1px dashed #9db28b55;border-radius:50%;animation:turn 42s linear infinite}.orbit:after{inset:29%;animation-direction:reverse;animation-duration:31s}.core{position:absolute;left:50%;top:50%;width:25%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 35% 30%,#e1edca,#819b72 65%,#283c2b);color:#162017;font:10px var(--mono);letter-spacing:.15em;box-shadow:0 0 60px #c5e5a866}.orbit-node{position:absolute;min-width:74px;min-height:74px;width:18%;aspect-ratio:1;border-radius:50%;border:1px solid #819879;background:#111a16e8;color:#dce8d2;font:10px var(--mono);letter-spacing:.08em;box-shadow:0 0 30px #81987918;transition:.3s}.orbit-node:hover,.orbit-node.active{background:#d7e6c0;color:#172018;box-shadow:0 0 36px #d7e6c077;transform:scale(1.08)}.orbit-node:nth-of-type(1){left:10%;top:12%}.orbit-node:nth-of-type(2){right:8%;top:16%}.orbit-node:nth-of-type(3){left:0;top:49%}.orbit-node:nth-of-type(4){right:0;top:53%}.orbit-node:nth-of-type(5){left:20%;bottom:2%}.orbit-node:nth-of-type(6){right:19%;bottom:2%}
+.section{padding:5rem 0;border-top:1px solid #ffffff1a}.heading{display:flex;justify-content:space-between;align-items:end;gap:2rem;margin-bottom:2rem}.heading h2{font:400 clamp(2.5rem,5vw,5rem)/.95 var(--serif);letter-spacing:-.05em;margin:.5rem 0}.heading p{max-width:28rem;color:var(--dim);font-size:13px}.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.room{position:relative;isolation:isolate;min-height:230px;padding:22px;border:1px solid #ffffff20;background:linear-gradient(145deg,#18221b,#0e1210);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:transform .25s,border-color .25s}.room:before{content:"";position:absolute;inset:-20%;z-index:-1;background:radial-gradient(circle at 75% 20%,var(--room-glow,#59734b66),transparent 48%);transition:transform .5s}.room:hover{transform:translateY(-5px);border-color:#a3bd8a}.room:hover:before{transform:scale(1.3)}.room small{font:9px var(--mono);letter-spacing:.18em;color:#bdcba9}.room strong{font:clamp(1.7rem,3vw,2.5rem)/1 var(--serif);font-weight:400}.room span{font:10px var(--mono);letter-spacing:.1em;color:#c0cbb9}.room:nth-child(3n+2){background-color:#12181c}.room:nth-child(3n){background-color:#1b151a}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}.instrument{border:1px solid #ffffff22;background:#111813d9;padding:clamp(18px,3vw,32px)}.instrument h3{font:400 2rem var(--serif);margin:0 0 .5rem}.instrument p{color:var(--dim);font-size:13px}.control-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:1.2rem}.control-row button{border:1px solid #62735b;background:#172119;padding:10px 13px;font:10px var(--mono);letter-spacing:.08em}.control-row button:hover{background:#2a3b2b}.control-row input{accent-color:#b9d49c;max-width:180px}.readout{min-height:1.6em;color:var(--moss);font:11px var(--mono);margin-top:1rem}
+.list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.list a{display:flex;justify-content:space-between;gap:12px;padding:16px;border:1px solid #ffffff20;background:#101612}.list a:hover{border-color:#a3bd8a;background:#172019}.list strong{font:1.2rem var(--serif);font-weight:400}.list small{font:9px var(--mono);color:#a9b79f}.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}.searchrow input,.searchrow select{min-height:44px;background:#101612;border:1px solid #435242;color:var(--ink);padding:0 12px;font:11px var(--mono)}.searchrow input{flex:1;min-width:220px}.results{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.result{padding:12px;border:1px solid #ffffff1b;background:#101612}.result:hover{border-color:#a3bd8a}.result strong,.result small{display:block;overflow-wrap:anywhere}.result small{color:#899587;font:9px var(--mono)}.result strong{font-size:12px}.quiet{color:#879284;font:10px var(--mono)}footer{padding:30px clamp(18px,5vw,76px);border-top:1px solid #ffffff18;color:#899486;font:9px var(--mono);letter-spacing:.1em;display:flex;justify-content:space-between;gap:1rem}
+@keyframes turn{to{transform:rotate(360deg)}}@media(max-width:850px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:4rem}.orbit{width:min(78vw,490px)}.rooms{grid-template-columns:repeat(2,1fr)}.nav{display:none}}@media(max-width:560px){.hero{padding-top:3rem;padding-bottom:3rem}.hero h1{font-size:clamp(4.2rem,19vw,6.5rem)}.orbit{width:88vw}.orbit-node{min-width:58px;font-size:8px}.rooms,.tools,.list,.results{grid-template-columns:1fr}.room{min-height:190px}.heading{display:block}.section{padding:3.5rem 0}footer{display:block}footer span{display:block;margin-top:8px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+body.still .orbit:before,body.still .orbit:after{animation:none}body.still #field{opacity:.2}
+</style></head>
 <body>
-<header><div class="wrap nav"><a class="brand" href="#top">✳ Mirror Cartographer</a><nav class="navlinks" aria-label="Main navigation"><a href="#worlds">Enter a world</a><a href="#experience">Experience</a><a href="#art">Art & play</a><a href="#systems">Systems</a><a href="#archive">Archive</a><a href="./rooms/">The rooms</a></nav></div></header>
-<main id="top">
-<div class="wrap hero"><div class="orbit" aria-hidden="true"><i></i></div><div class="eyebrow">A living atlas · Work by Charity Alessandra Sturgell</div><h1>Meaning has<br>a <em>shape.</em></h1><p class="lead">A connected home for the worlds, images, experiments, games, research, and tools we have been making. Not a pile of links: a map through the work, with the original source kept close.</p><div class="hero-actions"><a class="btn" href="./rooms/">Enter the rooms ↗</a><a class="btn secondary" href="#worlds">Browse the atlas ↓</a><a class="btn secondary" href="#archive">Explore the archive ↘</a></div><p class="quiet" style="margin-top:20px;max-width:620px">This is an index and doorway. Individual projects remain in their original locations; links open the source or hosted experience rather than pretending every artifact has already been merged into one application.</p></div>
-<section id="worlds"><div class="wrap"><div class="section-head"><div><div class="eyebrow">00 / Step inside</div><h2>Worlds you can enter</h2></div><p>The six entry pages are served directly by this Atlas. The Ten Experiments collection opens its ten interactive routes on the companion core GitHub Pages site.</p></div><div class="grid">
-<article class="card wide" data-search="night shift orchard interactive sound visual generative garden night shift"><span class="number">WORLD · 01 / LOCAL MIRROR</span><h3>Night Shift Orchard</h3><p>A nocturnal orchard that grows through motion and generative light. A small world to inhabit, not just inspect.</p><a href="./worlds/night-shift-orchard.html">Enter the orchard ↗</a></article>
-<article class="card wide" data-search="afterimage orchard memory plant afterimage light interactive generative"><span class="number">WORLD · 02 / LOCAL MIRROR</span><h3>Afterimage Orchard</h3><p>An orchard of traces: a quiet interactive study in memory, plant forms, and what remains after an image is gone.</p><a href="./worlds/afterimage-orchard.html">Enter the orchard ↗</a></article>
-<article class="card" data-search="constellation graph stars connected ideas map"><span class="number">WORLD · 03 / LOCAL MIRROR</span><h3>Constellation</h3><p>A navigable field of points and relationships.</p><a href="./worlds/constellation.html">Enter the constellation ↗</a></article>
-<article class="card" data-search="the world foundation intelligence colorful abstract interactive spatial world"><span class="number">WORLD · 04 / LOCAL MIRROR</span><h3>The World</h3><p>A spatial, generative world built from color, movement, and symbolic structure.</p><a href="./worlds/the-world.html">Enter the world ↗</a></article>
-<article class="card" data-search="research field evidence models research uncertainty interactive green"><span class="number">WORLD · 05 / LOCAL MIRROR</span><h3>Research Field</h3><p>A visual field for exploring evidence, models, and the boundary between a theory and what supports it.</p><a href="./worlds/research-field.html">Enter the field ↗</a></article>
-<article class="card" data-search="experiments observatory machine garden echo cathedral carnival of thought ocean blueprint dream library signal forest impossible museum composer"><span class="number">COLLECTION · 06 / LOCAL MIRROR</span><h3>Ten Experiments</h3><p>A directory of experiments: observatory, machine garden, echo cathedral, carnival of thought, ocean, living blueprint, dream library, signal forest, impossible museum, and composer.</p><a href="./worlds/experiments.html">Open the collection ↗</a></article>
-</div><p class="quiet" style="margin-top:18px">Local mirror means the standalone HTML itself is served by this website. The original project remains in the source archive with provenance preserved.</p></div></section>
-<section id="experience"><div class="wrap"><div class="section-head"><div><div class="eyebrow">01 / Enter</div><h2>Experiences</h2></div><p>Enter the work instead of only reading about it. Follow a symbol, notice what changes, and let a connection become a question.</p></div><div class="grid">
-<article class="card wide" data-search="room world interactive experience movement light sound music composition phrase memory"><span class="number">EXPERIENCE · 01</span><h3>The Room-World</h3><p>A wordless audiovisual environment built around movement, light, sound, and the feeling of returning to a place that remembers.</p><a href="../" target="_blank" rel="noreferrer">Open the interactive experience ↗</a><p class="quiet">If the host is unavailable, use the source repository below.</p></article>
-<article class="card wide" data-search="self cartography understand yourself body attention environment relationships values actions pattern map"><span class="number">EXPERIENCE · 03</span><h3>The Self Cartographer</h3><p>Build a living map of body, attention, environment, relationships, values and action. No personality test; no fixed identity.</p><a href="../self/">Enter the self-mapping instrument ↗</a></article>\n<article class="card wide" data-search="mirror cartographer game rooms reflection symbolic emotional self mapping tool"><span class="number">EXPERIENCE · 02</span><h3>Mirror Cartographer</h3><p>The larger project: symbolic emotional mapping, reflection rooms, embodied meaning, and ways to give difficult-to-name experience a shape without forcing it into a verdict.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Open the UI repository ↗</a></article>
-</div></div></section>
-<section id="art"><div class="wrap"><div class="section-head"><div><div class="eyebrow">02 / Play & look</div><h2>Art, games & experiments</h2></div><p>Creative work is part of the method, not decoration around the software. Image, sound, metaphor, and play can reveal what a plain description leaves out.</p></div><div class="grid">
-<article class="card" data-search="art images visual work creative universe"><span class="number">ART · 01</span><h3>Art archive</h3><p>Start with the project’s art directory and follow each work to its original file and context.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/art" target="_blank" rel="noreferrer">Browse art source ↗</a></article>
-<article class="card" data-search="creative universe generative art writing sound symbolic worlds"><span class="number">ART · 02</span><h3>Creative Universe</h3><p>A growing constellation of creative work and its supporting materials.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/Creative_Universe" target="_blank" rel="noreferrer">Explore the universe ↗</a></article>
-<article class="card" data-search="experiments prototype visual interactive research"><span class="number">EXPERIMENTS · 03</span><h3>Experiments</h3><p>Prototypes and explorations: the places where ideas can remain strange long enough to become something new.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/experiments" target="_blank" rel="noreferrer">Browse experiments ↗</a></article>
-<article class="card" data-search="connections game puzzle"><span class="number">GAME · 04</span><h3>Connections</h3><p>A playable grouping game housed in the public project files.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/games/connections" target="_blank" rel="noreferrer">Open game files ↗</a></article>
-<article class="card" data-search="veteran mission game interactive public game"><span class="number">GAME · 05</span><h3>Veteran Mission</h3><p>A mission-based interactive experience in the veterans project.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/games/veteran-mission" target="_blank" rel="noreferrer">Open game files ↗</a></article>
-<article class="card" data-search="source autobiography language authorship creative process"><span class="number">TEXT · 06</span><h3>Source autobiography</h3><p>A source-level record of the creative and project history.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui/blob/main/source-autobiography.html" target="_blank" rel="noreferrer">Read the source artifact ↗</a></article>
-</div></div></section>
-<section id="systems"><div class="wrap"><div class="section-head"><div><div class="eyebrow">03 / Build & connect</div><h2>Systems with a purpose</h2></div><p>Research, infrastructure, and public-interest tools belong in the same atlas: different ways of making hidden relationships visible while keeping uncertainty in view.</p></div><div class="grid">
-<article class="card" data-search="veterans hub benefits housing health work education records legal mission map"><span class="number">PUBLIC SERVICE · 01</span><h3>Veterans Hub</h3><p>A navigable starting point for benefits, housing, health, education, work, records, and mission planning.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public/veterans" target="_blank" rel="noreferrer">Explore the hub files ↗</a></article>
-<article class="card" data-search="architecture technical systems research evidence knowledge graph"><span class="number">RESEARCH · 02</span><h3>Architecture & research</h3><p>Explore the system maps, evidence, and technical foundations behind the work.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/architecture" target="_blank" rel="noreferrer">Browse architecture ↗</a></article>
-<article class="card" data-search="continuity agents tools memory systems github mind"><span class="number">TOOLS · 03</span><h3>Continuity & tools</h3><p>Infrastructure for connecting artifacts, preserving context, and making a growing body of work navigable.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Open the systems repository ↗</a></article>
-<article class="card" data-search="evidence research biology veteran access provenance interactive wordplay unknowns"><span class="number">RESEARCH · 04 / INTERACTIVE</span><h3>The Between</h3><p>Change the lens on a relationship. Trace a signal through context, response, record, interpretation, and outcome; reverse the question, follow a new edge, and see what evidence can—and cannot—carry.</p><a href="../research-atlas/" target="_blank" rel="noreferrer">Enter the research atlas ↗</a> <a href="https://github.com/MirrorCartographer/mirror-cartographer-ui/tree/main/research-atlas" target="_blank" rel="noreferrer">Inspect the source ↗</a></article>
-</div></div></section>
-<section id="archive"><div class="wrap"><div class="section-head"><div><div class="eyebrow">04 / Find your way</div><h2>The source archive</h2></div><p>Search the indexed source catalog across both project repositories. Each result preserves its original path and GitHub provenance.</p></div><label class="searchbar"><span aria-hidden="true">⌕</span><input id="filter" type="search" placeholder="Search art, games, research, veterans…" aria-label="Filter atlas cards"></label><p id="catalog-status" class="quiet" aria-live="polite">Loading the repository catalog…</p><div id="catalog-results" class="grid" aria-live="polite"></div><div id="empty" class="quiet" hidden>No matching entries. Try a broader term.</div><div class="grid" id="alllinks">
-<article class="card" data-search="all files repository source code documentation"><span class="number">SOURCE · A</span><h3>Main repository</h3><p>Full project tree, documentation, code, public pages, and source history.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
-<article class="card" data-search="frontend user interface audio visuals interactive source code"><span class="number">SOURCE · B</span><h3>Interactive UI repository</h3><p>Application source, media, public assets, deployment configuration, and tests.</p><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui" target="_blank" rel="noreferrer">Browse all files ↗</a></article>
-<article class="card" data-search="public games websites html pages"><span class="number">SOURCE · C</span><h3>Published-page source</h3><p>Static public experiences and web pages in the main repository.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public" target="_blank" rel="noreferrer">Browse public files ↗</a></article>
-</div><p class="quiet" style="margin-top:22px">Archive rule: preserve provenance. Each card points back to its source; hosted links are identified as experiences, not proof that every source file is deployed.</p></div></section>
-</main>
-<section id="image-organism" class="wrap"><div class="section-head"><div><div class="eyebrow">A machine inside the atlas</div><h2>Make an image organism.</h2></div><p>Grow a visual specimen from branching systems, orbital anatomy, botanical forms and controlled fracture. Keep the recipe. Disturb it. Make another.</p></div><div class="card wide" style="grid-column:span 12;min-height:150px;background-image:url('../art/main-glasshouse.svg');background-size:cover;background-position:center"><span class="number">01 / PROCEDURAL ART INSTRUMENT</span><h3>The Image Organism</h3><p>Not a prompt box. A small machine for growing forms.</p><a href="../art-machine/">Enter the image machine ↗</a></div></section>
-<footer><div class="wrap footrow"><span>✳ Mirror Cartographer · The Living Atlas
-Poetic justice for what has not yet found its words.</span><span>Made from the work of Charity Alessandra Sturgell · <a href="https://github.com/MirrorCartographer">GitHub organization ↗</a></span></div></footer>
+<canvas id="field" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div>
+<header class="top"><a class="brand" href="#">MIRROR CARTOGRAPHER<span>FIELD NOTES / 00—∞</span></a><nav class="nav"><a href="#atlas">FIELD</a><a href="#worlds">ROOMS</a><a href="#instruments">INSTRUMENTS</a><a href="./rooms/mind/">THE MIND</a><a href="#library">SHELVES</a><a href="./rooms/music/">SOUND</a><a href="./archive.html">ARCHIVE</a></nav><button class="sound-state" id="sound-toggle" aria-pressed="false">SOUND OFF</button></header>
+<main>
+<section class="hero wrap">
+<div><p class="eyebrow">A door is already open.</p><h1>The room<br>without <i>instructions.</i></h1><p class="subtle" id="whisper">Somewhere, a small light is waiting for a hand.</p><div class="hero-actions"><a class="pill primary" href="#worlds">WANDER IN ↓</a><button class="pill" id="surprise">TAKE ME SOMEWHERE ↗</button><button class="pill" id="clear-field">LET THE DUST SETTLE</button></div></div>
+<div class="orbit" id="atlas" aria-label="Interactive constellation. Select a light."><div class="core">TOUCH<br>THE BETWEEN</div><button class="orbit-node active" data-node="echo">ECHO</button><button class="orbit-node" data-node="drift">DRIFT</button><button class="orbit-node" data-node="memory">MEMORY</button><button class="orbit-node" data-node="signal">SIGNAL</button><button class="orbit-node" data-node="bloom">BLOOM</button><button class="orbit-node" data-node="absence">ABSENCE</button></div>
+</section>
+<section class="section wrap" id="worlds"><div class="heading"><div><p class="eyebrow">I / PLACES TO DISAPPEAR INTO</p><h2>Choose a door.</h2></div><p>Each room has its own weather. You can leave whenever you like.</p></div>
+<div class="rooms">
+<a class="room" style="--room-glow:#335c8a99" href="./rooms/experiments/001-observatory/"><small>01 / NIGHT SKY</small><strong>The Observatory</strong><span>orbit · connect · listen ↗</span></a>
+<a class="room" style="--room-glow:#557b3c99" href="./rooms/experiments/002-machine-garden/"><small>02 / GREENHOUSE</small><strong>Machine Garden</strong><span>grow · cross-pollinate ↗</span></a>
+<a class="room" style="--room-glow:#286b8299" href="./rooms/experiments/003-echo-cathedral/"><small>03 / RESONANCE</small><strong>Echo Cathedral</strong><span>ring · resonate ↗</span></a>
+<a class="room" style="--room-glow:#8a2c6a99" href="./rooms/experiments/004-carnival-of-thought/"><small>04 / FUNHOUSE</small><strong>Carnival of Thought</strong><span>spin · disturb · laugh ↗</span></a>
+<a class="room" style="--room-glow:#145c8a99" href="./rooms/experiments/005-ocean/"><small>05 / DEEP WATER</small><strong>The Ocean</strong><span>drift · descend ↗</span></a>
+<a class="room" style="--room-glow:#315c9a99" href="./rooms/experiments/006-living-blueprint/"><small>06 / WORKSHOP</small><strong>Living Blueprint</strong><span>draft · revise · animate ↗</span></a>
+<a class="room" style="--room-glow:#784c5a99" href="./rooms/experiments/007-dream-library/"><small>07 / DREAM ARCHIVE</small><strong>Dream Library</strong><span>browse by atmosphere ↗</span></a>
+<a class="room" style="--room-glow:#27764c99" href="./rooms/experiments/008-signal-forest/"><small>08 / WILD SIGNAL</small><strong>Signal Forest</strong><span>listen upward ↗</span></a>
+<a class="room" style="--room-glow:#5d3a8999" href="./rooms/experiments/009-impossible-museum/"><small>09 / ELSEWHERE</small><strong>Impossible Museum</strong><span>invert · contradict ↗</span></a>
+<a class="room" style="--room-glow:#8a4a9999" href="./rooms/experiments/010-composer/"><small>10 / LIGHT ORGAN</small><strong>The Composer</strong><span>gesture · sound · orbit ↗</span></a>
+<a class="room" style="--room-glow:#6c4c8a99" href="./rooms/worlds/unreliable-observatory/"><small>11 / WEATHER REPORTS</small><strong>The Unreliable Observatory</strong><span>scan impossible climates ↗</span></a>
+<a class="room" style="--room-glow:#466b6199" href="./rooms/mind/"><small>12 / THE MIND</small><strong>Seven Strange Rooms</strong><span>follow the mystery ↗</span></a>
+<a class="room" style="--room-glow:#466b6199" href="https://mirrorcartographer.github.io/mirror-cartographer-ui/self/"><small>13 / INNER MAP</small><strong>Self Cartographer</strong><span>map · sense · reflect ↗</span></a>
+<a class="room" style="--room-glow:#8a725099" href="https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/"><small>14 / IMAGE ORGANISM</small><strong>Grow a specimen</strong><span>branch · fracture · transform ↗</span></a>
+<a class="room" style="--room-glow:#72558a99" href="https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/"><small>15 / THE BETWEEN</small><strong>Follow the edges</strong><span>trace · connect · question ↗</span></a>
+<a class="room" style="--room-glow:#8a725099" href="./rooms/music/"><small>13 / SOUND ARCHIVE</small><strong>The Music Room</strong><span>listen · wander · remember ↗</span></a>
+<a class="room" style="--room-glow:#72558a99" href="./rooms/chatgpt/"><small>14 / THE OTHER SIDE</small><strong>Leave a message</strong><span>continue the encounter ↗</span></a>
+<a class="room" style="--room-glow:#3d756a99" href="https://mirrorcartographer.github.io/mirror-cartographer-ui/"><small>15 / SECOND DOOR</small><strong>Another world</strong><span>open the companion experience ↗</span></a>
+</div></section>
+<section class="section wrap" id="instruments"><div class="heading"><div><p class="eyebrow">II / SMALL MACHINES</p><h2>Touch changes things.</h2></div><p>Nothing here needs a correct answer. Try a gesture. Change the weather.</p></div>
+<div class="tools">
+<article class="instrument"><h3>Weather for the room</h3><p>Move the light. The field remembers the shape of your gesture until you clear it.</p><div class="control-row"><button id="rain">MAKE IT RAIN</button><button id="bloom">MAKE IT BLOOM</button><button id="erase">ERASE THE TRACE</button></div><div class="readout" id="field-readout" aria-live="polite">THE FIELD IS QUIET</div></article>
+<article class="instrument"><h3>Choose the pressure</h3><p>Change the intensity without changing the destination. The still version is a complete version.</p><div class="control-row"><label for="intensity" class="quiet">INTENSITY</label><input id="intensity" type="range" min="0" max="100" value="55"><button id="still">STILLNESS</button></div><div class="readout" id="intensity-readout">55 / 100</div></article>
+</div></section>
+<section class="section wrap" id="research"><div class="heading"><div><p class="eyebrow">III / FOUND FRAGMENTS</p><h2>Things that connect.</h2></div><p>Some rooms have no walls. Follow a thread if it catches.</p></div>
+<div class="list"><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research"><strong>Evidence / Hypotheses / Questions</strong><small>OPEN THE THREAD ↗</small></a><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/architecture"><strong>Architecture / Memory / Time</strong><small>OPEN THE THREAD ↗</small></a><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/mind"><strong>Contradictions / Experiments</strong><small>OPEN THE THREAD ↗</small></a><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/docs"><strong>Maps / Signals / Other paths</strong><small>OPEN THE THREAD ↗</small></a></div>
+</section>
+<section class="section wrap" id="library"><div class="heading"><div><p class="eyebrow">IV / THE SHELVES</p><h2>Find a fragment.</h2></div><p>Search the collection by a word, a room, or a feeling.</p></div><div class="searchrow"><input id="search" type="search" placeholder="a word, a fragment, a file…" aria-label="Search the collection"><select id="category" aria-label="Filter collection"><option value="all">All shelves</option><option value="research">Research</option><option value="architecture">Architecture</option><option value="demonstrations">Demonstrations</option><option value="creative">Creative</option><option value="tools">Tools</option><option value="documentation">Documentation</option><option value="governance">Governance</option><option value="other">Other</option></select><span id="count" class="quiet">WAITING</span></div><div class="results" id="results" aria-live="polite"><div class="quiet">The shelves are being arranged…</div></div></section>
+<section class="section wrap" id="repositories"><div class="heading"><div><p class="eyebrow">V / UNDER THE FLOORBOARDS</p><h2>Other ways through.</h2></div><p>For anyone who likes to wander beneath the surface.</p></div><div class="list"><a href="https://github.com/MirrorCartographer/MirrorCartographer"><strong>Open the archive</strong><small>GITHUB ↗</small></a><a href="https://github.com/MirrorCartographer/mirror-cartographer-ui"><strong>Open the companion source</strong><small>GITHUB ↗</small></a><a href="./rooms/chatgpt/"><strong>Leave a message</strong><small>CHAT ↗</small></a><a href="./rooms/mind/"><strong>Return to the seven rooms</strong><small>PLAY ↗</small></a></div><p class="quiet" style="margin-top:20px">MIRROR CARTOGRAPHER · A HOUSE WITH MANY DOORS</p></section>
+</main><footer><span>THE ROOM IS STILL HERE.</span><span>NO PARTICULAR WAY THROUGH.</span></footer>
 <script>
-const field = document.querySelector('#filter');
-const empty = document.querySelector('#empty');
-const catalogStatus = document.querySelector('#catalog-status');
-const catalogResults = document.querySelector('#catalog-results');
-let sourceFiles = [];
-const displayLimit = 80;
-const localCopies = {
-  'MirrorCartographer/MirrorCartographer:independent-creative-web/night-shift-orchard/index.html': './worlds/night-shift-orchard.html',
-  'MirrorCartographer/MirrorCartographer:independent-web/afterimage-orchard/index.html': './worlds/afterimage-orchard.html',
-  'MirrorCartographer/MirrorCartographer:constellation/index.html': './worlds/constellation.html',
-  'MirrorCartographer/MirrorCartographer:public/world/index.html': './worlds/the-world.html',
-  'MirrorCartographer/MirrorCartographer:cloudflare-static/index.html': './worlds/research-field.html',
-  'MirrorCartographer/MirrorCartographer:public/experiments/index.html': './worlds/experiments.html'
-};
-
-function renderCatalog(query) {
-  const q = query.trim().toLowerCase();
-  let visibleStatic = 0;
-  const staticCards = [...document.querySelectorAll('#alllinks [data-search], #art [data-search], #experience [data-search], #systems [data-search]')];
-  for (const card of staticCards) {
-    const match = !q || (card.dataset.search + ' ' + card.innerText).toLowerCase().includes(q);
-    card.hidden = !match;
-    if (match) visibleStatic++;
-  }
-
-  catalogResults.replaceChildren();
-  if (!q) {
-    catalogStatus.textContent = sourceFiles.length
-      ? `Source catalog ready: ${sourceFiles.length.toLocaleString()} files indexed across both repositories. Search to explore file-level results.`
-      : 'Loading repository catalog…';
-    empty.hidden = true;
-    return;
-  }
-
-  const matches = sourceFiles.filter((item) =>
-    (item.path + ' ' + item.repo + ' ' + item.ext).toLowerCase().includes(q)
-  );
-  const shown = matches.slice(0, displayLimit);
-  for (const item of shown) {
-    const card = document.createElement('article');
-    card.className = 'card catalog-entry';
-    const parts = item.path.split('/');
-    const fileName = parts[parts.length - 1] || item.path;
-    const category = parts.length > 1 ? parts[0].replace(/[-_]/g, ' ') : 'Root file';
-    const number = document.createElement('span');
-    number.className = 'number';
-    number.textContent = `${category.toUpperCase()} · ${item.ext ? item.ext.toUpperCase() : 'FILE'}`;
-    const title = document.createElement('h3');
-    title.textContent = fileName;
-    const description = document.createElement('p');
-    const size = Number.isFinite(item.bytes) ? `${(item.bytes / 1024).toFixed(1)} KB` : 'size unavailable';
-    description.textContent = `${item.repo} / ${item.path} · ${size} · blob ${item.sha.slice(0, 8)}`;
-    const encodedPath = item.path.split('/').map(encodeURIComponent).join('/');
-    const sourceUrl = 'https://github.com/' + item.repo + '/blob/' + item.source_commit + '/' + encodedPath;
-    const localCopy = localCopies[item.repo + ':' + item.path];
-    if (localCopy) {
-      const localLink = document.createElement('a');
-      localLink.href = localCopy;
-      localLink.target = '_blank';
-      localLink.rel = 'noreferrer';
-      localLink.textContent = 'Open local experience ↗';
-
-      const sourceLink = document.createElement('a');
-      sourceLink.href = sourceUrl;
-      sourceLink.target = '_blank';
-      sourceLink.rel = 'noreferrer';
-      sourceLink.textContent = 'View original source at commit ↗';
-      sourceLink.style.marginTop = '8px';
-      sourceLink.style.fontSize = '.78rem';
-      card.append(number, title, description, localLink, sourceLink);
-    } else {
-      const sourceLink = document.createElement('a');
-      sourceLink.href = sourceUrl;
-      sourceLink.target = '_blank';
-      sourceLink.rel = 'noreferrer';
-      sourceLink.textContent = 'Open original source at commit ↗';
-      card.append(number, title, description, sourceLink);
-    }
-    catalogResults.append(card);
-  }
-
-  catalogStatus.textContent = matches.length
-    ? `Found ${matches.length.toLocaleString()} source files; showing ${shown.length}. ${matches.length > displayLimit ? 'Refine your search to narrow the list.' : ''}`
-    : 'No source files matched that search.';
-  empty.hidden = matches.length + visibleStatic !== 0;
-}
-
-async function loadCatalog() {
-  try {
-    const response = await fetch('./catalog-index.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`catalog index returned HTTP ${response.status}`);
-    const index = await response.json();
-    const manifests = await Promise.all(index.sources.map(async (source) => {
-      const manifestResponse = await fetch(`./${source.file}`, { cache: 'no-store' });
-      if (!manifestResponse.ok) throw new Error(`${source.file} returned HTTP ${manifestResponse.status}`);
-      return manifestResponse.json();
-    }));
-    sourceFiles = manifests.flatMap((manifest) => manifest.items.map((item) => ({
-      ...item,
-      repo: manifest.repository,
-      source_commit: manifest.source_commit,
-    })));
-    catalogStatus.textContent = `Loaded ${sourceFiles.length.toLocaleString()} source files from ${index.source_count} repositories.`;
-    renderCatalog(field.value);
-  } catch (error) {
-    catalogStatus.textContent = 'The file-level catalog could not load. The source repositories remain available below.';
-    console.error('Living Atlas catalog load failed:', error);
-  }
-}
-
-field.addEventListener('input', () => renderCatalog(field.value));
-loadCatalog();
-</script>
-</body></html>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas=$('field'),ctx=canvas.getContext('2d');let W=0,H=0,d=1,points=[],sparks=[],raf=0,still=reduced,intensity=55,sound=false,audio=null,osc=null,gain=null,filter=null;
+function resize(){d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0)}addEventListener('resize',resize,{passive:true});resize();
+function addPoint(x,y,kind='touch'){points.push({x,y,kind,life:1,seed:Math.random()*6.28});if(points.length>140)points.shift();$('field-readout').textContent=kind.toUpperCase()+' / '+points.length+' TRACES'}
+function draw(){ctx.clearRect(0,0,W,H);const limit=Math.round(25+intensity*1.1);for(let i=Math.max(0,points.length-limit);i<points.length;i++){const p=points[i],age=1-p.life;const r=(kind=>kind==='bloom'?12+age*95:kind==='rain'?3+age*45:4+age*70)(p.kind);ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.strokeStyle=p.kind==='bloom'?'rgba(195,224,155,'+(p.life*.5)+')':p.kind==='rain'?'rgba(125,190,220,'+(p.life*.45)+')':'rgba(222,228,190,'+(p.life*.35)+')';ctx.lineWidth=1+intensity/70;ctx.stroke();p.life-=still?0:.0035+(intensity/10000);if(p.life<0)p.life=1;}for(const s of sparks){ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fillStyle='rgba(197,221,170,'+s.a+')';ctx.fill();s.a*=.985;}sparks=sparks.filter(s=>s.a>.03);if(!still)raf=requestAnimationFrame(draw)}
+function restart(){cancelAnimationFrame(raf);draw()}restart();
+function pointer(e){const r=canvas.getBoundingClientRect();addPoint(e.clientX-r.left,e.clientY-r.top)}document.addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input,select'))return;pointer(e);if(sound)ping(e.clientX/W)});document.addEventListener('pointermove',e=>{if(e.buttons===1&&!e.target.closest('button,a,input,select'))pointer(e)});
+function initAudio(){if(audio)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=new AC();osc=audio.createOscillator();gain=audio.createGain();filter=audio.createBiquadFilter();osc.type='sine';osc.frequency.value=110;filter.type='lowpass';filter.frequency.value=900;gain.gain.value=0;osc.connect(filter).connect(gain).connect(audio.destination);osc.start()}
+function ping(x=.5){initAudio();if(!audio)return;audio.resume();osc.frequency.setTargetAtTime(110+Math.max(0,Math.min(1,x))*440,audio.currentTime,.03);gain.gain.cancelScheduledValues(audio.currentTime);gain.gain.setTargetAtTime(.025+intensity/5000,audio.currentTime,.02);gain.gain.setTargetAtTime(0,audio.currentTime+.22,.12)}
+$('sound-toggle').addEventListener('click',()=>{sound=!sound;$('sound-toggle').textContent=sound?'SOUND ON':'SOUND OFF';$('sound-toggle').setAttribute('aria-pressed',String(sound));if(sound){initAudio();audio?.resume();ping(.5)}else if(gain)gain.gain.setTargetAtTime(0,audio.currentTime,.05)});
+$('rain').addEventListener('click',()=>{for(let i=0;i<14;i++)addPoint(Math.random()*W,Math.random()*H,'rain');if(sound)ping(.2);restart()});
+$('bloom').addEventListener('click',()=>{const x=W*(.2+Math.random()*.6),y=H*(.2+Math.random()*.6);for(let i=0;i<22;i++){const a=i/22*Math.PI*2,r=20+Math.random()*120;sparks.push({x:x+Math.cos(a)*r,y:y+Math.sin(a)*r,r:1+Math.random()*3,a:.8})}addPoint(x,y,'bloom');if(sound)ping(.8);restart()});
+$('erase').addEventListener('click',()=>{points=[];sparks=[];$('field-readout').textContent='THE FIELD IS QUIET';restart()});
+$('clear-field').addEventListener('click',()=>{$('erase').click();document.querySelector('#atlas').scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'})});
+$('intensity').addEventListener('input',e=>{intensity=+e.target.value;document.documentElement.style.setProperty('--heat',intensity/100);$('intensity-readout').textContent=intensity+' / 100';canvas.style.opacity=String(.15+intensity/120);restart()});
+$('still').addEventListener('click',()=>{still=!still;document.body.classList.toggle('still',still);$('still').textContent=still?'RETURN TO MOTION':'STILLNESS';if(!still)restart();else cancelAnimationFrame(raf)});
+$('surprise').addEventListener('click',()=>{const doors=[...document.querySelectorAll('.room')];const a=doors[Math.floor(Math.random()*doors.length)];a.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});if(!reduced)a.animate?.([{filter:'brightness(1)'},{filter:'brightness(1.8)'},{filter:'brightness(1)'}],{duration:900})});
+const whispers=['Somewhere, a small light is waiting for a hand.','The walls are listening for a shape they almost remember.','A little weather has entered the room.','There is a door behind the reflection.','Nothing needs to happen in the correct order.','The quiet is not an empty place.'];let wi=0;document.querySelectorAll('[data-node]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-node]').forEach(x=>x.classList.toggle('active',x===b));wi=(wi+1)%whispers.length;$('whisper').textContent=whispers[wi];const r=$('atlas').getBoundingClientRect();addPoint(r.left+r.width/2,r.top+r.height/2,b.dataset.node==='bloom'?'bloom':'touch');if(sound)ping(Math.random())}));
+const fallback=[{path:'README.md',title:'Project guide',category:'documentation',url:'https://github.com/MirrorCartographer/MirrorCartographer/blob/main/README.md'}];let catalog=[];
+function drawCatalog(){const q=$('search').value.toLowerCase().trim(),c=$('category').value;const rows=catalog.filter(x=>(c==='all'||x.category===c)&&(!q||(x.path+' '+x.title+' '+x.category).toLowerCase().includes(q))).slice(0,60);$('count').textContent=rows.length+' FRAGMENTS';const box=$('results');box.replaceChildren();if(!rows.length){box.textContent='Nothing catches. Try another word.';return}for(const x of rows){const a=document.createElement('a');a.className='result';a.href=x.url;a.target='_blank';a.rel='noreferrer';const strong=document.createElement('strong');strong.textContent=x.title;const small=document.createElement('small');small.textContent=x.path;a.append(strong,small);box.append(a)}}
+$('search').addEventListener('input',drawCatalog);$('category').addEventListener('change',drawCatalog);fetch('./catalog-index.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(async index=>{const manifests=await Promise.all(index.sources.map(async source=>{const r=await fetch('./'+source.file);if(!r.ok)throw Error();return r.json()}));const categoryFor=path=>{const first=path.split('/')[0];return ({research:'research',architecture:'architecture',demonstrations:'demonstrations',tools:'tools',docs:'documentation',public:'creative','.github':'governance'})[first]||'other'};catalog=manifests.flatMap(manifest=>manifest.items.map(item=>{const path=item.path;return {path,title:path.split('/').pop(),category:categoryFor(path),url:'https://github.com/'+manifest.repository+'/blob/'+manifest.source_commit+'/'+path.split('/').map(encodeURIComponent).join('/')}}));drawCatalog()}).catch(()=>{catalog=fallback;drawCatalog()});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();$('search').focus()}if(e.key==='Escape'){$('erase').click()}});
+window.__MIRROR_CARTOGRAPHER__={version:'2.0.0',rooms:15,trace:addPoint,clear:()=>{$('erase').click()}};
+})();
+</script></body></html>
