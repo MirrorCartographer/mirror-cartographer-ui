@@ -143,4 +143,43 @@ test.describe('Playable Atlas rooms', () => {
     expect((await download).suggestedFilename()).toMatch(/\.png$/);
   });
 
+  test('every public room loads and every visible button can be activated without a runtime error', async ({ page, context }) => {
+    const routes = [
+      '/', '/atlas/', '/atlas/rooms/', '/atlas/rooms/experiments/',
+      '/atlas/rooms/experiments/001-observatory/',
+      '/atlas/rooms/experiments/002-machine-garden/',
+      '/atlas/rooms/experiments/003-echo-cathedral/',
+      '/atlas/rooms/experiments/004-carnival-of-thought/',
+      '/atlas/rooms/experiments/005-ocean/',
+      '/atlas/rooms/experiments/006-living-blueprint/',
+      '/atlas/rooms/experiments/007-dream-library/',
+      '/atlas/rooms/experiments/008-signal-forest/',
+      '/atlas/rooms/experiments/009-impossible-museum/',
+      '/atlas/rooms/experiments/010-composer/',
+      '/atlas/rooms/music/', '/atlas/rooms/mind/',
+      '/atlas/rooms/chatgpt/', '/atlas/rooms/worlds/unreliable-observatory/',
+      '/atlas/archive.html', '/self/', '/art-machine/', '/research-atlas/', '/arc/',
+    ];
+    const failures = [];
+    page.on('pageerror', error => failures.push(error.message));
+    page.on('dialog', dialog => dialog.dismiss());
+    page.on('popup', popup => popup.close());
+
+    for (const route of routes) {
+      const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
+      expect(response?.ok(), route + ' should return a successful response').toBeTruthy();
+      await expect(page.locator('body')).not.toBeEmpty();
+      const buttons = page.locator('button:visible:not([disabled])');
+      const count = await buttons.count();
+      for (let i = 0; i < count; i++) {
+        const button = buttons.nth(i);
+        if (await button.isVisible().catch(() => false)) {
+          await button.click({ timeout: 3000 }).catch(error => failures.push(route + ' button ' + i + ': ' + error.message));
+        }
+      }
+      expect(failures, route + ' should not throw browser runtime errors').toEqual([]);
+    }
+    await context.clearCookies();
+  });
+
 });
