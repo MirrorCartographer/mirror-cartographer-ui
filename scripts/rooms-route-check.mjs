@@ -27,7 +27,7 @@ function walk(directory) {
 }
 function resolveLocal(file, raw) {
   const value = raw.trim();
-  if (!value || value.startsWith('#') || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return null;
+  if (!value || value.startsWith('#') || value.startsWith('%23') || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return null;
   const pathPart = value.split(/[?#]/, 1)[0];
   if (!pathPart) return null;
   let decoded;
