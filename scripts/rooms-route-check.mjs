@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { Script } from 'node:vm';
 
-const atlasRoot = resolve('public');
+const repoRoot = resolve('.');\nconst atlasRoot = resolve('public');
 const atlasDir = join(atlasRoot, 'atlas');
 const roomsRoot = join(atlasDir, 'rooms');
 const experiments = [
@@ -29,16 +29,18 @@ function walk(directory) {
 }
 function resolveLocal(file, raw) {
   const value = raw.trim();
-  if (!value || value.startsWith('#') || value.startsWith('%23') || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return null;
-  const pathPart = value.split(/[?#]/, 1)[0];
-  if (!pathPart) return null;
-  let decoded;
-  try { decoded = decodeURIComponent(pathPart); }
+  if (!value || value.startsWith('#') || /^(?:[a-z][a-z0-9+.-]*:|\\/\\/)/i.test(value)) return null;
+  const sourceRoute = relative(repoRoot, file).replace(/^public\\//, '').split(sep).join('/');
+  const base = new URL(sourceRoute, 'https://rooms.invalid/');
+  const resolved = new URL(value, base);
+  if (resolved.origin !== 'https://rooms.invalid') return null;
+  let pathname;
+  try { pathname = decodeURIComponent(resolved.pathname); }
   catch { throw new Error('Invalid URL encoding: ' + relative(atlasRoot, file) + ' -> ' + raw); }
-  const target = decoded.startsWith('/') ? resolve(atlasRoot, '.' + decoded) : resolve(dirname(file), decoded);
-  const rel = relative(atlasRoot, target);
+  const target = pathname === '/' ? resolve(repoRoot, 'index.html') : resolve(repoRoot, 'public', '.' + pathname);
+  const rel = relative(repoRoot, target);
   if (rel === '..' || rel.startsWith('..' + sep) || isAbsolute(rel)) {
-    throw new Error('Local reference escapes atlas: ' + relative(atlasRoot, file) + ' -> ' + raw);
+    throw new Error('Local reference escapes the site: ' + relative(atlasRoot, file) + ' -> ' + raw);
   }
   const candidates = [];
   if (existsSync(target) && statSync(target).isDirectory()) candidates.push(join(target, 'index.html'));
