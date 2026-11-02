@@ -74,7 +74,7 @@ jobs:
                 }
                 const worldChecks = await Promise.all(worldRoutes.map(async (route) => {
                   const relativeRoute = route.slice('/atlas/'.length);
-                const world = await fetch(new URL(relativeRoute, response.url), {
+                  const world = await fetch(new URL(relativeRoute, response.url), {
                     cache: 'no-store',
                     signal: AbortSignal.timeout(5000),
                   });
