@@ -73,7 +73,7 @@ for (const id of ['sound-toggle','surprise','rain','bloom','erase','intensity','
   if (!home.includes('id="' + id + '"')) throw new Error('Missing home interaction: ' + id);
 }
 const music = readFileSync(join(roomsRoot, 'music/index.html'), 'utf8');
-for (const id of ['sound','play','stop','random','clear','ambience','tempo','voice','space']) {
+for (const id of ['sound','play','stop','random','clear','ambience','tempo','voice','space','volume']) {
   if (!music.includes('id="' + id + '"')) throw new Error('Missing music control: ' + id);
 }
 console.log(JSON.stringify({
