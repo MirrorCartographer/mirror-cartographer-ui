@@ -18,6 +18,13 @@ section{padding:58px 0;border-top:1px solid var(--line)}.section-head{display:fl
 footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}.footrow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 @media(max-width:760px){.orbit{opacity:.32;right:-130px;top:35px;width:280px}.card{grid-column:span 6}.card.wide{grid-column:span 12}.hero{padding-top:72px}}@media(max-width:500px){.wrap{width:min(100% - 26px,1160px)}.card{grid-column:span 12;min-height:170px}.navlinks{gap:12px}.navlinks a{font-size:.8rem}.hero h1{font-size:3.5rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Living Atlas — Static Carnival */
+body{background:#09090c}
+.hero{isolation:isolate}.hero:after{content:"";position:absolute;z-index:-1;right:-3%;top:0;width:min(58vw,680px);height:115%;background:url('/mirror-cartographer-ui/art/atlas-carnival.svg') center/contain no-repeat;opacity:.68;mix-blend-mode:screen;pointer-events:none}
+.orbit{display:none}.card{position:relative;overflow:hidden;background:linear-gradient(145deg,#241923e8,#111410e8);border-color:#c6a47b55}.card:before{content:"";position:absolute;inset:0;background:url('/mirror-cartographer-ui/art/atlas-carnival.svg') center/cover;opacity:.11;mix-blend-mode:screen;pointer-events:none}.card>*{position:relative}
+.card:hover{border-color:#d7b77c99;box-shadow:0 18px 50px #0008}.tag{border-radius:2px;border-color:#c6a47b55}
+
 </style>
 </head>
 <body>
@@ -56,6 +63,7 @@ footer{padding:34px 0 52px;border-top:1px solid var(--line);color:var(--muted);f
 <article class="card" data-search="public games websites html pages"><span class="number">SOURCE · C</span><h3>Published-page source</h3><p>Static public experiences and web pages in the main repository.</p><a href="https://github.com/MirrorCartographer/MirrorCartographer/tree/main/public" target="_blank" rel="noreferrer">Browse public files ↗</a></article>
 </div><p class="quiet" style="margin-top:22px">Archive rule: preserve provenance. Each card points back to its source; hosted links are identified as experiences, not proof that every source file is deployed.</p></div></section>
 </main>
+<section id="image-organism" class="wrap"><div class="section-head"><div><div class="eyebrow">A machine inside the atlas</div><h2>Make an image organism.</h2></div><p>Grow a visual specimen from branching systems, orbital anatomy, botanical forms and controlled fracture. Keep the recipe. Disturb it. Make another.</p></div><div class="card wide" style="grid-column:span 12;min-height:150px;background-image:url('/mirror-cartographer-ui/art/main-glasshouse.svg');background-size:cover;background-position:center"><span class="number">01 / PROCEDURAL ART INSTRUMENT</span><h3>The Image Organism</h3><p>Not a prompt box. A small machine for growing forms.</p><a href="../art-machine/">Enter the image machine ↗</a></div></section>
 <footer><div class="wrap footrow"><span>✳ Mirror Cartographer · The Living Atlas</span><span>Made from the work of Charity Alessandra Sturgell · <a href="https://github.com/MirrorCartographer">GitHub organization ↗</a></span></div></footer>
 <script>
 const field = document.querySelector('#filter');
