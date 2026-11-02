@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#efe7d0">
+<title>Rain Organ</title>
+<style>
+:root{--paper:#efe7d0;--ink:#17150f;--blue:#315b78;--rust:#9b482f;--gold:#c18c32}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Georgia,'Times New Roman',serif}body{overflow:hidden}
+main{min-height:100svh;display:grid;grid-template-rows:auto 1fr auto;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));gap:12px}
+header,footer{display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:2}.title{font-size:clamp(24px,4vw,52px);letter-spacing:.03em}.note{font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;max-width:42ch}
+button,.return{appearance:none;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:10px 14px;min-height:44px;font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;box-shadow:3px 3px 0 var(--ink);text-decoration:none;display:inline-flex;align-items:center}button:active,.return:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}button:focus-visible,.return:focus-visible{outline:4px solid var(--gold);outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.55;box-shadow:none}
+#stage{position:relative;border:2px solid var(--ink);overflow:hidden;touch-action:none;background:linear-gradient(180deg,#d9e0df 0 55%,#d2c8ac 55% 100%);box-shadow:8px 8px 0 rgba(23,21,15,.16)}
+canvas{width:100%;height:100%;display:block}.legend{position:absolute;left:12px;bottom:10px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(239,231,208,.82);padding:6px 8px;border:1px solid var(--ink)}
+.footer-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.meter{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;width:min(220px,40vw)}.meter i{height:7px;border:1px solid var(--ink);background:transparent}.meter i.on{background:var(--rust)}
+@media (max-width:620px){header{align-items:flex-start}.footer-left{align-items:flex-start;flex-direction:column}.return{padding:8px 10px;min-height:40px}}
+@media (prefers-reduced-motion:reduce){.legend::after{content:' · reduced motion';}}
+</style>
+</head>
+<body>
+<main>
+<header><div><div class="title">Rain Organ</div><div class="note">Drag through the weather. Each landing place has a different voice.</div></div><button id="sound" aria-pressed="false">Start sound</button></header>
+<section id="stage" aria-label="Interactive rain instrument. Drag or use arrow keys to move the storm. Press space to drop rain."><canvas id="canvas"></canvas><div class="legend">drag · tap · arrows + space</div></section>
+<footer><div class="footer-left"><a class="return" href="../">Return to the bell</a><a class="return" href="../cloud-press/">Enter Cloud Press</a><div class="note" id="status" aria-live="polite">Sound asleep. The drawing still works.</div></div><div class="meter" aria-hidden="true"></div></footer>
+</main>
+<script>
+(()=>{
+const stage=document.querySelector('#stage'),canvas=document.querySelector('#canvas'),ctx=canvas.getContext('2d'),button=document.querySelector('#sound'),status=document.querySelector('#status'),meter=document.querySelector('.meter');
+for(let i=0;i<8;i++)meter.append(document.createElement('i'));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,AC=window.AudioContext||window.webkitAudioContext;let w=0,h=0,dpr=1,seed=1947,storm={x:.5,y:.25},drops=[],ripples=[],audio=null,master=null,sound=false,last=0;
+if(!AC){button.disabled=true;button.textContent='Visual mode';status.textContent='Web Audio unavailable. The drawing still works.'}
+function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+function resize(){const r=stage.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+new ResizeObserver(resize).observe(stage);resize();
+function voice(x,y){if(!sound||!audio||!master)return;const now=audio.currentTime,osc=audio.createOscillator(),gain=audio.createGain(),pan=audio.createStereoPanner?audio.createStereoPanner():null;const scale=[146.83,174.61,220,261.63,293.66,349.23,440,523.25];const f=scale[Math.max(0,Math.min(7,Math.floor(x*8)))];osc.type=y>.55?'triangle':'sine';osc.frequency.setValueAtTime(f,now);osc.frequency.exponentialRampToValueAtTime(f*.66,now+.45);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.08,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+.5);osc.connect(gain);if(pan){pan.pan.value=x*2-1;gain.connect(pan).connect(master)}else gain.connect(master);osc.start(now);osc.stop(now+.52)}
+function drop(x=storm.x,y=storm.y){const floor=.55+rnd()*.38;drops.push({x:x*w+(rnd()-.5)*80,y:y*h,v:3+rnd()*4,floor:floor*h});if(drops.length%3===0)voice(x,floor)}
+function burst(n=10){for(let i=0;i<n;i++)setTimeout(()=>drop(),i*22)}
+function pointer(e){const r=stage.getBoundingClientRect();storm.x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));storm.y=Math.max(.04,Math.min(.5,(e.clientY-r.top)/r.height));burst(reduced?2:6)}
+stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);pointer(e)});stage.addEventListener('pointermove',e=>{if(stage.hasPointerCapture(e.pointerId))pointer(e)});
+stage.tabIndex=0;stage.addEventListener('keydown',e=>{const k=.045;if(e.key==='ArrowLeft')storm.x-=k;if(e.key==='ArrowRight')storm.x+=k;if(e.key==='ArrowUp')storm.y-=k;if(e.key==='ArrowDown')storm.y+=k;storm.x=Math.max(0,Math.min(1,storm.x));storm.y=Math.max(.04,Math.min(.5,storm.y));if(e.key===' '){e.preventDefault();burst(reduced?3:12)}});
+button.addEventListener('click',async()=>{if(!AC)return;try{if(!audio){audio=new AC();master=audio.createGain();master.gain.value=0;master.connect(audio.destination)}if(audio.state==='suspended')await audio.resume();sound=!sound;master.gain.setTargetAtTime(sound?.7:0,audio.currentTime,.02);button.textContent=sound?'Mute sound':'Start sound';button.setAttribute('aria-pressed',String(sound));status.textContent=sound?'Sound awake. Move the storm.':'Sound asleep. The drawing still works.'}catch{sound=false;button.setAttribute('aria-pressed','false');status.textContent='Sound could not wake. The drawing still works.'}});
+function draw(t){const dt=Math.min(32,t-last||16);last=t;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#17150f';ctx.lineWidth=1.4;ctx.beginPath();for(let i=0;i<10;i++){const y=h*(.58+i*.043);ctx.moveTo(0,y+Math.sin(i*1.7)*3);ctx.quadraticCurveTo(w*.5,y+Math.sin(t*.0004+i)*12,w,y+Math.cos(i)*4)}ctx.stroke();ctx.fillStyle='rgba(49,91,120,.18)';ctx.beginPath();ctx.ellipse(storm.x*w,storm.y*h,w*.09,h*.035,0,0,Math.PI*2);ctx.fill();if(!reduced&&rnd()<.42)drop();for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.y+=d.v*dt*.08;ctx.strokeStyle=i%4?'#315b78':'#9b482f';ctx.beginPath();ctx.moveTo(d.x,d.y-8);ctx.lineTo(d.x-2,d.y);ctx.stroke();if(d.y>=d.floor){ripples.push({x:d.x,y:d.floor,r:2,a:.7});drops.splice(i,1)}}for(let i=ripples.length-1;i>=0;i--){const r=ripples[i];r.r+=dt*.045;r.a-=dt*.0015;ctx.strokeStyle=`rgba(23,21,15,${Math.max(0,r.a)})`;ctx.beginPath();ctx.ellipse(r.x,r.y,r.r,r.r*.26,0,0,Math.PI*2);ctx.stroke();if(r.a<=0)ripples.splice(i,1)}const energy=Math.min(8,Math.ceil((drops.length+ripples.length*.5)/10));[...meter.children].forEach((el,i)=>el.classList.toggle('on',i<energy));requestAnimationFrame(draw)}requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
