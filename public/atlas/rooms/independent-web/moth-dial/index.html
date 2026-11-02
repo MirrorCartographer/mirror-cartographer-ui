@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08070b">
+<title>Moth Dial</title>
+<style>
+:root{color-scheme:dark;--paper:#efe5cf;--dim:#9d93a7;--line:rgba(239,229,207,.24);--glass:rgba(255,255,255,.045)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#08070b;color:var(--paper);font-family:Georgia,"Times New Roman",serif;overflow:hidden}body{touch-action:none}
+canvas{position:fixed;inset:0;width:100%;height:100%}.shell{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));pointer-events:none}
+header{display:flex;justify-content:space-between;gap:1rem}.kicker,.readout,footer{font:600 .66rem/1.35 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}h1{margin:.4rem 0 0;font-size:clamp(2.4rem,9vw,7rem);font-weight:400;line-height:.8;letter-spacing:-.055em}.readout{text-align:right}.instructions{align-self:center;justify-self:center;max-width:26rem;text-align:center;font-style:italic;text-shadow:0 2px 24px #08070b;transition:opacity .7s}.instructions.hidden{opacity:0}
+footer{display:flex;justify-content:space-between;align-items:end;gap:1rem}.controls{display:flex;gap:.55rem;flex-wrap:wrap;pointer-events:auto}button,a{border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(12px);color:var(--paper);border-radius:999px;padding:.74rem 1rem;font:600 .67rem/1 system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--paper);outline-offset:3px}.state{text-align:right;max-width:16rem}
+@media(max-width:620px){.readout{font-size:.56rem}.controls{flex-direction:column;align-items:flex-start}button,a{padding:.67rem .85rem}.state{max-width:9rem}}
+@media(prefers-reduced-motion:reduce){.instructions{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="dial" aria-hidden="true"></canvas>
+<div class="shell">
+<header><div><div class="kicker">room four · an instrument for borrowed light</div><h1>Moth<br>Dial</h1></div><div class="readout" id="readout">moon: veiled<br>moths: 0<br>orbit: unmade</div></header>
+<div class="instructions" id="instructions">Move the lantern. Tap to release a moth. Hold to make the light heavier. Each creature remembers only the orbit you gave it.</div>
+<footer><div class="controls"><button id="lantern" type="button" aria-pressed="false">Wake lantern</button><button id="release" type="button">Release one</button><button id="darken" type="button">Extinguish all</button><a href="../index.html">Return to bell</a></div><output class="state" id="state" aria-live="polite">night unoccupied</output></footer>
+</div>
+<script>
+const canvas=document.querySelector('#dial'),ctx=canvas.getContext('2d',{alpha:false}),readout=document.querySelector('#readout'),state=document.querySelector('#state'),hint=document.querySelector('#instructions'),lanternButton=document.querySelector('#lantern');
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;let w=0,h=0,dpr=1,last=performance.now(),time=0,awake=false,holding=false,holdAt=0,gravity=.42;const light={x:.5,y:.48},moths=[];
+function resize(){dpr=Math.min(2,devicePixelRatio||1);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+function seed(x,y,n){return Math.abs(Math.floor((x*73856093)^(y*19349663)^(n*83492791)))||1}function rnd(s){return()=>((s=Math.imul(48271,s)%2147483647)&2147483647)/2147483647}
+function release(x=light.x,y=light.y){const r=rnd(seed(Math.round(x*997),Math.round(y*991),moths.length+1)),radius=38+r()*Math.min(w,h)*.24;moths.push({angle:r()*Math.PI*2,radius,speed:(.00022+r()*.00055)*(r()>.5?1:-1),wobble:r()*9+2,size:2.5+r()*4,hue:34+r()*32,phase:r()*Math.PI*2});if(moths.length>48)moths.shift();hint.classList.add('hidden');state.textContent=`moth ${moths.length} entered the dial`}
+function drawMoth(m,x,y,a){ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI/2);ctx.fillStyle=`hsla(${m.hue} 68% 78% / .82)`;ctx.beginPath();ctx.ellipse(-m.size*.65,0,m.size,m.size*.42,-.45,0,Math.PI*2);ctx.ellipse(m.size*.65,0,m.size,m.size*.42,.45,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(239,229,207,.65)';ctx.fillRect(-.35,-m.size*.7,.7,m.size*1.4);ctx.restore()}
+function draw(now){const dt=Math.min(32,now-last);last=now;time+=reduce?0:dt;const pressure=holding?Math.min(1,(now-holdAt)/1600):0;gravity+=(.34+pressure*.95-gravity)*.04;ctx.fillStyle='#08070b';ctx.fillRect(0,0,w,h);const lx=light.x*w,ly=light.y*h,g=ctx.createRadialGradient(lx,ly,0,lx,ly,Math.max(w,h)*(.2+pressure*.14));g.addColorStop(0,awake?`rgba(255,226,155,${.2+pressure*.18})`:'rgba(130,120,150,.055)');g.addColorStop(.25,awake?'rgba(180,137,75,.08)':'rgba(80,70,100,.025)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+ctx.save();ctx.translate(lx,ly);for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(0,0,30+i*22+Math.sin(time*.0005+i)*3,0,Math.PI*2);ctx.strokeStyle=`rgba(239,229,207,${.12-i*.011})`;ctx.lineWidth=.7;ctx.stroke()}ctx.restore();
+for(const m of moths){m.angle+=reduce?0:m.speed*dt*(.35+gravity);const wob=Math.sin(time*.003+m.phase)*m.wobble,x=lx+Math.cos(m.angle)*(m.radius+wob),y=ly+Math.sin(m.angle)*(m.radius*.62+wob*.3);drawMoth(m,x,y,m.angle)}
+readout.innerHTML=`moon: ${awake?'open':'veiled'}<br>moths: ${moths.length}<br>orbit: ${holding?'heavy':moths.length?'turning':'unmade'}`;requestAnimationFrame(draw)}requestAnimationFrame(draw);
+function locate(e){light.x=Math.max(.04,Math.min(.96,e.clientX/w));light.y=Math.max(.08,Math.min(.92,e.clientY/h))}canvas.addEventListener('pointermove',locate);canvas.addEventListener('pointerdown',e=>{locate(e);holding=true;holdAt=performance.now();canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointerup',e=>{locate(e);if(performance.now()-holdAt<420)release();else state.textContent='the light became heavy';holding=false});canvas.addEventListener('pointercancel',()=>holding=false);
+lanternButton.onclick=()=>{awake=!awake;lanternButton.setAttribute('aria-pressed',String(awake));lanternButton.textContent=awake?'Veil lantern':'Wake lantern';state.textContent=awake?'the lantern is awake':'the lantern is veiled'};document.querySelector('#release').onclick=()=>release();document.querySelector('#darken').onclick=()=>{moths.length=0;state.textContent='night unoccupied'};document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();release(.2+Math.random()*.6,.24+Math.random()*.5)}if(e.key.toLowerCase()==='l')lanternButton.click();if(e.key.toLowerCase()==='e')document.querySelector('#darken').click()});
+</script>
+</body>
+</html>
