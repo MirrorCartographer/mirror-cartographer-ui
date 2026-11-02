@@ -54,9 +54,8 @@ jobs:
             '/atlas/rooms/mind/',
             '/atlas/rooms/chatgpt/',
             '/atlas/rooms/worlds/unreliable-observatory/',
-            '/self/',
-            '/art-machine/',
           ];
+          const rootRoutes = ['../self/', '../art-machine/'];
           let lastFailure = 'No request attempted';
           for (let attempt = 1; attempt <= 8; attempt++) {
             for (const url of bases) {
@@ -82,6 +81,14 @@ jobs:
                   const worldBody = await world.text();
                   return { route, status: world.status, ok: world.ok && /<!doctype html|<html/i.test(worldBody) };
                 }));
+                const rootChecks = await Promise.all(rootRoutes.map(async (route) => {
+                  const rootPage = await fetch(new URL(route, response.url), {
+                    cache: 'no-store',
+                    signal: AbortSignal.timeout(5000),
+                  });
+                  const rootBody = await rootPage.text();
+                  return { route, status: rootPage.status, ok: rootPage.ok && /<!doctype html|<html/i.test(rootBody) };
+                }));
                 const archiveUrl = new URL('archive.html', response.url);
                 const archiveResponse = await fetch(archiveUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
                 const archiveBody = await archiveResponse.text();
@@ -103,6 +110,11 @@ jobs:
                 const failedWorlds = worldChecks.filter((check) => !check.ok);
                 if (failedWorlds.length) {
                   lastFailure = 'Local worlds failed: ' + JSON.stringify(failedWorlds);
+                  continue;
+                }
+                const failedRootRoutes = rootChecks.filter((check) => !check.ok);
+                if (failedRootRoutes.length) {
+                  lastFailure = 'Root-level experiences failed: ' + JSON.stringify(failedRootRoutes);
                   continue;
                 }
                 const healthUrl = new URL('healthz.txt', response.url);
@@ -135,6 +147,7 @@ jobs:
                   researchAtlasUrl: researchResponse.url,
                   researchAtlasMarkersVerified: researchRequired.length,
                   localWorldsVerified: worldChecks.length,
+        rootExperiencesVerified: rootChecks.length,
                   catalogFilesVerified: indexedFiles,
                   catalogManifestsVerified: manifestChecks.length,
                   healthProbe: health.url,
