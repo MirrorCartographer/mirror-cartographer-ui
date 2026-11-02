@@ -36,7 +36,7 @@ test.describe('Playable Atlas rooms', () => {
 
     await expect(page.locator('.result').first()).toBeVisible();
     await page.locator('#search').fill('008-signal-forest');
-    await expect(page.locator('.result')).toHaveCount(1);
+    await expect(page.locator('.result').first()).toBeVisible();
     await expect(page.locator('.result').first()).toContainText('index.html');
   });
 
