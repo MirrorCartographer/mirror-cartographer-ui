@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b13">
+<title>Afterbell</title>
+<style>
+:root{color-scheme:dark;--ink:#f2ead9;--dim:#9ca9bd}*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#080b13;color:var(--ink);font-family:Georgia,serif}body{touch-action:none}canvas{position:fixed;inset:0;width:100%;height:100%}.ui{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));pointer-events:none}.eyebrow,.status,.back,.room{font:600 .66rem/1.3 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}h1{margin:.35rem 0 0;font-weight:400;font-size:clamp(2.4rem,9vw,7rem);line-height:.82;letter-spacing:-.05em}.center{place-self:center;text-align:center;max-width:25rem;font-style:italic;text-shadow:0 2px 24px #080b13;transition:opacity .7s}.center.hidden{opacity:0}.foot{display:flex;justify-content:space-between;align-items:end;gap:1rem}.actions{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;pointer-events:auto}.back,.room{color:var(--ink);text-decoration:none;border:0;border-bottom:1px solid rgba(242,234,217,.35);padding:0 0 .2rem;background:none;cursor:pointer}.room[hidden]{display:none}.back:focus-visible,.room:focus-visible{outline:2px solid var(--ink);outline-offset:4px}.status{text-align:right}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:620px){.foot{align-items:flex-start}.actions{max-width:12rem}.status{font-size:.58rem}}@media(prefers-reduced-motion:reduce){.center{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="ui">
+<header><div class="eyebrow">A chamber for what remains</div><h1>Afterbell</h1></header>
+<div class="center" id="hint">Touch once to leave a tone. Touch again and the room remembers the distance between them.</div>
+<footer class="foot"><div class="actions"><a class="back" href="./index.html">Return to weather</a><button class="room" id="fold" type="button" hidden>Fold this room</button><button class="room" id="clear" type="button" hidden>Empty room</button><a class="room" id="rain" href="./rain-organ/" hidden>Enter Rain Organ</a></div><div class="status" id="status" aria-live="polite">room empty<br>sound sleeping</div></footer>
+</div>
+<div class="sr" id="announce" aria-live="polite"></div>
+<script type="module">
+import {AfterbellScore} from './afterbell-score.mjs';
+const c=document.querySelector('#field'),x=c.getContext('2d',{alpha:false}),hint=document.querySelector('#hint'),status=document.querySelector('#status'),announce=document.querySelector('#announce'),foldButton=document.querySelector('#fold'),clearButton=document.querySelector('#clear'),rainLink=document.querySelector('#rain');
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;let w=0,h=0,dpr=1,t=0,last=performance.now(),audio=null,score=new AfterbellScore({limit:12});
+try{if(location.hash.startsWith('#ab1.'))score=AfterbellScore.unfold(location.hash.slice(1),{limit:12})}catch{history.replaceState(null,'',location.pathname+location.search)}
+function resize(){dpr=Math.min(2,devicePixelRatio||1);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+async function wake(){if(audio){if(audio.ctx.state==='suspended')await audio.ctx.resume();return audio}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;const ctx=new AC(),master=ctx.createGain();master.gain.value=.55;master.connect(ctx.destination);audio={ctx,master};if(ctx.state==='suspended')await ctx.resume();return audio}
+async function tone(mark,index){const a=await wake();if(!a)return;const marks=score.snapshot().marks,now=a.ctx.currentTime,base=110+mark.y*330,ratio=index?1+Math.min(12,Math.abs(mark.x-marks[index-1].x)*12)/12:1;[1,2.01,3.98].forEach((p,i)=>{const o=a.ctx.createOscillator(),g=a.ctx.createGain(),pan=a.ctx.createStereoPanner?a.ctx.createStereoPanner():null;o.type=i===1?'triangle':'sine';o.frequency.value=base*ratio*p;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.12/(i+1),now+.02);g.gain.exponentialRampToValueAtTime(.0001,now+2.5+i);o.connect(g);if(pan){pan.pan.value=mark.x*2-1;g.connect(pan).connect(a.master)}else g.connect(a.master);o.start(now);o.stop(now+4)})}
+function refresh(message){const room=score.snapshot();hint.classList.toggle('hidden',room.count>0);foldButton.hidden=room.count<3;clearButton.hidden=room.count===0;rainLink.hidden=room.count<3;status.innerHTML=room.count?`echoes ${room.count}/12<br>${audio?'sound awake':'sound sleeping'}<br>${room.temperament} · ${room.signature}`:'room empty<br>sound sleeping';if(message)announce.textContent=message}
+async function addMark(clientX,clientY){const mark=score.add({x:clientX/w,y:clientY/h,strength:.35+Math.random()*.4});await tone(mark,score.snapshot().count-1);refresh(score.snapshot().count===3?'A rain door opened':`Echo ${score.snapshot().count} placed`)}
+function foldRoom(){const seed=score.fold();history.replaceState(null,'',`${location.pathname}${location.search}#${seed}`);const url=location.href;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>refresh('Room folded into the address and copied')).catch(()=>refresh('Room folded into the address'))}else refresh('Room folded into the address')}
+function clearRoom(){score.clear();history.replaceState(null,'',location.pathname+location.search);refresh('The room is empty')}
+c.addEventListener('pointerdown',async e=>{c.setPointerCapture(e.pointerId);await addMark(e.clientX,e.clientY)});foldButton.addEventListener('click',foldRoom);clearButton.addEventListener('click',clearRoom);document.addEventListener('keydown',async e=>{if(e.code==='Space'){e.preventDefault();await addMark(w*(.2+Math.random()*.6),h*(.2+Math.random()*.6))}if(e.key.toLowerCase()==='f'&&!foldButton.hidden)foldRoom();if(e.key.toLowerCase()==='e'&&!clearButton.hidden)clearRoom();if(e.key.toLowerCase()==='r'&&!rainLink.hidden)location.href=rainLink.href});
+function draw(now){const dt=Math.min(33,now-last);last=now;if(!reduce)t+=dt;x.fillStyle='#080b13';x.fillRect(0,0,w,h);const g=x.createRadialGradient(w*.5,h*.52,0,w*.5,h*.52,Math.max(w,h)*.75);g.addColorStop(0,'rgba(42,61,88,.2)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,w,h);const marks=score.snapshot().marks;
+for(let i=0;i<marks.length;i++){const m=marks[i],pulse=reduce?0:Math.sin(t*.0015+i)*8,px=m.x*w,py=m.y*h;x.beginPath();x.arc(px,py,12+i*2+pulse,0,Math.PI*2);x.strokeStyle=`rgba(242,234,217,${.1+.24*(i+1)/marks.length})`;x.lineWidth=.8+m.strength*1.6;x.stroke();if(i){const p=marks[i-1];x.beginPath();x.moveTo(p.x*w,p.y*h);const cx=(p.x+m.x)*w*.5,cy=(p.y+m.y)*h*.5-(20+Math.abs(m.x-p.x)*100);x.quadraticCurveTo(cx,cy,px,py);x.strokeStyle=`rgba(145,181,219,${.08+m.strength*.12})`;x.lineWidth=.7;x.stroke()}}
+requestAnimationFrame(draw)}refresh(score.snapshot().count?'A folded room reopened':null);requestAnimationFrame(draw);
+</script>
+</body>
+</html>
