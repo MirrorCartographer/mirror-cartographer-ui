@@ -38,6 +38,7 @@ jobs:
           test -s dist/index.html
           test -s dist/atlas/index.html
           test -s dist/research-atlas/index.html
+          test -s dist/self/index.html
           test -s dist/.well-known/mirror-cartographer-deployment.json
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
