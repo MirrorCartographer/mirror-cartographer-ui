@@ -19,8 +19,8 @@ header{position:absolute;z-index:4;top:max(20px,env(safe-area-inset-top));left:2
 <body>
 <main class="stage" aria-label="Afterimage Orchard, an interactive generative artwork">
 <div class="sky"></div><canvas id="orchard" aria-hidden="true"></canvas><div class="grain"></div>
-<header><div class="title"><h1>AFTERIMAGE ORCHARD</h1><p>Plant a light. Each seed remembers your hand, grows once, and bends every nearby organism toward its arrival.</p></div><div class="counter" id="counter" aria-live="polite">0 lights planted</div></header>
-<div class="controls"><button id="storm">Call a small storm</button><button id="clear">Let the field go dark</button><button id="sound" aria-pressed="false">Sound: asleep</button><span class="hint">tap · drag · alter the field</span></div>
+<header><div class="title"><h1>AFTERIMAGE ORCHARD</h1><p>Plant a light. Each seed leaves an afterimage: a small history of contact, changing the space around it. What arrives does not erase what was already growing.</p></div><div class="counter" id="counter" aria-live="polite">0 lights planted</div></header>
+<div class="controls"><button id="storm">Invite a small storm</button><button id="clear">Give the field its quiet</button><button id="sound" aria-pressed="false">Sound: asleep</button><span class="hint">tap · drag · leave a trace</span></div>
 </main>
 <script>
 (()=>{const c=document.querySelector('#orchard'),x=c.getContext('2d',{alpha:true});const count=document.querySelector('#counter');const seeds=[];const rain=[];const echoes=[];let dpr=1,w=0,h=0,last={x:innerWidth/2,y:innerHeight/2},audio=null,soundOn=false,t=0;
