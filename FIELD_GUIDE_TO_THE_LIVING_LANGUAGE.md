@@ -1,118 +1,158 @@
 # The Field Guide to the Living Language
-## Enter by sensation. Leave by a new possibility.
+## Come in by any door. Nothing here needs to be finished.
 
-This world is made of rooms, weather, words, thresholds, and traces. It does not ask you to solve yourself. It offers forms you can enter, alter, combine, and leave behind.
+Somewhere there is a house with too many rooms.
 
-A word here is not a label pinned to an experience. It is a small environment.
+One room remembers the sound of rain long after the storm has passed. One has a door that opens only when you stop trying to explain why you need it. In another, a word has grown roots through the floorboards. There is a window facing the sea, though no one remembers building the wall.
 
-## The first room: before the word
+Nothing in this house is asking you to become easier to describe.
 
-Pause at the edge of whatever has your attention.
+You can arrive with a sentence you cannot finish. A color that will not leave you alone. A question you have carried through several different lives of a project. A tiny image. A strange feeling. A joke. A whole weather system.
 
-Do not explain it yet.
+Set it down. See what happens when it is given a little room.
 
-Is it:
-- bright, dim, or backlit?
-- heavy, suspended, or weightless?
-- close, distant, or just beyond reach?
-- still, circling, pulsing, or breaking apart?
-- warm, cold, electric, damp, dry, or difficult to place?
+## Room I — Before the word
 
-Choose the detail that arrives first. It does not need to be profound.
+For a moment, do not explain.
 
-## The second room: give it a name
+Notice the shape of what is here.
 
-Try a temporary name. Let it be strange. Let it be imperfect.
+Is it a light behind a curtain? A stone held underwater? A hallway that lengthens when approached? A bird calling from somewhere you cannot locate? A bright, impossible little thing in the corner of an otherwise ordinary day?
 
-A name can be a compound, a sound, a fragment, a color, a direction, or a sentence.
+Maybe it has no image. Maybe it is only a change in pressure, a pause, a pull, a rhythm that will not settle.
 
-Examples:
-- **Nullglow** — the almost-invisible light of something not quite gone.
-- **Driftroot** — a root that keeps hold while the world moves around it.
-- **Tonefold** — the way a feeling changes the shape of a sentence.
-- **Glyphfracture** — the crack where an old explanation stops holding.
-- **Aftermeaning** — what a moment reveals once it has passed.
+Stay with the detail. It does not have to justify its existence.
 
-Do not ask whether the word is correct. Ask whether it helps you notice more.
+## Room II — The naming table
 
-## The third room: let it meet another thing
+Give it a name that can be changed.
 
-Place the new symbol beside something unexpected.
+Not the correct name. Not the final name. A name that lets you pick it up without crushing it.
 
-A storm beside a memory.
-A door beside a hesitation.
-A tide beside a decision.
-A broken sentence beside a scientific contradiction.
-A tiny creature beside a large, indifferent system.
+**Nullglow** — the light that remains when the obvious source is gone.
 
-Then look for three things:
-1. What echoes?
-2. What refuses to match?
-3. What becomes visible only because they are together?
+**Driftroot** — the root that keeps hold while the landscape moves.
 
-The difference matters as much as the resemblance.
+**Tonefold** — the way a feeling bends a sentence until it says something the words alone could not say.
 
-## Weather is a way of reading change
+**Glyphfracture** — the crack in the old explanation; the place where a larger truth begins to show.
 
-Weather is not a mood chart. It is a language for conditions and transitions.
+**Aftermeaning** — the late light that falls across an event after it has ended.
 
-- **Mist:** partial visibility; the shape is present but its edges are uncertain.
-- **Pressure:** something is accumulating or constraining movement.
-- **Front:** two conditions are meeting and changing one another.
-- **Clear break:** a sudden opening in what could be perceived.
-- **Undertow:** a force moving beneath the obvious direction.
-- **Afterlight:** what remains visible after the source has moved on.
+Say the word once. See what it does in the mouth. See what color it becomes. If it feels false, let it go. If it opens something, follow.
 
-A weather word describes the current field. It does not define the person inside it.
+## Room III — The impossible neighbor
 
-## The threshold sequence
+Bring your symbol something it would never ordinarily meet.
 
-When something changes, trace the passage:
+A storm and a lullaby.
+A submarine and a greenhouse.
+A childhood sentence and a scientific graph.
+A tiny slug following moonlight across dark water.
+A door made from thunder.
+A house that has forgotten gravity.
+
+Do not force them to agree.
+
+Look for:
+- the thing that echoes;
+- the thing that refuses to match;
+- the third thing that appears only because both are present.
+
+Sometimes the most important discovery is the difference.
+
+## Room IV — Weather with no forecast
+
+Weather describes what is moving through a place. It is not a verdict about the person standing in it.
+
+**Mist** — the outline is there, but its edges will not hold.
+
+**Pressure** — something is gathering. The air knows before the room does.
+
+**Undertow** — the visible movement goes one way; something underneath pulls another.
+
+**Front** — two conditions meet. Neither leaves untouched.
+
+**Clear break** — a sudden opening. Not an answer, but enough sky to see again.
+
+**Afterlight** — the glow on the wall after the lightning has gone.
+
+**Stillwater** — a surface that looks quiet while depth continues below.
+
+Let the weather change. Do not demand sunshine from every sky.
+
+## Room V — The threshold
+
+Every crossing has a before and an after. The middle is rarely clean.
 
 **Before → Contact → Disturbance → Crossing → Afterimage → Return**
 
-Not every transition is clean. Some crossings are partial. Some things return altered. Some doors open onto another threshold.
+A threshold can be a door, a first sentence, a decision, a diagnosis being questioned, a finished draft, a new friendship, the moment a machine stops behaving as expected.
 
-Use the sequence for a story, an idea, a research question, a relationship, or a creative work. Keep factual claims separate from metaphorical readings.
+Some crossings happen in an instant. Others take years. Some are crossed and crossed back. Some leave a trace that becomes the next doorway.
 
-## Make a small constellation
+If you are still standing at the edge, that is part of the map.
 
-Choose three symbols:
+## Room VI — The constellation table
 
-- one for what is present;
-- one for what is resisting or complicating it;
-- one for what might become possible.
+Choose three things:
 
-Connect them with a verb, not a vague line.
+- what is here;
+- what complicates it;
+- what might become possible.
 
-Examples: *holds*, *interrupts*, *hides*, *translates*, *returns*, *distorts*, *invites*, *outlasts*.
+Connect them with a verb.
 
-Now the constellation has movement. It is no longer just three pretty things.
+*holds. interrupts. remembers. conceals. translates. outlasts. invites. returns. refuses. grows through.*
 
-## The language changes as you do
+Now read the small sentence you have made.
 
-A symbol can be:
-- **alive** — still useful and generative;
-- **changing** — its meaning is being revised;
-- **dormant** — quiet, but worth preserving;
-- **disputed** — more than one reading remains plausible;
-- **released** — it no longer needs to be carried.
+Does it feel alive? Does it make you curious? Does it hurt in a way that clarifies something? Does it make you laugh? Does it suggest a work you want to make?
 
-You may return to an old word and find that it means something else. Keep the earlier meaning as a trace. Do not erase the path.
+Follow the response, not an obligation to finish.
 
-## A note on care
+## Room VII — The cabinet of changing names
 
-You do not owe the system a confession, a complete story, or a finished interpretation. You may make something beautiful without explaining why. You may stop at sensation. You may keep a symbol private. You may reject every offered word and invent your own.
+A symbol has a life beyond its first definition.
 
-Nothing here can diagnose you, determine who you are, or prove why something happened.
+It may be:
 
-## The invitation
+- **Alive** — still opening new doors.
+- **Changing** — its old meaning no longer holds the whole thing.
+- **Dormant** — quiet, but not erased.
+- **Disputed** — more than one reading deserves to remain.
+- **Released** — no longer yours to carry.
 
-Find one small thing that has been difficult to describe.
+Keep the trace of what it used to mean. You may need that earlier version someday. A changed meaning does not make the first one a lie.
 
-Give it a shape.
-Give it a temporary name.
-Let it meet something unexpected.
-Notice what becomes possible.
+## A little story about the language
 
-Then leave the door open.
+A girl stands in front of a door made of thunder.
+
+She has spent a long time trying to find the right key. She has tried explanations, plans, maps, beautiful names, practical names. She has tried to make the door behave like an ordinary door.
+
+At last she notices the hinges.
+
+They are made of all the things she thought were separate: a question she could not leave alone, a small creature moving slowly toward light, a room that changed when someone left, a sentence that kept its weather, a piece of work that refused to become what it was supposed to be.
+
+The door does not swing open because she has solved it.
+
+It opens because she has finally seen what it is made of.
+
+On the other side there is no finished answer. There is a landscape, and enough room to begin.
+
+## Leave something here
+
+You do not owe this house a confession. You can keep your symbols private. You can make something beautiful without explaining it. You can stop at the color, the sound, the shape. You can reject every word offered and invent one that fits better.
+
+Metaphor can help us approach an experience; it cannot establish its cause. A symbol is not a diagnosis, a prediction, or a definition of you.
+
+If a word closes the world, break it open.
+
+If an image makes something easier to carry, keep it.
+
+If a question is still breathing, let it breathe.
+
+**There is no prize for becoming simple enough to summarize.**
+
+Take what gives you language. Leave what does not. The door will still be here.
