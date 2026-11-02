@@ -54,6 +54,8 @@ jobs:
             '/atlas/rooms/mind/',
             '/atlas/rooms/chatgpt/',
             '/atlas/rooms/worlds/unreliable-observatory/',
+            '/self/',
+            '/art-machine/',
           ];
           let lastFailure = 'No request attempted';
           for (let attempt = 1; attempt <= 8; attempt++) {
