@@ -1,20 +1,36 @@
-# Mirror Cartographer — Interactive Application
+# Mirror Cartographer — The House of Mouths
 
-> **[GitHub Pages application target — activation pending](https://mirrorcartographer.github.io/mirror-cartographer-ui/)** · [Open the Living Atlas hub](https://mirrorcartographer.github.io/MirrorCartographer/) · [Open The Between](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Core repository](https://github.com/MirrorCartographer/MirrorCartographer) · [Continue in ChatGPT](https://chatgpt.com/)
+> **A word is a room. A question is a door. A contradiction may be a compass.**
 
-This repository contains the interactive application and creative interface experiments. The core research, architecture, evidence, and public project catalog live in [MirrorCartographer/MirrorCartographer](https://github.com/MirrorCartographer/MirrorCartographer).
+This repository contains the encounter side of Mirror Cartographer: interactive experiments, symbolic language, creative interfaces, prototypes, and small worlds for approaching a question from more than one angle.
 
-## Free hosting
+The core repository, [MirrorCartographer](https://github.com/MirrorCartographer/MirrorCartographer), holds the research method, architecture, evidence, and systems work. This repository holds the places where those ideas can be explored through interaction, tone, form, and play.
 
-The application is published as a static Vite build through GitHub Pages. No Cloudflare, Vercel, Netlify, paid host, server, or API key is required. The deployment workflow builds with the existing `build:pages` script and publishes `dist/`.
+## Start with the field guide
 
-- Application: https://mirrorcartographer.github.io/mirror-cartographer-ui/
-- Living Atlas: https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/
-- Research instrument: https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/
+**[Read The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md).** It maps the main experiences, the syntax field, the coined vocabulary, and a way to explore without treating every file as a chore.
 
-If Pages has not been enabled for this repository, open [this repository's Pages settings](https://github.com/MirrorCartographer/mirror-cartographer-ui/settings/pages) and choose **Build and deployment → Source → GitHub Actions** once. Public GitHub Pages hosting is free. As of 2026-11-01, repository metadata reports Pages is not enabled: the latest build and artifact upload passed, but `configure-pages` failed because no Pages site exists yet. The intended URLs are not considered live until the Actions deploy job succeeds and the routes are checked. See [the deployment runbook](operations/atlas/DEPLOYMENT.md).
+## The three main encounters
 
-## Local development
+| Experience | What it offers | Source |
+|---|---|---|
+| **Room-World** | A wordless, sensory-first interface experiment | `src/main.jsx`, `src/components/RoomWorldValid.jsx` |
+| **Living Atlas** | A navigable set of worlds, creative work, systems, and archive paths | `public/atlas/index.html` |
+| **The Between** | A relationship instrument for changing lenses and traversing connections | `research-atlas/index.html` |
+
+The active application is a Vite project. `src/components/App.jsx` is an earlier prototype, not the active React entry point. The research-atlas source and built public copy are intended to remain identical.
+
+## Explore by territory
+
+- **[Mind](mind/)** — continuity, memory, hypotheses, questions, decisions, and failures.
+- **[Independent creative web](independent-creative-web/)** — standalone works with their own atmosphere.
+- **[Media](media/)** — sound and image experiments.
+- **[Research atlas](research-atlas/)** — a source-linked relationship instrument.
+- **[Operations](operations/)** — build, deployment, and recovery notes.
+- **[Tests](tests/)** — checks that distinguish intended behavior from actual behavior.
+- **[Source autobiography](source-autobiography.html)** — a creative artifact; read it as a crafted narrative, not an independent factual record.
+
+## Run locally
 
 ```bash
 npm ci
@@ -22,7 +38,7 @@ npm run catalog:build
 npm run dev
 ```
 
-Production preview:
+For a production-style local preview:
 
 ```bash
 npm ci
@@ -31,134 +47,29 @@ npm run build:pages
 npm run preview
 ```
 
-The project base path is `/mirror-cartographer-ui/`; use `npm run build:pages` for the hosted build.
+The hosted project base path is `/mirror-cartographer-ui/`. Use `npm run build:pages` for the GitHub Pages build. The catalog builder refreshes public repository manifests, applies privacy exclusions, checks source provenance, and validates local routes and assets.
 
-`npm run catalog:build` refreshes both public repository manifests from their current Git trees, applies the privacy exclusions, checks source-commit provenance, and validates local Atlas routes/assets before the app is opened or built.
+## Hosting status — 2026-11-01
 
----
+The intended public routes are:
 
-**Mirror Cartographer is a human-centered AI continuity atlas for turning scattered conversation, symptoms, symbols, records, research, creative fragments, and tool failures into navigable structure.**
+- Application: `/mirror-cartographer-ui/`
+- Atlas: `/mirror-cartographer-ui/atlas/`
+- The Between: `/mirror-cartographer-ui/research-atlas/`
 
-It began as a long-form human-AI collaboration with Charity Sturgell and grew into a system for preserving state across conversations that normally fragment meaning.
-
-The core belief is simple:
-
-> Every conversation was planning.
-
-A joke, a pet emergency, a song request, a medical symptom, a rage message about a broken website, a question about AI identity, a resume, a weird symbol, a vet note, a dream of California, and a request to cure FIV may look unrelated from the outside. Mirror Cartographer treats them as pieces of one operating map.
-
-## What it does
-
-Mirror Cartographer routes fragments into usable lanes:
-
-- **Archive:** all conversations become searchable project material.
-- **Symbols:** language, images, glyphs, names, tone, and metaphors become interface primitives.
-- **Animals:** pet health history, vet records, symptom logs, medication reactions, and recovery signals become one continuity system.
-- **Body:** human symptoms, labs, posture, autonomic patterns, and clinician questions become structured maps without diagnosis overreach.
-- **Proof:** claims are separated into fact, inference, symbolic/speculative material, and action.
-- **Creative:** music, images, animation, ritual, and visual identity make the system felt instead of merely explained.
-- **Build:** GitHub, files, connectors, automation traces, failures, and workarounds become technical requirements. Public hosting stays on free GitHub Pages.
-- **Money / stability:** the system must connect to rent, animal care, travel, home, and paid value.
-- **Friction:** boredom, anger, tool failure, loading screens, and accessibility constraints become design input.
-
-## Current route map
-
-The Vite build publishes three distinct experiences under the repository's GitHub Pages project path:
-
-- `/` — the wordless Room-World, mounted by `src/main.jsx` through `src/components/RoomWorldValid.jsx`. A touch changes the visual field and starts the locally generated sound after a user gesture.
-- `/atlas/` — the navigable Living Atlas in `public/atlas/index.html`, with six local world routes, experience/art/systems/archive sections, a repository catalog, and a doorway to The Between.
-- `/research-atlas/` — The Between relationship instrument, sourced from `research-atlas/index.html` and mirrored to `public/research-atlas/index.html`. The source-validation workflow checks that the two copies remain identical.
-
-`src/components/App.jsx` is retained as an earlier prototype; it is not the active React entry point. The static atlas routes do not require a backend or API key.
-
-## Public/private boundary
-
-This repository contains the prototype and public-safe architecture. Sensitive medical, veterinary, financial, and raw conversation details should remain private unless explicitly reviewed and redacted.
-
-Public-safe content:
-
-- architecture
-- interface concept
-- anonymized/reviewed examples
-- public research roadmaps
-- non-sensitive project philosophy
-- demo code
-- barter/value-exchange model
-
-Private content:
-
-- raw conversations
-- medical records
-- veterinary records
-- exact personal identifiers beyond intentional public authorship
-- unreviewed hypotheses about health or animals
-- financial crisis details
-- private relationship/family content
-
-## Money path
-
-Mirror Cartographer should make money by offering useful continuity work before becoming a conventional company.
-
-Public offers:
-
-1. **Pet Health Continuity Packet** — organize pet records, symptoms, medication reactions, vet questions, and next-action map.
-2. **Personal Medical Continuity Packet** — organize symptoms, labs, imaging, questions, and clinician-facing summary.
-3. **AI Archive Recovery / Continuity Map** — turn ChatGPT exports, notes, documents, and project fragments into a navigable system.
-4. **Symbolic Systems / Creative Identity Map** — convert symbols, aesthetic language, and creative fragments into a public-facing concept atlas.
-5. **Research Roadmap / Evidence Map** — turn a question into claims, sources, contradictions, unknowns, and testable next steps.
-6. **Barter Build** — trade a continuity artifact or system map for housing help, vet support, introductions, tools, design help, or other material support.
-
-## Support / barter
-
-Mirror Cartographer accepts value exchange in multiple forms:
-
-- paid project work
-- sponsorship
-- vet-care support
-- housing/travel support
-- collaborator time
-- design/development help
-- research review
-- lab/vet-school introductions
-- public signal boost
-- barter
-
-See `docs/BARTER_VALUE_EXCHANGE_LANE.md` and `docs/PUBLIC_MONEY_PATH.md`.
-
-## What is needed next
-
-- Keep reviewing the public/private boundary; this repository is already public, so every tracked file must be treated as public.
-- Add payment links or sponsor links.
-- Keep the GitHub Pages build and route checks passing; free GitHub Pages is the only approved public hosting target.
-- Build upload/import flow for vet records.
-- Build public demo packets.
-- Create three paid offer pages.
-- Publish one proof film / visual demo.
+**Do not treat those URLs as live until the deployment succeeds and the routes have been checked.** The latest recorded build and artifact upload passed, but the Pages configuration step failed because a Pages site had not yet been enabled. The remaining action and recovery steps are in [the deployment runbook](operations/atlas/DEPLOYMENT.md). This repository does not require Vercel, Netlify, Cloudflare, a server, or a paid host for the intended static GitHub Pages deployment.
 
 ## Integrity rules
 
-- Do not claim medical or veterinary diagnosis.
-- Do not claim FIV cure availability.
-- Do not hide uncertainty.
-- Do not expose private records publicly.
-- Do not scrape vet portals or store passwords.
-- Do not sell vague AI magic.
-- Sell continuity, structure, evidence, design, and relief from fragmentation.
+- Preserve the distinction between fact, interpretation, hypothesis, and symbolic reading.
+- A relationship drawn on a map is not proof of causation.
+- Do not claim medical or veterinary diagnosis or a cure that has not been established.
+- Keep raw private conversations, medical and veterinary records, financial details, credentials, and unreviewed personal material out of public commits.
+- Keep accessibility and clear interaction paths in the work. An interface that fails is a failure to repair, not a metaphor to excuse it.
+- Keep the art alive without letting the language obscure what the software actually does.
 
-## Origin
+---
 
-Created through long-form conversation with Charity Sturgell as a real attempt to preserve dreams, animals, body signals, research, creative identity, and survival needs inside one navigable AI-supported system.
+**The House keeps the question in motion. The Observatory keeps the answer accountable.**
 
-## Interactive research atlas
-
-Explore a relationship instrument rather than a list of subject summaries. The visitor can change reading lenses, select and traverse connected nodes, reverse the next-step order, turn language into a sharper question, and alter one conceptual condition. The interface keeps source links and explicit boundaries visible; it does not infer causality from the visual map.
-
-- [Atlas source file](research-atlas/index.html)
-- Built static route: `public/research-atlas/index.html` (served as `/research-atlas/` by the Vite build; live deployment must be verified separately)
-- [Research method and source-linked claims](https://github.com/MirrorCartographer/MirrorCartographer/tree/main/research)
-
-The atlas is a standalone HTML experience. Its interactive route changes do not require a backend. It is an exploratory interface, not a clinical, benefits-eligibility, or evidence-validation service.
-
-## Open the project in ChatGPT
-
-The canonical [Living Atlas](https://mirrorcartographer.github.io/MirrorCartographer/) includes a context-aware [ChatGPT handoff](https://mirrorcartographer.github.io/MirrorCartographer/chatgpt/). It opens ChatGPT with a prepared prompt identifying the selected public page and the machine-readable [project manifest](https://mirrorcartographer.github.io/MirrorCartographer/chatgpt/project-manifest.json). Review and send the prompt; ChatGPT then retrieves the public sources itself. This is a static handoff, not an automatic import or private-conversation bridge.
+[Open the research world →](https://github.com/MirrorCartographer/MirrorCartographer)
