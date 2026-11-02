@@ -112,4 +112,35 @@ test.describe('Playable Atlas rooms', () => {
     await page.goto('/research-atlas/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-node="signal"]')).toBeVisible();
   });
+  test('Self Cartographer saves and exports a trace locally', async ({ page }) => {
+    await page.goto('/self/', { waitUntil: 'domcontentloaded' });
+    await page.locator('.lens[data-id="attention"]').click();
+    await expect(page.locator('.lens[data-id="attention"]')).toHaveAttribute('aria-pressed', 'true');
+    await page.locator('#note-title').fill('A small signal');
+    await page.locator('#note-body').fill('Attention changed when the room became quieter.');
+    await page.locator('#add-trace').click();
+    await expect(page.locator('#saved .entry')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('#saved .entry')).toHaveCount(1);
+    const download = page.waitForEvent('download');
+    await page.locator('#export').click();
+    expect((await download).suggestedFilename()).toContain('mirror-cartographer-self-map');
+  });
+
+  test('Image Organism grows, disturbs, remembers, and exports a specimen', async ({ page }) => {
+    await page.goto('/art-machine/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#art')).toBeVisible();
+    await page.locator('#grow').click();
+    await expect(page.locator('#status')).toHaveText('A new specimen has grown.');
+    await page.locator('#disturb').click();
+    await expect(page.locator('#status')).toHaveText('The structure was disturbed.');
+    await page.locator('#save').click();
+    await expect(page.locator('#status')).toHaveText('Recipe kept in this browser.');
+    await page.locator('#recall').click();
+    await expect(page.locator('#status')).toHaveText('Last recipe restored.');
+    const download = page.waitForEvent('download');
+    await page.locator('#download').click();
+    expect((await download).suggestedFilename()).toMatch(/\.png$/);
+  });
+
 });
