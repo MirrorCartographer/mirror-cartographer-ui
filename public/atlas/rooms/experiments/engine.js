@@ -24,7 +24,8 @@ if(mode==='composer'){for(let i=0;i<64;i++){let a=i/64*Math.PI*2+t,r=80+(i%8)*23
 if(!paused)raf=requestAnimationFrame(draw)}
 function start(){cancelAnimationFrame(raf);draw()}start();
 addEventListener('pointermove',e=>{p.x=e.clientX/W;p.y=e.clientY/H},{passive:true});
-addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;p.down=true;tone()});addEventListener('pointerup',()=>p.down=false);\naddEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;const step=.045;if(e.key==='ArrowLeft')p.x=Math.max(0,p.x-step);else if(e.key==='ArrowRight')p.x=Math.min(1,p.x+step);else if(e.key==='ArrowUp')p.y=Math.max(0,p.y-step);else if(e.key==='ArrowDown')p.y=Math.min(1,p.y+step);else if(e.key==='Enter'||e.key===' '){e.preventDefault();tone()}else return;});
+addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;p.down=true;tone()});addEventListener('pointerup',()=>p.down=false);
+addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;const step=.045;if(e.key==='ArrowLeft')p.x=Math.max(0,p.x-step);else if(e.key==='ArrowRight')p.x=Math.min(1,p.x+step);else if(e.key==='ArrowUp')p.y=Math.max(0,p.y-step);else if(e.key==='ArrowDown')p.y=Math.min(1,p.y+step);else if(e.key==='Enter'||e.key===' '){e.preventDefault();tone()}else return;});
 const controls=document.querySelector('.bottom .controls');
 if(controls){
 const soundButton=controls.querySelector('[data-action="sound"]');
