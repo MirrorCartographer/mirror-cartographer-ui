@@ -83,7 +83,7 @@ for (const file of htmlFiles) {
 const experimentsPath = join(atlasRoot, 'worlds', 'experiments.html');
 const experimentsHtml = readFileSync(experimentsPath, 'utf8');
 for (const slug of experimentSlugs) {
-  const route = 'https://mirrorcartographer.github.io/MirrorCartographer/experiments/' + slug + '/';
+  const route = 'https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/rooms/experiments/' + slug + '/';
   if (!experimentsHtml.includes(route)) throw new Error('Missing core Pages experiment route: ' + slug);
 }
 
