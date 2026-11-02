@@ -5,6 +5,9 @@ This repository is not a product catalog. It is a set of encounters: some playab
 
 Start with the thing that catches your eye. Follow it until it changes meaning.
 
+
+For an inventory of existing pieces and their actual status, open the [Cabinet of Real Things](CABINET_OF_REAL_THINGS.md).
+
 ## Door 01 — The Room-World
 **A room that responds before it explains.**
 
