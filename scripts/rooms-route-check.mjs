@@ -10,6 +10,7 @@ const experiments = [
   '009-impossible-museum','010-composer',
 ];
 const required = [
+  'index.html','archive.html',
   'rooms/index.html','rooms/mind/index.html','rooms/chatgpt/index.html',
   'rooms/experiments/index.html','rooms/experiments/engine.js','rooms/experiments/shared.css',
   'rooms/music/index.html','rooms/worlds/unreliable-observatory/index.html',
@@ -46,7 +47,7 @@ function resolveLocal(file, raw) {
   if (!found) throw new Error('Broken local reference: ' + relative(atlasRoot, file) + ' -> ' + raw);
   return found;
 }
-const htmlFiles = walk(roomsRoot).filter((path) => extname(path).toLowerCase() === '.html');
+const htmlFiles = [join(atlasRoot, 'index.html'), join(atlasRoot, 'archive.html'), ...walk(roomsRoot).filter((path) => extname(path).toLowerCase() === '.html')];
 let checkedReferences = 0;
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
@@ -66,7 +67,7 @@ for (const file of htmlFiles) {
 for (const file of walk(roomsRoot).filter((path) => extname(path) === '.js')) {
   new Script(readFileSync(file, 'utf8'), { filename: relative(atlasRoot, file) });
 }
-const home = readFileSync(join(roomsRoot, 'index.html'), 'utf8');
+const home = readFileSync(join(atlasRoot, 'index.html'), 'utf8');
 for (const id of ['sound-toggle','surprise','rain','bloom','erase','intensity','still','search','category']) {
   if (!home.includes('id="' + id + '"')) throw new Error('Missing home interaction: ' + id);
 }
