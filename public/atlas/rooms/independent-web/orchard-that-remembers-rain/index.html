@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#17150f" />
+<title>The Orchard That Remembers Rain</title>
+<style>
+:root{color-scheme:dark;--ink:#f4ead0;--dim:#b8aa8d;--ground:#17150f;--line:#4f4737;--glow:#d8c28a}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--ground);color:var(--ink);font-family:Georgia,"Times New Roman",serif;overflow:hidden}body{display:grid;place-items:center}.shell{position:relative;width:100vw;height:100dvh;isolation:isolate}.grain{position:absolute;inset:0;pointer-events:none;opacity:.08;background-image:radial-gradient(circle at 20% 20%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 80% 70%,#fff 0 1px,transparent 1.5px);background-size:9px 11px,13px 15px;mix-blend-mode:screen}.sky{position:absolute;inset:0;background:radial-gradient(circle at 50% 20%,#313126 0,#1c1a13 45%,#11100c 100%)}canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}.title{position:absolute;top:max(20px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(92vw,820px);text-align:center;pointer-events:none}.title h1{margin:0;font-weight:400;letter-spacing:.05em;font-size:clamp(1.5rem,4vw,3.2rem)}.title p{margin:.55rem 0 0;color:var(--dim);font-size:clamp(.9rem,2vw,1.1rem)}.controls{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:.65rem;align-items:center;justify-content:center;flex-wrap:wrap;width:min(94vw,760px)}button{appearance:none;border:1px solid var(--line);background:rgba(23,21,15,.72);color:var(--ink);padding:.72rem 1rem;border-radius:999px;font:inherit;min-height:44px;backdrop-filter:blur(8px);cursor:pointer}button:hover,button:focus-visible{border-color:var(--glow);outline:none;box-shadow:0 0 0 3px rgba(216,194,138,.15)}.status{position:absolute;right:max(14px,env(safe-area-inset-right));top:max(14px,env(safe-area-inset-top));font:12px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);text-align:right}.legend{position:absolute;left:max(14px,env(safe-area-inset-left));bottom:max(86px,calc(env(safe-area-inset-bottom) + 72px));max-width:270px;font-size:.9rem;line-height:1.35;color:var(--dim);pointer-events:none}.legend strong{color:var(--ink);font-weight:400}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:620px){.legend{font-size:.78rem;max-width:210px;bottom:118px}.status{display:none}.controls{gap:.45rem}button{padding:.65rem .85rem;font-size:.9rem}}@media(prefers-reduced-motion:reduce){canvas{opacity:.88}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="sky"></div><canvas id="world" aria-label="Interactive orchard growing from remembered rain"></canvas><div class="grain"></div>
+<header class="title"><h1>The Orchard That Remembers Rain</h1><p>Every drop becomes a tree. Every tree remembers where you touched the weather.</p></header>
+<div class="status" id="status">drops 0<br>trees 0<br>memory 0%</div>
+<p class="legend"><strong>Touch or drag the sky</strong> to make rain. Old rain grows into trees. Press <strong>R</strong> to release a storm.</p>
+<div class="controls"><button id="storm">Release a storm</button><button id="sound" aria-pressed="false">Wake the orchard</button><button id="clear">Let it forget</button></div>
+<p id="announce" class="sr-only" aria-live="polite"></p>
+</main>
+<script>
+(()=>{
+const c=document.getElementById('world'),x=c.getContext('2d'),status=document.getElementById('status'),announce=document.getElementById('announce');
+let w=0,h=0,dpr=1,t=0,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const drops=[],trees=[];let audio=null,master=null,soundOn=false;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+function addDrop(px,py,force=1){drops.push({x:px,y:py,v:1.6+Math.random()*2.8*force,age:0,life:160+Math.random()*120,seed:Math.random()});if(drops.length>700)drops.splice(0,drops.length-700)}
+function plant(d){const ground=h*(.67+.08*Math.sin(d.x*.006));trees.push({x:d.x,y:ground,age:0,max:45+Math.random()*100,lean:(d.seed-.5)*.5,branches:3+Math.floor(Math.random()*5),tone:d.seed});if(trees.length>180)trees.shift();ping(d.seed)}
+function rainAt(px,py,count=8){for(let i=0;i<count;i++)addDrop(px+(Math.random()-.5)*35,Math.min(py+(Math.random()-.5)*20,h*.58),.7+Math.random())}
+function storm(){for(let i=0;i<180;i++)setTimeout(()=>addDrop(Math.random()*w,Math.random()*h*.45,1.2),i*8);announce.textContent='A storm crosses the orchard.'}
+function clearAll(){drops.length=0;trees.length=0;announce.textContent='The orchard forgets.'}
+function ensureAudio(){if(audio)return;audio=new (window.AudioContext||window.webkitAudioContext)();master=audio.createGain();master.gain.value=.045;master.connect(audio.destination)}
+function ping(seed){if(!soundOn)return;ensureAudio();const o=audio.createOscillator(),g=audio.createGain(),now=audio.currentTime;o.type='sine';o.frequency.value=180+seed*420;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.12,now+.01);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g).connect(master);o.start(now);o.stop(now+.24)}
+function ground(){const g=x.createLinearGradient(0,h*.58,0,h);g.addColorStop(0,'rgba(28,31,21,.05)');g.addColorStop(1,'rgba(7,10,6,.95)');x.fillStyle=g;x.beginPath();x.moveTo(0,h);x.lineTo(0,h*.72);for(let px=0;px<=w;px+=18)x.lineTo(px,h*(.69+.025*Math.sin(px*.008)+.012*Math.sin(px*.023)));x.lineTo(w,h);x.closePath();x.fill()}
+function drawTree(tr){tr.age=Math.min(tr.max,tr.age+(reduced?.08:.22));const s=tr.age/tr.max,H=tr.max*1.7*s;x.save();x.translate(tr.x,tr.y);x.rotate(tr.lean*.2);x.strokeStyle=`rgba(181,159,111,${.25+.7*s})`;x.lineWidth=1.2+2.4*s;x.beginPath();x.moveTo(0,0);x.quadraticCurveTo(tr.lean*20,-H*.5,tr.lean*26,-H);x.stroke();for(let i=0;i<tr.branches;i++){const p=.25+i/(tr.branches+1)*.65,side=i%2?1:-1,len=(18+tr.tone*34)*(1-p*.3)*s,sy=-H*p;x.lineWidth=.8+1.2*s;x.beginPath();x.moveTo(tr.lean*18*p,sy);x.quadraticCurveTo(side*len*.45,sy-len*.2,side*len,sy-len*.48);x.stroke();x.fillStyle=`rgba(${110+Math.floor(tr.tone*45)},${116+Math.floor(tr.tone*55)},72,${.08+.28*s})`;for(let j=0;j<3;j++){x.beginPath();x.arc(side*len*(.65+j*.14),sy-len*(.28+j*.08),4+7*s,0,Math.PI*2);x.fill()}}x.restore()}
+function drawDrop(d){d.age++;d.y+=d.v;d.x+=Math.sin((d.age+d.seed*20)*.03)*.18;if(d.y>=h*(.67+.08*Math.sin(d.x*.006))){plant(d);d.dead=true;return}x.strokeStyle=`rgba(195,210,204,${.15+.65*(1-d.age/d.life)})`;x.lineWidth=.7;x.beginPath();x.moveTo(d.x,d.y-8-d.v*2);x.lineTo(d.x,d.y);x.stroke();if(d.age>d.life)d.dead=true}
+function frame(){t++;x.clearRect(0,0,w,h);const moon=x.createRadialGradient(w*.75,h*.18,0,w*.75,h*.18,180);moon.addColorStop(0,'rgba(226,214,168,.12)');moon.addColorStop(1,'rgba(226,214,168,0)');x.fillStyle=moon;x.fillRect(0,0,w,h);ground();for(const tr of trees)drawTree(tr);for(const d of drops)drawDrop(d);for(let i=drops.length-1;i>=0;i--)if(drops[i].dead)drops.splice(i,1);status.innerHTML=`drops ${drops.length}<br>trees ${trees.length}<br>memory ${Math.min(100,Math.round(trees.length/1.8))}%`;requestAnimationFrame(frame)}frame();
+let down=false;c.addEventListener('pointerdown',e=>{down=true;c.setPointerCapture(e.pointerId);rainAt(e.clientX,e.clientY,14)});c.addEventListener('pointermove',e=>{if(down)rainAt(e.clientX,e.clientY,3)});c.addEventListener('pointerup',()=>down=false);c.addEventListener('pointercancel',()=>down=false);
+document.getElementById('storm').onclick=storm;document.getElementById('clear').onclick=clearAll;document.getElementById('sound').onclick=async e=>{ensureAudio();if(audio.state==='suspended')await audio.resume();soundOn=!soundOn;e.currentTarget.setAttribute('aria-pressed',String(soundOn));e.currentTarget.textContent=soundOn?'The orchard is awake':'Wake the orchard';announce.textContent=soundOn?'The orchard is awake. New trees will sing.':'The orchard is quiet.'};addEventListener('keydown',e=>{if(e.key.toLowerCase()==='r')storm()});
+})();
+</script>
+</body>
+</html>
