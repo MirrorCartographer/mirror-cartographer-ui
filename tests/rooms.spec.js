@@ -198,4 +198,29 @@ test.describe('Playable Atlas rooms', () => {
     await context.clearCookies();
   });
 
+  test('the room map offers four cognitive modes and working sensory controls', async ({ page }) => {
+    await page.goto('/atlas/rooms/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('.room')).toHaveCount(18);
+    for (const mode of ['visual','text','audio','minimal']) {
+      const button = page.locator('button[data-mode="' + mode + '"]');
+      await button.click();
+      await expect(button).toHaveAttribute('aria-pressed', 'true');
+      await expect(page.locator('body')).toHaveAttribute('data-mode', mode);
+    }
+    await page.locator('#sound').click();
+    await expect(page.locator('#sound')).toHaveText('Sound on');
+    await page.locator('#sound').click();
+    await expect(page.locator('#sound')).toHaveText('Sound off');
+    await page.locator('#still').click();
+    await expect(page.locator('body')).toHaveAttribute('data-still', 'true');
+    await page.locator('#still').click();
+    await expect(page.locator('body')).toHaveAttribute('data-still', 'false');
+    await page.locator('#intensity').evaluate(node => {
+      node.value = '25';
+      node.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await expect(page.locator('#intensity-value')).toHaveText('25%');
+    await expect(page.locator('.room')).toHaveCount(18);
+  });
+
 });
