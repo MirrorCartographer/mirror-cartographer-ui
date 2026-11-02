@@ -42,7 +42,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|atlas(?:/|$)|research-atlas(?:/|$)).*)",
+      "source": "/((?!api/|atlas(?:/|$)|research-atlas(?:/|$)|self(?:/|$)).*)",
       "destination": "/index.html"
     }
   ]
