@@ -76,6 +76,7 @@ body[data-still="true"] *,body[data-still="true"] *:before,body[data-still="true
 const body=document.body,canvas=document.getElementById('field'),ctx=canvas.getContext('2d');
 const modes=[...document.querySelectorAll('[data-mode]')].filter(x=>x.tagName==='BUTTON');
 let intensity=.68,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,raf=0,audio=null,master=null,sound=false,t=0;
+body.dataset.still=String(paused);const stillControl=document.getElementById('still');stillControl.setAttribute('aria-pressed',String(paused));stillControl.textContent=paused?'Return to motion':'Stillness';
 function setMode(mode){body.dataset.mode=mode;modes.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));try{localStorage.setItem('mc-experience-mode',mode)}catch{}}
 try{const saved=localStorage.getItem('mc-experience-mode');if(['visual','text','audio','minimal'].includes(saved))setMode(saved)}catch{}
 modes.forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
