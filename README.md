@@ -12,6 +12,8 @@ The core repository, [MirrorCartographer](https://github.com/MirrorCartographer/
 
 **[Enter the Field Guide to the Living Language](FIELD_GUIDE_TO_THE_LIVING_LANGUAGE.md).** Begin with sensation, give it a temporary name, let it meet something unexpected, and follow the new possibility.
 
+**[Read LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md).** An offline literary and sensory score through Static Carnival, Ocean Terminal, Afterimage Orchard, Signal Funeral, and the door made of thunder. No website or interaction is required.
+
 **[Follow the Obsession Map](OBSESSION_MAP.md).** It connects the existing rooms, language experiments, creative pieces, and continuity ideas into a set of trails.
 
 **[Open the Cabinet of Real Things](CABINET_OF_REAL_THINGS.md).** See the creative pieces, research instruments, and production plans that already have a shape—and the difference between a plan and a finished experience.
