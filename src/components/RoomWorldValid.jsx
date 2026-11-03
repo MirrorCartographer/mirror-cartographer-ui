@@ -63,6 +63,7 @@ export default function RoomWorldValid() {
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   const room = useMemo(() => roomById(roomId), [roomId]);
   const canvasRef = useRef(null);
+  const drawFrameRef = useRef(null);
   const pointRef = useRef({ x: 0.5, y: 0.5, down: false, startX: 0.5, startY: 0.5, startedAt: 0 });
   const particlesRef = useRef([]);
   const audioRef = useRef(null);
@@ -143,6 +144,7 @@ export default function RoomWorldValid() {
       ctx.globalCompositeOperation = 'source-over';
       if (!reducedMotion) animation = requestAnimationFrame(frame);
     };
+    drawFrameRef.current = frame;
     resize();
     window.addEventListener('resize', resize);
     if (reducedMotion) frame(performance.now()); else animation = requestAnimationFrame(frame);
@@ -151,6 +153,7 @@ export default function RoomWorldValid() {
       window.removeEventListener('resize', resize);
     };
   }, [reducedMotion]);
+  useEffect(() => { if (reducedMotion) drawFrameRef.current?.(performance.now()); }, [room, depth, pulse, reducedMotion]);
 
   const record = (boost, gesture) => setProgress((current) => {
     const energy = current.energy + boost;
