@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 3/100 (canonical contract, Constellation syntax/index repair, and procedural room renderer syntax repair).  
+**Completed:** 4/100 (canonical contract, Constellation syntax/index repair, and two successive procedural/observatory JavaScript syntax repairs).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -42,3 +42,11 @@
 - **Change:** Restored the actual template literal in the carnival renderer.
 - **Verification:** The failure was directly reproduced by the hosted route syntax checker. A subsequent route and browser run must confirm all room routes parse and interact.
 - **Risk:** This repairs syntax only; visual quality and all room-specific behaviors still require browser inspection.
+
+
+## Iteration 004 — Repair observatory route normalization
+
+- **Observation:** The next hosted room-route pass progressed past the carnival renderer and exposed an invalid regular expression in `public/atlas/rooms/mc-observatory.js`. The route-normalization expression used a malformed slash/backslash delimiter sequence.
+- **Change:** Replaced it with a valid slash-collapsing regular expression.
+- **Verification:** The hosted syntax checker identified the exact file and line. A subsequent full room-route and browser run must pass.
+- **Risk:** This is a parse repair; route telemetry behavior and browser persistence still need direct testing.
