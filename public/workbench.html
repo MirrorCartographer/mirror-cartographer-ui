@@ -14,7 +14,7 @@ for(const path of artifacts){const o=document.createElement('option');o.value=pa
 function say(s,bad=false){status.textContent=s;status.classList.toggle('error',bad)}
 function count(){lines.textContent=source.value?source.value.split('\\n').length+' lines':'0 lines'}
 function previewDocument(html,base){
-  html=html.replace(/<base\\b[^>]*>/i,'');
+  html=html.replace(/<base\b[^>]*>/i,'');
   const safeBase=base.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
   const shim='<scr'+'ipt>(()=>{const make=()=>{const d=new Map();return {get length(){return d.size},key:i=>Array.from(d.keys())[i]??null,getItem:k=>d.has(String(k))?d.get(String(k)):null,setItem:(k,v)=>d.set(String(k),String(v)),removeItem:k=>d.delete(String(k)),clear:()=>d.clear()}};try{Object.defineProperty(window,"localStorage",{configurable:true,value:make()});Object.defineProperty(window,"sessionStorage",{configurable:true,value:make()})}catch(e){}})();</scr'+'ipt>';
   const insert='<base href="'+safeBase+'">'+shim;
