@@ -35,6 +35,17 @@ jobs:
           index = (root / "index.html").read_text(encoding="utf-8")
           engine = (root / "experiments/engine.js").read_text(encoding="utf-8")
           styles = (root / "experiments/shared.css").read_text(encoding="utf-8")
+          import json
+          manifest = json.loads((root / "room-identities.json").read_text(encoding="utf-8"))
+          rooms = manifest["rooms"]
+          assert manifest["count"] == 34 and len(rooms) == 34, "Room identity manifest must contain exactly 34 destinations"
+          assert len({r["id"] for r in rooms}) == 34, "Room IDs must be unique"
+          assert len({r["name"] for r in rooms}) == 34, "Room names must be unique"
+          assert len({r["path"] for r in rooms}) == 34, "Room paths must be unique"
+          for room in rooms:
+              for field in ("palette", "visual", "interaction", "temporal", "memory"):
+                  assert room.get(field, "").strip(), f'{room["name"]}: missing {field} contract'
+          assert len({r["interaction"] for r in rooms}) == 34, "Every destination needs its own interaction grammar"
           modes = {
               "001-observatory": "observatory",
               "002-machine-garden": "garden",
