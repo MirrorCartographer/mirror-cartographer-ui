@@ -202,12 +202,13 @@ function ensureDiagnosticButton(AudioContextCtor, observeContext) {
 export function installAudioObservabilityRuntime() {
   if (typeof window === 'undefined' || window.__MC_AUDIO_OBSERVABILITY_INSTALLED__) return;
   window.__MC_AUDIO_OBSERVABILITY_INSTALLED__ = true;
+  const diagnosticsEnabled = new URLSearchParams(window.location.search).get('diagnostics') === '1';
 
   const NativeAudioContext = window.AudioContext || window.webkitAudioContext;
   if (!NativeAudioContext) {
     window.addEventListener('DOMContentLoaded', () => {
       present('unsupported', { supported: false });
-      ensureDiagnosticButton(null, () => {});
+      if (diagnosticsEnabled) ensureDiagnosticButton(null, () => {});
     }, { once: true });
     return;
   }
@@ -248,6 +249,6 @@ export function installAudioObservabilityRuntime() {
   window.addEventListener('touchend', observe, { capture: false, passive: true });
   window.addEventListener('DOMContentLoaded', () => {
     ensureMeter();
-    ensureDiagnosticButton(TrackedAudioContext, observeContext);
+    if (diagnosticsEnabled) ensureDiagnosticButton(TrackedAudioContext, observeContext);
   }, { once: true });
 }
