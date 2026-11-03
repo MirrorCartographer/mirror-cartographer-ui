@@ -47,6 +47,21 @@ def resolve(source,raw):
  target=target.resolve()
  try: target.relative_to(ROOT.resolve())
  except ValueError: return None,frag
+ if not target.exists():
+  candidates=[]
+  if p.startswith("/"): candidates.append(ROOT/"public"/p.lstrip("/"))
+  try: site_relative=target.relative_to((ROOT/"site").resolve())
+  except ValueError: site_relative=None
+  if site_relative is not None:
+   candidates.append(ROOT/"public"/site_relative)
+   if site_relative.parts[:2]==("worlds","unreliable-observatory"): candidates.append(ROOT/"independent-site")
+  for candidate in candidates:
+   candidate=candidate.resolve()
+   try: candidate.relative_to(ROOT.resolve())
+   except ValueError: continue
+   if candidate.exists():
+    target=candidate
+    break
  if target.is_dir() and (target/"index.html").is_file(): target=target/"index.html"
  return target,frag
 def main():
