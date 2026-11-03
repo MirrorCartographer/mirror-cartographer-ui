@@ -28,7 +28,9 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Audit interactive HTML and JavaScript
-        run: |\n          node scripts/field-instruments-audit.mjs\n          node scripts/constellation-bridge-audit.mjs
+        run: |
+          node scripts/field-instruments-audit.mjs
+          node scripts/constellation-bridge-audit.mjs
       - name: Build GitHub Pages bundle
         run: npm run build:pages
       - name: Confirm both experiences ship
