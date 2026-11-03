@@ -269,3 +269,21 @@ test.describe('Playable Atlas rooms', () => {
   });
 
 });
+
+test('local observatory telemetry detects semantic control-state changes', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  const sound = page.locator('button[data-action="sound"]');
+  await sound.click();
+  await expect(sound).toHaveAttribute('aria-pressed', 'true');
+  await page.waitForTimeout(950);
+  const rows = await page.evaluate(() => JSON.parse(localStorage.getItem('mc:observatory:v1') || '[]'));
+  const interaction = rows.filter(row => row.type === 'interaction').at(-1);
+  const outcome = rows.filter(row => row.type === 'interaction_outcome' && row.id === interaction?.id).at(-1);
+  expect(interaction).toBeTruthy();
+  expect(outcome?.outcome).toBe('state-changed');
+  expect(outcome.state_before['aria-pressed']).toBe('false');
+  expect(outcome.state_after['aria-pressed']).toBe('true');
+  expect(Object.keys(outcome.state_before)).not.toContain('value');
+  expect(Object.keys(outcome.state_after)).not.toContain('value');
+});
