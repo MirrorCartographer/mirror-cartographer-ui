@@ -299,3 +299,16 @@ test('observatory dashboard reports semantic changes without misclassifying butt
   await expect(page.locator('#deadends')).not.toContainText('sound');
   await expect(page.locator('.foot')).toContainText('Buttons normally have no href');
 });
+
+test('observatory telemetry confirms same-origin route transitions across page loads', async ({ page }) => {
+  await page.goto('/atlas/rooms/observatory.html', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  await page.locator('a[href="./experiments/001-observatory/"]').click();
+  await expect(page).toHaveURL(/\/atlas\/rooms\/experiments\/001-observatory\//);
+  const rows = await page.evaluate(() => JSON.parse(localStorage.getItem('mc:observatory:v1') || '[]'));
+  const interaction = rows.filter(row => row.type === 'interaction').at(-1);
+  const outcome = rows.filter(row => row.type === 'interaction_outcome' && row.id === interaction?.id).at(-1);
+  expect(interaction?.target).toContain('/atlas/rooms/experiments/001-observatory/');
+  expect(outcome?.outcome).toBe('route-changed');
+  expect(outcome?.target_actual).toContain('/atlas/rooms/experiments/001-observatory/');
+});
