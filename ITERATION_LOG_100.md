@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 5/100 (canonical contract, workbench/index repairs, three syntax repairs, and deployment-relative source parity gate).  
+**Completed:** 6/100 (canonical contract, workbench/index repairs, syntax repairs, deployment-relative source parity gate, and functional spectral-shift control).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -58,3 +58,11 @@
 - **Change:** Added a parity checker that verifies each route independently, normalizes only that one intentional path difference, and then requires all remaining bytes to match. Replaced the invalid `cmp` step in the workflow.
 - **Verification:** The pre-fix hosted workflow failed at the byte comparison; the normalized checker has been added but still requires a passing hosted run.
 - **Risk:** This validates source parity and link intent, not the live deployed URL or deployment identity.
+
+
+## Iteration 006 — Make the room's spectral-shift control visibly work
+
+- **Observation:** The Playwright room test could activate the `shift` button but found no `hue-rotate` style on the body. The renderer advanced an internal hue value, but the visible scene had no whole-surface spectral transition.
+- **Change:** The shared experiment engine now applies the updated hue as a body-level CSS filter during the transform action, while retaining the phase update and renderer redraw.
+- **Verification:** The failing browser assertion was reproduced in the hosted phone-first gate. A new browser run must confirm the shift action changes the visible style and the rest of the room controls remain operational.
+- **Risk:** Body-level hue rotation affects all content in the room, including controls; visual contrast and accessibility should be checked in-browser.
