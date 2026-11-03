@@ -1,0 +1,28 @@
+# 100-iteration improvement log — Mirror Cartographer UI
+
+**Target:** 100 distinct inspect → change/test → verify → record cycles.  
+**Completed:** 1/100 (canonical deployment contract added to local quality gate; hosted execution pending).  
+**Branch:** `work/100-iterations-2026-11-03`
+
+## Iteration 001 — Enforce canonical experience and deployment-state invariants
+
+- **Observation:** The repository correctly records two protected Vercel URLs and an unresolved deployment-identity blocker. That state should be guarded against accidental wording or metadata drift.
+- **Change:** Added `scripts/cross-repo-experience-contract-check.mjs` and wired it into `test:local-gate`. It checks both canonical URLs and requires the deployment state to remain explicitly blocked until exact deployed-commit evidence exists.
+- **Expected proof:** `npm run test:cross-repo-contract` passes.
+- **Verification status:** CODE-ONLY. This test has not yet been run in GitHub Actions or a local checkout.
+- **Risk:** This is a repository contract check, not a browser test. It does not establish that either live site is currently reachable or that current source is deployed.
+
+## Remaining iteration areas (002–100)
+
+- 002–010: Route inventory, link integrity, route-specific browser tests, deep-link and refresh behavior.
+- 011–020: Door/button action completeness and dead-control detection.
+- 021–030: Room uniqueness, progression, unlock/reset paths, and state persistence.
+- 031–040: Sensory interaction, audio routing, mute/gain, and device evidence.
+- 041–050: Mobile/touch, keyboard, screen-reader, and reduced-motion behavior.
+- 051–060: Workbench open/edit/run/reset/export round trips.
+- 061–070: Procedural art diversity, deterministic rendering, and performance budgets.
+- 071–080: Local memory, privacy boundaries, import/export, and recovery.
+- 081–090: Deployment identity, exact-commit provenance, preview isolation, and rollback.
+- 091–100: Cross-repository integration, live browser verification, usability evidence, and release acceptance.
+
+**Counting rule:** A pass counts only when it has a distinct target, evidence, a concrete change or test, and a recorded outcome. Neither a source path nor an HTTP 200 alone proves the deployed experience is the intended build.
