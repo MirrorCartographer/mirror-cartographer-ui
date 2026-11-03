@@ -49,6 +49,7 @@ function PortalMap({ progress, onEnter, onClose }) {
       const seen = progress.visited.includes(room.id);
       return <button aria-label={open ? `Enter room ${room.id}, ${room.primary} form, ${room.motion} motion` : `Room ${room.id}, ${room.primary} form, locked`} key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
     })}</div>
+    <a className="map-all-rooms" href="./atlas/rooms/">All rooms and instruments ↗</a>
   </div>;
 }
 
