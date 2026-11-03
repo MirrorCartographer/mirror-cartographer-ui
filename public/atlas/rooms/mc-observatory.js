@@ -24,6 +24,7 @@
   };
   let activeStarted = document.visibilityState === "visible" ? Date.now() : 0;
   let activeMs = 0;
+  let finished = false;
   emit("page_view", {title: document.title.slice(0,100)});
   const flushActive = () => {
     if (activeStarted) { activeMs += Math.max(0, Date.now() - activeStarted); activeStarted = 0; }
@@ -32,12 +33,14 @@
     if (document.visibilityState === "visible") { if (!activeStarted) activeStarted = Date.now(); emit("visibility", {state:"visible"}); }
     else { flushActive(); emit("visibility", {state:"hidden"}); }
   });
-  const finish = () => { flushActive(); if (activeMs) emit("active_time", {ms:activeMs}); };
+  const finish = () => { if (finished) return; finished = true; flushActive(); if (activeMs) emit("active_time", {ms:activeMs}); };
   window.addEventListener("pagehide", finish, {once:true});
   window.addEventListener("beforeunload", finish, {once:true});
   const labelFor = el => {
-    const raw = el.getAttribute("data-action") || el.getAttribute("aria-label") || el.getAttribute("title");
-    return raw ? raw.trim().slice(0,80) : (el.tagName.toLowerCase() === "a" ? "link" : el.tagName.toLowerCase());
+    const raw = el.getAttribute("data-mc-label") || el.getAttribute("data-action") || el.getAttribute("aria-label") || el.getAttribute("title");
+    if (raw) return raw.trim().slice(0,80);
+    if (el.tagName === "A") { try { return new URL(el.href).pathname.split("/").filter(Boolean).slice(-2).join("/") || "home"; } catch {} }
+    return el.tagName.toLowerCase();
   };
   document.addEventListener("click", event => {
     const el = event.target?.closest?.("a,button,[role=button],[data-action]");
