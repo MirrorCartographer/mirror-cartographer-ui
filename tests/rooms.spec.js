@@ -260,8 +260,10 @@ test.describe('Playable Atlas rooms', () => {
 
     await page.locator('.world-map-button').click();
     await expect(page.getByRole('dialog', { name: 'Room constellation' })).toBeVisible();
-    await page.getByRole('button', { name: 'Close constellation' }).click();
+    await expect(page.getByRole('link', { name: 'All rooms and instruments' })).toHaveAttribute('href', './atlas/rooms/');
+    await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog', { name: 'Room constellation' })).toHaveCount(0);
+    await expect(page.locator('.world-map-button')).toBeFocused();
   });
 
 });
