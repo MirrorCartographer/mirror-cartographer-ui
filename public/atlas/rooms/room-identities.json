@@ -1,6 +1,6 @@
 {
   "schema": "mc.room-identity.v1",
-  "purpose": "A room is a distinct environment with its own visual grammar, interaction grammar, temporal behavior, and consequence. Shared infrastructure may handle navigation, accessibility, and persistence; it must not flatten room identity.",
+  "purpose": "A room is a distinct environment with its own visual grammar, interaction grammar, temporal behavior, and consequence. Shared infrastructure may handle navigation, accessibility, and persistence; it must not flatten room identity. The interaction and memory fields are design contracts, not claims that those features are already implemented.",
   "count": 34,
   "acceptance": {
     "distinctAxes": [
@@ -27,7 +27,9 @@
       "visual": "parallax star vault; proximity constellations; elliptical orbital mechanics",
       "interaction": "Move to bring nearby stars into temporary constellations; transform to alter orbital relationships.",
       "temporal": "slow celestial drift; rare conjunctions",
-      "memory": "constellation traces and discovered relationships"
+      "memory": "constellation traces and discovered relationships",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "002",
@@ -38,7 +40,9 @@
       "visual": "recursive stems; branching growth; translucent seed pods",
       "interaction": "Touch plants to grow branches; cross-pollinate two forms to create a hybrid.",
       "temporal": "growth, bloom, dormancy",
-      "memory": "seed lineage and hybrid forms"
+      "memory": "seed lineage and hybrid forms",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "003",
@@ -49,7 +53,9 @@
       "visual": "ribbed nave; resonance rings; spectral glass",
       "interaction": "Sound or gesture excites a resonant structure; overlapping tones reveal hidden architectural modes.",
       "temporal": "decay, resonance, silence",
-      "memory": "resonance patterns and remembered tones"
+      "memory": "resonance patterns and remembered tones",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "004",
@@ -60,7 +66,9 @@
       "visual": "distorted funhouse geometry; kinetic signage; rotating booths",
       "interaction": "Choose a booth; each action changes the rules of another booth, creating playful interference.",
       "temporal": "bursts, loops, surprise",
-      "memory": "collected oddities and altered booth rules"
+      "memory": "collected oddities and altered booth rules",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "005",
@@ -71,7 +79,9 @@
       "visual": "layered fluid fields; pressure haze; caustic light; drifting particles",
       "interaction": "Move horizontally to travel and vertically to change depth; sonar reveals temporary contours.",
       "temporal": "currents, tides, depth-dependent slowness",
-      "memory": "sonar traces and explored depth bands"
+      "memory": "sonar traces and explored depth bands",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "006",
@@ -82,7 +92,9 @@
       "visual": "technical grid; measured vectors; exploded geometry",
       "interaction": "Place constraints and connect components; a viable structure assembles from the drawing.",
       "temporal": "iterative construction and revision",
-      "memory": "design versions and constraint history"
+      "memory": "design versions and constraint history",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "007",
@@ -93,7 +105,9 @@
       "visual": "floating shelves; impossible staircases; book constellations",
       "interaction": "Follow a volume by sensory clue; opening it changes nearby shelf topology and reveals a fragment.",
       "temporal": "drift, rearrangement, recall",
-      "memory": "found fragments and shelf transformations"
+      "memory": "found fragments and shelf transformations",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "008",
@@ -104,7 +118,9 @@
       "visual": "layered canopy; branching antennae; wind-borne light",
       "interaction": "Send a signal from one tree; trace how it propagates and changes through the canopy.",
       "temporal": "wind cycles and seasonal shifts",
-      "memory": "signal routes and canopy responses"
+      "memory": "signal routes and canopy responses",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "009",
@@ -115,7 +131,9 @@
       "visual": "non-Euclidean galleries; contradictory frames; impossible thresholds",
       "interaction": "Select two conflicting exhibits and rotate perspective until both interpretations can coexist.",
       "temporal": "perspective shifts and exhibit reordering",
-      "memory": "contradictions preserved as paired views"
+      "memory": "contradictions preserved as paired views",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "010",
@@ -126,7 +144,9 @@
       "visual": "radial notation; gesture trails; luminous score lines",
       "interaction": "Drag to compose motifs; position changes pitch and geometry; layer motifs into a score.",
       "temporal": "phrases, rests, tempo changes",
-      "memory": "locally saved motifs and score layers"
+      "memory": "locally saved motifs and score layers",
+      "implementation_status": "procedural-renderer-present",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "011",
@@ -137,7 +157,9 @@
       "visual": "stage lighting; waveform curtains; tactile instrument panels",
       "interaction": "Select and sequence original project audio; inspect track relationships and sound layers.",
       "temporal": "tempo, rests, looping",
-      "memory": "playlists and listening position"
+      "memory": "playlists and listening position",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "012",
@@ -148,7 +170,9 @@
       "visual": "branching thought map; layered translucent planes",
       "interaction": "Move between thought, sensation, context, and interpretation without collapsing them into one label.",
       "temporal": "reflection cycles and changing salience",
-      "memory": "user-authored maps and revisions"
+      "memory": "user-authored maps and revisions",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "013",
@@ -159,7 +183,9 @@
       "visual": "unstable star charts; shifting horizon; unreliable instruments",
       "interaction": "Compare readings from instruments that disagree; calibrate without erasing disagreement.",
       "temporal": "drift, measurement error, recalibration",
-      "memory": "calibration history and unresolved readings"
+      "memory": "calibration history and unresolved readings",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "014",
@@ -170,7 +196,9 @@
       "visual": "editable layered self-map; nested regions; movable landmarks",
       "interaction": "Build a map from chosen dimensions; every label remains revisable and user-owned.",
       "temporal": "nonlinear revisiting",
-      "memory": "private local map and change history"
+      "memory": "private local map and change history",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "015",
@@ -181,7 +209,9 @@
       "visual": "procedural morphology; cellular patterns; evolving image organisms",
       "interaction": "Change environmental parameters and observe form emerge; save seeds to branch variations.",
       "temporal": "growth, mutation, decay",
-      "memory": "seed lineage and selected specimens"
+      "memory": "seed lineage and selected specimens",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "016",
@@ -192,7 +222,9 @@
       "visual": "source constellations; claim graphs; uncertainty bands",
       "interaction": "Move from observation to claim to hypothesis; inspect provenance and competing explanations.",
       "temporal": "evidence accumulation and revision",
-      "memory": "claim history, sources, and falsification status"
+      "memory": "claim history, sources, and falsification status",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "017",
@@ -203,7 +235,9 @@
       "visual": "stratified shelves; dated layers; artifact thumbnails",
       "interaction": "Filter by time, medium, theme, and provenance; open an artifact without losing its place.",
       "temporal": "chronology and resurfacing",
-      "memory": "collections and saved trails"
+      "memory": "collections and saved trails",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "018",
@@ -214,7 +248,9 @@
       "visual": "fragment wall; branching prompt slips; visible provenance",
       "interaction": "Compose a fragment, inspect the prepared handoff, and choose whether to send it; no automatic submission.",
       "temporal": "pause, return, handoff",
-      "memory": "explicitly approved fragments only"
+      "memory": "explicitly approved fragments only",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "019",
@@ -225,7 +261,9 @@
       "visual": "bell-shaped atmosphere; pressure contours; suspended rain",
       "interaction": "Change pressure and watch weather form inside the bell; tap to send a wave through the atmosphere.",
       "temporal": "fronts, pressure shifts, rainfall",
-      "memory": "weather states and pressure history"
+      "memory": "weather states and pressure history",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "020",
@@ -236,7 +274,9 @@
       "visual": "residual rings; fading light; ghost geometry",
       "interaction": "Trigger an event, then navigate only by its fading traces.",
       "temporal": "decay and afterimage",
-      "memory": "residual paths and echoes"
+      "memory": "residual paths and echoes",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "021",
@@ -247,7 +287,9 @@
       "visual": "rainfall columns; resonant gutters; water-driven keys",
       "interaction": "Route drops through channels to play layered tones and rhythms.",
       "temporal": "rain intensity and accumulating rhythm",
-      "memory": "composed rain patterns"
+      "memory": "composed rain patterns",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "022",
@@ -258,7 +300,9 @@
       "visual": "ghost fruit; photographic persistence; branching paths",
       "interaction": "Move through light trails; linger to develop an afterimage into a new branch.",
       "temporal": "exposure, persistence, fading",
-      "memory": "developed afterimages and paths"
+      "memory": "developed afterimages and paths",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "023",
@@ -269,7 +313,9 @@
       "visual": "atmospheric press; soft mechanical plates; cloud typography",
       "interaction": "Compress and release cloud masses; pressure changes density, shape, and printed traces.",
       "temporal": "compression and release",
-      "memory": "printed cloud specimens"
+      "memory": "printed cloud specimens",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "024",
@@ -280,7 +326,9 @@
       "visual": "radial dial; moth-wing symmetry; lamp halo",
       "interaction": "Rotate a dial to redirect moths and light; observe attraction, avoidance, and orbit.",
       "temporal": "nocturnal cycles",
-      "memory": "dial settings and flight patterns"
+      "memory": "dial settings and flight patterns",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "025",
@@ -291,7 +339,9 @@
       "visual": "rain-memory rings; fruiting branches; water-marked surfaces",
       "interaction": "Rain changes the orchard; revisit a branch to read where water fell and what grew.",
       "temporal": "seasons and long memory",
-      "memory": "rainfall marks and growth history"
+      "memory": "rainfall marks and growth history",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "026",
@@ -302,7 +352,9 @@
       "visual": "inflatable botanical forms; pressure vessels; elastic stems",
       "interaction": "Apply pressure to one region and watch neighboring structures respond through coupled constraints.",
       "temporal": "pressure waves and elastic recovery",
-      "memory": "stress history and adaptive forms"
+      "memory": "stress history and adaptive forms",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "027",
@@ -313,7 +365,9 @@
       "visual": "night work lights; orchard rows; long shadows",
       "interaction": "Move between tasks and watch the orchard change under a limited night shift; prioritize without a perfect view.",
       "temporal": "shift clock and dawn approach",
-      "memory": "task order and changed orchard state"
+      "memory": "task order and changed orchard state",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "028",
@@ -324,7 +378,9 @@
       "visual": "tilting rooms; suspended furniture; architectural drift",
       "interaction": "Reorient the house; objects retain momentum and settle according to the new gravity vector.",
       "temporal": "inertia, tilt, settling",
-      "memory": "room orientations and object placements"
+      "memory": "room orientations and object placements",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "029",
@@ -335,7 +391,9 @@
       "visual": "compact puzzle board; crisp grouping feedback",
       "interaction": "Group related items; require a reasoned grouping and allow deliberate revision.",
       "temporal": "turns, mistakes, completion",
-      "memory": "solved boards and difficulty progression"
+      "memory": "solved boards and difficulty progression",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "030",
@@ -346,7 +404,9 @@
       "visual": "mission map; route nodes; resource and capacity indicators",
       "interaction": "Navigate service-to-civilian transition choices; decisions reveal dependencies and next steps.",
       "temporal": "staged pathway progression",
-      "memory": "chosen path and unresolved dependencies"
+      "memory": "chosen path and unresolved dependencies",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "031",
@@ -357,7 +417,9 @@
       "visual": "clear service dashboard; urgent pathways distinct from exploration",
       "interaction": "Choose a need area; receive explainable pathways, records checklist, and human handoff points.",
       "temporal": "time-sensitive needs and follow-up states",
-      "memory": "locally held mission map and explicit next actions"
+      "memory": "locally held mission map and explicit next actions",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "032",
@@ -368,7 +430,9 @@
       "visual": "navigable terrain; layered biomes; distant landmarks",
       "interaction": "Explore by movement and discovery; landmarks change the map and open linked experiences.",
       "temporal": "daylight, weather, traversal",
-      "memory": "visited landmarks and map discoveries"
+      "memory": "visited landmarks and map discoveries",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "033",
@@ -379,7 +443,9 @@
       "visual": "spatial composition surface; movable forms; generative balance",
       "interaction": "Arrange forms and forces; the composition responds to tension, spacing, and rhythm.",
       "temporal": "iteration and deliberate stillness",
-      "memory": "compositions and versions"
+      "memory": "compositions and versions",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     },
     {
       "id": "034",
@@ -390,7 +456,9 @@
       "visual": "unknown terrain; incomplete contours; generative negative space",
       "interaction": "Discover the rules through experimentation; the system reveals no tutorial until a pattern is found.",
       "temporal": "emergence and threshold events",
-      "memory": "discovered rules and first-contact traces"
+      "memory": "discovered rules and first-contact traces",
+      "implementation_status": "existing-destination-needs-audit",
+      "interaction_status": "design-contract-not-yet-verified"
     }
   ]
 }
