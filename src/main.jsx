@@ -15,7 +15,7 @@ import './assets/styles.css';
 import './assets/failsafe.css';
 import './assets/comet-garden.css';
 import './assets/possibility-field.css';
-import '../../public/art-direction.css';
+import './assets/art-direction.css';
 
 installRuntimeInfrastructure();
 installPossibilityFieldRuntime();
