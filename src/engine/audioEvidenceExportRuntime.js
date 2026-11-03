@@ -184,6 +184,8 @@ function ensureExportButton() {
 export function installAudioEvidenceExportRuntime() {
   if (typeof window === 'undefined' || window.__MC_AUDIO_EVIDENCE_EXPORT_INSTALLED__) return;
   window.__MC_AUDIO_EVIDENCE_EXPORT_INSTALLED__ = true;
+  const diagnosticsEnabled = new URLSearchParams(window.location.search).get('diagnostics') === '1';
+  if (!diagnosticsEnabled) return;
 
   const install = () => {
     const button = ensureExportButton();
