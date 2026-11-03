@@ -42,12 +42,12 @@ function drawLayer(ctx, room, layer, width, height, time, point, pulse) {
 }
 
 function PortalMap({ progress, onEnter, onClose }) {
-  return <div className="portal-map" role="dialog" aria-label="Room constellation">
-    <button className="map-close" aria-label="Close constellation" onClick={onClose}>×</button>
+  return <div className="portal-map" role="dialog" aria-modal="true" aria-label="Room constellation" onKeyDown={(event) => { if (event.key === "Escape") onClose(); }}>
+    <button className="map-close" aria-label="Close constellation" autoFocus onClick={onClose}>×</button>
     <div className="portal-grid">{ROOMS.map((room) => {
       const open = progress.unlocked.includes(room.id);
       const seen = progress.visited.includes(room.id);
-      return <button aria-label={open ? `Enter room ${room.id}` : `Room ${room.id} closed`} key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
+      return <button aria-label={open ? `Enter room ${room.id}, ${room.primary} form, ${room.motion} motion` : `Room ${room.id}, ${room.primary} form, locked`} key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
     })}</div>
   </div>;
 }
@@ -66,6 +66,7 @@ export default function RoomWorldValid() {
   const pointRef = useRef({ x: 0.5, y: 0.5, down: false, startX: 0.5, startY: 0.5, startedAt: 0 });
   const particlesRef = useRef([]);
   const audioRef = useRef(null);
+  const mapButtonRef = useRef(null);
 
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId })); }, [progress, roomId]);
@@ -217,13 +218,13 @@ export default function RoomWorldValid() {
 
   return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
     <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
-    <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can turn motion down or pause it.</span>
+    <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can reduce motion.</span><span className="sr-only" aria-live="polite">Room {roomId} of {ROOM_COUNT}. {room.primary} form, {room.motion} motion. Layer {depth} of {LAYERS_PER_ROOM}.</span>
     <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
-    <button aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>
+    <button ref={mapButtonRef} aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>
     <button aria-label={muted ? 'Turn sound on' : 'Turn sound off'} className={`sound-orb ${muted ? 'muted' : ''}`} onClick={() => setMuted((value) => { const next = !value; next ? audioRef.current?.silence() : audioRef.current?.wake(); return next; })}><i /><i /><i /></button>
     <button aria-label={reducedMotion ? "Allow motion" : "Reduce motion"} aria-pressed={reducedMotion} className="motion-orb" onClick={() => setReducedMotion((value) => !value)}><span aria-hidden="true">◌</span></button>
     <div className="room-sigil" aria-hidden="true"><i /><span>{Array.from({ length: Math.min(9, Math.ceil(roomId / 12)) }, (_, index) => <b key={index} />)}</span></div>
     {depth === LAYERS_PER_ROOM && <button aria-label="Enter the next room" className="completion-portal" onClick={nextRoom}><i /></button>}
-    {showMap && <PortalMap progress={progress} onEnter={enter} onClose={() => setShowMap(false)} />}
+    {showMap && <PortalMap progress={progress} onEnter={enter} onClose={() => { setShowMap(false); requestAnimationFrame(() => mapButtonRef.current?.focus()); }} />}
   </main>;
 }
