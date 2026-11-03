@@ -11,7 +11,7 @@ body[data-mode="garden"] .controls button{border-radius:5px;border-color:#9bd99a
 body[data-mode="cathedral"] .ui{padding:clamp(24px,6vw,76px)}
 body[data-mode="cathedral"] .top{align-items:center}
 body[data-mode="cathedral"] .title{text-align:center;letter-spacing:.015em;font-weight:400}
-body[data-mode="cathedral"] .tag,.body[data-mode="cathedral"] .pill{letter-spacing:.28em}
+body[data-mode="cathedral"] .tag,body[data-mode="cathedral"] .pill{letter-spacing:.28em}
 body[data-mode="cathedral"] .bottom{align-items:center}
 body[data-mode="carnival"] .title{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-.06em;color:#ffe1a1;text-shadow:4px 4px 0 #a82e73,8px 8px 0 #35104b}
 body[data-mode="carnival"] .pill{border-radius:3px;transform:rotate(-3deg);background:#4c103b88;border-color:#ffbd6c99}
