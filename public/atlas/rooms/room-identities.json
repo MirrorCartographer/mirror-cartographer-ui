@@ -29,7 +29,8 @@
       "temporal": "slow celestial drift; rare conjunctions",
       "memory": "constellation traces and discovered relationships",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "002",
@@ -42,7 +43,8 @@
       "temporal": "growth, bloom, dormancy",
       "memory": "seed lineage and hybrid forms",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "003",
@@ -55,7 +57,8 @@
       "temporal": "decay, resonance, silence",
       "memory": "resonance patterns and remembered tones",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "004",
@@ -68,7 +71,8 @@
       "temporal": "bursts, loops, surprise",
       "memory": "collected oddities and altered booth rules",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "005",
@@ -81,7 +85,8 @@
       "temporal": "currents, tides, depth-dependent slowness",
       "memory": "sonar traces and explored depth bands",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "006",
@@ -94,7 +99,8 @@
       "temporal": "iterative construction and revision",
       "memory": "design versions and constraint history",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "007",
@@ -107,7 +113,8 @@
       "temporal": "drift, rearrangement, recall",
       "memory": "found fragments and shelf transformations",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "008",
@@ -120,7 +127,8 @@
       "temporal": "wind cycles and seasonal shifts",
       "memory": "signal routes and canopy responses",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "009",
@@ -133,7 +141,8 @@
       "temporal": "perspective shifts and exhibit reordering",
       "memory": "contradictions preserved as paired views",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "010",
@@ -146,7 +155,8 @@
       "temporal": "phrases, rests, tempo changes",
       "memory": "locally saved motifs and score layers",
       "implementation_status": "procedural-renderer-present",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
+      "memory_status": "session-only gesture traces; reload persistence not implemented"
     },
     {
       "id": "011",
@@ -159,7 +169,8 @@
       "temporal": "tempo, rests, looping",
       "memory": "playlists and listening position",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "012",
@@ -172,7 +183,8 @@
       "temporal": "reflection cycles and changing salience",
       "memory": "user-authored maps and revisions",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "013",
@@ -185,7 +197,8 @@
       "temporal": "drift, measurement error, recalibration",
       "memory": "calibration history and unresolved readings",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "014",
@@ -198,7 +211,8 @@
       "temporal": "nonlinear revisiting",
       "memory": "private local map and change history",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "015",
@@ -211,7 +225,8 @@
       "temporal": "growth, mutation, decay",
       "memory": "seed lineage and selected specimens",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "016",
@@ -224,7 +239,8 @@
       "temporal": "evidence accumulation and revision",
       "memory": "claim history, sources, and falsification status",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "017",
@@ -237,7 +253,8 @@
       "temporal": "chronology and resurfacing",
       "memory": "collections and saved trails",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "018",
@@ -250,7 +267,8 @@
       "temporal": "pause, return, handoff",
       "memory": "explicitly approved fragments only",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "019",
@@ -263,7 +281,8 @@
       "temporal": "fronts, pressure shifts, rainfall",
       "memory": "weather states and pressure history",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "020",
@@ -276,7 +295,8 @@
       "temporal": "decay and afterimage",
       "memory": "residual paths and echoes",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "021",
@@ -289,7 +309,8 @@
       "temporal": "rain intensity and accumulating rhythm",
       "memory": "composed rain patterns",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "022",
@@ -302,7 +323,8 @@
       "temporal": "exposure, persistence, fading",
       "memory": "developed afterimages and paths",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "023",
@@ -315,7 +337,8 @@
       "temporal": "compression and release",
       "memory": "printed cloud specimens",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "024",
@@ -328,7 +351,8 @@
       "temporal": "nocturnal cycles",
       "memory": "dial settings and flight patterns",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "025",
@@ -341,7 +365,8 @@
       "temporal": "seasons and long memory",
       "memory": "rainfall marks and growth history",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "026",
@@ -354,7 +379,8 @@
       "temporal": "pressure waves and elastic recovery",
       "memory": "stress history and adaptive forms",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "027",
@@ -367,7 +393,8 @@
       "temporal": "shift clock and dawn approach",
       "memory": "task order and changed orchard state",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "028",
@@ -380,7 +407,8 @@
       "temporal": "inertia, tilt, settling",
       "memory": "room orientations and object placements",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "029",
@@ -393,7 +421,8 @@
       "temporal": "turns, mistakes, completion",
       "memory": "solved boards and difficulty progression",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "030",
@@ -406,7 +435,8 @@
       "temporal": "staged pathway progression",
       "memory": "chosen path and unresolved dependencies",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "031",
@@ -419,7 +449,8 @@
       "temporal": "time-sensitive needs and follow-up states",
       "memory": "locally held mission map and explicit next actions",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "032",
@@ -432,7 +463,8 @@
       "temporal": "daylight, weather, traversal",
       "memory": "visited landmarks and map discoveries",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "033",
@@ -445,7 +477,8 @@
       "temporal": "iteration and deliberate stillness",
       "memory": "compositions and versions",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     },
     {
       "id": "034",
@@ -458,7 +491,8 @@
       "temporal": "emergence and threshold events",
       "memory": "discovered rules and first-contact traces",
       "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-verified"
+      "interaction_status": "design-contract-not-yet-implemented-or-verified",
+      "memory_status": "memory behavior not implemented or verified"
     }
   ]
 }
