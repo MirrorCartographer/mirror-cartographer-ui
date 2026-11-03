@@ -71,7 +71,7 @@
     for(let i=0;i<17;i++){const a=spin+i*TAU/17,r=scale*(.1+(i%5)*.07),x=cx+Math.cos(a)*r*1.25,y=cy+Math.sin(a*1.7)*r*.8;ctx.save();ctx.translate(x,y);ctx.rotate(-a*.6);const w=scale*(.045+(i%4)*.012),h=scale*(.07+(i%3)*.02);ctx.fillStyle=`hsla(${(i*27+hue+phase*11)%360},80%,58%,.12)`;ctx.fillRect(-w/2,-h/2,w,h);ctx.strokeStyle=`hsla(${(i*27+hue+phase*11)%360},90%,78%,.75)`;ctx.lineWidth=1.2;ctx.strokeRect(-w/2,-h/2,w,h);ctx.restore();}
     for(let i=0;i<9;i++){const a=spin*(i%2?1:-1)+i*.7,r=scale*(.12+i*.047);ctx.beginPath();ctx.ellipse(cx,cy,r,r*.45,a,0,TAU);ctx.strokeStyle=`hsla(${(hue+i*31)%360},80%,70%,.28)`;ctx.stroke();}
     for(let i=0;i<30;i++){const a=rand(i)*TAU+time*(i%2?1:-1),r=scale*(.05+rand(i+50)*.46);circle(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.7,2+rand(i+90)*6,`hsla(${(i*17+hue+phase*20)%360},90%,70%,.75)`);}
-    memory.carnival.forEach((p,i)=>{const x=p.x*W,y=p.y*H;ctx.save();ctx.translate(x,y);ctx.rotate(time*.7+i);ctx.strokeStyle=\`hsla(\${(i*49+hue)%360},95%,75%,.8)\`;ctx.strokeRect(-22-i%4*5,-22-i%4*5,44+i%4*10,44+i%4*10);ctx.restore();});
+    memory.carnival.forEach((p,i)=>{const x=p.x*W,y=p.y*H;ctx.save();ctx.translate(x,y);ctx.rotate(time*.7+i);ctx.strokeStyle=`hsla(${(i*49+hue)%360},95%,75%,.8)`;ctx.strokeRect(-22-i%4*5,-22-i%4*5,44+i%4*10,44+i%4*10);ctx.restore();});
     glow(cx,cy,scale*.2,palette[3],.1);
   }
   function ocean(){
