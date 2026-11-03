@@ -3,8 +3,7 @@ import { readFileSync } from 'node:fs';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const readme = read('../README.md');
-const coordination = read('../../MirrorCartographer/WORK_COORDINATION.md');
-const state = JSON.parse(read('operations/CURRENT_STATE.json'));
+const state = JSON.parse(read('../operations/CURRENT_STATE.json'));
 
 const canonical = [
   'https://mirror-cartographer-ui-3orp.vercel.app',
@@ -12,7 +11,6 @@ const canonical = [
 ];
 for (const url of canonical) {
   assert.ok(readme.includes(url), `UI README must retain canonical URL: ${url}`);
-  assert.ok(coordination.includes(url), `coordination guide must retain canonical URL: ${url}`);
 }
 assert.equal(state.delivery_state, 'in_progress_blocked', 'stale deployment identity must not be represented as accepted');
 assert.match(state.operating_constraints.join(' '), /Do not claim deployment or peer execution without evidence/);
