@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify every HTML file is indexed
+        run: node tools/validate-workbench-index.mjs public/workbench.html workbench.html
+
       - name: Install Playwright Chromium
         run: npx playwright install --only-shell chromium
 
