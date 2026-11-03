@@ -124,4 +124,25 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
 
     await expectWordlessBody(page);
   });
+  test('workbench loads an artifact and runs an edited live design', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/workbench.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#artifact')).toBeVisible();
+    await expect(page.locator('#status')).toContainText('Loaded', { timeout: 15000 });
+    await expect(page.locator('#source')).not.toHaveValue('', { timeout: 15000 });
+    await expect(page.locator('#preview')).toBeVisible();
+    const source = page.locator('#source');
+    await source.fill('<!doctype html><html><head><title>Live design proof</title></head><body><main><h1>Live, not static</h1><button id="proof">Working control</button></main><script>document.querySelector("#proof").addEventListener("click",()=>document.body.dataset.clicked="yes")<\\/script></body></html>');
+    await page.locator('#run').click();
+    const preview = page.frameLocator('#preview');
+    await expect(preview.locator('h1')).toHaveText('Live, not static');
+    await preview.locator('#proof').click();
+    await expect(preview.locator('body')).toHaveAttribute('data-clicked', 'yes');
+    await page.locator('#reset').click();
+    await expect(page.locator('#source')).not.toHaveValue('', { timeout: 5000 });
+    expect(errors).toEqual([]);
+  });
+
 });
