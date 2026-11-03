@@ -5,7 +5,9 @@
 > A question is a door.  
 > What is missing may matter most.
 
-**Canonical live experiences — preserve these URLs:** [Mirror Cartographer UI](https://mirror-cartographer-ui-3orp.vercel.app) · [AV Prototype V4](https://mirrorcartographeravprototypev4.vercel.app/#)\n\n**GitHub Pages entry points:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
+**Canonical live experiences — preserve these URLs:** [Mirror Cartographer UI](https://mirror-cartographer-ui-3orp.vercel.app) · [AV Prototype V4](https://mirrorcartographeravprototypev4.vercel.app/#)\n\n**Source / live-design workbench:** [Open the interactive workbench](https://mirrorcartographer.github.io/mirror-cartographer-ui/workbench.html) · 90 HTML artifacts with editable source and a live preview.  
+
+**GitHub Pages entry points:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
 
 ## What is this place?
 
