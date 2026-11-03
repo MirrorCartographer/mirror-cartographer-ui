@@ -32,7 +32,7 @@
 
 - **Observation:** Hosted UI checks found a literal escaped newline between two JavaScript declarations in the Constellation instrument. Node syntax checking failed. The same run found four real HTML files absent from both workbench indexes (92/96 coverage).
 - **Change:** Replaced the literal escape with a real source newline; added all four missing HTML paths to both workbench indexes and updated their count to 96.
-- **Verification:** The failures were directly reproduced in GitHub Actions. A subsequent hosted run must pass the field-instrument syntax audit and workbench-index gate.
+- **Verification:** GitHub Actions run #21 passed the field-instrument release gate; run #4088 passed the HTML-index gate and full phone-first local gate.
 - **Risk:** This is source-level repair. It does not establish browser interaction quality or deployment of the changed source.
 
 
@@ -48,7 +48,7 @@
 
 - **Observation:** The next hosted room-route pass progressed past the carnival renderer and exposed an invalid regular expression in `public/atlas/rooms/mc-observatory.js`. The route-normalization expression used a malformed slash/backslash delimiter sequence.
 - **Change:** Replaced it with a valid slash-collapsing regular expression.
-- **Verification:** The hosted syntax checker identified the exact file and line. A subsequent full room-route and browser run must pass.
+- **Verification:** GitHub Actions run #4088 passed the full room-route and phone-first browser gate after this correction.
 - **Risk:** This is a parse repair; route telemetry behavior and browser persistence still need direct testing.
 
 
@@ -56,7 +56,7 @@
 
 - **Observation:** Atlas Source Validation used byte-for-byte `cmp` between the source and published research-atlas copies. They intentionally differ in one relative link: the source copy links to `../public/atlas/`, while the published copy links to `../atlas/`. The test rejected the correct deployment-specific route.
 - **Change:** Added a parity checker that verifies each route independently, normalizes only that one intentional path difference, and then requires all remaining bytes to match. Replaced the invalid `cmp` step in the workflow.
-- **Verification:** The pre-fix hosted workflow failed at the byte comparison; the normalized checker has been added but still requires a passing hosted run.
+- **Verification:** GitHub Actions Atlas Source Validation run #418 passed after replacing the incorrect byte-for-byte comparison.
 - **Risk:** This validates source parity and link intent, not the live deployed URL or deployment identity.
 
 
@@ -64,5 +64,5 @@
 
 - **Observation:** The Playwright room test could activate the `shift` button but found no `hue-rotate` style on the body. The renderer advanced an internal hue value, but the visible scene had no whole-surface spectral transition.
 - **Change:** The shared experiment engine now applies the updated hue as a body-level CSS filter during the transform action, while retaining the phase update and renderer redraw.
-- **Verification:** The failing browser assertion was reproduced in the hosted phone-first gate. A new browser run must confirm the shift action changes the visible style and the rest of the room controls remain operational.
+- **Verification:** GitHub Actions run #4088 passed the full phone-first gate, including the spectral-shift browser assertion and remaining room controls.
 - **Risk:** Body-level hue rotation affects all content in the room, including controls; visual contrast and accessibility should be checked in-browser.
