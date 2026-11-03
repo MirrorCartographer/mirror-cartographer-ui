@@ -234,4 +234,34 @@ test.describe('Playable Atlas rooms', () => {
     await expect(page.locator('.room')).toHaveCount(34);
   });
 
+  test('the wordless world is keyboard-operable, silent by default, and motion-adjustable', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    const surface = page.getByRole('button', { name: /Explore/ });
+    await expect(surface).toBeVisible();
+    await expect(page.locator('.sound-orb')).toHaveAttribute('aria-label', 'Turn sound on');
+    await surface.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.locator('.depth-spine i.lit')).toHaveCount(2);
+    await page.keyboard.press('Enter');
+    await expect(page.locator('.depth-spine i.lit')).toHaveCount(3);
+
+    await page.locator('.sound-orb').click();
+    await expect(page.locator('.sound-orb')).toHaveAttribute('aria-label', 'Turn sound off');
+    await page.locator('.sound-orb').click();
+    await expect(page.locator('.sound-orb')).toHaveAttribute('aria-label', 'Turn sound on');
+
+    const motion = page.locator('.motion-orb');
+    await motion.click();
+    await expect(motion).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('html')).toHaveClass(/mc-reduced-motion/);
+    await motion.click();
+    await expect(motion).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.locator('html')).not.toHaveClass(/mc-reduced-motion/);
+
+    await page.locator('.world-map-button').click();
+    await expect(page.getByRole('dialog', { name: 'Room constellation' })).toBeVisible();
+    await page.getByRole('button', { name: 'Close constellation' }).click();
+    await expect(page.getByRole('dialog', { name: 'Room constellation' })).toHaveCount(0);
+  });
+
 });
