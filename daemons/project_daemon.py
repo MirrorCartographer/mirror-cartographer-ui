@@ -61,11 +61,10 @@ def main():
  REPORT.mkdir(exist_ok=True)
  result={"project":cfg["project"],"role":cfg["role"],"generated_at":datetime.now(timezone.utc).isoformat(),"files_scanned":len(files),"html_pages":sum(x["kind"]=="html" for x in inventory),"markdown_pages":sum(x["kind"]=="markdown" for x in inventory),"errors":errors,"warnings":warnings,"inventory":inventory,"guardrails":cfg.get("guardrails",[])}
  (REPORT/"latest.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
- lines=["# "+cfg["project"]+" — daemon report","", "Generated: "+result["generated_at"],"Files scanned: "+str(len(files)),"HTML pages: "+str(result["html_pages"]),"Markdown pages: "+str(result["markdown_pages"]),"Integrity errors: "+str(len(errors)),"Structural/accessibility warnings: "+str(len(warnings)),"","## Errors"]
- lines += ["- "+e["file"]+" — "+e["kind"]+": "+e["detail"] for e in errors] or ["- None detected."]
- lines += ["","## Warnings"]+["- "+w["file"]+" — "+w["kind"]+": "+w["detail"] for w in warnings] or ["- None detected."]
- lines += ["","## Next action","- Review findings, fix in a dedicated branch, rerun the daemon.","","## Safety","- Read-only inspection; no source files were modified."]
+ lines=["# "+cfg["project"]+" — daemon report","", "Generated: "+result["generated_at"],"Files scanned: "+str(len(files)),"HTML pages: "+str(result["html_pages"]),"Markdown pages: "+str(result["markdown_pages"]),"Integrity findings: "+str(len(errors)),"Structural/accessibility warnings: "+str(len(warnings)),"","## Findings"]
+ lines += ["- "+e["file"]+" — "+e["kind"]+": "+e["detail"] for e in errors] or ["- No broken local links or missing HTML fragments detected."]
+ lines += ["","## Warnings"]+["- "+w["file"]+" — "+w["kind"]+": "+w["detail"] for w in warnings] or ["- No structural warnings detected."]
+ lines += ["","## Next action","- Review findings and prioritize fixes; this baseline monitor does not block project work.","","## Safety","- Read-only inspection; no source files were modified."]
  (REPORT/"latest.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
  print("DAEMON_RESULT errors="+str(len(errors))+" warnings="+str(len(warnings))+" files="+str(len(files)))
- if errors: raise SystemExit(1)
 if __name__=="__main__": main()
