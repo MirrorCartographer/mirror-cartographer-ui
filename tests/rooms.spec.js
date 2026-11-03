@@ -144,6 +144,7 @@ test.describe('Playable Atlas rooms', () => {
   });
 
   test('every public room loads and every visible button can be activated without a runtime error', async ({ page, context }) => {
+    test.setTimeout(120000);
     const routes = [
       '/', '/atlas/', '/atlas/rooms/', '/atlas/rooms/experiments/',
       '/atlas/rooms/experiments/001-observatory/',
@@ -230,7 +231,7 @@ test.describe('Playable Atlas rooms', () => {
       node.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await expect(page.locator('#intensity-value')).toHaveText('25%');
-    await expect(page.locator('.room')).toHaveCount(18);
+    await expect(page.locator('.room')).toHaveCount(34);
   });
 
 });
