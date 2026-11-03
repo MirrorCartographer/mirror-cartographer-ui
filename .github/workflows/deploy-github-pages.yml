@@ -81,7 +81,7 @@ jobs:
       - name: Validate interactive research atlas
         run: |
           test -s public/research-atlas/index.html
-          cmp -s research-atlas/index.html public/research-atlas/index.html
+          node scripts/research-atlas-parity-check.mjs
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
           import { Script } from 'node:vm';

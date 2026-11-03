@@ -4,8 +4,9 @@
   if (window.__MC_LOCAL_OBSERVATORY__) return;
   window.__MC_LOCAL_OBSERVATORY__ = true;
   const KEY = "mc:observatory:v1";
+  const PENDING_KEY = "mc:observatory:pending-route";
   const LIMIT = 1200;
-  const path = location.pathname.replace(/\\/+/g, "/");
+  const path = location.pathname.replace(/\/+/g, "/");
   const route = path.split("/").filter(Boolean).slice(-3).join("/") || "home";
   const session = (() => {
     try {
@@ -26,6 +27,20 @@
   let activeMs = 0;
   let finished = false;
   emit("page_view", {title: document.title.slice(0,100)});
+  try {
+    const pending = JSON.parse(sessionStorage.getItem(PENDING_KEY) || 'null');
+    if (pending && Date.now() - pending.at < 30000) {
+      emit("interaction_outcome", {
+        id: pending.id,
+        outcome: pending.target === path ? "route-changed" : "route-changed-other",
+        target_expected: pending.target,
+        target_actual: path,
+        state_before: pending.state_before || {},
+        state_after: {}
+      });
+    }
+    sessionStorage.removeItem(PENDING_KEY);
+  } catch {}
   const flushActive = () => {
     if (activeStarted) { activeMs += Math.max(0, Date.now() - activeStarted); activeStarted = 0; }
   };
@@ -36,6 +51,16 @@
   const finish = () => { if (finished) return; finished = true; flushActive(); if (activeMs) emit("active_time", {ms:activeMs}); };
   window.addEventListener("pagehide", finish, {once:true});
   window.addEventListener("beforeunload", finish, {once:true});
+  const stateSnapshot = el => {
+    const state = {};
+    for (const name of ['aria-pressed','aria-expanded','aria-selected','data-state','data-active']) {
+      const value = el.getAttribute(name);
+      if (value !== null) state[name] = value;
+    }
+    if ('disabled' in el) state.disabled = Boolean(el.disabled);
+    if (el instanceof HTMLInputElement && ['checkbox','radio'].includes(el.type)) state.checked = Boolean(el.checked);
+    return state;
+  };
   const labelFor = el => {
     const raw = el.getAttribute("data-mc-label") || el.getAttribute("data-action") || el.getAttribute("aria-label") || el.getAttribute("title");
     if (raw) return raw.trim().slice(0,80);
@@ -49,11 +74,23 @@
     const target = href ? (() => { try { const u = new URL(href, location.href); return u.origin === location.origin ? u.pathname : u.origin; } catch { return "invalid"; } })() : null;
     const id = (crypto.randomUUID?.() || String(Date.now()) + Math.random());
     const before = document.documentElement.innerHTML.length;
-    emit("interaction", {id, element:el.tagName.toLowerCase(), label:labelFor(el), target, href_state:href === null ? "no-href" : (href === "#" ? "placeholder" : "set")});
+    const stateBefore = stateSnapshot(el);
+    const hrefState = href === null ? "no-href" : (!href.trim() || href.trim() === "#" ? "placeholder" : "set");
+    emit("interaction", {id, element:el.tagName.toLowerCase(), label:labelFor(el), target, href_state:hrefState});
+    if (el.tagName === "A" && target && target.startsWith("/") && target !== path) {
+      try { sessionStorage.setItem(PENDING_KEY, JSON.stringify({id, target, source:path, at:Date.now(), state_before:stateBefore})); } catch {}
+    }
     window.setTimeout(() => {
       const after = document.documentElement.innerHTML.length;
       const routeChanged = location.pathname !== path;
-      emit("interaction_outcome", {id, outcome:routeChanged ? "route-changed" : after !== before ? "dom-size-changed" : "no-observed-dom-size-change"});
+      const stateAfter = stateSnapshot(el);
+      const stateChanged = JSON.stringify(stateBefore) !== JSON.stringify(stateAfter);
+      const outcome = routeChanged ? "route-changed" : stateChanged ? "state-changed" : after !== before ? "dom-size-changed" : "no-observed-dom-size-change";
+      emit("interaction_outcome", {id, outcome, state_before:stateBefore, state_after:stateAfter});
+      try {
+        const pending = JSON.parse(sessionStorage.getItem(PENDING_KEY) || 'null');
+        if (pending?.id === id) sessionStorage.removeItem(PENDING_KEY);
+      } catch {}
     }, 900);
   }, true);
   document.addEventListener("submit", () => emit("form_submit", {form:"submitted"}), true);

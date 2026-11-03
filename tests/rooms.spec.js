@@ -269,3 +269,46 @@ test.describe('Playable Atlas rooms', () => {
   });
 
 });
+
+test('local observatory telemetry detects semantic control-state changes', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  const sound = page.locator('button[data-action="sound"]');
+  await sound.click();
+  await expect(sound).toHaveAttribute('aria-pressed', 'true');
+  await page.waitForTimeout(950);
+  const rows = await page.evaluate(() => JSON.parse(localStorage.getItem('mc:observatory:v1') || '[]'));
+  const interaction = rows.filter(row => row.type === 'interaction').at(-1);
+  const outcome = rows.filter(row => row.type === 'interaction_outcome' && row.id === interaction?.id).at(-1);
+  expect(interaction).toBeTruthy();
+  expect(outcome?.outcome).toBe('state-changed');
+  expect(outcome.state_before['aria-pressed']).toBe('false');
+  expect(outcome.state_after['aria-pressed']).toBe('true');
+  expect(Object.keys(outcome.state_before)).not.toContain('value');
+  expect(Object.keys(outcome.state_after)).not.toContain('value');
+});
+
+test('observatory dashboard reports semantic changes without misclassifying buttons as dead links', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  await page.locator('button[data-action="sound"]').click();
+  await page.waitForTimeout(950);
+  await page.goto('/atlas/rooms/observatory.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#outcomes')).toContainText('state-changed');
+  await expect(page.locator('#stats')).toContainText('Semantic state changes');
+  await expect(page.locator('#deadends')).not.toContainText('sound');
+  await expect(page.locator('.foot')).toContainText('Buttons normally have no href');
+});
+
+test('observatory telemetry confirms same-origin route transitions across page loads', async ({ page }) => {
+  await page.goto('/atlas/rooms/observatory.html', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  await page.locator('a[href="./experiments/001-observatory/"]').click();
+  await expect(page).toHaveURL(/\/atlas\/rooms\/experiments\/001-observatory\//);
+  const rows = await page.evaluate(() => JSON.parse(localStorage.getItem('mc:observatory:v1') || '[]'));
+  const interaction = rows.filter(row => row.type === 'interaction').at(-1);
+  const outcome = rows.filter(row => row.type === 'interaction_outcome' && row.id === interaction?.id).at(-1);
+  expect(interaction?.target).toContain('/atlas/rooms/experiments/001-observatory/');
+  expect(outcome?.outcome).toBe('route-changed');
+  expect(outcome?.target_actual).toContain('/atlas/rooms/experiments/001-observatory/');
+});
