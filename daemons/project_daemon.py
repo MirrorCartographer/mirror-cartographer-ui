@@ -25,6 +25,7 @@ class Parser(HTMLParser):
  def handle_data(self,data):
   if self.button is not None: self.button["text"]+=data.strip()
  def handle_endtag(self,tag):
+  if tag=="label": self.label_depth=max(0,self.label_depth-1)
   if tag=="button" and self.button is not None:
    if not (self.button["text"] or self.button["aria"] or self.button["title"]): self.buttons.append("button has no accessible name")
    self.button=None
