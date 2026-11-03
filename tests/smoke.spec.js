@@ -109,6 +109,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expectAnimationFramesAtLeast(page, framesBeforeTap + 8);
     await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBe(0);
+    await expect(page.locator('[data-audio-diagnostic]')).toHaveCount(0);
     const sound = page.locator('.sound-orb');
     await expect(sound).toHaveAttribute('aria-label', 'Turn sound on');
     await sound.click();
