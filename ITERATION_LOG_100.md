@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 2/100 (deployment contract added; hosted checks exposed and corrected a JavaScript syntax defect and four missing workbench entries).  
+**Completed:** 3/100 (canonical contract, Constellation syntax/index repair, and procedural room renderer syntax repair).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -34,3 +34,11 @@
 - **Change:** Replaced the literal escape with a real source newline; added all four missing HTML paths to both workbench indexes and updated their count to 96.
 - **Verification:** The failures were directly reproduced in GitHub Actions. A subsequent hosted run must pass the field-instrument syntax audit and workbench-index gate.
 - **Risk:** This is source-level repair. It does not establish browser interaction quality or deployment of the changed source.
+
+
+## Iteration 003 — Repair procedural carnival renderer syntax
+
+- **Observation:** After the Constellation and index repairs, the hosted phone-first gate progressed further and exposed another parse failure in `public/atlas/rooms/experiments/engine.js:74`. A template literal had been stored with escaped backticks and interpolation markers, making the shared room engine invalid JavaScript.
+- **Change:** Restored the actual template literal in the carnival renderer.
+- **Verification:** The failure was directly reproduced by the hosted route syntax checker. A subsequent route and browser run must confirm all room routes parse and interact.
+- **Risk:** This repairs syntax only; visual quality and all room-specific behaviors still require browser inspection.
