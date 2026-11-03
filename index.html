@@ -31,7 +31,7 @@
       (() => {
         const companion = document.querySelector('.comet-companion');
         const finePointer = window.matchMedia('(pointer:fine)').matches;
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let x = -50, y = -50, tx = -50, ty = -50, lastSpark = 0, frame = 0;
         const bloom = (clientX, clientY, intensity = .5) => {
           const node = document.createElement('i');
@@ -64,8 +64,13 @@
           companion.classList.toggle('is-complete', Boolean(detail.complete));
           if (detail.complete && Number.isFinite(detail.x) && Number.isFinite(detail.y)) bloom(detail.x, detail.y, 1);
         });
+        window.addEventListener('mc:motion-preference', (event) => {
+          reducedMotion = Boolean(event.detail?.reduced);
+          if (reducedMotion) { cancelAnimationFrame(frame); companion.style.opacity = '0'; }
+          else if (finePointer) frame = requestAnimationFrame(animate);
+        });
         if (finePointer) {
-          frame = requestAnimationFrame(animate);
+          if (!reducedMotion) frame = requestAnimationFrame(animate);
           window.addEventListener('pointermove', (event) => { tx = event.clientX; ty = event.clientY; companion.style.opacity = '1'; const now = performance.now(); if (now - lastSpark > 42) { lastSpark = now; spark(event.clientX - 5, event.clientY + 8, Number(getComputedStyle(document.documentElement).getPropertyValue('--comet-charge')) || .25); } }, { passive: true });
           window.addEventListener('pointerleave', () => { companion.style.opacity = '0'; });
           window.addEventListener('pointerdown', (event) => { companion.classList.add('is-down'); bloom(event.clientX, event.clientY, .65); }, { passive: true });
