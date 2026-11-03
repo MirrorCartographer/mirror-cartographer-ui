@@ -1,0 +1,60 @@
+name: Room encounter integrity
+
+on:
+  push:
+    paths:
+      - "public/atlas/rooms/**"
+      - ".github/workflows/room-encounter-integrity.yml"
+  pull_request:
+    paths:
+      - "public/atlas/rooms/**"
+      - ".github/workflows/room-encounter-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  room-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Parse the procedural room engine
+        run: node --check public/atlas/rooms/experiments/engine.js
+      - name: Verify the ten authored encounters and 34 doors
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path("public/atlas/rooms")
+          index = (root / "index.html").read_text(encoding="utf-8")
+          engine = (root / "experiments/engine.js").read_text(encoding="utf-8")
+          styles = (root / "experiments/shared.css").read_text(encoding="utf-8")
+          modes = {
+              "001-observatory": "observatory",
+              "002-machine-garden": "garden",
+              "003-echo-cathedral": "cathedral",
+              "004-carnival-of-thought": "carnival",
+              "005-ocean": "ocean",
+              "006-living-blueprint": "blueprint",
+              "007-dream-library": "library",
+              "008-signal-forest": "forest",
+              "009-impossible-museum": "museum",
+              "010-composer": "composer",
+          }
+          doors = re.findall(r'<a class="room" href=', index)
+          assert len(doors) == 34, f"Expected 34 room-directory destinations, found {len(doors)}"
+          for folder, mode in modes.items():
+              page = (root / "experiments" / folder / "index.html").read_text(encoding="utf-8")
+              assert f"data-mode={mode}" in page, f"{folder}: page mode missing"
+              assert f"function {mode}()" in engine, f"{mode}: procedural renderer missing"
+              assert f'body[data-mode="{mode}"]' in styles, f"{mode}: art direction missing"
+          veteran = (root / "veterans/index.html").read_text(encoding="utf-8")
+          assert 'content="0;url=./hub.html"' in veteran, "Veteran Hub redirect is not project-relative"
+          print("PASS: 34 directory destinations; 10 distinct renderers and art directions; Veteran Hub relative redirect.")
+          PY
