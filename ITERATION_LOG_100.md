@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 4/100 (canonical contract, Constellation syntax/index repair, and two successive procedural/observatory JavaScript syntax repairs).  
+**Completed:** 5/100 (canonical contract, workbench/index repairs, three syntax repairs, and deployment-relative source parity gate).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -50,3 +50,11 @@
 - **Change:** Replaced it with a valid slash-collapsing regular expression.
 - **Verification:** The hosted syntax checker identified the exact file and line. A subsequent full room-route and browser run must pass.
 - **Risk:** This is a parse repair; route telemetry behavior and browser persistence still need direct testing.
+
+
+## Iteration 005 — Correct the research-atlas parity gate
+
+- **Observation:** Atlas Source Validation used byte-for-byte `cmp` between the source and published research-atlas copies. They intentionally differ in one relative link: the source copy links to `../public/atlas/`, while the published copy links to `../atlas/`. The test rejected the correct deployment-specific route.
+- **Change:** Added a parity checker that verifies each route independently, normalizes only that one intentional path difference, and then requires all remaining bytes to match. Replaced the invalid `cmp` step in the workflow.
+- **Verification:** The pre-fix hosted workflow failed at the byte comparison; the normalized checker has been added but still requires a passing hosted run.
+- **Risk:** This validates source parity and link intent, not the live deployed URL or deployment identity.
