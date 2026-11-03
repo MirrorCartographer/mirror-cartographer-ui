@@ -70,7 +70,7 @@ for (const file of htmlFiles) {
   const css = styles.flatMap((style) => [...style.matchAll(/url\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi)]
     .map((match) => (match[1] ?? match[2] ?? match[3]).trim()));
   for (const value of attributes) {
-    if (/^https?:/i.test(value) && legacyHost.test(value) && !canonicalExperienceUrls.has(value.replace(/\\/$/, ''))) {
+    if (/^https?:/i.test(value) && legacyHost.test(value) && !canonicalExperienceUrls.has((value.endsWith('/') ? value.slice(0, -1) : value))) {
       throw new Error('Legacy hosting URL found in public Atlas route: ' + relative(repoRoot, file));
     }
     if (localTarget(file, value)) checkedReferences += 1;
