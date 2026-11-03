@@ -108,7 +108,11 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expectWordlessBody(page);
     await expectAnimationFramesAtLeast(page, framesBeforeTap + 8);
     await expectCanvasHasPixels(canvas);
-    expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1);
+    expect(await audioContextsCreated(page)).toBe(0);
+    const sound = page.locator('.sound-orb');
+    await expect(sound).toHaveAttribute('aria-label', 'Turn sound on');
+    await sound.click();
+    await expect.poll(async () => audioContextsCreated(page)).toBeGreaterThanOrEqual(1);
     expect(errors).toEqual([]);
   });
 
