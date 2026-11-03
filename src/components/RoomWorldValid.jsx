@@ -57,7 +57,7 @@ export default function RoomWorldValid() {
   const saved = load();
   const [progress, setProgress] = useState(() => ({ unlocked: [1], visited: [1], depth: { 1: 1 }, energy: 0, gestures: {}, ...saved }));
   const [roomId, setRoomId] = useState(saved.roomId || 1);
-  const [depth, setDepth] = useState(saved.depth?.[saved.roomId || 1] || 1);
+  const [depth, setDepth] = useState(Math.floor(saved.depth?.[saved.roomId || 1] || 1));
   const [pulse, setPulse] = useState(0.1);
   const [showMap, setShowMap] = useState(false);
   const [muted, setMuted] = useState(true);
@@ -160,10 +160,10 @@ export default function RoomWorldValid() {
     const energy = current.energy + boost;
     const unlocked = new Set(current.unlocked);
     ROOMS.forEach((candidate) => { if (energy >= candidate.unlockCost) unlocked.add(candidate.id); });
-    const rawDepth = (current.depth?.[roomId] || 1) + boost * 0.9;
+    const rawDepth = Math.min(LAYERS_PER_ROOM, (current.depth?.[roomId] ?? depth) + boost * 0.9);
     const nextDepth = Math.min(LAYERS_PER_ROOM, Math.max(depth, Math.floor(rawDepth)));
     setDepth(nextDepth);
-    return { ...current, energy, unlocked: [...unlocked].sort((a, b) => a - b), visited: [...new Set([...current.visited, roomId])], depth: { ...current.depth, [roomId]: nextDepth }, gestures: { ...current.gestures, [roomId]: [...new Set([...(current.gestures?.[roomId] || []), gesture])] } };
+    return { ...current, energy, unlocked: [...unlocked].sort((a, b) => a - b), visited: [...new Set([...current.visited, roomId])], depth: { ...current.depth, [roomId]: rawDepth }, gestures: { ...current.gestures, [roomId]: [...new Set([...(current.gestures?.[roomId] || []), gesture])] } };
   });
 
   const signalComet = (event, boost, complete = false) => {
@@ -214,7 +214,7 @@ export default function RoomWorldValid() {
     interact(point, 'up');
   };
 
-  const enter = (nextId) => { setRoomId(nextId); setDepth(progress.depth?.[nextId] || 1); setShowMap(false); setProgress((current) => ({ ...current, visited: [...new Set([...current.visited, nextId])] })); };
+  const enter = (nextId) => { setRoomId(nextId); setDepth(Math.floor(progress.depth?.[nextId] || 1)); setShowMap(false); setProgress((current) => ({ ...current, visited: [...new Set([...current.visited, nextId])] })); };
   const nextRoom = (event) => {
     signalComet(event, 1, true);
     enter(progress.unlocked.find((candidate) => !progress.visited.includes(candidate)) || progress.unlocked[(progress.unlocked.indexOf(roomId) + 1) % progress.unlocked.length] || 1);
