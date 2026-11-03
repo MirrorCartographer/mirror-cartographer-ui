@@ -287,3 +287,15 @@ test('local observatory telemetry detects semantic control-state changes', async
   expect(Object.keys(outcome.state_before)).not.toContain('value');
   expect(Object.keys(outcome.state_after)).not.toContain('value');
 });
+
+test('observatory dashboard reports semantic changes without misclassifying buttons as dead links', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.removeItem('mc:observatory:v1'));
+  await page.locator('button[data-action="sound"]').click();
+  await page.waitForTimeout(950);
+  await page.goto('/atlas/rooms/observatory.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#outcomes')).toContainText('state-changed');
+  await expect(page.locator('#stats')).toContainText('Semantic state changes');
+  await expect(page.locator('#deadends')).not.toContainText('sound');
+  await expect(page.locator('.foot')).toContainText('Buttons normally have no href');
+});
