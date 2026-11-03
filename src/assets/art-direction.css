@@ -1,0 +1,75 @@
+/* MIRROR CARTOGRAPHER — shared visual grammar / 2026
+   Matte mineral surfaces, weathered brass, botanical shadow, architectural negative space.
+   This is a design layer, not a new component system. */
+:root{
+ --mc-void:#0b0d0b;--mc-coal:#111510;--mc-panel:#151a15;--mc-panel-2:#1a211a;
+ --mc-ink:#e8e1d1;--mc-muted:#aaa493;--mc-dim:#77796c;--mc-line:rgba(190,171,128,.24);
+ --mc-brass:#b49a6d;--mc-bone:#d9c9a6;--mc-moss:#78866b;--mc-water:#607b77;
+ --mc-rust:#8c5c4d;--mc-glow:rgba(170,151,105,.13);
+ color-scheme:dark;
+}
+html,body,#root{background:var(--mc-void);color:var(--mc-ink)}
+body{font-family:Georgia,'Times New Roman',serif;background:
+ radial-gradient(ellipse at 50% 8%,rgba(100,119,91,.12),transparent 42%),
+ radial-gradient(ellipse at 85% 78%,rgba(95,113,105,.07),transparent 34%),var(--mc-void)}
+::selection{background:rgba(180,154,109,.34);color:#fff4dd}
+button,input,textarea,select{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+button,a{ -webkit-tap-highlight-color:transparent}
+:focus-visible{outline:1px solid var(--mc-bone)!important;outline-offset:4px!important}
+a{color:var(--mc-bone)}
+/* Main encounter: let the artwork breathe; frame controls like small instruments. */
+.room-world{background:
+ radial-gradient(ellipse at 50% 50%,rgba(109,126,100,.13),transparent 54%),
+ radial-gradient(ellipse at 50% 110%,rgba(137,112,76,.09),transparent 55%),#0b0d0b!important}
+.world-surface:after{background:
+ radial-gradient(circle 130px at var(--px) var(--py),rgba(206,190,151,.09),transparent 74%),
+ repeating-radial-gradient(ellipse at 50% 50%,rgba(206,190,151,.018) 0 1px,transparent 1px 17px)!important;
+ mix-blend-mode:screen;opacity:.7}
+.world-map-button,.sound-orb,.motion-orb{border:1px solid rgba(190,171,128,.38)!important;border-radius:2px!important;
+ background:rgba(13,17,13,.72)!important;color:var(--mc-bone)!important;box-shadow:0 12px 38px #0008,inset 0 0 18px rgba(190,171,128,.035)!important}
+.world-map-button{width:52px;height:52px;clip-path:polygon(10% 0,90% 0,100% 10%,100% 90%,90% 100%,10% 100%,0 90%,0 10%)}
+.world-map-button span{font-size:23px;text-shadow:0 0 16px var(--mc-brass)}
+.sound-orb i{background:var(--mc-moss)!important;box-shadow:0 0 8px var(--mc-moss)!important}
+.motion-orb{color:var(--mc-moss)!important}
+.room-sigil>i{border-color:var(--mc-brass)!important;box-shadow:0 0 20px rgba(180,154,109,.3)!important;background:radial-gradient(circle,var(--mc-bone),transparent 65%)!important;clip-path:none!important;border-radius:50%!important}
+.room-sigil b{background:var(--mc-brass)!important;box-shadow:0 0 6px var(--mc-brass)!important}
+.depth-spine i{border-radius:0!important;border-color:rgba(190,171,128,.32)!important}
+.depth-spine i.lit{background:var(--mc-brass)!important;border-color:var(--mc-bone)!important;box-shadow:0 0 9px var(--mc-brass),0 0 18px rgba(180,154,109,.3)!important}
+.completion-portal:before,.completion-portal:after,.completion-portal i{border-color:var(--mc-brass)!important;box-shadow:0 0 24px rgba(180,154,109,.32),inset 0 0 25px rgba(120,134,107,.15)!important}
+.completion-portal i{background:radial-gradient(circle,var(--mc-bone),transparent 70%)!important}
+.portal-map{background:
+ radial-gradient(ellipse at 50% 42%,rgba(77,91,68,.36),transparent 50%),
+ repeating-linear-gradient(135deg,rgba(190,171,128,.018) 0 1px,transparent 1px 13px),rgba(9,12,9,.97)!important}
+.portal{border-radius:2px!important;border-color:rgba(190,171,128,.15)!important}
+.portal.open{box-shadow:inset 0 0 18px rgba(180,154,109,.1)!important}
+.portal.open:hover,.portal.open:focus-visible{background:rgba(180,154,109,.13)!important;box-shadow:0 0 26px rgba(180,154,109,.22)!important}
+.map-close,.map-all-rooms{border-radius:2px!important;border-color:var(--mc-line)!important;background:#111711!important;color:var(--mc-bone)!important}
+/* Shared editorial treatment for standalone pages and tools. */
+.mc-page,.wrap,.page-shell{position:relative}
+.eyebrow,.kicker,.num,.brand,.quiet,.readout,.pill,.btn,.back,.nav,.sound-state{
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;letter-spacing:.13em}
+h1,h2,h3,.hero h1,.heading h2,.room strong,.instrument h3{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.045em}
+h1 em,h1 i,.hero h1 i{color:var(--mc-bone)!important}
+.eyebrow,.kicker{color:var(--mc-brass)!important}
+p,.lead,.subtle{color:var(--mc-muted)}
+.top,header{background:rgba(11,14,11,.86)!important;border-color:var(--mc-line)!important;backdrop-filter:blur(18px)}
+.brand,.top .brand{color:var(--mc-ink)!important}
+.pill,.btn,.sound-state,.control-row button,.actions button{
+ border:1px solid var(--mc-line)!important;border-radius:2px!important;background:#151b15!important;color:var(--mc-ink)!important;
+ box-shadow:inset 0 0 20px rgba(190,171,128,.025);transition:background .22s,border-color .22s,transform .22s}
+.pill:hover,.btn:hover,.control-row button:hover,.actions button:hover{background:#222a20!important;border-color:var(--mc-brass)!important;transform:translateY(-2px)}
+.pill.primary,.btn.primary{background:#b49a6d!important;color:#151710!important;border-color:#cbb58b!important}
+.room,.instrument,.result,.list a,.lens,.detail,.map,.entry,.node,.gate-card,.portal-shell{
+ border-radius:2px!important;border-color:var(--mc-line)!important;background-color:rgba(20,26,20,.86)!important;
+ box-shadow:inset 0 1px rgba(230,215,180,.035),0 18px 50px rgba(0,0,0,.16)}
+.room{background-image:linear-gradient(145deg,rgba(105,121,91,.11),transparent 58%),linear-gradient(0deg,#0e130f,#171d17)!important}
+.room:before{opacity:.55;filter:saturate(.55)}
+.room:hover{border-color:rgba(190,171,128,.7)!important;transform:translateY(-3px)}
+.instrument,.detail,.lens,.entry,.result{background:linear-gradient(145deg,rgba(28,36,28,.95),rgba(14,18,14,.96))!important}
+.section,.rule{border-color:var(--mc-line)!important}
+.hero:after{opacity:.36!important;filter:grayscale(.4) sepia(.12)}
+input,textarea,select{border-radius:2px!important;border-color:var(--mc-line)!important;background:#0d120e!important;color:var(--mc-ink)!important}
+input::placeholder,textarea::placeholder{color:#77796c!important}
+footer{border-color:var(--mc-line)!important;color:var(--mc-dim)!important}
+@media(max-width:700px){.world-map-button{width:48px;height:48px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important}}
