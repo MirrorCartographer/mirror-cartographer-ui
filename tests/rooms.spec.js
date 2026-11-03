@@ -202,6 +202,7 @@ test.describe('Playable Atlas rooms', () => {
         const button = buttons.nth(i);
         if (await button.isVisible().catch(() => false)) {
           await button.click({ timeout: 3000 }).catch(error => failures.push(route + ' button ' + i + ': ' + error.message));
+          if (await page.locator('[role="dialog"]').count()) await page.keyboard.press('Escape');
         }
       }
       expect(failures, route + ' should not throw browser runtime errors').toEqual([]);
