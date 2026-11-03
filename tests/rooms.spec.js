@@ -164,6 +164,11 @@ test.describe('Playable Atlas rooms', () => {
       '/atlas/rooms/independent-web/cloud-press/', '/atlas/rooms/independent-web/moth-dial/',
       '/atlas/rooms/independent-web/orchard-that-remembers-rain/', '/atlas/rooms/independent-web/pressure-garden/',
       '/atlas/rooms/night-shift-orchard/', '/atlas/rooms/house-that-forgets-gravity/',
+      '/atlas/rooms/arcade/connections/',
+      ...Array.from({ length: 10 }, (_, i) => '/atlas/rooms/arcade/connections/game-' + (i + 1) + '.html'),
+      '/atlas/rooms/arcade/veteran-mission/', '/atlas/rooms/veterans/',
+      '/atlas/rooms/veterans/hub.html', '/atlas/rooms/veterans/mission.html',
+      '/atlas/rooms/world/', '/atlas/rooms/composition/', '/atlas/rooms/unmapped/',
     ];
     const failures = [];
     page.on('pageerror', error => failures.push(error.message));
@@ -205,7 +210,7 @@ test.describe('Playable Atlas rooms', () => {
 
   test('the room map offers four cognitive modes and working sensory controls', async ({ page }) => {
     await page.goto('/atlas/rooms/', { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.room')).toHaveCount(28);
+    await expect(page.locator('.room')).toHaveCount(34);
     for (const mode of ['visual','text','audio','minimal']) {
       const button = page.locator('button[data-mode="' + mode + '"]');
       await button.click();
