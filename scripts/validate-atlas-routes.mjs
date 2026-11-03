@@ -4,6 +4,11 @@ import { dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node
 const repoRoot = resolve('.');
 const atlasRoot = resolve('public/atlas');
 const legacyHost = /(?:vercel\.app|netlify\.app|pages\.dev)/i;
+// Preserve only the two user-confirmed canonical live experiences; reject other legacy hosts.
+const canonicalExperienceUrls = new Set([
+  'https://mirror-cartographer-ui-3orp.vercel.app',
+  'https://mirrorcartographeravprototypev4.vercel.app/#',
+]);
 const experimentSlugs = [
   '001-observatory',
   '002-machine-garden',
