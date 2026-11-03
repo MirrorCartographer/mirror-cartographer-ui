@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 8/100 (canonical contract, index and syntax repairs, source parity, spectral shift, semantic interaction telemetry, and false-positive dead-link correction).  
+**Completed:** 9/100 (canonical contract, index and syntax repairs, source parity, spectral shift, semantic interaction telemetry, dead-link correction, and cross-page route outcome confirmation).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -82,3 +82,11 @@
 - **Change:** Only anchor elements without a real destination are now classified as potential dead ends. Added a semantic-state-change metric and updated the interpretation boundary. Added a browser test that toggles a button, observes a state change, and verifies the button is not reported as a dead link.
 - **Verification:** The preceding UI run #4095 passed all 10 room tests, including semantic telemetry. This dashboard-specific regression test requires a fresh hosted run.
 - **Risk:** This remains local-only telemetry and cannot tell us how visitors on other devices behave unless they voluntarily export and share their local evidence.
+
+
+## Iteration 009 — Preserve route-transition outcomes across navigation
+
+- **Observation:** The interaction observer waited 900 ms before recording an outcome. A real navigation unloads the source page before that timer runs, so the click was retained but the successful route transition could be lost.
+- **Change:** Same-origin anchor interactions now place a short-lived pending record in sessionStorage. The destination page confirms the transition and writes the outcome to localStorage. Pending records expire after 30 seconds and are cleared after resolution. Empty anchor hrefs are now treated as placeholders.
+- **Verification:** The preceding hosted run #4095 passed the semantic state-change browser test. The new cross-page route test requires a fresh hosted run.
+- **Risk:** Only same-origin route transitions are confirmed. External navigation cannot be followed across origins, and a browser crash before the destination loads may leave an unresolved pending record until expiry.
