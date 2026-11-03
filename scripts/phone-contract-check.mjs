@@ -46,7 +46,7 @@ assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes
 assert('smoke test asserts wordless body without treating interface glyphs as copy', smoke.includes('visibleText.replace') && smoke.includes('readableText).toBe'));
 assert('smoke test asserts wordless body before and after first tap', smoke.indexOf('await expectWordlessBody(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectWordlessBody(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
 assert('smoke test probes no autoplay before first tap', smoke.includes('__mirrorAudioContextsCreated') && smoke.includes('expect(await audioContextsCreated(page)).toBe(0)'));
-assert('smoke test expects audio only after user gesture', smoke.includes('await sky.tap') && smoke.includes('expect(await audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));
+assert('smoke test keeps sound off until the visitor explicitly enables it', smoke.includes('await sound.click()') && smoke.includes('expect.poll(async () => audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
 assert('preview server is local vite preview', pw.includes('npm run build && npm run preview'));
 assert('vite build uses relative asset base for portable static previews', vite.includes("base: './'"));
