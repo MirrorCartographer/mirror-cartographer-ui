@@ -1,0 +1,9 @@
+{
+  "project": "Mirror Cartographer UI",
+  "role": "Encounter and workbench integrity",
+  "guardrails": [
+    "Protect the two confirmed Vercel URLs; do not promote unverified deployments.",
+    "Read-only inspection: never edits or deletes source.",
+    "Reports retained as workflow artifacts; no external publishing."
+  ]
+}
