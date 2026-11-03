@@ -8,3 +8,6 @@ html.mc-reduced-motion *,html.mc-reduced-motion *:before,html.mc-reduced-motion 
 html.mc-reduced-motion .comet-companion,html.mc-reduced-motion .comet-spark,html.mc-reduced-motion .comet-bloom{display:none!important}
 @media(pointer:fine){html.mc-reduced-motion,html.mc-reduced-motion body,html.mc-reduced-motion button,html.mc-reduced-motion a,html.mc-reduced-motion [role=button]{cursor:auto!important}}
 @media(max-width:700px){.motion-orb{right:max(72px,calc(env(safe-area-inset-right) + 60px));width:44px;height:44px}}
+
+.map-all-rooms{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;padding:10px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(2,2,7,.58);backdrop-filter:blur(16px);color:var(--p2);font:11px/1.2 system-ui;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;white-space:nowrap}
+.map-all-rooms:focus-visible{outline:2px solid var(--p2);outline-offset:4px}
