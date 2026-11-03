@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 1/100 (canonical deployment contract added to local quality gate; hosted execution pending).  
+**Completed:** 2/100 (deployment contract added; hosted checks exposed and corrected a JavaScript syntax defect and four missing workbench entries).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -26,3 +26,11 @@
 - 091–100: Cross-repository integration, live browser verification, usability evidence, and release acceptance.
 
 **Counting rule:** A pass counts only when it has a distinct target, evidence, a concrete change or test, and a recorded outcome. Neither a source path nor an HTTP 200 alone proves the deployed experience is the intended build.
+
+
+## Iteration 002 — Repair the Constellation instrument and workbench inventory
+
+- **Observation:** Hosted UI checks found a literal escaped newline between two JavaScript declarations in the Constellation instrument. Node syntax checking failed. The same run found four real HTML files absent from both workbench indexes (92/96 coverage).
+- **Change:** Replaced the literal escape with a real source newline; added all four missing HTML paths to both workbench indexes and updated their count to 96.
+- **Verification:** The failures were directly reproduced in GitHub Actions. A subsequent hosted run must pass the field-instrument syntax audit and workbench-index gate.
+- **Risk:** This is source-level repair. It does not establish browser interaction quality or deployment of the changed source.
