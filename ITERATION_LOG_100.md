@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 6/100 (canonical contract, workbench/index repairs, syntax repairs, deployment-relative source parity gate, and functional spectral-shift control).  
+**Completed:** 7/100 (canonical contract, index and syntax repairs, source parity, spectral shift, and semantic interaction telemetry).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -66,3 +66,11 @@
 - **Change:** The shared experiment engine now applies the updated hue as a body-level CSS filter during the transform action, while retaining the phase update and renderer redraw.
 - **Verification:** GitHub Actions run #4088 passed the full phone-first gate, including the spectral-shift browser assertion and remaining room controls.
 - **Risk:** Body-level hue rotation affects all content in the room, including controls; visual contrast and accessibility should be checked in-browser.
+
+
+## Iteration 007 — Measure semantic interaction outcomes locally
+
+- **Observation:** The observatory recorded clicks and later inferred outcomes from route changes or total DOM-size changes. A button could change its actual state (for example, `aria-pressed=false` to `true`) without changing DOM size, so the event could be mislabeled as having no observed effect.
+- **Change:** Added a privacy-minimal state snapshot of selected accessibility/state attributes, disabled state, and checkbox/radio state. Interaction outcomes now distinguish route changes, semantic state changes, DOM-size changes, and no observed change. No text-input values or free-form content are recorded. Added a browser regression test for the sound toggle.
+- **Verification:** The prior hosted run #4090 passed the full phone-first browser gate and all room interactions. The new telemetry outcome test requires a fresh hosted run.
+- **Risk:** The telemetry remains browser-local in localStorage; it does not report usage to a server or provide cross-user analytics. The 900 ms observation window can miss delayed effects.
