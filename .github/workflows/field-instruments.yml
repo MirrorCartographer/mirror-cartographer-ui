@@ -1,0 +1,39 @@
+name: Field Instruments release gate
+on:
+  push:
+    paths:
+      - 'public/field-instruments/**'
+      - 'scripts/field-instruments-audit.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/field-instruments.yml'
+  pull_request:
+    paths:
+      - 'public/field-instruments/**'
+      - 'scripts/field-instruments-audit.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/field-instruments.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Audit interactive HTML and JavaScript
+        run: node scripts/field-instruments-audit.mjs
+      - name: Build GitHub Pages bundle
+        run: npm run build:pages
+      - name: Confirm both experiences ship
+        run: |
+          test -s dist/field-instruments/index.html
+          test -s dist/field-instruments/constellation.html
+          grep -q '101-Dimension Atlas' dist/field-instruments/index.html
+          grep -q 'Veteran Pathways' dist/field-instruments/index.html
