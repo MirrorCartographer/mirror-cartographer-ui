@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ROOMS, LAYERS_PER_ROOM, roomById } from '../world/roomCatalog';
+import { ROOMS, ROOM_COUNT, LAYERS_PER_ROOM, roomById } from '../world/roomCatalog';
 import { createRoomAudio } from '../world/roomAudio';
 import './RoomWorld.css';
 
