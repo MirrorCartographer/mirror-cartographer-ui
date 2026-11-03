@@ -36,6 +36,16 @@
   const finish = () => { if (finished) return; finished = true; flushActive(); if (activeMs) emit("active_time", {ms:activeMs}); };
   window.addEventListener("pagehide", finish, {once:true});
   window.addEventListener("beforeunload", finish, {once:true});
+  const stateSnapshot = el => {
+    const state = {};
+    for (const name of ['aria-pressed','aria-expanded','aria-selected','data-state','data-active']) {
+      const value = el.getAttribute(name);
+      if (value !== null) state[name] = value;
+    }
+    if ('disabled' in el) state.disabled = Boolean(el.disabled);
+    if (el instanceof HTMLInputElement && ['checkbox','radio'].includes(el.type)) state.checked = Boolean(el.checked);
+    return state;
+  };
   const labelFor = el => {
     const raw = el.getAttribute("data-mc-label") || el.getAttribute("data-action") || el.getAttribute("aria-label") || el.getAttribute("title");
     if (raw) return raw.trim().slice(0,80);
@@ -49,11 +59,15 @@
     const target = href ? (() => { try { const u = new URL(href, location.href); return u.origin === location.origin ? u.pathname : u.origin; } catch { return "invalid"; } })() : null;
     const id = (crypto.randomUUID?.() || String(Date.now()) + Math.random());
     const before = document.documentElement.innerHTML.length;
+    const stateBefore = stateSnapshot(el);
     emit("interaction", {id, element:el.tagName.toLowerCase(), label:labelFor(el), target, href_state:href === null ? "no-href" : (href === "#" ? "placeholder" : "set")});
     window.setTimeout(() => {
       const after = document.documentElement.innerHTML.length;
       const routeChanged = location.pathname !== path;
-      emit("interaction_outcome", {id, outcome:routeChanged ? "route-changed" : after !== before ? "dom-size-changed" : "no-observed-dom-size-change"});
+      const stateAfter = stateSnapshot(el);
+      const stateChanged = JSON.stringify(stateBefore) !== JSON.stringify(stateAfter);
+      const outcome = routeChanged ? "route-changed" : stateChanged ? "state-changed" : after !== before ? "dom-size-changed" : "no-observed-dom-size-change";
+      emit("interaction_outcome", {id, outcome, state_before:stateBefore, state_after:stateAfter});
     }, 900);
   }, true);
   document.addEventListener("submit", () => emit("form_submit", {form:"submitted"}), true);
