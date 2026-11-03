@@ -59,7 +59,8 @@ export default function RoomWorldValid() {
   const [depth, setDepth] = useState(saved.depth?.[saved.roomId || 1] || 1);
   const [pulse, setPulse] = useState(0.1);
   const [showMap, setShowMap] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   const room = useMemo(() => roomById(roomId), [roomId]);
   const canvasRef = useRef(null);
   const pointRef = useRef({ x: 0.5, y: 0.5, down: false, startX: 0.5, startY: 0.5, startedAt: 0 });
@@ -68,7 +69,8 @@ export default function RoomWorldValid() {
 
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId })); }, [progress, roomId]);
-  useEffect(() => { const timer = setInterval(() => setPulse((value) => Math.max(0.06, value * 0.96)), 100); return () => clearInterval(timer); }, []);
+  useEffect(() => { const timer = setInterval(() => setPulse((value) => Math.max(0.06, value * 0.96)), reducedMotion ? 1000 : 100); return () => clearInterval(timer); }, [reducedMotion]);
+  useEffect(() => { document.documentElement.classList.toggle('mc-reduced-motion', reducedMotion); window.dispatchEvent(new CustomEvent('mc:motion-preference', { detail: { reduced: reducedMotion } })); return () => document.documentElement.classList.remove('mc-reduced-motion'); }, [reducedMotion]);
 
   useEffect(() => {
     const charge = clamp((depth / LAYERS_PER_ROOM) * 0.72 + pulse * 0.28, 0.1, 1);
@@ -138,16 +140,16 @@ export default function RoomWorldValid() {
         ctx.fill();
       }
       ctx.globalCompositeOperation = 'source-over';
-      animation = requestAnimationFrame(frame);
+      if (!reducedMotion) animation = requestAnimationFrame(frame);
     };
     resize();
     window.addEventListener('resize', resize);
-    animation = requestAnimationFrame(frame);
+    if (reducedMotion) frame(performance.now()); else animation = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(animation);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [reducedMotion]);
 
   const record = (boost, gesture) => setProgress((current) => {
     const energy = current.energy + boost;
@@ -191,6 +193,22 @@ export default function RoomWorldValid() {
     for (let i = 0; i < (type === 'down' ? 15 : 2); i += 1) particlesRef.current.push({ x, y, vx: (Math.random() - 0.5) * 0.006, vy: (Math.random() - 0.5) * 0.006, life: 0.4 + Math.random() * 0.6 });
   };
 
+  const keyboardInteract = (event) => {
+    const key = event.key;
+    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' '].includes(key)) return;
+    event.preventDefault();
+    const surface = event.currentTarget;
+    const rect = surface.getBoundingClientRect();
+    const previous = pointRef.current;
+    const x = clamp(previous.x + (key === 'ArrowLeft' ? -0.08 : key === 'ArrowRight' ? 0.08 : 0));
+    const y = clamp(previous.y + (key === 'ArrowUp' ? -0.08 : key === 'ArrowDown' ? 0.08 : 0));
+    const target = { getBoundingClientRect: () => rect, style: surface.style };
+    const point = { currentTarget: target, clientX: rect.left + rect.width * x, clientY: rect.top + rect.height * y };
+    interact(point, 'down');
+    if (key.startsWith('Arrow')) interact(point, 'move');
+    interact(point, 'up');
+  };
+
   const enter = (nextId) => { setRoomId(nextId); setDepth(progress.depth?.[nextId] || 1); setShowMap(false); setProgress((current) => ({ ...current, visited: [...new Set([...current.visited, nextId])] })); };
   const nextRoom = (event) => {
     signalComet(event, 1, true);
@@ -198,10 +216,12 @@ export default function RoomWorldValid() {
   };
 
   return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
-    <button aria-label="Explore" className="world-surface" onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
+    <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
+    <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can turn motion down or pause it.</span>
     <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
     <button aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>
     <button aria-label={muted ? 'Turn sound on' : 'Turn sound off'} className={`sound-orb ${muted ? 'muted' : ''}`} onClick={() => setMuted((value) => { const next = !value; next ? audioRef.current?.silence() : audioRef.current?.wake(); return next; })}><i /><i /><i /></button>
+    <button aria-label={reducedMotion ? "Allow motion" : "Reduce motion"} aria-pressed={reducedMotion} className="motion-orb" onClick={() => setReducedMotion((value) => !value)}><span aria-hidden="true">◌</span></button>
     <div className="room-sigil" aria-hidden="true"><i /><span>{Array.from({ length: Math.min(9, Math.ceil(roomId / 12)) }, (_, index) => <b key={index} />)}</span></div>
     {depth === LAYERS_PER_ROOM && <button aria-label="Enter the next room" className="completion-portal" onClick={nextRoom}><i /></button>}
     {showMap && <PortalMap progress={progress} onEnter={enter} onClose={() => setShowMap(false)} />}
