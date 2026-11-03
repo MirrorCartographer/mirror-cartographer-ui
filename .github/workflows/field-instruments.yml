@@ -25,8 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+      - run: npm install
       - name: Audit interactive HTML and JavaScript
         run: |
           node scripts/field-instruments-audit.mjs
