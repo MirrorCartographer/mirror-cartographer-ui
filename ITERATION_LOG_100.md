@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 7/100 (canonical contract, index and syntax repairs, source parity, spectral shift, and semantic interaction telemetry).  
+**Completed:** 8/100 (canonical contract, index and syntax repairs, source parity, spectral shift, semantic interaction telemetry, and false-positive dead-link correction).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -74,3 +74,11 @@
 - **Change:** Added a privacy-minimal state snapshot of selected accessibility/state attributes, disabled state, and checkbox/radio state. Interaction outcomes now distinguish route changes, semantic state changes, DOM-size changes, and no observed change. No text-input values or free-form content are recorded. Added a browser regression test for the sound toggle.
 - **Verification:** The prior hosted run #4090 passed the full phone-first browser gate and all room interactions. The new telemetry outcome test requires a fresh hosted run.
 - **Risk:** The telemetry remains browser-local in localStorage; it does not report usage to a server or provide cross-user analytics. The 900 ms observation window can miss delayed effects.
+
+
+## Iteration 008 — Correct the Observatory's dead-end classification
+
+- **Observation:** The Observatory dashboard counted every button with no `href` as a potential dead end. That is a false positive: buttons are action controls and normally do not have link destinations. The dashboard also did not surface the new semantic state-change outcomes as a headline metric.
+- **Change:** Only anchor elements without a real destination are now classified as potential dead ends. Added a semantic-state-change metric and updated the interpretation boundary. Added a browser test that toggles a button, observes a state change, and verifies the button is not reported as a dead link.
+- **Verification:** The preceding UI run #4095 passed all 10 room tests, including semantic telemetry. This dashboard-specific regression test requires a fresh hosted run.
+- **Risk:** This remains local-only telemetry and cannot tell us how visitors on other devices behave unless they voluntarily export and share their local evidence.
