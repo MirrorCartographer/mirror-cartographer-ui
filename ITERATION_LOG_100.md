@@ -88,5 +88,5 @@
 
 - **Observation:** The interaction observer waited 900 ms before recording an outcome. A real navigation unloads the source page before that timer runs, so the click was retained but the successful route transition could be lost.
 - **Change:** Same-origin anchor interactions now place a short-lived pending record in sessionStorage. The destination page confirms the transition and writes the outcome to localStorage. Pending records expire after 30 seconds and are cleared after resolution. Empty anchor hrefs are now treated as placeholders.
-- **Verification:** The preceding hosted run #4095 passed the semantic state-change browser test. The new cross-page route test requires a fresh hosted run.
+- **Verification:** GitHub Actions Smoke Test run #4105 passed the full local phone-first gate, including 12 browser tests and cross-page route confirmation. Atlas Source Validation run #425, room integrity #47, field instrument #28, and machine checks #3613 also passed.
 - **Risk:** Only same-origin route transitions are confirmed. External navigation cannot be followed across origins, and a browser crash before the destination loads may leave an unresolved pending record until expiry.
