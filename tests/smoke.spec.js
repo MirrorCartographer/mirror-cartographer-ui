@@ -134,7 +134,8 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expect(page.locator('#source')).not.toHaveValue('', { timeout: 15000 });
     await expect(page.locator('#preview')).toBeVisible();
     const source = page.locator('#source');
-    await source.fill('<!doctype html><html><head><title>Live design proof</title></head><body><main><h1>Live, not static</h1><button id="proof">Working control</button></main><script>document.querySelector("#proof").addEventListener("click",()=>document.body.dataset.clicked="yes")<\\/script></body></html>');
+    const liveDesign = '<!doctype html><html><head><title>Live design proof</title></head><body><main><h1>Live, not static</h1><button id="proof">Working control</button></main><scr' + 'ipt>document.querySelector("#proof").addEventListener("click",()=>document.body.dataset.clicked="yes")</scr' + 'ipt></body></html>';
+    await source.fill(liveDesign);
     await page.locator('#run').click();
     const preview = page.frameLocator('#preview');
     await expect(preview.locator('h1')).toHaveText('Live, not static');
