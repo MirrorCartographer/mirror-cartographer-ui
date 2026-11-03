@@ -17,8 +17,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run project daemon
-        id: daemon
-        continue-on-error: true
         run: python daemons/project_daemon.py
       - name: Add report to workflow summary
         if: always()
@@ -36,6 +34,3 @@ jobs:
           path: daemon-reports/
           if-no-files-found: warn
           retention-days: 30
-      - name: Fail on integrity errors
-        if: steps.daemon.outcome == 'failure'
-        run: exit 1
