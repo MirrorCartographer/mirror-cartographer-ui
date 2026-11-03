@@ -10,16 +10,18 @@ ROOT=Path.cwd(); REPORT=ROOT/"daemon-reports"; IGNORE={".git",".github","node_mo
 EXTS={".html",".htm",".md",".markdown"}; SKIP={"http","https","mailto","tel","javascript","data","blob"}
 class Parser(HTMLParser):
  def __init__(self):
-  super().__init__(convert_charrefs=True); self.ids=Counter(); self.links=[]; self.controls=[]; self.buttons=[]; self.images=[]; self.button=None
+  super().__init__(convert_charrefs=True); self.ids=Counter(); self.links=[]; self.controls=[]; self.buttons=[]; self.images=[]; self.button=None; self.label_depth=0
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
   if a.get("id"): self.ids[a["id"]]+=1
   if tag in ("a","area") and a.get("href"): self.links.append(a["href"])
-  if tag=="label" and a.get("for"): self.controls.append({"kind":"label","for":a["for"]})
+  if tag=="label":
+   self.label_depth+=1
+   if a.get("for"): self.controls.append({"kind":"label","for":a["for"]})
   if tag=="input" and a.get("type","text") not in {"hidden","submit","button","reset"}:
-   self.controls.append({"kind":"input","id":a.get("id"),"aria":a.get("aria-label"),"title":a.get("title")})
+   self.controls.append({"kind":"input","id":a.get("id"),"aria":a.get("aria-label"),"title":a.get("title"),"wrapped":self.label_depth>0})
   if tag=="textarea" or tag=="select":
-   self.controls.append({"kind":tag,"id":a.get("id"),"aria":a.get("aria-label"),"title":a.get("title")})
+   self.controls.append({"kind":tag,"id":a.get("id"),"aria":a.get("aria-label"),"title":a.get("title"),"wrapped":self.label_depth>0})
   if tag=="img" and not a.get("alt"): self.images.append(a.get("src","(source missing)"))
   if tag=="button": self.button={"text":"","aria":a.get("aria-label"),"title":a.get("title")}
  def handle_data(self,data):
@@ -33,7 +35,7 @@ class Parser(HTMLParser):
   label_ids={x["for"] for x in self.controls if x["kind"]=="label"}
   result=[]
   for c in self.controls:
-   if c["kind"]=="label": continue
+   if c["kind"]=="label" or c.get("wrapped"): continue
    if not (c.get("aria") or c.get("title") or (c.get("id") and c["id"] in label_ids)):
     result.append({"kind":"unlabelled_control","detail":c["kind"]+" id="+str(c.get("id") or "(none)")})
   result.extend({"kind":"unnamed_button","detail":x} for x in self.buttons)
