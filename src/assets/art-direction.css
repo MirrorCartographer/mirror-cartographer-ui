@@ -73,3 +73,16 @@ input::placeholder,textarea::placeholder{color:#77796c!important}
 footer{border-color:var(--mc-line)!important;color:var(--mc-dim)!important}
 @media(max-width:700px){.world-map-button{width:48px;height:48px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important}}
+
+/* Constellation and landing-page art: aged instrument, not neon dashboard. */
+.orbit{border-color:rgba(190,171,128,.42)!important;background:radial-gradient(circle,rgba(105,124,96,.17),rgba(20,28,20,.08) 48%,transparent 68%)!important;box-shadow:0 0 100px rgba(170,151,105,.10),inset 0 0 90px rgba(170,151,105,.045)!important}
+.orbit:before,.orbit:after{border-color:rgba(190,171,128,.34)!important}
+.core{background:radial-gradient(circle at 35% 30%,#d9c9a6,#a58b5f 68%,#343b2c)!important;color:#171a13!important;box-shadow:0 0 48px rgba(180,154,109,.22)!important}
+.orbit-node{border-radius:2px!important;border-color:rgba(190,171,128,.48)!important;background:rgba(15,20,15,.94)!important;color:#d9c9a6!important;box-shadow:0 0 24px rgba(180,154,109,.07)!important}
+.orbit-node:hover,.orbit-node.active{background:#b49a6d!important;color:#141810!important;box-shadow:0 0 28px rgba(180,154,109,.24)!important}
+.room:nth-child(3n+2),.room:nth-child(3n){background-color:#141a14!important}
+.instrument h3,.room strong{color:#e8e1d1!important}
+.hero .subtle{color:#b7b09f!important}
+.heading p,.instrument p,.room span{color:#a7a493!important}
+.top .nav a:hover,.list a:hover{color:#d9c9a6!important}
+.searchrow input:focus,.searchrow select:focus{border-color:#b49a6d!important;outline:1px solid rgba(180,154,109,.4)!important}
