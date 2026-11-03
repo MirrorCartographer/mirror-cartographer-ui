@@ -115,7 +115,7 @@
   const controls=document.querySelector('.bottom .controls');
   if(controls){
     const sound=controls.querySelector('[data-action="sound"]');
-    if(sound){sound.setAttribute('aria-pressed','false');sound.addEventListener('click',()=>{soundOn=!soundOn;sound.setAttribute('aria-pressed',String(soundOn));sound.textContent=soundOn?'sound on':'sound off';if(soundOn){tone();}else if(master)master.gain.setTargetAtTime(0,audio.currentTime,.04);});}
+    if(sound){sound.setAttribute('aria-pressed','false');sound.addEventListener('click',()=>{soundOn=!soundOn;sound.setAttribute('aria-pressed',String(soundOn));sound.textContent=soundOn?'sound on':'sound off';if(soundOn){initAudio();if(master)master.gain.setTargetAtTime(.045*intensity,audio.currentTime,.04);tone();}else if(master&&audio)master.gain.setTargetAtTime(0,audio.currentTime,.04);});}
     const shift=controls.querySelector('[data-action="shift"]');
     if(shift)shift.addEventListener('click',()=>{transform();shift.setAttribute('aria-label','Transform this room again');});
     const home=document.createElement('a');home.className='mc-home';home.href='../../';home.textContent='← all rooms';home.setAttribute('aria-label','Return to all rooms');controls.append(home);
