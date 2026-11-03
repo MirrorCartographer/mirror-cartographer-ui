@@ -32,7 +32,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: project-daemon-report-\${{ github.run_number }}
+          name: project-daemon-report
           path: daemon-reports/
           if-no-files-found: warn
           retention-days: 30
