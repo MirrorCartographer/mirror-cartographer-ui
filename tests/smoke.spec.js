@@ -133,6 +133,12 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await expect(page.locator('#status')).toContainText('Loaded', { timeout: 15000 });
     await expect(page.locator('#source')).not.toHaveValue('', { timeout: 15000 });
     await expect(page.locator('#preview')).toBeVisible();
+    await page.selectOption('#viewport', 'phone');
+    await expect(page.locator('#preview')).toHaveCSS('width', '390px');
+    await page.locator('#focus').click();
+    await expect(page.locator('.workspace')).toHaveClass(/preview-focus/);
+    await page.locator('#focus').click();
+    await expect(page.locator('.workspace')).not.toHaveClass(/preview-focus/);
     const source = page.locator('#source');
     const liveDesign = '<!doctype html><html><head><title>Live design proof</title></head><body><main><h1>Live, not static</h1><button id="proof">Working control</button></main><scr' + 'ipt>document.querySelector("#proof").addEventListener("click",()=>document.body.dataset.clicked="yes")</scr' + 'ipt></body></html>';
     await source.fill(liveDesign);
