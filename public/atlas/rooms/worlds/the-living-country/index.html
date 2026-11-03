@@ -72,7 +72,7 @@ function updateWisp(dt){
   const distance=Math.hypot(player.x-wisp.x,player.y-wisp.y);
   const bio=biomeAt(player.x,player.y);
   let tx=wisp.x+Math.sin(wisp.phase*.35)*80,ty=wisp.y+Math.cos(wisp.phase*.27)*55;
-  if(distance<260){tx=player.x+Math.cos(wisp.phase*.65)*92;ty=player.y-40+Math.sin(wisp.phase*.8)*34;wisp.mood='curious'}
+  if(flags['wisp-bond']){tx=player.x+Math.cos(wisp.phase*.65)*64;ty=player.y-32+Math.sin(wisp.phase*.8)*25;wisp.mood='companion'}else if(distance<260){tx=player.x+Math.cos(wisp.phase*.65)*92;ty=player.y-40+Math.sin(wisp.phase*.8)*34;wisp.mood='curious'}
   else if(bio==='glassfen'){tx=player.x+Math.cos(wisp.phase*.3)*130;ty=player.y-55+Math.sin(wisp.phase*.45)*60;wisp.mood='guiding'}
   else {wisp.mood='wandering';tx+=Math.sin(wisp.phase*.21)*70;ty+=Math.cos(wisp.phase*.19)*50}
   if(weather==='rain'){tx-=Math.cos(wisp.phase)*28;ty-=18;wisp.mood='sheltering'}
