@@ -218,10 +218,11 @@ test.describe('Playable Atlas rooms', () => {
       await expect(button).toHaveAttribute('aria-pressed', 'true');
       await expect(page.locator('body')).toHaveAttribute('data-mode', mode);
     }
-    await page.locator('#sound').click();
     await expect(page.locator('#sound')).toHaveText('Sound on');
     await page.locator('#sound').click();
     await expect(page.locator('#sound')).toHaveText('Sound off');
+    await page.locator('#sound').click();
+    await expect(page.locator('#sound')).toHaveText('Sound on');
     await page.locator('#still').click();
     await expect(page.locator('body')).toHaveAttribute('data-still', 'true');
     await page.locator('#still').click();
