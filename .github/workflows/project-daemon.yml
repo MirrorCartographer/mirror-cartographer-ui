@@ -1,0 +1,41 @@
+name: Project daemon
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run project daemon
+        id: daemon
+        continue-on-error: true
+        run: python daemons/project_daemon.py
+      - name: Add report to workflow summary
+        if: always()
+        run: |
+          if [ -f daemon-reports/latest.md ]; then
+            cat daemon-reports/latest.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Daemon did not produce a report." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-daemon-report-\${{ github.run_number }}
+          path: daemon-reports/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Fail on integrity errors
+        if: steps.daemon.outcome == 'failure'
+        run: exit 1
