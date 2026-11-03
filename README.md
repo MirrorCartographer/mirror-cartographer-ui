@@ -19,6 +19,8 @@ The research and systems work lives in the [other repository](https://github.com
 
 ## Find a door
 
+- **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — four distinct instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways.
+
 - **[The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md)** — the rooms, their rules, and how to wander.
 - **[Field Guide to the Living Language](FIELD_GUIDE_TO_THE_LIVING_LANGUAGE.md)** — give a sensation a name; see what the name makes possible.
 - **[LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md)** — an offline journey through five strange territories.
