@@ -50,7 +50,7 @@ def main():
    warnings.extend({"file":rel,**w} for w in parser.warnings); links=parser.links
    inventory.append({"file":rel,"kind":"html","ids":len(parser.ids),"links":len(links),"warnings":len(parser.warnings)})
   else:
-   links=re.findall(r'!?\\[[^\\]]*\\]\\(([^)]+)\\)',raw); inventory.append({"file":rel,"kind":"markdown","links":len(links)})
+   links=re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',raw); inventory.append({"file":rel,"kind":"markdown","links":len(links)})
   for link in links:
    target,frag=resolve(p,link)
    if target is None: continue
@@ -65,7 +65,7 @@ def main():
  lines += ["- "+e["file"]+" — "+e["kind"]+": "+e["detail"] for e in errors] or ["- None detected."]
  lines += ["","## Warnings"]+["- "+w["file"]+" — "+w["kind"]+": "+w["detail"] for w in warnings] or ["- None detected."]
  lines += ["","## Next action","- Review findings, fix in a dedicated branch, rerun the daemon.","","## Safety","- Read-only inspection; no source files were modified."]
- (REPORT/"latest.md").write_text("\\n".join(lines)+"\\n",encoding="utf-8")
+ (REPORT/"latest.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
  print("DAEMON_RESULT errors="+str(len(errors))+" warnings="+str(len(warnings))+" files="+str(len(files)))
  if errors: raise SystemExit(1)
 if __name__=="__main__": main()
