@@ -13,7 +13,7 @@
     observatory: ['#02040b','#0c1933','#a9d5ff','#fff0d5'],
     garden: ['#040d08','#10291b','#86d99b','#f3d78a'],
     cathedral: ['#030911','#102b40','#9de8ff','#f1f6ff'],
-    carnival: ['#13020d','#48103b','#ffbd6c','#f4a6ed'],
+    carnival: ['#100d10','#2b1723','#b49a6d','#a86f70'],
     ocean: ['#010712','#063451','#4ed4d0','#d1f7ff'],
     blueprint: ['#061126','#0c2c4d','#8ac7ff','#e8f3ff'],
     library: ['#100a10','#38202b','#e7b77e','#f9e8c8'],
@@ -67,12 +67,75 @@
     glow(cx,H*.46,Math.min(W,H)*.24,palette[2],.08);
   }
   function carnival(){
-    background();const cx=W/2,cy=H/2,scale=Math.min(W,H),spin=time*.22+phase*.3;
-    for(let i=0;i<17;i++){const a=spin+i*TAU/17,r=scale*(.1+(i%5)*.07),x=cx+Math.cos(a)*r*1.25,y=cy+Math.sin(a*1.7)*r*.8;ctx.save();ctx.translate(x,y);ctx.rotate(-a*.6);const w=scale*(.045+(i%4)*.012),h=scale*(.07+(i%3)*.02);ctx.fillStyle=`hsla(${(i*27+hue+phase*11)%360},80%,58%,.12)`;ctx.fillRect(-w/2,-h/2,w,h);ctx.strokeStyle=`hsla(${(i*27+hue+phase*11)%360},90%,78%,.75)`;ctx.lineWidth=1.2;ctx.strokeRect(-w/2,-h/2,w,h);ctx.restore();}
-    for(let i=0;i<9;i++){const a=spin*(i%2?1:-1)+i*.7,r=scale*(.12+i*.047);ctx.beginPath();ctx.ellipse(cx,cy,r,r*.45,a,0,TAU);ctx.strokeStyle=`hsla(${(hue+i*31)%360},80%,70%,.28)`;ctx.stroke();}
-    for(let i=0;i<30;i++){const a=rand(i)*TAU+time*(i%2?1:-1),r=scale*(.05+rand(i+50)*.46);circle(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.7,2+rand(i+90)*6,`hsla(${(i*17+hue+phase*20)%360},90%,70%,.75)`);}
-    memory.carnival.forEach((p,i)=>{const x=p.x*W,y=p.y*H;ctx.save();ctx.translate(x,y);ctx.rotate(time*.7+i);ctx.strokeStyle=\`hsla(\${(i*49+hue)%360},95%,75%,.8)\`;ctx.strokeRect(-22-i%4*5,-22-i%4*5,44+i%4*10,44+i%4*10);ctx.restore();});
-    glow(cx,cy,scale*.2,palette[3],.1);
+    // A small, unsettling fairground built from worn geometry rather than rainbow neon.
+    background();
+    const unit=Math.min(W,H),cx=W*.5,cy=H*.53,spin=time*.12+phase*.22;
+    const ink='#171116',wine='#563044',rose='#a86f70',brass='#b49a6d',bone='#d9c9a6',moss='#78866b';
+    const wash=(c,a)=>color(c,a);
+    // Faded striped big top: an awning that sags slightly as if it remembers weather.
+    const tentTop=H*.07,tentBase=H*.38,peak=W*.5;
+    ctx.beginPath();ctx.moveTo(W*.16,tentBase);ctx.lineTo(peak,tentTop);ctx.lineTo(W*.84,tentBase);ctx.closePath();
+    ctx.fillStyle=wash(wine,.24);ctx.fill();
+    for(let i=0;i<12;i++){
+      const x0=W*(.16+i*.0567),x1=W*(.16+(i+1)*.0567);
+      ctx.beginPath();ctx.moveTo(x0,tentBase);ctx.lineTo(peak+(x0-peak)*.06,tentTop+Math.abs(x0-peak)*.035);ctx.lineTo(peak+(x1-peak)*.06,tentTop+Math.abs(x1-peak)*.035);ctx.lineTo(x1,tentBase);ctx.closePath();
+      ctx.fillStyle=i%2?wash(brass,.14):wash(ink,.26);ctx.fill();
+    }
+    line(W*.16,tentBase,W*.84,tentBase,wash(bone,.38),1);
+    // Ferris wheel: not quite centered, and its spokes don't agree on a common rhythm.
+    const wx=cx+Math.sin(spin*.3)*unit*.025,wy=H*.53,wr=unit*.235;
+    for(let ring=0;ring<4;ring++){
+      ctx.beginPath();ctx.ellipse(wx,wy,wr*(1-ring*.12),wr*(1-ring*.12),ring*.035,0,TAU);
+      ctx.strokeStyle=wash(ring===0?brass:rose,.12+intensity*.12);ctx.lineWidth=ring===0?1.35:.65;ctx.stroke();
+    }
+    line(wx-wr*1.13,wy+wr*.98,wx+wr*1.13,wy+wr*.98,wash(brass,.34),1.2);
+    line(wx,wy+wr*.96,wx-wr*.13,wy+wr*1.42,wash(brass,.36),1.2);
+    line(wx,wy+wr*.96,wx+wr*.13,wy+wr*1.42,wash(brass,.36),1.2);
+    for(let i=0;i<17;i++){
+      const a=spin+(i/17)*TAU, wobble=1+Math.sin(time*.43+i*2.1)*.018;
+      const x=wx+Math.cos(a)*wr*wobble,y=wy+Math.sin(a)*wr*wobble;
+      line(wx,wy,x,y,wash(i%4===0?bone:brass,.12+intensity*.16),.7);
+      ctx.save();ctx.translate(x,y);ctx.rotate(a*.08);
+      ctx.fillStyle=wash(i%3===0?rose:wine,.72);ctx.fillRect(-unit*.012,-unit*.017,unit*.024,unit*.034);
+      ctx.strokeStyle=wash(bone,.4);ctx.strokeRect(-unit*.012,-unit*.017,unit*.024,unit*.034);
+      ctx.restore();
+    }
+    // Three booth fronts, each with a different perspective error.
+    for(let i=0;i<3;i++){
+      const x=W*(.18+i*.32),y=H*(.72+(i===1?-.025:.015)),bw=unit*(i===1?.19:.16),bh=unit*.115;
+      ctx.fillStyle=wash(ink,.72);ctx.fillRect(x-bw/2,y-bh/2,bw,bh);
+      ctx.strokeStyle=wash(brass,.55);ctx.lineWidth=1;ctx.strokeRect(x-bw/2,y-bh/2,bw,bh);
+      const roof=y-bh/2;
+      ctx.beginPath();ctx.moveTo(x-bw*.56,roof);ctx.lineTo(x-bw*.42,roof-unit*.045);ctx.lineTo(x+bw*.42,roof-unit*.045);ctx.lineTo(x+bw*.56,roof);ctx.closePath();ctx.fillStyle=wash(wine,.9);ctx.fill();
+      for(let s=0;s<7;s++){const sx=x-bw*.48+bw*.16*s;ctx.beginPath();ctx.moveTo(sx,roof);ctx.lineTo(sx+bw*.08,roof-unit*.045);ctx.lineTo(sx+bw*.16,roof-unit*.045);ctx.lineTo(sx+bw*.08,roof);ctx.closePath();ctx.fillStyle=s%2?wash(bone,.5):wash(rose,.52);ctx.fill();}
+      // A dark ticket window with two tiny, watchful lights.
+      ctx.fillStyle=wash('#050406',.92);ctx.fillRect(x-bw*.19,y-bh*.27,bw*.38,bh*.42);
+      circle(x-bw*.055,y-bh*.08,1.5,wash(bone,.65));circle(x+bw*.055,y-bh*.08,1.5,wash(bone,.65));
+      line(x-bw*.13,y+bh*.23,x+bw*.13,y+bh*.23,wash(brass,.5),.7);
+    }
+    // Strings of bulbs droop with gravity; a few bulbs are deliberately missing.
+    for(let strand=0;strand<3;strand++){
+      const y=H*(.22+strand*.075),left=W*(.08+strand*.035),right=W*(.92-strand*.035);
+      ctx.beginPath();ctx.moveTo(left,y);ctx.quadraticCurveTo(cx,y+unit*.09,right,y-unit*.005);
+      ctx.strokeStyle=wash(brass,.2);ctx.stroke();
+      for(let i=0;i<19;i++){if((i+strand*7)%8===0)continue;const t=i/18,x=mix(left,right,t),yy=y+Math.sin(t*Math.PI)*unit*.09*(1-t*.08);circle(x,yy,1.1+(i%4===0?1:0),wash(i%5===0?rose:bone,.25+Math.sin(time*.7+i)*.08));}
+    }
+    // The midway floor is a warped checkerboard that dissolves into darkness.
+    for(let row=0;row<8;row++){
+      const y0=H*(.79+row*.028),y1=y0+H*.028,spread= W*(.1+row*.075);
+      for(let col=0;col<16;col++){
+        const x0=cx-spread+2*spread*col/16,x1=cx-spread+2*spread*(col+1)/16;
+        ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y0);ctx.lineTo(cx+(x1-cx)*1.04,y1);ctx.lineTo(cx+(x0-cx)*1.04,y1);ctx.closePath();
+        ctx.fillStyle=wash((row+col)%2?bone:ink,.025+row*.005);ctx.fill();
+      }
+    }
+    // Slow, nearly hidden motes; user gestures leave afterimages, not scores.
+    for(let i=0;i<38;i++){
+      const a=rand(i)*TAU+time*(i%2?-.035:.028),r=unit*(.08+rand(i+50)*.48);
+      circle(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.72,1+rand(i+90)*2.3,wash(i%7===0?rose:brass,.08+rand(i+120)*.18*intensity));
+    }
+    memory.carnival.forEach((p,i)=>{const x=p.x*W,y=p.y*H,r=unit*(.012+(i%4)*.006);ctx.save();ctx.translate(x,y);ctx.rotate((i%2?1:-1)*time*.08+i*.7);ctx.strokeStyle=wash(i%3?brass:rose,.65);ctx.strokeRect(-r,-r,r*2,r*2);circle(0,0,1.5,wash(bone,.7));ctx.restore();});
+    glow(cx,cy,unit*.3,rose,.035);
   }
   function ocean(){
     background();const depth=pointer.y;for(let layer=0;layer<9;layer++){const y=H*(.18+layer*.105),amp=H*(.012+layer*.006),freq=1.2+layer*.13,offset=time*(.3+layer*.07)*(layer%2?1:-1)+phase*.2;ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W+4;x+=4){const yy=y+Math.sin(x/W*TAU*freq+offset)*amp+Math.sin(x/W*TAU*3+offset*.7)*amp*.3;ctx.lineTo(x,yy);}ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=color(layer%3?palette[1]:palette[2],.035+layer*.008);ctx.fill();ctx.strokeStyle=color(palette[2],.16-layer*.009);ctx.stroke();}
