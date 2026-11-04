@@ -134,7 +134,7 @@
   addEventListener('pointercancel',releasePointer);
   addEventListener('lostpointercapture',releasePointer);
   addEventListener('blur',releasePointer);
-  addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;const s=.045;if(e.key==='ArrowLeft')pointer.x=clamp(pointer.x-s,0,1);else if(e.key==='ArrowRight')pointer.x=clamp(pointer.x+s,0,1);else if(e.key==='ArrowUp')pointer.y=clamp(pointer.y-s,0,1);else if(e.key==='ArrowDown')pointer.y=clamp(pointer.y+s,0,1);else if(e.key==='Enter'||e.key===' '){e.preventDefault();transform();return;}else return;start();});
+  addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;const s=.045;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft')pointer.x=clamp(pointer.x-s,0,1);else if(e.key==='ArrowRight')pointer.x=clamp(pointer.x+s,0,1);else if(e.key==='ArrowUp')pointer.y=clamp(pointer.y-s,0,1);else if(e.key==='ArrowDown')pointer.y=clamp(pointer.y+s,0,1);else if(e.key==='Enter'||e.key===' '){e.preventDefault();transform();return;}else return;start();});
   const controls=document.querySelector('.bottom .controls');
   if(controls){
     const sound=controls.querySelector('[data-action="sound"]');
