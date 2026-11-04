@@ -17,6 +17,7 @@ assert.ok(new Set(signatures).size >= 58, 'catalog must maintain strong room-lev
 const roomWorldSource = fs.readFileSync('src/components/RoomWorldValid.jsx', 'utf8');
 assert.ok(roomWorldSource.includes('const sanitizeProgress = value =>'), 'room progress must be sanitized before use');
 assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
+assert.ok(roomWorldSource.includes('unlocked.includes(value.roomId)'), 'restored current room must be unlocked');
 assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
 assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
 assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
