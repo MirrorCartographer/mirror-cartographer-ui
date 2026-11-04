@@ -7,7 +7,7 @@
 
 **Canonical live experiences — preserve these URLs:** [Mirror Cartographer UI](https://mirror-cartographer-ui-3orp.vercel.app) · [AV Prototype V4](https://mirrorcartographeravprototypev4.vercel.app/#)
 
-**Source / live-design workbench:** [Open the interactive workbench](https://mirrorcartographer.github.io/mirror-cartographer-ui/workbench.html) · 92 HTML artifacts with editable source and a live preview.  
+**Source / live-design workbench:** [Open the interactive workbench](https://mirrorcartographer.github.io/mirror-cartographer-ui/workbench.html) · 96 HTML artifacts with editable source and a live preview.  
 
 **GitHub Pages entry points:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
 
@@ -27,6 +27,7 @@ The research and systems work lives in the [other repository](https://github.com
 
 - **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — four distinct instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways.
 
+- **[Project completion map](PROJECT_COMPLETION_MAP.md)** — verified status, acceptance criteria, and remaining work.
 - **[The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md)** — the rooms, their rules, and how to wander.
 - **[Field Guide to the Living Language](FIELD_GUIDE_TO_THE_LIVING_LANGUAGE.md)** — give a sensation a name; see what the name makes possible.
 - **[LYR — The Unfinished Door](LYR_THE_UNFINISHED_DOOR.md)** — an offline journey through five strange territories.
