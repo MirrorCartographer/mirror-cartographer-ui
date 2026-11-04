@@ -40,3 +40,9 @@ body[data-mode="composer"] .controls button{border-color:#e8a7ff77;background:#1
  body[data-mode="cathedral"] .title{text-align:left}
  body[data-mode="carnival"] .title{text-shadow:2px 2px 0 #a82e73,4px 4px 0 #35104b}
 }
+/* Carnival of Thought — old midway, bent geometry, no rainbow arcade treatment. */
+body[data-mode="carnival"]{--bg:#100d10;--ink:#e8d7c0}
+body[data-mode="carnival"] .pill{font:10px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
+body[data-mode="carnival"] .bottom{align-items:flex-end}
+body[data-mode="carnival"] .controls{gap:10px}
+body[data-mode="carnival"] .note{max-width:280px}
