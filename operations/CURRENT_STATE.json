@@ -2,16 +2,16 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-11-04T15:46:00Z",
+  "updated_at": "2026-11-04T21:30:00Z",
   "active_delivery_item": "V-001",
-  "delivery_state": "in_progress_blocked",
-  "observed_blocker": "The current source head includes the 2026-11-04 room-world resilience, hover-progression, and constellation focus-containment changes (source commit fa28d3c6ec7abfa3884937b7577c9681f2041e89). GitHub commit status currently reports all three Vercel project checks (mirror-cartographer-ui-31jg, mirror-cartographer-ui, mirror-cartographer-ui-3orp) as failures with the provider's build-rate-limit / upgrade-to-Pro response. This is an external build-capacity block, not evidence of an application build failure. The previously verified GitHub Pages release remains the last known live verification; current source deployment to Pages or Vercel has not been established in this pass. Do not retry Vercel deployment while the provider returns the build-rate-limit response.",
-  "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
+  "delivery_state": "in_progress_partial",
+  "observed_blocker": "Source commit a2913b6d40d93979502e66cda8173a799b11a3ed restores first-class hover dwell and retains atlas access across interpretation modes. GitHub Pages build and deploy succeeded, and the post-deploy live smoke test succeeded for this commit. The local phone-first Playwright gate is still running. The separate Cloudflare Workers build check failed; its failure is not evidence that the GitHub Pages deployment failed. The Vercel/Cloudflare deployment path must not be conflated with the verified Pages release.",
+  "last_verified_commit": "a2913b6d40d93979502e66cda8173a799b11a3ed",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
     "Do not delete GitHub files or history.",
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Keep source-level checks and the Pages build gate passing. Verify the exact current commit on GitHub Pages after its publication workflow runs, and only retry Vercel after the provider's build-rate-limit condition clears. Do not claim current source has shipped based only on source commits or older live routes."
+  "next_action": "Finish the phone-first Playwright gate for a2913b6d40d93979502e66cda8173a799b11a3ed. Inspect the separate Cloudflare Workers build failure before claiming that deployment path works. Keep GitHub Pages as the verified live path unless a later provider deployment and live check both pass."
 }
