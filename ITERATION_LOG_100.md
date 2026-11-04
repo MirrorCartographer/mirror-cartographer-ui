@@ -106,3 +106,11 @@
 - **Change:** The pointer-down handler now captures and clamps the initial contact coordinates before recording the gesture. Added a minimal read-only pointer probe to the existing room test hook and a regression test that dispatches a touch pointer-down without a preceding move.
 - **Verification:** GitHub Actions Smoke Test run #4261 passed the phone-first and room browser suite, including the initial-touch-coordinate regression test.
 - **Risk:** The regression test uses a synthetic pointer event. Physical-device touch behavior still warrants a real-device check.
+
+ 
+## Iteration 012 — Make room motion independent of display refresh rate
+
+- **Observation:** The procedural room clock advanced by a fixed amount per animation frame. A 120 Hz display therefore ran the artwork approximately twice as fast as a 60 Hz display, while slower devices produced slower motion.
+- **Change:** Replaced per-frame increments with elapsed-time advancement, preserving the prior 60 Hz speed and clamping long frame gaps to avoid large jumps after tab suspension. Added a deterministic browser test comparing equal elapsed time at 60 Hz and 120 Hz.
+- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Risk:** The time clamp intentionally discards unusually long frame gaps. Physical-device motion perception and reduced-motion preferences still need dedicated review.
