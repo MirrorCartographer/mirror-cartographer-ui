@@ -120,7 +120,7 @@
   function tone(){if(!soundOn)return;initAudio();if(!audio)return;audio.resume();const osc=audio.createOscillator(),gain=audio.createGain();osc.type=mode==='cathedral'?'sine':mode==='carnival'?'triangle':'sine';const base={observatory:220,garden:164.81,cathedral:110,carnival:293.66,ocean:82.41,blueprint:196,library:146.83,forest:130.81,museum:246.94,composer:261.63}[mode]||220;osc.frequency.value=base*Math.pow(2,(pointer.x-.5)*2+gesture%5/5);gain.gain.setValueAtTime(.0001,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.22,audio.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.75);osc.connect(gain).connect(master);osc.start();osc.stop(audio.currentTime+.8);}
   function transform(){phase+=1;gesture+=1;hue=(hue+23)%360;document.body.style.setProperty('--room-phase',String(phase));canvas.style.filter=`hue-rotate(${hue}deg)`;start();tone();}
   addEventListener('pointermove',e=>{pointer.x=e.clientX/W;pointer.y=e.clientY/H;},{passive:true});
-  addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;pointer.down=true;pointer.px=pointer.x;pointer.py=pointer.y;gesture++;remember();tone();start();});
+  addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;pointer.x=clamp(e.clientX/W,0,1);pointer.y=clamp(e.clientY/H,0,1);pointer.down=true;pointer.px=pointer.x;pointer.py=pointer.y;gesture++;remember();tone();start();});
   addEventListener('pointerup',()=>{pointer.down=false;start();});
   addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;const s=.045;if(e.key==='ArrowLeft')pointer.x=clamp(pointer.x-s,0,1);else if(e.key==='ArrowRight')pointer.x=clamp(pointer.x+s,0,1);else if(e.key==='ArrowUp')pointer.y=clamp(pointer.y-s,0,1);else if(e.key==='ArrowDown')pointer.y=clamp(pointer.y+s,0,1);else if(e.key==='Enter'||e.key===' '){e.preventDefault();transform();return;}else return;start();});
   const controls=document.querySelector('.bottom .controls');
@@ -135,5 +135,5 @@
     const hint=document.createElement('span');hint.className='mc-key-hint';hint.textContent='ARROWS MOVE · ENTER TRANSFORMS';controls.append(hint);
   }
   reduced.addEventListener?.('change',e=>{if(e.matches){paused=true;cancelAnimationFrame(raf);}else{paused=false;start();}});
-  window.__MC_EXPERIMENT__={mode,transform,setIntensity(v){intensity=clamp(Number(v),.1,1);start();},setPaused(v){paused=!!v;if(paused)cancelAnimationFrame(raf);else start();}};
+  window.__MC_EXPERIMENT__={mode,transform,getPointer(){return {x:pointer.x,y:pointer.y};},setIntensity(v){intensity=clamp(Number(v),.1,1);start();},setPaused(v){paused=!!v;if(paused)cancelAnimationFrame(raf);else start();}};
 })();
