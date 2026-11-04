@@ -51,7 +51,6 @@ export const ROOMS = Array.from({ length: ROOM_COUNT }, (_, index) => {
   }));
   return {
     id, seed, primary, secondary, motion, interaction, audio, palette, layers,
-    unlockCost: id === 1 ? 0 : 8 + Math.floor(id * 1.7),
     portalShape: 3 + (seed % 8),
     gravity: frac(seed, 120) * 2 - 1,
     tempo: 52 + (seed % 78),
