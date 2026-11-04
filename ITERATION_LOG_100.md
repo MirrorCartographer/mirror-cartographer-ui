@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 11/100 (artwork-only spectral transformation and first-contact touch coordinate capture; Smoke Test run #4261 and Static Preview Artifact run #4226 passed).  
+**Completed:** 12/100 (artwork-only hue transformation, first-contact touch capture, and refresh-rate-independent room motion; Smoke Test run #4265 and Static Preview Artifact run #4230 passed).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -112,5 +112,5 @@
 
 - **Observation:** The procedural room clock advanced by a fixed amount per animation frame. A 120 Hz display therefore ran the artwork approximately twice as fast as a 60 Hz display, while slower devices produced slower motion.
 - **Change:** Replaced per-frame increments with elapsed-time advancement, preserving the prior 60 Hz speed and clamping long frame gaps to avoid large jumps after tab suspension. Added a deterministic browser test comparing equal elapsed time at 60 Hz and 120 Hz.
-- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Verification:** GitHub Actions Smoke Test run #4265 passed the 60 Hz/120 Hz elapsed-time regression and full phone-first/room suite; Static Preview Artifact run #4230 passed.
 - **Risk:** The time clamp intentionally discards unusually long frame gaps. Physical-device motion perception and reduced-motion preferences still need dedicated review.
