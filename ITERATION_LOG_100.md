@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 13/100 (artwork-only hue transformation, first-contact touch capture, refresh-rate-independent motion, and pointer-cancellation recovery; Smoke Test run #4269 and Static Preview Artifact run #4234 passed).  
+**Completed:** 14/100 (artwork-only hue transformation, touch lifecycle, refresh-rate-independent motion, and bounded keyboard navigation; Smoke Test run #4273 and Static Preview Artifact run #4238 passed).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -128,5 +128,5 @@
 
 - **Observation:** Arrow keys moved the room pointer but did not cancel the browser's default scroll behavior. Repeated input was clamped visually, but the page could still scroll behind the artwork.
 - **Change:** Prevented default scrolling only for the four recognized directional keys. Added a browser test that drives the pointer to both coordinate boundaries and verifies the key event was cancelled.
-- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Verification:** GitHub Actions Smoke Test run #4273 passed the keyboard boundary and scroll-suppression regression; Static Preview Artifact run #4238 passed.
 - **Risk:** The test verifies keyboard event handling in Chromium; assistive-technology combinations still need broader accessibility review.
