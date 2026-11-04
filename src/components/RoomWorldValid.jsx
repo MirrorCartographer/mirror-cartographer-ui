@@ -30,7 +30,7 @@ const sanitizeProgress = value => {
     }
   }
   return {
-    roomId: validRoomId(value.roomId) ? value.roomId : 1,
+    roomId: validRoomId(value.roomId) && unlocked.includes(value.roomId) ? value.roomId : 1,
     unlocked, visited, depth,
     energy: Number.isFinite(value.energy) && value.energy >= 0 ? Math.min(value.energy, 1_000_000_000) : 0,
     gestures
