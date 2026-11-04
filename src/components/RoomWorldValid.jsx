@@ -116,6 +116,17 @@ export default function RoomWorldValid() {
 
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
   useEffect(() => {
+    const preference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (!preference) return undefined;
+    const updatePreference = event => setReducedMotion(event.matches);
+    if (preference.addEventListener) preference.addEventListener('change', updatePreference);
+    else preference.addListener?.(updatePreference);
+    return () => {
+      if (preference.removeEventListener) preference.removeEventListener('change', updatePreference);
+      else preference.removeListener?.(updatePreference);
+    };
+  }, []);
+  useEffect(() => {
     try {
       localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId }));
       setStorageStatus('');
