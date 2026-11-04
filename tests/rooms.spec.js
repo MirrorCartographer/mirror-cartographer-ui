@@ -186,7 +186,7 @@ test.describe('Playable Atlas rooms', () => {
   });
 
   test('every public room loads and every visible button can be activated without a runtime error', async ({ page, context }) => {
-    test.setTimeout(120000);
+    test.setTimeout(180000);
     const routes = [
       '/', '/atlas/', '/atlas/rooms/', '/atlas/rooms/experiments/',
       '/atlas/rooms/experiments/001-observatory/',
@@ -214,12 +214,18 @@ test.describe('Playable Atlas rooms', () => {
       '/atlas/rooms/veterans/hub.html', '/atlas/rooms/veterans/mission.html',
       '/atlas/rooms/world/', '/atlas/rooms/composition/', '/atlas/rooms/unmapped/',
     ];
+    const manifestResponse = await page.request.get('/atlas/rooms/room-identities.json');
+    expect(manifestResponse.ok(), 'room identity manifest should load').toBeTruthy();
+    const roomManifest = await manifestResponse.json();
+    expect(roomManifest.count).toBe(34);
+    const manifestRoutes = roomManifest.rooms.map(room => new URL(room.path, 'http://localhost/atlas/rooms/').pathname);
+    const allRoutes = [...new Set([...routes, ...manifestRoutes])];
     const failures = [];
     page.on('pageerror', error => failures.push(error.message));
     page.on('dialog', dialog => dialog.dismiss());
     page.on('popup', popup => popup.close());
 
-    for (const route of routes) {
+    for (const route of allRoutes) {
       const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
       expect(response?.ok(), route + ' should return a successful response').toBeTruthy();
       await expect(page.locator('body')).not.toBeEmpty();
