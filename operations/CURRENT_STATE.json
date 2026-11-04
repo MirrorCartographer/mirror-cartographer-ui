@@ -2,10 +2,10 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-10-22T17:40:00Z",
+  "updated_at": "2026-11-04T15:46:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_blocked",
-  "observed_blocker": "Route availability has been partially recovered: the live smoke test passed on 2026-10-22 17:24:49 UTC against https://mirror-cartographer-ui-3orp.vercel.app/atlas/ (HTTP 200) and its sibling /research-atlas/ (HTTP 200), verified 10 Living Atlas markers, 5 research-instrument markers, 6 world routes, 6,537 indexed files across 2 manifests, and /atlas/healthz.txt (HTTP 200). The previously checked alias https://mirror-cartographer-ui.vercel.app/atlas/ returned 404. The successful smoke-test workflow was running at source commit e3ed3a567aa67c9e80f08f2e427306f7c12f6e28, but it did not establish the deployed artifact's source commit. The last deployment identity previously accepted by the project remains fa4501e3a97aefac632c6e361eae58b59bbb0e48; do not treat route health as immutable deployment acceptance.",
+  "observed_blocker": "The current source head includes the 2026-11-04 room-world resilience, hover-progression, and constellation focus-containment changes (source commit 262c001e4e00b9467fca2179bf520b5338f22b5c). GitHub commit status currently reports all three Vercel project checks (mirror-cartographer-ui-31jg, mirror-cartographer-ui, mirror-cartographer-ui-3orp) as failures with the provider's build-rate-limit / upgrade-to-Pro response. This is an external build-capacity block, not evidence of an application build failure. The previously verified GitHub Pages release remains the last known live verification; current source deployment to Pages or Vercel has not been established in this pass. Do not retry Vercel deployment while the provider returns the build-rate-limit response.",
   "last_verified_commit": "fa4501e3a97aefac632c6e361eae58b59bbb0e48",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
@@ -13,5 +13,5 @@
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Keep source and interaction checks passing. Before production acceptance, establish the exact deployed commit and immutable Vercel deployment identity for the live route; re-run live route and research-instrument checks against that deployment. Do not claim current source has shipped solely because the older live route responds."
+  "next_action": "Keep source-level checks and the Pages build gate passing. Verify the exact current commit on GitHub Pages after its publication workflow runs, and only retry Vercel after the provider's build-rate-limit condition clears. Do not claim current source has shipped based only on source commits or older live routes."
 }
