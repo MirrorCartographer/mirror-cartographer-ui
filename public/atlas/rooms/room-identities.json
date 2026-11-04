@@ -30,7 +30,7 @@
       "memory": "constellation traces and discovered relationships",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "002",
@@ -44,7 +44,7 @@
       "memory": "seed lineage and hybrid forms",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "003",
@@ -58,7 +58,7 @@
       "memory": "resonance patterns and remembered tones",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "004",
@@ -72,7 +72,7 @@
       "memory": "collected oddities and altered booth rules",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "005",
@@ -86,7 +86,7 @@
       "memory": "sonar traces and explored depth bands",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "006",
@@ -100,7 +100,7 @@
       "memory": "design versions and constraint history",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "007",
@@ -114,7 +114,7 @@
       "memory": "found fragments and shelf transformations",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "008",
@@ -128,7 +128,7 @@
       "memory": "signal routes and canopy responses",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "009",
@@ -142,7 +142,7 @@
       "memory": "contradictions preserved as paired views",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "010",
@@ -156,7 +156,7 @@
       "memory": "locally saved motifs and score layers",
       "implementation_status": "procedural-renderer-present",
       "interaction_status": "pointer-gesture traces prototype; room-specific persistent state and full interaction grammar remain unfinished",
-      "memory_status": "session-only gesture traces; reload persistence not implemented"
+      "memory_status": "opt-in local trace persistence restores phase, gesture, hue, and up to 36 traces on reload; room-specific consequence state remains unfinished"
     },
     {
       "id": "011",
