@@ -26,7 +26,7 @@
   const rand = n => { const v=Math.sin((seed>>>0)*.0000917+(n+1)*44.321)*43758.5453; return v-Math.floor(v); };
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const mix=(a,b,t)=>a+(b-a)*t;
-  let W=0,H=0,D=1,time=0,raf=0,paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W=0,H=0,D=1,time=0,raf=0,lastFrameAt=null,paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let intensity=.72,hue=0,phase=0,gesture=0,soundOn=false,audio=null,master=null;
   const pointer={x:.5,y:.5,down:false,px:.5,py:.5};
   const points=Array.from({length:150},(_,i)=>({x:rand(i*3),y:rand(i*3+1),r:.5+rand(i*3+2)*2.2,seed:i}));
@@ -113,8 +113,16 @@
     if(pointer.down){line(cx,cy,pointer.x*W,pointer.y*H,color(palette[3],.55),1.5);glow(pointer.x*W,pointer.y*H,90,palette[3],.22);}
   }
   const renderers={observatory,garden,cathedral,carnival,ocean,blueprint,library,forest,museum,composer};
-  function draw(){time+=paused?0:.006*(.35+intensity);ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;(renderers[mode]||observatory)();if(!paused)raf=requestAnimationFrame(draw);}
-  function start(){cancelAnimationFrame(raf);draw();}start();
+  function advanceClock(timestamp){
+    const now=typeof timestamp==='number'&&Number.isFinite(timestamp)?timestamp:performance.now();
+    if(lastFrameAt===null){lastFrameAt=now;return time;}
+    const elapsed=clamp((now-lastFrameAt)/1000,0,.05);
+    lastFrameAt=now;
+    if(!paused)time+=elapsed*.36*(.35+intensity);
+    return time;
+  }
+  function draw(timestamp){advanceClock(timestamp);ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;(renderers[mode]||observatory)();if(!paused)raf=requestAnimationFrame(draw);}
+  function start(){cancelAnimationFrame(raf);lastFrameAt=null;draw(performance.now());}start();
 
   function initAudio(){if(audio)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=new AC();master=audio.createGain();master.gain.value=.045*intensity;master.connect(audio.destination);}
   function tone(){if(!soundOn)return;initAudio();if(!audio)return;audio.resume();const osc=audio.createOscillator(),gain=audio.createGain();osc.type=mode==='cathedral'?'sine':mode==='carnival'?'triangle':'sine';const base={observatory:220,garden:164.81,cathedral:110,carnival:293.66,ocean:82.41,blueprint:196,library:146.83,forest:130.81,museum:246.94,composer:261.63}[mode]||220;osc.frequency.value=base*Math.pow(2,(pointer.x-.5)*2+gesture%5/5);gain.gain.setValueAtTime(.0001,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.22,audio.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.75);osc.connect(gain).connect(master);osc.start();osc.stop(audio.currentTime+.8);}
@@ -135,5 +143,5 @@
     const hint=document.createElement('span');hint.className='mc-key-hint';hint.textContent='ARROWS MOVE · ENTER TRANSFORMS';controls.append(hint);
   }
   reduced.addEventListener?.('change',e=>{if(e.matches){paused=true;cancelAnimationFrame(raf);}else{paused=false;start();}});
-  window.__MC_EXPERIMENT__={mode,transform,getPointer(){return {x:pointer.x,y:pointer.y};},setIntensity(v){intensity=clamp(Number(v),.1,1);start();},setPaused(v){paused=!!v;if(paused)cancelAnimationFrame(raf);else start();}};
+  window.__MC_EXPERIMENT__={mode,transform,getPointer(){return {x:pointer.x,y:pointer.y};},resetClock(){time=0;lastFrameAt=null;},advanceClock,getTime(){return time;},setIntensity(v){intensity=clamp(Number(v),.1,1);start();},setPaused(v){paused=!!v;if(paused)cancelAnimationFrame(raf);else start();}};
 })();
