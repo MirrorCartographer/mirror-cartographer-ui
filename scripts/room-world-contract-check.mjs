@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { ROOMS, ROOM_COUNT, LAYERS_PER_ROOM } from '../src/world/roomCatalog.js';
 
 assert.equal(ROOM_COUNT, 79, 'room count must remain 79');
@@ -12,5 +13,11 @@ assert.ok(ROOMS.slice(1).every((room, index) => room.unlockCost > ROOMS[index].u
 
 const signatures = ROOMS.map((room) => [room.primary, room.secondary, room.motion, room.interaction, room.audio, room.palette.join(':')].join('|'));
 assert.ok(new Set(signatures).size >= 58, 'catalog must maintain strong room-level uniqueness');
+
+const roomWorldSource = fs.readFileSync('src/components/RoomWorldValid.jsx', 'utf8');
+assert.ok(roomWorldSource.includes('const sanitizeProgress = value =>'), 'room progress must be sanitized before use');
+assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
+assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
+assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
 
 console.log(JSON.stringify({ rooms: ROOMS.length, layersPerRoom: LAYERS_PER_ROOM, totalLayers: ROOMS.length * LAYERS_PER_ROOM, uniqueSignatures: new Set(signatures).size }, null, 2));
