@@ -114,3 +114,11 @@
 - **Change:** Replaced per-frame increments with elapsed-time advancement, preserving the prior 60 Hz speed and clamping long frame gaps to avoid large jumps after tab suspension. Added a deterministic browser test comparing equal elapsed time at 60 Hz and 120 Hz.
 - **Verification:** GitHub Actions Smoke Test run #4265 passed the 60 Hz/120 Hz elapsed-time regression and full phone-first/room suite; Static Preview Artifact run #4230 passed.
 - **Risk:** The time clamp intentionally discards unusually long frame gaps. Physical-device motion perception and reduced-motion preferences still need dedicated review.
+
+ 
+## Iteration 013 — Release pointer state after cancelled gestures
+
+- **Observation:** The room engine released pointer state on `pointerup` only. A cancelled touch, lost pointer capture, or window blur could leave the gesture marked as active after the operating system interrupted it.
+- **Change:** Added a shared pointer-release handler for `pointerup`, `pointercancel`, `lostpointercapture`, and window blur. Extended the read-only pointer probe and added a browser regression test for a cancelled touch.
+- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Risk:** Synthetic cancellation verifies event handling; physical-device interruption and OS gesture arbitration still need device testing.
