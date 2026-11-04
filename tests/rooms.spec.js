@@ -65,6 +65,13 @@ test.describe('Playable Atlas rooms', () => {
     }
   });
 
+  test('Carnival directory card loads the bespoke crooked-midway artwork', async ({ page }) => {
+    await page.goto('/atlas/rooms/experiments/', { waitUntil: 'domcontentloaded' });
+    const artwork = page.locator('.carnival-card .card-art');
+    await expect(artwork).toBeVisible();
+    await expect.poll(() => artwork.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+  });
+
   test('procedural room memory is opt-in, local, restorable, and erasable', async ({ page }) => {
     const memoryKey = 'mc-room-memory:v1:carnival';
     const preferenceKey = 'mc-room-memory-enabled:v1:carnival';
