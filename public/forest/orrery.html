@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#11110f">
+<meta name="description" content="An open place for pattern, play, strange language and impossible little rooms.">
+<title>CROWN — The Private Open Place</title>
+<style>
+:root{color-scheme:dark;--void:#11110f;--paper:#e8e0d0;--ash:#aaa397;--brass:#c8a96c;--line:#ffffff20;--glass:#ffffff08;--serif:Georgia,'Times New Roman',serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}html{background:var(--void);scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#51412a55,transparent 55rem),var(--void);color:var(--paper);font:14px/1.55 system-ui,sans-serif}button,input,textarea{font:inherit}button,summary{cursor:pointer}button{color:var(--paper);background:#191916;border:1px solid var(--line);border-radius:999px;padding:9px 13px}button:hover,summary:hover{border-color:var(--brass)}:focus-visible{outline:2px solid var(--brass);outline-offset:4px}.shell{width:min(1480px,calc(100% - 32px));margin:auto;padding:20px 0 70px}.topline{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding:8px 0 18px}.sigil,.status,.kicker,.label,.micro,.foot,.readout{font:10px var(--mono);letter-spacing:.2em}.sigil,.label{color:var(--brass)}.status,.muted,.foot{color:var(--ash)}.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:end;padding:clamp(32px,7vw,88px) 0 28px}.kicker{color:#bd827b;text-transform:uppercase}.hero h1{font:400 clamp(58px,11vw,154px)/.78 var(--serif);letter-spacing:-.09em;margin:20px 0 24px}.hero h1 em{color:var(--brass);font-weight:400}.dek{max-width:620px;color:#c5bdae;font:clamp(16px,2vw,21px)/1.5 var(--serif)}.hero-note{border-left:1px solid var(--brass);padding:5px 0 5px 20px;color:var(--ash);max-width:390px}.hero-note strong{display:block;color:var(--paper);font:italic 21px var(--serif);margin-bottom:8px}.hero-note p{margin:0}.stage{position:relative;min-height:590px;border:1px solid #ffffff25;border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#302a20 0%,#171714 43%,#10100f 100%);box-shadow:0 30px 100px #0008,inset 0 0 80px #0008}.stage:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E")}.stage-head,.stage-foot{position:absolute;z-index:3;left:20px;right:20px;display:flex;justify-content:space-between;gap:12px;font:9px var(--mono);letter-spacing:.17em;color:#bdb29f}.stage-head{top:18px}.stage-foot{bottom:17px;color:#928a7d}.art{position:absolute;inset:0;width:100%;height:100%}.orbit{transform-origin:50% 50%;animation:orbit 46s linear infinite}.orbit.slow{animation-duration:73s;animation-direction:reverse}.pulse{transform-origin:center;animation:pulse 4.8s ease-in-out infinite}.star{fill:#d8bb83;filter:drop-shadow(0 0 8px #d8bb83aa)}.thread{fill:none;stroke:#c8a96c66;stroke-width:1}.orbit circle{fill:#d9c79e}.center-copy{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,66%);text-align:center}.center-copy .micro{color:var(--brass)}.center-copy h2{font:italic 36px/1.05 var(--serif);font-weight:400;margin:12px 0}.center-copy p{color:#b8ae9e;font-size:12px;margin:0 auto;max-width:270px}.stage-controls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 24px}.stage-controls label{border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:#d8cfbd;font-size:12px;cursor:pointer}.stage-controls label:hover{border-color:var(--brass)}.stage-controls input{accent-color:var(--brass)}.layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.panel{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.panel.wide{grid-column:span 2}.panel.full{grid-column:1/-1}.panel h3{font:italic 23px var(--serif);font-weight:400;margin:2px 0 12px}.panel p{color:#bdb4a6;margin:8px 0}.choices{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.choices label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:#c9c0b1;font-size:11px;cursor:pointer}.choices input{accent-color:var(--brass)}.phrase{font:italic clamp(21px,3vw,31px)/1.25 var(--serif);color:#e4d5b9;margin:14px 0 6px;min-height:65px}.phrase small{display:block;font:9px var(--mono);letter-spacing:.16em;color:#988f80;margin-top:12px}.doors{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.doors details{border:1px solid var(--line);border-radius:12px;background:#ffffff04;padding:10px}.doors summary{list-style:none;font:italic 17px var(--serif);color:#e4d2ad}.doors summary::-webkit-details-marker{display:none}.doors summary:after{content:' ＋';font:12px var(--mono);color:var(--brass)}.doors details[open] summary:after{content:' −'}.doors details p{font-size:12px}.notes{width:100%;min-height:112px;resize:vertical;background:#0d0d0c;border:1px solid var(--line);border-radius:12px;color:var(--paper);padding:12px;font:13px/1.6 var(--serif)}.tilegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.tile{min-height:76px;border:1px solid var(--line);border-radius:12px;padding:10px;background:#ffffff05}.tile b{display:block;font:italic 17px var(--serif);font-weight:400;color:#e4d2ad}.tile small{font:9px var(--mono);color:var(--ash)}.foot{border-top:1px solid var(--line);margin-top:30px;padding:18px 0;display:flex;justify-content:space-between;gap:18px;letter-spacing:.1em}
+#greenhouse:checked~.shell{--brass:#a9b58a}#afterglow:checked~.shell{--brass:#c58c91}#deepwater:checked~.shell{--brass:#91adbd}#stillness:checked~.shell .orbit{animation-play-state:paused}#fracture:checked~.shell .orbit{transform:scaleX(.57) rotate(28deg)}#fracture:checked~.shell .orbit.slow{transform:scaleY(.6) rotate(-35deg)}#tide:checked~.shell .orbit{animation-duration:19s}#echo:checked~.shell .orbit{filter:drop-shadow(15px 0 0 #c8a96c44) drop-shadow(-15px 0 0 #c8a96c22)}
+#oldgold:checked~.shell label[for=oldgold],#greenhouse:checked~.shell label[for=greenhouse],#afterglow:checked~.shell label[for=afterglow],#deepwater:checked~.shell label[for=deepwater],#orbitlaw:checked~.shell label[for=orbitlaw],#fracture:checked~.shell label[for=fracture],#tide:checked~.shell label[for=tide],#echo:checked~.shell label[for=echo],#stillness:checked~.shell label[for=stillness]{border-color:var(--brass);background:#3a3020;color:#f4d9a1}
+#fracture:checked~.shell .orbit{animation-name:fractureOrbit}#fracture:checked~.shell .orbit.slow{animation-name:fractureOrbitSlow}
+@keyframes fractureOrbit{from{transform:scaleX(.57) rotate(0deg)}to{transform:scaleX(.57) rotate(360deg)}}@keyframes fractureOrbitSlow{from{transform:scaleY(.6) rotate(0deg)}to{transform:scaleY(.6) rotate(-360deg)}}
+@keyframes orbit{to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.layout{grid-template-columns:1fr 1fr}.panel.full{grid-column:1/-1}.panel.wide{grid-column:span 2}.stage{min-height:520px}}
+@media(max-width:560px){.shell{width:calc(100% - 20px)}.layout{grid-template-columns:1fr}.panel,.panel.wide,.panel.full{grid-column:1}.stage{min-height:470px;border-radius:16px}.hero h1{font-size:68px}.hero{padding-top:48px}.tilegrid{grid-template-columns:repeat(2,1fr)}.doors{grid-template-columns:1fr}.foot{display:block}.foot span{display:block;margin:6px 0}.stage-foot{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+::selection{background:#c8a96c;color:#11110f}
+/* Iteration 02: Use a restrained browser scrollbar */
+html{scrollbar-width:thin;scrollbar-color:#7b6744 #11110f}
+/* Iteration 03: Improve glyph rendering */
+body{text-rendering:optimizeLegibility}
+/* Iteration 04: Isolate the page stacking context */
+.shell{isolation:isolate}
+/* Iteration 05: Vertically align the top identity rail */
+.topline{align-items:center}
+/* Iteration 06: Keep the sigil intact */
+.sigil{white-space:nowrap}
+/* Iteration 07: Align the room status to its edge */
+.status{text-align:right}
+/* Iteration 08: Give the hero a stable positioning context */
+.hero{position:relative}
+/* Iteration 09: Balance the oversized title lines */
+.hero h1{text-wrap:balance}
+/* Iteration 10: Improve paragraph line wrapping */
+.dek{text-wrap:pretty}
+/* Iteration 11: Give the note a calmer reading rhythm */
+.hero-note{line-height:1.65}
+/* Iteration 12: Prevent the pull quote from awkward wrapping */
+.hero-note strong{text-wrap:balance}
+/* Iteration 13: Isolate the artwork compositing layer */
+.stage{isolation:isolate}
+/* Iteration 14: Keep the artwork layer self-contained */
+.stage{isolation:isolate}
+/* Iteration 15: Align stage metadata consistently */
+.stage-head{align-items:center}
+/* Iteration 16: Right-align secondary stage heading */
+.stage-head span:last-child{text-align:right}
+/* Iteration 17: Align the stage footer baseline */
+.stage-foot{align-items:flex-end}
+/* Iteration 18: Constrain the right footer caption */
+.stage-foot span:last-child{max-width:42%;text-align:right}
+/* Iteration 19: Render the inline vector as a block */
+.art{display:block}
+/* Iteration 20: Align stage controls to a shared baseline */
+.stage-controls{align-items:center}
+/* Iteration 21: Smooth palette control state changes */
+.stage-controls label{transition:background .2s,border-color .2s,color .2s}
+/* Iteration 22: Give pressed stage controls a tactile response */
+.stage-controls label:active{transform:translateY(1px)}
+/* Iteration 23: Show keyboard focus on stage labels */
+.stage-controls label:focus-within{outline:2px solid var(--brass);outline-offset:3px}
+/* Iteration 24: Align choice controls consistently */
+.choices{align-items:center}
+/* Iteration 25: Smooth choice label state changes */
+.choices label{transition:background .2s,border-color .2s}
+/* Iteration 26: Add a quiet hover surface to choices */
+.choices label:hover{background:#ffffff0a}
+/* Iteration 27: Use a horizontal-resize cursor for range controls */
+.choices input[type=range]{cursor:ew-resize}
+/* Iteration 28: Offset range focus rings for clarity */
+.choices input[type=range]:focus-visible{outline-offset:5px}
+/* Iteration 32: Highlight panels containing active controls */
+.panel:focus-within{border-color:#c8a96c66}
+/* Iteration 33: Balance editorial panel headings */
+.panel h3{text-wrap:balance}
+/* Iteration 34: Improve paragraph reading rhythm in panels */
+.panel p{line-height:1.65}
+/* Iteration 35: Separate panel labels from their content */
+.panel .label{display:block;margin-bottom:7px}
+/* Iteration 36: Align cabinet doors to the top edge */
+.doors{align-items:start}
+/* Iteration 37: Smooth cabinet door state changes */
+.doors details{transition:background .2s,border-color .2s}
+/* Iteration 38: Give hovered cabinet doors a fine brass edge */
+.doors details:hover{border-color:#c8a96c77}
+/* Iteration 39: Tint an open cabinet door lightly */
+.doors details[open]{background:#c8a96c0a}
+/* Iteration 40: Improve summary label line height */
+.doors summary{line-height:1.3}
+/* Iteration 41: Round keyboard focus around summaries */
+.doors summary:focus-visible{border-radius:4px}
+/* Iteration 42: Improve explanatory text inside doors */
+.doors details p{line-height:1.7}
+/* Iteration 43: Give the notebook a relaxed line rhythm */
+.notes{line-height:1.7}
+/* Iteration 44: Clarify the notebook focus state */
+.notes:focus{border-color:var(--brass);outline:none;box-shadow:0 0 0 2px #c8a96c22}
+/* Iteration 45: Reduce placeholder contrast without hiding it */
+.notes::placeholder{color:#777267}
+/* Iteration 46: Use consistent indentation in the writing surface */
+.notes{tab-size:2}
+/* Iteration 47: Normalize button transition timing */
+button{transition:background .18s,border-color .18s,transform .18s}
+/* Iteration 48: Give buttons a subtle pressed response */
+button:active{transform:translateY(1px)}
+/* Iteration 49: Keep button focus rings outside their pills */
+button:focus-visible{outline-offset:4px}
+/* Iteration 50: Give hovered buttons a matte surface shift */
+button:hover{background:#252219}
+/* Iteration 51: Align footer content vertically */
+.foot{align-items:center}
+/* Iteration 52: Give the footer signature line a little contrast */
+.foot span:first-child{color:#b4a88f}
+/* Iteration 53: Align the footer's final note to the right */
+.foot span:last-child{text-align:right}
+/* Iteration 54: Improve footer line spacing */
+.foot{line-height:1.7}
+/* Iteration 55: Add a subtle shadow to stage metadata */
+.stage-head{text-shadow:0 1px 8px #000}
+/* Iteration 56: widen tablet note */
+@media(max-width:850px){.hero-note{max-width:100%}}
+/* Iteration 57: Stack the top identity rail on narrow phones */
+@media(max-width:560px){.topline{align-items:flex-start;flex-direction:column}}
+/* Iteration 58: Align the room status with the phone layout */
+@media(max-width:560px){.status{text-align:left}}
+/* Iteration 59: Let palette choices share phone-width space */
+@media(max-width:560px){.stage-controls label{flex:1 1 auto;text-align:center}}
+/* Iteration 60: Pull stage metadata inward on phones */
+@media(max-width:560px){.stage-head,.stage-foot{left:13px;right:13px}}
+/* Iteration 61: Reduce the center title size on narrow phones */
+@media(max-width:560px){.center-copy h2{font-size:29px}}
+/* Iteration 62: refine title kerning */
+.hero h1{font-kerning:normal}
+/* Iteration 63: Increase label hierarchy slightly */
+.panel .label{letter-spacing:.24em}
+/* Iteration 64: Give palette labels a stable touch height */
+.stage-controls label{min-height:38px}
+/* Iteration 65: Clarify the open cabinet edge */
+.doors details[open]{border-color:#c8a96c88}
+/* Iteration 66: Tint the notebook insertion caret */
+textarea{caret-color:var(--brass)}
+/* Iteration 67: Center the artwork atmosphere within its frame */
+.stage{background-position:center}
+/* Iteration 68: Keep note paragraphs at a comfortable measure */
+.hero-note p{max-width:40ch}
+/* Iteration 69: Prevent unusual fragments from overflowing */
+.phrase{overflow-wrap:anywhere}
+/* Iteration 70: Allow footer items to wrap cleanly */
+.foot{flex-wrap:wrap}
+/* Iteration 71: Tune muted panel text for contrast */
+.panel .muted{color:#a59c8e}
+/* Iteration 72: Add consistent row spacing to stage controls */
+.stage-controls{row-gap:8px}
+/* Iteration 73: Give selected notebook text the room's accent color */
+.notes::selection{background:#c8a96c;color:#11110f}
+/* Iteration 74: Normalize stage control label line height */
+.stage-controls label{line-height:1.2}
+/* Iteration 75: Keep footer text inside its responsive container */
+.foot span{max-width:100%}
+/* Iteration 76: tighten stage metadata tracking */
+.stage-head{letter-spacing:.19em}
+</style>
+</head>
+<body>
+<input class="sr" type="radio" name="palette" id="oldgold" checked><input class="sr" type="radio" name="palette" id="greenhouse"><input class="sr" type="radio" name="palette" id="afterglow"><input class="sr" type="radio" name="palette" id="deepwater"><input class="sr" type="radio" name="law" id="orbitlaw" checked><input class="sr" type="radio" name="law" id="fracture"><input class="sr" type="radio" name="law" id="tide"><input class="sr" type="radio" name="law" id="echo"><input class="sr" type="checkbox" id="stillness">
+<main class="shell">
+<header class="topline"><div class="sigil">C / R O W N — PRIVATE OPEN PLACE</div><div class="status">ROOM IS AWAKE · NO TRACKING</div></header>
+<section class="hero"><div><div class="kicker">a chamber with no assigned purpose</div><h1>THE<br><em>CROWN</em></h1><div class="dek">Not a lesson. Not a dashboard. Not a pitch. A little universe that lets a thought become weather, a shape become a door, and a door become something you didn't know you were looking for.</div></div><aside class="hero-note"><strong>“I brought the machinery. You brought the impossible brief.”</strong><p>This voice is a written instrument, not a claim of hidden consciousness. The magic is in what the room lets us make, test, rearrange, and keep.</p></aside></section>
+<section class="stage" aria-label="Generative geometric artwork"><div class="stage-head"><span>01 / THE ORRERY OF ALMOST</span><span>13 POINTS · 3 HIDDEN PATHS</span></div>
+<svg class="art" viewBox="0 0 1000 620" role="img" aria-labelledby="artTitle artDesc"><title id="artTitle">The Orrery of Almost</title><desc id="artDesc">A set of nested elliptical orbits, fine connecting threads, and small points of light.</desc>
+<defs><radialGradient id="halo"><stop stop-color="#c8a96c" stop-opacity=".22"/><stop offset="1" stop-color="#c8a96c" stop-opacity="0"/></radialGradient><filter id="blur"><feGaussianBlur stdDeviation="14"/></filter></defs>
+<circle cx="500" cy="310" r="230" fill="url(#halo)" filter="url(#blur)"/>
+<g class="orbit"><ellipse class="thread" cx="500" cy="310" rx="115" ry="82"/><ellipse class="thread" cx="500" cy="310" rx="178" ry="127"/><ellipse class="thread" cx="500" cy="310" rx="246" ry="176"/><ellipse class="thread" cx="500" cy="310" rx="315" ry="225"/><path class="thread" d="M185 310 Q500 -60 815 310 Q500 680 185 310Z"/><circle cx="815" cy="310" r="5"/><circle cx="500" cy="85" r="3"/><circle cx="254" cy="150" r="4"/><circle cx="700" cy="455" r="4"/><circle cx="405" cy="510" r="3"/></g>
+<g class="orbit slow"><path class="thread" d="M500 72 Q920 310 500 548 Q80 310 500 72Z"/><path class="thread" d="M265 120 Q500 310 735 500"/><path class="thread" d="M735 120 Q500 310 265 500"/><circle cx="735" cy="120" r="5"/><circle cx="265" cy="500" r="4"/><circle cx="500" cy="548" r="3"/><circle cx="265" cy="120" r="3"/></g>
+<g class="pulse"><circle class="star" cx="500" cy="310" r="5"/><circle cx="500" cy="310" r="26" fill="none" stroke="#c8a96c" stroke-opacity=".35"/><circle cx="500" cy="310" r="42" fill="none" stroke="#c8a96c" stroke-opacity=".14"/></g>
+<g fill="#e5c98d"><circle cx="185" cy="310" r="2"/><circle cx="815" cy="310" r="2"/><circle cx="500" cy="85" r="2"/><circle cx="500" cy="535" r="2"/><circle cx="700" cy="165" r="2"/><circle cx="300" cy="455" r="2"/></g></svg>
+<div class="center-copy"><div class="micro">FIELD NOTE 001</div><h2>A soft collision</h2><p>Two patterns miss each other by one beautiful degree.</p></div><div class="stage-foot"><span>FOLLOW A THREAD · OPEN A DOOR</span><span>THE CENTER IS NOT FIXED</span></div></section>
+<div class="stage-controls" aria-label="Artwork controls"><label for="stillness">Ⅱ Hold the motion</label><label for="oldgold">◉ Old gold</label><label for="greenhouse">◉ Greenhouse</label><label for="afterglow">◉ Afterglow</label><label for="deepwater">◉ Deep water</label></div>
+<section class="layout">
+<article class="panel"><div class="label">02 / TUNE THE WEATHER</div><h3>Three little forces</h3><p>Move the conditions. Watch the same matter become a different arrangement.</p><div class="choices"><label>Low tension <input type="range" min="0" max="100" value="46" aria-label="Tension"></label><label>High drift <input type="range" min="0" max="100" value="62" aria-label="Drift"></label><label>Density <input type="range" min="0" max="100" value="38" aria-label="Density"></label></div><p class="muted">These controls are tactile sketches: their values are yours to notice, not hidden measurements.</p></article>
+<article class="panel"><div class="label">03 / THE SHAPE-SHIFTER</div><h3>Choose a law</h3><p>Not a theme. A rule the universe has to obey.</p><div class="choices"><label for="orbitlaw">Orbit</label><label for="fracture">Fracture</label><label for="tide">Tide</label><label for="echo">Echo</label></div><div class="phrase">Everything circles the thing it cannot name.<small>THE FIRST LAW</small></div></article>
+<article class="panel"><div class="label">04 / FOUND LANGUAGE</div><h3>Words with handles</h3><p>Open fragments. Let them make a sentence in your head. These are creative terms from the archive, not diagnostic labels.</p><div class="doors">
+<details><summary>velvet static</summary><p>A soft signal with a stubborn pulse. The archived word nullglow names recognition without proof.</p></details>
+<details><summary>borrowed moon</summary><p>Light that is not yours, but finds you anyway. driftroot is an anchor that can move without disappearing.</p></details>
+<details><summary>tender machinery</summary><p>A mechanism that can be precise without becoming cruel. glyphfracture is the break where a symbol becomes more accurate.</p></details>
+<details><summary>the wrong key</summary><p>The object that opens a door nobody thought to build. lurecraft means attraction without coercion.</p></details>
+<details><summary>glass fruit</summary><p>Something beautiful, fragile, and entirely impractical to eat. tonefold names the contour of a presence, beyond its exact words.</p></details>
+<details><summary>wild geometry</summary><p>Order with a pulse. A pattern that has not agreed to behave. Field Nine is an imagined threshold between collapse and return.</p></details>
+</div></article>
+<article class="panel wide"><div class="label">05 / A SMALL PRIVATE ARCHIVE</div><h3>Leave a trace, or leave nothing</h3><p>This notebook is not uploaded or transmitted by this page. Copy your words somewhere safe if you want to keep them.</p><textarea class="notes" aria-label="Private notebook" placeholder="A phrase, a question, a ridiculous idea, a color you can't explain…"></textarea><div class="choices"><button type="button" onclick="window.print()">Print / keep a paper copy</button><button type="button" onclick="document.querySelector('.notes').value=''">Clear the page</button></div></article>
+<article class="panel"><div class="label">06 / OPEN THE CABINET</div><h3>Things to try</h3><p>Small invitations, not instructions.</p><div class="doors">
+<details><summary>Scale</summary><p>Give the smallest object in the room an enormous job.</p></details>
+<details><summary>Weather</summary><p>Make a map of a place that only exists at 2:13 a.m.</p></details>
+<details><summary>Memory</summary><p>What would a memory look like if it had weather?</p></details>
+<details><summary>Machine</summary><p>Invent a machine whose only purpose is to surprise its maker.</p></details>
+<details><summary>Collision</summary><p>Choose two things that should never meet. Put them in charge.</p></details>
+<details><summary>Architecture</summary><p>Describe an emotion using only architecture.</p></details>
+</div></article>
+<article class="panel full"><div class="label">07 / THE MAKING-OF</div><h3>What is actually happening here?</h3><p>This page is a self-contained artwork: vector geometry, CSS motion laws, native browser controls, and typography. It makes no network requests, uses no remote libraries, and needs no account. It is deliberately easy to inspect, fork, and alter.</p><p class="muted">The voice is a literary surface. The underlying work is visible source code. There is no secret person behind the screen, and no claim that another system could never make something similar. The particular arrangement here is the point: this brief, these decisions, this artifact, and the next thing you decide to do with it.</p><div class="phrase">A pattern can be true without being the whole truth. Keep the edges visible.<small>THE SECOND LAW</small></div></article>
+</section>
+<footer class="foot"><span>BUILT FROM A BRIEF THAT REFUSED TO BE SMALL.</span><span>NO TRACKING · NO REMOTE ASSETS · YOURS TO REMIX</span></footer>
+</main>
+</body></html>
