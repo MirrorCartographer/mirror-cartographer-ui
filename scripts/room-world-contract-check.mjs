@@ -20,6 +20,7 @@ assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room id
 assert.ok(roomWorldSource.includes('unlocked.includes(value.roomId)'), 'restored current room must be unlocked');
 assert.ok(roomWorldSource.includes('const depth = Math.floor(progress.depth?.[roomId] || 1)'), 'room depth must have one source of truth');
 assert.ok(!roomWorldSource.includes('setDepth('), 'progress updater must not trigger nested React state updates');
+assert.ok(!roomWorldSource.includes('setMuted((value) => {'), 'audio side effects must stay outside React state updaters');
 assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
 assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
 assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
