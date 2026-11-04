@@ -364,3 +364,22 @@ test('cancelled touch gestures release the room pointer state', async ({ page })
   await page.evaluate(() => document.body.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 2, pointerType: 'touch' })));
   expect(await page.evaluate(() => window.__MC_EXPERIMENT__.getPointer().down)).toBe(false);
 });
+
+ 
+test('room keyboard controls clamp coordinates and prevent arrow-key page scrolling', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  const result = await page.evaluate(() => {
+    let prevented = false;
+    for (let i = 0; i < 20; i++) {
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true });
+      document.body.dispatchEvent(event);
+      prevented = prevented || event.defaultPrevented;
+    }
+    const left = window.__MC_EXPERIMENT__.getPointer().x;
+    for (let i = 0; i < 30; i++) document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    return { left, right: window.__MC_EXPERIMENT__.getPointer().x, prevented };
+  });
+  expect(result.left).toBe(0);
+  expect(result.right).toBe(1);
+  expect(result.prevented).toBe(true);
+});
