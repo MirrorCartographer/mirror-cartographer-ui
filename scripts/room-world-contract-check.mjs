@@ -22,5 +22,6 @@ assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be an
 assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
 assert.ok(roomWorldSource.includes('event.key !== "Tab"'), 'room constellation dialog must trap keyboard focus');
 assert.ok(roomWorldSource.includes('event.shiftKey && document.activeElement === first'), 'room constellation dialog must support reverse tab focus');
+assert.ok(roomWorldSource.includes("preference.addEventListener('change', updatePreference)"), 'room world must respond to OS reduced-motion changes');
 
 console.log(JSON.stringify({ rooms: ROOMS.length, layersPerRoom: LAYERS_PER_ROOM, totalLayers: ROOMS.length * LAYERS_PER_ROOM, uniqueSignatures: new Set(signatures).size }, null, 2));
