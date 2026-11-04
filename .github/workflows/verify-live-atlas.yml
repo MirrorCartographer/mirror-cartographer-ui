@@ -9,12 +9,16 @@ on:
       - 'vercel.json'
       - '.github/workflows/verify-live-atlas.yml'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Publish interactive application to GitHub Pages"]
+    types: [completed]
 
 permissions:
   contents: read
 
 jobs:
   live-smoke-test:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
