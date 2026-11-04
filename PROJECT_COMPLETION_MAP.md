@@ -16,11 +16,29 @@
 
 ## Evidence-backed changes in this pass
 
-- Workbench indexes were missing four existing HTML files. Both indexes were updated to include `public/atlas/research-atlas/index.html`, `public/atlas/rooms/arcade/connections/game-11.html`, `public/atlas/rooms/observatory.html`, and `public/atlas/rooms/worlds/the-living-country/index.html`.
-- The index-validation step passed in the smoke run after the index change.
-- Shared experiment-room transform now applies a visible `hue-rotate(...)` body filter in addition to updating room phase state.
-- The following checks passed on commit `edff9e9f8bac1a65da13c59185e2da3eff60cd26`: Atlas Source Checks; Room encounter integrity; Verify Live Living Atlas on GitHub Pages; Project daemon.
-- Static preview, Working Machine Checks, Smoke Test, and Pages publication were still running when this map was authored. Do not mark them passed until their run conclusions are available.
+- Both workbench indexes now include the four previously omitted HTML experiences: the Research Atlas, Signal Loom game 11, standalone Observatory, and The Living Country. The workbench validator confirms all 96 HTML artifacts are indexed.
+- The shared experiment-room transform now produces a visible hue shift, not only an internal phase change.
+- Fixed the observatory route normalizer's malformed regular expression and The Living Country's nonexistent `draw()` call, which is now `drawWorld(0)`.
+- Fixed a literal escaped newline in the Unfinished Constellation inline script. The Field Instruments release gate now parses the script and builds successfully.
+- Synchronized the source and published Research Atlas pages; the relative stylesheet works in both contexts and Atlas Source Validation passes.
+- Added opt-in, per-room local memory to the ten procedural rooms. The default is one-off; saved phase/gesture/hue and up to 36 traces restore on reload; “forget trace” clears local state. This is browser-local storage, not encryption or cross-device sync.
+- Updated the room identity manifest to reflect the new memory behavior without claiming that the deeper room-specific interaction grammars are complete.
+- Expanded the browser smoke test to derive destinations from all 34 entries in `room-identities.json`, in addition to standalone routes. It checks route responses, internal links, visible button activation, and browser runtime errors. Added a dedicated Signal Loom puzzle completion/reset test and a memory opt-in/restore/erase test.
+- Added a CI check that requires `public/art-direction.css` and `src/assets/art-direction.css` to remain byte-identical.
+- Added a `workflow_run` trigger so a successful GitHub Pages publication is followed by a live-site verification, rather than relying only on a check that may run before deployment.
+
+## Verified release evidence
+
+The following checks passed on commit `56f58beb4d506da52cd3704710c7799c685cfcc7`:
+
+- [Smoke Test, including local gate and room tests](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763621108)
+- [Publish interactive application to GitHub Pages](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763621008)
+- [Post-deploy live Atlas verification](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763686171)
+- [Field Instruments release gate](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620985)
+- [Working Machine Checks](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620956)
+- [Static Preview Artifact](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620984)
+
+The live GitHub Pages deployment is verified at https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/. This is **not** evidence that the separate Vercel deployment is current; Vercel remains unverified in this pass.
 
 ## Completion criteria
 
@@ -36,10 +54,10 @@ A route or room is not complete merely because it returns HTTP 200 or paints a c
 ## Remaining work — ordered by proof gate
 
 ### P0 — Release correctness
-- [ ] Finish the latest smoke test after the workbench-index and room-transform fixes; diagnose and repair every failing assertion.
-- [ ] Confirm Working Machine Checks and static preview artifacts on the same main commit.
-- [ ] Confirm Pages publication and live route verification; do not infer deployment from a green build alone.
-- [ ] Run the full local gate and all room tests; preserve run links and commit SHAs in the report.
+- [x] Complete the latest smoke test and diagnose the observed runtime and script-syntax failures.
+- [x] Confirm Working Machine Checks and static preview artifacts on the same release commit.
+- [x] Confirm GitHub Pages publication and a post-deploy live route verification.
+- [x] Run the full local gate and room tests; preserve run links and commit SHA above.
 
 ### P1 — Experience integrity
 - [ ] Audit every curated destination in the 34-room directory individually, including its identity, route, controls, empty/error states, and return path.
@@ -56,7 +74,7 @@ A route or room is not complete merely because it returns HTTP 200 or paints a c
 ### P2 — Maintenance and architecture
 - [ ] Establish the canonical production/deployment path and document legacy, research, and standalone runtimes.
 - [ ] Review duplicate CSS and runtime entry points before deletion; remove only proven dead/duplicate code.
-- [ ] Keep the public and source art-direction CSS synchronized with an automated parity check.
+- [x] Keep the public and source art-direction CSS synchronized with an automated parity check.
 - [ ] Preserve proof artifacts for each completion claim.
 
 ## Status vocabulary
