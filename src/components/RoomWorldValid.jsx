@@ -229,7 +229,7 @@ export default function RoomWorldValid() {
     const speed = Math.hypot(x - previous.x, y - previous.y);
     let gesture = 'tap';
     if (type === 'down') pointRef.current = { ...previous, x, y, down: true, startX: x, startY: y, startedAt: now };
-    else if (type === 'move') { pointRef.current = { ...previous, x, y }; gesture = speed > 0.055 ? 'rapid' : Math.abs(x - previous.x) > Math.abs(y - previous.y) ? 'trace' : 'fold'; }
+    else if (type === 'move') { pointRef.current = { ...previous, x, y }; if (!previous.down) return; gesture = speed > 0.055 ? 'rapid' : Math.abs(x - previous.x) > Math.abs(y - previous.y) ? 'trace' : 'fold'; }
     else { const distance = Math.hypot(x - previous.startX, y - previous.startY); gesture = distance > 0.25 ? 'sweep' : now - previous.startedAt > 650 ? 'hold' : 'tap'; pointRef.current = { ...previous, x, y, down: false }; }
     const boost = type === 'move' && previous.down ? 0.06 : type === 'down' ? 0.72 : type === 'up' ? 0.4 : 0.01;
     record(boost, gesture);
