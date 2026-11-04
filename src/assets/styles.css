@@ -471,3 +471,23 @@ body{background:#070b0a}
 .primary-action{background:linear-gradient(120deg,#8eaa8844,#d7b77c22);border-color:#d7b77c88}
 .capsule-node,.artifact-card,.engine-grid article{border-radius:2px;background-color:#0d1915;border-color:var(--mc-line)}
 .capsule-node:after,.artifact-card:after{content:"";position:absolute;inset:0;background-image:url('/mirror-cartographer-ui/art/main-glasshouse.svg');background-size:cover;opacity:.14;mix-blend-mode:screen;pointer-events:none}
+
+
+/* Visible only when browser storage refuses to persist room progress. */
+.storage-warning {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 40;
+  max-width: min(280px, calc(100vw - 28px));
+  padding: 8px 11px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  background: rgba(4,5,10,0.78);
+  color: rgba(255,255,255,0.78);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+}
