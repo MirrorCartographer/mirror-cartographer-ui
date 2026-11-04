@@ -238,7 +238,7 @@ export default function RoomWorldValid() {
   };
 
   const interact = (event, type) => {
-    if (type === 'down') { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = null; event.currentTarget.setPointerCapture?.(event.pointerId);
+    if (type === 'down') { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = null; event.currentTarget.setPointerCapture?.(event.pointerId); }
     const rect = event.currentTarget.getBoundingClientRect();
     const x = clamp((event.clientX - rect.left) / rect.width);
     const y = clamp((event.clientY - rect.top) / rect.height);
