@@ -2,10 +2,10 @@
   "schema_version": 1,
   "project": "Mirror Cartographer",
   "repository": "MirrorCartographer/mirror-cartographer-ui",
-  "updated_at": "2026-11-04T21:30:00Z",
+  "updated_at": "2026-11-04T21:34:00Z",
   "active_delivery_item": "V-001",
   "delivery_state": "in_progress_partial",
-  "observed_blocker": "Source commit a2913b6d40d93979502e66cda8173a799b11a3ed restores first-class hover dwell and retains atlas access across interpretation modes. GitHub Pages build and deploy succeeded, and the post-deploy live smoke test succeeded for this commit. The local phone-first Playwright gate is still running. The separate Cloudflare Workers build check failed; its failure is not evidence that the GitHub Pages deployment failed. The Vercel/Cloudflare deployment path must not be conflated with the verified Pages release.",
+  "observed_blocker": "The current source head cdeed0097dee29cb2d5bf076c6ccde226ef0abc7 removes artificial room unlock thresholds: all 79 rooms are discoverable immediately and exploration deepens each room. Its Portal build and ARC harness checks passed; the main build, build artifact, and phone-first smoke checks were still running at the time of this update. The preceding commit a2913b6d40d93979502e66cda8173a799b11a3ed passed GitHub Pages build/deploy and post-deploy live smoke. That live verification does not include the later all-rooms-open change. The separate Cloudflare Workers build check failed and must be treated independently from GitHub Pages.",
   "last_verified_commit": "a2913b6d40d93979502e66cda8173a799b11a3ed",
   "operating_constraints": [
     "Do not add payments or conversion logic to Vercel.",
@@ -13,5 +13,6 @@
     "Do not claim deployment or peer execution without evidence.",
     "Avoid application deployment attempts while provider build capacity is exhausted."
   ],
-  "next_action": "Finish the phone-first Playwright gate for a2913b6d40d93979502e66cda8173a799b11a3ed. Inspect the separate Cloudflare Workers build failure before claiming that deployment path works. Keep GitHub Pages as the verified live path unless a later provider deployment and live check both pass."
+  "next_action": "Wait for build, build-artifact, and phone-first smoke checks on cdeed0097dee29cb2d5bf076c6ccde226ef0abc7. If they pass, verify that exact commit on GitHub Pages after its deployment and run the live gate. Investigate the Cloudflare Workers failure separately; do not claim that deployment path is healthy.",
+  "source_head": "cdeed0097dee29cb2d5bf076c6ccde226ef0abc7"
 }
