@@ -42,7 +42,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|atlas(?:/|$)|research-atlas(?:/|$)|self(?:/|$)|permission-room-next-move\\.html$).*)",
+      "source": "/((?!api/|atlas(?:/|$)|research-atlas(?:/|$)|self(?:/|$)|forest(?:/|$)|permission-room-next-move\\.html$).*)",
       "destination": "/index.html"
     }
   ]
