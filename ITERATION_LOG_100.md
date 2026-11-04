@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 12/100 (artwork-only hue transformation, first-contact touch capture, and refresh-rate-independent room motion; Smoke Test run #4265 and Static Preview Artifact run #4230 passed).  
+**Completed:** 13/100 (artwork-only hue transformation, first-contact touch capture, refresh-rate-independent motion, and pointer-cancellation recovery; Smoke Test run #4269 and Static Preview Artifact run #4234 passed).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -120,5 +120,5 @@
 
 - **Observation:** The room engine released pointer state on `pointerup` only. A cancelled touch, lost pointer capture, or window blur could leave the gesture marked as active after the operating system interrupted it.
 - **Change:** Added a shared pointer-release handler for `pointerup`, `pointercancel`, `lostpointercapture`, and window blur. Extended the read-only pointer probe and added a browser regression test for a cancelled touch.
-- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Verification:** GitHub Actions Smoke Test run #4269 passed the cancelled-touch regression and full phone-first/room suite; Static Preview Artifact run #4234 passed.
 - **Risk:** Synthetic cancellation verifies event handling; physical-device interruption and OS gesture arbitration still need device testing.
