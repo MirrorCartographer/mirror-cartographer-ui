@@ -95,6 +95,21 @@ test.describe('Playable Atlas rooms', () => {
     await expect(page.locator('#readout')).toHaveText('0 NOTES IN THE PATTERN');
   });
 
+  test('Signal Loom routes the beam, records completion, and resets cleanly', async ({ page }) => {
+    await page.goto('/atlas/rooms/arcade/connections/game-11.html', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#state')).toHaveText('In motion');
+    await page.getByRole('button', { name: /Row 5, column 3, mirror/ }).click();
+    await page.getByRole('button', { name: /Row 3, column 3, mirror/ }).click();
+    await expect(page.locator('#state')).toHaveText('Complete');
+    await expect(page.locator('#message')).toHaveText('The signal arrived. The field is connected.');
+    await expect(page.locator('#moves')).toHaveText('2');
+    await page.locator('#reset').click();
+    await expect(page.locator('#moves')).toHaveText('0');
+    await expect(page.locator('#message')).toHaveText('The source is waiting.');
+    await page.locator('#hint').click();
+    await expect(page.locator('#message')).toContainText('Two mirrors control the turn');
+  });
+
   test('the archive and message room remain reachable and interactive', async ({ page }) => {
     await page.goto('/atlas/archive.html', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#filter')).toBeVisible();
