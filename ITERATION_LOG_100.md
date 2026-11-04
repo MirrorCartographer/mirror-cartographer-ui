@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 10/100 (artwork-only spectral transformation; hosted phone-first smoke and room suite passed).  
+**Completed:** 10/100 (artwork-only spectral transformation; Smoke Test run #4256 and Static Preview Artifact run #4221 passed).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -96,5 +96,5 @@
 
 - **Observation:** The room transformation applied `hue-rotate` to the entire document body. This recolored navigation, labels, buttons, and focus indicators along with the canvas artwork, so an artistic transformation could silently alter interface contrast and control affordances.
 - **Change:** Moved the hue filter to the room canvas only. Updated the browser regression test to require the canvas transformation and reject a body-level filter.
-- **Verification:** Pending the next hosted Playwright run; this iteration is not counted as complete until that run passes.
+- **Verification:** GitHub Actions Smoke Test run #4256 passed, including the phone-first gate and room-route/browser suite; Static Preview Artifact run #4221 passed.
 - **Risk:** Canvas artwork changes hue while DOM controls retain their designed colors. Room-specific canvas contrast still requires visual review across all ten room palettes.
