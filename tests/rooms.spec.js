@@ -328,3 +328,25 @@ test('experiment rooms capture the initial touch point without a prior pointermo
   expect(pointer.y).toBeCloseTo(0.7, 1);
   await page.evaluate(() => document.body.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1, pointerType: 'touch' })));
 });
+
+ 
+test('room animation advances consistently across 60 Hz and 120 Hz frame schedules', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  const times = await page.evaluate(() => {
+    const room = window.__MC_EXPERIMENT__;
+    room.setPaused(false);
+    room.setIntensity(0.72);
+    room.resetClock();
+    room.advanceClock(1000);
+    room.advanceClock(1016.6666667);
+    const at60Hz = room.getTime();
+    room.resetClock();
+    room.advanceClock(1000);
+    room.advanceClock(1008.3333333);
+    room.advanceClock(1016.6666667);
+    const at120Hz = room.getTime();
+    return { at60Hz, at120Hz };
+  });
+  expect(times.at60Hz).toBeGreaterThan(0);
+  expect(times.at120Hz).toBeCloseTo(times.at60Hz, 8);
+});
