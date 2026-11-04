@@ -19,6 +19,7 @@
 - Both workbench indexes now include the four previously omitted HTML experiences: the Research Atlas, Signal Loom game 11, standalone Observatory, and The Living Country. The workbench validator confirms all 96 HTML artifacts are indexed.
 - The shared experiment-room transform now produces a visible hue shift, not only an internal phase change.
 - Fixed the observatory route normalizer's malformed regular expression and The Living Country's nonexistent `draw()` call, which is now `drawWorld(0)`.
+- Integrated the hand-authored `public/art/atlas-carnival.svg` into the Carnival of Thought directory card; a browser test verifies the artwork actually loads.
 - Fixed a literal escaped newline in the Unfinished Constellation inline script. The Field Instruments release gate now parses the script and builds successfully.
 - Synchronized the source and published Research Atlas pages; the relative stylesheet works in both contexts and Atlas Source Validation passes.
 - Added opt-in, per-room local memory to the ten procedural rooms. The default is one-off; saved phase/gesture/hue and up to 36 traces restore on reload; “forget trace” clears local state. This is browser-local storage, not encryption or cross-device sync.
@@ -29,14 +30,16 @@
 
 ## Verified release evidence
 
-The following checks passed on commit `56f58beb4d506da52cd3704710c7799c685cfcc7`:
+The latest release candidate passed on commit `94e5dc0bc72cfcba6fb85ece95b4da2e5ca09f19`:
 
-- [Smoke Test, including local gate and room tests](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763621108)
-- [Publish interactive application to GitHub Pages](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763621008)
-- [Post-deploy live Atlas verification](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763686171)
+- [Smoke Test: local gate, all 34 manifest destinations, room controls, memory privacy, Signal Loom, and Carnival artwork](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764490217)
+- [Publish interactive application to GitHub Pages](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764489431)
+- [Post-deploy live Atlas verification](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764624032)
 - [Field Instruments release gate](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620985)
-- [Working Machine Checks](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620956)
-- [Static Preview Artifact](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41763620984)
+- [Working Machine Checks](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764489684)
+- [Static Preview Artifact](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764489716)
+- [Room encounter integrity](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764475952)
+- [Atlas Source Checks](https://github.com/MirrorCartographer/mirror-cartographer-ui/actions/runs/41764475722)
 
 The live GitHub Pages deployment is verified at https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/. This is **not** evidence that the separate Vercel deployment is current; Vercel remains unverified in this pass.
 
