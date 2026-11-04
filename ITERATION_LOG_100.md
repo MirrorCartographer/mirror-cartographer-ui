@@ -98,3 +98,11 @@
 - **Change:** Moved the hue filter to the room canvas only. Updated the browser regression test to require the canvas transformation and reject a body-level filter.
 - **Verification:** GitHub Actions Smoke Test run #4256 passed, including the phone-first gate and room-route/browser suite; Static Preview Artifact run #4221 passed.
 - **Risk:** Canvas artwork changes hue while DOM controls retain their designed colors. Room-specific canvas contrast still requires visual review across all ten room palettes.
+
+ 
+## Iteration 011 — Capture the first touch coordinate
+
+- **Observation:** The shared room engine updated pointer coordinates only on `pointermove`. A touch interaction can begin with `pointerdown` before any move event, so the first tap could be recorded and rendered at the stale center/previous pointer location rather than where the user touched.
+- **Change:** The pointer-down handler now captures and clamps the initial contact coordinates before recording the gesture. Added a minimal read-only pointer probe to the existing room test hook and a regression test that dispatches a touch pointer-down without a preceding move.
+- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Risk:** The regression test uses a synthetic pointer event. Physical-device touch behavior still warrants a real-device check.
