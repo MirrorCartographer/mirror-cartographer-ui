@@ -19,5 +19,6 @@ assert.ok(roomWorldSource.includes('const sanitizeProgress = value =>'), 'room p
 assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
 assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
 assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
+assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
 
 console.log(JSON.stringify({ rooms: ROOMS.length, layersPerRoom: LAYERS_PER_ROOM, totalLayers: ROOMS.length * LAYERS_PER_ROOM, uniqueSignatures: new Set(signatures).size }, null, 2));
