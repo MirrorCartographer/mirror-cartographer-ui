@@ -52,7 +52,8 @@ test.describe('Playable Atlas rooms', () => {
       await sound.click();
       await expect(sound).toHaveText('sound on');
       await shift.click();
-      await expect(page.locator('canvas')).toHaveAttribute('style', /hue-rotate/);\n      await expect(page.locator('body')).not.toHaveAttribute('style', /hue-rotate/);
+      await expect(page.locator('canvas')).toHaveAttribute('style', /hue-rotate/);
+      await expect(page.locator('body')).not.toHaveAttribute('style', /hue-rotate/);
       const still = page.getByRole('button', { name: 'stillness' });
       await still.click();
       await expect(page.getByRole('button', { name: 'return to motion' })).toBeVisible();
