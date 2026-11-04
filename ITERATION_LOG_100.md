@@ -1,7 +1,7 @@
 # 100-iteration improvement log — Mirror Cartographer UI
 
 **Target:** 100 distinct inspect → change/test → verify → record cycles.  
-**Completed:** 10/100 (artwork-only spectral transformation; Smoke Test run #4256 and Static Preview Artifact run #4221 passed).  
+**Completed:** 11/100 (artwork-only spectral transformation and first-contact touch coordinate capture; Smoke Test run #4261 and Static Preview Artifact run #4226 passed).  
 **Branch:** `work/100-iterations-2026-11-03`
 
 ## Iteration 001 — Enforce canonical experience and deployment-state invariants
@@ -104,5 +104,5 @@
 
 - **Observation:** The shared room engine updated pointer coordinates only on `pointermove`. A touch interaction can begin with `pointerdown` before any move event, so the first tap could be recorded and rendered at the stale center/previous pointer location rather than where the user touched.
 - **Change:** The pointer-down handler now captures and clamps the initial contact coordinates before recording the gesture. Added a minimal read-only pointer probe to the existing room test hook and a regression test that dispatches a touch pointer-down without a preceding move.
-- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Verification:** GitHub Actions Smoke Test run #4261 passed the phone-first and room browser suite, including the initial-touch-coordinate regression test.
 - **Risk:** The regression test uses a synthetic pointer event. Physical-device touch behavior still warrants a real-device check.
