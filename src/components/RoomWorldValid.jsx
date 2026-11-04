@@ -11,9 +11,8 @@ const validRoomId = value => Number.isInteger(value) && value >= 1 && value <= R
 const sanitizeProgress = value => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
   const roomIds = input => Array.isArray(input) ? [...new Set(input.filter(validRoomId))] : [];
-  const unlocked = roomIds(value.unlocked);
+  const unlocked = ROOMS.map((room) => room.id);
   const visited = roomIds(value.visited);
-  if (!unlocked.includes(1)) unlocked.unshift(1);
   if (!visited.includes(1)) visited.unshift(1);
   const depth = {};
   if (value.depth && typeof value.depth === 'object' && !Array.isArray(value.depth)) {
@@ -88,9 +87,9 @@ function PortalMap({ progress, onEnter, onClose }) {
   return <div className="portal-map" role="dialog" aria-modal="true" aria-label="Room constellation" onKeyDown={containDialogFocus}>
     <button className="map-close" aria-label="Close constellation" autoFocus onClick={onClose}>×</button>
     <div className="portal-grid">{ROOMS.map((room) => {
-      const open = progress.unlocked.includes(room.id);
+      const open = true;
       const seen = progress.visited.includes(room.id);
-      return <button aria-label={open ? `Enter room ${room.id}, ${room.primary} form, ${room.motion} motion` : `Room ${room.id}, ${room.primary} form, locked`} key={room.id} disabled={!open} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
+      return <button aria-label={open ? `Enter room ${room.id}, ${room.primary} form, ${room.motion} motion` : `Room ${room.id}, ${room.primary} form, locked`} key={room.id} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
     })}</div>
     <a className="map-all-rooms" href="./atlas/rooms/">All rooms and instruments ↗</a>
   </div>;
@@ -98,7 +97,7 @@ function PortalMap({ progress, onEnter, onClose }) {
 
 export default function RoomWorldValid() {
   const saved = load();
-  const [progress, setProgress] = useState(() => ({ unlocked: [1], visited: [1], depth: { 1: 1 }, energy: 0, gestures: {}, ...saved }));
+  const [progress, setProgress] = useState(() => ({ unlocked: ROOMS.map((room) => room.id), visited: [1], depth: { 1: 1 }, energy: 0, gestures: {}, ...saved }));
   const [roomId, setRoomId] = useState(saved.roomId || 1);
   const depth = Math.floor(progress.depth?.[roomId] || 1);
   const [pulse, setPulse] = useState(0.1);
@@ -221,10 +220,8 @@ export default function RoomWorldValid() {
 
   const record = (boost, gesture) => setProgress((current) => {
     const energy = current.energy + boost;
-    const unlocked = new Set(current.unlocked);
-    ROOMS.forEach((candidate) => { if (energy >= candidate.unlockCost) unlocked.add(candidate.id); });
     const rawDepth = Math.min(LAYERS_PER_ROOM, (current.depth?.[roomId] ?? depth) + boost * 0.9);
-    return { ...current, energy, unlocked: [...unlocked].sort((a, b) => a - b), visited: [...new Set([...current.visited, roomId])], depth: { ...current.depth, [roomId]: rawDepth }, gestures: { ...current.gestures, [roomId]: [...new Set([...(current.gestures?.[roomId] || []), gesture])] } };
+    return { ...current, energy, unlocked: ROOMS.map((room) => room.id), visited: [...new Set([...current.visited, roomId])], depth: { ...current.depth, [roomId]: rawDepth }, gestures: { ...current.gestures, [roomId]: [...new Set([...(current.gestures?.[roomId] || []), gesture])] } };
   });
 
   const signalComet = (event, boost, complete = false) => {
