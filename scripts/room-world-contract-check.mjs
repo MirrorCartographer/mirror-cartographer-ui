@@ -9,13 +9,15 @@ assert.equal(new Set(ROOMS.map((room) => room.id)).size, 79, 'room ids must be u
 assert.ok(ROOMS.every((room) => room.layers.length >= 20), 'every room must contain at least 20 layers');
 assert.ok(ROOMS.every((room) => room.palette.length === 4), 'every room must define a four-part palette');
 assert.ok(ROOMS.every((room) => room.tempo >= 52 && room.tempo <= 129), 'room tempo must stay within the audio budget');
-assert.ok(ROOMS.slice(1).every((room, index) => room.unlockCost > ROOMS[index].unlockCost), 'unlock costs must increase');
+assert.ok(ROOMS.every((room) => !('unlockCost' in room)), 'rooms must not carry artificial unlock thresholds');
 
 const signatures = ROOMS.map((room) => [room.primary, room.secondary, room.motion, room.interaction, room.audio, room.palette.join(':')].join('|'));
 assert.ok(new Set(signatures).size >= 58, 'catalog must maintain strong room-level uniqueness');
 
 const roomWorldSource = fs.readFileSync('src/components/RoomWorldValid.jsx', 'utf8');
 assert.ok(roomWorldSource.includes('const sanitizeProgress = value =>'), 'room progress must be sanitized before use');
+assert.ok(roomWorldSource.includes('const unlocked = ROOMS.map((room) => room.id)'), 'all rooms must remain discoverable from the start');
+assert.ok(!roomWorldSource.includes('candidate.unlockCost'), 'exploration must not be blocked by arbitrary unlock costs');
 assert.ok(roomWorldSource.includes('input.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
 assert.ok(roomWorldSource.includes('unlocked.includes(value.roomId)'), 'restored current room must be unlocked');
 assert.ok(roomWorldSource.includes('const depth = Math.floor(progress.depth?.[roomId] || 1)'), 'room depth must have one source of truth');
