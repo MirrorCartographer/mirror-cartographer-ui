@@ -313,3 +313,18 @@ test('observatory telemetry confirms same-origin route transitions across page l
   expect(outcome?.outcome).toBe('route-changed');
   expect(outcome?.target_actual).toContain('/atlas/rooms/experiments/001-observatory/');
 });
+
+ 
+test('experiment rooms capture the initial touch point without a prior pointermove', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => {
+    document.body.dispatchEvent(new PointerEvent('pointerdown', {
+      bubbles: true, clientX: Math.round(innerWidth * 0.2), clientY: Math.round(innerHeight * 0.7),
+      pointerId: 1, pointerType: 'touch',
+    }));
+  });
+  const pointer = await page.evaluate(() => window.__MC_EXPERIMENT__.getPointer());
+  expect(pointer.x).toBeCloseTo(0.2, 1);
+  expect(pointer.y).toBeCloseTo(0.7, 1);
+  await page.evaluate(() => document.body.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1, pointerType: 'touch' })));
+});
