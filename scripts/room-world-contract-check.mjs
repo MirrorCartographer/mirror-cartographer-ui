@@ -23,7 +23,9 @@ assert.ok(!roomWorldSource.includes('setDepth('), 'progress updater must not tri
 assert.ok(!roomWorldSource.includes('setMuted((value) => {'), 'audio side effects must stay outside React state updaters');
 assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
 assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
-assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
+assert.ok(roomWorldSource.includes("'hold', 'hover'"), 'hover must be represented as a first-class interaction signal');
+assert.ok(roomWorldSource.includes('elapsed >= 280'), 'hover dwell must accumulate into exploration progress');
+assert.ok(roomWorldSource.includes("record(0.045, 'hover')"), 'hover dwell must be recorded as exploration, not discarded');
 assert.ok(roomWorldSource.includes('event.key !== "Tab"'), 'room constellation dialog must trap keyboard focus');
 assert.ok(roomWorldSource.includes('event.shiftKey && document.activeElement === first'), 'room constellation dialog must support reverse tab focus');
 assert.ok(roomWorldSource.includes("preference.addEventListener('change', updatePreference)"), 'room world must respond to OS reduced-motion changes');
