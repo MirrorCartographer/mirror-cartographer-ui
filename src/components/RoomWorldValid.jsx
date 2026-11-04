@@ -6,7 +6,40 @@ import './RoomWorld.css';
 const TAU = Math.PI * 2;
 const KEY = 'mc-room-world-valid-v2';
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
-const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
+const VALID_GESTURES = new Set(['tap', 'rapid', 'trace', 'fold', 'sweep', 'hold']);
+const validRoomId = value => Number.isInteger(value) && value >= 1 && value <= ROOM_COUNT;
+const sanitizeProgress = value => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const roomIds = input => Array.isArray(input) ? [...new Set(input.filter(validRoomId))] : [];
+  const unlocked = roomIds(value.unlocked);
+  const visited = roomIds(value.visited);
+  if (!unlocked.includes(1)) unlocked.unshift(1);
+  if (!visited.includes(1)) visited.unshift(1);
+  const depth = {};
+  if (value.depth && typeof value.depth === 'object' && !Array.isArray(value.depth)) {
+    for (const [id, amount] of Object.entries(value.depth)) {
+      const roomId = Number(id);
+      if (validRoomId(roomId) && Number.isFinite(amount)) depth[String(roomId)] = clamp(amount, 1, LAYERS_PER_ROOM);
+    }
+  }
+  const gestures = {};
+  if (value.gestures && typeof value.gestures === 'object' && !Array.isArray(value.gestures)) {
+    for (const [id, items] of Object.entries(value.gestures)) {
+      const roomId = Number(id);
+      if (validRoomId(roomId) && Array.isArray(items)) gestures[String(roomId)] = [...new Set(items.filter(item => VALID_GESTURES.has(item)))];
+    }
+  }
+  return {
+    roomId: validRoomId(value.roomId) ? value.roomId : 1,
+    unlocked, visited, depth,
+    energy: Number.isFinite(value.energy) && value.energy >= 0 ? Math.min(value.energy, 1_000_000_000) : 0,
+    gestures
+  };
+};
+const load = () => {
+  try { return sanitizeProgress(JSON.parse(localStorage.getItem(KEY) || 'null')); }
+  catch { return sanitizeProgress(null); }
+};
 const rgba = (hex, alpha) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${alpha})`; };
 
 function drawLayer(ctx, room, layer, width, height, time, point, pulse) {
@@ -61,6 +94,7 @@ export default function RoomWorldValid() {
   const [pulse, setPulse] = useState(0.1);
   const [showMap, setShowMap] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [storageStatus, setStorageStatus] = useState('');
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   const room = useMemo(() => roomById(roomId), [roomId]);
   const canvasRef = useRef(null);
@@ -71,7 +105,14 @@ export default function RoomWorldValid() {
   const mapButtonRef = useRef(null);
 
   useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
-  useEffect(() => { localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId })); }, [progress, roomId]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ ...progress, roomId }));
+      setStorageStatus('');
+    } catch {
+      setStorageStatus('Progress will not persist after this session.');
+    }
+  }, [progress, roomId]);
   useEffect(() => { const timer = setInterval(() => setPulse((value) => Math.max(0.06, value * 0.96)), reducedMotion ? 1000 : 100); return () => clearInterval(timer); }, [reducedMotion]);
   useEffect(() => { document.documentElement.classList.toggle('mc-reduced-motion', reducedMotion); window.dispatchEvent(new CustomEvent('mc:motion-preference', { detail: { reduced: reducedMotion } })); return () => document.documentElement.classList.remove('mc-reduced-motion'); }, [reducedMotion]);
 
@@ -221,6 +262,7 @@ export default function RoomWorldValid() {
   };
 
   return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
+    {storageStatus && <span className="storage-warning" role="status">{storageStatus}</span>}
     <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
     <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can reduce motion.</span><span className="sr-only" aria-live="polite">Room {roomId} of {ROOM_COUNT}. {room.primary} form, {room.motion} motion. Layer {depth} of {LAYERS_PER_ROOM}.</span>
     <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
