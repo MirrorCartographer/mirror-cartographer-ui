@@ -23,7 +23,7 @@ const lines=[
 ['I keep a key for a door that disappeared.','The birds have started flying in circles at dusk.','I saw a light moving under the hill.']
 ];
 const rand=(a,b)=>{worldSeed=(worldSeed*1664525+1013904223)>>>0;return a+(worldSeed/4294967296)*(b-a)};
-function resize(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;c.style.width=W+'px';c.style.height=H+'px';x.setTransform(D,0,0,D,0,0);mini.width=360;mini.height=360;generate();draw(0)}
+function resize(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;c.style.width=W+'px';c.style.height=H+'px';x.setTransform(D,0,0,D,0,0);mini.width=360;mini.height=360;generate();drawWorld(0)}
 function generate(){
 worldSeed=78431;tiles=[];trees=[];rocks=[];houses=[];people=[];things=[];paths=[];
 for(let y=0;y<MH;y++){tiles[y]=[];for(let a=0;a<MW;a++){let n=noise(a,y);tiles[y][a]=n<.12?'water':n<.18?'shore':n>.82?'moss':n>.72?'flower':'grass'}}
