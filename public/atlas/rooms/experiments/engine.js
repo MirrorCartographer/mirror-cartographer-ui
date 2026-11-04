@@ -118,7 +118,7 @@
 
   function initAudio(){if(audio)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=new AC();master=audio.createGain();master.gain.value=.045*intensity;master.connect(audio.destination);}
   function tone(){if(!soundOn)return;initAudio();if(!audio)return;audio.resume();const osc=audio.createOscillator(),gain=audio.createGain();osc.type=mode==='cathedral'?'sine':mode==='carnival'?'triangle':'sine';const base={observatory:220,garden:164.81,cathedral:110,carnival:293.66,ocean:82.41,blueprint:196,library:146.83,forest:130.81,museum:246.94,composer:261.63}[mode]||220;osc.frequency.value=base*Math.pow(2,(pointer.x-.5)*2+gesture%5/5);gain.gain.setValueAtTime(.0001,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.22,audio.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.75);osc.connect(gain).connect(master);osc.start();osc.stop(audio.currentTime+.8);}
-  function transform(){phase+=1;gesture+=1;hue=(hue+23)%360;document.body.style.setProperty('--room-phase',String(phase));document.body.style.filter=`hue-rotate(${hue}deg)`;start();tone();}
+  function transform(){phase+=1;gesture+=1;hue=(hue+23)%360;document.body.style.setProperty('--room-phase',String(phase));canvas.style.filter=`hue-rotate(${hue}deg)`;start();tone();}
   addEventListener('pointermove',e=>{pointer.x=e.clientX/W;pointer.y=e.clientY/H;},{passive:true});
   addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;pointer.down=true;pointer.px=pointer.x;pointer.py=pointer.y;gesture++;remember();tone();start();});
   addEventListener('pointerup',()=>{pointer.down=false;start();});
