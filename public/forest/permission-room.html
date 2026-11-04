@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10120f">
+<title>The Next Move — Permission Room · Mirror Cartographer</title>
+<style>
+:root{color-scheme:dark;--bg:#0c0e0c;--panel:#151a15;--line:#344536;--ink:#e8e6d9;--muted:#a4ad9e;--moss:#9bbd83;--gold:#d7bf83;--red:#d78b80;--accent:var(--moss)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#263a29 0,transparent 55%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1100px;margin:auto;padding:clamp(18px,4vw,44px)}a{color:var(--gold)}.eyebrow{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--moss)}h1,h2,h3,p{margin-top:0}h1{font:clamp(2.4rem,7vw,5.4rem)/.95 Georgia,serif;letter-spacing:-.045em;margin:.45em 0}h2{font:1.65rem Georgia,serif}.lede{max-width:760px;color:#c4cbbc;font-size:1.12rem}.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:28px}.panel{grid-column:span 12;border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,26px);background:linear-gradient(145deg,#192019f2,#111511f7);box-shadow:0 18px 50px #0003}.half{grid-column:span 6}.third{grid-column:span 4}.muted{color:var(--muted)}.small{font-size:.86rem}.rule{height:1px;background:var(--line);margin:20px 0}.status{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:.78rem;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;background:#697768}.dot.live{background:var(--moss);box-shadow:0 0 12px var(--moss)}button{font:inherit;color:var(--ink);background:#263426;border:1px solid #61795c;border-radius:10px;padding:11px 15px;cursor:pointer;transition:transform .15s,background .15s}button:hover:not(:disabled){background:#354a33;transform:translateY(-1px)}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}button:disabled{opacity:.42;cursor:not-allowed}.primary{background:#b8ce9d;color:#11180f;border-color:#b8ce9d;font-weight:700}.danger{border-color:#8b4e48;background:#321d1b}.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.door{min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(#233425,#111711);border:1px solid #52634c;border-radius:12px}.door .symbol{font:3rem Georgia,serif;color:var(--moss)}.door .name{letter-spacing:.12em;text-transform:uppercase;font-size:.8rem}.door:disabled{opacity:.35}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:14px;border:1px solid var(--line);border-radius:10px;background:#0c110c}.stat strong{display:block;font-size:1.6rem;font-weight:500}.stat span{font-size:.76rem;color:var(--muted)}.log{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:10px}.event{display:grid;grid-template-columns:95px 1fr;gap:12px;padding:9px 12px;border-bottom:1px solid #293329;font: .82rem/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.event:last-child{border:0}.event time{color:var(--gold)}.notice{padding:12px 14px;border-left:3px solid var(--gold);background:#292619;color:#e5dfc9;border-radius:0 8px 8px 0}.checkline{display:flex;gap:10px;align-items:flex-start;margin:12px 0}.checkline input{margin-top:6px;accent-color:var(--moss);width:18px;height:18px;flex-shrink:0}.actions{display:flex;gap:10px;flex-wrap:wrap}.hidden{display:none!important}pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#c9d7c0;background:#0b100b;padding:12px;border-radius:8px}.tag{font-size:.73rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}footer{margin-top:36px;color:var(--muted);font-size:.82rem}#message{min-height:1.5em;color:var(--gold)}@media(max-width:680px){.half,.third{grid-column:span 12}.doors{gap:7px}.door{min-height:145px;padding:8px 3px}.door .symbol{font-size:2.3rem}.stats{grid-template-columns:repeat(2,1fr)}.event{grid-template-columns:78px 1fr;font-size:.74rem}main{padding:18px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Mirror Cartographer · The Forest · Permission Room / 01</div>
+  <h1>The Next<br>Move.</h1>
+  <p class="lede">Three doors. A system that makes a prediction <em>before</em> you choose. A visible record of what it observed, what it guessed, and whether the guess was right.</p>
+  <p><span class="status"><span id="statusDot" class="dot"></span><span id="statusText">Telemetry off · no events collected</span></span></p>
+  <div class="grid">
+    <section class="panel" aria-labelledby="consentTitle">
+      <div class="eyebrow">Threshold / consent first</div><h2 id="consentTitle">What this experiment does</h2>
+      <p>This experiment tests whether a tiny, transparent model can predict your next door choice from your earlier choices in this session. It may be wrong. A correct guess is not evidence of mind-reading; a miss is not a failure of you.</p>
+      <div class="notice"><strong>Data boundary:</strong> only after you opt in, this page records the chosen door, trial number, relative event order, and event timestamp. Records stay in this page's memory until you export them or leave. No cookies, local storage, account identifier, IP logging by this code, external analytics, or network transmission are used by this experiment.</div>
+      <div class="rule"></div>
+      <label class="checkline"><input id="consentCore" type="checkbox"><span>I consent to recording my door choices and event timestamps for this experiment, and understand that this page keeps the session log in memory only.</span></label>
+      <label class="checkline"><input id="consentLimits" type="checkbox"><span>I understand the model uses past choices only, the first prediction is a baseline guess, and results may be inconclusive.</span></label>
+      <div class="actions"><button class="primary" id="grant">Grant session permission & begin</button><button id="revoke" class="danger" disabled>Revoke & clear session</button></div>
+      <p id="message" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" aria-labelledby="gameTitle">
+      <div class="eyebrow">Live trial / 12 rounds</div><h2 id="gameTitle">Which door?</h2>
+      <p id="trialPrompt">Grant permission to activate the doors. Predictions are committed to the log before your choice is accepted.</p>
+      <div class="doors">
+        <button class="door" data-door="moss" disabled><span class="symbol" aria-hidden="true">♧</span><span class="name">Moss</span></button>
+        <button class="door" data-door="glass" disabled><span class="symbol" aria-hidden="true">◇</span><span class="name">Glass</span></button>
+        <button class="door" data-door="ember" disabled><span class="symbol" aria-hidden="true">✳</span><span class="name">Ember</span></button>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong id="roundStat">0 / 12</strong><span>Trials completed</span></div>
+        <div class="stat"><strong id="accuracyStat">—</strong><span>Model accuracy</span></div>
+        <div class="stat"><strong id="chanceStat">33.3%</strong><span>Uniform chance baseline</span></div>
+        <div class="stat"><strong id="liftStat">—</strong><span>Accuracy minus chance</span></div>
+      </div>
+      <p class="muted small" id="feedback">No prediction has been made.</p>
+    </section>
+    <section class="panel half" aria-labelledby="reportTitle">
+      <div class="eyebrow">Evidence / not atmosphere</div><h2 id="reportTitle">Verification report</h2>
+      <p class="muted">The report separates observed facts from interpretation. Before any trials, it cannot claim predictive success.</p>
+      <div id="report" aria-live="polite"><p><span class="tag">Status</span><br>Awaiting consent. No trial data exists.</p></div>
+      <div class="actions"><button id="download" disabled>Export report + event log (.json)</button><button id="copyReport" disabled>Copy summary</button></div>
+    </section>
+    <section class="panel half" aria-labelledby="ledgerTitle">
+      <div class="eyebrow">Forensic trace / current session</div><h2 id="ledgerTitle">Visible event ledger</h2>
+      <p class="muted small">Each trial records the prediction before the selected door. Timestamps are wall-clock timestamps; ordering is the key evidence.</p>
+      <div class="log" id="eventLog" aria-label="Telemetry event log"><div class="event"><time>—</time><span>No events collected. Consent is off.</span></div></div>
+      <p class="muted small" id="logCount">0 events · memory only</p>
+    </section>
+    <section class="panel" aria-labelledby="methodTitle">
+      <div class="eyebrow">Protocol / inspectable method</div><h2 id="methodTitle">How the prediction works</h2>
+      <div class="grid" style="margin-top:0">
+        <div class="third"><h3>01 · Prior</h3><p class="small muted">Before the first choice, the model has no personal history. It picks the first door in a documented random choice among all three doors. This is an explicit uniform baseline, not a personalized insight.</p></div>
+        <div class="third"><h3>02 · Update</h3><p class="small muted">For each later trial, it predicts the most frequent next door after the most recent choice. Ties are randomized. When no such transition exists, it samples from global prior counts with Laplace smoothing. No choice from the current trial is available to the prediction.</p></div>
+        <div class="third"><h3>03 · Compare</h3><p class="small muted">After your choice, the system marks the prediction correct or incorrect, then updates the tally. It reports accuracy, the 1/3 uniform baseline, percentage-point lift, and a 95% Wilson interval.</p></div>
+      </div>
+      <div class="rule"></div>
+      <h3>What counts as proof?</h3>
+      <p>A valid trial must have a logged prediction created before the choice event, exactly one selected door, and an outcome comparison. Twelve trials are a demonstration, not enough to establish general predictive ability. A confidence interval describes sampling uncertainty under simplifying assumptions; repeated choices may not be independent, so interpret it cautiously.</p>
+      <h3>Storage and revocation</h3>
+      <p>Storage: JavaScript memory in this open page only. No persistent browser storage or server endpoint is called. Export creates a file only when you request it. Revoke disables the doors and clears all in-memory event and trial records. Reloading or closing the page also discards them. Exported files are outside this page's control and must be deleted by you if no longer wanted.</p>
+      <h3>Capability boundaries</h3>
+      <p>This page does not access the camera, microphone, location, other tabs, keystrokes outside its controls, or private device data. It does not infer emotional state, identity, or hidden thoughts. It measures choices made in this experiment only.</p>
+    </section>
+  </div>
+  <footer>THE FOREST / PERMISSION ROOM · Experiment version 1.0 · Local-only demonstration. “Implemented in this file” is not the same as “verified in every browser or production deployment.”</footer>
+</main>
+<script>
+(function(){
+'use strict';
+const ORDER=['moss','glass','ember'];
+const LABEL={moss:'Moss',glass:'Glass',ember:'Ember'};
+const TOTAL=12;
+const $=id=>document.getElementById(id);
+let active=false, events=[], trials=[], startAt=0, lastFeedback='';
+const nowISO=()=>new Date().toISOString();
+function addEvent(type,details={}){
+  if(!active && type!=='consent_granted') return null;
+  const ev={seq:events.length+1,type,at:nowISO(),elapsed_ms:Math.round(performance.now()-startAt),details};
+  events.push(ev);renderLog();return ev;
+}
+let lastPredictionMeta={};
+function predict(){
+  const draw=Math.random();
+  if(!trials.length){
+    const index=Math.min(ORDER.length-1,Math.floor(draw*ORDER.length));
+    lastPredictionMeta={method:'uniform_random_prior',candidates:ORDER.slice(),counts:{},draw};
+    return ORDER[index];
+  }
+  const last=trials[trials.length-1].choice;
+  const transitions=Object.fromEntries(ORDER.map(d=>[d,0]));
+  for(let i=0;i<trials.length-1;i++){
+    if(trials[i].choice===last) transitions[trials[i+1].choice]++;
+  }
+  const transitionTotal=Object.values(transitions).reduce((a,b)=>a+b,0);
+  if(transitionTotal>0){
+    const best=Math.max(...Object.values(transitions));
+    const candidates=ORDER.filter(d=>transitions[d]===best);
+    const index=Math.min(candidates.length-1,Math.floor(draw*candidates.length));
+    lastPredictionMeta={method:'most_common_transition_random_tie',from:last,counts:transitions,candidates,draw};
+    return candidates[index];
+  }
+  const global=Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length]));
+  const weights=ORDER.map(d=>global[d]+1);
+  const total=weights.reduce((a,b)=>a+b,0);
+  let point=draw*total,index=weights.length-1;
+  for(let i=0;i<weights.length;i++){point-=weights[i];if(point<0){index=i;break;}}
+  lastPredictionMeta={method:'laplace_smoothed_global_fallback',counts:global,weights,candidates:ORDER.slice(),draw};
+  return ORDER[index];
+}
+function wilson(success,n){
+  if(!n)return null;
+  const z=1.96,p=success/n,z2=z*z,den=1+z2/n;
+  const center=(p+z2/(2*n))/den;
+  const margin=z*Math.sqrt((p*(1-p)/n)+z2/(4*n*n))/den;
+  return [Math.max(0,center-margin),Math.min(1,center+margin)];
+}
+function pct(n){return (n*100).toFixed(1)+'%'}
+function renderLog(){
+  const el=$('eventLog');
+  if(!events.length){el.innerHTML='<div class="event"><time>—</time><span>No events collected. Consent is off.</span></div>';$('logCount').textContent='0 events · memory only';return}
+  el.innerHTML=events.slice().reverse().map(e=>'<div class="event"><time>'+new Date(e.at).toLocaleTimeString()+'</time><span><b>'+escapeHTML(e.type)+'</b> · '+escapeHTML(JSON.stringify(e.details))+'<br><span class="muted">#'+e.seq+' · +'+e.elapsed_ms+' ms</span></span></div>').join('');
+  $('logCount').textContent=events.length+' events · memory only';
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+  const n=trials.length,correct=trials.filter(t=>t.correct).length,acc=n?correct/n:null,ci=wilson(correct,n);
+  $('roundStat').textContent=n+' / '+TOTAL;
+  $('accuracyStat').textContent=acc===null?'—':pct(acc);
+  $('chanceStat').textContent='33.3%';
+  $('liftStat').textContent=acc===null?'—':((acc-1/3)*100).toFixed(1)+' pp';
+  $('statusText').textContent=active?'Telemetry active · consent granted':'Telemetry off · no events collected';
+  $('statusDot').classList.toggle('live',active);
+  document.querySelectorAll('[data-door]').forEach(b=>b.disabled=!active||n>=TOTAL);
+  $('trialPrompt').textContent=!active?'Grant permission to activate the doors.':n>=TOTAL?'All 12 trials complete. Export or inspect your report.':'Trial '+(n+1)+' of '+TOTAL+'. Make your choice; the prediction is recorded first.';
+  if(n){
+    const t=trials[n-1];
+    $('feedback').textContent='Trial '+n+': predicted '+LABEL[t.prediction]+', you chose '+LABEL[t.choice]+'. '+(t.correct?'Prediction matched.':'Prediction missed.')+' Next prediction will use the updated history.';
+  }else $('feedback').textContent=active?'Ready. No previous choices; the initial prediction is a fixed baseline.':'No prediction has been made.';
+  const report=$('report');
+  if(!active){report.innerHTML='<p><span class="tag">Status</span><br>Awaiting consent. No trial data exists.</p>'}
+  else if(!n){report.innerHTML='<p><span class="tag">Status</span><br>Consent granted. No outcomes yet; predictive performance is not established.</p><p><b>Protocol checks:</b> '+events.filter(e=>e.type==='prediction_committed').length+' prediction(s) committed; '+events.filter(e=>e.type==='choice_recorded').length+' choice(s) recorded.</p>'}
+  else{
+    const misses=n-correct,actualCounts=Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length]));
+    const observedMost=Math.max(...Object.values(actualCounts))/n;
+    const valid=trials.every(t=>t.predictionSeq<t.choiceSeq&&t.choiceSeq<t.outcomeSeq);
+    report.innerHTML='<p><span class="tag">Observed result · '+n+' trial(s)</span></p><p><b>Correct predictions:</b> '+correct+' / '+n+' ('+pct(acc)+')<br><b>Misses:</b> '+misses+'<br><b>Uniform chance reference:</b> 33.3%<br><b>Accuracy minus chance:</b> '+((acc-1/3)*100).toFixed(1)+' percentage points<br><b>95% Wilson interval:</b> '+pct(ci[0])+'–'+pct(ci[1])+'<br><b>Most common chosen door:</b> '+pct(observedMost)+' of choices<br><b>Ordering audit:</b> '+(valid?'PASS — every prediction precedes its choice and outcome.':'FAIL — at least one event ordering is invalid.')+'</p><p class="muted small">The majority-share statistic describes the choices observed; it is not an independent test. The Wilson interval assumes a binomial-like sampling process; sequential behavior can violate independence.</p><p><span class="tag">Interpretation</span><br>'+(n<TOTAL?'Preliminary only: finish all '+TOTAL+' trials before reading this as a complete run. ': 'Complete demonstration run. ')+(acc>1/3?'Observed accuracy is above the 1/3 reference in this small run. ':'Observed accuracy is not above the 1/3 reference in this run. ')+'This does not establish general predictive ability or psychological insight.</p>';
+  }
+  $('download').disabled=!active||!events.length;
+  $('copyReport').disabled=!active||!events.length;
+}
+function begin(){
+  if(!$('consentCore').checked||!$('consentLimits').checked){$('message').textContent='Both consent statements are required. Nothing has been collected.';return}
+  active=true;events=[];trials=[];startAt=performance.now();
+  addEvent('consent_granted',{scope:['door_choice','trial_number','event_timestamp','relative_event_order'],storage:'in_memory_only',external_transmission:false});
+  addEvent('experiment_started',{version:'1.1',trials_total:TOTAL,model:'transition-frequency-with-random-ties-and-smoothed-fallback',door_order:ORDER});
+  $('grant').disabled=true;$('consentCore').disabled=true;$('consentLimits').disabled=true;$('revoke').disabled=false;
+  $('message').textContent='Permission active. You can revoke at any time; revocation clears this session.';
+  render();
+}
+function choose(choice){
+  if(!active||trials.length>=TOTAL||!ORDER.includes(choice))return;
+  const trialNo=trials.length+1;
+  const prediction=predict();
+  const predEv=addEvent('prediction_committed',{trial:trialNo,prediction,...lastPredictionMeta,history_length:trials.length});
+  const choiceEv=addEvent('choice_recorded',{trial:trialNo,choice});
+  const t={trial:trialNo,prediction,choice,correct:prediction===choice,predictionSeq:predEv.seq,choiceSeq:choiceEv.seq,outcomeSeq:null};
+  trials.push(t);
+  const outEv=addEvent('outcome_compared',{trial:trialNo,prediction,choice,correct:t.correct,accuracy_so_far:trials.filter(x=>x.correct).length/trials.length});
+  t.outcomeSeq=outEv.seq;
+  if(trials.length===TOTAL)addEvent('experiment_completed',{trials:TOTAL,correct:trials.filter(x=>x.correct).length,accuracy:trials.filter(x=>x.correct).length/TOTAL});
+  render();
+}
+function revoke(){
+  active=false;events=[];trials=[];lastFeedback='';
+  document.querySelectorAll('[data-door]').forEach(b=>b.disabled=true);
+  $('grant').disabled=false;$('consentCore').disabled=false;$('consentLimits').disabled=false;$('consentCore').checked=false;$('consentLimits').checked=false;$('revoke').disabled=true;
+  $('message').textContent='Permission revoked. In-memory session events and trial records cleared. Nothing was transmitted by this experiment.';
+  renderLog();render();
+}
+function reportData(){
+  const n=trials.length,c=trials.filter(t=>t.correct).length,ci=wilson(c,n);
+  return {experiment:'The Next Move',version:'1.0',generated_at:nowISO(),status:n===TOTAL?'complete_demo_run':'partial_run',consent:{granted:true,scope:['door_choice','trial_number','event_timestamp','relative_event_order'],storage:'in_memory_only',external_transmission:false},method:{name:'transition-frequency-with-random-ties-and-smoothed-fallback',door_order:ORDER,initial_prediction:'Uniform random choice among all doors',subsequent_prediction:'Most frequent next door after the most recent choice; random tie-break. If no matching transition exists, sample using prior global counts plus one pseudocount per door.',chance_reference:1/3},metrics:{trials:n,correct:c,misses:n-c,accuracy:n?c/n:null,uniform_chance:1/3,lift:n?c/n-1/3:null,wilson_95:ci,choice_counts:Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length])),ordering_audit:trials.every(t=>t.predictionSeq<t.choiceSeq&&t.choiceSeq<t.outcomeSeq)},trials,events,limitations:['Small sample; not evidence of general predictive ability.','Sequential choices may not be independent.','The model sees only choices in this experiment.','No psychological, identity, or hidden-state inference is attempted.','Exported data is outside the page’s control.']};
+}
+function download(){
+ const data=JSON.stringify(reportData(),null,2),blob=new Blob([data],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='the-next-move-proof-report.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ addEvent('report_exported',{format:'json',contains_trial_and_event_log:true});render();
+}
+async function copy(){
+ const d=reportData(),m=d.metrics;
+ const text='THE NEXT MOVE — VERIFICATION REPORT\nStatus: '+d.status+'\nTrials: '+m.trials+'\nCorrect: '+m.correct+'\nAccuracy: '+(m.accuracy===null?'not available':pct(m.accuracy))+'\nUniform chance reference: 33.3%\nLift: '+(m.lift===null?'not available':(m.lift*100).toFixed(1)+' percentage points')+'\n95% Wilson interval: '+(m.wilson_95?pct(m.wilson_95[0])+'–'+pct(m.wilson_95[1]):'not available')+'\nOrdering audit: '+(m.ordering_audit?'PASS':'FAIL')+'\nStorage: in-memory only; no network transmission by this experiment.\nLimit: small demonstration, not evidence of general predictive ability.';
+ try{await navigator.clipboard.writeText(text);$('message').textContent='Summary copied.'}catch(e){$('message').textContent='Clipboard unavailable. Use Export report + event log instead.'}
+}
+document.querySelectorAll('[data-door]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.door)));
+$('grant').addEventListener('click',begin);$('revoke').addEventListener('click',revoke);$('download').addEventListener('click',download);$('copyReport').addEventListener('click',copy);
+render();renderLog();
+})();
+</script>
+</body></html>
