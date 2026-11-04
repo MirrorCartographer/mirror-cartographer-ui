@@ -65,6 +65,33 @@ test.describe('Playable Atlas rooms', () => {
     }
   });
 
+  test('procedural room memory is opt-in, local, restorable, and erasable', async ({ page }) => {
+    const memoryKey = 'mc-room-memory:v1:carnival';
+    const preferenceKey = 'mc-room-memory-enabled:v1:carnival';
+    await page.goto('/atlas/rooms/experiments/004-carnival-of-thought/', { waitUntil: 'domcontentloaded' });
+    await page.evaluate(([dataKey, preference]) => {
+      localStorage.removeItem(dataKey);
+      localStorage.removeItem(preference);
+    }, [memoryKey, preferenceKey]);
+    const remember = page.getByRole('button', { name: 'Toggle local room memory' });
+    await expect(remember).toHaveAttribute('aria-pressed', 'false');
+    await remember.click();
+    await expect(remember).toHaveAttribute('aria-pressed', 'true');
+    await page.mouse.click(360, 300);
+    await expect.poll(async () => page.evaluate(key => {
+      const saved = JSON.parse(localStorage.getItem(key) || 'null');
+      return saved?.traces?.length || 0;
+    }, memoryKey)).toBeGreaterThan(0);
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Toggle local room memory' })).toHaveAttribute('aria-pressed', 'true');
+    const restored = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || 'null'), memoryKey);
+    expect(restored?.version).toBe(1);
+    expect(restored?.traces?.length).toBeGreaterThan(0);
+    await page.getByRole('button', { name: 'Forget local room memory' }).click();
+    expect(await page.evaluate(key => localStorage.getItem(key), memoryKey)).toBeNull();
+    expect(await page.evaluate(key => localStorage.getItem(key), preferenceKey)).toBeNull();
+  });
+
   test('the Music Room plays, sequences, stops, and clears notes', async ({ page }) => {
     await page.goto('/atlas/rooms/music/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#status')).toHaveText('SILENCE / READY');
