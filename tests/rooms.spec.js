@@ -196,6 +196,9 @@ test.describe('Playable Atlas rooms', () => {
       const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
       expect(response?.ok(), route + ' should return a successful response').toBeTruthy();
       await expect(page.locator('body')).not.toBeEmpty();
+      // Respect first-entry gates before testing controls underneath them.
+      const entryGate = page.locator('#intro #enter');
+      if (await entryGate.isVisible().catch(() => false)) await entryGate.click();
       const internalLinks = await page.locator('a[href]').evaluateAll(nodes => nodes.map(node => ({
         href: node.href,
         raw: node.getAttribute('href'),
