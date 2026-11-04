@@ -350,3 +350,17 @@ test('room animation advances consistently across 60 Hz and 120 Hz frame schedul
   expect(times.at60Hz).toBeGreaterThan(0);
   expect(times.at120Hz).toBeCloseTo(times.at60Hz, 8);
 });
+
+ 
+test('cancelled touch gestures release the room pointer state', async ({ page }) => {
+  await page.goto('/atlas/rooms/experiments/001-observatory/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => {
+    document.body.dispatchEvent(new PointerEvent('pointerdown', {
+      bubbles: true, clientX: Math.round(innerWidth * 0.4), clientY: Math.round(innerHeight * 0.4),
+      pointerId: 2, pointerType: 'touch',
+    }));
+  });
+  expect(await page.evaluate(() => window.__MC_EXPERIMENT__.getPointer().down)).toBe(true);
+  await page.evaluate(() => document.body.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 2, pointerType: 'touch' })));
+  expect(await page.evaluate(() => window.__MC_EXPERIMENT__.getPointer().down)).toBe(false);
+});
