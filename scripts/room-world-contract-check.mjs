@@ -16,7 +16,7 @@ assert.ok(new Set(signatures).size >= 58, 'catalog must maintain strong room-lev
 
 const roomWorldSource = fs.readFileSync('src/components/RoomWorldValid.jsx', 'utf8');
 assert.ok(roomWorldSource.includes('const sanitizeProgress = value =>'), 'room progress must be sanitized before use');
-assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
+assert.ok(roomWorldSource.includes('input.filter(validRoomId)'), 'stored room identifiers must be allowlisted');
 assert.ok(roomWorldSource.includes('unlocked.includes(value.roomId)'), 'restored current room must be unlocked');
 assert.ok(roomWorldSource.includes('const depth = Math.floor(progress.depth?.[roomId] || 1)'), 'room depth must have one source of truth');
 assert.ok(!roomWorldSource.includes('setDepth('), 'progress updater must not trigger nested React state updates');
