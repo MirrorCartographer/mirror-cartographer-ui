@@ -5,7 +5,7 @@
   window.__MC_LOCAL_OBSERVATORY__ = true;
   const KEY = "mc:observatory:v1";
   const LIMIT = 1200;
-  const path = location.pathname.replace(/\\/+/g, "/");
+  const path = location.pathname.replace(/\/+/g, "/");
   const route = path.split("/").filter(Boolean).slice(-3).join("/") || "home";
   const session = (() => {
     try {
