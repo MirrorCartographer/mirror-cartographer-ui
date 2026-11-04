@@ -113,8 +113,9 @@ export default function RoomWorldValid() {
   const particlesRef = useRef([]);
   const audioRef = useRef(null);
   const mapButtonRef = useRef(null);
+  const hoverTimerRef = useRef(null);
 
-  useEffect(() => { audioRef.current = createRoomAudio(); return () => audioRef.current?.dispose(); }, []);
+  useEffect(() => { audioRef.current = createRoomAudio(); return () => { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); audioRef.current?.dispose(); }; }, []);
   useEffect(() => {
     const preference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     if (!preference) return undefined;
@@ -237,7 +238,7 @@ export default function RoomWorldValid() {
   };
 
   const interact = (event, type) => {
-    if (type === 'down') event.currentTarget.setPointerCapture?.(event.pointerId);
+    if (type === 'down') { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = null; event.currentTarget.setPointerCapture?.(event.pointerId);
     const rect = event.currentTarget.getBoundingClientRect();
     const x = clamp((event.clientX - rect.left) / rect.width);
     const y = clamp((event.clientY - rect.top) / rect.height);
@@ -248,7 +249,7 @@ export default function RoomWorldValid() {
     const speed = Math.hypot(x - previous.x, y - previous.y);
     let gesture = 'tap';
     if (type === 'down') pointRef.current = { ...previous, x, y, down: true, startX: x, startY: y, startedAt: now };
-    else if (type === 'move') { pointRef.current = { ...previous, x, y }; if (!previous.down) { const elapsed = previous.lastHoverAt ? now - previous.lastHoverAt : 0; if (elapsed >= 280) { pointRef.current = { ...pointRef.current, lastHoverAt: now }; record(0.045, 'hover'); setPulse((value) => Math.min(1, value + 0.018)); signalComet(event, 0.045, depth === LAYERS_PER_ROOM); } return; } gesture = speed > 0.055 ? 'rapid' : Math.abs(x - previous.x) > Math.abs(y - previous.y) ? 'trace' : 'fold'; }
+    else if (type === 'move') { pointRef.current = { ...previous, x, y }; if (!previous.down) return; gesture = speed > 0.055 ? 'rapid' : Math.abs(x - previous.x) > Math.abs(y - previous.y) ? 'trace' : 'fold'; }
     else { const distance = Math.hypot(x - previous.startX, y - previous.startY); gesture = distance > 0.25 ? 'sweep' : now - previous.startedAt > 650 ? 'hold' : 'tap'; pointRef.current = { ...previous, x, y, down: false }; }
     const boost = type === 'move' && previous.down ? 0.06 : type === 'down' ? 0.72 : type === 'up' ? 0.4 : 0.01;
     record(boost, gesture);
@@ -282,7 +283,7 @@ export default function RoomWorldValid() {
 
   return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
     {storageStatus && <span className="storage-warning" role="status">{storageStatus}</span>}
-    <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerEnter={() => { pointRef.current = { ...pointRef.current, lastHoverAt: performance.now() }; }} onPointerLeave={() => { pointRef.current = { ...pointRef.current, lastHoverAt: 0 }; }} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
+    <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerEnter={() => { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = window.setInterval(() => { if (!pointRef.current.down) { record(0.045, 'hover'); setPulse((value) => Math.min(1, value + 0.018)); } }, 280); }} onPointerLeave={() => { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = null; }} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
     <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can reduce motion.</span><span className="sr-only" aria-live="polite">Room {roomId} of {ROOM_COUNT}. {room.primary} form, {room.motion} motion. Layer {depth} of {LAYERS_PER_ROOM}.</span>
     <div className="depth-spine" aria-hidden="true">{Array.from({ length: LAYERS_PER_ROOM }, (_, index) => <i key={index} className={index < depth ? 'lit' : ''} />)}</div>
     <button ref={mapButtonRef} aria-label="Room constellation" className="world-map-button" onClick={() => setShowMap(true)}><span aria-hidden="true">✣</span></button>
