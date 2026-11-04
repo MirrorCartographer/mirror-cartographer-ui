@@ -1,1 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900"><defs><radialGradient id="g"><stop stop-color="#43283c"/><stop offset="1" stop-color="#100b12"/></radialGradient></defs><rect width="1200" height="900" fill="url(#g)"/><g fill="none" stroke="#d9b985" stroke-opacity=".65"><circle cx="600" cy="420" r="260" stroke-width="2"/><circle cx="600" cy="420" r="215" stroke-dasharray="2 8"/><path d="M600 160V680M340 420H860M416 236L784 604M784 236L416 604"/><path d="M390 710Q600 540 810 710M420 730Q600 600 780 730" stroke-width="3"/><path d="M180 760V340L260 260L340 340V760M860 760V340L940 260L1020 340V760" stroke-width="2"/></g><g fill="#b78b7b" fill-opacity=".3"><path d="M600 170C470 280 480 350 600 420C720 350 730 280 600 170Z"/><path d="M600 670C480 560 470 490 600 420C730 490 720 560 600 670Z"/></g><g stroke="#91a887" fill="none" stroke-width="2"><path d="M110 810Q250 630 350 760T590 760T850 730T1090 800"/><path d="M260 260q-90-30-120 55q70 60 120-55M940 260q90-30 120 55q-70 60-120-55"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<title id="title">The crooked midway</title><desc id="desc">A faded carnival tent, uneven ferris wheel, crooked ticket booths, and weeds beneath a tarnished moon.</desc>
+<defs>
+ <linearGradient id="night" x2=".1" y2="1"><stop stop-color="#281720"/><stop offset=".55" stop-color="#151015"/><stop offset="1" stop-color="#08090a"/></linearGradient>
+ <radialGradient id="haze"><stop stop-color="#80505b" stop-opacity=".35"/><stop offset="1" stop-color="#80505b" stop-opacity="0"/></radialGradient>
+ <linearGradient id="tent" x2="0" y2="1"><stop stop-color="#573044"/><stop offset="1" stop-color="#21131d"/></linearGradient>
+ <pattern id="grain" width="31" height="31" patternUnits="userSpaceOnUse"><path d="M0 7h8M20 22h11M5 29h2" stroke="#d9c9a6" stroke-opacity=".08"/></pattern>
+ <pattern id="stripes" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M0 0V44" stroke="#d9c9a6" stroke-opacity=".45" stroke-width="21"/></pattern>
+ <filter id="soft"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>
+<rect width="1200" height="900" fill="url(#night)"/><ellipse cx="610" cy="360" rx="530" ry="380" fill="url(#haze)"/>
+<circle cx="940" cy="146" r="42" fill="#d9c9a6" fill-opacity=".13"/><circle cx="940" cy="146" r="31" fill="none" stroke="#b49a6d" stroke-opacity=".42"/>
+<g fill="none" stroke="#b49a6d" stroke-opacity=".22"><path d="M0 760Q320 730 600 768T1200 748"/><path d="M0 810Q380 775 650 818T1200 792"/><path d="M65 120V730M1135 92V742" stroke-dasharray="2 9"/></g>
+<!-- The tent is deliberately asymmetrical. -->
+<path d="M145 505L590 145L1038 510Z" fill="url(#tent)" stroke="#b49a6d" stroke-opacity=".65" stroke-width="2"/>
+<path d="M145 505L590 145L1038 510Z" fill="url(#stripes)" opacity=".3"/>
+<path d="M145 505L590 145L1038 510" fill="none" stroke="#d9c9a6" stroke-opacity=".22"/>
+<path d="M145 505Q590 540 1038 510" fill="none" stroke="#b49a6d" stroke-width="3" stroke-opacity=".7"/>
+<path d="M590 145L574 512M590 145L630 512" stroke="#b49a6d" stroke-opacity=".32"/>
+<path d="M565 176L590 143L615 176" fill="none" stroke="#d9c9a6" stroke-opacity=".7" stroke-width="2"/>
+<!-- A wheel with a slightly displaced hub. -->
+<g transform="translate(780 435) rotate(-4)" fill="none">
+ <circle r="205" stroke="#b49a6d" stroke-opacity=".62" stroke-width="3"/>
+ <circle r="181" stroke="#a86f70" stroke-opacity=".3" stroke-dasharray="2 10"/>
+ <circle r="10" fill="#d9c9a6" fill-opacity=".7" stroke="none"/>
+ <g stroke="#b49a6d" stroke-opacity=".48" stroke-width="1.5">
+ <path d="M0 0L0 -205M0 0L70 -193M0 0L145 -145M0 0L193 -70M0 0L205 0M0 0L193 70M0 0L145 145M0 0L70 193M0 0L0 205M0 0L-70 193M0 0L-145 145M0 0L-193 70M0 0L-205 0M0 0L-193 -70M0 0L-145 -145M0 0L-70 -193"/>
+ <path d="M-220 224H220M-12 205L-38 300M12 205L44 300"/>
+ </g>
+ <g fill="#38202b" stroke="#d9c9a6" stroke-opacity=".58">
+ <path d="M-12 -207h24l9 28h-42z"/><path d="M67 -183l23 -8 17 23 -39 14z"/><path d="M141 -133l22 -18 24 17 -29 26z"/>
+ <path d="M182 -12h28l7 28h-42z"/><path d="M140 128l24 18 20 -19 -29 -25z"/><path d="M57 177l27 10 -3 28 -38 -15z"/>
+ <path d="M-12 180h24l9 28h-42z"/><path d="M-89 167l25 13 -10 27 -32 -21z"/><path d="M-166 115l24 18 -22 20 -20 -26z"/>
+ <path d="M-207 -12h28l7 28h-42z"/><path d="M-163 -151l24 17 -20 25 -23 -24z"/><path d="M-87 -194l26 -7 11 27 -35 12z"/>
+ </g>
+</g>
+<!-- Booths: ticket windows like little unblinking eyes. -->
+<g stroke="#b49a6d" stroke-opacity=".6" stroke-width="2">
+ <path d="M90 665L120 590L355 590L384 665Z" fill="#281720"/><path d="M90 665H384V796H90Z" fill="#100d10"/>
+ <path d="M420 640L447 557L688 557L718 640Z" fill="#38202b"/><path d="M420 640H718V795H420Z" fill="#100d10"/>
+ <path d="M842 674L873 604L1090 604L1120 674Z" fill="#281720"/><path d="M842 674H1120V797H842Z" fill="#100d10"/>
+</g>
+<g fill="none" stroke="#a86f70" stroke-opacity=".68" stroke-width="2">
+ <path d="M120 590L143 665M167 590L190 665M214 590L237 665M261 590L284 665M308 590L331 665"/>
+ <path d="M447 557L474 640M495 557L522 640M543 557L570 640M591 557L618 640M639 557L666 640"/>
+ <path d="M873 604L895 674M916 604L938 674M959 604L981 674M1002 604L1024 674M1045 604L1067 674"/>
+</g>
+<g fill="#d9c9a6" fill-opacity=".8"><circle cx="213" cy="704" r="3"/><circle cx="237" cy="704" r="3"/><circle cx="557" cy="680" r="3"/><circle cx="581" cy="680" r="3"/><circle cx="957" cy="714" r="3"/><circle cx="981" cy="714" r="3"/></g>
+<g fill="none" stroke="#78866b" stroke-width="3" stroke-opacity=".7"><path d="M0 860q42-60 58-5t52-17t67 15t66-30t64 22t83-16t78 25t78-14t67 18t78-27t72 21t88-18t75 14t75-31t87 28t80-11t52 12"/>
+<path d="M86 846q-29-45-48-20q26 5 48 20q1-37 29-43q-6 31-29 43M1082 849q-28-45-49-20q25 5 49 20q1-37 29-43q-6 31-29 43"/></g>
+<rect width="1200" height="900" fill="url(#grain)"/>
+<rect x="20" y="20" width="1160" height="860" fill="none" stroke="#b49a6d" stroke-opacity=".18"/>
+<path d="M20 75V20H75M1125 20h55v55M20 825v55h55M1125 880h55v-55" fill="none" stroke="#b49a6d" stroke-opacity=".4" stroke-width="2"/>
+</svg>
