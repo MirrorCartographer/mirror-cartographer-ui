@@ -20,5 +20,7 @@ assert.ok(roomWorldSource.includes('value.filter(validRoomId)'), 'stored room id
 assert.ok(roomWorldSource.includes('setStorageStatus(\'Progress will not persist after this session.\')'), 'storage denial must be visible to the user');
 assert.ok(roomWorldSource.includes('role="status"'), 'storage failure must be announced accessibly');
 assert.ok(roomWorldSource.includes('if (!previous.down) return;'), 'hover-only movement must not advance room progress');
+assert.ok(roomWorldSource.includes("event.key !== 'Tab'"), 'room constellation dialog must trap keyboard focus');
+assert.ok(roomWorldSource.includes('event.shiftKey && document.activeElement === first'), 'room constellation dialog must support reverse tab focus');
 
 console.log(JSON.stringify({ rooms: ROOMS.length, layersPerRoom: LAYERS_PER_ROOM, totalLayers: ROOMS.length * LAYERS_PER_ROOM, uniqueSignatures: new Set(signatures).size }, null, 2));
