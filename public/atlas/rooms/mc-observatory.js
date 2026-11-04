@@ -1,5 +1,5 @@
 /* Mirror Cartographer first-party interaction observatory.
-   Local-only: no network requests, no text-field values, no coordinates, no identifiers. */
+   Local-only: no network requests, no text-field values, no pointer coordinates, and no personal identifiers. A random session token is stored only in this browser's sessionStorage. */
 (() => {
   if (window.__MC_LOCAL_OBSERVATORY__) return;
   window.__MC_LOCAL_OBSERVATORY__ = true;
