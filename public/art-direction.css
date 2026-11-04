@@ -167,3 +167,25 @@ body[data-mode="carnival"] input:focus-visible{outline:1px dashed #d9c9a6!import
  body[data-mode="carnival"] .bottom{gap:12px}
 }
 @media(prefers-reduced-motion:reduce){body[data-mode="carnival"] .title{transform:none}}
+
+/* Directory pages and catalogue cards are part of the artwork, not neutral scaffolding. */
+.card,.cards .card,.grid .card{
+ position:relative;border-radius:2px!important;border-color:var(--mc-line)!important;
+ background-color:#111510!important;box-shadow:inset 0 1px rgba(230,215,180,.035),0 16px 42px rgba(0,0,0,.2)!important;
+}
+.card:after,.cards .card:after,.grid .card:after{
+ content:"";position:absolute;inset:7px;border:1px solid rgba(190,171,128,.07);pointer-events:none;
+}
+.card:hover,.cards .card:hover,.grid .card:hover{
+ border-color:rgba(190,171,128,.72)!important;box-shadow:inset 0 0 24px rgba(180,154,109,.05),0 22px 50px rgba(0,0,0,.3)!important;
+}
+.card .name,.card strong,.cards .card strong,.grid .card .name{color:var(--mc-ink)!important}
+.card .n,.card .verb,.cards .card small,.grid .card .verb{color:var(--mc-muted)!important}
+.grid .card:nth-child(4){
+ background:radial-gradient(ellipse at 80% 12%,rgba(168,111,112,.17),transparent 54%),linear-gradient(150deg,#21141d,#100d10)!important;
+ border-color:rgba(180,154,109,.28)!important;
+}
+.grid .card:nth-child(4):before{
+ content:"";position:absolute;right:14px;top:14px;width:42px;height:42px;border:1px solid rgba(180,154,109,.38);border-radius:50%;
+ box-shadow:inset 0 0 0 7px rgba(168,111,112,.07),inset 0 0 0 14px rgba(180,154,109,.04);pointer-events:none;
+}
