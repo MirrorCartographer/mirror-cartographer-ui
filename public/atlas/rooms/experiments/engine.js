@@ -31,7 +31,47 @@
   const pointer={x:.5,y:.5,down:false,px:.5,py:.5};
   const points=Array.from({length:150},(_,i)=>({x:rand(i*3),y:rand(i*3+1),r:.5+rand(i*3+2)*2.2,seed:i}));
   const memory=Object.fromEntries(Object.keys(palettes).map(k=>[k,[]]));
-  function remember(){const list=memory[mode];if(!list)return;list.push({x:pointer.x,y:pointer.y,phase,at:time});if(list.length>36)list.shift();}
+  const memoryKey='mc-room-memory:v1:'+mode;
+  const memoryPreferenceKey='mc-room-memory-enabled:v1:'+mode;
+  let memoryEnabled=false,memoryButton=null,memoryStatus=null;
+  function syncMemoryControls(){
+    if(memoryButton){memoryButton.textContent=memoryEnabled?'remembering locally':'one-off';memoryButton.setAttribute('aria-pressed',String(memoryEnabled));}
+    if(memoryStatus)memoryStatus.textContent=memoryEnabled?'saved locally · '+(memory[mode]?.length||0)+' traces':'one-off · new traces stay in this visit';
+  }
+  function persistMemory(){
+    if(!memoryEnabled)return;
+    try{localStorage.setItem(memoryKey,JSON.stringify({version:1,phase,gesture,hue,traces:(memory[mode]||[]).slice(-36)}));}catch{}
+    syncMemoryControls();
+  }
+  function restoreMemory(){
+    try{
+      memoryEnabled=localStorage.getItem(memoryPreferenceKey)==='true';
+      if(memoryEnabled){
+        const saved=JSON.parse(localStorage.getItem(memoryKey)||'null');
+        if(saved&&saved.version===1){
+          if(Number.isFinite(saved.phase))phase=clamp(saved.phase,0,1000000);
+          if(Number.isFinite(saved.gesture))gesture=clamp(saved.gesture,0,1000000);
+          if(Number.isFinite(saved.hue))hue=((saved.hue%360)+360)%360;
+          if(Array.isArray(saved.traces))memory[mode]=saved.traces.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.phase)).slice(-36).map(p=>({x:clamp(p.x,0,1),y:clamp(p.y,0,1),phase:clamp(p.phase,0,1000000),at:Number.isFinite(p.at)?p.at:0}));
+        }
+      }
+    }catch{memoryEnabled=false;}
+    document.body.style.setProperty('--room-phase',String(phase));
+    if(hue)document.body.style.filter=`hue-rotate(${hue}deg)`;
+  }
+  function setMemoryEnabled(enabled){
+    memoryEnabled=!!enabled;
+    try{localStorage.setItem(memoryPreferenceKey,String(memoryEnabled));}catch{}
+    persistMemory();syncMemoryControls();
+  }
+  function forgetLocalMemory(){
+    memoryEnabled=false;memory[mode]=[];phase=0;gesture=0;hue=0;
+    try{localStorage.removeItem(memoryKey);localStorage.removeItem(memoryPreferenceKey);}catch{}
+    document.body.style.filter='';document.body.style.setProperty('--room-phase','0');
+    syncMemoryControls();start();
+  }
+  function remember(){const list=memory[mode];if(!list)return;list.push({x:pointer.x,y:pointer.y,phase,at:time});if(list.length>36)list.shift();persistMemory();syncMemoryControls();}
+  restoreMemory();
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   function resize(){D=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;canvas.width=Math.max(1,Math.round(W*D));canvas.height=Math.max(1,Math.round(H*D));ctx.setTransform(D,0,0,D,0,0);}
   addEventListener('resize',resize,{passive:true});resize();
@@ -181,7 +221,7 @@
 
   function initAudio(){if(audio)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=new AC();master=audio.createGain();master.gain.value=.045*intensity;master.connect(audio.destination);}
   function tone(){if(!soundOn)return;initAudio();if(!audio)return;audio.resume();const osc=audio.createOscillator(),gain=audio.createGain();osc.type=mode==='cathedral'?'sine':mode==='carnival'?'triangle':'sine';const base={observatory:220,garden:164.81,cathedral:110,carnival:293.66,ocean:82.41,blueprint:196,library:146.83,forest:130.81,museum:246.94,composer:261.63}[mode]||220;osc.frequency.value=base*Math.pow(2,(pointer.x-.5)*2+gesture%5/5);gain.gain.setValueAtTime(.0001,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.22,audio.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.75);osc.connect(gain).connect(master);osc.start();osc.stop(audio.currentTime+.8);}
-  function transform(){phase+=1;gesture+=1;hue=(hue+23)%360;document.body.style.setProperty('--room-phase',String(phase));document.body.style.filter=`hue-rotate(${hue}deg)`;start();tone();}
+  function transform(){phase+=1;gesture+=1;hue=(hue+23)%360;document.body.style.setProperty('--room-phase',String(phase));document.body.style.filter=`hue-rotate(${hue}deg)`;persistMemory();start();tone();}
   addEventListener('pointermove',e=>{pointer.x=e.clientX/W;pointer.y=e.clientY/H;},{passive:true});
   addEventListener('pointerdown',e=>{if(e.target.closest('button,a,input'))return;pointer.down=true;pointer.px=pointer.x;pointer.py=pointer.y;gesture++;remember();tone();start();});
   addEventListener('pointerup',()=>{pointer.down=false;start();});
@@ -193,6 +233,9 @@
     const shift=controls.querySelector('[data-action="shift"]');
     if(shift)shift.addEventListener('click',()=>{transform();shift.setAttribute('aria-label','Transform this room again');});
     const home=document.createElement('a');home.className='mc-home';home.href='../../';home.textContent='← all rooms';home.setAttribute('aria-label','Return to all rooms');controls.append(home);
+    memoryButton=document.createElement('button');memoryButton.type='button';memoryButton.setAttribute('aria-label','Toggle local room memory');memoryButton.addEventListener('click',()=>setMemoryEnabled(!memoryEnabled));controls.append(memoryButton);
+    const forgetButton=document.createElement('button');forgetButton.type='button';forgetButton.textContent='forget trace';forgetButton.setAttribute('aria-label','Forget local room memory');forgetButton.addEventListener('click',forgetLocalMemory);controls.append(forgetButton);
+    memoryStatus=document.createElement('span');memoryStatus.className='mc-memory-status';memoryStatus.setAttribute('role','status');memoryStatus.setAttribute('aria-live','polite');controls.append(memoryStatus);syncMemoryControls();
     const still=document.createElement('button');still.type='button';still.textContent=paused?'return to motion':'stillness';still.setAttribute('aria-pressed',String(paused));still.addEventListener('click',()=>{paused=!paused;still.textContent=paused?'return to motion':'stillness';still.setAttribute('aria-pressed',String(paused));if(paused)cancelAnimationFrame(raf);else start();});controls.append(still);
     const label=document.createElement('label');label.className='mc-intensity';label.textContent='intensity ';const range=document.createElement('input');range.type='range';range.min='10';range.max='100';range.value='72';range.setAttribute('aria-label','Visual and sound intensity');range.addEventListener('input',()=>{intensity=Number(range.value)/100;if(master)master.gain.setTargetAtTime(.045*intensity,audio.currentTime,.04);start();});label.append(range);controls.append(label);
     const hint=document.createElement('span');hint.className='mc-key-hint';hint.textContent='ARROWS MOVE · ENTER TRANSFORMS';controls.append(hint);
