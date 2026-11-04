@@ -57,8 +57,8 @@
     <section class="panel" aria-labelledby="methodTitle">
       <div class="eyebrow">Protocol / inspectable method</div><h2 id="methodTitle">How the prediction works</h2>
       <div class="grid" style="margin-top:0">
-        <div class="third"><h3>01 · Prior</h3><p class="small muted">Before the first choice, the model has no personal history. It picks the first door in a documented fixed tie-break order. This is a deliberately weak baseline, not a personalized insight.</p></div>
-        <div class="third"><h3>02 · Update</h3><p class="small muted">For each later trial, it predicts the most frequently chosen door among previous trials. Ties are broken in the fixed order Moss → Glass → Ember. No choice from the current trial is available to the prediction.</p></div>
+        <div class="third"><h3>01 · Prior</h3><p class="small muted">Before the first choice, the model has no personal history. It picks the first door in a documented random choice among all three doors. This is an explicit uniform baseline, not a personalized insight.</p></div>
+        <div class="third"><h3>02 · Update</h3><p class="small muted">For each later trial, it predicts the most frequent next door after the most recent choice. Ties are randomized. When no such transition exists, it samples from global prior counts with Laplace smoothing. No choice from the current trial is available to the prediction.</p></div>
         <div class="third"><h3>03 · Compare</h3><p class="small muted">After your choice, the system marks the prediction correct or incorrect, then updates the tally. It reports accuracy, the 1/3 uniform baseline, percentage-point lift, and a 95% Wilson interval.</p></div>
       </div>
       <div class="rule"></div>
@@ -86,11 +86,34 @@ function addEvent(type,details={}){
   const ev={seq:events.length+1,type,at:nowISO(),elapsed_ms:Math.round(performance.now()-startAt),details};
   events.push(ev);renderLog();return ev;
 }
+let lastPredictionMeta={};
 function predict(){
-  if(!trials.length) return ORDER[0];
-  const counts=Object.fromEntries(ORDER.map(x=>[x,0]));
-  trials.forEach(t=>counts[t.choice]++);
-  return ORDER.reduce((best,d)=>counts[d]>counts[best]?d:best,ORDER[0]);
+  const draw=Math.random();
+  if(!trials.length){
+    const index=Math.min(ORDER.length-1,Math.floor(draw*ORDER.length));
+    lastPredictionMeta={method:'uniform_random_prior',candidates:ORDER.slice(),counts:{},draw};
+    return ORDER[index];
+  }
+  const last=trials[trials.length-1].choice;
+  const transitions=Object.fromEntries(ORDER.map(d=>[d,0]));
+  for(let i=0;i<trials.length-1;i++){
+    if(trials[i].choice===last) transitions[trials[i+1].choice]++;
+  }
+  const transitionTotal=Object.values(transitions).reduce((a,b)=>a+b,0);
+  if(transitionTotal>0){
+    const best=Math.max(...Object.values(transitions));
+    const candidates=ORDER.filter(d=>transitions[d]===best);
+    const index=Math.min(candidates.length-1,Math.floor(draw*candidates.length));
+    lastPredictionMeta={method:'most_common_transition_random_tie',from:last,counts:transitions,candidates,draw};
+    return candidates[index];
+  }
+  const global=Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length]));
+  const weights=ORDER.map(d=>global[d]+1);
+  const total=weights.reduce((a,b)=>a+b,0);
+  let point=draw*total,index=weights.length-1;
+  for(let i=0;i<weights.length;i++){point-=weights[i];if(point<0){index=i;break;}}
+  lastPredictionMeta={method:'laplace_smoothed_global_fallback',counts:global,weights,candidates:ORDER.slice(),draw};
+  return ORDER[index];
 }
 function wilson(success,n){
   if(!n)return null;
@@ -137,7 +160,7 @@ function begin(){
   if(!$('consentCore').checked||!$('consentLimits').checked){$('message').textContent='Both consent statements are required. Nothing has been collected.';return}
   active=true;events=[];trials=[];startAt=performance.now();
   addEvent('consent_granted',{scope:['door_choice','trial_number','event_timestamp','relative_event_order'],storage:'in_memory_only',external_transmission:false});
-  addEvent('experiment_started',{version:'1.0',trials_total:TOTAL,model:'historical-frequency-with-fixed-tie-break',door_order:ORDER});
+  addEvent('experiment_started',{version:'1.1',trials_total:TOTAL,model:'transition-frequency-with-random-ties-and-smoothed-fallback',door_order:ORDER});
   $('grant').disabled=true;$('consentCore').disabled=true;$('consentLimits').disabled=true;$('revoke').disabled=false;
   $('message').textContent='Permission active. You can revoke at any time; revocation clears this session.';
   render();
@@ -146,7 +169,7 @@ function choose(choice){
   if(!active||trials.length>=TOTAL||!ORDER.includes(choice))return;
   const trialNo=trials.length+1;
   const prediction=predict();
-  const predEv=addEvent('prediction_committed',{trial:trialNo,prediction,method:trials.length?'most_frequent_prior_choice':'fixed_initial_baseline',history_length:trials.length});
+  const predEv=addEvent('prediction_committed',{trial:trialNo,prediction,...lastPredictionMeta,history_length:trials.length});
   const choiceEv=addEvent('choice_recorded',{trial:trialNo,choice});
   const t={trial:trialNo,prediction,choice,correct:prediction===choice,predictionSeq:predEv.seq,choiceSeq:choiceEv.seq,outcomeSeq:null};
   trials.push(t);
@@ -164,7 +187,7 @@ function revoke(){
 }
 function reportData(){
   const n=trials.length,c=trials.filter(t=>t.correct).length,ci=wilson(c,n);
-  return {experiment:'The Next Move',version:'1.0',generated_at:nowISO(),status:n===TOTAL?'complete_demo_run':'partial_run',consent:{granted:true,scope:['door_choice','trial_number','event_timestamp','relative_event_order'],storage:'in_memory_only',external_transmission:false},method:{name:'historical-frequency-with-fixed-tie-break',door_order:ORDER,initial_prediction:'Moss fixed baseline',subsequent_prediction:'Most frequent prior choice; ties resolved Moss → Glass → Ember',chance_reference:1/3},metrics:{trials:n,correct:c,misses:n-c,accuracy:n?c/n:null,uniform_chance:1/3,lift:n?c/n-1/3:null,wilson_95:ci,choice_counts:Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length])),ordering_audit:trials.every(t=>t.predictionSeq<t.choiceSeq&&t.choiceSeq<t.outcomeSeq)},trials,events,limitations:['Small sample; not evidence of general predictive ability.','Sequential choices may not be independent.','The model sees only choices in this experiment.','No psychological, identity, or hidden-state inference is attempted.','Exported data is outside the page’s control.']};
+  return {experiment:'The Next Move',version:'1.0',generated_at:nowISO(),status:n===TOTAL?'complete_demo_run':'partial_run',consent:{granted:true,scope:['door_choice','trial_number','event_timestamp','relative_event_order'],storage:'in_memory_only',external_transmission:false},method:{name:'transition-frequency-with-random-ties-and-smoothed-fallback',door_order:ORDER,initial_prediction:'Uniform random choice among all doors',subsequent_prediction:'Most frequent next door after the most recent choice; random tie-break. If no matching transition exists, sample using prior global counts plus one pseudocount per door.',chance_reference:1/3},metrics:{trials:n,correct:c,misses:n-c,accuracy:n?c/n:null,uniform_chance:1/3,lift:n?c/n-1/3:null,wilson_95:ci,choice_counts:Object.fromEntries(ORDER.map(d=>[d,trials.filter(t=>t.choice===d).length])),ordering_audit:trials.every(t=>t.predictionSeq<t.choiceSeq&&t.choiceSeq<t.outcomeSeq)},trials,events,limitations:['Small sample; not evidence of general predictive ability.','Sequential choices may not be independent.','The model sees only choices in this experiment.','No psychological, identity, or hidden-state inference is attempted.','Exported data is outside the page’s control.']};
 }
 function download(){
  const data=JSON.stringify(reportData(),null,2),blob=new Blob([data],{type:'application/json'});
