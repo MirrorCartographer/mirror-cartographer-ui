@@ -122,3 +122,11 @@
 - **Change:** Added a shared pointer-release handler for `pointerup`, `pointercancel`, `lostpointercapture`, and window blur. Extended the read-only pointer probe and added a browser regression test for a cancelled touch.
 - **Verification:** GitHub Actions Smoke Test run #4269 passed the cancelled-touch regression and full phone-first/room suite; Static Preview Artifact run #4234 passed.
 - **Risk:** Synthetic cancellation verifies event handling; physical-device interruption and OS gesture arbitration still need device testing.
+
+ 
+## Iteration 014 — Make keyboard room navigation bounded and non-scrolling
+
+- **Observation:** Arrow keys moved the room pointer but did not cancel the browser's default scroll behavior. Repeated input was clamped visually, but the page could still scroll behind the artwork.
+- **Change:** Prevented default scrolling only for the four recognized directional keys. Added a browser test that drives the pointer to both coordinate boundaries and verifies the key event was cancelled.
+- **Verification:** Pending hosted Playwright validation; this iteration is not counted as complete until the room suite passes.
+- **Risk:** The test verifies keyboard event handling in Chromium; assistive-technology combinations still need broader accessibility review.
