@@ -14,7 +14,7 @@ a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:3px}butt
 .grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);gap:16px;align-items:start}.panel{padding:18px}.panel h2{font-size:17px;margin:0 0 12px}.panel p{color:var(--muted);margin:6px 0}.panel ul{padding-left:18px;color:var(--muted);margin:8px 0}.panel li{margin:5px 0}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:22px 0 12px}.toolbar h2{font-size:20px;margin:0}.toolbar select,.task select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:10px}
 .tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.task{padding:16px;min-width:0}.task-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.task h3{margin:0;font-size:16px}.badge{font-size:11px;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-radius:99px;border:1px solid var(--line);white-space:nowrap;color:var(--muted)}.badge.complete{color:var(--mint);border-color:#42695a}.badge.in_progress{color:var(--blue);border-color:#425a7a}.badge.blocked{color:var(--rose);border-color:#744747}.badge.pending{color:var(--gold);border-color:#756748}.task p{color:var(--muted);font-size:13px;margin:10px 0}.proof{font-size:12px;color:#d8d7d1;border-left:2px solid var(--gold);padding-left:10px;margin:10px 0}.task-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}.task-foot a{font-size:12px}.task select{font-size:12px;padding:7px 9px}
-.footer{border-top:1px solid var(--line);margin-top:28px;padding-top:18px;color:var(--muted);font-size:12px}
+ .footer{border-top:1px solid var(--line);margin-top:28px;padding-top:18px;color:var(--muted);font-size:12px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tasks{grid-template-columns:1fr}}@media(max-width:420px){.wrap{padding:22px 14px 48px}.actions{width:100%}.actions button{flex:1}}
 </style>
 </head>
@@ -105,7 +105,7 @@ function render(){
   <div class="task-head"><h3>${esc(t.title)}</h3><span class="badge ${t.status}">${t.status.replace("_"," ")}</span></div>
   <p>${esc(t.summary)}</p>
   <div class="proof">${esc(t.proof)}</div>
-  <div class="task-foot"><a href="${esc(t.url)}" target="_blank" rel="noopener">Inspect evidence ↗</a>
+  <div class="task-foot"><a href="${esc(safeHref(t.url))}" target="_blank" rel="noopener noreferrer">Inspect evidence ↗</a>
    <label class="sr-only" for="status-${esc(t.id)}">Status for ${esc(t.title)}</label>
    <select id="status-${esc(t.id)}" data-id="${esc(t.id)}">
     ${["complete","in_progress","blocked","pending"].map(s=>`<option value="${s}" ${s===t.status?"selected":""}>${s.replace("_"," ")}</option>`).join("")}
@@ -114,7 +114,7 @@ function render(){
  </article>`).join("")||'<p>No tasks match this filter.</p>';
  document.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("change",e=>{const t=tasks.find(x=>x.id===e.target.dataset.id);if(t){t.status=e.target.value;save();render()}}));
 }
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function safeHref(v){try{const u=new URL(String(v),location.href);return u.protocol==="https:"?u.href:"#"}catch(e){return "#"}}\nfunction esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 document.getElementById("filter").addEventListener("change",render);
 document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({schema:"mc-hub-state-v1",exported_at:new Date().toISOString(),tasks},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mc-execution-hub-state.json";a.click();URL.revokeObjectURL(a.href)});
 document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
