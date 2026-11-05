@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Mirror Cartographer Unified Execution Hub: evidence-aware project status, tasks, and reproducibility links.">
+<title>Mirror Cartographer — Unified Execution Hub</title>
+<style>
+:root{color-scheme:dark;--bg:#101116;--panel:#191b24;--panel2:#20232e;--line:#343846;--ink:#f0eee8;--muted:#a8acb9;--gold:#e2c58a;--mint:#9fd2b9;--rose:#e4a3a3;--blue:#9bb9e9;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 10% -5%,#333044 0,transparent 65%),var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:3px}button,select,input{font:inherit}button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer}button:hover{border-color:var(--gold)}button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1180px;margin:auto;padding:28px 20px 64px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.title{font-size:clamp(30px,5vw,52px);line-height:1.05;letter-spacing:-.04em;margin:8px 0 12px}.sub{max-width:700px;color:var(--muted);margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.notice{margin:24px 0;padding:14px 16px;border:1px solid #756748;background:#26231d;border-radius:14px;color:#e7d9b9}.notice strong{color:#fff1cc}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}.stat,.panel,.task{background:linear-gradient(160deg,var(--panel),#171922);border:1px solid var(--line);border-radius:var(--radius)}.stat{padding:16px}.stat b{display:block;font-size:28px;line-height:1.2}.stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.progress{height:7px;background:#343846;border-radius:99px;overflow:hidden;margin-top:12px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--mint));width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);gap:16px;align-items:start}.panel{padding:18px}.panel h2{font-size:17px;margin:0 0 12px}.panel p{color:var(--muted);margin:6px 0}.panel ul{padding-left:18px;color:var(--muted);margin:8px 0}.panel li{margin:5px 0}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:22px 0 12px}.toolbar h2{font-size:20px;margin:0}.toolbar select,.task select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:10px}
+.tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.task{padding:16px;min-width:0}.task-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.task h3{margin:0;font-size:16px}.badge{font-size:11px;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-radius:99px;border:1px solid var(--line);white-space:nowrap;color:var(--muted)}.badge.complete{color:var(--mint);border-color:#42695a}.badge.in_progress{color:var(--blue);border-color:#425a7a}.badge.blocked{color:var(--rose);border-color:#744747}.badge.pending{color:var(--gold);border-color:#756748}.task p{color:var(--muted);font-size:13px;margin:10px 0}.proof{font-size:12px;color:#d8d7d1;border-left:2px solid var(--gold);padding-left:10px;margin:10px 0}.task-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}.task-foot a{font-size:12px}.task select{font-size:12px;padding:7px 9px}
+ .footer{border-top:1px solid var(--line);margin-top:28px;padding-top:18px;color:var(--muted);font-size:12px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tasks{grid-template-columns:1fr}}@media(max-width:420px){.wrap{padding:22px 14px 48px}.actions{width:100%}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+ <div>
+  <div class="eyebrow">Mirror Cartographer · Evidence operations</div>
+  <h1 class="title">Unified Execution Hub</h1>
+  <p class="sub">One inspectable queue for recovery, provenance, reproducibility, deployment, and external review. Each status is tied to a concrete evidence boundary—not optimism.</p>
+ </div>
+ <div class="actions">
+  <button id="export">Export state JSON</button>
+  <button id="importBtn">Import state JSON</button>
+  <button id="reset">Reset baseline</button>
+  <input id="importFile" type="file" accept="application/json" hidden>
+ </div>
+</header>
+<div class="notice"><strong>Operating boundary:</strong> this is a static, browser-local dashboard. Changes stay in this browser until exported. It does not access private accounts, call model APIs, run background jobs, or bypass service permissions.</div>
+<section class="stats" aria-label="Project status summary">
+ <div class="stat"><span>Work units</span><b id="total">10</b></div>
+ <div class="stat"><span>Complete</span><b id="done">3</b></div>
+ <div class="stat"><span>Active</span><b id="active">3</b></div>
+ <div class="stat"><span>Blocked / waiting</span><b id="waiting">4</b><div class="progress"><i id="bar"></i></div></div>
+</section>
+<section class="grid">
+ <div class="panel">
+  <h2>Evidence already published</h2>
+  <ul>
+   <li>Authorship, contribution model, and technical evidence boundaries.</li>
+   <li>Canvas document index with observed per-document version metadata.</li>
+   <li>Historical archive audit and OpenAI feature chronology.</li>
+   <li>Repository branch/deployment audit and reproducibility protocol.</li>
+   <li>Archive SHA-256 generator, unit tests, and GitHub Actions workflow.</li>
+  </ul>
+  <p><a href="https://github.com/MirrorCartographer/MirrorCartographer">Open the public research repository</a> · <a href="https://github.com/MirrorCartographer/mirror-cartographer-ui">Open the interactive UI repository</a></p>
+ </div>
+ <aside class="panel">
+  <h2>Proof rules</h2>
+  <p><strong>Source verified</strong> means code or a record exists.</p>
+  <p><strong>Runtime verified</strong> requires an observed execution and preserved output.</p>
+  <p><strong>Historical evidence</strong> can establish that a workflow was attempted without proving it succeeded.</p>
+  <p><strong>Adoption</strong> requires a traceable connection to an OpenAI decision or implementation; similarity is not enough.</p>
+ </aside>
+</section>
+<div class="toolbar">
+ <h2>Execution queue</h2>
+ <label>Filter
+  <select id="filter" aria-label="Filter tasks by status">
+   <option value="all">All statuses</option><option value="complete">Complete</option><option value="in_progress">In progress</option><option value="blocked">Blocked</option><option value="pending">Pending</option>
+  </select>
+ </label>
+</div>
+<section id="tasks" class="tasks" aria-live="polite"></section>
+<footer class="footer">
+ <p><strong>Data handling:</strong> no personal health, veterinary, financial, credential, or raw conversation data is included in the baseline. Task status is saved to localStorage on this device. Use Export before changing devices or clearing browser data.</p>
+ <p>Baseline audit: 2026-11-05 · Maintainer: Mirror Cartographer project lead · Version 1.0</p>
+</footer>
+</main>
+<script>
+const KEY="mc-unified-execution-hub-v1";
+const BASE=[
+{id:"canvas",title:"Canvas revision chronology",status:"complete",priority:"P0",summary:"Recovered 39 unique textdoc IDs, 695 metadata events, and 133 distinct ID/version pairs; indexed 29 project-related records without publishing private health or resume documents.",proof:"Machine-readable index and source-export SHA-256 are published.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/evidence/canvas/document-index.json"},
+{id:"archive",title:"Historical archive evidence audit",status:"complete",priority:"P0",summary:"Inspected the bounded 337-conversation export, RTF archive, artifact catalog, and selected source files. Raw personal archives remain private.",proof:"Audit documents counts, dates, hashes, and exclusions; it does not claim full account coverage.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/HISTORICAL_ARCHIVE_RECOVERY_AUDIT.md"},
+{id:"authorship",title:"Public attribution and professional portfolio",status:"complete",priority:"P0",summary:"Published contribution model, AI-assistance disclosure, founder profile, case studies, system map, and reproducibility guide.",proof:"Public documents are linked from the canonical README.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/PROVENANCE_AND_AUTHORSHIP.md"},
+{id:"hashes",title:"Hash and stage remaining historical artifacts",status:"in_progress",priority:"P0",summary:"A local SHA-256 manifest generator exists. The recovered catalog lists 256 entries, but most historical sandbox paths are not mounted in this runtime; only selected available files have been hashed.",proof:"Do not publish raw conversation exports, health/vet records, credentials, or private source. Remaining files need retrieval/materialization and human privacy review.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/tools/build_archive_manifest.py"},
+{id:"apps-script",title:"Recover Apps Script execution proof",status:"blocked",priority:"P0",summary:"May 30, 2025 records show GPT-4 Chat Completions code and user-pasted email outputs, including a fallback response. Gmail searches found no matching execution or request logs.",proof:"Successful GPT-4 inference is not established. Need Apps Script execution records, HTTP status, raw response, request ID, or message headers.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/HISTORICAL_ARCHIVE_RECOVERY_AUDIT.md"},
+{id:"branches",title:"Reconcile repository branches",status:"in_progress",priority:"P1",summary:"Branch census found 224 branches in the UI repository and 71 in the research repository. High-value branches have been identified but not fully diffed or merged.",proof:"A full head-SHA, ahead/behind, test, privacy, and supersession ledger is still required.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/REPOSITORY_BRANCH_AND_DEPLOYMENT_AUDIT.md"},
+{id:"deploy",title:"Restore reproducible deployments",status:"blocked",priority:"P1",summary:"Inspected Vercel checks report build-rate-limit failures for the examined commits. No current Render service was verified.",proof:"The failure appears to be a service/account build gate, not a demonstrated source-code build failure.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/REPOSITORY_BRANCH_AND_DEPLOYMENT_AUDIT.md"},
+{id:"ci",title:"Execute archive manifest CI tests",status:"in_progress",priority:"P1",summary:"Privacy-aware manifest script, unit tests, and a GitHub Actions workflow are committed. The connected status response has not exposed a passing Actions run.",proof:"Configured is not passed. Preserve the actual Actions run URL and logs when available.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/.github/workflows/archive-manifest-tests.yml"},
+{id:"review",title:"Obtain independent technical review",status:"pending",priority:"P1",summary:"A public review protocol and invitation are published. No external reviewer has accepted or completed the review yet.",proof:"Do not describe an invitation as a completed independent review.",url:"https://github.com/MirrorCartographer/MirrorCartographer/issues/23"},
+{id:"adoption",title:"Investigate possible OpenAI influence",status:"pending",priority:"P1",summary:"Published an evidence-bounded feature chronology with alternative explanations. No direct internal adoption evidence has been found.",proof:"Need a receipt, acknowledgement, contract, or traceable internal decision link before making an adoption claim.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/OPENAI_ADOPTION_EVIDENCE_AUDIT.md"}
+];
+let tasks=load();
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(v)&&v.length)return v}catch(e){}return structuredClone(BASE)}
+function save(){localStorage.setItem(KEY,JSON.stringify(tasks))}
+function render(){
+ const counts={complete:0,in_progress:0,blocked:0,pending:0};tasks.forEach(t=>counts[t.status]=(counts[t.status]||0)+1);
+ document.getElementById("total").textContent=tasks.length;
+ document.getElementById("done").textContent=counts.complete;
+ document.getElementById("active").textContent=counts.in_progress;
+ document.getElementById("waiting").textContent=counts.blocked+counts.pending;
+ document.getElementById("bar").style.width=(tasks.length?counts.complete/tasks.length*100:0)+"%";
+ const filter=document.getElementById("filter").value;
+ const visible=tasks.filter(t=>filter==="all"||t.status===filter);
+ document.getElementById("tasks").innerHTML=visible.map(t=>`
+ <article class="task">
+  <div class="task-head"><h3>${esc(t.title)}</h3><span class="badge ${t.status}">${t.status.replace("_"," ")}</span></div>
+  <p>${esc(t.summary)}</p>
+  <div class="proof">${esc(t.proof)}</div>
+  <div class="task-foot"><a href="${esc(safeHref(t.url))}" target="_blank" rel="noopener noreferrer">Inspect evidence ↗</a>
+   <label class="sr-only" for="status-${esc(t.id)}">Status for ${esc(t.title)}</label>
+   <select id="status-${esc(t.id)}" data-id="${esc(t.id)}">
+    ${["complete","in_progress","blocked","pending"].map(s=>`<option value="${s}" ${s===t.status?"selected":""}>${s.replace("_"," ")}</option>`).join("")}
+   </select>
+  </div>
+ </article>`).join("")||'<p>No tasks match this filter.</p>';
+ document.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("change",e=>{const t=tasks.find(x=>x.id===e.target.dataset.id);if(t){t.status=e.target.value;save();render()}}));
+}
+function safeHref(v){try{const u=new URL(String(v),location.href);return u.protocol==="https:"?u.href:"#"}catch(e){return "#"}}\nfunction esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.getElementById("filter").addEventListener("change",render);
+document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({schema:"mc-hub-state-v1",exported_at:new Date().toISOString(),tasks},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mc-execution-hub-state.json";a.click();URL.revokeObjectURL(a.href)});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{const obj=JSON.parse(await file.text());const rows=Array.isArray(obj)?obj:obj.tasks;if(!Array.isArray(rows)||rows.some(t=>!t.id||!["complete","in_progress","blocked","pending"].includes(t.status)))throw new Error("Invalid task state");tasks=rows;save();render()}catch(err){alert("Import failed: "+err.message)}e.target.value=""});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Reset task statuses to the published baseline?")){tasks=structuredClone(BASE);save();render()}});
+render();
+</script>
+</body>
+</html>
