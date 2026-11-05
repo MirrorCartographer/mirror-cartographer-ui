@@ -23,6 +23,9 @@ The research and systems work lives in the [other repository](https://github.com
 
 ## Find a door
 
+- **[Unified Execution Hub](https://mirrorcartographer.github.io/mirror-cartographer-ui/execution-hub.html)** — local-first lane status, evidence links, task updates, and JSON import/export. State stays in this browser until exported.
+
+
 - **[Playable HTML Index](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/interactive-index.html)** — direct links to interactive HTML experiences, grouped by area. Link targets are routes, not code views; live behavior still needs browser verification.
 
 - **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — four distinct instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways.
