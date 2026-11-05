@@ -14,6 +14,8 @@ on:
       - 'scripts/execution-hub-contract-check.mjs'
       - 'package.json'
       - '.github/workflows/execution-hub-contract.yml'
+  schedule:
+    - cron: '5 13 * * 1'
   workflow_dispatch:
 permissions:
   contents: read
