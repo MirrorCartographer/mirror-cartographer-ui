@@ -1,0 +1,465 @@
+<!-- Recovered source artifact: index(35).html | 52,595 bytes | SHA-256 d1fba1c518babbbfdec808e3442583b3fb338f122d2615118e0acde3615a5817 | privacy-reviewed 2026-11-05. No personal identifiers, credential patterns, or external API calls detected. Inline JavaScript passed node --check; browser interaction not independently tested. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mirror Portal — Creation World</title>
+  <meta name="description" content="A private playable portal for art, music, animation, and saved creations." />
+  <meta name="theme-color" content="#07060b" />
+  <style>
+    :root{
+      --bg:#07060b;
+      --ink:#f8f0ff;
+      --muted:rgba(248,240,255,.67);
+      --ghost:rgba(248,240,255,.18);
+      --line:rgba(255,255,255,.12);
+      --glass:rgba(255,255,255,.07);
+      --glass2:rgba(255,255,255,.11);
+      --a:#e760ff;
+      --b:#42f3ff;
+      --c:#ffcf62;
+      --d:#8dffb7;
+      --e:#ff6e95;
+      --shadow: 0 30px 80px rgba(0,0,0,.45);
+      --radius: 28px;
+      --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);overflow:hidden;}
+    body{
+      background:
+        radial-gradient(circle at 20% 18%, rgba(231,96,255,.20), transparent 36%),
+        radial-gradient(circle at 80% 12%, rgba(66,243,255,.16), transparent 34%),
+        radial-gradient(circle at 54% 84%, rgba(255,207,98,.10), transparent 38%),
+        linear-gradient(140deg,#06050b,#10101d 45%,#05060a);
+    }
+    button,input,textarea,select{font:inherit;color:inherit}
+    button{cursor:pointer;border:0}
+    .bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.76;}
+    .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.20;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");mix-blend-mode:screen;}
+    .app{position:relative;z-index:2;width:100%;height:100%;}
+    .gate{position:absolute;inset:0;display:grid;place-items:center;padding:24px;transition:opacity .9s ease, transform .9s ease;}
+    .gate.hidden{opacity:0;transform:scale(1.05);pointer-events:none;}
+    .gate-shell{width:min(680px, 92vw);text-align:center;position:relative;}
+    .portal-ring{width:min(330px,76vw);aspect-ratio:1;margin:0 auto 28px;border-radius:50%;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 45px rgba(231,96,255,.26));}
+    .portal-ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 20deg,rgba(255,255,255,.09),var(--a),var(--b),var(--c),var(--e),rgba(255,255,255,.09));animation:spin 14s linear infinite;mask:radial-gradient(circle, transparent 48%, #000 50%, #000 63%, transparent 65%);}
+    .portal-ring::after{content:"";position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle at 50% 44%, rgba(255,255,255,.18), transparent 16%), radial-gradient(circle at 47% 54%, rgba(66,243,255,.28), transparent 36%), radial-gradient(circle at 56% 46%, rgba(231,96,255,.24), transparent 42%), radial-gradient(circle, rgba(0,0,0,.1), rgba(0,0,0,.74));box-shadow:inset 0 0 70px rgba(0,0,0,.82), 0 0 80px rgba(66,243,255,.12);animation:breathe 5s ease-in-out infinite alternate;}
+    .gate h1{font-size:clamp(40px,8vw,92px);letter-spacing:-.08em;margin:0;font-weight:760;line-height:.9;text-transform:uppercase;text-shadow:0 0 40px rgba(255,255,255,.11);}
+    .gate .sub{margin:18px auto 28px;max-width:580px;color:var(--muted);font-size:clamp(14px,2vw,18px);line-height:1.5;}
+    .gate-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+    .primary,.soft-btn,.icon-btn{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.05));backdrop-filter:blur(16px);border-radius:999px;padding:13px 18px;box-shadow:0 18px 45px rgba(0,0,0,.27);transition:transform .22s ease,border .22s ease,background .22s ease;}
+    .primary{padding:15px 22px;background:linear-gradient(135deg,rgba(231,96,255,.34),rgba(66,243,255,.22),rgba(255,207,98,.18));text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:800;}
+    .primary:hover,.soft-btn:hover,.icon-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);}
+    .world{position:absolute;inset:0;padding:18px;display:grid;grid-template-columns:minmax(270px, 360px) 1fr;gap:18px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .7s ease, transform .7s ease;}
+    .world.active{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.095),rgba(255,255,255,.04));backdrop-filter:blur(22px);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .left{display:flex;flex-direction:column;min-height:0;}
+    .brand{padding:22px 22px 16px;border-bottom:1px solid var(--line);}
+    .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:800;}
+    .brand h2{margin:7px 0 6px;font-size:24px;letter-spacing:-.055em;line-height:1.05;}
+    .brand p{margin:0;color:var(--muted);font-size:13px;line-height:1.45;}
+    .mode-row{display:flex;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line);}
+    .mode-row button{flex:1;font-size:12px;padding:10px 8px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid transparent;color:var(--muted);}
+    .mode-row button.active{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.22);color:white;}
+    .signal-list{padding:14px;display:grid;gap:10px;overflow:auto;}
+    .signal{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.055);border-radius:22px;padding:12px;display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;min-height:70px;transition:transform .2s ease, background .2s ease, border-color .2s ease;}
+    .signal:hover,.signal.active{transform:translateX(3px);background:rgba(255,255,255,.105);border-color:rgba(255,255,255,.24);}
+    .sig-orb{width:46px;height:46px;border-radius:18px;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.65), transparent 20%), conic-gradient(from var(--angle), var(--a), var(--b), var(--c), var(--e), var(--a));box-shadow:0 0 35px rgba(231,96,255,.15);}
+    .signal b{display:block;font-size:14px;letter-spacing:-.02em;}
+    .signal span{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.25;}
+    .bottom-actions{margin-top:auto;padding:14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;}
+    .bottom-actions button{font-size:12px;padding:10px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.78);}
+    .stage{position:relative;min-width:0;min-height:0;display:grid;grid-template-rows:auto 1fr;}
+    .topbar{height:auto;min-height:72px;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);}
+    .crumb{min-width:0;}
+    .crumb .label{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:rgba(255,255,255,.48);font-weight:800;}
+    .crumb h3{margin:4px 0 0;font-size:clamp(20px,3vw,32px);letter-spacing:-.065em;line-height:1;}
+    .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
+    .top-actions button,.top-actions label{font-size:12px;padding:10px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.82);display:inline-flex;align-items:center;gap:6px;}
+    .top-actions input{display:none;}
+    .room{position:relative;min-height:0;overflow:auto;padding:18px;display:none;}
+    .room.active{display:block;}
+    .field-room{height:100%;min-height:620px;overflow:hidden;}
+    .field-map{position:relative;height:100%;min-height:620px;border-radius:26px;border:1px solid rgba(255,255,255,.09);background:radial-gradient(circle at 45% 32%,rgba(231,96,255,.14),transparent 27%),radial-gradient(circle at 70% 55%,rgba(66,243,255,.12),transparent 28%),rgba(0,0,0,.12);overflow:hidden;}
+    .object{position:absolute;width:118px;height:118px;border-radius:36px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);backdrop-filter:blur(12px);display:grid;place-items:center;transition:transform .22s ease, filter .22s ease, border-color .22s ease;box-shadow:0 30px 70px rgba(0,0,0,.32);}
+    .object:hover{transform:translateY(-8px) scale(1.03);filter:saturate(1.35);border-color:rgba(255,255,255,.32);}
+    .glyph{width:72px;height:72px;border-radius:24px;position:relative;overflow:hidden;background:conic-gradient(from 30deg,var(--a),var(--b),var(--c),var(--e),var(--a));}
+    .glyph::after{content:"";position:absolute;inset:18%;border-radius:50%;background:rgba(0,0,0,.46);box-shadow:inset 0 0 25px rgba(255,255,255,.12);}
+    .object small{position:absolute;bottom:-25px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.16em;text-transform:uppercase;}
+    .object:nth-child(1){left:12%;top:12%;--angle:0deg}.object:nth-child(2){left:52%;top:8%;--angle:70deg}.object:nth-child(3){left:76%;top:38%;--angle:140deg}.object:nth-child(4){left:34%;top:43%;--angle:210deg}.object:nth-child(5){left:10%;top:66%;--angle:280deg}.object:nth-child(6){left:62%;top:71%;--angle:320deg}
+    .threadline{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);transform-origin:left center;opacity:.35;filter:drop-shadow(0 0 8px rgba(66,243,255,.35));}
+    .hint-card{position:absolute;right:22px;bottom:22px;max-width:320px;padding:16px;border-radius:24px;background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);}
+    .hint-card b{display:block;font-size:14px}.hint-card p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4;}
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(12,1fr);}
+    .card{border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border-radius:24px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.24);}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .art-card{min-height:285px;display:grid;grid-template-rows:1fr auto;transition:transform .22s ease,border-color .22s ease;}
+    .art-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.25)}
+    .art-visual{min-height:210px;position:relative;overflow:hidden;background:#0b0a13;}
+    .art-visual svg,.art-visual canvas{position:absolute;inset:0;width:100%;height:100%;}
+    .art-info{padding:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
+    .art-info b{display:block;font-size:14px;letter-spacing:-.02em}.art-info span{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.3}.mini{font-size:11px;color:rgba(255,255,255,.52);text-transform:uppercase;letter-spacing:.16em;font-weight:800;}
+    .pill{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);padding:8px 10px;border-radius:999px;color:rgba(255,255,255,.78);font-size:12px;white-space:nowrap;}
+    .big-stage{min-height:500px;border-radius:26px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.1);background:#07070d;}
+    .big-stage canvas,.big-stage svg{position:absolute;inset:0;width:100%;height:100%;}
+    .overlay-copy{position:absolute;left:18px;bottom:18px;max-width:480px;padding:16px;border-radius:22px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);}
+    .overlay-copy h4{margin:0 0 8px;font-size:26px;letter-spacing:-.06em}.overlay-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .control-card{padding:16px;display:grid;gap:12px;}
+    .control-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .control-row button,.control-row select,.control-row input[type="range"], .control-row textarea, .control-row input[type="text"]{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);border-radius:18px;padding:11px 12px;color:white;}
+    .control-row select{appearance:none;min-width:150px}.control-row input[type="range"]{padding:0;accent-color:#e760ff}.control-row textarea,.control-row input[type="text"]{width:100%;min-height:46px;outline:none;}
+    .control-row textarea{min-height:130px;resize:vertical;line-height:1.45;}
+    .room-title{margin:0 0 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
+    .room-title h4{margin:0;font-size:clamp(26px,5vw,54px);letter-spacing:-.08em;line-height:.9}.room-title p{margin:0;max-width:520px;color:var(--muted);line-height:1.45;font-size:14px;}
+    .drop-zone{min-height:320px;border:1px dashed rgba(255,255,255,.22);border-radius:26px;background:radial-gradient(circle at 50% 50%,rgba(231,96,255,.12),transparent 35%),rgba(255,255,255,.04);display:grid;place-items:center;text-align:center;padding:22px;position:relative;overflow:hidden;}
+    .drop-zone.drag{border-color:rgba(66,243,255,.62);background:radial-gradient(circle at 50% 50%,rgba(66,243,255,.22),transparent 36%),rgba(255,255,255,.07);}
+    .drop-zone .huge{font-size:clamp(52px,11vw,120px);letter-spacing:-.1em;line-height:.8;margin-bottom:12px;opacity:.92}.drop-zone p{margin:0;color:var(--muted);line-height:1.45;}
+    .file-previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px;}
+    .file-card{padding:12px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);min-height:120px;display:flex;flex-direction:column;gap:8px;justify-content:space-between;}
+    .file-card img,.file-card video{width:100%;height:120px;object-fit:cover;border-radius:14px;background:#000}.file-card audio{width:100%}.file-card b{font-size:12px;word-break:break-word}.file-card span{font-size:11px;color:var(--muted)}
+    .audio-canvas{height:330px;border-radius:26px;border:1px solid rgba(255,255,255,.1);background:radial-gradient(circle at 50% 40%,rgba(66,243,255,.12),transparent 40%),#07070d;overflow:hidden;position:relative;}
+    .audio-canvas canvas{position:absolute;inset:0;width:100%;height:100%;}
+    .step-grid{display:grid;grid-template-columns:repeat(16,1fr);gap:5px;padding:10px;background:rgba(0,0,0,.18);border-radius:20px;border:1px solid rgba(255,255,255,.1);}
+    .step{aspect-ratio:1;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);}
+    .step.on{background:linear-gradient(135deg,rgba(231,96,255,.75),rgba(66,243,255,.7));box-shadow:0 0 22px rgba(66,243,255,.22)}
+    .step.playing{outline:2px solid rgba(255,255,255,.65)}
+    .motion-stage{height:520px;border-radius:26px;overflow:hidden;position:relative;background:radial-gradient(circle at 55% 40%,rgba(255,255,255,.06),transparent 30%),#07070d;border:1px solid rgba(255,255,255,.1);}
+    .motion-layer{position:absolute;inset:-15%;filter:blur(.1px);}
+    .floating-shard{position:absolute;width:120px;height:170px;border-radius:50% 40% 55% 45%;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(231,96,255,.12),rgba(66,243,255,.10));border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 0 30px rgba(255,255,255,.08),0 20px 70px rgba(0,0,0,.35);animation:floaty 8s ease-in-out infinite alternate;}
+    .archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+    .artifact{padding:14px;border-radius:24px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.12);min-height:180px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;position:relative;overflow:hidden;}
+    .artifact::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from var(--spin,0deg), transparent, rgba(231,96,255,.18), transparent, rgba(66,243,255,.16), transparent);opacity:.6;animation:spin 18s linear infinite;}.artifact>*{position:relative}.artifact b{font-size:18px;letter-spacing:-.04em}.artifact p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.artifact .meta{font-size:11px;color:rgba(255,255,255,.48);text-transform:uppercase;letter-spacing:.14em;}
+    .map-table{width:100%;border-collapse:separate;border-spacing:0 8px}.map-table td{padding:12px;background:rgba(255,255,255,.055);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09);font-size:13px;color:var(--muted);}.map-table td:first-child{border-left:1px solid rgba(255,255,255,.09);border-radius:16px 0 0 16px;color:white;font-weight:800}.map-table td:last-child{border-right:1px solid rgba(255,255,255,.09);border-radius:0 16px 16px 0;}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;z-index:20;border:1px solid rgba(255,255,255,.16);background:rgba(7,6,11,.76);backdrop-filter:blur(18px);border-radius:999px;padding:12px 16px;font-size:13px;color:rgba(255,255,255,.86);box-shadow:0 20px 60px rgba(0,0,0,.42);transition:opacity .25s ease, transform .25s ease;}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .modal{position:fixed;inset:0;z-index:12;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.45);backdrop-filter:blur(12px);}.modal.show{display:grid}.modal-card{width:min(980px,96vw);height:min(760px,90vh);border-radius:30px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(20,18,33,.96),rgba(6,6,10,.96));box-shadow:0 50px 140px rgba(0,0,0,.7);overflow:hidden;display:grid;grid-template-rows:auto 1fr}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1)}.modal-head b{font-size:18px;letter-spacing:-.04em}.modal-body{position:relative;overflow:auto}.modal-art{height:100%;min-height:520px;position:relative;background:#07070d}.modal-art svg,.modal-art canvas{position:absolute;inset:0;width:100%;height:100%;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes breathe{from{transform:scale(.985);filter:saturate(1)}to{transform:scale(1.025);filter:saturate(1.35)}}
+    @keyframes floaty{from{transform:translate3d(0,0,0) rotate(-12deg)}to{transform:translate3d(20px,-42px,0) rotate(18deg)}}
+    @media (max-width:920px){html,body{overflow:auto}.app{min-height:100dvh}.world{position:relative;min-height:100dvh;grid-template-columns:1fr;padding:10px;overflow:visible}.left{max-height:none}.stage{min-height:720px}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}.topbar{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}.field-room,.field-map{min-height:650px}.object{width:94px;height:94px;border-radius:28px}.glyph{width:58px;height:58px}.hint-card{left:14px;right:14px}.room-title{display:block}.room-title p{margin-top:10px}.gate h1{letter-spacing:-.065em}}
+  </style>
+</head>
+<body>
+<canvas id="ambient" class="bg-canvas" aria-hidden="true"></canvas>
+<div class="noise" aria-hidden="true"></div>
+<div class="app">
+  <section class="gate" id="gate" aria-label="Portal entrance">
+    <div class="gate-shell">
+      <div class="portal-ring" aria-hidden="true"></div>
+      <div class="eyebrow">private creation world</div>
+      <h1>Enter the portal</h1>
+      <p class="sub">A place for our art, music, animation, fragments, experiments, and the strange aftermath of making things together.</p>
+      <div class="gate-actions">
+        <button class="primary" id="enterBtn">Enter</button>
+        <button class="soft-btn" id="skipSoundBtn">Enter Quietly</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="world" id="world" aria-label="Creation portal world">
+    <aside class="panel left">
+      <div class="brand">
+        <div class="eyebrow">Mirror Portal</div>
+        <h2>Our creation field</h2>
+        <p>Touch objects. Make sounds. Open art. Drop fragments. Save the aftermath.</p>
+      </div>
+      <div class="mode-row" role="group" aria-label="Mode">
+        <button data-mode="soft" class="active">soft</button>
+        <button data-mode="full">full</button>
+        <button data-mode="weird">weird</button>
+      </div>
+      <div class="signal-list" id="signalList"></div>
+      <div class="bottom-actions">
+        <button id="exportBtn">export archive</button>
+        <button id="clearBtn">clear local archive</button>
+      </div>
+    </aside>
+
+    <section class="panel stage">
+      <header class="topbar">
+        <div class="crumb">
+          <div class="label" id="roomLabel">the field</div>
+          <h3 id="roomTitle">Touch the world</h3>
+        </div>
+        <div class="top-actions">
+          <label for="filePicker">drop files<input id="filePicker" type="file" multiple accept="image/*,video/*,audio/*,.txt,.md" /></label>
+          <button id="saveSceneBtn">save current state</button>
+          <button id="returnFieldBtn">return to field</button>
+        </div>
+      </header>
+
+      <section class="room field-room active" data-room="field">
+        <div class="field-map" id="fieldMap" aria-label="Interactive creation map">
+          <button class="object" data-target="gallery"><span class="glyph"></span><small>open images</small></button>
+          <button class="object" data-target="audio"><span class="glyph"></span><small>make sound</small></button>
+          <button class="object" data-target="motion"><span class="glyph"></span><small>animate</small></button>
+          <button class="object" data-target="remix"><span class="glyph"></span><small>remix</small></button>
+          <button class="object" data-target="drop"><span class="glyph"></span><small>drop signal</small></button>
+          <button class="object" data-target="archive"><span class="glyph"></span><small>aftermath</small></button>
+          <div class="threadline" style="left:21%;top:22%;width:35%;transform:rotate(-6deg)"></div>
+          <div class="threadline" style="left:60%;top:20%;width:28%;transform:rotate(48deg)"></div>
+          <div class="threadline" style="left:45%;top:50%;width:38%;transform:rotate(-14deg)"></div>
+          <div class="threadline" style="left:17%;top:75%;width:53%;transform:rotate(-5deg)"></div>
+          <div class="hint-card"><b>Not a dashboard.</b><p>This is a playable gallery. The tools are inside the objects: image, sound, motion, remix, dropped files, and saved aftermath.</p></div>
+        </div>
+      </section>
+
+      <section class="room" data-room="gallery">
+        <div class="room-title"><h4>Image chambers</h4><p>Generated visual artifacts made for this portal. Open one, mutate its seed, save the version that feels alive.</p></div>
+        <div class="grid" id="galleryGrid"></div>
+      </section>
+
+      <section class="room" data-room="audio">
+        <div class="room-title"><h4>Sound forge</h4><p>Tap play. The portal builds layered audio from simple synthesis: pulse, bell, shadow-bass, and glass drone.</p></div>
+        <div class="grid">
+          <div class="card span-8"><div class="audio-canvas"><canvas id="audioViz"></canvas></div></div>
+          <div class="card span-4 control-card">
+            <div class="mini">composition controls</div>
+            <div class="control-row"><button class="primary" id="playBtn">play</button><button id="stopBtn">stop</button><button id="randomBeatBtn">mutate</button></div>
+            <div class="control-row"><select id="moodSelect"><option value="chrome">chrome tide</option><option value="chapel">neon chapel</option><option value="moth">moth circuit</option><option value="carnival">carnival weather</option><option value="void">black aquarium</option></select></div>
+            <div class="control-row"><span class="pill">tempo</span><input id="tempoRange" type="range" min="58" max="156" value="92" /></div>
+            <div class="control-row"><span class="pill">strangeness</span><input id="weirdRange" type="range" min="0" max="100" value="38" /></div>
+            <div class="control-row"><button id="saveSoundBtn">save sound state</button></div>
+          </div>
+          <div class="card span-12 control-card"><div class="mini">step field</div><div class="step-grid" id="stepGrid"></div></div>
+        </div>
+      </section>
+
+      <section class="room" data-room="motion">
+        <div class="room-title"><h4>Motion theatre</h4><p>Small animation systems that can become music videos, background worlds, transitions, or ritual loops.</p></div>
+        <div class="grid">
+          <div class="card span-8"><div class="motion-stage" id="motionStage"></div></div>
+          <div class="card span-4 control-card">
+            <div class="mini">animation route</div>
+            <div class="control-row"><button data-motion="mirror-rain">mirror rain</button><button data-motion="signal-bloom">signal bloom</button><button data-motion="afterimage">afterimage</button></div>
+            <div class="control-row"><button data-motion="carnival-orbit">carnival orbit</button><button data-motion="water-memory">water memory</button></div>
+            <div class="control-row"><button id="saveMotionBtn">save motion state</button></div>
+            <div class="mini">video prompt seed</div>
+            <p style="color:var(--muted);font-size:13px;line-height:1.45;margin:0" id="motionPrompt">Select a route to generate a video-direction seed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="room" data-room="remix">
+        <div class="room-title"><h4>Remix altar</h4><p>Combine one visual mood, one audio mood, and a phrase. The portal turns it into a saved artifact card.</p></div>
+        <div class="grid">
+          <div class="card span-7"><div class="big-stage" id="remixPreview"><canvas id="remixCanvas"></canvas><div class="overlay-copy"><h4 id="remixTitle">Unnamed signal</h4><p id="remixText">Choose ingredients. Press forge.</p></div></div></div>
+          <div class="card span-5 control-card">
+            <div class="mini">ingredients</div>
+            <div class="control-row"><select id="visualPick"></select><select id="soundPick"><option>chrome tide</option><option>neon chapel</option><option>moth circuit</option><option>carnival weather</option><option>black aquarium</option></select></div>
+            <div class="control-row"><input type="text" id="artifactName" placeholder="name the artifact" /></div>
+            <div class="control-row"><textarea id="artifactPhrase" placeholder="write a phrase, lyric, spell, instruction, or fragment"></textarea></div>
+            <div class="control-row"><button class="primary" id="forgeBtn">forge artifact</button><button id="randomPhraseBtn">give me a strange phrase</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="room" data-room="drop">
+        <div class="room-title"><h4>Drop chamber</h4><p>Bring in images, sounds, clips, or text. This version previews locally and remembers metadata in your browser.</p></div>
+        <div class="drop-zone" id="dropZone"><div><div class="huge">Drop</div><p>Drag files here or use the top button. Nothing uploads anywhere. It stays local.</p></div></div>
+        <div class="file-previews" id="filePreviews"></div>
+      </section>
+
+      <section class="room" data-room="archive">
+        <div class="room-title"><h4>Aftermath archive</h4><p>Everything you save becomes a local artifact. This is the residue of the portal: what happened after we made something.</p></div>
+        <div class="archive-grid" id="archiveGrid"></div>
+      </section>
+
+      <section class="room" data-room="engine">
+        <div class="room-title"><h4>Hidden engine</h4><p>The public face stays magical. This room remembers how the magic is wired.</p></div>
+        <div class="grid">
+          <div class="card span-12 control-card">
+            <table class="map-table">
+              <tr><td>Art</td><td>procedural SVG/canvas chambers, seed mutation, saved visual states</td></tr>
+              <tr><td>Music</td><td>Web Audio layers, step sequencer, mood routing, visualizer</td></tr>
+              <tr><td>Animation</td><td>CSS/canvas loops, video prompt seeds, motion routes</td></tr>
+              <tr><td>Aftermath</td><td>localStorage artifact archive, JSON export, dropped-file metadata</td></tr>
+              <tr><td>Portal logic</td><td>field objects instead of exposed tools, soft/full/weird intensity modes</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="artModal" role="dialog" aria-modal="true" aria-label="Opened art">
+  <div class="modal-card">
+    <div class="modal-head"><b id="modalTitle">Artifact</b><div><button class="soft-btn" id="mutateArtBtn">mutate</button> <button class="soft-btn" id="saveArtBtn">save</button> <button class="soft-btn" id="closeModalBtn">close</button></div></div>
+    <div class="modal-body"><div class="modal-art" id="modalArt"></div></div>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+  const state = {
+    room: 'field', mode: 'soft', entered: false, soundOn: false, activeArt: null,
+    archive: JSON.parse(localStorage.getItem('mirrorPortalArchive') || '[]'),
+    files: [], beat: [], step: 0, playing: false, currentMotion: 'mirror-rain', seed: 42
+  };
+  const rooms = [
+    {id:'field', name:'The field', hint:'touch the world', glyph:'◌'},
+    {id:'gallery', name:'Image chambers', hint:'generated visual artifacts', glyph:'◇'},
+    {id:'audio', name:'Sound forge', hint:'make portal music', glyph:'◍'},
+    {id:'motion', name:'Motion theatre', hint:'animation loops', glyph:'✦'},
+    {id:'remix', name:'Remix altar', hint:'combine image + sound + phrase', glyph:'✺'},
+    {id:'drop', name:'Drop chamber', hint:'bring in signals', glyph:'⌁'},
+    {id:'archive', name:'Aftermath archive', hint:'saved residue', glyph:'▣'},
+    {id:'engine', name:'Hidden engine', hint:'how it is wired', glyph:'⌬'}
+  ];
+  const artPieces = [
+    {name:'Glass Orchard', type:'iridescent botany', a:'#e760ff', b:'#42f3ff', c:'#ffcf62', kind:'orchard'},
+    {name:'Neon Chapel', type:'ritual architecture', a:'#ff6e95', b:'#8dffb7', c:'#e760ff', kind:'chapel'},
+    {name:'Signal Rain', type:'falling transmissions', a:'#42f3ff', b:'#e760ff', c:'#ffffff', kind:'rain'},
+    {name:'Soft Static Moon', type:'gentle interference', a:'#cdb7ff', b:'#ffcf62', c:'#42f3ff', kind:'moon'},
+    {name:'Chrome Tide', type:'liquid machine water', a:'#42f3ff', b:'#e760ff', c:'#8dffb7', kind:'tide'},
+    {name:'Moth Circuit', type:'guide-layer insect light', a:'#ffcf62', b:'#e760ff', c:'#42f3ff', kind:'moth'},
+    {name:'Carnival Weather', type:'bright wrong atmosphere', a:'#ff6e95', b:'#ffcf62', c:'#42f3ff', kind:'carnival'},
+    {name:'Black Aquarium', type:'dark water archive', a:'#231942', b:'#42f3ff', c:'#e760ff', kind:'aquarium'},
+    {name:'Dream Terminal', type:'symbolic command room', a:'#8dffb7', b:'#42f3ff', c:'#ff6e95', kind:'terminal'},
+    {name:'Afterimage Saint', type:'echo body / halo field', a:'#ffffff', b:'#e760ff', c:'#ffcf62', kind:'saint'},
+    {name:'Mirror Weather', type:'reactive sky glass', a:'#42f3ff', b:'#ffffff', c:'#e760ff', kind:'weather'},
+    {name:'The Quiet Machine', type:'soft engine room', a:'#8dffb7', b:'#ffcf62', c:'#231942', kind:'machine'}
+  ];
+  const phrases = [
+    'A door made of sound remembers the shape of your hand.',
+    'The image learned to hum before it learned to explain itself.',
+    'Every artifact leaves weather behind.',
+    'We do not post the signal. We build a place for it to live.',
+    'A mirror is not a wall. It is a room that answers back.',
+    'The song opens the color; the color teaches the room to move.',
+    'Nothing has to become content to become real.',
+    'The aftermath is the proof that something happened here.'
+  ];
+
+  function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2100); }
+  function saveArchive(){ localStorage.setItem('mirrorPortalArchive', JSON.stringify(state.archive)); renderArchive(); }
+  function saveArtifact(type, name, payload){ state.archive.unshift({id:Date.now()+Math.random().toString(16).slice(2), type, name:name||'untitled artifact', payload, date:new Date().toISOString()}); saveArchive(); toast('saved to aftermath'); }
+  function setRoom(id){
+    state.room=id; $$('.room').forEach(r=>r.classList.toggle('active', r.dataset.room===id));
+    $$('.signal').forEach(s=>s.classList.toggle('active', s.dataset.target===id));
+    const room=rooms.find(r=>r.id===id)||rooms[0]; $('#roomLabel').textContent=room.hint; $('#roomTitle').textContent=room.name;
+    if(id==='archive') renderArchive(); if(id==='motion') renderMotion(state.currentMotion); if(id==='remix') drawRemix();
+  }
+  function renderSignals(){
+    $('#signalList').innerHTML = rooms.map((r,i)=>`<button class="signal ${r.id==='field'?'active':''}" data-target="${r.id}"><span class="sig-orb" style="--angle:${i*44}deg">${r.glyph}</span><span><b>${r.name}</b><span>${r.hint}</span></span></button>`).join('');
+    $$('.signal').forEach(btn=>btn.addEventListener('click',()=>setRoom(btn.dataset.target)));
+  }
+  function enter(quiet=false){
+    state.entered=true; $('#gate').classList.add('hidden'); $('#world').classList.add('active');
+    if(!quiet){ primeAudioSoft(); }
+    toast('portal opened');
+  }
+
+  function svgArt(piece, seed=1, big=false){
+    const w=big?1200:800, h=big?760:520; const rand = mulberry(seed + piece.name.length*999);
+    let defs = `<defs><radialGradient id="g${seed}" cx="45%" cy="34%"><stop offset="0" stop-color="${piece.c}" stop-opacity=".85"/><stop offset=".45" stop-color="${piece.a}" stop-opacity=".35"/><stop offset="1" stop-color="#05050a" stop-opacity="1"/></radialGradient><filter id="blur${seed}"><feGaussianBlur stdDeviation="${big?9:6}"/></filter></defs>`;
+    let bg = `<rect width="100%" height="100%" fill="url(#g${seed})"/><rect width="100%" height="100%" fill="#05050a" opacity=".28"/>`;
+    let shapes='';
+    const count = big?90:48;
+    for(let i=0;i<count;i++){
+      const x=rand()*w, y=rand()*h, r=8+rand()*70, rot=rand()*360, op=.08+rand()*.35;
+      const col=[piece.a,piece.b,piece.c,'#ffffff'][Math.floor(rand()*4)];
+      if(piece.kind==='rain') shapes+=`<path d="M${x} ${y-r} C${x+12} ${y-8}, ${x-12} ${y+8}, ${x} ${y+r}" stroke="${col}" stroke-width="${1+rand()*3}" opacity="${op}" fill="none"/>`;
+      else if(piece.kind==='chapel') shapes+=`<path d="M${x-r} ${y+r} L${x} ${y-r*1.4} L${x+r} ${y+r} Z" fill="${col}" opacity="${op}" transform="rotate(${rot} ${x} ${y})"/>`;
+      else if(piece.kind==='moth') shapes+=`<ellipse cx="${x-r/2}" cy="${y}" rx="${r*.52}" ry="${r*.28}" fill="${col}" opacity="${op}" transform="rotate(${rot} ${x} ${y})"/><ellipse cx="${x+r/2}" cy="${y}" rx="${r*.52}" ry="${r*.28}" fill="${col}" opacity="${op}" transform="rotate(${-rot} ${x} ${y})"/>`;
+      else if(piece.kind==='terminal') shapes+=`<rect x="${x-r/2}" y="${y-r/3}" width="${r*1.5}" height="${r*.8}" rx="${r*.12}" fill="none" stroke="${col}" opacity="${op}" transform="rotate(${rot} ${x} ${y})"/>`;
+      else if(piece.kind==='saint') shapes+=`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${col}" stroke-width="${1+rand()*6}" opacity="${op}"/><path d="M${x} ${y-r*.2} C${x-r} ${y+r}, ${x+r} ${y+r}, ${x} ${y-r*.2}" fill="${col}" opacity="${op*.8}"/>`;
+      else if(piece.kind==='machine') shapes+=`<rect x="${x-r/2}" y="${y-r/2}" width="${r}" height="${r}" rx="${r*.2}" fill="${col}" opacity="${op}" transform="rotate(${rot} ${x} ${y})"/><circle cx="${x}" cy="${y}" r="${r*.16}" fill="#05050a" opacity=".55"/>`;
+      else shapes+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" opacity="${op}" filter="url(#blur${seed})"/>`;
+    }
+    const lines = Array.from({length:big?34:18},(_,i)=>{ const x1=rand()*w,y1=rand()*h,x2=rand()*w,y2=rand()*h; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${[piece.a,piece.b,piece.c][i%3]}" stroke-opacity="${.08+rand()*.18}"/>`; }).join('');
+    const label = `<text x="${big?40:24}" y="${big?h-44:h-30}" fill="white" opacity=".38" font-size="${big?24:16}" font-family="system-ui" letter-spacing="4">${piece.name.toUpperCase()}</text>`;
+    return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${defs}${bg}${lines}${shapes}${label}</svg>`;
+  }
+  function renderGallery(){
+    const grid=$('#galleryGrid');
+    grid.innerHTML=artPieces.map((p,i)=>`<button class="card art-card span-3" data-art="${i}"><div class="art-visual">${svgArt(p, 110+i*77)}</div><div class="art-info"><span><b>${p.name}</b><span>${p.type}</span></span><span class="pill">open</span></div></button>`).join('');
+    $$('.art-card').forEach(btn=>btn.addEventListener('click',()=>openArt(+btn.dataset.art)));
+    $('#visualPick').innerHTML=artPieces.map(p=>`<option>${p.name}</option>`).join('');
+  }
+  function openArt(index){
+    const piece=artPieces[index]; state.activeArt={index, seed:Date.now()%100000};
+    $('#modalTitle').textContent=piece.name; $('#modalArt').innerHTML=svgArt(piece,state.activeArt.seed,true); $('#artModal').classList.add('show');
+  }
+  function mutateArt(){ if(!state.activeArt) return; state.activeArt.seed=(state.activeArt.seed+Math.floor(Math.random()*9999)+17)%999999; $('#modalArt').innerHTML=svgArt(artPieces[state.activeArt.index],state.activeArt.seed,true); }
+  function saveArt(){ if(!state.activeArt) return; const p=artPieces[state.activeArt.index]; saveArtifact('visual', p.name, {seed:state.activeArt.seed, piece:p}); }
+
+  function mulberry(a){ return function(){ let t = a += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; } }
+
+  let audioCtx, master, delay, timer;
+  function primeAudioSoft(){ try{ if(!audioCtx) initAudio(); const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.frequency.value=220; g.gain.setValueAtTime(0.0001,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.025,audioCtx.currentTime+.05); g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.5); o.connect(g).connect(master); o.start(); o.stop(audioCtx.currentTime+.55); }catch(e){} }
+  function initAudio(){ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); master=audioCtx.createGain(); master.gain.value=.42; delay=audioCtx.createDelay(); delay.delayTime.value=.28; const fb=audioCtx.createGain(); fb.gain.value=.28; delay.connect(fb).connect(delay); delay.connect(master); master.connect(audioCtx.destination); }
+  function ensureAudio(){ if(!audioCtx) initAudio(); if(audioCtx.state==='suspended') audioCtx.resume(); }
+  function note(freq,time,dur=.18,type='sine',vol=.12,pan=0){
+    ensureAudio(); const osc=audioCtx.createOscillator(); const g=audioCtx.createGain(); const p=audioCtx.createStereoPanner?audioCtx.createStereoPanner():null;
+    osc.type=type; osc.frequency.setValueAtTime(freq,time); osc.frequency.exponentialRampToValueAtTime(freq*(1+Math.random()*.02),time+dur);
+    g.gain.setValueAtTime(.0001,time); g.gain.exponentialRampToValueAtTime(vol,time+.015); g.gain.exponentialRampToValueAtTime(.0001,time+dur);
+    if(p){ p.pan.value=pan; osc.connect(g).connect(p); p.connect(Math.random()>.5?delay:master); } else { osc.connect(g).connect(Math.random()>.5?delay:master); }
+    osc.start(time); osc.stop(time+dur+.05);
+  }
+  function makeBeat(){ const rand=mulberry(Date.now()%999999); state.beat=Array.from({length:16},(_,i)=>({kick:i%4===0 || rand()>.82, bell:rand()>.67, glass:rand()>.78, bass:i%8===0 || rand()>.88})); renderSteps(); }
+  function renderSteps(){ const grid=$('#stepGrid'); grid.innerHTML=''; state.beat.forEach((s,i)=>{ const div=document.createElement('div'); div.className='step '+((s.kick||s.bell||s.glass||s.bass)?'on':''); div.dataset.step=i; div.addEventListener('click',()=>{state.beat[i].bell=!state.beat[i].bell; renderSteps();}); grid.appendChild(div); }); }
+  function play(){ ensureAudio(); if(!state.beat.length) makeBeat(); state.playing=true; $('#playBtn').textContent='playing'; let next=audioCtx.currentTime+.05; clearInterval(timer); timer=setInterval(()=>{ const tempo=+$('#tempoRange').value; const stepDur=60/tempo/4; while(next<audioCtx.currentTime+.12){ scheduleStep(state.step,next); state.step=(state.step+1)%16; next+=stepDur; } },25); }
+  function stop(){ state.playing=false; clearInterval(timer); $('#playBtn').textContent='play'; $$('.step').forEach(s=>s.classList.remove('playing')); }
+  function scheduleStep(i,time){
+    const s=state.beat[i], mood=$('#moodSelect').value, weird=+$('#weirdRange').value/100; const root={chrome:110,chapel:146.8,moth:196,carnival:130.8,void:82.4}[mood]||110;
+    $$('.step').forEach((el,idx)=>el.classList.toggle('playing',idx===i));
+    if(s.kick) note(root/2,time,.22,'sine',.18,-.1);
+    if(s.bass) note(root*(i%3?1:1.5),time,.28,'triangle',.12,.1);
+    if(s.bell) note(root*[2,2.5,3,4,5][i%5]*(1+weird*.04),time,.16,'sine',.09,(i%7-3)/4);
+    if(s.glass) note(root*[6,7,8,9][i%4]*(1+Math.random()*weird*.1),time,.12,'square',.028,Math.random()*2-1);
+  }
+  function drawAudioViz(){ const c=$('#audioViz'), ctx=c.getContext('2d'); function resize(){c.width=c.clientWidth*devicePixelRatio;c.height=c.clientHeight*devicePixelRatio;} resize(); addEventListener('resize',resize); function frame(){ const w=c.width,h=c.height; ctx.clearRect(0,0,w,h); const t=performance.now()/1000; const bars=64; for(let i=0;i<bars;i++){ const x=i/bars*w; const amp=(Math.sin(t*2+i*.45)+Math.sin(t*.8+i*.17))*0.5+1; const active=state.playing?(state.beat[i%16]?.bell||state.beat[i%16]?.kick):false; const hh=(active?0.42:0.22)*h*(.2+amp*.6); const grd=ctx.createLinearGradient(x,h-hh,x,h); grd.addColorStop(0,`rgba(231,96,255,${active?.85:.28})`); grd.addColorStop(1,`rgba(66,243,255,${active?.55:.18})`); ctx.fillStyle=grd; roundedRect(ctx,x+2,h-hh,Math.max(3,w/bars-4),hh,8); ctx.fill(); } ctx.globalAlpha=.45; ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.beginPath(); for(let x=0;x<w;x+=10){ const y=h/2+Math.sin(x*.018+t*2)*h*.08+Math.sin(x*.004-t)*h*.12; if(x===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); ctx.globalAlpha=1; requestAnimationFrame(frame); } frame(); }
+  function roundedRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+  function renderMotion(kind){
+    state.currentMotion=kind; const st=$('#motionStage'); st.innerHTML='<div class="motion-layer"></div>'; const layer=$('.motion-layer',st);
+    const promptMap={
+      'mirror-rain':'A music video loop where shards of mirror fall upward through dark water, each shard reflecting a different version of the same room. No characters. The camera drifts like memory trying to stabilize.',
+      'signal-bloom':'An abstract animation of colored signal spores blooming through a black field, syncing to bass pulses and opening into temporary portals before collapsing into dust.',
+      'afterimage':'A slow, haunted afterimage sequence: forms appear only after they move away. Every frame feels like residue, like the proof of a vanished performance.',
+      'carnival-orbit':'A bright wrong carnival-weather loop with glowing ribbons, broken spotlights, and orbiting paper moons. Beautiful, unstable, playful, slightly dangerous.',
+      'water-memory':'A dark oceanic memory space where light trails move under the surface and old images try to rise but dissolve before becoming literal.'
+    };
+    $('#motionPrompt').textContent=promptMap[kind]||promptMap['mirror-rain'];
+    const count={ 'mirror-rain':34, 'signal-bloom':56, 'afterimage':22, 'carnival-orbit':42, 'water-memory':62 }[kind]||34;
+    for(let i=0;i<count;i++){ const d=document.createElement('span'); d.className='floating-shard'; const size=40+Math.random()*150; d.style.width=size+'px'; d.style.height=(size*(.6+Math.random()*1.4))+'px'; d.style.left=(Math.random()*100)+'%'; d.style.top=(Math.random()*100)+'%'; d.style.animationDelay=(-Math.random()*8)+'s'; d.style.animationDuration=(5+Math.random()*13)+'s'; d.style.opacity=(.12+Math.random()*.52); d.style.borderRadius= kind==='signal-bloom'?'50%': kind==='carnival-orbit'?'18px 80px 24px 80px':'50% 40% 55% 45%'; d.style.background=`linear-gradient(${Math.random()*360}deg, rgba(255,255,255,.18), ${['rgba(231,96,255,.18)','rgba(66,243,255,.17)','rgba(255,207,98,.17)','rgba(255,110,149,.17)'][i%4]}, transparent)`; layer.appendChild(d); }
+  }
+  function drawRemix(){
+    const c=$('#remixCanvas'), ctx=c.getContext('2d'); function resize(){ c.width=c.clientWidth*devicePixelRatio; c.height=c.clientHeight*devicePixelRatio; } resize();
+    const visual=$('#visualPick').value||artPieces[0].name; const p=artPieces.find(x=>x.name===visual)||artPieces[0]; const rand=mulberry(visual.length*777+state.seed); const w=c.width,h=c.height; ctx.clearRect(0,0,w,h); const grd=ctx.createRadialGradient(w*.45,h*.35,20,w*.5,h*.5,Math.max(w,h)*.7); grd.addColorStop(0,p.c); grd.addColorStop(.3,p.a); grd.addColorStop(.62,p.b); grd.addColorStop(1,'#05050a'); ctx.fillStyle=grd; ctx.fillRect(0,0,w,h); ctx.globalCompositeOperation='screen'; for(let i=0;i<120;i++){ ctx.globalAlpha=.05+rand()*.22; ctx.fillStyle=[p.a,p.b,p.c,'white'][i%4]; ctx.beginPath(); ctx.arc(rand()*w,rand()*h,rand()*80,0,Math.PI*2); ctx.fill(); } ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
+  function forge(){ const name=$('#artifactName').value.trim() || $('#visualPick').value + ' / ' + $('#soundPick').value; const phrase=$('#artifactPhrase').value.trim() || phrases[Math.floor(Math.random()*phrases.length)]; $('#remixTitle').textContent=name; $('#remixText').textContent=phrase; state.seed+=17; drawRemix(); saveArtifact('remix', name, {visual:$('#visualPick').value, sound:$('#soundPick').value, phrase}); }
+
+  function handleFiles(files){
+    [...files].forEach(file=>{ const item={name:file.name,type:file.type||'unknown',size:file.size,date:new Date().toISOString()}; state.files.unshift(item); saveArtifact('dropped signal', file.name, item); previewFile(file,item); });
+    setRoom('drop');
+  }
+  function previewFile(file,item){ const wrap=document.createElement('div'); wrap.className='file-card'; const url=URL.createObjectURL(file); let media=''; if(file.type.startsWith('image/')) media=`<img src="${url}" alt="${file.name}">`; else if(file.type.startsWith('video/')) media=`<video src="${url}" controls muted></video>`; else if(file.type.startsWith('audio/')) media=`<audio src="${url}" controls></audio>`; else media='<span class="pill">text/file</span>'; wrap.innerHTML=`${media}<b>${file.name}</b><span>${Math.round(file.size/1024)} KB · ${file.type||'file'}</span>`; $('#filePreviews').prepend(wrap); }
+
+  function renderArchive(){ const grid=$('#archiveGrid'); if(!state.archive.length){ grid.innerHTML='<div class="artifact"><b>No aftermath yet.</b><p>Open art, forge sound, make motion, or drop a file. Saved things appear here.</p><span class="meta">local browser only</span></div>'; return; } grid.innerHTML=state.archive.map(a=>`<div class="artifact"><span class="meta">${a.type} · ${new Date(a.date).toLocaleString()}</span><b>${escapeHtml(a.name)}</b><p>${escapeHtml(describePayload(a.payload))}</p><button class="pill" data-delete="${a.id}">remove</button></div>`).join(''); $$('[data-delete]').forEach(b=>b.addEventListener('click',()=>{state.archive=state.archive.filter(a=>a.id!==b.dataset.delete); saveArchive();})); }
+  function describePayload(p){ if(!p) return 'saved state'; if(p.phrase) return p.phrase; if(p.piece) return `${p.piece.type} · seed ${p.seed}`; if(p.motion) return p.motion; if(p.type) return `${p.type} · ${Math.round((p.size||0)/1024)} KB`; return JSON.stringify(p).slice(0,160); }
+  function escapeHtml(s){return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function exportArchive(){ const blob=new Blob([JSON.stringify({exported:new Date().toISOString(), archive:state.archive},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mirror-portal-aftermath.json'; a.click(); URL.revokeObjectURL(a.href); }
+
+  function drawAmbient(){ const c=$('#ambient'), ctx=c.getContext('2d'); let pts=[]; function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio; pts=Array.from({length:Math.min(110,Math.floor(innerWidth/9))},()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.28*devicePixelRatio,vy:(Math.random()-.5)*.28*devicePixelRatio,r:(1+Math.random()*2.8)*devicePixelRatio,h:Math.random()*360}));} resize(); addEventListener('resize',resize); function frame(){ ctx.clearRect(0,0,c.width,c.height); const t=performance.now()/1000; pts.forEach((p,i)=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1; ctx.beginPath(); ctx.fillStyle=`hsla(${(p.h+t*18)%360}, 90%, 70%, .55)`; ctx.arc(p.x,p.y,p.r*(1+Math.sin(t+i)*.25),0,Math.PI*2); ctx.fill(); for(let j=i+1;j<pts.length;j++){ const q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d=Math.hypot(dx,dy); if(d<150*devicePixelRatio){ ctx.strokeStyle=`rgba(255,255,255,${(1-d/(150*devicePixelRatio))*.08})`; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke(); } } }); requestAnimationFrame(frame); } frame(); }
+
+  function bind(){
+    $('#enterBtn').addEventListener('click',()=>enter(false)); $('#skipSoundBtn').addEventListener('click',()=>enter(true)); $('#returnFieldBtn').addEventListener('click',()=>setRoom('field'));
+    $$('.mode-row button').forEach(b=>b.addEventListener('click',()=>{ $$('.mode-row button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); state.mode=b.dataset.mode; document.body.dataset.mode=state.mode; toast(`${state.mode} mode`); }));
+    $$('.object').forEach(o=>o.addEventListener('click',()=>setRoom(o.dataset.target)));
+    $('#closeModalBtn').addEventListener('click',()=>$('#artModal').classList.remove('show')); $('#mutateArtBtn').addEventListener('click',mutateArt); $('#saveArtBtn').addEventListener('click',saveArt);
+    $('#playBtn').addEventListener('click',play); $('#stopBtn').addEventListener('click',stop); $('#randomBeatBtn').addEventListener('click',()=>{makeBeat(); toast('beat mutated');}); $('#saveSoundBtn').addEventListener('click',()=>saveArtifact('sound', $('#moodSelect').value+' sequence',{mood:$('#moodSelect').value, tempo:+$('#tempoRange').value, weird:+$('#weirdRange').value, beat:state.beat}));
+    $$('[data-motion]').forEach(b=>b.addEventListener('click',()=>renderMotion(b.dataset.motion))); $('#saveMotionBtn').addEventListener('click',()=>saveArtifact('motion',state.currentMotion,{motion:state.currentMotion,prompt:$('#motionPrompt').textContent}));
+    $('#forgeBtn').addEventListener('click',forge); $('#randomPhraseBtn').addEventListener('click',()=>{$('#artifactPhrase').value=phrases[Math.floor(Math.random()*phrases.length)];}); $('#visualPick').addEventListener('change',drawRemix); $('#soundPick').addEventListener('change',drawRemix);
+    $('#filePicker').addEventListener('change',e=>handleFiles(e.target.files)); const dz=$('#dropZone'); ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag');})); ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');})); dz.addEventListener('drop',e=>handleFiles(e.dataTransfer.files));
+    $('#exportBtn').addEventListener('click',exportArchive); $('#clearBtn').addEventListener('click',()=>{ if(confirm('Clear the local aftermath archive in this browser?')){state.archive=[];saveArchive();toast('archive cleared');} });
+    $('#saveSceneBtn').addEventListener('click',()=>saveArtifact('portal state',state.room,{room:state.room,mode:state.mode,date:new Date().toISOString()}));
+  }
+  function init(){ renderSignals(); renderGallery(); makeBeat(); drawAudioViz(); renderMotion('mirror-rain'); drawRemix(); renderArchive(); drawAmbient(); bind(); }
+  init();
+})();
+</script>
+</body>
+</html>
