@@ -22,3 +22,14 @@ const scripts = [...rootHtml.matchAll(/<script>([\s\S]*?)<\/script>/g)];
 assert.equal(scripts.length, 1, 'expected one inline application script');
 new vm.Script(scripts[0][1], { filename: 'execution-hub-inline.js' });
 console.log('Execution Hub contract passed: copies match, inline JS parses, local-only boundary holds.');
+
+const portalFile = resolve(root, 'public/creation-portal-v1.html');
+assert.ok(existsSync(portalFile), 'recovered Creation Portal prototype must be included in Vite public assets');
+const portalHtml = readFileSync(portalFile, 'utf8');
+assert.ok(portalHtml.includes('Mirror Portal — Creation World'), 'Creation Portal title must be present');
+assert.doesNotMatch(portalHtml, /\bfetch\s*\(|XMLHttpRequest|WebSocket|api\.openai\.com/i, 'recovered portal must remain browser-local');
+assert.doesNotMatch(portalHtml, /sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}/, 'portal must not contain credential patterns');
+const portalScripts = [...portalHtml.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+assert.ok(portalScripts.length > 0, 'Creation Portal must contain its interactive script');
+portalScripts.forEach((match, index) => new vm.Script(match[1], { filename: `creation-portal-inline-${index}.js` }));
+console.log('Creation Portal contract passed: static asset exists, inline JS parses, local-only boundary holds.');
