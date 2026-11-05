@@ -1,0 +1,29 @@
+name: Execution Hub contract
+on:
+  push:
+    paths:
+      - 'execution-hub.html'
+      - 'public/execution-hub.html'
+      - 'scripts/execution-hub-contract-check.mjs'
+      - 'package.json'
+      - '.github/workflows/execution-hub-contract.yml'
+  pull_request:
+    paths:
+      - 'execution-hub.html'
+      - 'public/execution-hub.html'
+      - 'scripts/execution-hub-contract-check.mjs'
+      - 'package.json'
+      - '.github/workflows/execution-hub-contract.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify local-first hub contract
+        run: node scripts/execution-hub-contract-check.mjs
