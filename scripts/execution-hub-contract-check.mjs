@@ -12,7 +12,7 @@ const rootHtml = readFileSync(rootFile, 'utf8');
 const publicHtml = readFileSync(publicFile, 'utf8');
 assert.equal(rootHtml, publicHtml, 'root and public copies must remain byte-identical');
 
-for (const marker of ['Unified Execution Hub', 'localStorage', 'JSON.stringify', 'JSON.parse', 'safeHref', 'noopener noreferrer', 'mc-unified-execution-hub-v1', 'Recover FIA build and artifact infrastructure', 'Scrub legacy public branch personal context']) {
+for (const marker of ['Unified Execution Hub', 'localStorage', 'JSON.stringify', 'JSON.parse', 'safeHref', 'noopener noreferrer', 'mc-unified-execution-hub-v1', 'Recover FIA build and artifact infrastructure', 'Scrub legacy public branch personal context', 'const merged=BASE.map']) {
   assert.ok(rootHtml.includes(marker), `missing required contract marker: ${marker}`);
 }
 assert.doesNotMatch(rootHtml, /\bfetch\s*\(|XMLHttpRequest|WebSocket|api\.openai\.com/i, 'hub must remain local-first with no remote API calls');
