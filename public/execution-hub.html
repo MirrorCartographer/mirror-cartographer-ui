@@ -35,10 +35,10 @@ a{color:var(--gold);text-decoration-thickness:1px;text-underline-offset:3px}butt
 </header>
 <div class="notice"><strong>Operating boundary:</strong> this is a static, browser-local dashboard. Changes stay in this browser until exported. It does not access private accounts, call model APIs, run background jobs, or bypass service permissions.</div>
 <section class="stats" aria-label="Project status summary">
- <div class="stat"><span>Work units</span><b id="total">10</b></div>
+ <div class="stat"><span>Work units</span><b id="total">12</b></div>
  <div class="stat"><span>Complete</span><b id="done">3</b></div>
- <div class="stat"><span>Active</span><b id="active">3</b></div>
- <div class="stat"><span>Blocked / waiting</span><b id="waiting">4</b><div class="progress"><i id="bar"></i></div></div>
+ <div class="stat"><span>Active</span><b id="active">4</b></div>
+ <div class="stat"><span>Blocked / waiting</span><b id="waiting">5</b><div class="progress"><i id="bar"></i></div></div>
 </section>
 <section class="grid">
  <div class="panel">
@@ -91,7 +91,7 @@ const BASE=[
 {id:"adoption",title:"Investigate possible OpenAI influence",status:"pending",priority:"P1",summary:"Published an evidence-bounded feature chronology with alternative explanations. No direct internal adoption evidence has been found.",proof:"Need a receipt, acknowledgement, contract, or traceable internal decision link before making an adoption claim.",url:"https://github.com/MirrorCartographer/MirrorCartographer/blob/main/docs/OPENAI_ADOPTION_EVIDENCE_AUDIT.md"}
 ];
 let tasks=load();
-function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(v)&&v.length)return v}catch(e){}return structuredClone(BASE)}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(v)){const valid=v.filter(t=>t&&typeof t.id==="string"&&["complete","in_progress","blocked","pending"].includes(t.status));const byId=new Map(valid.map(t=>[t.id,t]));const merged=BASE.map(b=>({...b,status:byId.get(b.id)?.status??b.status}));const extras=valid.filter(t=>!BASE.some(b=>b.id===t.id));return [...merged,...extras]}}catch(e){}return structuredClone(BASE)}
 function save(){localStorage.setItem(KEY,JSON.stringify(tasks))}
 function render(){
  const counts={complete:0,in_progress:0,blocked:0,pending:0};tasks.forEach(t=>counts[t.status]=(counts[t.status]||0)+1);
@@ -104,7 +104,7 @@ function render(){
  const visible=tasks.filter(t=>filter==="all"||t.status===filter);
  document.getElementById("tasks").innerHTML=visible.map(t=>`
  <article class="task">
-  <div class="task-head"><h3>${esc(t.title)}</h3><span class="badge ${t.status}">${t.status.replace("_"," ")}</span></div>
+  <div class="task-head"><h3>${esc(t.title)}</h3><span class="badge ${["complete","in_progress","blocked","pending"].includes(t.status)?t.status:"pending"}">${(["complete","in_progress","blocked","pending"].includes(t.status)?t.status:"pending").replace("_"," ")}</span></div>
   <p>${esc(t.summary)}</p>
   <div class="proof">${esc(t.proof)}</div>
   <div class="task-foot"><a href="${esc(safeHref(t.url))}" target="_blank" rel="noopener noreferrer">Inspect evidence ↗</a>
