@@ -23,6 +23,8 @@ The research and systems work lives in the [other repository](https://github.com
 
 ## Find a door
 
+- **[Creation Portal v1](https://mirrorcartographer.github.io/mirror-cartographer-ui/creation-portal-v1.html)** — recovered local-first art/animation/archive prototype; historical source is preserved in the research repository.
+
 - **[Unified Execution Hub](https://mirrorcartographer.github.io/mirror-cartographer-ui/execution-hub.html)** — local-first lane status, evidence links, task updates, and JSON import/export. State stays in this browser until exported.
 
 
