@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0b"><meta name="description" content="A collection of rooms, instruments, sounds, and impossible places.">
-<title>Mirror Cartographer — The Living Atlas</title>
+<title>Mirror Cartographer — A Glasshouse at the Edge</title>
 <style>
 :root{color-scheme:dark;--void:#090b0b;--ink:#e8e6d9;--moss:#b6c99b;--line:#354036;--dim:#9ba696;--glow:rgba(177,211,151,.18);--heat:1;--serif:Georgia,'Times New Roman',serif;--mono:ui-monospace,monospace}
 *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--void);scroll-padding-top:5rem}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#1b2a20 0,transparent 48%),var(--void);color:var(--ink);font:15px/1.55 system-ui,sans-serif;overflow-x:hidden}button,a,input{font:inherit}a{color:inherit;text-decoration:none}button{color:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #e5f4c8;outline-offset:4px}
@@ -16,14 +16,78 @@ portal-orbit{display:block}.orbit{position:relative;width:min(82vw,590px);aspect
 .list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.list a{display:flex;justify-content:space-between;gap:12px;padding:16px;border:1px solid #ffffff20;background:#101612}.list a:hover{border-color:#a3bd8a;background:#172019}.list strong{font:1.2rem var(--serif);font-weight:400}.list small{font:9px var(--mono);color:#a9b79f}.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}.searchrow input,.searchrow select{min-height:44px;background:#101612;border:1px solid #435242;color:var(--ink);padding:0 12px;font:11px var(--mono)}.searchrow input{flex:1;min-width:220px}.results{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.result{padding:12px;border:1px solid #ffffff1b;background:#101612}.result:hover{border-color:#a3bd8a}.result strong,.result small{display:block;overflow-wrap:anywhere}.result small{color:#899587;font:9px var(--mono)}.result strong{font-size:12px}.quiet{color:#879284;font:10px var(--mono)}footer{padding:30px clamp(18px,5vw,76px);border-top:1px solid #ffffff18;color:#899486;font:9px var(--mono);letter-spacing:.1em;display:flex;justify-content:space-between;gap:1rem}
 @keyframes turn{to{transform:rotate(360deg)}}@media(max-width:850px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:4rem}.orbit{width:min(78vw,490px)}.rooms{grid-template-columns:repeat(2,1fr)}.nav{display:none}}@media(max-width:560px){.hero{padding-top:3rem;padding-bottom:3rem}.hero h1{font-size:clamp(4.2rem,19vw,6.5rem)}.orbit{width:88vw}.orbit-node{min-width:58px;font-size:8px}.rooms,.tools,.list,.results{grid-template-columns:1fr}.room{min-height:190px}.heading{display:block}.section{padding:3.5rem 0}footer{display:block}footer span{display:block;margin-top:8px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 body.still .orbit:before,body.still .orbit:after{animation:none}body.still #field{opacity:.2}
-</style><link rel="stylesheet" href="../art-direction.css">\n</head>
+</style><link rel="stylesheet" href="../art-direction.css"><style id="mc-glasshouse-art-pass">
+:root{--void:#090910;--ink:#f0e8db;--moss:#9ebd9c;--line:#55404b;--dim:#b6a8a1;--glow:rgba(199,143,112,.22);--brass:#d4b17b;--plum:#352234;--water:#789da0}
+html,body{background:#090910!important;color:var(--ink)}
+body{background:radial-gradient(ellipse at 18% 18%,#342033 0,transparent 38rem),radial-gradient(ellipse at 82% 70%,#173a36 0,transparent 42rem),linear-gradient(135deg,#090910,#111018 55%,#080d0d)!important}
+#field{opacity:.42;filter:hue-rotate(125deg) saturate(.82)}
+.grain{opacity:.13}
+.top{background:rgba(9,9,16,.78)!important;border-color:#d2b17b35!important}
+.brand{color:#f0e8db}.brand span{color:#a69a91}
+.nav{color:#d1c4b6}.nav a:hover{color:#e4b98c}
+.sound-state{border-color:#d4b17b70;background:#241a25;color:#e8c995}
+.hero{min-height:min(92svh,960px);gap:2vw}
+.hero h1{font-size:clamp(4.4rem,9.5vw,9.4rem);line-height:.79;max-width:9ch;color:#f2e8d8;text-shadow:0 14px 55px #0008}
+.hero h1 i{color:#d9a67e!important;font-style:italic}
+.eyebrow{color:#d4b17b!important}
+.subtle{color:#d0c0b7!important;max-width:34rem}
+.pill{border-color:#c49a7066;background:#17131c;color:#e9ddcc}
+.pill.primary{background:#d8b681;color:#201820;border-color:#e6c998}
+.orbit{border:1px solid #d4b17b66;background:radial-gradient(circle at 50% 48%,#27413a80,transparent 65%),radial-gradient(circle at 55% 58%,#512b3c44,transparent 70%);box-shadow:0 0 100px #ba896326,inset 0 0 90px #83b3aa1c}
+.orbit:before{border:1px solid #d8b68155;inset:7%;animation-duration:65s}
+.orbit:after{border:1px dashed #9dc8b866;inset:20%;animation-duration:43s}
+.glasshouse-art{position:absolute;inset:2%;width:96%;height:96%;overflow:visible;opacity:.86;filter:drop-shadow(0 0 22px #b5c9ad33);pointer-events:none}
+.core{width:22%;background:radial-gradient(circle at 32% 28%,#fff0d1,#c99b76 54%,#526c62 100%);color:#201820;font-size:9px;box-shadow:0 0 70px #d9a67e77}
+.orbit-node{min-width:72px;min-height:72px;border:1px solid #d4b17b99;background:rgba(16,15,23,.88);color:#f0e8db;border-radius:50%;font-size:9px;box-shadow:0 0 24px #d9a67e22}
+.orbit-node:hover,.orbit-node.active{background:#d4b17b;color:#1b1719;box-shadow:0 0 34px #d9a67e88}
+.section{border-color:#d4b17b2c}
+.section:before{background:linear-gradient(90deg,#d4b17b,#9bc4a2,transparent);height:2px}
+.heading h2{color:#f0e8db}
+.heading p{color:#c2b4aa}
+.rooms{gap:14px}
+.room{min-height:260px;padding:26px;background:linear-gradient(145deg,#1a2020,#17121a 60%,#0d1112)!important;border-color:#d4b17b45;box-shadow:inset 0 0 70px #a3c5a20a,0 18px 60px #0005}
+.room:before{background:radial-gradient(ellipse at 78% 18%,var(--room-glow,#7b9c7a66),transparent 56%),radial-gradient(ellipse at 15% 100%,#9a5d6a33,transparent 58%)}
+.room:after{border-color:#e2c18b1c}
+.room small{color:#d7b57f}.room strong{font-size:clamp(1.8rem,3vw,2.8rem);color:#f3e9da}
+.room span{color:#c2b7aa}
+.room:nth-child(3n+2){background:linear-gradient(145deg,#172421,#15131d)!important}
+.room:nth-child(3n){background:linear-gradient(145deg,#261821,#12161a)!important}
+.room:hover{border-color:#e1bc86;box-shadow:0 20px 70px #0008,0 0 35px #d9a67e18}
+.tools{gap:16px}
+.instrument{position:relative;background:linear-gradient(145deg,#1c2522,#1b1420)!important;border-color:#d4b17b4d;padding:clamp(22px,3vw,36px)}
+.instrument h3{font-size:2.3rem;color:#f0e8db}
+.instrument p{color:#c2b4aa}
+.control-row button{border-color:#d4b17b66;background:#201924;color:#e8dfd1}
+.control-row button:hover{background:#392536}
+.control-row input{accent-color:#d4b17b}
+.readout{color:#a9c6ac}
+.list a,.result{background:#15161c;border-color:#d4b17b35}
+.list a:hover,.result:hover{border-color:#d4b17b;background:#24202a}
+.list strong,.result strong{color:#f0e8db}
+.list small,.result small{color:#b9a99d}
+.searchrow input,.searchrow select{background:#12131a;border-color:#d4b17b55;color:#f0e8db}
+footer{border-color:#d4b17b35;color:#a99d93}
+@media(max-width:850px){.hero{padding-top:4rem}.orbit{width:min(82vw,520px)}}
+@media(max-width:560px){.hero h1{font-size:clamp(3.8rem,16vw,6.3rem)}.orbit{width:90vw}.orbit-node{min-width:54px;min-height:54px;font-size:7px}.room{min-height:205px}}
+@media(prefers-reduced-motion:reduce){.orbit:before,.orbit:after{animation:none!important}}
+</style>\n</head>
 <body>
 <canvas id="field" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div>
 <header class="top"><a class="brand" href="../" aria-label="Return to the wordless world">MIRROR CARTOGRAPHER<span>FIELD NOTES / 00—∞</span></a><nav class="nav"><a href="#atlas">FIELD</a><a href="./rooms/">ROOMS</a><a href="#instruments">INSTRUMENTS</a><a href="./rooms/mind/">THE MIND</a><a href="#library">SHELVES</a><a href="./rooms/music/">SOUND</a><a href="./archive.html">ARCHIVE</a><a href="../field-instruments/">FIELD LAB ↗</a><a href="../workbench.html">WORKSHOP ↗</a></nav><button class="sound-state" id="sound-toggle" aria-pressed="false">SOUND OFF</button></header>
 <main>
 <section class="hero wrap">
-<div><p class="eyebrow">A door is already open.</p><h1>The room<br>without <i>instructions.</i></h1><p class="subtle" id="whisper">Somewhere, a small light is waiting for a hand.</p><div class="hero-actions"><a class="pill primary" href="#worlds">WANDER IN ↓</a><a class="pill" href="./archive.html">OPEN THE ARCHIVE ↗</a><a class="pill" href="../field-instruments/">ENTER FIELD INSTRUMENTS ↗</a><button class="pill" id="surprise">TAKE ME SOMEWHERE ↗</button><button class="pill" id="clear-field">LET THE DUST SETTLE</button></div></div>
-<div class="orbit" id="atlas" aria-label="Interactive constellation. Select a light."><div class="core">TOUCH<br>THE BETWEEN</div><button class="orbit-node active" data-node="echo">ECHO</button><button class="orbit-node" data-node="drift">DRIFT</button><button class="orbit-node" data-node="memory">MEMORY</button><button class="orbit-node" data-node="signal">SIGNAL</button><button class="orbit-node" data-node="bloom">BLOOM</button><button class="orbit-node" data-node="absence">ABSENCE</button></div>
+<div><p class="eyebrow">A living atlas · a little beautiful strangeness</p><h1>A glasshouse<br>at the edge of <i>everything.</i></h1><p class="subtle" id="whisper">A place for music, impossible gardens, strange ideas, and the things that do not fit neatly anywhere else.</p><div class="hero-actions"><a class="pill primary" href="#worlds">WANDER IN ↓</a><a class="pill" href="./archive.html">OPEN THE ARCHIVE ↗</a><a class="pill" href="../field-instruments/">ENTER FIELD INSTRUMENTS ↗</a><button class="pill" id="surprise">TAKE ME SOMEWHERE ↗</button><button class="pill" id="clear-field">LET THE DUST SETTLE</button></div></div>
+<div class="orbit" id="atlas" aria-label="Interactive constellation. Select a light."><svg class="glasshouse-art" viewBox="0 0 600 600" role="img" aria-label="An overgrown glasshouse beneath a moon, with botanical branches and reflected water">
+<defs><radialGradient id="moon"><stop stop-color="#fff0c9" stop-opacity=".95"/><stop offset="1" stop-color="#c58b70" stop-opacity=".05"/></radialGradient><linearGradient id="glass" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#b9e2d2" stop-opacity=".4"/><stop offset=".55" stop-color="#a4c4c7" stop-opacity=".08"/><stop offset="1" stop-color="#e5b28c" stop-opacity=".28"/></linearGradient></defs>
+<circle cx="300" cy="190" r="116" fill="url(#moon)"/>
+<circle cx="300" cy="190" r="72" fill="none" stroke="#e6c99b" stroke-opacity=".6"/>
+<path d="M145 435V285L300 170l155 115v150M178 435V300l122-91 122 91v135M145 285h310M300 170v265M178 300h244" fill="none" stroke="url(#glass)" stroke-width="3"/>
+<path d="M110 435h380M135 456h330M165 477h270M195 498h210" stroke="#d6b98d" stroke-opacity=".34" fill="none"/>
+<path d="M300 435c-4-80-54-112-86-142-27-26-29-56-18-80 37 6 65 31 67 66 23-45 52-70 94-75 13 42-9 79-49 99-25 13-32 38-8 132" fill="none" stroke="#9bc4a2" stroke-width="3" stroke-linecap="round"/>
+<path d="M215 292c-45-2-65-28-70-57 37-8 67 10 76 44M260 254c-5-42 15-72 46-89 20 34 8 68-26 94M336 296c37-25 71-21 98-1-16 33-49 44-86 23M285 356c-36-22-73-14-97 10 22 31 57 35 91 9" fill="none" stroke="#a8c99d" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M300 435c-16-54-4-85 16-112 22-30 51-35 75-26-2 32-23 54-57 58M300 435c-13-49-43-73-76-76-8 31 10 59 45 75" fill="none" stroke="#d4ad84" stroke-width="2.2"/>
+<g fill="#d9b58d" fill-opacity=".8"><circle cx="300" cy="170" r="4"/><circle cx="178" cy="300" r="3"/><circle cx="422" cy="300" r="3"/><circle cx="300" cy="435" r="4"/></g>
+</svg><div class="core">ENTER<br>THE GARDEN</div><button class="orbit-node active" data-node="echo">ECHO</button><button class="orbit-node" data-node="drift">DRIFT</button><button class="orbit-node" data-node="memory">MEMORY</button><button class="orbit-node" data-node="signal">SIGNAL</button><button class="orbit-node" data-node="bloom">BLOOM</button><button class="orbit-node" data-node="absence">ABSENCE</button></div>
 </section>
 <section class="section wrap" id="worlds"><div class="heading"><div><p class="eyebrow">I / PLACES TO DISAPPEAR INTO</p><h2>Choose a door.</h2></div><p>Each room has its own weather. You can leave whenever you like.</p></div>
 <div class="rooms">
