@@ -189,3 +189,94 @@ body[data-mode="carnival"] input:focus-visible{outline:1px dashed #d9c9a6!import
  content:"";position:absolute;right:14px;top:14px;width:42px;height:42px;border:1px solid rgba(180,154,109,.38);border-radius:50%;
  box-shadow:inset 0 0 0 7px rgba(168,111,112,.07),inset 0 0 0 14px rgba(180,154,109,.04);pointer-events:none;
 }
+
+
+/* GLASSHOUSE / AFTERIMAGE ART DIRECTION
+   A living glasshouse at the edge of the ocean: botanical shadow, old theatre velvet,
+   reflected water, warm brass, sea-glass light, and imperfect celestial geometry. */
+:root{
+ --mc-void:#090910;--mc-coal:#11121a;--mc-panel:#191720;--mc-panel-2:#24202a;
+ --mc-ink:#f0e8db;--mc-muted:#c2b4aa;--mc-dim:#91878b;
+ --mc-line:rgba(212,177,123,.28);--mc-brass:#d4b17b;--mc-bone:#f0dfc1;
+ --mc-moss:#9ebd9c;--mc-water:#789da0;--mc-rust:#b87970;
+ --mc-glow:rgba(199,143,112,.18);
+}
+html,body,#root{background:#090910;color:var(--mc-ink)}
+body{background:
+ radial-gradient(ellipse at 15% 8%,rgba(74,43,70,.19),transparent 42%),
+ radial-gradient(ellipse at 88% 78%,rgba(39,89,83,.13),transparent 38%),#090910}
+::selection{background:rgba(212,177,123,.38);color:#fff8eb}
+a{color:var(--mc-bone)}
+.room-world{
+ background:
+ radial-gradient(ellipse at 50% 48%,rgba(103,145,127,.17),transparent 44%),
+ radial-gradient(ellipse at 18% 18%,rgba(129,74,91,.16),transparent 40%),
+ radial-gradient(ellipse at 85% 85%,rgba(93,132,143,.14),transparent 42%),
+ #090910!important;
+}
+.room-world:before{
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.48;
+ background:
+ linear-gradient(90deg,transparent 0 9.8%,rgba(220,190,145,.08) 10%,transparent 10.15% 89.8%,rgba(220,190,145,.07) 90%,transparent 90.15%),
+ linear-gradient(0deg,transparent 0 13%,rgba(220,190,145,.055) 13.1%,transparent 13.25% 86.8%,rgba(220,190,145,.05) 87%,transparent 87.15%),
+ radial-gradient(ellipse at 50% 105%,rgba(116,160,151,.15),transparent 46%);
+}
+.world-surface{z-index:1}
+.world-surface:after{
+ background:
+ radial-gradient(circle 170px at var(--px) var(--py),rgba(241,213,171,.12),transparent 74%),
+ repeating-radial-gradient(ellipse at 50% 52%,rgba(216,190,151,.026) 0 1px,transparent 1px 23px),
+ linear-gradient(135deg,rgba(165,202,183,.035),transparent 38%,rgba(190,125,129,.035))!important;
+ mix-blend-mode:screen;opacity:.86;
+}
+.world-surface canvas{filter:saturate(1.13) contrast(1.035)}
+.room-sigil>i{
+ width:34px;height:34px;border:1px solid var(--mc-brass)!important;
+ background:radial-gradient(circle at 35% 30%,#fff0cf,#d4a77b 35%,rgba(120,157,160,.12) 72%,transparent)!important;
+ box-shadow:0 0 28px rgba(212,177,123,.35),0 0 70px rgba(120,157,160,.13)!important;
+ clip-path:none!important;border-radius:50%!important;
+}
+.room-sigil span b{background:#d4b17b!important;box-shadow:0 0 8px #d4b17b!important}
+.depth-spine i{border-radius:50%!important;border-color:#d4b17b55!important}
+.depth-spine i.lit{background:#e6c895!important;border-color:#fff0cf!important;box-shadow:0 0 12px #d4b17b,0 0 26px #789da0!important}
+.world-map-button,.sound-orb,.motion-orb{
+ border:1px solid #d4b17b88!important;border-radius:50%!important;
+ background:linear-gradient(145deg,rgba(49,31,47,.88),rgba(12,20,20,.9))!important;
+ color:#f0dfc1!important;box-shadow:0 10px 38px #0009,0 0 26px #d4b17b19,inset 0 0 18px #d4b17b0c!important;
+}
+.world-map-button span{font-size:24px;text-shadow:0 0 16px #d4b17b}
+.sound-orb i{background:#a8d0b5!important;box-shadow:0 0 10px #a8d0b5!important}
+.motion-orb{color:#d4b17b!important}
+.completion-portal:before,.completion-portal:after,.completion-portal i{
+ border-color:#e0bf88!important;box-shadow:0 0 34px #d4b17b55,inset 0 0 36px #83b9ad22!important;
+}
+.completion-portal:after{border-style:dashed!important}
+.completion-portal i{background:radial-gradient(circle,#fff0cf,#d4a77b 40%,transparent 72%)!important}
+.portal-map{
+ background:
+ radial-gradient(ellipse at 50% 42%,rgba(75,50,69,.62),transparent 48%),
+ radial-gradient(ellipse at 80% 80%,rgba(40,95,86,.22),transparent 46%),
+ repeating-linear-gradient(135deg,rgba(212,177,123,.024) 0 1px,transparent 1px 15px),
+ rgba(9,9,16,.97)!important;
+}
+.portal{border-radius:50%!important;border-color:#d4b17b36!important}
+.portal.open{box-shadow:inset 0 0 24px rgba(212,177,123,.14),0 0 22px rgba(120,157,160,.08)!important}
+.portal.open:hover,.portal.open:focus-visible{background:rgba(212,177,123,.18)!important;box-shadow:0 0 34px rgba(212,177,123,.3)!important}
+.map-close,.map-all-rooms{border-radius:2px!important;border-color:#d4b17b66!important;background:#1a1520!important;color:#f0dfc1!important}
+.pill,.btn,.sound-state,.control-row button,.actions button{
+ border-color:#d4b17b66!important;background:#211923!important;color:#f0e8db!important;
+}
+.pill.primary,.btn.primary{background:#d4b17b!important;color:#201820!important}
+.room,.instrument,.result,.list a,.lens,.detail,.map,.entry,.node,.gate-card,.portal-shell,.card{
+ border-color:#d4b17b38!important;background-color:rgba(25,23,32,.88)!important;
+ box-shadow:inset 0 1px rgba(255,240,207,.045),0 18px 50px rgba(0,0,0,.24)!important;
+}
+.room{background-image:linear-gradient(145deg,rgba(115,157,133,.13),transparent 52%),linear-gradient(25deg,rgba(122,68,91,.14),transparent 62%),linear-gradient(180deg,#211c26,#10171a)!important}
+.room:before{filter:saturate(.9);opacity:.78}
+.room:hover{border-color:#e2c18b!important;box-shadow:0 20px 60px #0008,0 0 32px #d4b17b1c!important}
+.instrument,.detail,.lens,.entry,.result{background:linear-gradient(145deg,rgba(36,31,42,.96),rgba(15,22,23,.96))!important}
+.eyebrow,.kicker,.num{color:#d4b17b!important}
+h1 em,h1 i,.hero h1 i{color:#d9a67e!important}
+p,.lead,.subtle{color:#c2b4aa}
+footer{border-color:#d4b17b35!important;color:#a99d93!important}
+@media(prefers-reduced-motion:reduce){.room-sigil>i,.sound-orb i,.completion-portal,.completion-portal:after{animation:none!important}}
