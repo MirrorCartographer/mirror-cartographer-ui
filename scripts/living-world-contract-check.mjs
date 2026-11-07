@@ -11,6 +11,14 @@ assert.ok(world.includes('visitorId: typeof value.visitorId'), 'each browser vis
 assert.ok(world.includes('visitorSeed(memory.visitorId)'), 'first encounter must be individualized per visitor');
 assert.ok(world.includes('memory.choices.includes'), 'return dialogue must respond to remembered choices');
 assert.ok(world.includes('onPointerMove={trackPresence}'), 'the environment must respond to continuous pointer presence');
+assert.ok(world.includes('onPointerDown={trackPresence}'), 'touch interaction must be observed without requiring pointer hover');
+assert.ok(world.includes("onFocus={() => onPresence('tazar-near')}"), 'keyboard focus must be able to approach Tazar');
+assert.ok(world.includes("onFocus={() => onPresence('jello-near')}"), 'keyboard focus must be able to approach Jello');
+assert.ok(world.includes("document.addEventListener('visibilitychange', onVisibility)"), 'the environment must observe page visibility');
+assert.ok(world.includes("window.addEventListener('blur', onBlur)"), 'the environment must observe when the browser loses focus');
+assert.ok(world.includes('className="tazar-name">TAZAR'), 'Tazar must be named visibly in the scene');
+assert.ok(world.includes('className="jello-name">JELLO'), 'Jello must be named visibly in the scene');
+
 assert.ok(world.includes("onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
@@ -69,4 +77,4 @@ assert.ok(pages.includes('npm run build:pages'), 'the hosted build must use the 
 assert.ok(pages.includes('actions/upload-pages-artifact@v3'), 'the build must upload a Pages artifact');
 assert.ok(pages.includes('actions/deploy-pages@v4'), 'the release must deploy through GitHub Pages');
 
-console.log('PASS: visitor-specific memory, passive presence, character response, accessibility, and GitHub Pages release contract.');
+console.log('PASS: visitor memory, multimodal consent-based perception, character response, privacy, accessibility, and GitHub Pages release contract.');
