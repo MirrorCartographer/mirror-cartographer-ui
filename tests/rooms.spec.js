@@ -293,7 +293,7 @@ test.describe('Playable Atlas rooms', () => {
       node.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await expect(page.locator('#intensity-value')).toHaveText('25%');
-    await expect(page.locator('.room')).toHaveCount(34);
+    await expect(page.locator('.room')).toHaveCount(39);
   });
 
   test('the shifting world is keyboard-operable, silent by default, and motion-adjustable', async ({ page }) => {
