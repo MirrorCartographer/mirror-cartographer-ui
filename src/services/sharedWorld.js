@@ -1,6 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 
 let client = null;
+const PRIVATE_MEMORY_CONSENT_KEY = 'mc-private-memory-sync-consent-v1';
+
+export function hasPrivateMemoryConsent() {
+  try { return localStorage.getItem(PRIVATE_MEMORY_CONSENT_KEY) === 'yes'; } catch { return false; }
+}
+
+export function setPrivateMemoryConsent(enabled) {
+  try {
+    if (enabled) localStorage.setItem(PRIVATE_MEMORY_CONSENT_KEY, 'yes');
+    else localStorage.removeItem(PRIVATE_MEMORY_CONSENT_KEY);
+  } catch {}
+  window.dispatchEvent(new CustomEvent('mc-private-memory-consent-change', { detail: { enabled: Boolean(enabled) } }));
+}
 
 const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
 
@@ -170,6 +183,7 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
 }
 
 export async function loadPrivateContinuity() {
+  if (!hasPrivateMemoryConsent()) return null;
   const supabase = getSharedWorldClient();
   if (!supabase) return null;
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -187,6 +201,7 @@ export async function loadPrivateContinuity() {
 }
 
 export async function savePrivateContinuity(memory = {}) {
+  if (!hasPrivateMemoryConsent()) return false;
   const supabase = getSharedWorldClient();
   if (!supabase) return false;
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -221,9 +236,17 @@ export async function askResident(resident, message) {
   const text = String(message || '').trim();
   if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
   const { data, error } = await supabase.functions.invoke('resident-dialogue', {
-    body: { resident: character, message: text }
+    body: { resident: character, message: text, includeMemory: hasPrivateMemoryConsent() }
   });
   if (error) throw error;
   if (!data?.reply || typeof data.reply !== 'string') throw new Error('The resident could not find a reply.');
   return data.reply.slice(0, 1400);
+}
+
+export async function deletePrivateContinuity() {
+  const { supabase, user } = await requireSharedWorldUser();
+  const { error } = await supabase.from('continuity_records')
+    .delete().eq('id', user.id).eq('owner_id', user.id).eq('collection', 'settings');
+  if (error) throw error;
+  return true;
 }
