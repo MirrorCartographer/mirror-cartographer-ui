@@ -8,6 +8,7 @@ The GitHub Pages application remains a static frontend. Supabase supplies authen
 2. Apply the SQL migrations in order:
    - `db/001_continuity_records.sql`
    - `db/002_shared_world_presence.sql`
+   - `db/003_resident_dialogue_limits.sql`
 3. Confirm that Auth magic-link redirects allow:
    `https://mirrorcartographer.github.io/mirror-cartographer-ui/`
 4. Add these GitHub repository Actions variables (they are public browser configuration, not secrets):
