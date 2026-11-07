@@ -172,3 +172,10 @@
 /* Each browser's local visitor seed gives the idle choreography a different phase. */
 .tazar{animation-delay:var(--visitor-delay,0s)}
 .jello{animation-delay:var(--visitor-delay,0s)}
+
+/* Bounded perception cues: signals change the scene, never claim to read a visitor's feelings. */
+.living-scene.signal-sound .tazar-art,.living-scene.signal-sound .jello{filter:drop-shadow(0 0 13px #e7c99566)}
+.living-scene.signal-approach-tazar .tazar{filter:drop-shadow(0 0 20px #e7c99588)}
+.living-scene.signal-approach-jello .jello{filter:drop-shadow(0 0 18px #b8c79b88)}
+.living-scene.signal-away .scene-signals{opacity:.22}
+.living-scene.signal-return .station-lamp{animation:lamp-flicker .7s infinite}
