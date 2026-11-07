@@ -71,7 +71,7 @@ function Jello({ onClick, onFocus, speaking }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase }) {
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
@@ -116,6 +116,7 @@ export default function LivingWorld() {
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const micRequestRef = useRef(0);
   const event = EVENTS[eventIndex];
+  const visitorPhase = visitorSeed(memory.visitorId) % 100;
   const line = useMemo(() => {
     if (dialogue) return dialogue;
     if (returningVisitorRef.current && memory.visits > 1 && memory.choices.includes('asked-about-world')) return 'You came back to ask what this place is. I have made absolutely no progress. Welcome back.';
@@ -297,7 +298,7 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
