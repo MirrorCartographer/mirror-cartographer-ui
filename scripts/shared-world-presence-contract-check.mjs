@@ -10,7 +10,10 @@ assert.match(sql, /alter table public\.world_presence enable row level security/
 assert.match(sql, /world_connections_participant_read[\s\S]*auth\.uid\(\) = requester_id or auth\.uid\(\) = recipient_id/i);
 assert.match(sql, /world_connections_request[\s\S]*auth\.uid\(\) = requester_id and status = 'pending'/i);
 assert.match(sql, /world_connections_recipient_decision[\s\S]*auth\.uid\(\) = recipient_id and status = 'pending'/i);
-assert.match(sql, /world_connections_requester_revoke[\s\S]*status = 'accepted'[\s\S]*status = 'revoked'/i);
+
+assert.match(sql, /world_connections_requester_cancel[\s\S]*status = 'pending'[\s\S]*status = 'revoked'/i);
+assert.match(sql, /world_connections_participant_revoke[\s\S]*auth\.uid\(\) = requester_id or auth\.uid\(\) = recipient_id/i);
+
 assert.match(sql, /world_connections_undirected_pair_idx[\s\S]*least\(requester_id, recipient_id\)[\s\S]*greatest\(requester_id, recipient_id\)/i);
 assert.match(sql, /guard_world_connection_update[\s\S]*participants are immutable/i);
 assert.match(sql, /invalid connection status transition/i);
