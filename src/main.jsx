@@ -28,7 +28,7 @@ installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
 installCometGardenRuntime();
 
-const isWorkshop = new URLSearchParams(window.location.search).get('view') === 'workshop';
+const params = new URLSearchParams(window.location.search);\nconst isWorkshop = params.get('view') === 'workshop';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
