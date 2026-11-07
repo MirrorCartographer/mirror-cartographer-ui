@@ -9,7 +9,7 @@ const experimentSlugs = [
 test.describe('Playable Atlas rooms', () => {
   test('the front door controls respond and the collection search works', async ({ page }) => {
     await page.goto('/atlas/', { waitUntil: 'networkidle' });
-    await expect(page.locator('h1')).toContainText('The room');
+    await expect(page.locator('h1')).toContainText('A glasshouse');
     await expect(page.locator('#sound-toggle')).toHaveText('SOUND OFF');
 
     await page.locator('#sound-toggle').click();
