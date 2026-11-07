@@ -193,3 +193,18 @@
 
 .resident-ontology{margin:0 0 7px;color:#a99a83;font:8px 'DM Mono',monospace;letter-spacing:.13em}
 .resident-boundary-notice{margin:5px 0;padding:6px 8px;border-left:2px solid #c7aa7d;color:#c8b99f;background:#c7aa7d12;font:9px/1.4 'DM Mono',monospace}
+
+/* Actual locomotion: the visitor has a place in the scene and can choose where to go. */
+.living-scene{cursor:crosshair;touch-action:manipulation}
+.visitor-token{position:absolute;z-index:6;display:flex;align-items:center;gap:5px;transform:translate(-50%,-50%);pointer-events:none;transition:left 1.15s cubic-bezier(.18,.72,.24,1),top 1.15s cubic-bezier(.18,.72,.24,1);filter:drop-shadow(0 0 8px #f4d9a9aa)}
+.visitor-token i{display:block;width:9px;height:9px;border-radius:50%;background:#f4d9a9;border:1px solid #fff0d2;box-shadow:0 0 0 5px #f4d9a922,0 0 20px 8px #f4d9a955}
+.visitor-token span{color:#f0dfc3;font:8px 'DM Mono',monospace;letter-spacing:.16em;text-shadow:0 1px 5px #09080d}
+.visitor-token.walking i{animation:visitor-footfall .22s ease-in-out infinite alternate}
+@keyframes visitor-footfall{to{scale:.65;box-shadow:0 0 0 8px #f4d9a911,0 0 25px 10px #f4d9a977}}
+.scene-walk-controls{position:absolute;z-index:7;left:50%;bottom:clamp(22px,6vh,62px);transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:7px 9px;background:#111018c9;border:1px solid #d7bd9655;backdrop-filter:blur(12px);white-space:nowrap}
+.scene-walk-controls>span{color:#b7a68e;font:8px 'DM Mono',monospace;letter-spacing:.14em;margin:0 4px}
+.scene-walk-controls button{border:1px solid #c9ae8277;background:#28232c;color:#e8d8bf;padding:8px 10px;font:8px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer}
+.scene-walk-controls button:hover,.scene-walk-controls button:focus-visible{background:#594252;border-color:#e6c99d;outline:none}
+.presence-walking .visitor-token i{box-shadow:0 0 0 8px #f4d9a933,0 0 28px 12px #f4d9a977}
+@media(max-width:760px){.scene-walk-controls{bottom:clamp(22px,5vh,48px);gap:5px;padding:6px}.scene-walk-controls>span{display:none}.scene-walk-controls button{font-size:7px;padding:9px 8px}.visitor-token span{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.visitor-token{transition:none}.visitor-token.walking i{animation:none}}
