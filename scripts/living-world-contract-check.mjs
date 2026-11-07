@@ -19,6 +19,10 @@ assert.ok(world.includes("onPointerLeave={() => onPresence('away')}"), 'the worl
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
 assert.ok(world.includes('function Morrow'), 'Morrow must be a real character component');
 assert.ok(world.includes('function Vesper'), 'Vesper must be a real character component');
+assert.ok(world.includes("setDialogue('I keep the doors from getting ideas. They are very ambitious doors.')"), 'clicking Morrow must open a conversation rather than dismiss it');
+assert.ok(world.includes('station cat</i></span>'), 'Vesper must be visibly named in the scene');
+assert.ok(world.includes("speaker === 'VESPER' ? <div className=\"dialogue-choices\""), 'Vesper must receive character-specific dialogue choices');
+assert.ok(style.includes('.vesper-name{'), 'Vesper name label must have visible styling');
 assert.ok(world.includes('speaking={speaker === "MORROW" && Boolean(dialogue)}'), 'Morrow facial animation must follow active dialogue');
 assert.ok(world.includes('speaking={speaker === "VESPER" && Boolean(dialogue)}'), 'Vesper facial animation must follow active dialogue');
 assert.ok(style.includes('.morrow.speaking .morrow-mouth'), 'Morrow mouth must animate while speaking');
