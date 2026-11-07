@@ -127,7 +127,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.goto('/?view=workshop', { waitUntil: 'networkidle' });
     await expect(page.locator('.operating-atlas')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Mirror Cartographer operating atlas' })).toBeVisible();
-    await page.getByRole('button', { name: /Human health lane/ }).click();
+    await page.locator('aside nav button').filter({ hasText: 'Human health lane' }).click();
     await expect(page.getByRole('heading', { name: 'Human health continuity' })).toBeVisible();
     await page.getByPlaceholder('Title').fill('Smoke-test observation');
     await page.getByPlaceholder('Details').fill('A local record created by the browser test.');
