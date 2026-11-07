@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './LivingWorld.css';
+import { publishPerceptionObservation } from '../engine/perceptionLedger.js';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
 const EVENTS = [
@@ -76,6 +77,8 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
     const y = clamp((pointerEvent.clientY - rect.top) / rect.height, 0, 1);
+    publishPerceptionObservation({ kind: 'pointer-position', source: 'pointer', value: { x, y }, ttlMs: 5000 });
+    if (pointerEvent.type === 'pointerdown') publishPerceptionObservation({ kind: 'pointer-touch', source: pointerEvent.pointerType || 'pointer', value: true, ttlMs: 2500 });
     pointerEvent.currentTarget.style.setProperty('--field-x', `${x * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
@@ -94,7 +97,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Tazar mood={event.mood} onClick={onTalk} onFocus={() => onPresence('tazar-near')} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => onPresence('jello-near')} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
+    <Tazar mood={event.mood} onClick={onTalk} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'tazar', ttlMs: 5000 }); onPresence('tazar-near'); }} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'jello', ttlMs: 5000 }); onPresence('jello-near'); }} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -143,13 +146,16 @@ export default function LivingWorld() {
     const onVisibility = () => {
       if (document.visibilityState === 'hidden') {
         window.clearTimeout(presenceTimerRef.current);
+        publishPerceptionObservation({ kind: 'page-visibility', source: 'document.visibilityState', value: false, ttlMs: 10000 });
         setPresence('away');
       } else {
+        publishPerceptionObservation({ kind: 'page-visibility', source: 'document.visibilityState', value: true, ttlMs: 10000 });
         setPresence('arrived');
       }
     };
-    const onBlur = () => setPresence('away');
+    const onBlur = () => { publishPerceptionObservation({ kind: 'window-focus', source: 'window.blur', value: false, ttlMs: 10000 }); setPresence('away'); };
     const onFocus = () => {
+      publishPerceptionObservation({ kind: 'window-focus', source: 'window.focus', value: true, ttlMs: 10000 });
       if (document.visibilityState === 'visible') setPresence('arrived');
     };
     document.addEventListener('visibilitychange', onVisibility);
@@ -219,6 +225,7 @@ export default function LivingWorld() {
     micRef.current = { stream:null, context:null, source:null, analyser:null, frame:0 };
     setMicLevel(0);
     setMicState('off');
+    publishPerceptionObservation({ kind: 'microphone-state', source: 'getUserMedia', permission: 'visitor-stopped', value: 'off', ttlMs: 3000 });
   };
   const startListening = async () => {
     if (micState === 'listening') { stopListening(); return; }
@@ -230,6 +237,7 @@ export default function LivingWorld() {
     let stream = null;
     let context = null;
     setMicState('requesting');
+    publishPerceptionObservation({ kind: 'microphone-state', source: 'getUserMedia', permission: 'permission-requested', value: 'requesting', ttlMs: 10000 });
     try {
       stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true },
@@ -239,6 +247,7 @@ export default function LivingWorld() {
         stream.getTracks().forEach((track) => track.stop());
         return;
       }
+      publishPerceptionObservation({ kind: 'microphone-state', source: 'getUserMedia', permission: 'explicit-grant', value: 'listening', ttlMs: 10000 });
       context = new AudioContextClass();
       micRef.current = { stream, context, source:null, analyser:null, frame:0 };
       await context.resume();
@@ -267,6 +276,7 @@ export default function LivingWorld() {
           lastPublishedLevel = smoothedLevel;
           framesSincePublish = 0;
           setMicLevel(smoothedLevel);
+          publishPerceptionObservation({ kind: 'audio-envelope', source: 'microphone-rms', permission: 'explicit-grant', value: smoothedLevel, confidence: 1, ttlMs: 1200 });
         }
         micRef.current.frame = window.requestAnimationFrame(sample);
       };
@@ -277,6 +287,7 @@ export default function LivingWorld() {
       micRef.current = { stream:null, context:null, source:null, analyser:null, frame:0 };
       if (requestId !== micRequestRef.current) return;
       setMicState(error?.name === 'NotAllowedError' ? 'permission-denied' : 'unavailable');
+      publishPerceptionObservation({ kind: 'microphone-state', source: 'getUserMedia', permission: error?.name === 'NotAllowedError' ? 'denied' : 'failed', value: error?.name === 'NotAllowedError' ? 'denied' : 'unavailable', ttlMs: 10000 });
     }
   };
   const stopAmbient = () => {
