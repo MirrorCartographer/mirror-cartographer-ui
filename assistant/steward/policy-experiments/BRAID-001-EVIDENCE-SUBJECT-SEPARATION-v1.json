@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "BRAID-001-EVIDENCE-SUBJECT-SEPARATION",
+  "version": "1.0.0",
+  "status": "adopted_for_trial",
+  "weakness": "The prior freshness rule treated the receipt-bearing branch head and the tested evidence subject as the same commit, creating a self-reference problem whenever governance metadata changed after a hosted run.",
+  "hypothesis": "Separating evidence_subject_sha from receipt_commit_sha will preserve truthful evidence binding while allowing governance-only repairs without falsely describing untested commits as tested.",
+  "metric": "receipts_with_ambiguous_tested_commit",
+  "baseline": 1,
+  "target": 0,
+  "evaluation_window_cycles": 3,
+  "rules": [
+    "evidence_subject_sha identifies the exact commit whose workflow and job conclusions were observed",
+    "receipt_commit_sha identifies the commit that stores the receipt and may differ from evidence_subject_sha",
+    "a task cannot be accepted unless the latest reviewed implementation head is itself the evidence_subject_sha of a passing required workflow",
+    "governance-only commits may preserve blocked status while referencing the most recent tested implementation head",
+    "unknown root cause remains unknown"
+  ],
+  "rollback": "Remove this experiment and restore the prior single-SHA freshness rule; retain receipts and queue history as evidence of the ambiguity.",
+  "privacy_class": "public-safe"
+}

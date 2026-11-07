@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "cycle_id": "BRAID-CYCLE-20260724-01",
+  "task_id": "BRAID-001",
+  "source_steward": "build",
+  "target_steward": "integration",
+  "relationship": "repairs",
+  "artifact_paths": [
+    "scripts/braid-control-plane-check.mjs",
+    "scripts/braid-control-plane-check.test.mjs",
+    "automation/steward/policy-experiments/BRAID-001-invariant-fixtures.json"
+  ],
+  "evidence": [
+    {
+      "kind": "artifact",
+      "reference": "github:MirrorCartographer/mirror-cartographer-ui/pull/168",
+      "strength": "high"
+    },
+    {
+      "kind": "decision",
+      "reference": "github:MirrorCartographer/mirror-cartographer-ui/issues/169",
+      "strength": "high"
+    },
+    {
+      "kind": "observation",
+      "reference": "Hosted workflows on commit f7b3d9e77b7a434667c037cb23d12bb58d73f9e2 failed outside the braid-specific test surface",
+      "strength": "high"
+    }
+  ],
+  "acceptance_criteria": [
+    "All ten adversarial fixtures reject their invalid state",
+    "The valid acyclic single-owner fixture passes",
+    "The baseline manifest and queue pass the validator",
+    "Hosted braid-specific test evidence is reported separately from unrelated failing workflows",
+    "PR #168 remains draft until hosted evidence confirms the braid test"
+  ],
+  "contradictions": [
+    "The runtime could not clone the private repository, so local test execution is unverified",
+    "Current hosted workflows fail in ARC harness, portal build, smoke, static preview, and audio routing paths; none yet isolate test:braid"
+  ],
+  "privacy_class": "public-safe",
+  "rollback": "Revert commits ddf481e, 420fddf, f7b3d9e, and 63b564a individually or together; retain issue #169 as the research record.",
+  "expires_at": "2026-07-31T06:30:00Z"
+}

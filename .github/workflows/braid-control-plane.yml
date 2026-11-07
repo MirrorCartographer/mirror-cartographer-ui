@@ -1,0 +1,66 @@
+name: Braid Control Plane
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/braid-control-plane.yml'
+      - 'automation/steward/**'
+      - 'scripts/braid-control-plane-check.mjs'
+      - 'scripts/braid-control-plane-check.test.mjs'
+      - 'stewards/braid/**'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: braid-control-plane-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-probe:
+    name: Probe hosted runner and shell
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm runner and shell startup
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf 'runner-shell-started\n'
+          printf 'phase=runner-shell-startup\n' >> "$GITHUB_STEP_SUMMARY"
+
+  validate-braid:
+    name: Validate braid fixtures
+    needs: runner-probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install locked dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          npm ci 2>&1 | tee braid-npm-ci.log
+          status=${PIPESTATUS[0]}
+          printf 'phase=npm-ci exit_code=%s\n' "$status" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: Run braid control-plane tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:braid 2>&1 | tee braid-test.log
+          status=${PIPESTATUS[0]}
+          printf 'phase=test-braid exit_code=%s\n' "$status" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"

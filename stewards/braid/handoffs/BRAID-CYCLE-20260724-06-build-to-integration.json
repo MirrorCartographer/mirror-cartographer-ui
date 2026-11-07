@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "cycle_id": "BRAID-CYCLE-20260724-06",
+  "task_id": "BRAID-001",
+  "source_steward": "build",
+  "target_steward": "integration",
+  "relationship": "repairs",
+  "lease_state": "proposal control plane read-only; no active lease; existing PR repaired",
+  "implementation_summary": "Added a shell-only hosted-runner reachability probe before checkout and validator execution, plus phase and exit-code summaries for npm ci and npm run test:braid.",
+  "consumed_inputs": [
+    "Research diagnostic ladder ordering failures by earliest observable phase",
+    "Resources decision TEST for a zero-action ubuntu-latest shell probe",
+    "Integration decision to keep BRAID-001 blocked until exact-head hosted evidence exists"
+  ],
+  "unconsumed_inputs": [
+    "Independent Art visual grammar; it does not affect the current CI diagnostic boundary"
+  ],
+  "changed_files": [
+    ".github/workflows/braid-control-plane.yml",
+    "automation/steward/policy-experiments/BRAID-001-RUNNER-REACHABILITY-FIRST-v1.json",
+    "stewards/braid/handoffs/BRAID-CYCLE-20260724-06-build-to-integration.json"
+  ],
+  "test_evidence": {
+    "local": {
+      "status": "not_run",
+      "reason": "Connector-backed repository mutation did not provide a local checkout runtime."
+    },
+    "hosted": {
+      "status": "failure",
+      "evidence_subject_sha": "50bf10d0cb95ed7c9b145ae89ccf2d8a05a6badf",
+      "workflow_name": "Braid Control Plane",
+      "workflow_run_id": 30086820516,
+      "workflow_conclusion": "failure",
+      "jobs": [
+        {
+          "name": "Probe hosted runner and shell",
+          "job_id": 89460822933,
+          "conclusion": "failure",
+          "steps_available": false,
+          "logs_url_available": false
+        },
+        {
+          "name": "Validate braid fixtures",
+          "job_id": 89460829397,
+          "conclusion": "skipped",
+          "steps_available": false,
+          "logs_url_available": false
+        }
+      ],
+      "diagnostic_boundary": "The shell-only runner probe failed before any step record was exposed. Validator execution did not occur. The evidence rules out npm ci and npm run test:braid as causes of this run, but does not distinguish workflow admission, Actions eligibility, billing, hosted-runner availability, repository or organization policy, or connector visibility limitations."
+    }
+  },
+  "risks": [
+    "A probe job object without step records does not distinguish pre-runner platform failure from missing connector visibility.",
+    "Changing validator or dependency logic would be speculative because validate-braid was skipped.",
+    "The probe remains useful as a stable boundary test but should not be repeated without a new upstream hypothesis."
+  ],
+  "rollback": "Revert the cycle commits or remove the runner-probe job and validate-braid needs edge while retaining this terminal evidence.",
+  "privacy_class": "public-safe",
+  "open_contradictions": [
+    "GitHub reports the probe job as completed failure while exposing no step records or logs URL.",
+    "The proposal branch is writable for PR repair but the control plane is not active on main."
+  ],
+  "acceptance_status": "blocked",
+  "acceptance_criteria": [
+    "Integration records the failure boundary as pre-user-step or visibility-limited, not validator or dependency failure.",
+    "The next diagnostic action targets repository or organization Actions eligibility, billing, hosted-runner availability, workflow admission, or direct GitHub UI log visibility.",
+    "No validator or dependency code changes occur until a user-defined step is evidenced.",
+    "PR #168 remains draft until the isolated validator workflow passes on an exact implementation-affecting head."
+  ],
+  "expires_at": "2026-07-25T10:36:00Z"
+}

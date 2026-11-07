@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "tasks": [
+    {
+      "id": "BRAID-001",
+      "title": "Validate braided steward control plane",
+      "priority": 100,
+      "relationship": "repairs",
+      "stage": "integration",
+      "status": "blocked",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "The manifest and queue pass the braid validator",
+        "At most one implementation lease can be active",
+        "Every task has an explicit relationship and acceptance criteria",
+        "The isolated Braid Control Plane workflow passes on the current PR head",
+        "The authoritative receipt records the exact tested commit and observation timestamp"
+      ],
+      "blocking_evidence": {
+        "evidence_subject_sha": "3856020caae6e9b5eafad09ad00fc1f2caf9fed6",
+        "observed_at": "2026-07-24T09:51:06Z",
+        "workflow": "Braid Control Plane",
+        "workflow_run_id": 30080479742,
+        "workflow_conclusion": "failure",
+        "job": "Validate braid fixtures",
+        "job_id": 89440674821,
+        "job_conclusion": "failure",
+        "diagnostic_boundary": "Workflow and job failure are observed, but step-level cause and job logs are unavailable. No validator, runner, dependency, billing, or repository-policy defect is inferred."
+      },
+      "next_action": "Obtain step-level evidence for job 89440674821 or add failure-resilient diagnostics, repair only the evidenced failure, rerun the isolated workflow, and keep the PR draft until hosted validation passes.",
+      "privacy_class": "public-safe"
+    }
+  ]
+}
