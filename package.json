@@ -60,7 +60,8 @@
     "catalog:build": "node --test scripts/atlas-privacy-policy.test.mjs && node scripts/validate-atlas-catalog.mjs && node scripts/generate-atlas-catalog.mjs && node scripts/validate-atlas-catalog.mjs && node scripts/validate-atlas-routes.mjs",
     "test:art-direction-parity": "node scripts/art-direction-parity-check.mjs",
     "test:execution-hub": "node scripts/execution-hub-contract-check.mjs",
-    "test:living-world": "node scripts/living-world-contract-check.mjs"
+    "test:living-world": "node scripts/living-world-contract-check.mjs",
+    "test:perception-ledger": "node --test tests/perception-ledger.test.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.45.0",
