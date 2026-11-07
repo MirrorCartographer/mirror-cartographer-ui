@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { enterSharedPresence, getSharedWorldClient, getSharedWorldSession, requestSharedWorldLink, sharedWorldConfigured } from '../services/sharedWorld.js';
+import { enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -11,6 +11,9 @@ export default function SharedWorldPanel() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [people, setPeople] = useState([]);
+  const [connections, setConnections] = useState([]);
+  const [targetId, setTargetId] = useState('');
+  const [connectionBusy, setConnectionBusy] = useState(false);
   const [status, setStatus] = useState('idle');
   const stopRef = useRef(null);
   const configured = sharedWorldConfigured();
@@ -29,6 +32,47 @@ export default function SharedWorldPanel() {
   }, [open, configured]);
 
   useEffect(() => () => { stopRef.current?.(); }, []);
+  useEffect(() => {
+    if (!open || !session) return undefined;
+    let active = true;
+    listWorldConnections().then((rows) => { if (active) setConnections(rows); })
+      .catch((error) => { if (active) setMessage(error.message || 'Could not load connection requests.'); });
+    return () => { active = false; };
+  }, [open, session?.user?.id]);
+
+  const refreshConnections = async () => {
+    const rows = await listWorldConnections();
+    setConnections(rows);
+    return rows;
+  };
+
+  const sendConnectionRequest = async () => {
+    setConnectionBusy(true); setMessage('');
+    try {
+      await requestWorldConnection(targetId);
+      setTargetId('');
+      await refreshConnections();
+      setMessage('Request sent. The other person decides whether to open the door.');
+    } catch (error) { setMessage(error.message || 'Could not send that connection request.'); }
+    finally { setConnectionBusy(false); }
+  };
+
+  const changeConnection = async (id, nextStatus) => {
+    setConnectionBusy(true); setMessage('');
+    try {
+      await transitionWorldConnection(id, nextStatus);
+      await refreshConnections();
+      setMessage(nextStatus === 'accepted' ? 'Connection accepted.' : nextStatus === 'declined' ? 'Request declined.' : 'Connection closed.');
+    } catch (error) { setMessage(error.message || 'Could not update that connection.'); }
+    finally { setConnectionBusy(false); }
+  };
+
+  const copyConnectionCode = async () => {
+    try {
+      await navigator.clipboard.writeText(session.user.id);
+      setMessage('Your connection code was copied.');
+    } catch { setMessage('Select the connection code above and copy it manually.'); }
+  };
 
   const signIn = async () => {
     setBusy(true); setMessage('');
@@ -89,6 +133,21 @@ export default function SharedWorldPanel() {
         <button className="shared-action" onClick={signIn} disabled={busy || !email.trim()}>{busy ? 'SENDING…' : 'SEND ME A KEY'}</button>
       </> : <>
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
+        <div className="shared-identity"><small>YOUR CONNECTION CODE</small><code>{session.user.id}</code><button type="button" onClick={copyConnectionCode}>COPY CODE</button></div>
+        <div className="shared-connections">
+          <b>FIND YOUR PEOPLE</b>
+          <label>Paste another visitor's connection code<input value={targetId} onChange={(event) => setTargetId(event.target.value)} placeholder="Account UUID" autoCapitalize="off" autoCorrect="off" /></label>
+          <button className="shared-action" onClick={sendConnectionRequest} disabled={connectionBusy || !targetId.trim()}>SEND CONNECTION REQUEST</button>
+          {connections.filter((item) => item.recipient_id === session.user.id && item.status === 'pending').length > 0 && <section><b>WAITING AT YOUR DOOR</b>
+            {connections.filter((item) => item.recipient_id === session.user.id && item.status === 'pending').map((item) => <p key={item.id}><code>{item.requester_id.slice(0, 8)}…</code><span><button onClick={() => changeConnection(item.id, 'accepted')} disabled={connectionBusy}>ACCEPT</button><button onClick={() => changeConnection(item.id, 'declined')} disabled={connectionBusy}>DECLINE</button></span></p>)}
+          </section>}
+          {connections.filter((item) => item.requester_id === session.user.id && item.status === 'pending').length > 0 && <section><b>OUTGOING REQUESTS</b>
+            {connections.filter((item) => item.requester_id === session.user.id && item.status === 'pending').map((item) => <p key={item.id}><code>{item.recipient_id.slice(0, 8)}…</code><button onClick={() => changeConnection(item.id, 'revoked')} disabled={connectionBusy}>CANCEL</button></p>)}
+          </section>}
+          {connections.filter((item) => item.status === 'accepted').length > 0 && <section><b>ACCEPTED CONNECTIONS</b>
+            {connections.filter((item) => item.status === 'accepted').map((item) => { const otherId = item.requester_id === session.user.id ? item.recipient_id : item.requester_id; return <p key={item.id}><code>{otherId.slice(0, 8)}…</code><button onClick={() => changeConnection(item.id, 'revoked')} disabled={connectionBusy}>DISCONNECT</button></p>; })}
+          </section>}
+        </div>
         <label>Your name in this room<input value={displayName} maxLength={40} disabled={status === 'connected'} onChange={(event) => setDisplayName(event.target.value)} /></label>
         <label>Who can see you<select value={visibility} disabled={status === 'connected'} onChange={(event) => setVisibility(event.target.value)}>
           <option value="private">Only me</option><option value="connections">Accepted connections</option><option value="public">Everyone in the room</option>
