@@ -93,11 +93,9 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
     pointerEvent.currentTarget.style.setProperty('--gaze-y', `${clamp((y - 0.5) * 5, -2.5, 2.5)}px`);
-    const nearTazar = x > 0.34 && x < 0.66 && y > 0.42;
-    const nearJello = x > 0.66 && y > 0.5;
-    onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
+    
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence} signal-${responseCue} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} signal-${responseCue} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => publishPerceptionObservation({ kind: 'pointer-leave', source: 'pointer', value: true, ttlMs: 5000 })}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -106,8 +104,8 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     <div className="platform"><div className="rail rail-one"/><div className="rail rail-two"/><div className="platform-crack"/></div>
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
-    <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Tazar mood={event.mood} onClick={onTalk} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'tazar', ttlMs: 5000 }); onPresence('tazar-near'); }} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'jello', ttlMs: 5000 }); onPresence('jello-near'); }} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
+    <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>LIVE SIGNALS {String(perceptionCount).padStart(2, '0')}</span></div>
+    <Tazar mood={event.mood} onClick={onTalk} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'tazar', ttlMs: 5000 }); }} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'jello', ttlMs: 5000 }); }} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -119,6 +117,7 @@ export default function LivingWorld() {
   const returningVisitorRef = useRef(memory.visits > 0);
   const [eventIndex, setEventIndex] = useState(0);
   const [presence, setPresence] = useState('arrived');
+  const [perceptionCount, setPerceptionCount] = useState(0);
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
   const autoNoticeRef = useRef({ tazar:false, jello:false });
@@ -133,6 +132,27 @@ export default function LivingWorld() {
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const micRequestRef = useRef(0);
   const accountMemoryReadyRef = useRef(false);
+  useEffect(() => subscribePerceptionObservations((observation) => {
+    setPerceptionCount((count) => count + 1);
+    if (observation.kind === 'pointer-position' && observation.value) {
+      const { x, y } = observation.value;
+      updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby');
+    } else if (observation.kind === 'pointer-leave') {
+      updatePresence('away');
+    } else if (observation.kind === 'pointer-stillness') {
+      window.clearTimeout(presenceTimerRef.current);
+      setPresence('still');
+    } else if (observation.kind === 'character-focus') {
+      updatePresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
+    } else if (observation.kind === 'page-visibility' || observation.kind === 'window-focus') {
+      updatePresence(observation.value ? 'arrived' : 'away');
+    } else if (observation.kind === 'audio-envelope' && typeof observation.value === 'number') {
+      setMicLevel(observation.value);
+    } else if (observation.kind === 'microphone-state') {
+      setMicState(observation.value);
+      if (observation.value === 'off') setMicLevel(0);
+    }
+  }), []);
   const event = EVENTS[eventIndex];
   const visitorPhase = visitorSeed(accountUserId || memory.visitorId) % 100;
   const persistMemory = (next) => {
@@ -247,16 +267,13 @@ export default function LivingWorld() {
       if (document.visibilityState === 'hidden') {
         window.clearTimeout(presenceTimerRef.current);
         publishPerceptionObservation({ kind: 'page-visibility', source: 'document.visibilityState', value: false, ttlMs: 10000 });
-        setPresence('away');
       } else {
         publishPerceptionObservation({ kind: 'page-visibility', source: 'document.visibilityState', value: true, ttlMs: 10000 });
-        setPresence('arrived');
       }
     };
-    const onBlur = () => { publishPerceptionObservation({ kind: 'window-focus', source: 'window.blur', value: false, ttlMs: 10000 }); setPresence('away'); };
+    const onBlur = () => publishPerceptionObservation({ kind: 'window-focus', source: 'window.blur', value: false, ttlMs: 10000 });
     const onFocus = () => {
       publishPerceptionObservation({ kind: 'window-focus', source: 'window.focus', value: true, ttlMs: 10000 });
-      if (document.visibilityState === 'visible') setPresence('arrived');
     };
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('blur', onBlur);
@@ -283,7 +300,7 @@ export default function LivingWorld() {
     window.clearTimeout(presenceTimerRef.current);
     setPresence(nextPresence);
     if (['nearby', 'tazar-near', 'jello-near'].includes(nextPresence)) {
-      presenceTimerRef.current = window.setTimeout(() => setPresence('still'), 2600);
+      presenceTimerRef.current = window.setTimeout(() => publishPerceptionObservation({ kind: 'pointer-stillness', source: 'pointer-idle-timer', value: true, ttlMs: 3000 }), 2600);
     }
   };
   const remember = (choice, reply, trust = 1) => {
@@ -374,7 +391,6 @@ export default function LivingWorld() {
         if (framesSincePublish >= 6 || Math.abs(smoothedLevel - lastPublishedLevel) > 0.025) {
           lastPublishedLevel = smoothedLevel;
           framesSincePublish = 0;
-          setMicLevel(smoothedLevel);
           publishPerceptionObservation({ kind: 'audio-envelope', source: 'microphone-rms', permission: 'explicit-grant', value: smoothedLevel, confidence: 1, ttlMs: 1200 });
         }
         micRef.current.frame = window.requestAnimationFrame(sample);
