@@ -37,6 +37,8 @@ jobs:
         run: npm run test:resident-response
       - name: Verify secure resident dialogue and ephemeral conversation context
         run: npm run test:resident-dialogue
+      - name: Verify agency-preserving memory ledger
+        run: npm run test:agency-memory-ledger
       - uses: denoland/setup-deno@v2
       - name: Type-check the Supabase resident Edge Function
         run: deno check supabase/functions/resident-dialogue/index.ts
