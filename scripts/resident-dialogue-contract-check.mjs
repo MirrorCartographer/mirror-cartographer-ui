@@ -12,7 +12,8 @@ assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation
 assert.ok(world.includes('worldConversationHistory.slice(-8)'), 'browser conversation history must be bounded');
 assert.ok(world.includes('setWorldConversationHistory([])'), 'conversation history must clear when the authenticated account changes');
 assert.ok(world.includes('setResponseIntensity(response.intensity)'), 'the scene response policy must pass bounded intensity to the agent');
-assert.ok(service.includes('perception: { cue, intensity, ambientCue, ambientIntensity }'), 'the browser bridge must send normalized speech and ambient cues separately');
+assert.ok(service.includes('ambientCue: isAmbientContextUseEnabled() ? ambientCue : \'quiet\''), 'ambient scene cues must remain local unless provider sharing is enabled');
+assert.ok(service.includes('ambientIntensity: isAmbientContextUseEnabled() ? ambientIntensity : 0'), 'ambient intensity must be omitted from provider context by default');
 assert.ok(service.includes('history.slice(-8)'), 'the browser bridge must bound conversation history');
 assert.ok(service.includes("['user', 'assistant'].includes(item.role)"), 'the browser bridge must reject system or unknown history roles');
 assert.ok(service.includes('content.slice(0, 600)'), 'each prior turn must have a strict character limit');
@@ -33,6 +34,7 @@ assert.ok(edge.includes("item.content!.trim().slice(0, 600)"), 'the inference fu
 assert.ok(edge.includes('...history,'), 'the model must receive bounded in-session conversation context');
 assert.ok(edge.includes('memory_ledger') && edge.includes("eq('memory_class', 'user-approved')"), 'the provider must read only approved memory ledger entries');
 assert.ok(edge.includes("eq('sensitivity_class', 'low')") && edge.includes(".contains('allowed_uses', ['personalization'])"), 'the provider must honor sensitivity and allowed-use metadata');
+assert.ok(service.includes('isAmbientContextUseEnabled'), 'ambient context sharing must have a separate preference');
 assert.ok(edge.includes('transcriptStored: false'), 'the inference function must explicitly report no transcript persistence');
 assert.ok(!/\.from\(['"]continuity_records['"]\)\s*\.insert|\.upsert/i.test(edge), 'the dialogue function must not persist conversation turns');
 assert.ok(boundary.includes('exclusive-bond') && boundary.includes('personhood') && boundary.includes('diagnostic-claim'), 'the co-presence boundary must cover anthropomorphism, dependency and diagnostic claims');
