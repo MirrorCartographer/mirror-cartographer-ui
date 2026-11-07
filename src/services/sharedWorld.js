@@ -215,14 +215,23 @@ export async function savePrivateContinuity(memory = {}) {
 }
 
 
-export async function askResident(resident, message) {
-  const { supabase, user } = await requireSharedWorldUser();
+export async function askResident(resident, message, perception = {}) {
+  const { supabase } = await requireSharedWorldUser();
   const character = String(resident || '').toLowerCase();
   if (!['tazar', 'jello'].includes(character)) throw new Error('Unknown resident.');
   const text = String(message || '').trim();
   if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
+  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return']);
+  const requestedCue = String(perception.cue || 'quiet');
+  const cue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
+  const intensity = Number.isFinite(perception.intensity) ? Math.max(0, Math.min(1, perception.intensity)) : 0;
   const { data, error } = await supabase.functions.invoke('resident-dialogue', {
-    body: { resident: character, message: text, includeMemory: isPrivateMemorySyncEnabled() }
+    body: {
+      resident: character,
+      message: text,
+      includeMemory: isPrivateMemorySyncEnabled(),
+      perception: { cue, intensity }
+    }
   });
   if (error) throw error;
   if (!data?.reply || typeof data.reply !== 'string') throw new Error('The resident could not find a reply.');
