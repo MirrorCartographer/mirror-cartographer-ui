@@ -89,3 +89,14 @@ assert.ok(pages.includes('actions/upload-pages-artifact@v3'), 'the build must up
 assert.ok(pages.includes('actions/deploy-pages@v4'), 'the release must deploy through GitHub Pages');
 
 console.log('PASS: visitor memory, multimodal consent-based perception, character response, privacy, accessibility, and GitHub Pages release contract.');
+
+const ledger = fs.readFileSync('src/engine/perceptionLedger.js', 'utf8');
+const migration = fs.readFileSync('db/002_shared_world_presence.sql', 'utf8');
+assert.ok(world.includes("publishPerceptionObservation({ kind: 'pointer-position'"), 'pointer observations must enter the provenance ledger');
+assert.ok(world.includes("kind: 'audio-envelope'"), 'consented microphone envelopes must enter the provenance ledger');
+assert.ok(ledger.includes("scope: 'local-only'"), 'perception observations must remain local-only');
+assert.ok(ledger.includes("retention: 'ephemeral'"), 'perception observations must be explicitly ephemeral');
+assert.ok(ledger.includes('MAX_OBSERVATIONS = 64'), 'the local observation buffer must be bounded');
+assert.ok(migration.includes("visibility in ('private','connections','public')"), 'shared presence must have explicit visibility scopes');
+assert.ok(migration.includes("c.status = 'accepted'"), 'connections-only presence must require an accepted relationship');
+assert.ok(migration.includes('expires_at > now()'), 'shared presence must expire');
