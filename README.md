@@ -5,11 +5,11 @@
 > A question is a door.  
 > What is missing may matter most.
 
-**Canonical live experiences — preserve these URLs:** [Mirror Cartographer UI](https://mirror-cartographer-ui-3orp.vercel.app) · [AV Prototype V4](https://mirrorcartographeravprototypev4.vercel.app/#)
+**Canonical public experience — GitHub Pages:** [Enter the House of Mouths](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [The Living Country](https://mirrorcartographer.github.io/mirror-cartographer-ui/?view=workshop&lane=country)
 
 **Source / live-design workbench:** [Open the interactive workbench](https://mirrorcartographer.github.io/mirror-cartographer-ui/workbench.html) · 96 HTML artifacts with editable source and a live preview.  
 
-**GitHub Pages entry points:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
+**More rooms on the same public site:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
 
 ## What is this place?
 
@@ -61,7 +61,7 @@ The research and systems work lives in the [other repository](https://github.com
 - [Tests](tests/) — checks against what the software actually does.
 - [Source autobiography](source-autobiography.html) — a crafted narrative, not an independent factual record.
 
-## Run it
+## Hosting and release authority\n\nGitHub Pages is the sole supported public publishing path for this repository. The source, build checks, route validation, and release identity remain in GitHub. No external hosting provider is required. Historical provider-specific evidence is retained only where needed to explain past engineering decisions; it is not an active deployment path. See [hosting policy](HOSTING.md).\n\n## Run it
 
 ```bash
 npm ci
