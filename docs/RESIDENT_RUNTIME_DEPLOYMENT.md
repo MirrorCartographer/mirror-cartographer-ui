@@ -8,8 +8,9 @@ Run these files in order in the Supabase SQL Editor:
 
 1. `db/001_continuity_records.sql`
 2. `db/002_shared_world_presence.sql`
+3. `db/003_resident_dialogue_limits.sql`
 
-The first creates private continuity storage and its owner-only policies. The second creates connection requests and expiring room presence with RLS. Neither migration stores perception events or conversation transcripts.
+The first creates private continuity storage and its owner-only policies. The second creates connection requests and expiring room presence with RLS. The third adds a per-user quota of 12 resident requests per 60 seconds; quota rows are not directly accessible to browser roles. None of these migrations stores perception events or conversation transcripts.
 
 ## 2. Configure GitHub Pages
 
@@ -46,7 +47,7 @@ supabase secrets set \
   ALLOWED_ORIGINS="https://mirrorcartographer.github.io,http://localhost:5173"
 ```
 
-The provider must accept an OpenAI-compatible chat-completions request and return `choices[0].message.content`. The function limits message size, history length, output size, and scene cues. It verifies the Supabase user before calling the provider.
+The provider must accept an OpenAI-compatible chat-completions request and return `choices[0].message.content`. The function limits message size, history length, output size, scene cues, and request rate (12 messages per authenticated user per minute). It verifies the Supabase user before calling the provider.
 
 ## 5. Configure authentication redirects
 
@@ -72,6 +73,7 @@ Raw microphone samples, pointer coordinates, account IDs, and inferred psycholog
 - `403`: request origin is not in `ALLOWED_ORIGINS`.
 - `503`: Supabase or model provider configuration is incomplete.
 - `502`: provider request or response failed.
+- `429`: visitor exceeded the resident message quota.
 - `504`: provider request timed out.
 
 A committed function is not a deployed function. A successful local test is not proof of a live provider response. Verify the deployed function and Pages build separately.
