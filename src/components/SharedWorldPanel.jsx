@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { deletePrivateContinuity, deletePrivateMemoryEntry, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, loadPrivateMemoryLedger, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, updatePrivateMemoryNote, isPrivateMemorySyncEnabled, isResidentMemoryUseEnabled, setPrivateMemorySyncEnabled, setResidentMemoryUseEnabled } from '../services/sharedWorld.js';
+import { deletePrivateContinuity, deletePrivateMemoryEntry, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, loadPrivateMemoryLedger, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, updatePrivateMemoryNote, isPrivateMemorySyncEnabled, isResidentMemoryUseEnabled, isAmbientContextUseEnabled, setPrivateMemorySyncEnabled, setResidentMemoryUseEnabled, setAmbientContextUseEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -16,6 +16,7 @@ export default function SharedWorldPanel() {
   const [connectionBusy, setConnectionBusy] = useState(false);
   const [memorySync, setMemorySync] = useState(isPrivateMemorySyncEnabled);
   const [residentMemoryUse, setResidentMemoryUse] = useState(isResidentMemoryUseEnabled);
+  const [ambientContextUse, setAmbientContextUse] = useState(isAmbientContextUseEnabled);
   const [privateMemory, setPrivateMemory] = useState(null);
   const [memoryEntries, setMemoryEntries] = useState([]);
   const [memoryNotes, setMemoryNotes] = useState({});
@@ -191,6 +192,11 @@ export default function SharedWorldPanel() {
           } catch (error) { setMessage(error.message || 'Could not update resident memory access.'); }
         }} /> <span>Let Tazar and Jello consult my private memory when replying</span></label>}
         {memorySync && <p className="shared-sync-note">This is separate from saving memory. Off by default. When enabled, only your private visit and choice summary may be included with a message sent to the model provider.</p>}
+        <label className="shared-memory-sync"><input type="checkbox" checked={ambientContextUse} onChange={(event) => {
+          try { setAmbientContextUseEnabled(event.target.checked); setAmbientContextUse(event.target.checked); setMessage(event.target.checked ? 'A bounded room-sound cue may accompany your next resident message.' : 'Room-sound perception remains local to the scene.');
+          } catch (error) { setMessage(error.message || 'Could not update the ambient-context preference.'); }
+        }} /> <span>Let residents use the room-sound cue when replying</span></label>
+        <p className="shared-sync-note">The microphone analyser stays local by default. Only a short sound-level cue—not audio or speech—is sent to the model provider when you enable this.</p>
         {memorySync && <section className="shared-memory-ledger">
           <b>PRIVATE MEMORY LEDGER · PRIVATE DURABLE / VISITOR-ENABLED</b>
           <p>{privateMemory ? `${privateMemory.visits || 0} visits · ${privateMemory.trust || 0} interaction marks · last event: ${privateMemory.lastEvent || 'none'}` : 'Loading private memory…'}</p>
