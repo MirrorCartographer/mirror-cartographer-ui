@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { deriveResidentResponse } from '../src/engine/residentResponsePolicy.js';
 
 const event = (kind, value) => ({ kind, value, scope: 'local-only', retention: 'ephemeral' });
-assert.equal(deriveResidentResponse(event('pointer-position', { x: 0.5, y: 0.8 })).cue, 'drift', 'pointer position alone is not an approach');
+assert.equal(deriveResidentResponse(event('pointer-position', { x: 0.5, y: 0.8 })), null, 'pointer position alone is not an approach or resident cue');
 assert.equal(deriveResidentResponse(event('visitor-move', { x: 0.5, y: 0.8 })).cue, 'walking');
 assert.equal(deriveResidentResponse(event('visitor-approach', 'tazar')).cue, 'approach-tazar');
 assert.equal(deriveResidentResponse(event('visitor-approach', 'jello')).cue, 'approach-jello');
