@@ -122,7 +122,7 @@ export default function LivingWorld() {
   const autoNoticeRef = useRef({ tazar:false, jello:false });
   const [dialogue, setDialogue] = useState('');
   const [visitorMessage, setVisitorMessage] = useState('');
-  const [residentHistory, setResidentHistory] = useState({ tazar:[], jello:[] });
+  const [worldConversationHistory, setWorldConversationHistory] = useState([]);
   const residentSessionUserRef = useRef(null);
   const [agentBusy, setAgentBusy] = useState(false);
   const [speaker, setSpeaker] = useState('TAZAR');
@@ -428,14 +428,15 @@ export default function LivingWorld() {
     publishPerceptionObservation({ kind: 'submitted-language', source: 'resident-text-input', permission: 'explicit-submit', value: speaker.toLowerCase(), ttlMs: 5000 });
     setAgentBusy(true);
     const residentKey = speaker.toLowerCase();
-    const history = residentHistory[residentKey] || [];
+    const history = worldConversationHistory.slice(-8);
     try {
       const reply = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history });
       setDialogue(reply);
-      setResidentHistory((current) => ({
+      setWorldConversationHistory((current) => [
         ...current,
-        [residentKey]: [...(current[residentKey] || []), { role: 'user', content: message }, { role: 'assistant', content: reply }].slice(-8)
-      }));
+        { role: 'user', content: message },
+        { role: 'assistant', content: `[${residentKey === 'tazar' ? 'Tazar' : 'Jello'}]: ${reply}` }
+      ].slice(-8));
       setVisitorMessage('');
     } catch (error) {
       setDialogue(error.message || 'The line went quiet. Try again later.');
