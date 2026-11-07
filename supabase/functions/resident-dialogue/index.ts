@@ -36,6 +36,8 @@ Deno.serve(async (request: Request) => {
   if (request.method !== 'POST') return json({ error: 'POST required.' }, 405, allowed[0] || '*');
   if (requestOrigin && !allowed.includes(requestOrigin)) return json({ error: 'Origin not allowed.' }, 403, allowed[0] || '*');
 
+  const contentLength = Number(request.headers.get('content-length') || 0);
+  if (contentLength > 10000) return json({ error: 'Request is too large.' }, 413, requestOrigin || allowed[0] || '*');
   const authorization = request.headers.get('authorization') || '';
   if (!authorization.startsWith('Bearer ')) return json({ error: 'Sign in first.' }, 401, requestOrigin || allowed[0] || '*');
 
@@ -54,7 +56,7 @@ Deno.serve(async (request: Request) => {
   const message = String(payload.message || '').trim();
   if (!resident) return json({ error: 'Unknown resident.' }, 400, requestOrigin || allowed[0] || '*');
   if (!message || message.length > 1200) return json({ error: 'Message must contain 1–1,200 characters.' }, 400, requestOrigin || allowed[0] || '*');
-  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return']);
+  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
   const requestedCue = String(payload.perception?.cue || 'quiet');
   const perceptionCue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
   const perceptionIntensity = Number.isFinite(payload.perception?.intensity)
