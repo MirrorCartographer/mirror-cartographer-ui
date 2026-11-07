@@ -155,7 +155,7 @@ export default function OperatingAtlas() {
     if (active==='offline') return <section className="lane"><h2>Standalone fallback</h2><p>This atlas is local-first and exportable. A production installable PWA still requires a service worker and manifest deployment.</p><button onClick={exportData}>Export offline bundle</button></section>;
     if (active==='public') return <section className="lane"><h2>Public-safe cleanup</h2>{['Review raw conversations','Remove identifiers','Redact medical records','Redact veterinary records','Check financial details','Verify claims and sources','Mark demo vs production'].map(x=><label key={x}><input type="checkbox"/>{x}</label>)}</section>;
     if (active==='arc') return <GenericLane title="ARC solver expansion lab" description="Benchmark claims require measured improvement." items={state.arc} onAdd={(v)=>add('arc',v)} onRemove={(id)=>remove('arc',id)} fields={[{name:'title',label:'Experiment'},{name:'primitive',label:'Primitive or capability'},{name:'score',label:'Benchmark score'},{name:'result',label:'Failure summary',type:'textarea'}]} render={(x)=><><strong>{x.title} · {x.score}</strong><p>{x.primitive}</p><small>{x.result}</small></>}/>;
-    return <Dashboard state={state} setActive={setActive}/>;
+    return <Dashboard state={state} setActive={setActive} backendStatus={backendStatus}/>;
   })();
 
   return <div className={`operating-atlas ${state.accessibility.textMode?'text-mode':''}`}>
