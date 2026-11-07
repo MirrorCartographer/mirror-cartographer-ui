@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './LivingWorld.css';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
@@ -79,7 +79,8 @@ export default function LivingWorld() {
   const [eventIndex, setEventIndex] = useState(() => Math.floor(Date.now() / 60000) % EVENTS.length);
   const [dialogue, setDialogue] = useState('');
   const [chapter, setChapter] = useState(0);
-  const [ambient, setAmbient] = useState(true);
+  const [ambient, setAmbient] = useState(false);
+  const audioRef = useRef(null);
   const event = EVENTS[eventIndex];
   const line = useMemo(() => {
     if (dialogue) return dialogue;
@@ -92,7 +93,7 @@ export default function LivingWorld() {
     setMemory(next);
     try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
     const timer = window.setInterval(() => setEventIndex((value) => (value + 1) % EVENTS.length), 42000);
-    return () => window.clearInterval(timer);
+    return () => { window.clearInterval(timer); if (audioRef.current) audioRef.current.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -101,6 +102,28 @@ export default function LivingWorld() {
     setMemory(next);
     setDialogue(reply);
     try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+  };
+  const toggleSound = async () => {
+    if (ambient && audioRef.current) {
+      const context = audioRef.current; audioRef.current = null; setAmbient(false);
+      try { await context.close(); } catch {}
+      return;
+    }
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    try {
+      const context = new AudioContextClass(); await context.resume();
+      const master = context.createGain(); const filter = context.createBiquadFilter();
+      filter.type = 'lowpass'; filter.frequency.value = 420; master.gain.value = 0.0001;
+      filter.connect(master).connect(context.destination);
+      [55, 82.41, 110].forEach((frequency, index) => {
+        const oscillator = context.createOscillator(); const gain = context.createGain();
+        oscillator.type = index === 1 ? 'triangle' : 'sine'; oscillator.frequency.value = frequency;
+        oscillator.detune.value = index === 2 ? 7 : -4; gain.gain.value = index === 0 ? 0.42 : 0.17;
+        oscillator.connect(gain).connect(filter); oscillator.start();
+      });
+      master.gain.setTargetAtTime(0.055, context.currentTime, 1.4); audioRef.current = context; setAmbient(true);
+    } catch { setAmbient(false); }
   };
   const talk = () => {
     setDialogue('');
@@ -114,11 +137,11 @@ export default function LivingWorld() {
   return <main className="living-world">
     <WorldScene event={event} onTalk={talk} onDoor={openDoor} visits={memory.visits}/>
     <div className="world-vignette"/>
-    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={() => setAmbient((value) => !value)}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button></nav></header>
+    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
     <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">MORROW <i>does not work here, technically</i></p><p className="dialogue-line">“{line}”</p>
       {dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div> : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-morrow', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
-    <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE WORLD DOES NOT NEED YOU TO CLICK TO KEEP EXISTING.</span></footer>
+    <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
 }
