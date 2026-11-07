@@ -458,19 +458,19 @@ textarea { min-height: 150px; resize: vertical; grid-column: 1 / -1; }
 body{background:#070b0a}
 .gate-screen{background:radial-gradient(ellipse at 50% 48%,#203d35 0,transparent 32rem),radial-gradient(ellipse at 80% 10%,#35232c 0,transparent 30rem),#070b0a}
 .gate-card{border-radius:3px;border-color:var(--mc-line);background:linear-gradient(135deg,rgba(13,31,27,.9),rgba(8,12,15,.84));box-shadow:0 35px 110px #000b,inset 0 0 90px #8eaa8810}
-.gate-card:before{width:min(54vw,430px);height:min(68vw,520px);background:url('/mirror-cartographer-ui/art/main-glasshouse.svg') center/cover no-repeat;filter:none;opacity:.64;mix-blend-mode:screen}
+.gate-card:before{width:min(54vw,430px);height:min(68vw,520px);background:url('./art/main-glasshouse.svg') center/cover no-repeat;filter:none;opacity:.64;mix-blend-mode:screen}
 .enter-button{border-color:#d7b77c99;background:radial-gradient(circle at 50% 45%,#d7b77c55,#183c3555 42%,#07100e 72%);box-shadow:0 0 55px #8eaa8840,inset 0 0 45px #d7b77c22}
 .portal-shell{background:radial-gradient(ellipse at 60% 10%,#1d3a32 0,transparent 35rem),radial-gradient(ellipse at 12% 70%,#38232d 0,transparent 34rem),#070b0a}
 .topline{border-radius:3px;border-color:var(--mc-line);background:#07100ee8}
 .canvas-stage,.control-oracle,.map-layer,.artifact-layer,.drop-zone,.aftermath-layer,.engine-layer{border-radius:3px;border-color:var(--mc-line);background:linear-gradient(145deg,#10231dcc,#09110ff0);box-shadow:0 25px 80px #0008,inset 0 0 60px #b7c9a00a}
-.canvas-stage:before{content:"";position:absolute;inset:0;background:url('/mirror-cartographer-ui/art/main-glasshouse.svg') center/cover;opacity:.43;mix-blend-mode:screen;pointer-events:none;z-index:0}
+.canvas-stage:before{content:"";position:absolute;inset:0;background:url('./art/main-glasshouse.svg') center/cover;opacity:.43;mix-blend-mode:screen;pointer-events:none;z-index:0}
 .canvas-stage:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,#050a08b8);pointer-events:none;z-index:0}
 .portal-canvas{z-index:1;mix-blend-mode:screen}.floating-title{z-index:2;border-radius:2px;border-color:#d7b77c55;background:#07100ed9}
 .control-oracle blockquote{border-left-color:var(--mc-brass);background:#d7b77c0b;border-radius:2px}
 .world-tabs button,.ghost-button,.secondary-action,.primary-action,.save-action{border-radius:2px}
 .primary-action{background:linear-gradient(120deg,#8eaa8844,#d7b77c22);border-color:#d7b77c88}
 .capsule-node,.artifact-card,.engine-grid article{border-radius:2px;background-color:#0d1915;border-color:var(--mc-line)}
-.capsule-node:after,.artifact-card:after{content:"";position:absolute;inset:0;background-image:url('/mirror-cartographer-ui/art/main-glasshouse.svg');background-size:cover;opacity:.14;mix-blend-mode:screen;pointer-events:none}
+.capsule-node:after,.artifact-card:after{content:"";position:absolute;inset:0;background-image:url('./art/main-glasshouse.svg');background-size:cover;opacity:.14;mix-blend-mode:screen;pointer-events:none}
 
 
 /* Visible only when browser storage refuses to persist room progress. */
