@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const client = fs.readFileSync('src/services/sharedWorld.js', 'utf8');
+const panel = fs.readFileSync('src/components/SharedWorldPanel.jsx', 'utf8');
+const world = fs.readFileSync('src/components/LivingWorld.jsx', 'utf8');
+const migration = fs.readFileSync('db/002_shared_world_presence.sql', 'utf8');
+const workflow = fs.readFileSync('.github/workflows/publish-github-pages.yml', 'utf8');
+
+assert.ok(world.includes("import SharedWorldPanel from './SharedWorldPanel.jsx'"), 'The Between must expose the shared-world entrance');
+assert.ok(world.includes('<SharedWorldPanel />'), 'The shared-world panel must be mounted in the world');
+assert.ok(client.includes('createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY'), 'the browser client must use only public Supabase credentials');
+assert.ok(!client.includes('SERVICE_ROLE'), 'the browser client must never contain a service-role credential');
+assert.ok(client.includes('visibility,') && client.includes('expires_at:'), 'presence must carry an explicit scope and expiry');
+assert.ok(client.includes('world-presence:'), 'the shared world must subscribe to realtime room changes');
+assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a heartbeat');
+assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
+assert.ok(panel.includes('value="private">Only me'), 'private presence must be the default');
+assert.ok(panel.includes('Accepted connections'), 'connection-scoped sharing must be offered');
+assert.ok(panel.includes('Everyone in the room'), 'public sharing must be an explicit choice');
+assert.ok(migration.includes('enable row level security'), 'shared-world tables must enforce RLS');
+assert.ok(migration.includes("visibility = 'public'"), 'public presence must be explicitly visible');
+assert.ok(migration.includes("c.status = 'accepted'"), 'connections-only presence must require an accepted relationship');
+assert.ok(workflow.includes('vars.VITE_SUPABASE_URL') && workflow.includes('vars.VITE_SUPABASE_ANON_KEY'), 'Pages must accept optional public Supabase build configuration');
+console.log('PASS: shared-world auth, explicit scopes, RLS, expiring presence, and realtime client contract.');
