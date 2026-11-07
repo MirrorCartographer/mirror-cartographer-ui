@@ -15,6 +15,17 @@ assert.ok(client.includes('visibility,') && client.includes('expires_at:'), 'pre
 assert.ok(client.includes('world-presence:'), 'the shared world must subscribe to realtime room changes');
 assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a heartbeat');
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
+assert.ok(client.includes('export async function listWorldConnections'), 'authenticated visitors must be able to list their connection requests');
+assert.ok(client.includes('export async function requestWorldConnection'), 'visitors must be able to send a connection request by account code');
+assert.ok(client.includes('export async function transitionWorldConnection'), 'visitors must be able to accept, decline, cancel, and revoke connections');
+assert.ok(client.includes("status: 'pending'"), 'connection requests must begin pending');
+assert.ok(panel.includes('YOUR CONNECTION CODE'), 'visitors must be able to share their own account code');
+assert.ok(panel.includes('SEND CONNECTION REQUEST'), 'the panel must expose a connection request action');
+assert.ok(panel.includes('ACCEPT') && panel.includes('DECLINE'), 'incoming connection requests must require a recipient decision');
+assert.ok(panel.includes('DISCONNECT'), 'either participant must have a disconnect action');
+assert.ok(migration.includes('world_connections_participant_revoke'), 'either participant must be able to revoke an accepted connection');
+assert.ok(migration.includes('world_connections_requester_cancel'), 'requesters must be able to cancel pending requests');
+
 assert.ok(panel.includes('value="private">Only me'), 'private presence must be the default');
 assert.ok(panel.includes('Accepted connections'), 'connection-scoped sharing must be offered');
 assert.ok(panel.includes('Everyone in the room'), 'public sharing must be an explicit choice');
