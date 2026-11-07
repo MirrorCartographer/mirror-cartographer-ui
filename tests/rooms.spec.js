@@ -219,12 +219,13 @@ test.describe('Playable Atlas rooms', () => {
       '/atlas/research-atlas/', '/atlas/rooms/observatory.html', '/atlas/rooms/worlds/the-living-country/',
       '/atlas/rooms/arcade/veteran-mission/', '/atlas/rooms/veterans/',
       '/atlas/rooms/veterans/hub.html', '/atlas/rooms/veterans/mission.html',
+      '/atlas/rooms/signal-loom/', '/atlas/rooms/after-the-uniform/',
       '/atlas/rooms/world/', '/atlas/rooms/composition/', '/atlas/rooms/unmapped/',
     ];
     const manifestResponse = await page.request.get('/atlas/rooms/room-identities.json');
     expect(manifestResponse.ok(), 'room identity manifest should load').toBeTruthy();
     const roomManifest = await manifestResponse.json();
-    expect(roomManifest.count).toBe(34);
+    expect(roomManifest.count).toBe(39);
     const manifestRoutes = roomManifest.rooms.map(room => new URL(room.path, 'http://localhost/atlas/rooms/').pathname);
     const allRoutes = [...new Set([...routes, ...manifestRoutes])];
     const failures = [];
@@ -271,7 +272,7 @@ test.describe('Playable Atlas rooms', () => {
 
   test('the room map offers four cognitive modes and working sensory controls', async ({ page }) => {
     await page.goto('/atlas/rooms/', { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.room')).toHaveCount(34);
+    await expect(page.locator('.room')).toHaveCount(39);
     for (const mode of ['visual','text','audio','minimal']) {
       const button = page.locator('button[data-mode="' + mode + '"]');
       await button.click();
@@ -295,7 +296,7 @@ test.describe('Playable Atlas rooms', () => {
     await expect(page.locator('.room')).toHaveCount(34);
   });
 
-  test('the wordless world is keyboard-operable, silent by default, and motion-adjustable', async ({ page }) => {
+  test('the shifting world is keyboard-operable, silent by default, and motion-adjustable', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     const surface = page.getByRole('button', { name: /Explore/ });
     await expect(surface).toBeVisible();
@@ -321,7 +322,7 @@ test.describe('Playable Atlas rooms', () => {
 
     await page.locator('.world-map-button').click();
     await expect(page.getByRole('dialog', { name: 'Room constellation' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'All rooms and instruments' })).toHaveAttribute('href', './atlas/rooms/');
+    await expect(page.getByRole('link', { name: /Browse all 39 rooms and instruments/ })).toHaveAttribute('href', './atlas/rooms/');
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog', { name: 'Room constellation' })).toHaveCount(0);
     await expect(page.locator('.world-map-button')).toBeFocused();
