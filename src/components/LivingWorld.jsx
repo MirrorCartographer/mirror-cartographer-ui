@@ -120,12 +120,13 @@ export default function LivingWorld() {
   const [micLevel, setMicLevel] = useState(0);
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const micRequestRef = useRef(0);
+  const accountMemoryReadyRef = useRef(false);
   const event = EVENTS[eventIndex];
   const visitorPhase = visitorSeed(memory.visitorId) % 100;
   const persistMemory = (next) => {
     setMemory(next);
     try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
-    savePrivateContinuity(next).catch(() => {});
+    if (accountMemoryReadyRef.current) savePrivateContinuity(next).catch(() => {});
   };
   const rememberJello = () => {
     const next = { ...memory, trust: clamp(memory.trust + 1, 0, 8), choices: [...memory.choices, 'asked-jello'].slice(-12) };
@@ -156,7 +157,9 @@ export default function LivingWorld() {
   useEffect(() => {
     let active = true;
     const hydrate = () => loadPrivateContinuity().then((remote) => {
-      if (!active || !remote) return;
+      if (!active) return;
+      accountMemoryReadyRef.current = true;
+      if (!remote) return;
       setMemory((current) => {
         const next = { ...current, visits: Math.max(current.visits, Number(remote.visits) || 0), trust: clamp(Number(remote.trust) || 0, 0, 8), choices: Array.isArray(remote.choices) ? remote.choices.slice(-12) : current.choices, lastEvent: typeof remote.lastEvent === 'string' ? remote.lastEvent : current.lastEvent };
         try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
