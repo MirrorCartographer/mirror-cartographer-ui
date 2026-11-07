@@ -30,9 +30,14 @@ for update using (auth.uid() = recipient_id and status = 'pending')
 with check (auth.uid() = recipient_id and status in ('accepted','declined'));
 
 drop policy if exists world_connections_requester_revoke on public.world_connections;
-create policy world_connections_requester_revoke on public.world_connections
-for update using (auth.uid() = requester_id and status = 'accepted')
+drop policy if exists world_connections_requester_cancel on public.world_connections;
+drop policy if exists world_connections_participant_revoke on public.world_connections;
+create policy world_connections_requester_cancel on public.world_connections
+for update using (auth.uid() = requester_id and status = 'pending')
 with check (auth.uid() = requester_id and status = 'revoked');
+create policy world_connections_participant_revoke on public.world_connections
+for update using ((auth.uid() = requester_id or auth.uid() = recipient_id) and status = 'accepted')
+with check ((auth.uid() = requester_id or auth.uid() = recipient_id) and status = 'revoked');
 
 create table if not exists public.world_presence (
   user_id uuid primary key references auth.users(id) on delete cascade,
@@ -94,7 +99,7 @@ begin
   end if;
 
   if not (
-    (old.status = 'pending' and new.status in ('pending', 'accepted', 'declined'))
+    (old.status = 'pending' and new.status in ('pending', 'accepted', 'declined', 'revoked'))
     or (old.status = 'accepted' and new.status in ('accepted', 'revoked'))
     or old.status = new.status
   ) then
