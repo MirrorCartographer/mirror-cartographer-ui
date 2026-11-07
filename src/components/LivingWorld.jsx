@@ -75,7 +75,7 @@ function Jello({ onClick, onFocus, speaking }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase, responseCue }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase, responseCue, perceptionCount }) {
   const lastObservationRef = useRef({ x: -1, y: -1, at: 0 });
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
@@ -456,7 +456,7 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue} perceptionCount={perceptionCount}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
