@@ -27,13 +27,15 @@ function safeValue(value) {
  */
 export function publishPerceptionObservation(input = {}) {
   if (!ALLOWED_KINDS.has(input.kind)) throw new TypeError('Unsupported perception observation.');
+  const value = safeValue(input.value);
+  if (value === null && input.value !== null && input.value !== undefined) throw new TypeError('Perception values must be bounded scalar data or normalized coordinates.');
   const now = Date.now();
   const observation = Object.freeze({
     id: `obs-${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     kind: input.kind,
     source: String(input.source || 'unknown').slice(0, 40),
     permission: String(input.permission || 'not-required').slice(0, 40),
-    value: safeValue(input.value),
+    value,
     confidence: Number.isFinite(input.confidence) ? Math.max(0, Math.min(1, input.confidence)) : 1,
     observedAt: new Date(now).toISOString(),
     expiresAt: new Date(now + Math.max(250, Math.min(30000, input.ttlMs || 5000))).toISOString(),
