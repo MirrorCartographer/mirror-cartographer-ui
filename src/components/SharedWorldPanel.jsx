@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
+import { deletePrivateContinuity, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -148,6 +148,14 @@ export default function SharedWorldPanel() {
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
         <label className="shared-memory-sync"><input type="checkbox" checked={memorySync} onChange={(event) => updateMemorySync(event.target.checked)} /> <span>Carry my private memory across devices</span></label>
         <p className="shared-sync-note">Only your visit count and choices. Never visible to other visitors. Off by default.</p>
+        {memorySync && <button className="shared-signout" onClick={async () => {
+          try {
+            await deletePrivateContinuity();
+            setPrivateMemorySyncEnabled(false);
+            setMemorySync(false);
+            setMessage('Saved account memory deleted. This browser can still remember locally.');
+          } catch (error) { setMessage(error.message || 'Could not delete saved account memory.'); }
+        }}>DELETE SAVED ACCOUNT MEMORY</button>}
         <div className="shared-identity"><small>YOUR CONNECTION CODE</small><code>{session.user.id}</code><button type="button" onClick={copyConnectionCode}>COPY CODE</button></div>
         <div className="shared-connections">
           <b>FIND YOUR PEOPLE</b>
