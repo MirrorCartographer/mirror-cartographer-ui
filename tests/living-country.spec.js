@@ -36,7 +36,7 @@ test.describe('The Living Country', () => {
     await expect(page.locator('.map-mark').filter({ hasText: 'A new signal' })).toBeVisible();
     await expect(page.locator('.context-slip')).toContainText('TIME / SEQUENCE');
     await page.getByLabel('Move fragment to context').selectOption('systems');
-    await expect(page.locator('.context-slip')).toContainText('Systems / environment');
+    await expect(page.locator('.context-slip')).toContainText('SYSTEMS / ENVIRONMENT');
     await page.reload();
     await expect(page.locator('.map-mark')).toContainText('A new signal');
     await page.getByLabel('Read through context').selectOption('all');
