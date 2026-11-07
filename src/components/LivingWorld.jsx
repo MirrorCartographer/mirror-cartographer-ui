@@ -60,7 +60,7 @@ function Tazar({ mood, onClick, noticed, speaking }) {
       <g className="tazar-lantern" transform="translate(187 228)"><path d="M0 0v20" stroke="#d9c39f" strokeWidth="2"/><path d="M-10 20h20l-3 24h-14Z" fill="#d5a96c" stroke="#f3d6a5"/><ellipse cx="0" cy="31" rx="8" ry="10" fill="#ffe7a9" opacity=".9" filter="url(#m-glow)"/></g>
     </svg>
     {noticed && <span className="tazar-notice">you again.</span>}
-    <span className="tazar-name">MORROW <i>· station keeper</i></span>
+    <span className="tazar-name">TAZAR <i>· station keeper</i></span>
   </button>;
 }
 
