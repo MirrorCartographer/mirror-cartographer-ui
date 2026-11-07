@@ -6,7 +6,8 @@ The Living World is a client-side experience served as a static GitHub Pages app
 
 | Input | Permission | What it can observe | What it cannot establish |
 |---|---|---|---|
-| Pointer movement | No extra permission | Position, approach, dwell, stillness | Identity, attention, emotion |
+| Pointer movement | No extra permission | Cursor position for visual gaze only | Body position, approach, dwell, identity, attention, emotion |
+| Tap/click on the ground or approach controls | Explicit scene interaction | A local visitor marker moves to the chosen point; arrival near Tazar/Jello triggers a character response | Real-world movement, identity, emotion, or intent |
 | Page visibility/focus | Browser event | Whether the page is visible/focused | Whether a person is present |
 | Keyboard focus and touch | Browser event | Which resident control is focused or touched | Identity, intention, or attention beyond that action |
 | Browser-local visitor key | Browser storage | Return to the same browser profile | Real-world identity or cross-device identity |
@@ -19,13 +20,13 @@ The Living World is a client-side experience served as a static GitHub Pages app
 
 The scene now routes bounded observations through `src/engine/perceptionLedger.js`. Each event carries a source, permission state, observation timestamp, expiry, confidence, `local-only` scope, and `ephemeral` retention label. The in-memory ring buffer is capped at 64 observations and expires entries from snapshots. It accepts only bounded scalar values or normalized pointer coordinates; it rejects arbitrary objects and raw media payloads. The ledger is not written to localStorage, Supabase, or a network endpoint. It is a local sensing/provenance substrate, not a remote inference engine.
 
-Current event types include pointer position/touch/leave/stillness, resident focus, page visibility, window focus, microphone state, a short-lived microphone RMS envelope, the fact that a resident message was explicitly submitted, and explicit dialogue-choice IDs. The ledger does not retain the submitted text itself; the final message is sent to the configured resident provider only when the visitor submits it.
+Current event types include cursor position, explicit visitor movement and resident approach, touch, stillness, resident focus, page visibility, window focus, microphone state, a short-lived microphone RMS envelope, the fact that a resident message was explicitly submitted, and explicit dialogue-choice IDs. Cursor position is used for eye gaze only; it does not count as physical approach. The visitor must move the in-scene marker by tapping/clicking the ground or selecting an approach control. The ledger does not retain the submitted text itself; the final message is sent to the configured resident provider only when the visitor submits it.
 
 ## Microphone boundary
 
 "LET THEM HEAR" requests microphone access only after an explicit click. The stream is connected to a Web Audio analyser, not to the audio output. The app computes a short-lived RMS amplitude envelope in the browser and uses it only to animate Tazar and Jello.
 
-The sound envelope is transient and used for local visual response. It is not retained in browser memory. If the visitor separately enables scene-cue sharing, only the derived cue and normalized intensity may accompany a submitted resident message. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
+The sound envelope is transient and used for local visual response. It is not retained in browser memory. If the visitor separately enables scene-cue sharing, only the derived cue and normalized intensity may accompany a submitted resident message. The experience also observes explicit scene movement, touch and keyboard focus, plus whether the page is visible or blurred.
 
 The residents use deterministic local reactions and now have an optional, authenticated model-dialogue path through `supabase/functions/resident-dialogue`. Model use of private memory and sharing of ambient scene cues each require separate opt-ins. A visitor can send a message to Tazar or Jello; the request includes only a bounded scene cue and up to eight prior turns held in browser memory. The function verifies the Supabase session, calls a configured model provider, and does not write the conversation transcript to Supabase. This is request/response character dialogue, not a self-directed autonomous agent with ongoing goals.
 
