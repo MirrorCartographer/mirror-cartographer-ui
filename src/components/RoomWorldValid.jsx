@@ -95,6 +95,7 @@ function PortalMap({ progress, onEnter, onClose }) {
         <a href="./atlas/rooms/common-thread/"><small>PEOPLE / RELATIONSHIPS</small><strong>Common Thread</strong><span>Build a private constellation of people, places, groups, questions, and shared work.</span><b>TRACE A CONNECTION ↗</b></a>
         <a href="./atlas/rooms/screening-room/"><small>FILM / CULTURE</small><strong>The Picture House</strong><span>A little independent cinema. The current feature is a Veteran-made story of one person showing up for another.</span><b>ENTER THE SCREENING ↗</b></a>
         <a href="./atlas/rooms/arcade/veteran-mission/"><small>VETERAN / PRACTICAL PATH</small><strong>The Mission</strong><span>Turn a broad situation into a manageable path, with room for evidence, constraints, and the next action.</span><b>OPEN THE MISSION MAP ↗</b></a>
+        <a href="./?view=workshop"><small>THE ENGINE ROOM / 31 WORKING LANES</small><strong>The Workshop</strong><span>Open the deeper instruments: health, body mapping, evidence, memory, projects, privacy, and creative work.</span><b>OPEN THE WORKSHOP ↗</b></a>
       </div>
     </section>
     <div className="portal-grid">{ROOMS.map((room) => {
@@ -292,7 +293,7 @@ export default function RoomWorldValid() {
   return <main className="room-world mc-afterimage-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
     <header className="mc-zine-masthead">
       <a className="mc-zine-brand" href="./atlas/"><span className="mc-brand-mark">✳</span><span>MIRROR CARTOGRAPHER<small>FIELD RECORDS · VOL. 01</small></span></a>
-      <nav aria-label="Explore the archive"><a href="./atlas/">THE ATLAS ↗</a><a href="./atlas/rooms/music/">SOUND ARCHIVE ♫</a><a href="./art-machine/">IMAGE ORGANISM ↗</a></nav>
+      <nav aria-label="Explore the archive"><a href="./atlas/">THE ATLAS ↗</a><a href="./?view=workshop">THE WORKSHOP ↗</a><a href="./atlas/rooms/music/">SOUND ARCHIVE ♫</a><a href="./art-machine/">IMAGE ORGANISM ↗</a></nav>
       <span className="mc-zine-edition">AN INDEPENDENT UNIVERSE / EST. IN CURIOSITY</span>
     </header>
     <div className="mc-zine-collage" aria-hidden="true">
