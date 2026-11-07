@@ -19,6 +19,10 @@ assert.ok(world.includes("onPointerLeave={() => onPresence('away')}"), 'the worl
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
 assert.ok(world.includes('function Morrow'), 'Morrow must be a real character component');
 assert.ok(world.includes('function Vesper'), 'Vesper must be a real character component');
+assert.ok(world.includes('speaking={speaker === "MORROW" && Boolean(dialogue)}'), 'Morrow facial animation must follow active dialogue');
+assert.ok(world.includes('speaking={speaker === "VESPER" && Boolean(dialogue)}'), 'Vesper facial animation must follow active dialogue');
+assert.ok(style.includes('.morrow.speaking .morrow-mouth'), 'Morrow mouth must animate while speaking');
+assert.ok(style.includes('.vesper.speaking .vesper-mouth'), 'Vesper mouth must animate while speaking');
 assert.ok(world.includes('const toggleSound = async'), 'sound must be an explicit opt-in interaction');
 assert.ok(style.includes('.presence-still .morrow-lantern'), 'Morrow must respond to visitor stillness');
 assert.ok(style.includes('.presence-still .vesper-body'), 'Vesper must have an independent stillness animation');
