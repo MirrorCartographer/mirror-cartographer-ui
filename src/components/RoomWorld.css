@@ -11,3 +11,23 @@ html.mc-reduced-motion .comet-companion,html.mc-reduced-motion .comet-spark,html
 
 .map-all-rooms{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;padding:10px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(2,2,7,.58);backdrop-filter:blur(16px);color:var(--p2);font:11px/1.2 system-ui;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;white-space:nowrap}
 .map-all-rooms:focus-visible{outline:2px solid var(--p2);outline-offset:4px}
+
+/* Named working rooms are discoveries inside the procedural field. */
+.portal-map{padding-top:max(58px,env(safe-area-inset-top));padding-bottom:86px}
+.found-rooms{width:min(1120px,100%);margin:0 auto 34px;color:#eee4d3}
+.found-rooms-heading{max-width:760px;margin:0 auto 18px;text-align:center}
+.found-rooms-heading>p{font:9px ui-monospace,monospace;letter-spacing:.2em;color:#c5a779}
+.found-rooms-heading h2{font:900 clamp(2rem,5vw,3.7rem)/.9 Impact,"Arial Black",sans-serif;letter-spacing:-.035em;text-transform:uppercase;margin:12px 0;text-shadow:3px 3px #672d42}
+.found-rooms-heading h2 em{font-style:normal;color:#b8c69d}
+.found-rooms-heading>span{display:block;color:#bfb39f;font:italic 13px/1.55 Georgia,serif}
+.found-rooms-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.found-rooms-grid a{min-height:158px;padding:15px;border:1px solid #d4c19a55;background:linear-gradient(145deg,#292127ef,#111614f2);box-shadow:4px 5px 0 #09090b;text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;transition:transform .18s,border-color .18s}
+.found-rooms-grid a:nth-child(odd){transform:rotate(-.35deg)}.found-rooms-grid a:nth-child(even){transform:rotate(.35deg)}
+.found-rooms-grid a:hover,.found-rooms-grid a:focus-visible{transform:translateY(-3px) rotate(0);border-color:#d8bd8c}
+.found-rooms-grid small{font:8px ui-monospace,monospace;letter-spacing:.15em;color:#c8a77c}
+.found-rooms-grid strong{font:400 clamp(1.2rem,2vw,1.7rem)/1 Georgia,serif;color:#f0e4ce}
+.found-rooms-grid span{font:11px/1.45 Georgia,serif;color:#bcb19f}
+.found-rooms-grid b{margin-top:auto;font:8px ui-monospace,monospace;letter-spacing:.12em;color:#aebc98}
+.map-all-rooms{position:sticky;left:auto;bottom:8px;display:block;width:max-content;max-width:100%;margin:18px auto 0;transform:none}
+@media(max-width:760px){.found-rooms-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.found-rooms-grid a{min-height:174px}}
+@media(max-width:440px){.found-rooms-grid{grid-template-columns:1fr}.found-rooms-grid a{min-height:0}.portal-grid{margin-bottom:22px}}
