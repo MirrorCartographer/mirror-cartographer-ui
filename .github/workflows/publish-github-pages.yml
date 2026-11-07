@@ -29,6 +29,8 @@ jobs:
           node scripts/validate-atlas-routes.mjs
       - name: Install locked dependencies
         run: npm install --no-audit --no-fund
+      - name: Verify the inhabited world and visitor interaction contract
+        run: npm run test:living-world
       - name: Build static application for GitHub Pages
         env:
           VITE_DEPLOYMENT_PROVIDER: github-pages
