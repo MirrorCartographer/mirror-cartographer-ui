@@ -11,6 +11,10 @@ assert.ok(world.includes('visitorId: typeof value.visitorId'), 'each browser vis
 assert.ok(world.includes('visitorSeed(memory.visitorId)'), 'first encounter must be individualized per visitor');
 assert.ok(world.includes('memory.choices.includes'), 'return dialogue must respond to remembered choices');
 assert.ok(world.includes('onPointerMove={trackPresence}'), 'the environment must respond to continuous pointer presence');
+assert.ok(world.includes("onPresence(nearMorrow ? 'morrow-near' : nearVesper ? 'vesper-near' : 'nearby')"), 'the world must distinguish character proximity');
+assert.ok(world.includes("presence === 'morrow-near' && !autoNoticeRef.current.morrow"), 'Morrow must initiate a proximity encounter without a click');
+assert.ok(world.includes("presence === 'vesper-near' && !autoNoticeRef.current.vesper"), 'Vesper must initiate an independent proximity encounter');
+assert.ok(world.includes('const returningVisitorRef = useRef(memory.visits > 0)'), 'first visits must be distinguished from returning visitors');
 assert.ok(world.includes("onPointerLeave={() => onPresence('away')}"), 'the world must register when a visitor leaves the scene');
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
 assert.ok(world.includes('function Morrow'), 'Morrow must be a real character component');
@@ -18,6 +22,8 @@ assert.ok(world.includes('function Vesper'), 'Vesper must be a real character co
 assert.ok(world.includes('const toggleSound = async'), 'sound must be an explicit opt-in interaction');
 assert.ok(style.includes('.presence-still .morrow-lantern'), 'Morrow must respond to visitor stillness');
 assert.ok(style.includes('.presence-still .vesper-body'), 'Vesper must have an independent stillness animation');
+assert.ok(style.includes('.presence-morrow-near .morrow-wings'), 'Morrow must react when approached');
+assert.ok(style.includes('.presence-vesper-near .vesper'), 'Vesper must react when approached');
 assert.ok(style.includes('.morrow-eyes{translate:var(--gaze-x'), 'Morrow must track the visitor');
 assert.ok(style.includes('@media(prefers-reduced-motion:reduce)'), 'motion must respect reduced-motion preferences');
 assert.ok(entry.includes(': <LivingWorld />'), 'the Pages default route must open the inhabited world');
