@@ -221,16 +221,21 @@ export async function askResident(resident, message, perception = {}) {
   if (!['tazar', 'jello'].includes(character)) throw new Error('Unknown resident.');
   const text = String(message || '').trim();
   if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
+  const context = perception && typeof perception === 'object' ? perception : {};
   const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return']);
-  const requestedCue = String(perception.cue || 'quiet');
+  const requestedCue = String(context.cue || 'quiet');
   const cue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
-  const intensity = Number.isFinite(perception.intensity) ? Math.max(0, Math.min(1, perception.intensity)) : 0;
+  const intensity = Number.isFinite(context.intensity) ? Math.max(0, Math.min(1, context.intensity)) : 0;
+  const history = Array.isArray(context.history) ? context.history.slice(-8).filter((item) =>
+    item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string'
+  ).map((item) => ({ role: item.role, content: item.content.slice(0, 600) })) : [];
   const { data, error } = await supabase.functions.invoke('resident-dialogue', {
     body: {
       resident: character,
       message: text,
       includeMemory: isPrivateMemorySyncEnabled(),
-      perception: { cue, intensity }
+      perception: { cue, intensity },
+      history
     }
   });
   if (error) throw error;
