@@ -8,12 +8,15 @@ The Living World is a client-side experience served as a static GitHub Pages app
 |---|---|---|---|
 | Pointer movement | No extra permission | Position, approach, dwell, stillness | Identity, attention, emotion |
 | Page visibility/focus | Browser event | Whether the page is visible/focused | Whether a person is present |
+| Keyboard focus and touch | Browser event | Which resident control is focused or touched | Identity, intention, or attention beyond that action |
 | Browser-local visitor key | Browser storage | Return to the same browser profile | Real-world identity or cross-device identity |
 | Microphone amplitude | Explicit visitor action + browser permission | A local sound-level envelope | Words, speaker identity, intent, mood, or meaning |
 
 ## Microphone boundary
 
 "LET THEM HEAR" requests microphone access only after an explicit click. The stream is connected to a Web Audio analyser, not to the audio output. The app computes a short-lived RMS amplitude envelope in the browser and uses it only to animate Tazar and Jello.
+
+The sound envelope is transient and used only for visual response. It is not retained in browser memory. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
 
 The Living World does not:
 - record or retain audio;
