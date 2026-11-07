@@ -15,6 +15,7 @@ assert.match(sql, /world_connections_requester_cancel[\s\S]*status = 'pending'[\
 assert.match(sql, /world_connections_participant_revoke[\s\S]*auth\.uid\(\) = requester_id or auth\.uid\(\) = recipient_id/i);
 
 assert.match(sql, /world_connections_undirected_pair_idx[\s\S]*least\(requester_id, recipient_id\)[\s\S]*greatest\(requester_id, recipient_id\)/i);
+assert.match(sql, /world_connections_not_self[\s\S]*requester_id <> recipient_id/i);
 assert.match(sql, /guard_world_connection_update[\s\S]*participants are immutable/i);
 assert.match(sql, /invalid connection status transition/i);
 assert.match(sql, /world_connections_guard_update/i);
