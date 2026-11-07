@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './LivingWorld.css';
-import { publishPerceptionObservation } from '../engine/perceptionLedger.js';
+import { publishPerceptionObservation, subscribePerceptionObservations } from '../engine/perceptionLedger.js';
+import { deriveResidentResponse } from '../engine/residentResponsePolicy.js';
 import SharedWorldPanel from './SharedWorldPanel.jsx';
 import { getSharedWorldClient, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
 
@@ -74,12 +75,18 @@ function Jello({ onClick, onFocus, speaking }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase, responseCue }) {
+  const lastObservationRef = useRef({ x: -1, y: -1, at: 0 });
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
     const y = clamp((pointerEvent.clientY - rect.top) / rect.height, 0, 1);
-    publishPerceptionObservation({ kind: 'pointer-position', source: 'pointer', value: { x, y }, ttlMs: 5000 });
+    const now = Date.now();
+    const last = lastObservationRef.current;
+    if (Math.abs(x - last.x) > 0.035 || Math.abs(y - last.y) > 0.035 || now - last.at > 180) {
+      publishPerceptionObservation({ kind: 'pointer-position', source: 'pointer', value: { x, y }, ttlMs: 5000 });
+      lastObservationRef.current = { x, y, at: now };
+    }
     if (pointerEvent.type === 'pointerdown') publishPerceptionObservation({ kind: 'pointer-touch', source: pointerEvent.pointerType || 'pointer', value: true, ttlMs: 2500 });
     pointerEvent.currentTarget.style.setProperty('--field-x', `${x * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
@@ -89,7 +96,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     const nearJello = x > 0.66 && y > 0.5;
     onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} signal-${responseCue} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -118,6 +125,8 @@ export default function LivingWorld() {
   const audioRef = useRef(null);
   const [micState, setMicState] = useState('off');
   const [micLevel, setMicLevel] = useState(0);
+  const [responseCue, setResponseCue] = useState('quiet');
+  const responseTimerRef = useRef(null);
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const micRequestRef = useRef(0);
   const accountMemoryReadyRef = useRef(false);
@@ -153,6 +162,16 @@ export default function LivingWorld() {
     return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); micRequestRef.current += 1; const mic = micRef.current; if (mic.frame) window.cancelAnimationFrame(mic.frame); mic.stream?.getTracks().forEach((track) => track.stop()); mic.source?.disconnect(); if (mic.context) mic.context.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    const unsubscribe = subscribePerceptionObservations((observation) => {
+      const response = deriveResidentResponse(observation);
+      if (!response) return;
+      setResponseCue(response.cue);
+      window.clearTimeout(responseTimerRef.current);
+      if (response.cue !== 'away' && response.cue !== 'return') responseTimerRef.current = window.setTimeout(() => setResponseCue('quiet'), 1800);
+    });
+    return () => { unsubscribe(); window.clearTimeout(responseTimerRef.current); };
   }, []);
   useEffect(() => {
     let active = true;
@@ -340,7 +359,7 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
