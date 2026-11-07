@@ -184,7 +184,7 @@ export default function LivingCountry() {
         <label>NEW FRAGMENT<textarea value={draft} onChange={e=>setDraft(e.target.value)} placeholder="A detail, an oddity, a question, a thing you noticed…" required rows="3"/></label>
         <div className="form-bottom">
           <label>TYPE<select value={kind} onChange={e=>setKind(e.target.value)}>{['field note','question','connection','hypothesis','experiment','contradiction'].map(x=><option key={x}>{x}</option>)}</select></label>
-          <label>CONTEXT<select value={draftContext} onChange={e=>setDraftContext(e.target.value)}>{contexts.map(x=><option key={x} value={x}>{x}</option>)}</select></label>
+          <label>CONTEXT<select aria-label="New fragment context" value={draftContext} onChange={e=>setDraftContext(e.target.value)}>{contexts.map(x=><option key={x} value={x}>{x}</option>)}</select></label>
           <button type="submit">PIN TO THE COUNTRY +</button>
         </div>
         <small role="status" aria-live="polite">{noteStatus}</small>
