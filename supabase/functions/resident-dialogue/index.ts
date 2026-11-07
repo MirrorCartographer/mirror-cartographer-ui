@@ -1,4 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { evaluateResidentOutput, residentBoundaryFallback } from '../../../src/engine/coPresenceBoundary.js';
 
 const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -157,5 +158,18 @@ Deno.serve(async (request: Request) => {
   const result = await modelResponse.json().catch(() => null);
   const reply = result?.choices?.[0]?.message?.content;
   if (typeof reply !== 'string' || !reply.trim()) return json({ error: 'The resident had no reply this time.' }, 502, requestOrigin || allowed[0] || '*');
-  return json({ reply: reply.trim().slice(0, 1400), resident: residentKey, memory: payload.includeMemory === true ? 'private-consented-context-only' : 'none', perceptionCue, ambientCue, transcriptStored: false, conversationHistory: 'ephemeral-request-context-only' }, 200, requestOrigin || allowed[0] || '*');
+  const boundary = evaluateResidentOutput(reply);
+  const finalReply = boundary.action === 'block' ? residentBoundaryFallback(residentKey) : reply.trim().slice(0, 1400);
+  return json({
+    reply: finalReply,
+    resident: residentKey,
+    memory: payload.includeMemory === true ? 'private-consented-context-only' : 'none',
+    perceptionCue,
+    ambientCue,
+    transcriptStored: false,
+    conversationHistory: 'ephemeral-request-context-only',
+    ontologyLabel: boundary.ontologyLabel,
+    boundaryAction: boundary.action,
+    boundaryFlags: boundary.flags
+  }, 200, requestOrigin || allowed[0] || '*');
 });
