@@ -17,7 +17,7 @@ The Living World is a client-side experience served as a static GitHub Pages app
 | Submitted resident message | Explicit submit action | Final text entered into Tazar/Jello conversation | Drafts, deleted text, general typing behavior, or hidden context |
 
 ## Observation provenance
-The optional **FIELD LOG** is a visitor-facing receipt for the latest local events. It shows event type, source, permission, scope, and retention without exposing typed message content or pointer coordinates. It is a display of what the browser actually observed, not a claim that the system knows the visitor's inner state.
+The optional **FIELD LOG** is a visitor-facing receipt for selected recent local events. It shows event type, source, permission, scope, and retention without exposing typed message content or pointer coordinates. It is a display of what the browser actually observed, not a claim that the system knows the visitor's inner state.
 
 
 The scene now routes bounded observations through `src/engine/perceptionLedger.js`. Each event carries a source, permission state, observation timestamp, expiry, confidence, `local-only` scope, and `ephemeral` retention label. The in-memory ring buffer is capped at 64 observations and expires entries from snapshots. It accepts only bounded scalar values or normalized pointer coordinates; it rejects arbitrary objects and raw media payloads. The ledger is not written to localStorage, Supabase, or a network endpoint. It is a local sensing/provenance substrate, not a remote inference engine.
