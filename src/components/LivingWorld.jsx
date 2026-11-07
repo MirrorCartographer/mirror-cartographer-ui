@@ -10,17 +10,23 @@ const EVENTS = [
   { id:'music', line:'Someone is playing the song from the room that burned down. The room is still there, by the way.', cue:'A melody is leaking through the floorboards.', mood:'music' },
 ];
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+const makeVisitorId = () => {
+  try { return window.crypto?.randomUUID?.() || `visitor-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`; }
+  catch { return `visitor-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`; }
+};
+const visitorSeed = (id = '') => [...id].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) >>> 0, 7);
 
 function readMemory() {
   try {
     const value = JSON.parse(localStorage.getItem(MEMORY_KEY) || '{}');
     return {
+      visitorId: typeof value.visitorId === 'string' && value.visitorId.length >= 8 ? value.visitorId : makeVisitorId(),
       visits: Number.isFinite(value.visits) ? clamp(value.visits, 0, 100000) : 0,
       trust: Number.isFinite(value.trust) ? clamp(value.trust, 0, 8) : 0,
       choices: Array.isArray(value.choices) ? value.choices.slice(-12) : [],
       lastEvent: typeof value.lastEvent === 'string' ? value.lastEvent : '',
     };
-  } catch { return { visits:0, trust:0, choices:[], lastEvent:'' }; }
+  } catch { return { visitorId:makeVisitorId(), visits:0, trust:0, choices:[], lastEvent:'' }; }
 }
 
 function Morrow({ mood, onClick, noticed }) {
@@ -65,8 +71,18 @@ function Vesper({ onClick }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onVesper, onDoor, visits }) {
-  return <div className={`living-scene mood-${event.mood}`} onPointerMove={(event) => { const rect = event.currentTarget.getBoundingClientRect(); event.currentTarget.style.setProperty("--field-x", `${((event.clientX - rect.left) / rect.width) * 100}%`); event.currentTarget.style.setProperty("--field-y", `${((event.clientY - rect.top) / rect.height) * 100}%`); }}>
+function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPresence }) {
+  const trackPresence = (pointerEvent) => {
+    const rect = pointerEvent.currentTarget.getBoundingClientRect();
+    const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
+    const y = clamp((pointerEvent.clientY - rect.top) / rect.height, 0, 1);
+    pointerEvent.currentTarget.style.setProperty('--field-x', `${x * 100}%`);
+    pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
+    pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
+    pointerEvent.currentTarget.style.setProperty('--gaze-y', `${clamp((y - 0.5) * 5, -2.5, 2.5)}px`);
+    onPresence('nearby');
+  };
+  return <div className={`living-scene mood-${event.mood} presence-${presence}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -83,7 +99,10 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits }) {
 
 export default function LivingWorld() {
   const [memory, setMemory] = useState(readMemory);
-  const [eventIndex, setEventIndex] = useState(() => Math.floor(Date.now() / 60000) % EVENTS.length);
+  const [eventIndex, setEventIndex] = useState(0);
+  const [presence, setPresence] = useState('arrived');
+  const presenceTimerRef = useRef(null);
+  const visitRecordedRef = useRef(false);
   const [dialogue, setDialogue] = useState('');
   const [chapter, setChapter] = useState(0);
   const [speaker, setSpeaker] = useState('MORROW');
@@ -92,19 +111,35 @@ export default function LivingWorld() {
   const event = EVENTS[eventIndex];
   const line = useMemo(() => {
     if (dialogue) return dialogue;
+    if (memory.visits > 1 && memory.choices.includes('asked-about-world')) return 'You came back to ask what this place is. I have made absolutely no progress. Welcome back.';
+    if (memory.visits > 1 && memory.choices.includes('opened-the-door')) return 'You came back from the other side. I was going to ask what you saw, but you look tired.';
     if (memory.visits > 0 && memory.trust > 2) return 'You came back. I was beginning to think you had better places to be.';
     if (memory.visits > 0) return 'Oh. It’s you. I kept your place. Don’t make it sentimental.';
     return event.line;
   }, [dialogue, memory, event]);
   useEffect(() => {
-    const next = { ...memory, visits: memory.visits + 1 };
-    setMemory(next);
-    try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+    const seed = visitorSeed(memory.visitorId);
+    setEventIndex((seed + memory.visits) % EVENTS.length);
+    if (!visitRecordedRef.current) {
+      visitRecordedRef.current = true;
+      const next = { ...memory, visits: memory.visits + 1 };
+      setMemory(next);
+      try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+    }
     const timer = window.setInterval(() => setEventIndex((value) => (value + 1) % EVENTS.length), 42000);
-    return () => { window.clearInterval(timer); if (audioRef.current) audioRef.current.close().catch(() => {}); };
+    return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const updatePresence = (nextPresence) => {
+    window.clearTimeout(presenceTimerRef.current);
+    setPresence(nextPresence);
+    if (nextPresence === 'nearby') {
+      presenceTimerRef.current = window.setTimeout(() => setPresence('still'), 2600);
+    } else if (nextPresence === 'away') {
+      presenceTimerRef.current = window.setTimeout(() => setPresence('away'), 1200);
+    }
+  };
   const remember = (choice, reply, trust = 1) => {
     setSpeaker('MORROW');
     const next = { ...memory, trust: clamp(memory.trust + trust, 0, 8), choices: [...memory.choices, choice].slice(-12), lastEvent: event.id };
@@ -146,7 +181,7 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onVesper={talkToVesper} onDoor={openDoor} visits={memory.visits}/>
+    <WorldScene event={event} onTalk={talk} onVesper={talkToVesper} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
