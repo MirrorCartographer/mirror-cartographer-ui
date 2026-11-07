@@ -1,13 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-const expectWordlessBody = async (page) => {
-  const visibleText = await page.locator('body').evaluate((body) => {
-    const clone = body.cloneNode(true);
-    clone.querySelectorAll('script, style, .sr-only, [data-audio-diagnostic], #mc-audio-diagnostic-help, [data-audio-observability], [data-audibility-panel], [data-audio-evidence-export], [data-audio-evidence-status]').forEach((node) => node.remove());
-    return clone.innerText;
-  });
-  const readableText = visibleText.replace(/[\s\p{P}\p{S}]/gu, '');
-  expect(readableText).toBe('');
+const expectFieldCopy = async (page) => {
+  await expect(page.locator('.mc-zine-masthead')).toBeVisible();
+  await expect(page.locator('.mc-zine-copy h1')).toContainText('THE WORLD');
+  await expect(page.locator('.mc-zine-copy h1')).toContainText('SHIFTING');
+  await expect(page.locator('button.world-surface')).toBeVisible();
 };
 
 const installAudioContextProbe = async (page) => {
@@ -79,7 +76,7 @@ const expectCanvasHasPixels = async (canvas) => {
 };
 
 test.describe('Mirror Cartographer phone-first smoke', () => {
-  test('renders wordless room surface and survives first gesture', async ({ page }) => {
+  test('renders the fragmented field surface and survives first gesture', async ({ page }) => {
     await installAudioContextProbe(page);
     await installAnimationFrameProbe(page);
     const errors = [];
@@ -95,7 +92,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     const canvas = page.locator('canvas');
     await expect(sky).toBeVisible();
     await expect(canvas).toBeVisible();
-    await expectWordlessBody(page);
+    await expectFieldCopy(page);
     await expectAnimationFramesAtLeast(page, 8);
     await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBe(0);
@@ -105,7 +102,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.waitForTimeout(700);
 
     await expect(canvas).toBeVisible();
-    await expectWordlessBody(page);
+    await expectFieldCopy(page);
     await expectAnimationFramesAtLeast(page, framesBeforeTap + 8);
     await expectCanvasHasPixels(canvas);
     expect(await audioContextsCreated(page)).toBe(0);
@@ -118,11 +115,11 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('keeps visible surface essentially wordless', async ({ page }) => {
+  test('keeps the field copy visible alongside the interactive canvas', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    await expectWordlessBody(page);
+    await expectFieldCopy(page);
   });
   test('opens the deeper operating workshop and saves a health record locally', async ({ page }) => {
     await page.addInitScript(() => localStorage.clear());
