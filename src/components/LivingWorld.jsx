@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './LivingWorld.css';
 import { publishPerceptionObservation } from '../engine/perceptionLedger.js';
 import SharedWorldPanel from './SharedWorldPanel.jsx';
+import { getSharedWorldClient, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
 const EVENTS = [
@@ -121,6 +122,16 @@ export default function LivingWorld() {
   const micRequestRef = useRef(0);
   const event = EVENTS[eventIndex];
   const visitorPhase = visitorSeed(memory.visitorId) % 100;
+  const persistMemory = (next) => {
+    setMemory(next);
+    try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+    savePrivateContinuity(next).catch(() => {});
+  };
+  const rememberJello = () => {
+    const next = { ...memory, trust: clamp(memory.trust + 1, 0, 8), choices: [...memory.choices, 'asked-jello'].slice(-12) };
+    persistMemory(next);
+    setDialogue('I am not lost. I am exactly where I mean to be.');
+  };
   const line = useMemo(() => {
     if (dialogue) return dialogue;
     if (returningVisitorRef.current && memory.visits > 1 && memory.choices.includes('asked-about-world')) return 'You came back to ask what this place is. I have made absolutely no progress. Welcome back.';
@@ -135,13 +146,30 @@ export default function LivingWorld() {
     if (!visitRecordedRef.current) {
       visitRecordedRef.current = true;
       const next = { ...memory, visits: memory.visits + 1 };
-      setMemory(next);
-      try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+      persistMemory(next);
     }
     const timer = window.setInterval(() => setEventIndex((value) => (value + 1) % EVENTS.length), 42000);
     return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); micRequestRef.current += 1; const mic = micRef.current; if (mic.frame) window.cancelAnimationFrame(mic.frame); mic.stream?.getTracks().forEach((track) => track.stop()); mic.source?.disconnect(); if (mic.context) mic.context.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    let active = true;
+    const hydrate = () => loadPrivateContinuity().then((remote) => {
+      if (!active || !remote) return;
+      setMemory((current) => {
+        const next = { ...current, visits: Math.max(current.visits, Number(remote.visits) || 0), trust: clamp(Number(remote.trust) || 0, 0, 8), choices: Array.isArray(remote.choices) ? remote.choices.slice(-12) : current.choices, lastEvent: typeof remote.lastEvent === 'string' ? remote.lastEvent : current.lastEvent };
+        try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+        return next;
+      });
+    }).catch(() => {});
+    const supabase = getSharedWorldClient();
+    if (supabase) {
+      hydrate();
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => { if (session) window.setTimeout(hydrate, 0); });
+      return () => { active = false; data.subscription.unsubscribe(); };
+    }
+    return () => { active = false; };
   }, []);
   useEffect(() => {
     const onVisibility = () => {
@@ -190,9 +218,8 @@ export default function LivingWorld() {
   const remember = (choice, reply, trust = 1) => {
     setSpeaker('TAZAR');
     const next = { ...memory, trust: clamp(memory.trust + trust, 0, 8), choices: [...memory.choices, choice].slice(-12), lastEvent: event.id };
-    setMemory(next);
+    persistMemory(next);
     setDialogue(reply);
-    try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
   };
   const toggleSound = async () => {
     if (ambient && audioRef.current) {
@@ -315,7 +342,7 @@ export default function LivingWorld() {
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
     <section className="tazar-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
-      {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-jello'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
+      {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={rememberJello}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-tazar', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
