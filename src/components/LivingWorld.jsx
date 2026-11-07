@@ -94,30 +94,30 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPrese
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 0}/><Vesper onClick={onVesper}/>
+    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 1}/><Vesper onClick={onVesper}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
 
 export default function LivingWorld() {
   const [memory, setMemory] = useState(readMemory);
+  const returningVisitorRef = useRef(memory.visits > 0);
   const [eventIndex, setEventIndex] = useState(0);
   const [presence, setPresence] = useState('arrived');
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
   const autoNoticeRef = useRef({ morrow:false, vesper:false });
   const [dialogue, setDialogue] = useState('');
-  const [chapter, setChapter] = useState(0);
   const [speaker, setSpeaker] = useState('MORROW');
   const [ambient, setAmbient] = useState(false);
   const audioRef = useRef(null);
   const event = EVENTS[eventIndex];
   const line = useMemo(() => {
     if (dialogue) return dialogue;
-    if (memory.visits > 1 && memory.choices.includes('asked-about-world')) return 'You came back to ask what this place is. I have made absolutely no progress. Welcome back.';
-    if (memory.visits > 1 && memory.choices.includes('opened-the-door')) return 'You came back from the other side. I was going to ask what you saw, but you look tired.';
-    if (memory.visits > 0 && memory.trust > 2) return 'You came back. I was beginning to think you had better places to be.';
-    if (memory.visits > 0) return 'Oh. It’s you. I kept your place. Don’t make it sentimental.';
+    if (returningVisitorRef.current && memory.visits > 1 && memory.choices.includes('asked-about-world')) return 'You came back to ask what this place is. I have made absolutely no progress. Welcome back.';
+    if (returningVisitorRef.current && memory.visits > 1 && memory.choices.includes('opened-the-door')) return 'You came back from the other side. I was going to ask what you saw, but you look tired.';
+    if (returningVisitorRef.current && memory.visits > 1 && memory.trust > 2) return 'You came back. I was beginning to think you had better places to be.';
+    if (returningVisitorRef.current) return 'Oh. It’s you. I kept your place. Don’t make it sentimental.';
     return event.line;
   }, [dialogue, memory, event]);
   useEffect(() => {
@@ -188,7 +188,7 @@ export default function LivingWorld() {
   const talk = () => {
     setSpeaker('MORROW');
     setDialogue('');
-    setChapter((value) => value + 1);
+    if (audioRef.current) { audioRef.current.close().catch(() => {}); audioRef.current = null; }
     setAmbient(false);
   };
   const openDoor = () => {
