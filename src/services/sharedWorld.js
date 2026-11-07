@@ -327,7 +327,7 @@ export async function askResident(resident, message, perception = {}) {
   const text = String(message || '').trim();
   if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
   const context = perception && typeof perception === 'object' ? perception : {};
-  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
+  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'walking', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
   const requestedCue = String(context.cue || 'quiet');
   const cue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
   const requestedAmbientCue = String(context.ambientCue || 'quiet');
