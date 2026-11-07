@@ -430,7 +430,7 @@ export default function LivingWorld() {
     const residentKey = speaker.toLowerCase();
     const history = residentHistory[residentKey] || [];
     try {
-      const reply = await askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history });
+      const reply = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history });
       setDialogue(reply);
       setResidentHistory((current) => ({
         ...current,
