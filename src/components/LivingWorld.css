@@ -150,3 +150,15 @@
 @keyframes jello-hear{from{rotate:-5deg}to{rotate:7deg}}
 .world-topbar nav button[aria-pressed="true"]{color:#f4d9a7;border-color:#e8c99599;box-shadow:0 0 14px #e8c99533}
 @media(prefers-reduced-motion:reduce){.living-scene.sound-active .tazar-wings,.living-scene.sound-active .jello-ear{animation:none}}
+
+@media(max-width:760px){
+  .world-topbar nav{max-width:74%;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  .world-topbar nav button:disabled{opacity:.45;cursor:wait}
+  .world-topbar nav button[aria-pressed="true"]{text-shadow:0 0 10px #e8c995}
+}
+@media(max-width:430px){
+  .world-topbar{gap:8px}
+  .world-topbar nav{max-width:78%;column-gap:8px}
+  .world-topbar nav a,.world-topbar nav button{font-size:7px;letter-spacing:.06em}
+  .world-footer span:first-child{max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
