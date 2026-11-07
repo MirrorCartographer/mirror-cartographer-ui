@@ -21,7 +21,7 @@ The service-role key must never be added to GitHub Pages variables or browser co
 
 ## Resident dialogue provider
 
-The residents can accept free-text dialogue through the authenticated Edge Function. It reads the visitor's own continuity summary and low-sensitivity, user-approved memory ledger entries only when the visitor separately enables both cross-device memory sync and resident memory use. It does not write chat transcripts or new memories.
+The residents can accept free-text dialogue through the authenticated Edge Function. It reads the visitor's own continuity summary and low-sensitivity, user-approved memory ledger entries only when the visitor separately enables both cross-device memory sync and resident memory use. It does not write chat transcripts or new memories. A separate optional scene-cue preference may send only categorical cues (sound level, approach, stillness, or focus); no audio, speech, or raw pointer coordinates are sent.
 
 Set server-side Supabase function secrets:
 
