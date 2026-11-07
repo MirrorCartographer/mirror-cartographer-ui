@@ -50,7 +50,7 @@ Those components are not automatically part of this GitHub Pages scene. The UI's
 
 `db/002_shared_world_presence.sql` adds authenticated connection requests and an expiring presence projection. Presence visibility is `private`, `connections`, or `public`; connection-only visibility requires an accepted relationship. The schema publishes the presence table to Supabase Realtime when the standard publication is available. It deliberately stores no microphone envelope, pointer coordinates, transcripts, inferred mood, or private continuity content.
 
-This is a database migration, not proof of a live connection. The migration must be applied to the actual Supabase project, and a browser client must be configured with its public URL/anon key and authenticated session before live co-presence can be enabled. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
+The browser-side shared-world client and entry panel are now implemented. They use Supabase Auth magic links, a public anon key, Realtime Postgres Changes, expiring heartbeat presence, and explicit private/connections/public visibility. This is a connection path, not proof of a live connection. The migration must still be applied to the actual Supabase project, and the GitHub repository must supply `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Actions variables. The deployed build must then pass the shared-world smoke test. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
 
 ## Perception roadmap
 
