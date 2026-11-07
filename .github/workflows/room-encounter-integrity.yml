@@ -71,8 +71,8 @@ jobs:
           assert "arcade/veteran-mission" in corridor and "877-424-3838" in corridor, "Service Corridor is missing practical support routes"
           assert "988" in corridor and "838255" in corridor, "Service Corridor is missing crisis contact routes"
           assert "localStorage" in body_archive and "diagnosis" in body_archive, "Body Archive privacy/clinical boundary missing"
-          assert "localStorage" in common_thread and "does not publish" in common_thread, "Common Thread sharing boundary missing"
+          assert "localStorage" in common_thread and "Nothing is sent automatically" in common_thread and "Import a map" in common_thread and "Export map" in common_thread, "Common Thread portable exchange and privacy boundary missing"
           veteran = (root / "veterans/index.html").read_text(encoding="utf-8")
           assert 'content="0;url=./hub.html"' in veteran, "Veteran Hub redirect is not project-relative"
-          print("PASS: 39 directory destinations; 10 distinct renderers; Service Corridor, Body Archive, and Common Thread present; Veteran Hub relative redirect.")
+          print("PASS: 39 directory destinations; 10 distinct renderers; Service Corridor, Body Archive, portable Common Thread, and Veteran Hub relative redirect.")
           PY
