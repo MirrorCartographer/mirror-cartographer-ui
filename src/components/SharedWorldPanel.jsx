@@ -195,8 +195,8 @@ export default function SharedWorldPanel() {
         <label className="shared-memory-sync"><input type="checkbox" checked={ambientContextUse} onChange={(event) => {
           try { setAmbientContextUseEnabled(event.target.checked); setAmbientContextUse(event.target.checked); setMessage(event.target.checked ? 'A bounded room-sound cue may accompany your next resident message.' : 'Room-sound perception remains local to the scene.');
           } catch (error) { setMessage(error.message || 'Could not update the ambient-context preference.'); }
-        }} /> <span>Let residents use the room-sound cue when replying</span></label>
-        <p className="shared-sync-note">The microphone analyser stays local by default. Only a short sound-level cue—not audio or speech—is sent to the model provider when you enable this.</p>
+        }} /> <span>Let residents use a bounded scene cue when replying</span></label>
+        <p className="shared-sync-note">Off by default. If enabled, categorical cues such as sound level, approach, stillness, or focus may accompany a message. No audio, speech, or raw coordinates are sent.</p>
         {memorySync && <section className="shared-memory-ledger">
           <b>PRIVATE MEMORY LEDGER · PRIVATE DURABLE / VISITOR-ENABLED</b>
           <p>{privateMemory ? `${privateMemory.visits || 0} visits · ${privateMemory.trust || 0} interaction marks · last event: ${privateMemory.lastEvent || 'none'}` : 'Loading private memory…'}</p>
