@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { deletePrivateContinuity, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
+import { deletePrivateContinuity, deletePrivateMemoryEntry, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, loadPrivateMemoryLedger, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, updatePrivateMemoryNote, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -16,6 +16,8 @@ export default function SharedWorldPanel() {
   const [connectionBusy, setConnectionBusy] = useState(false);
   const [memorySync, setMemorySync] = useState(isPrivateMemorySyncEnabled);
   const [privateMemory, setPrivateMemory] = useState(null);
+  const [memoryEntries, setMemoryEntries] = useState([]);
+  const [memoryNotes, setMemoryNotes] = useState({});
   const [status, setStatus] = useState('idle');
   const stopRef = useRef(null);
   const configured = sharedWorldConfigured();
@@ -43,11 +45,16 @@ export default function SharedWorldPanel() {
     return () => { active = false; };
   }, [open, session?.user?.id]);
   useEffect(() => {
-    if (!open || !session || !memorySync) { setPrivateMemory(null); return undefined; }
+    if (!open || !session || !memorySync) { setPrivateMemory(null); setMemoryEntries([]); return undefined; }
     let active = true;
+    const refreshLedger = () => loadPrivateMemoryLedger().then((entries) => {
+      if (active) setMemoryEntries(entries);
+    }).catch((error) => { if (active) setMessage(error.message || 'Could not read the memory ledger.'); });
     loadPrivateContinuity().then((value) => { if (active) setPrivateMemory(value || { visits: 0, choices: [] }); })
       .catch((error) => { if (active) setMessage(error.message || 'Could not read private memory.'); });
-    return () => { active = false; };
+    refreshLedger();
+    window.addEventListener('mc-memory-ledger-updated', refreshLedger);
+    return () => { active = false; window.removeEventListener('mc-memory-ledger-updated', refreshLedger); };
   }, [open, session?.user?.id, memorySync]);
 
   const refreshConnections = async () => {
@@ -87,14 +94,25 @@ export default function SharedWorldPanel() {
     } catch (error) { setMessage(error.message || 'Could not update the memory preference.'); }
   };
 
-  const forgetMemoryChoice = async (choice) => {
-    if (!privateMemory) return;
+  const forgetMemoryEntry = async (entry) => {
+    if (!privateMemory || !entry?.id) return;
+    const choice = entry.content?.choice_id;
     const next = { ...privateMemory, choices: (privateMemory.choices || []).filter((item) => item !== choice) };
     try {
       await savePrivateContinuity(next);
+      await deletePrivateMemoryEntry(entry.id);
       setPrivateMemory(next);
+      setMemoryEntries((items) => items.filter((item) => item.id !== entry.id));
       setMessage('That memory entry has been removed.');
     } catch (error) { setMessage(error.message || 'Could not update private memory.'); }
+  };
+
+  const saveMemoryNote = async (entry) => {
+    try {
+      const content = await updatePrivateMemoryNote(entry.id, memoryNotes[entry.id] ?? entry.content?.user_note ?? '');
+      setMemoryEntries((items) => items.map((item) => item.id === entry.id ? { ...item, content, last_user_reviewed_at: new Date().toISOString() } : item));
+      setMessage('Your correction has been saved to the private ledger.');
+    } catch (error) { setMessage(error.message || 'Could not save that correction.'); }
   };
 
   const copyConnectionCode = async () => {
@@ -170,16 +188,25 @@ export default function SharedWorldPanel() {
           <b>PRIVATE MEMORY LEDGER · PRIVATE DURABLE / VISITOR-ENABLED</b>
           <p>{privateMemory ? `${privateMemory.visits || 0} visits · ${privateMemory.trust || 0} interaction marks · last event: ${privateMemory.lastEvent || 'none'}` : 'Loading private memory…'}</p>
           <small>Only explicit in-world choices are saved. No typed messages, microphone samples, or inferred feelings.</small>
-          {(privateMemory?.choices || []).map((choice) => <p className="memory-entry" key={choice}><span>{({
-            'asked-jello': 'Asked Jello if she is always here',
-            'asked-about-world': 'Asked what this place is',
-            'asked-why': 'Asked why the station exists',
-            'asked-event': 'Asked what happened',
-            'asked-tazar': 'Asked who Tazar is',
-            'left-silence': 'Chose to listen quietly',
-            'opened-the-door': 'Opened the station door'
-          })[choice] || choice}</span><button onClick={() => forgetMemoryChoice(choice)}>FORGET</button></p>)}
-          {privateMemory && !(privateMemory.choices || []).length && <p className="shared-empty">No saved choices yet.</p>}
+          {memoryEntries.map((entry) => {
+            const choice = entry.content?.choice_id || 'in-world choice';
+            const label = ({
+              'asked-jello': 'Asked Jello if she is always here',
+              'asked-about-world': 'Asked what this place is',
+              'asked-why': 'Asked why the station exists',
+              'asked-event': 'Asked what happened',
+              'asked-tazar': 'Asked who Tazar is',
+              'left-silence': 'Chose to listen quietly',
+              'opened-the-door': 'Opened the station door'
+            })[choice] || choice;
+            return <div className="memory-entry" key={entry.id}>
+              <span>{label}</span>
+              <small>{entry.memory_class} · {entry.claim_status} · {entry.sensitivity_class} · {entry.confidence}</small>
+              <input value={memoryNotes[entry.id] ?? entry.content?.user_note ?? ''} onChange={(event) => setMemoryNotes((notes) => ({ ...notes, [entry.id]: event.target.value }))} placeholder="Your correction or note…" maxLength={500} aria-label="Edit your private memory note"/>
+              <div><button onClick={() => saveMemoryNote(entry)}>SAVE NOTE</button><button onClick={() => forgetMemoryEntry(entry)}>FORGET</button></div>
+            </div>;
+          })}
+          {privateMemory && !memoryEntries.length && <p className="shared-empty">No saved choices yet.</p>}
         </section>}
         {memorySync && <button className="shared-signout" onClick={async () => {
           try {
@@ -187,6 +214,7 @@ export default function SharedWorldPanel() {
             setPrivateMemorySyncEnabled(false);
             setMemorySync(false);
             setPrivateMemory(null);
+            setMemoryEntries([]);
             setMessage('Saved account memory deleted. This browser can still remember locally.');
           } catch (error) { setMessage(error.message || 'Could not delete saved account memory.'); }
         }}>DELETE SAVED ACCOUNT MEMORY</button>}
