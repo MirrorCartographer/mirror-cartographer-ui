@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+import { createHash } from 'node:crypto';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+
+const SCHEMA='fia.owned-deployment-installation.v1';
+const RESTORE_SCHEMA='fia.owned-deployment-restore.v1';
+const POLICY={schema:SCHEMA,algorithm:'sha256',atomicPointer:true,immutableRelease:true,rollbackVerification:true,symlinks:'reject'};
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const canon=v=>JSON.stringify(sort(v));
+function sort(v){if(Array.isArray(v))return v.map(sort);if(v&&typeof v==='object')return Object.fromEntries(Object.keys(v).sort().map(k=>[k,sort(v[k])])) ;return v;}
+function identity(o){const c={...o};delete c.identity;return hash(Buffer.from(canon(c)));}
+function fail(m){throw new Error(m)}
+function args(){const a={};for(let i=2;i<process.argv.length;i+=2)a[process.argv[i].replace(/^--/,'')]=process.argv[i+1];return a;}
+function safeRel(p){if(typeof p!=='string'||!p||path.isAbsolute(p)||p.includes('\\')||p.includes('\0'))fail(`unsafe path: ${p}`);const n=path.posix.normalize(p);if(n==='..'||n.startsWith('../')||n!==p)fail(`unsafe path: ${p}`);return n;}
+async function exists(p){try{await fs.lstat(p);return true}catch(e){if(e.code==='ENOENT')return false;throw e}}
+async function verifyTree(root, entries){const out=[];for(const e of [...entries].sort((a,b)=>a.path.localeCompare(b.path))){const rel=safeRel(e.path);const abs=path.join(root,rel);const st=await fs.lstat(abs);if(st.isSymbolicLink()||!st.isFile())fail(`unsupported restored entry: ${rel}`);const bytes=await fs.readFile(abs);const actual={path:rel,mode:st.mode&0o777,size:bytes.length,sha256:hash(bytes)};if(actual.size!==e.size||actual.sha256!==e.sha256||actual.mode!==e.mode)fail(`restored tree mismatch: ${rel}`);out.push(actual)}return out;}
+async function copyVerified(src,dst,entries){for(const e of entries){const rel=safeRel(e.path),s=path.join(src,rel),d=path.join(dst,rel);await fs.mkdir(path.dirname(d),{recursive:true});const bytes=await fs.readFile(s);if(bytes.length!==e.size||hash(bytes)!==e.sha256)fail(`source changed during install: ${rel}`);await fs.writeFile(d,bytes,{flag:'wx',mode:e.mode});await fs.chmod(d,e.mode);}}
+async function switchActive(stateDir,target){const active=path.join(stateDir,'active');const tmp=path.join(stateDir,`.active-${process.pid}`);await fs.rm(tmp,{force:true});await fs.symlink(target,tmp);await fs.rename(tmp,active);}
+async function readActive(stateDir){const p=path.join(stateDir,'active');if(!await exists(p))return null;const st=await fs.lstat(p);if(!st.isSymbolicLink())fail('active target is not a symbolic link');return fs.readlink(p);}
+async function main(){const a=args();for(const k of ['restoreEvidence','restoreDir','stateDir','releaseName','output'])if(!a[k])fail(`missing --${k}`);if(await exists(a.output))fail('output evidence already exists');const raw=await fs.readFile(a.restoreEvidence);const ev=JSON.parse(raw);if(ev.schema!==RESTORE_SCHEMA)fail('unsupported restore evidence schema');if(ev.identity!==identity(ev))fail('stale restore evidence identity');if(!Array.isArray(ev.entries)||!ev.entries.length)fail('restore evidence has no entries');if(!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(a.releaseName))fail('invalid release name');await verifyTree(a.restoreDir,ev.entries);
+ const releases=path.join(a.stateDir,'releases');await fs.mkdir(releases,{recursive:true});const releaseId=`${a.releaseName}-${ev.releaseIdentity.slice(0,16)}`;const finalDir=path.join(releases,releaseId),stage=`${finalDir}.staging-${process.pid}`;if(await exists(finalDir))fail('immutable release already exists');await fs.rm(stage,{recursive:true,force:true});await fs.mkdir(stage,{recursive:true});const previous=await readActive(a.stateDir);
+ let switched=false;try{await copyVerified(a.restoreDir,stage,ev.entries);const staged=await verifyTree(stage,ev.entries);await fs.writeFile(path.join(stage,'.fia-release.json'),canon({schema:'fia.owned-installed-release.v1',releaseIdentity:ev.releaseIdentity,restoreIdentity:ev.identity,entries:staged})+'\n',{flag:'wx',mode:0o444});await fs.rename(stage,finalDir);await switchActive(a.stateDir,path.posix.join('releases',releaseId));switched=true;if(a.injectFailure==='post-switch')fail('injected post-switch failure');const installed=await verifyTree(finalDir,ev.entries);const record={schema:SCHEMA,releaseIdentity:ev.releaseIdentity,restoreIdentity:ev.identity,releaseId,previousActive:previous,active:path.posix.join('releases',releaseId),entries:installed,policy:POLICY};record.identity=identity(record);await fs.writeFile(a.output,canon(record)+'\n',{flag:'wx'});console.log(canon(record));}
+ catch(err){await fs.rm(stage,{recursive:true,force:true});if(switched){if(previous)await switchActive(a.stateDir,previous);else await fs.rm(path.join(a.stateDir,'active'),{force:true});const restored=await readActive(a.stateDir);if(restored!==previous)fail(`rollback verification failed after: ${err.message}`);await fs.rm(finalDir,{recursive:true,force:true});}throw err;}}
+main().catch(e=>{console.error(e.message);process.exitCode=1});
