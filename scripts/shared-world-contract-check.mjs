@@ -6,6 +6,7 @@ const panel = fs.readFileSync('src/components/SharedWorldPanel.jsx', 'utf8');
 const world = fs.readFileSync('src/components/LivingWorld.jsx', 'utf8');
 const migration = fs.readFileSync('db/002_shared_world_presence.sql', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/publish-github-pages.yml', 'utf8');
+const residentFunction = fs.readFileSync('supabase/functions/resident-dialogue/index.ts', 'utf8');
 
 assert.ok(world.includes("import SharedWorldPanel from './SharedWorldPanel.jsx'"), 'The Between must expose the shared-world entrance');
 assert.ok(world.includes('<SharedWorldPanel />'), 'The shared-world panel must be mounted in the world');
@@ -15,6 +16,16 @@ assert.ok(client.includes('visibility,') && client.includes('expires_at:'), 'pre
 assert.ok(client.includes('world-presence:'), 'the shared world must subscribe to realtime room changes');
 assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a heartbeat');
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
+assert.ok(client.includes("functions.invoke('resident-dialogue'"), 'resident dialogue must use the authenticated Supabase function');
+assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled()'), 'resident context must require the explicit memory-sync preference');
+assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
+assert.ok(panel.includes('DELETE SAVED ACCOUNT MEMORY'), 'visitors must be able to delete private account memory');
+assert.ok(panel.includes('resident-message-form') === false || world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
+assert.ok(world.includes('askResident(speaker.toLowerCase(), message)'), 'the scene must route free dialogue to the resident provider');
+assert.ok(residentFunction.includes("payload.includeMemory === true"), 'the edge function must gate continuity context on opt-in');
+assert.ok(residentFunction.includes('MODEL_API_KEY') && residentFunction.includes('MODEL_API_URL') && residentFunction.includes('MODEL_NAME'), 'the model provider must be configured only server-side');
+assert.ok(residentFunction.includes('transcriptStored: false'), 'the resident function must not persist conversation transcripts');
+assert.ok(residentFunction.includes('Do not claim private feelings, needs, suffering, consciousness'), 'resident dialogue must preserve the co-presence boundary');
 assert.ok(client.includes('loadPrivateContinuity'), 'authenticated Mirror Memory must be retrievable');
 assert.ok(client.includes('savePrivateContinuity'), 'authenticated Mirror Memory must be writable');
 assert.ok(client.includes("collection: 'settings'"), 'private world memory must use the existing continuity store');
