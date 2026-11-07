@@ -179,3 +179,10 @@
 .living-scene.signal-approach-jello .jello{filter:drop-shadow(0 0 18px #b8c79b88)}
 .living-scene.signal-away .scene-signals{opacity:.22}
 .living-scene.signal-return .station-lamp{animation:lamp-flicker .7s infinite}
+
+.resident-message-form{display:flex;gap:7px;margin-top:14px;border-top:1px solid #c0a57a44;padding-top:12px}
+.resident-message-form input{flex:1;min-width:0;border:1px solid #a78e6c77;background:#13131a;color:#f0e4d0;padding:10px 11px;font:11px 'DM Sans',sans-serif;outline:none}
+.resident-message-form input:focus{border-color:#d6bd91;box-shadow:0 0 0 2px #d6bd9122}
+.resident-message-form button{border:1px solid #c9ae82;background:#c9ae82;color:#19171b;padding:0 13px;font:9px 'DM Mono',monospace;letter-spacing:.12em;cursor:pointer}
+.resident-message-form button:disabled{opacity:.5;cursor:wait}
+.resident-message-note{margin:7px 0 0;color:#9d9284;font:9px/1.45 'DM Mono',monospace;letter-spacing:.03em}
