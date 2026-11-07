@@ -142,9 +142,9 @@
 @media(prefers-reduced-motion:reduce){.tazar.speaking .tazar-mouth,.jello.speaking .jello-mouth{animation:none}}
 
 /* Consent-based acoustic perception: only the live amplitude envelope is observed. */
-.living-scene.sound-active .tazar{filter:drop-shadow(0 14px 22px #f4d9a777);scale:calc(1 + var(--sound-level,0)*.025)}
+.living-scene.sound-active .tazar{filter:drop-shadow(0 14px 22px #f4d9a777);scale:var(--sound-scale,1)}
 .living-scene.sound-active .tazar-wings{animation:tazar-hear .72s ease-in-out infinite alternate}
-.living-scene.sound-active .jello{filter:drop-shadow(0 0 16px #e8c995aa);scale:calc(1 + var(--sound-level,0)*.04)}
+.living-scene.sound-active .jello{filter:drop-shadow(0 0 16px #e8c995aa);scale:var(--sound-scale,1)}
 .living-scene.sound-active .jello-ear{animation:jello-hear .42s ease-in-out infinite alternate}
 @keyframes tazar-hear{from{transform:scaleX(.94) rotate(-1deg)}to{transform:scaleX(1.04) rotate(2deg)}}
 @keyframes jello-hear{from{rotate:-5deg}to{rotate:7deg}}
@@ -170,5 +170,5 @@
 .presence-arrived .jello{filter:drop-shadow(0 0 12px #e8c99555)}
 
 /* Each browser's local visitor seed gives the idle choreography a different phase. */
-.tazar{animation-delay:calc(var(--visitor-phase,0) * -.035s)}
-.jello{animation-delay:calc(var(--visitor-phase,0) * -.027s)}
+.tazar{animation-delay:var(--visitor-delay,0s)}
+.jello{animation-delay:var(--visitor-delay,0s)}
