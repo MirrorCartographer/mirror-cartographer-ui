@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { deletePrivateContinuity, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
+import { deletePrivateContinuity, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -15,6 +15,7 @@ export default function SharedWorldPanel() {
   const [targetId, setTargetId] = useState('');
   const [connectionBusy, setConnectionBusy] = useState(false);
   const [memorySync, setMemorySync] = useState(isPrivateMemorySyncEnabled);
+  const [privateMemory, setPrivateMemory] = useState(null);
   const [status, setStatus] = useState('idle');
   const stopRef = useRef(null);
   const configured = sharedWorldConfigured();
@@ -41,6 +42,13 @@ export default function SharedWorldPanel() {
       .catch((error) => { if (active) setMessage(error.message || 'Could not load connection requests.'); });
     return () => { active = false; };
   }, [open, session?.user?.id]);
+  useEffect(() => {
+    if (!open || !session || !memorySync) { setPrivateMemory(null); return undefined; }
+    let active = true;
+    loadPrivateContinuity().then((value) => { if (active) setPrivateMemory(value); })
+      .catch((error) => { if (active) setMessage(error.message || 'Could not read private memory.'); });
+    return () => { active = false; };
+  }, [open, session?.user?.id, memorySync]);
 
   const refreshConnections = async () => {
     const rows = await listWorldConnections();
@@ -77,6 +85,16 @@ export default function SharedWorldPanel() {
         ? 'Private memory sync is on for this account. Your visit history and choices remain private.'
         : 'Private memory sync is off. This browser keeps its own separate visit history.');
     } catch (error) { setMessage(error.message || 'Could not update the memory preference.'); }
+  };
+
+  const forgetMemoryChoice = async (choice) => {
+    if (!privateMemory) return;
+    const next = { ...privateMemory, choices: (privateMemory.choices || []).filter((item) => item !== choice) };
+    try {
+      await savePrivateContinuity(next);
+      setPrivateMemory(next);
+      setMessage('That memory entry has been removed.');
+    } catch (error) { setMessage(error.message || 'Could not update private memory.'); }
   };
 
   const copyConnectionCode = async () => {
@@ -148,11 +166,27 @@ export default function SharedWorldPanel() {
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
         <label className="shared-memory-sync"><input type="checkbox" checked={memorySync} onChange={(event) => updateMemorySync(event.target.checked)} /> <span>Carry my private memory across devices</span></label>
         <p className="shared-sync-note">Only your visit count and choices. Never visible to other visitors. Off by default.</p>
+        {memorySync && <section className="shared-memory-ledger">
+          <b>PRIVATE MEMORY LEDGER</b>
+          <p>{privateMemory ? `${privateMemory.visits || 0} visits recorded` : 'Loading private memory…'}</p>
+          <small>Only explicit in-world choices are saved. No typed messages, microphone samples, or inferred feelings.</small>
+          {(privateMemory?.choices || []).map((choice) => <p className="memory-entry" key={choice}><span>{({
+            'asked-jello': 'Asked Jello if she is always here',
+            'asked-about-world': 'Asked what this place is',
+            'asked-why': 'Asked why the station exists',
+            'asked-event': 'Asked what happened',
+            'asked-tazar': 'Asked who Tazar is',
+            'left-silence': 'Chose to listen quietly',
+            'opened-the-door': 'Opened the station door'
+          })[choice] || choice}</span><button onClick={() => forgetMemoryChoice(choice)}>FORGET</button></p>)}
+          {privateMemory && !(privateMemory.choices || []).length && <p className="shared-empty">No saved choices yet.</p>}
+        </section>}
         {memorySync && <button className="shared-signout" onClick={async () => {
           try {
             await deletePrivateContinuity();
             setPrivateMemorySyncEnabled(false);
             setMemorySync(false);
+            setPrivateMemory(null);
             setMessage('Saved account memory deleted. This browser can still remember locally.');
           } catch (error) { setMessage(error.message || 'Could not delete saved account memory.'); }
         }}>DELETE SAVED ACCOUNT MEMORY</button>}
