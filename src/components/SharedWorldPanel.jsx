@@ -89,8 +89,8 @@ export default function SharedWorldPanel() {
         <button className="shared-action" onClick={signIn} disabled={busy || !email.trim()}>{busy ? 'SENDING…' : 'SEND ME A KEY'}</button>
       </> : <>
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
-        <label>Your name in this room<input value={displayName} maxLength={40} onChange={(event) => setDisplayName(event.target.value)} /></label>
-        <label>Who can see you<select value={visibility} onChange={(event) => setVisibility(event.target.value)}>
+        <label>Your name in this room<input value={displayName} maxLength={40} disabled={status === 'connected'} onChange={(event) => setDisplayName(event.target.value)} /></label>
+        <label>Who can see you<select value={visibility} disabled={status === 'connected'} onChange={(event) => setVisibility(event.target.value)}>
           <option value="private">Only me</option><option value="connections">Accepted connections</option><option value="public">Everyone in the room</option>
         </select></label>
         {status !== 'connected'
