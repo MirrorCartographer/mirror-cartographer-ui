@@ -333,7 +333,7 @@ export async function askResident(resident, message, perception = {}) {
   });
   if (error) throw error;
   if (!data?.reply || typeof data.reply !== 'string') throw new Error('The resident could not find a reply.');
-  return data.reply.slice(0, 1400);
+  return { reply: data.reply.slice(0, 1400), ontologyLabel: data.ontologyLabel || 'AI-generated fictional character dialogue', boundaryAction: data.boundaryAction || 'allow', boundaryFlags: Array.isArray(data.boundaryFlags) ? data.boundaryFlags : [] };
 }
 
 export async function deletePrivateContinuity() {
