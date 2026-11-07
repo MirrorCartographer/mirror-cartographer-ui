@@ -12,6 +12,12 @@ The Living World is a client-side experience served as a static GitHub Pages app
 | Browser-local visitor key | Browser storage | Return to the same browser profile | Real-world identity or cross-device identity |
 | Microphone amplitude | Explicit visitor action + browser permission | A local sound-level envelope | Words, speaker identity, intent, mood, or meaning |
 
+## Observation provenance
+
+The scene now routes bounded observations through `src/engine/perceptionLedger.js`. Each event carries a source, permission state, observation timestamp, expiry, confidence, `local-only` scope, and `ephemeral` retention label. The in-memory ring buffer is capped at 64 observations and expires entries from snapshots. It accepts only bounded scalar values or normalized pointer coordinates; it rejects arbitrary objects and raw media payloads. The ledger is not written to localStorage, Supabase, or a network endpoint. It is a local sensing/provenance substrate, not a remote inference engine.
+
+Current event types include pointer position/touch, resident focus, page visibility, window focus, microphone state, and a short-lived microphone RMS envelope.
+
 ## Microphone boundary
 
 "LET THEM HEAR" requests microphone access only after an explicit click. The stream is connected to a Web Audio analyser, not to the audio output. The app computes a short-lived RMS amplitude envelope in the browser and uses it only to animate Tazar and Jello.
@@ -40,15 +46,20 @@ The wider repositories contain separate work for:
 
 Those components are not automatically part of this GitHub Pages scene. The UI's `api/` and `server/` modules require a compatible server deployment and configured secrets. The static Pages build does not make those server routes appear. The core repository's peer execution runtime is not a visitor-presence service. No live shared-world database, real-time visitor channel, or character inference API is claimed by this page.
 
+## Shared-world substrate
+
+`db/002_shared_world_presence.sql` adds authenticated connection requests and an expiring presence projection. Presence visibility is `private`, `connections`, or `public`; connection-only visibility requires an accepted relationship. The schema publishes the presence table to Supabase Realtime when the standard publication is available. It deliberately stores no microphone envelope, pointer coordinates, transcripts, inferred mood, or private continuity content.
+
+This is a database migration, not proof of a live connection. The migration must be applied to the actual Supabase project, and a browser client must be configured with its public URL/anon key and authenticated session before live co-presence can be enabled. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
+
 ## Perception roadmap
 
-1. **Local interaction sensing** — pointer, dwell, stillness, focus, visibility.
-2. **Consented acoustic envelope** — local amplitude only; no recording/transcription.
-3. **Sensor provenance** — label every observation with source, permission, timestamp, confidence, and expiry.
-4. **Character response policy** — map observable signals to bounded visual/dialogue changes; no hidden emotional claims.
-5. **Session continuity** — distinguish browser-local memory from authenticated account memory.
-6. **Shared presence** — only after a real backend, authenticated identities, opt-in visibility, retention policy, and cross-user privacy tests exist.
-7. **Agentic character dialogue** — only when a real model/runtime, memory scope, provenance, safety boundary, and failure handling are connected and tested.
+1. **Local interaction sensing** — pointer, dwell, stillness, focus, visibility, and consented acoustic envelope.
+2. **Observation provenance** — implemented as a bounded, ephemeral, local-only ledger.
+3. **Character response policy** — map observable signals to bounded visual/dialogue changes; no hidden emotional claims.
+4. **Session continuity** — browser-local memory exists; authenticated account continuity remains separate and needs a compatible server or direct RLS-protected client.
+5. **Shared presence** — database schema is prepared; live authentication, client subscription, migration application, expiry cleanup, and cross-user privacy tests remain to be connected.
+6. **Agentic character dialogue** — requires a real model/runtime, memory scope, provenance, safety boundary, and failure handling. The current resident dialogue remains scripted.
 8. **Perception-to-agent bridge** — connect signal records to a real inference runtime only with explicit provenance, bounded memory, consent scopes, and observable failure states.
 
 ## Release truth
