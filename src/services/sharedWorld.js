@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 let client = null;
+let activePresenceWriter = null;
 const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
 const RESIDENT_MEMORY_USE_KEY = 'mc-resident-memory-use-enabled';
 const AMBIENT_CONTEXT_USE_KEY = 'mc-ambient-context-use-enabled';
@@ -65,6 +66,12 @@ export function getSharedWorldClient() {
     });
   }
   return client;
+}
+
+export function updateSharedPresenceActivity(activityState) {
+  if (!['present', 'wandering', 'in-conversation', 'away'].includes(activityState)) return Promise.resolve(false);
+  if (!activePresenceWriter) return Promise.resolve(false);
+  return activePresenceWriter(activityState).then(() => true);
 }
 
 export async function requestSharedWorldLink(email) {
@@ -145,13 +152,16 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
 
   const safeName = String(displayName || 'Wanderer').trim().slice(0, 40) || 'Wanderer';
   const safeRoom = String(roomId).replace(/[^a-z0-9-]/gi, '-').slice(0, 80);
-  const writePresence = async (activityState = 'present') => {
+  let desiredActivityState = 'present';
+  const writePresence = async (activityState = desiredActivityState) => {
+    if (activityState !== 'away') desiredActivityState = activityState;
+    const effectiveActivityState = document.visibilityState === 'hidden' ? 'away' : activityState;
     const now = Date.now();
     const { error } = await supabase.from('world_presence').upsert({
       user_id: user.id,
       display_name: safeName,
       room_id: safeRoom,
-      activity_state: activityState,
+      activity_state: effectiveActivityState,
       visibility,
       last_seen_at: new Date(now).toISOString(),
       expires_at: new Date(now + 90000).toISOString()
@@ -169,7 +179,8 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
     onChange({ status: 'connected', people: (data || []).filter((person) => person.user_id !== user.id) });
   };
 
-  await writePresence();
+  await writePresence('present');
+  activePresenceWriter = writePresence;
   await refresh();
   const channel = supabase.channel(`world-presence:${safeRoom}`);
   channel.on('postgres_changes', {
@@ -182,10 +193,10 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
 
   const heartbeat = window.setInterval(() => {
     const hidden = document.visibilityState === 'hidden';
-    writePresence(hidden ? 'away' : 'present').then(refresh).catch((error) => onChange({ status: 'error', error: error.message }));
+    writePresence(hidden ? 'away' : desiredActivityState).then(refresh).catch((error) => onChange({ status: 'error', error: error.message }));
   }, 30000);
   const onVisibility = () => {
-    writePresence(document.visibilityState === 'hidden' ? 'away' : 'present')
+    writePresence(document.visibilityState === 'hidden' ? 'away' : desiredActivityState)
       .then(refresh).catch((error) => onChange({ status: 'error', error: error.message }));
   };
   document.addEventListener('visibilitychange', onVisibility);
@@ -194,6 +205,7 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
   return async () => {
     if (stopped) return;
     stopped = true;
+    if (activePresenceWriter === writePresence) activePresenceWriter = null;
     window.clearInterval(heartbeat);
     document.removeEventListener('visibilitychange', onVisibility);
     await supabase.removeChannel(channel);
