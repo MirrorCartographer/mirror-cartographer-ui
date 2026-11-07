@@ -125,6 +125,7 @@ export default function LivingWorld() {
   const [worldConversationHistory, setWorldConversationHistory] = useState([]);
   const residentSessionUserRef = useRef(null);
   const [agentBusy, setAgentBusy] = useState(false);
+  const [boundaryNotice, setBoundaryNotice] = useState('');
   const [speaker, setSpeaker] = useState('TAZAR');
   const [ambient, setAmbient] = useState(false);
   const audioRef = useRef(null);
@@ -430,8 +431,10 @@ export default function LivingWorld() {
     const residentKey = speaker.toLowerCase();
     const history = worldConversationHistory.slice(-8);
     try {
-      const reply = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history });
+      const response = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history });
+      const reply = typeof response === 'string' ? response : response.reply;
       setDialogue(reply);
+      setBoundaryNotice(response?.boundaryAction === 'softened' ? 'The reply was reframed to keep the boundary clear.' : '');
       setWorldConversationHistory((current) => [
         ...current,
         { role: 'user', content: message },
@@ -461,7 +464,7 @@ export default function LivingWorld() {
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
-    <section className="tazar-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
+    <section className="tazar-dialogue" aria-live="polite"><p className="resident-ontology">FICTIONAL INHABITANTS · SCRIPTED OR AI-GENERATED DIALOGUE</p>{boundaryNotice && <p className="resident-boundary-notice">{boundaryNotice}</p>}<p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
       {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={rememberJello}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-tazar', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
@@ -469,7 +472,7 @@ export default function LivingWorld() {
         <input value={visitorMessage} onChange={(event) => setVisitorMessage(event.target.value)} maxLength={1200} placeholder={`Say something to ${speaker.toLowerCase()}…`} aria-label={`Message ${speaker.toLowerCase()}`} />
         <button type="submit" disabled={agentBusy || !visitorMessage.trim()}>{agentBusy ? 'LISTENING…' : 'SEND'}</button>
       </form>
-      <p className="resident-message-note">Free dialogue requires sign-in and a configured resident model. Messages are sent to that provider; Mirror Cartographer does not store the transcript.</p>
+      <p className="resident-message-note">Free dialogue is AI-generated fiction. Sign in and configure the resident provider to use it. Submitted messages and recent turns are sent to that provider; Mirror Cartographer does not store the transcript.</p>
     </section>
     <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>MICROPHONE {micState.toUpperCase().replaceAll('-', ' ')} · LEVEL {Math.round(micLevel * 100)}{micState === 'listening' ? ' · LOCAL ONLY / NO RECORDING' : ''}</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
