@@ -18,7 +18,7 @@ assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a he
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
 assert.ok(client.includes("functions.invoke('resident-dialogue'"), 'resident dialogue must use the authenticated Supabase function');
 assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled()'), 'resident context must require the explicit memory-sync preference');
-assert.ok(client.includes('history') && client.includes('perception: { cue, intensity }'), 'resident calls must carry only bounded session history and perception cues');
+assert.ok(client.includes('history') && client.includes('perception: { cue, intensity, ambientCue, ambientIntensity }'), 'resident calls must carry only bounded session history and perception cues');
 assert.ok(world.includes('residentHistory[residentKey]'), 'conversation continuity must be scoped by resident');
 assert.ok(world.includes("slice(-8)"), 'resident conversation history must remain bounded');
 assert.ok(residentFunction.includes('...history'), 'the provider may receive only the bounded ephemeral conversation turns');
@@ -30,7 +30,7 @@ assert.ok(panel.includes('PRIVATE MEMORY LEDGER'), 'visitors must be able to ins
 assert.ok(panel.includes('forgetMemoryChoice'), 'visitors must be able to remove individual saved choices');
 assert.ok(panel.includes('Off by default'), 'cross-device memory sync must begin disabled');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
-assert.ok(world.includes('askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history })'), 'the scene must route free dialogue to the resident provider');
+assert.ok(world.includes('askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history })'), 'the scene must route free dialogue to the resident provider');
 assert.ok(residentFunction.includes("payload.includeMemory === true"), 'the edge function must gate continuity context on opt-in');
 assert.ok(residentFunction.includes('MODEL_API_KEY') && residentFunction.includes('MODEL_API_URL') && residentFunction.includes('MODEL_NAME'), 'the model provider must be configured only server-side');
 assert.ok(residentFunction.includes('transcriptStored: false'), 'the resident function must not persist conversation transcripts');
