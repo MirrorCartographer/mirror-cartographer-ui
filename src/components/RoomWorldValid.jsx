@@ -280,8 +280,8 @@ export default function RoomWorldValid() {
 
   return <main className="room-world mc-afterimage-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
     <header className="mc-zine-masthead">
-      <a className="mc-zine-brand" href="/atlas/"><span className="mc-brand-mark">✳</span><span>MIRROR CARTOGRAPHER<small>FIELD RECORDS · VOL. 01</small></span></a>
-      <nav aria-label="Explore the archive"><a href="/atlas/">THE ATLAS ↗</a><a href="/atlas/rooms/music/">SOUND ARCHIVE ♫</a><a href="/art-machine/">IMAGE ORGANISM ↗</a></nav>
+      <a className="mc-zine-brand" href="./atlas/"><span className="mc-brand-mark">✳</span><span>MIRROR CARTOGRAPHER<small>FIELD RECORDS · VOL. 01</small></span></a>
+      <nav aria-label="Explore the archive"><a href="./atlas/">THE ATLAS ↗</a><a href="./atlas/rooms/music/">SOUND ARCHIVE ♫</a><a href="./art-machine/">IMAGE ORGANISM ↗</a></nav>
       <span className="mc-zine-edition">AN INDEPENDENT UNIVERSE / EST. IN CURIOSITY</span>
     </header>
     <div className="mc-zine-collage" aria-hidden="true">
@@ -300,7 +300,7 @@ export default function RoomWorldValid() {
     <section className="mc-zine-copy" aria-label="Welcome">
       <p className="mc-zine-kicker">A FIELD GUIDE TO THE BEAUTIFULLY UNFINISHED</p><h1>MAKE A<br/>LITTLE <em>WEIRD.</em></h1>
       <p className="mc-zine-deck">A living archive for music, strange ideas, symbolic machinery, art, and other things that refuse to behave.</p>
-      <div className="mc-zine-actions"><a href="/atlas/">WANDER IN <span>↗</span></a><a href="/atlas/rooms/music/">PLAY SOMETHING <span>♫</span></a></div>
+      <div className="mc-zine-actions"><a href="./atlas/">WANDER IN <span>↗</span></a><a href="./atlas/rooms/music/">PLAY SOMETHING <span>♫</span></a></div>
       <p className="mc-zine-footnote">CURRENT FREQUENCY: ROOM {String(roomId).padStart(2,'0')} / {room.primary.toUpperCase()}</p>
     </section><div className="mc-zine-stamp" aria-hidden="true">NO<br/>FIXED<br/>MEANING</div>
     {storageStatus && <span className="storage-warning" role="status">{storageStatus}</span>}
