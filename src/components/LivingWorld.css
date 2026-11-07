@@ -190,3 +190,6 @@
 .living-scene.signal-conversation .tazar-mouth,.living-scene.signal-conversation .jello-mouth{animation:resident-speak .16s ease-in-out infinite alternate}
 .living-scene.signal-choice .station-lamp{filter:brightness(1.25);box-shadow:0 0 14px 7px #ffe3a277}
 @keyframes resident-speak{to{transform:scaleY(1.8)}}
+
+.resident-ontology{margin:0 0 7px;color:#a99a83;font:8px 'DM Mono',monospace;letter-spacing:.13em}
+.resident-boundary-notice{margin:5px 0;padding:6px 8px;border-left:2px solid #c7aa7d;color:#c8b99f;background:#c7aa7d12;font:9px/1.4 'DM Mono',monospace}
