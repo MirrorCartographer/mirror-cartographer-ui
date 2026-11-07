@@ -202,6 +202,7 @@ export default function LivingWorld() {
       setPerceptionFeed((items) => [observation, ...items].slice(0, 8));
     }
     if (observation.kind === 'visitor-move') {
+      window.clearTimeout(presenceTimerRef.current);
       lastApproachedResidentRef.current = null;
       setPresence('walking');
       updateSharedPresenceActivity('wandering').catch(() => {});
@@ -551,7 +552,7 @@ export default function LivingWorld() {
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     {fieldLogOpen && <aside className="field-receipt" aria-label="Local perception field log">
       <div className="field-receipt-head"><b>FIELD RECEIPT</b><button onClick={() => setFieldLogOpen(false)} aria-label="Close field log">×</button></div>
-      <p>OBSERVED SIGNALS · LOCAL / EPHEMERAL</p>
+      <p>SELECTED OBSERVATIONS · LOCAL / EPHEMERAL</p>
       {perceptionFeed.length ? perceptionFeed.map((item) => {
         const labels = { 'visitor-move': 'VISITOR MOVED', 'visitor-approach': `APPROACH · ${String(item.value).toUpperCase()}`, 'pointer-touch': 'TOUCH INPUT', 'pointer-stillness': 'MOVEMENT SETTLED', 'character-focus': `FOCUS · ${String(item.value).toUpperCase()}`, 'audio-envelope': 'ROOM SOUND LEVEL', 'microphone-state': `MICROPHONE · ${String(item.value).toUpperCase()}`, 'page-visibility': item.value ? 'PAGE VISIBLE' : 'PAGE HIDDEN', 'window-focus': item.value ? 'WINDOW FOCUSED' : 'WINDOW BLURRED', 'submitted-language': 'MESSAGE SUBMITTED', 'resident-choice': `CHOICE · ${String(item.value).toUpperCase()}` };
         return <div className="field-receipt-entry" key={item.id}><b>{labels[item.kind] || item.kind.toUpperCase()}</b><small>{item.source} · {item.permission}</small><small>{item.scope} / {item.retention}</small></div>;
