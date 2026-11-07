@@ -96,6 +96,9 @@ function PortalMap({ progress, onEnter, onClose }) {
         <a href="./atlas/rooms/screening-room/"><small>FILM / CULTURE</small><strong>The Picture House</strong><span>A little independent cinema. The current feature is a Veteran-made story of one person showing up for another.</span><b>ENTER THE SCREENING ↗</b></a>
         <a href="./atlas/rooms/arcade/veteran-mission/"><small>VETERAN / PRACTICAL PATH</small><strong>The Mission</strong><span>Turn a broad situation into a manageable path, with room for evidence, constraints, and the next action.</span><b>OPEN THE MISSION MAP ↗</b></a>
         <a href="./?view=workshop"><small>THE ENGINE ROOM / 31 WORKING LANES</small><strong>The Workshop</strong><span>Open the deeper instruments: health, body mapping, evidence, memory, projects, privacy, and creative work.</span><b>OPEN THE WORKSHOP ↗</b></a>
+        <a href="./atlas/research-atlas/"><small>RESEARCH / PROVENANCE</small><strong>The Between</strong><span>Trace sources, claims, hypotheses, relationships, decisions, and uncertainty in a research instrument.</span><b>ENTER THE RESEARCH FIELD ↗</b></a>
+        <a href="./commissions.html"><small>MAKE THE WORK SUSTAINABLE</small><strong>Commissions</strong><span>Request a private, source-aware map for a tangled decision, project, identity, or system.</span><b>WORK WITH THE CARTOGRAPHER ↗</b></a>
+        <a href="./workbench.html"><small>PLAY / INSPECT / REMIX</small><strong>Source Workbench</strong><span>Open indexed HTML experiments, run them, inspect their source, and export local remixes.</span><b>OPEN THE WORKBENCH ↗</b></a>
       </div>
     </section>
     <div className="portal-grid">{ROOMS.map((room) => {
