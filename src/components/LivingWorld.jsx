@@ -29,27 +29,27 @@ function readMemory() {
   } catch { return { visitorId:makeVisitorId(), visits:0, trust:0, choices:[], lastEvent:'' }; }
 }
 
-function Morrow({ mood, onClick, noticed, speaking }) {
-  return <button className={`morrow ${mood} ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Morrow, the station keeper">
-    <span className="morrow-shadow" />
-    <svg className="morrow-art" viewBox="0 0 250 340" role="img" aria-label="Morrow, a small moth-like station keeper in an oversized coat">
+function Tazar({ mood, onClick, noticed, speaking }) {
+  return <button className={`tazar ${mood} ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Tazar, the station keeper">
+    <span className="tazar-shadow" />
+    <svg className="tazar-art" viewBox="0 0 250 340" role="img" aria-label="Tazar, a small moth-like station keeper in an oversized coat">
       <defs>
         <linearGradient id="m-coat" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#5c3445"/><stop offset=".55" stopColor="#29252e"/><stop offset="1" stopColor="#11151b"/></linearGradient>
         <linearGradient id="m-wing" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#e8cfa0" stopOpacity=".92"/><stop offset=".52" stopColor="#b98c9b" stopOpacity=".62"/><stop offset="1" stopColor="#758e85" stopOpacity=".15"/></linearGradient>
         <radialGradient id="m-face"><stop stopColor="#f3dfbd"/><stop offset="1" stopColor="#a98a76"/></radialGradient>
         <filter id="m-glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <g className="morrow-wings" fill="url(#m-wing)" stroke="#e8d3b5" strokeOpacity=".75" strokeWidth="1.5">
+      <g className="tazar-wings" fill="url(#m-wing)" stroke="#e8d3b5" strokeOpacity=".75" strokeWidth="1.5">
         <path d="M108 130C52 32 8 45 20 124c7 47 48 79 94 80Z"/><path d="M142 130c56-98 100-85 88-6-7 47-48 79-94 80Z"/>
         <path d="M104 163C42 135 24 173 52 211c18 24 43 24 61 9Z" opacity=".7"/><path d="M146 163c62-28 80 10 52 48-18 24-43 24-61 9Z" opacity=".7"/>
         <path d="M30 84q38 8 67 64M219 84q-38 8-67 64M48 184q30-20 58-13M202 184q-30-20-58-13" fill="none" stroke="#6e5b61" strokeOpacity=".7"/>
       </g>
-      <g className="morrow-antennae" fill="none" stroke="#d9c39f" strokeWidth="3" strokeLinecap="round"><path d="M111 83Q78 25 61 42"/><path d="M139 83q33-58 50-41"/></g>
+      <g className="tazar-antennae" fill="none" stroke="#d9c39f" strokeWidth="3" strokeLinecap="round"><path d="M111 83Q78 25 61 42"/><path d="M139 83q33-58 50-41"/></g>
       <ellipse cx="125" cy="125" rx="49" ry="52" fill="url(#m-face)" stroke="#ead9bd" strokeWidth="2"/>
       <path d="M79 117q4-51 46-49 44-1 48 49-22-20-47-18-24-2-47 18" fill="#342833"/>
-      <g className="morrow-eyes" fill="#17151a" filter="url(#m-glow)"><ellipse cx="108" cy="126" rx="6" ry="10"/><ellipse cx="143" cy="126" rx="6" ry="10"/></g>
-      <g className="morrow-blush" fill="#a66d71" opacity=".48"><ellipse cx="94" cy="143" rx="10" ry="5"/><ellipse cx="156" cy="143" rx="10" ry="5"/></g>
-      <path className="morrow-mouth" d="M119 151q7 6 14 0" fill="none" stroke="#66464a" strokeWidth="2" strokeLinecap="round"/>
+      <g className="tazar-eyes" fill="#17151a" filter="url(#m-glow)"><ellipse cx="108" cy="126" rx="6" ry="10"/><ellipse cx="143" cy="126" rx="6" ry="10"/></g>
+      <g className="tazar-blush" fill="#a66d71" opacity=".48"><ellipse cx="94" cy="143" rx="10" ry="5"/><ellipse cx="156" cy="143" rx="10" ry="5"/></g>
+      <path className="tazar-mouth" d="M119 151q7 6 14 0" fill="none" stroke="#66464a" strokeWidth="2" strokeLinecap="round"/>
       <path d="M83 174q42-19 84 0l25 128q-66 36-134 0Z" fill="url(#m-coat)" stroke="#d0b28b" strokeWidth="2"/>
       <path d="M125 173v127m-23-112 23 24 23-24" fill="none" stroke="#d7bd96" strokeWidth="2"/>
       <path d="M83 188 48 266q-3 11 9 14l47-61m63-31 35 78q3 11-9 14l-47-61" fill="none" stroke="#b98e79" strokeWidth="15" strokeLinecap="round"/>
@@ -57,21 +57,21 @@ function Morrow({ mood, onClick, noticed, speaking }) {
       <path d="M105 190q20 18 40 0" fill="none" stroke="#ead8b7" strokeWidth="1.5"/>
       <circle cx="125" cy="222" r="5" fill="#e5c68d"/><circle cx="125" cy="249" r="4" fill="#e5c68d"/>
       <path d="M94 183q-20 45-8 87m70-87q20 45 8 87" fill="none" stroke="#8f6670" strokeWidth="2" opacity=".8"/>
-      <g className="morrow-lantern" transform="translate(187 228)"><path d="M0 0v20" stroke="#d9c39f" strokeWidth="2"/><path d="M-10 20h20l-3 24h-14Z" fill="#d5a96c" stroke="#f3d6a5"/><ellipse cx="0" cy="31" rx="8" ry="10" fill="#ffe7a9" opacity=".9" filter="url(#m-glow)"/></g>
+      <g className="tazar-lantern" transform="translate(187 228)"><path d="M0 0v20" stroke="#d9c39f" strokeWidth="2"/><path d="M-10 20h20l-3 24h-14Z" fill="#d5a96c" stroke="#f3d6a5"/><ellipse cx="0" cy="31" rx="8" ry="10" fill="#ffe7a9" opacity=".9" filter="url(#m-glow)"/></g>
     </svg>
-    {noticed && <span className="morrow-notice">you again.</span>}
-    <span className="morrow-name">MORROW <i>· station keeper</i></span>
+    {noticed && <span className="tazar-notice">you again.</span>}
+    <span className="tazar-name">MORROW <i>· station keeper</i></span>
   </button>;
 }
 
 
-function Vesper({ onClick, speaking }) {
-  return <button className={`vesper ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Vesper, the station cat">
-    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-mouth"/><span className="vesper-bell"/><span className="vesper-name">VESPER <i>· station cat</i></span>
+function Jello({ onClick, speaking }) {
+  return <button className={`jello ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Jello, the station cat">
+    <span className="jello-tail"/><span className="jello-body"/><span className="jello-head"/><i className="jello-ear ear-left"/><i className="jello-ear ear-right"/><i className="jello-eye eye-left"/><i className="jello-eye eye-right"/><span className="jello-mouth"/><span className="jello-bell"/><span className="jello-name">JELLO <i>· station cat</i></span>
   </button>;
 }
 
-function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPresence, speaker, dialogue }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue }) {
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
@@ -80,9 +80,9 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPrese
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
     pointerEvent.currentTarget.style.setProperty('--gaze-y', `${clamp((y - 0.5) * 5, -2.5, 2.5)}px`);
-    const nearMorrow = x > 0.34 && x < 0.66 && y > 0.42;
-    const nearVesper = x > 0.66 && y > 0.5;
-    onPresence(nearMorrow ? 'morrow-near' : nearVesper ? 'vesper-near' : 'nearby');
+    const nearTazar = x > 0.34 && x < 0.66 && y > 0.42;
+    const nearJello = x > 0.66 && y > 0.5;
+    onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
   };
   return <div className={`living-scene mood-${event.mood} presence-${presence}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
@@ -94,7 +94,7 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPrese
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "MORROW" && Boolean(dialogue)}/><Vesper onClick={onVesper} speaking={speaker === "VESPER" && Boolean(dialogue)}/>
+    <Tazar mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "MORROW" && Boolean(dialogue)}/><Jello onClick={onJello} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -106,7 +106,7 @@ export default function LivingWorld() {
   const [presence, setPresence] = useState('arrived');
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
-  const autoNoticeRef = useRef({ morrow:false, vesper:false });
+  const autoNoticeRef = useRef({ tazar:false, jello:false });
   const [dialogue, setDialogue] = useState('');
   const [speaker, setSpeaker] = useState('MORROW');
   const [ambient, setAmbient] = useState(false);
@@ -136,20 +136,20 @@ export default function LivingWorld() {
   }, []);
   useEffect(() => {
     if (dialogue) return;
-    if (presence === 'morrow-near' && !autoNoticeRef.current.morrow) {
-      autoNoticeRef.current.morrow = true;
+    if (presence === 'tazar-near' && !autoNoticeRef.current.tazar) {
+      autoNoticeRef.current.tazar = true;
       setSpeaker('MORROW');
       setDialogue('You can look, you know. I am not a display.');
-    } else if (presence === 'vesper-near' && !autoNoticeRef.current.vesper) {
-      autoNoticeRef.current.vesper = true;
-      setSpeaker('VESPER');
+    } else if (presence === 'jello-near' && !autoNoticeRef.current.jello) {
+      autoNoticeRef.current.jello = true;
+      setSpeaker('JELLO');
       setDialogue('I saw you looking. I am deciding whether to be offended.');
     }
   }, [presence, dialogue]);
   const updatePresence = (nextPresence) => {
     window.clearTimeout(presenceTimerRef.current);
     setPresence(nextPresence);
-    if (['nearby', 'morrow-near', 'vesper-near'].includes(nextPresence)) {
+    if (['nearby', 'tazar-near', 'jello-near'].includes(nextPresence)) {
       presenceTimerRef.current = window.setTimeout(() => setPresence('still'), 2600);
     } else if (nextPresence === 'away') {
       presenceTimerRef.current = window.setTimeout(() => setPresence('away'), 1200);
@@ -188,10 +188,10 @@ export default function LivingWorld() {
     if (audioRef.current) { audioRef.current.close().catch(() => {}); audioRef.current = null; }
     setAmbient(false);
   };
-  const talkToVesper = () => {
+  const talkToJello = () => {
     stopAmbient();
-    setSpeaker('VESPER');
-    setDialogue('I live under the timetable. It is warmer there. Morrow says I am not supposed to eat the tickets.');
+    setSpeaker('JELLO');
+    setDialogue('I live under the timetable. It is warmer there. Tazar says I am not supposed to eat the tickets.');
   };
   const talk = () => {
     stopAmbient();
@@ -203,14 +203,14 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onVesper={talkToVesper} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
-    <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'VESPER' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
-      {speaker === 'VESPER' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-vesper'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Morrow keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
+    <section className="tazar-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
+      {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-jello'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
-      : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-morrow', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
+      : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-tazar', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
     <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
