@@ -140,3 +140,13 @@
 .jello.speaking .jello-mouth{height:6px;background:#b77e83;border:1px solid #e0b0a0;animation:jello-speech .22s ease-in-out infinite alternate}
 @keyframes jello-speech{to{transform:scaleY(.45)}}
 @media(prefers-reduced-motion:reduce){.tazar.speaking .tazar-mouth,.jello.speaking .jello-mouth{animation:none}}
+
+/* Consent-based acoustic perception: only the live amplitude envelope is observed. */
+.living-scene.sound-active .tazar{filter:drop-shadow(0 14px 22px #f4d9a777)}
+.living-scene.sound-active .tazar-wings{animation:tazar-hear .72s ease-in-out infinite alternate}
+.living-scene.sound-active .jello{filter:drop-shadow(0 0 16px #e8c995aa)}
+.living-scene.sound-active .jello-ear{animation:jello-hear .42s ease-in-out infinite alternate}
+@keyframes tazar-hear{from{transform:scaleX(.94) rotate(-1deg)}to{transform:scaleX(1.04) rotate(2deg)}}
+@keyframes jello-hear{from{rotate:-5deg}to{rotate:7deg}}
+.world-topbar nav button[aria-pressed="true"]{color:#f4d9a7;border-color:#e8c99599;box-shadow:0 0 14px #e8c99533}
+@media(prefers-reduced-motion:reduce){.living-scene.sound-active .tazar-wings,.living-scene.sound-active .jello-ear{animation:none}}
