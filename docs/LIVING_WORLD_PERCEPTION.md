@@ -63,7 +63,7 @@ The browser-side shared-world client and entry panel are implemented. They use S
 1. **Local interaction sensing** — pointer, dwell, stillness, focus, visibility, and consented acoustic envelope.
 2. **Observation provenance** — implemented as a bounded, ephemeral, local-only ledger.
 3. **Character response policy** — map observable signals to bounded visual/dialogue changes; no hidden emotional claims.
-4. **Session continuity** — browser-local memory exists; authenticated account continuity remains separate and needs a compatible server or direct RLS-protected client.
+4. **Session continuity** — browser-local memory and optional RLS-protected account memory sync are implemented; account sync is off by default, opt-in, and disabled on sign-out.
 5. **Shared presence** — browser client, sign-in, connection requests, visibility controls, Realtime subscription, and heartbeat code are implemented; live operation still depends on applying the migration, configuring GitHub Actions variables and Supabase redirect allowlists, and verifying cross-user behavior.
 6. **Model-backed resident dialogue** — client bridge, authenticated Edge Function, bounded in-session history, and scene-cue payload are implemented in source; live replies require the Edge Function to be deployed and `MODEL_API_URL`, `MODEL_API_KEY`, `MODEL_NAME`, and allowed origins configured in Supabase.
 7. **Perception-to-agent bridge** — bounded cues now flow from the local ledger through the response policy into resident model requests. It does not pass raw audio, coordinates, or psychological inferences.
