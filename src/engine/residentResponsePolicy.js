@@ -17,6 +17,8 @@ export function deriveResidentResponse(observation) {
       ? { cue: 'sound', resident: 'both', intensity: clamp(observation.value) }
       : { cue: 'quiet', resident: null, intensity: 0 };
   }
+  if (observation.kind === 'submitted-language') return { cue: 'conversation', resident: observation.value, intensity: 1 };
+  if (observation.kind === 'resident-choice') return { cue: 'choice', resident: observation.value, intensity: 0.7 };
   if (observation.kind === 'character-focus') {
     return { cue: observation.value === 'jello' ? 'approach-jello' : 'approach-tazar', resident: observation.value, intensity: 1 };
   }
