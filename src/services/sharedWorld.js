@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 let client = null;
 const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
+const notifyMemoryLedgerChanged = () => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('mc-memory-ledger-updated')); };
 
 export function isPrivateMemorySyncEnabled() {
   try { return window.localStorage.getItem(PRIVATE_MEMORY_SYNC_KEY) === 'true'; }
@@ -238,6 +239,7 @@ export async function savePrivateContinuity(memory = {}) {
     const { error: ledgerError } = await supabase.from('memory_ledger').upsert(ledgerRows, { onConflict: 'owner_id,source_key' });
     if (ledgerError) throw ledgerError;
   }
+  notifyMemoryLedgerChanged();
   return true;
 }
 
@@ -267,6 +269,7 @@ export async function updatePrivateMemoryNote(entryId, note) {
     content, last_user_reviewed_at: new Date().toISOString()
   }).eq('id', entryId).eq('owner_id', user.id);
   if (error) throw error;
+  notifyMemoryLedgerChanged();
   return content;
 }
 
@@ -316,5 +319,6 @@ export async function deletePrivateContinuity() {
   if (recordError) throw recordError;
   const { error: ledgerError } = await supabase.from('memory_ledger').delete().eq('owner_id', user.id);
   if (ledgerError) throw ledgerError;
+  notifyMemoryLedgerChanged();
   return true;
 }
