@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 const openCountry = async page => page.goto('/?view=workshop&lane=country', { waitUntil: 'domcontentloaded' });
-const clearCountry = async page => page.addInitScript(() => {
-  localStorage.removeItem('mc-living-country-v1');
-  localStorage.removeItem('mc-living-country-v2');
-  localStorage.removeItem('mc-living-country-investigations-v1');
-});
+const clearCountry = async page => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => {
+    localStorage.removeItem('mc-living-country-v1');
+    localStorage.removeItem('mc-living-country-v2');
+    localStorage.removeItem('mc-living-country-investigations-v1');
+  });
+};
 
 test.describe('The Living Country', () => {
   test('the lens changes the reading mode and companion notes respond', async ({ page }) => {
@@ -26,7 +29,7 @@ test.describe('The Living Country', () => {
     await openCountry(page);
     await page.getByPlaceholder('A detail, an oddity, a question, a thing you noticed…').fill('A new signal\nIt repeats after a delay.');
     await page.getByLabel('TYPE').selectOption('hypothesis');
-    await page.getByLabel('CONTEXT').selectOption('temporal');
+    await page.getByLabel('New fragment context').selectOption('temporal');
     await page.getByRole('button', { name: 'PIN TO THE COUNTRY +' }).click();
     await expect(page.locator('.selected-fragment h2')).toHaveText('A new signal');
     await page.getByLabel('Read through context').selectOption('temporal');
@@ -131,7 +134,7 @@ test.describe('The Living Country', () => {
     await expect(page.getByRole('heading', { name: 'Reality ledger' })).toBeVisible();
     await expect(page.locator('.reality-ledger')).toContainText('No OAuth, server-side identity');
     await expect(page.locator('.reality-ledger')).toContainText('Browser-local only');
-    await page.getByRole('button', { name: /Human Judgment Lab/ }).click();
+    await page.getByLabel('Jump to workshop lane').selectOption('judgment');
     await expect(page.getByRole('heading', { name: 'Human Judgment Lab' })).toBeVisible();
     await page.getByRole('link', { name: /OPEN THE REPRODUCIBLE EXPERIMENT/ }).click();
     await expect(page).toHaveURL(/field-instruments\/consensus-trap\.html$/);
