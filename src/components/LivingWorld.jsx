@@ -80,7 +80,9 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPrese
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
     pointerEvent.currentTarget.style.setProperty('--gaze-y', `${clamp((y - 0.5) * 5, -2.5, 2.5)}px`);
-    onPresence('nearby');
+    const nearMorrow = x > 0.34 && x < 0.66 && y > 0.42;
+    const nearVesper = x > 0.66 && y > 0.5;
+    onPresence(nearMorrow ? 'morrow-near' : nearVesper ? 'vesper-near' : 'nearby');
   };
   return <div className={`living-scene mood-${event.mood} presence-${presence}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
@@ -103,6 +105,7 @@ export default function LivingWorld() {
   const [presence, setPresence] = useState('arrived');
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
+  const autoNoticeRef = useRef({ morrow:false, vesper:false });
   const [dialogue, setDialogue] = useState('');
   const [chapter, setChapter] = useState(0);
   const [speaker, setSpeaker] = useState('MORROW');
@@ -131,10 +134,22 @@ export default function LivingWorld() {
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (dialogue) return;
+    if (presence === 'morrow-near' && !autoNoticeRef.current.morrow) {
+      autoNoticeRef.current.morrow = true;
+      setSpeaker('MORROW');
+      setDialogue('You can look, you know. I am not a display.');
+    } else if (presence === 'vesper-near' && !autoNoticeRef.current.vesper) {
+      autoNoticeRef.current.vesper = true;
+      setSpeaker('VESPER');
+      setDialogue('I saw you looking. I am deciding whether to be offended.');
+    }
+  }, [presence, dialogue]);
   const updatePresence = (nextPresence) => {
     window.clearTimeout(presenceTimerRef.current);
     setPresence(nextPresence);
-    if (nextPresence === 'nearby') {
+    if (['nearby', 'morrow-near', 'vesper-near'].includes(nextPresence)) {
       presenceTimerRef.current = window.setTimeout(() => setPresence('still'), 2600);
     } else if (nextPresence === 'away') {
       presenceTimerRef.current = window.setTimeout(() => setPresence('away'), 1200);
