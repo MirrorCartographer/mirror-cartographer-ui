@@ -60,7 +60,8 @@ for (const file of htmlFiles) {
     ...[...html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].map((match) => match[1]),
   ];
   for (const ref of refs) if (resolveLocal(file, ref)) checkedReferences += 1;
-  const ids = [...html.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]);
+  const staticMarkup = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<style\b[\s\S]*?<\/style>/gi, '');
+  const ids = [...staticMarkup.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]);
   const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
   if (duplicates.length) throw new Error('Duplicate IDs in ' + relative(atlasRoot, file) + ': ' + [...new Set(duplicates)].join(', '));
   for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
