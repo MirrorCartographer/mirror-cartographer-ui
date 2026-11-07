@@ -23,7 +23,7 @@ assert.ok(world.includes('visitorId: typeof value.visitorId'), 'each browser vis
 assert.ok(world.includes('visitorSeed(accountUserId || memory.visitorId)'), 'first encounter must be individualized per visitor');
 assert.ok(world.includes('memory.choices.includes'), 'return dialogue must respond to remembered choices');
 assert.ok(world.includes('onPointerMove={trackPresence}'), 'the environment must respond to continuous pointer presence');
-assert.ok(world.includes('onPointerDown={trackPresence}'), 'touch interaction must be observed without requiring pointer hover');
+assert.ok(world.includes('onPointerDown={handleGroundPointerDown}'), 'touch and pointer input must move the visitor through the scene');
 assert.ok(world.includes("kind: 'character-focus'") && world.includes("value: 'tazar'"), 'keyboard focus must record Tazar as an observed signal');
 assert.ok(world.includes("kind: 'character-focus'") && world.includes("value: 'jello'"), 'keyboard focus must record Jello as an observed signal');
 assert.ok(world.includes("document.addEventListener('visibilitychange', onVisibility)"), 'the environment must observe page visibility');
@@ -31,11 +31,15 @@ assert.ok(world.includes("window.addEventListener('blur', onBlur)"), 'the enviro
 assert.ok(world.includes('className="tazar-name">TAZAR'), 'Tazar must be named visibly in the scene');
 assert.ok(world.includes('className="jello-name">JELLO'), 'Jello must be named visibly in the scene');
 
-assert.ok(world.includes("observation.kind === 'pointer-position' && observation.value") && world.includes("updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity from ledger events');
+assert.ok(world.includes("kind: 'visitor-move'"), 'explicit locomotion must enter the perception ledger');
+assert.ok(world.includes("kind: 'visitor-approach'"), 'arrival near a resident must enter the perception ledger');
+assert.ok(world.includes('APPROACH TAZAR') && world.includes('FOLLOW JELLO'), 'the scene must expose direct resident approach affordances');
+assert.ok(world.includes('visitor-token') && world.includes('setVisitorPosition'), 'visitor movement must have a visible spatial representation');
+assert.ok(!world.includes("updatePresence(x > 0.34 && x < 0.66"), 'raw cursor coordinates must not be mistaken for physical approach');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
 assert.ok(world.includes('const returningVisitorRef = useRef(memory.visits > 0)'), 'first visits must be distinguished from returning visitors');
-assert.ok(world.includes("onPointerLeave={() => publishPerceptionObservation({ kind: 'pointer-leave'"), 'the world must register when a visitor leaves the scene');
+assert.ok(world.includes("document.addEventListener('visibilitychange', onVisibility)"), 'leaving the page must be distinguished from moving a cursor out of the scene');
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
 assert.ok(world.includes('function Tazar'), 'Tazar must be a real character component');
 assert.ok(world.includes('function Jello'), 'Jello must be a real character component');
