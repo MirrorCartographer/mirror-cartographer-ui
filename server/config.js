@@ -5,7 +5,7 @@ const required = (name, value) => {
 
 function normalizeOrigin(env) {
   if (env.APP_ORIGIN) return String(env.APP_ORIGIN).replace(/\/$/, '');
-  if (env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${String(env.VERCEL_PROJECT_PRODUCTION_URL).replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+  if (env.PUBLIC_APP_URL) return String(env.PUBLIC_APP_URL).replace(/\/$/, '');
   return 'http://localhost:5173';
 }
 
