@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "name": "mirror-cartographer-five-agent-hourly-task-plan",
+  "status": "proposed-until-review-and-merge",
+  "schedule": {
+    "executor": "GitHub Actions",
+    "cron": "17 * * * *",
+    "cadence": "hourly",
+    "note": "The hosted workflow is on a draft PR branch and is not active on main until reviewed and merged. GitHub may delay scheduled runs."
+  },
+  "execution_boundary": {
+    "current_mode": "deterministic-audit-only",
+    "external_research_enabled": false,
+    "llm_provider_adapter_configured": false,
+    "automatic_repository_writes": false,
+    "automatic_merge": false,
+    "platform_limit_evasion": false,
+    "private_conversation_export": false
+  },
+  "repositories": {
+    "implementation_self": "MirrorCartographer/mirror-cartographer-ui",
+    "evidence_self": "MirrorCartographer/MirrorCartographer"
+  },
+  "tasks": [
+    {
+      "id": "research",
+      "hourly_role": "Research",
+      "question": "Which public-safe, unresolved claim or design question is most useful to test next?",
+      "unique_method": "Source triangulation and attempted falsification",
+      "target_repository": "MirrorCartographer/MirrorCartographer",
+      "output": "Claim envelope, primary-source map, counterexample or synthetic fixture, falsification route",
+      "handoff": "resources",
+      "required_labels": ["source_status", "claim_status", "privacy_class", "missingness", "falsification_route"],
+      "current_execution": "audit-only; does not browse or assert new findings"
+    },
+    {
+      "id": "resources",
+      "hourly_role": "Resources",
+      "question": "What single capability gap blocks the highest-priority research or build task?",
+      "unique_method": "Compatibility, license, cost, privacy, freshness, and exit-path comparison",
+      "target_repository": "MirrorCartographer/mirror-cartographer-ui",
+      "output": "Resource decision record and implementation-ready integration criteria",
+      "handoff": "art-or-build",
+      "required_labels": ["source_status", "decision", "license", "cost", "privacy_class", "exit_path"],
+      "current_execution": "audit-only; does not search the live web or acquire resources"
+    },
+    {
+      "id": "art",
+      "hourly_role": "Art",
+      "question": "Which evidence-backed semantic or usability concept needs an editable visual expression?",
+      "unique_method": "One measurable composition or interaction experiment",
+      "target_repository": "MirrorCartographer/mirror-cartographer-ui",
+      "output": "Editable SVG/CSS/tokens/interaction specification plus accessibility and provenance checks",
+      "handoff": "build",
+      "required_labels": ["objective", "editable_format", "accessibility", "rights_provenance", "acceptance_criteria"],
+      "current_execution": "audit-only; creates no artwork until an authorized generation/build step is implemented"
+    },
+    {
+      "id": "build",
+      "hourly_role": "Build",
+      "question": "What is the smallest executable component that tests or improves the accepted claim?",
+      "unique_method": "Local deterministic code, schema, fixture, validator, or regression test",
+      "target_repository": "MirrorCartographer/mirror-cartographer-ui",
+      "output": "Runnable artifact, exact test command, expected pass/fail conditions",
+      "handoff": "integration",
+      "required_labels": ["implementation_status", "testability", "failure_behavior", "rollback", "next_action"],
+      "current_execution": "audit-only; does not modify source automatically"
+    },
+    {
+      "id": "integration",
+      "hourly_role": "Integration",
+      "question": "Do both repositories agree on what was observed, what is inferred, and what remains unknown?",
+      "unique_method": "Cross-repository traceability, contradiction and privacy audit",
+      "target_repository": "both",
+      "output": "Validation receipt, contradiction list, prioritized next action",
+      "handoff": "research",
+      "required_labels": ["claim_status", "evidence_strength", "privacy_class", "test_result", "rollback"],
+      "current_execution": "audit-only; cannot establish external truth or deployment health"
+    }
+  ],
+  "activation_gates": [
+    "Review and merge the implementation PR before the scheduled workflow is active on main",
+    "Review and merge the evidence protocol PR before treating the paired contract as the main-branch standard",
+    "Observe at least one workflow run and inspect all five receipts",
+    "Run standard-library regression tests and fix failures",
+    "Implement an authorized provider adapter before claiming external research",
+    "Implement scoped branch/PR write behavior and human-review gates before allowing automated repository updates"
+  ]
+}
