@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 let client = null;
 const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
 const RESIDENT_MEMORY_USE_KEY = 'mc-resident-memory-use-enabled';
+const AMBIENT_CONTEXT_USE_KEY = 'mc-ambient-context-use-enabled';
 const notifyMemoryLedgerChanged = () => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('mc-memory-ledger-updated')); };
 
 export function isPrivateMemorySyncEnabled() {
@@ -21,6 +22,20 @@ export function setResidentMemoryUseEnabled(enabled) {
     else window.localStorage.removeItem(RESIDENT_MEMORY_USE_KEY);
   } catch {
     throw new Error('This browser could not save the resident-memory preference.');
+  }
+}
+
+export function isAmbientContextUseEnabled() {
+  try { return window.localStorage.getItem(AMBIENT_CONTEXT_USE_KEY) === 'true'; }
+  catch { return false; }
+}
+
+export function setAmbientContextUseEnabled(enabled) {
+  try {
+    if (enabled) window.localStorage.setItem(AMBIENT_CONTEXT_USE_KEY, 'true');
+    else window.localStorage.removeItem(AMBIENT_CONTEXT_USE_KEY);
+  } catch {
+    throw new Error('This browser could not save the ambient-context preference.');
   }
 }
 
@@ -327,7 +342,7 @@ export async function askResident(resident, message, perception = {}) {
       resident: character,
       message: text,
       includeMemory: isPrivateMemorySyncEnabled() && isResidentMemoryUseEnabled(),
-      perception: { cue, intensity, ambientCue, ambientIntensity },
+      perception: { cue, intensity, ambientCue: isAmbientContextUseEnabled() ? ambientCue : 'quiet', ambientIntensity: isAmbientContextUseEnabled() ? ambientIntensity : 0 },
       history
     }
   });
