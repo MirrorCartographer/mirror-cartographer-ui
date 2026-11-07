@@ -13,6 +13,7 @@ create table if not exists public.world_connections (
 
 create index if not exists world_connections_requester_idx on public.world_connections(requester_id, status);
 create index if not exists world_connections_recipient_idx on public.world_connections(recipient_id, status);
+create unique index if not exists world_connections_undirected_pair_idx on public.world_connections (least(requester_id, recipient_id), greatest(requester_id, recipient_id));
 alter table public.world_connections enable row level security;
 
 drop policy if exists world_connections_participant_read on public.world_connections;
@@ -77,3 +78,57 @@ begin
     alter publication supabase_realtime add table public.world_presence;
   end if;
 end $$;
+
+
+-- A connection's participants are immutable; only the permitted state transitions are allowed.
+create or replace function public.guard_world_connection_update()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  if new.requester_id is distinct from old.requester_id
+    or new.recipient_id is distinct from old.recipient_id then
+    raise exception 'Connection participants are immutable';
+  end if;
+
+  if not (
+    (old.status = 'pending' and new.status in ('pending', 'accepted', 'declined'))
+    or (old.status = 'accepted' and new.status in ('accepted', 'revoked'))
+    or old.status = new.status
+  ) then
+    raise exception 'Invalid connection status transition';
+  end if;
+
+  new.updated_at := now();
+  return new;
+end;
+$$;
+
+drop trigger if exists world_connections_guard_update on public.world_connections;
+create trigger world_connections_guard_update
+before update on public.world_connections
+for each row execute function public.guard_world_connection_update();
+
+-- Presence is a heartbeat projection. Clients cannot extend a stale presence indefinitely.
+create or replace function public.refresh_world_presence_expiry()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  new.last_seen_at := now();
+  new.expires_at := now() + interval '90 seconds';
+  return new;
+end;
+$$;
+
+drop trigger if exists world_presence_refresh_expiry on public.world_presence;
+create trigger world_presence_refresh_expiry
+before insert or update on public.world_presence
+for each row execute function public.refresh_world_presence_expiry();
+
+grant select, insert, update on public.world_connections to authenticated;
+grant select, insert, update, delete on public.world_presence to authenticated;
