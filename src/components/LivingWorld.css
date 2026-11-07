@@ -168,3 +168,7 @@
 .presence-away .jello{opacity:.72;translate:0 5px}
 .presence-arrived .tazar{animation-duration:5.1s}
 .presence-arrived .jello{filter:drop-shadow(0 0 12px #e8c99555)}
+
+/* Each browser's local visitor seed gives the idle choreography a different phase. */
+.tazar{animation-delay:calc(var(--visitor-phase,0) * -.035s)}
+.jello{animation-delay:calc(var(--visitor-phase,0) * -.027s)}
