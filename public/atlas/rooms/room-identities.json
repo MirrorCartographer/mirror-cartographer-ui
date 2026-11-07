@@ -1,7 +1,7 @@
 {
   "schema": "mc.room-identity.v1",
   "purpose": "A room is a distinct environment with its own visual grammar, interaction grammar, temporal behavior, and consequence. Shared infrastructure may handle navigation, accessibility, and persistence; it must not flatten room identity. The interaction and memory fields are design contracts, not claims that those features are already implemented.",
-  "count": 34,
+  "count": 35,
   "acceptance": {
     "distinctAxes": [
       "palette",
@@ -493,6 +493,20 @@
       "implementation_status": "existing-destination-needs-audit",
       "interaction_status": "design-contract-not-yet-implemented-or-verified",
       "memory_status": "memory behavior not implemented or verified"
+    },
+    {
+      "id": "035",
+      "name": "The Picture House",
+      "path": "./screening-room/",
+      "kind": "cinema",
+      "palette": "aged parchment / oxblood / projector black / tarnished brass",
+      "visual": "single widescreen projection framed by distressed paper, handbill typography, and a hand-built cinema poster",
+      "interaction": "Play the featured film in the embedded player; the published featured-film configuration replaces the program without changing the room",
+      "temporal": "seasonal screenings; the featured film changes when the curator updates the program",
+      "memory": "the selected feature is defined by a public configuration file; playback position and viewing behavior are not collected",
+      "implementation_status": "single-feature-player-present",
+      "interaction_status": "embedded-player-and-configurable-feature-present",
+      "memory_status": "program configuration is public; no personal viewing history is stored"
     }
   ]
 }
