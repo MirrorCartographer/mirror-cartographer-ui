@@ -45,7 +45,7 @@ export default function SharedWorldPanel() {
   useEffect(() => {
     if (!open || !session || !memorySync) { setPrivateMemory(null); return undefined; }
     let active = true;
-    loadPrivateContinuity().then((value) => { if (active) setPrivateMemory(value); })
+    loadPrivateContinuity().then((value) => { if (active) setPrivateMemory(value || { visits: 0, choices: [] }); })
       .catch((error) => { if (active) setMessage(error.message || 'Could not read private memory.'); });
     return () => { active = false; };
   }, [open, session?.user?.id, memorySync]);
