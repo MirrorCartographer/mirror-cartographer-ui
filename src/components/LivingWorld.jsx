@@ -75,8 +75,55 @@ function Jello({ onClick, onFocus, speaking }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel, visitorPhase, responseCue, perceptionCount }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, speaker, dialogue, micLevel, visitorPhase, responseCue, perceptionCount }) {
   const lastObservationRef = useRef({ x: -1, y: -1, at: 0 });
+  const sceneRef = useRef(null);
+  const walkTimerRef = useRef(null);
+  const [visitorPosition, setVisitorPosition] = useState({ x: 0.16, y: 0.84 });
+  const [walkState, setWalkState] = useState('resting');
+
+  const moveVisitorTo = (x, y, intendedResident = null) => {
+    const next = { x: clamp(x, 0.04, 0.96), y: clamp(y, 0.36, 0.94) };
+    setVisitorPosition(next);
+    setWalkState('walking');
+    publishPerceptionObservation({ kind: 'visitor-move', source: intendedResident ? 'resident-approach-control' : 'scene-ground-pointer', permission: 'explicit-pointer-or-touch-action', value: next, ttlMs: 5000 });
+    window.clearTimeout(walkTimerRef.current);
+    walkTimerRef.current = window.setTimeout(() => {
+      publishPerceptionObservation({ kind: 'pointer-stillness', source: 'visitor-arrival-settled', permission: 'explicit-scene-navigation', value: true, ttlMs: 3000 });
+      setWalkState('resting');
+    }, 1150);
+
+    const scene = sceneRef.current;
+    if (!scene) return;
+    const residents = ['tazar', 'jello'].map((name) => {
+      const element = scene.querySelector(`. ${name}`.replace('. ', '.'));
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return { name, x: (rect.left + rect.width / 2 - scene.getBoundingClientRect().left) / scene.clientWidth, y: (rect.top + rect.height * 0.82 - scene.getBoundingClientRect().top) / scene.clientHeight };
+    }).filter(Boolean);
+    const nearest = residents.map((resident) => ({ ...resident, distance: Math.hypot((resident.x - next.x) * scene.clientWidth / scene.clientHeight, resident.y - next.y) })).sort((a, b) => a.distance - b.distance)[0];
+    const target = intendedResident || (nearest && nearest.distance < 0.18 ? nearest.name : null);
+    if (target) publishPerceptionObservation({ kind: 'visitor-approach', source: intendedResident ? 'explicit-approach-control' : 'visitor-arrived-near-resident', permission: 'explicit-scene-navigation', value: target, ttlMs: 5000 });
+  };
+
+  const approachResident = (resident) => {
+    const scene = sceneRef.current;
+    const element = scene?.querySelector(`.${resident}`);
+    if (!scene || !element) return;
+    const sceneRect = scene.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
+    moveVisitorTo(
+      (rect.left + rect.width / 2 - sceneRect.left) / sceneRect.width,
+      (rect.top + rect.height * 0.82 - sceneRect.top) / sceneRect.height,
+      resident
+    );
+  };
+
+  const handleGroundPointerDown = (event) => {
+    if (event.target.closest('button, a, input, form, .scene-walk-controls')) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    moveVisitorTo((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
+  };
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
@@ -87,14 +134,13 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
       publishPerceptionObservation({ kind: 'pointer-position', source: 'pointer', value: { x, y }, ttlMs: 5000 });
       lastObservationRef.current = { x, y, at: now };
     }
-    if (pointerEvent.type === 'pointerdown') publishPerceptionObservation({ kind: 'pointer-touch', source: pointerEvent.pointerType || 'pointer', value: true, ttlMs: 2500 });
     pointerEvent.currentTarget.style.setProperty('--field-x', `${x * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--field-y', `${y * 100}%`);
     pointerEvent.currentTarget.style.setProperty('--gaze-x', `${clamp((x - 0.5) * 7, -3.5, 3.5)}px`);
     pointerEvent.currentTarget.style.setProperty('--gaze-y', `${clamp((y - 0.5) * 5, -2.5, 2.5)}px`);
     
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence} signal-${responseCue} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => publishPerceptionObservation({ kind: 'pointer-leave', source: 'pointer', value: true, ttlMs: 5000 })}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} signal-${responseCue} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} ref={sceneRef} onPointerMove={trackPresence} onPointerDown={handleGroundPointerDown}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -104,6 +150,8 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>LIVE SIGNALS {String(perceptionCount).padStart(2, '0')}</span></div>
+    <div className={`visitor-token ${walkState}`} style={{ left: `${visitorPosition.x * 100}%`, top: `${visitorPosition.y * 100}%` }} aria-label="Your position in the station"><i/><span>YOU</span></div>
+    <div className="scene-walk-controls" aria-label="Move around the station"><span>WHERE TO?</span><button type="button" onClick={() => approachResident('tazar')}>APPROACH TAZAR</button><button type="button" onClick={() => approachResident('jello')}>FOLLOW JELLO</button></div>
     <Tazar mood={event.mood} onClick={onTalk} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'tazar', ttlMs: 5000 }); }} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => { publishPerceptionObservation({ kind: 'character-focus', source: 'keyboard-or-assistive-focus', value: 'jello', ttlMs: 5000 }); }} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
@@ -139,11 +187,10 @@ export default function LivingWorld() {
   const accountMemoryReadyRef = useRef(false);
   useEffect(() => subscribePerceptionObservations((observation) => {
     setPerceptionCount((count) => count + 1);
-    if (observation.kind === 'pointer-position' && observation.value) {
-      const { x, y } = observation.value;
-      updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby');
-    } else if (observation.kind === 'pointer-leave') {
-      updatePresence('away');
+    if (observation.kind === 'visitor-move') {
+      setPresence('walking');
+    } else if (observation.kind === 'visitor-approach') {
+      setPresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
     } else if (observation.kind === 'pointer-stillness') {
       window.clearTimeout(presenceTimerRef.current);
       setPresence('still');
@@ -460,7 +507,7 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue} perceptionCount={perceptionCount}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue} perceptionCount={perceptionCount}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
