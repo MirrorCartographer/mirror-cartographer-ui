@@ -121,6 +121,24 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
 
     await expectFieldCopy(page);
   });
+  test('Common Thread imports a portable map without publishing it', async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem('mc-common-thread-v1'));
+    await page.goto('/atlas/rooms/common-thread/', { waitUntil: 'networkidle' });
+    await page.locator('#import-file').setInputFiles({
+      name: 'shared-map.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify({
+        format: 'mc-common-thread-v1',
+        nodes: [
+          { id: 'person-1', name: 'First person', kind: 'Person', to: null, thread: 'mutual aid', x: 40, y: 40 },
+          { id: 'resource-1', name: 'Shared resource', kind: 'Resource', to: 'person-1', thread: 'support', x: 60, y: 60 }
+        ]
+      }))
+    });
+    await expect(page.locator('.node')).toHaveCount(2);
+    await expect(page.locator('#notice')).toContainText('Imported 2 points');
+  });
+
   test('opens the deeper operating workshop and saves a health record locally', async ({ page }) => {
     await page.addInitScript(() => localStorage.clear());
     await page.setViewportSize({ width: 1280, height: 900 });
