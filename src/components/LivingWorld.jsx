@@ -71,7 +71,7 @@ function Jello({ onClick, speaking }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue }) {
+function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresence, speaker, dialogue, micLevel }) {
   const trackPresence = (pointerEvent) => {
     const rect = pointerEvent.currentTarget.getBoundingClientRect();
     const x = clamp((pointerEvent.clientX - rect.left) / rect.width, 0, 1);
@@ -84,7 +84,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     const nearJello = x > 0.66 && y > 0.5;
     onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -94,7 +94,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Tazar mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "MORROW" && Boolean(dialogue)}/><Jello onClick={onJello} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
+    <Tazar mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -108,9 +108,12 @@ export default function LivingWorld() {
   const visitRecordedRef = useRef(false);
   const autoNoticeRef = useRef({ tazar:false, jello:false });
   const [dialogue, setDialogue] = useState('');
-  const [speaker, setSpeaker] = useState('MORROW');
+  const [speaker, setSpeaker] = useState('TAZAR');
   const [ambient, setAmbient] = useState(false);
   const audioRef = useRef(null);
+  const [micState, setMicState] = useState('off');
+  const [micLevel, setMicLevel] = useState(0);
+  const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const event = EVENTS[eventIndex];
   const line = useMemo(() => {
     if (dialogue) return dialogue;
@@ -130,7 +133,7 @@ export default function LivingWorld() {
       try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
     }
     const timer = window.setInterval(() => setEventIndex((value) => (value + 1) % EVENTS.length), 42000);
-    return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); };
+    return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); const mic = micRef.current; if (mic.frame) window.cancelAnimationFrame(mic.frame); mic.stream?.getTracks().forEach((track) => track.stop()); mic.source?.disconnect(); if (mic.context) mic.context.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -138,7 +141,7 @@ export default function LivingWorld() {
     if (dialogue) return;
     if (presence === 'tazar-near' && !autoNoticeRef.current.tazar) {
       autoNoticeRef.current.tazar = true;
-      setSpeaker('MORROW');
+      setSpeaker('TAZAR');
       setDialogue('You can look, you know. I am not a display.');
     } else if (presence === 'jello-near' && !autoNoticeRef.current.jello) {
       autoNoticeRef.current.jello = true;
@@ -156,7 +159,7 @@ export default function LivingWorld() {
     }
   };
   const remember = (choice, reply, trust = 1) => {
-    setSpeaker('MORROW');
+    setSpeaker('TAZAR');
     const next = { ...memory, trust: clamp(memory.trust + trust, 0, 8), choices: [...memory.choices, choice].slice(-12), lastEvent: event.id };
     setMemory(next);
     setDialogue(reply);
@@ -184,6 +187,55 @@ export default function LivingWorld() {
       master.gain.setTargetAtTime(0.055, context.currentTime, 1.4); audioRef.current = context; setAmbient(true);
     } catch { setAmbient(false); }
   };
+  const stopListening = () => {
+    const mic = micRef.current;
+    if (mic.frame) window.cancelAnimationFrame(mic.frame);
+    mic.stream?.getTracks().forEach((track) => track.stop());
+    mic.source?.disconnect();
+    if (mic.context) mic.context.close().catch(() => {});
+    micRef.current = { stream:null, context:null, source:null, analyser:null, frame:0 };
+    setMicLevel(0);
+    setMicState('off');
+  };
+  const startListening = async () => {
+    if (micState === 'listening' || micState === 'requesting') { stopListening(); return; }
+    if (!navigator.mediaDevices?.getUserMedia) { setMicState('unsupported'); return; }
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) { setMicState('unsupported'); return; }
+    setMicState('requesting');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true },
+        video: false
+      });
+      const context = new AudioContextClass();
+      await context.resume();
+      const source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const samples = new Uint8Array(analyser.fftSize);
+      micRef.current = { stream, context, source, analyser, frame:0 };
+      setMicState('listening');
+      const sample = () => {
+        if (!micRef.current.analyser) return;
+        analyser.getByteTimeDomainData(samples);
+        let sum = 0;
+        for (let i = 0; i < samples.length; i += 1) {
+          const value = (samples[i] - 128) / 128;
+          sum += value * value;
+        }
+        const level = Math.min(1, Math.sqrt(sum / samples.length) * 5);
+        setMicLevel(level);
+        micRef.current.frame = window.requestAnimationFrame(sample);
+      };
+      sample();
+    } catch (error) {
+      micRef.current.stream?.getTracks().forEach((track) => track.stop());
+      micRef.current = { stream:null, context:null, source:null, analyser:null, frame:0 };
+      setMicState(error?.name === 'NotAllowedError' ? 'permission-denied' : 'unavailable');
+    }
+  };
   const stopAmbient = () => {
     if (audioRef.current) { audioRef.current.close().catch(() => {}); audioRef.current = null; }
     setAmbient(false);
@@ -195,7 +247,7 @@ export default function LivingWorld() {
   };
   const talk = () => {
     stopAmbient();
-    setSpeaker('MORROW');
+    setSpeaker('TAZAR');
     setDialogue('I keep the doors from getting ideas. They are very ambitious doors.');
   };
   const openDoor = () => {
@@ -203,15 +255,15 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue}/>
+    <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel}/>
     <div className="world-vignette"/>
-    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
+    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} aria-pressed={micState === 'listening'}>{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
     <section className="tazar-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
       {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-jello'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-tazar', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
-    <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
+    <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>MICROPHONE {micState.toUpperCase().replaceAll('-', ' ')} · LEVEL {Math.round(micLevel * 100)}</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
 }
