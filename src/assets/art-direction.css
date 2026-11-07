@@ -358,3 +358,11 @@ html,body,#root{background:#100d12!important;color:var(--mc-paper)!important}
 }
 @media(max-width:390px){.mc-zine-brand{font-size:9px}.mc-zine-masthead nav a{font-size:6px}.mc-zine-copy h1{font-size:3.65rem}.mc-zine-stamp{display:none}}
 @media(prefers-reduced-motion:reduce){.mc-zine-actions a{transition:none}}
+
+/* A deliberately unstable editorial surface: layered echoes, never flashing. */
+.mc-zine-copy h1{ text-shadow:-3px 0 rgba(217,107,88,.58),4px 2px rgba(159,177,138,.38),8px 8px 0 #762f45,13px 13px 0 rgba(12,8,13,.82); }
+.mc-zine-copy h1 em{display:inline-block;transform:translateX(5px) skew(-2deg);filter:drop-shadow(-5px 2px 0 rgba(159,177,138,.32))}
+.mc-zine-kicker{max-width:32rem;transform:rotate(-.8deg);text-shadow:2px 1px 0 #762f45}
+.mc-zine-deck{border-left:2px solid #d96b58;padding-left:14px;max-width:460px}
+.mc-paper-scrap{outline:1px dashed rgba(23,18,25,.4);outline-offset:-5px}
+@media(prefers-reduced-motion:reduce){.mc-zine-copy h1 em{transform:none;filter:none}}
