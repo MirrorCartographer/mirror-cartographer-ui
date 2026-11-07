@@ -70,3 +70,19 @@
 @media(max-width:760px){.world-intro{top:15%;max-width:68vw}.world-intro h1{font-size:clamp(2rem,8vw,3.5rem)}.glasshouse{left:-4%;width:38%;bottom:29%;min-width:150px}.clocktower{right:4%;width:14%;min-width:65px}.station{left:30%;width:48%;min-width:200px;bottom:25%}.morrow{left:43%;bottom:12%;width:clamp(130px,32vw,190px);height:245px}.morrow-dialogue{left:16px;bottom:74px;width:min(360px,calc(100vw - 32px));padding:13px 14px}.dialogue-line{font-size:15px;min-height:38px}.door-invitation{right:12px;bottom:34%;font-size:8px;padding:8px}.world-footer{bottom:9px;font-size:7px}.world-footer span:last-child{display:none}.world-topbar{align-items:flex-start}.world-topbar nav{gap:9px}.world-topbar nav a,.world-topbar nav button{font-size:8px}.world-wordmark{font-size:8px}.world-wordmark span{display:none}.scene-signals{top:12%;font-size:7px}}
 @media(max-width:430px){.world-intro{top:16%;max-width:76vw}.world-intro h1{font-size:2.25rem}.world-intro>span{font-size:12px}.station{left:25%;width:56%;bottom:29%;height:24%;min-width:0}.glasshouse{bottom:30%;height:29%;min-width:0}.clocktower{bottom:29%;height:43%}.morrow{left:39%;bottom:13%;width:150px;height:215px}.door-invitation{bottom:32%;right:8px;writing-mode:vertical-rl}.morrow-dialogue{bottom:68px}.world-footer{font-size:6px}}
 @media(prefers-reduced-motion:reduce){.living-world *, .living-world *:before,.living-world *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* Vesper: a second resident, not a decorative icon. */
+.vesper{position:absolute;z-index:4;right:clamp(15%,calc(50% - 360px),35%);bottom:13%;width:94px;height:70px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 8px 9px #05050a99);animation:vesper-prowl 6s ease-in-out infinite}
+.vesper-body{position:absolute;left:18px;bottom:8px;width:62px;height:34px;border-radius:55% 55% 38% 42%;background:linear-gradient(145deg,#34333b,#11141b 72%);box-shadow:inset 8px 3px 0 #77708033}
+.vesper-head{position:absolute;left:8px;top:13px;width:43px;height:37px;border-radius:48% 48% 44% 44%;background:linear-gradient(145deg,#514957,#171923 78%)}
+.vesper-ear{position:absolute;top:3px;width:17px;height:24px;background:#27232d;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:1}.vesper-ear.ear-left{left:8px;rotate:-18deg}.vesper-ear.ear-right{left:34px;rotate:16deg}
+.vesper-eye{position:absolute;z-index:2;top:29px;width:5px;height:7px;border-radius:50%;background:#e9d19a;box-shadow:0 0 8px 3px #e9d19a88;animation:vesper-blink 5.8s infinite}
+.vesper-eye.eye-left{left:20px}.vesper-eye.eye-right{left:38px}
+.vesper-tail{position:absolute;z-index:-1;left:65px;top:18px;width:32px;height:30px;border:7px solid #292630;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;rotate:28deg;transform-origin:0 100%;animation:vesper-tail 2.4s ease-in-out infinite}
+.vesper-bell{position:absolute;left:52px;bottom:14px;width:8px;height:8px;border-radius:50%;background:#d9b982;box-shadow:0 0 10px #f4d59c}
+@keyframes vesper-prowl{0%,100%{translate:0 0}50%{translate:5px -4px}}
+@keyframes vesper-tail{50%{rotate:58deg}}
+@keyframes vesper-blink{0%,46%,49%,100%{scale:1 1}47.5%{scale:1 .08}}
+.vesper:hover{filter:drop-shadow(0 0 13px #e7c99599)}
+@media(max-width:760px){.vesper{right:7%;bottom:16%;scale:.82}}
+@media(prefers-reduced-motion:reduce){.vesper,.vesper-tail,.vesper-eye{animation:none}}
