@@ -112,3 +112,8 @@ assert.ok(ledger.includes('MAX_OBSERVATIONS = 64'), 'the local observation buffe
 assert.ok(migration.includes("visibility in ('private','connections','public')"), 'shared presence must have explicit visibility scopes');
 assert.ok(migration.includes("c.status = 'accepted'"), 'connections-only presence must require an accepted relationship');
 assert.ok(migration.includes('expires_at > now()'), 'shared presence must expire');
+
+const responsePolicy = fs.readFileSync('src/engine/residentResponsePolicy.js', 'utf8');
+assert.ok(world.includes('subscribePerceptionObservations'), 'perception events must be consumed by the living scene');
+assert.ok(world.includes('deriveResidentResponse(observation)'), 'resident reactions must pass through a bounded response policy');
+assert.ok(responsePolicy.includes("observation.scope !== 'local-only'"), 'the response policy must reject out-of-scope signals');
