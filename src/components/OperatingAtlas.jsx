@@ -58,7 +58,7 @@ const CAPABILITY_REALITY = [
   {id:'memory',title:'Persistent memory',level:'working local',works:'Local browser storage plus JSON export and reset.',gap:'Not encrypted, not synced, and not a server-backed memory service.'},
   {id:'sessions',title:'Session modes',level:'manual prototype',works:'Stores a selected mode in the local profile.',gap:'No facilitator workflow, group session, or session orchestration.'},
   {id:'tone',title:'Tone modes',level:'manual prototype',works:'Stores a symbolic, neutral, scientific, or adaptive preference.',gap:'Does not yet transform every lane or control a connected model.'},
-  {id:'symbols',title:'Symbol engine',level:'manual prototype',works:'User-entered glyphs, meanings, and links are stored locally.',gap:'Not yet wired to Repository C’s full authored corpus or its deterministic parser.'},
+  {id:'symbols',title:'Symbol engine',level:'manual prototype',works:'User-entered glyphs, meanings, and links are stored locally.',gap:'Not yet wired to the full private symbolic corpus or its deterministic parser.'},
   {id:'body',title:'Body map',level:'working local',works:'Places and removes spatial markers with user-entered notes.',gap:'No clinical measurement, anatomical inference, or clinician sync.'},
   {id:'health',title:'Human health lane',level:'working local',works:'Stores user-entered symptom, lab, imaging, medication, and question records.',gap:'No medical-record connector, automatic interpretation, or diagnosis.'},
   {id:'animals',title:'Animal health lane',level:'working local',works:'Stores local animal profiles and continuity notes.',gap:'No veterinary record connector or medication verification.'},
