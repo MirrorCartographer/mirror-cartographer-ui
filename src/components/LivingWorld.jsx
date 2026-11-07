@@ -67,7 +67,7 @@ function Morrow({ mood, onClick, noticed, speaking }) {
 
 function Vesper({ onClick, speaking }) {
   return <button className={`vesper ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Vesper, the station cat">
-    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-mouth"/><span className="vesper-bell"/>
+    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-mouth"/><span className="vesper-bell"/><span className="vesper-name">VESPER <i>· station cat</i></span>
   </button>;
 }
 
@@ -184,12 +184,19 @@ export default function LivingWorld() {
       master.gain.setTargetAtTime(0.055, context.currentTime, 1.4); audioRef.current = context; setAmbient(true);
     } catch { setAmbient(false); }
   };
-  const talkToVesper = () => { setSpeaker('VESPER'); setDialogue('I live under the timetable. It is warmer there. Morrow says I am not supposed to eat the tickets.'); };
-  const talk = () => {
-    setSpeaker('MORROW');
-    setDialogue('');
+  const stopAmbient = () => {
     if (audioRef.current) { audioRef.current.close().catch(() => {}); audioRef.current = null; }
     setAmbient(false);
+  };
+  const talkToVesper = () => {
+    stopAmbient();
+    setSpeaker('VESPER');
+    setDialogue('I live under the timetable. It is warmer there. Morrow says I am not supposed to eat the tickets.');
+  };
+  const talk = () => {
+    stopAmbient();
+    setSpeaker('MORROW');
+    setDialogue('I keep the doors from getting ideas. They are very ambitious doors.');
   };
   const openDoor = () => {
     remember('opened-the-door', 'Good. I was getting tired of pretending this was a waiting room.', 1);
@@ -200,8 +207,10 @@ export default function LivingWorld() {
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
-    <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>resident of the station</i></p><p className="dialogue-line">“{line}”</p>
-      {dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div> : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-morrow', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
+    <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'VESPER' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
+      {speaker === 'VESPER' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-vesper'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Morrow keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
+      : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
+      : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-morrow', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
     <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
