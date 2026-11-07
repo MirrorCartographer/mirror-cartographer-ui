@@ -26,7 +26,7 @@ jobs:
           node-version: 20
       - name: Parse the procedural room engine
         run: node --check public/atlas/rooms/experiments/engine.js
-      - name: Verify the ten authored encounters and 35 doors
+      - name: Verify the ten authored encounters and 37 doors
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -38,14 +38,14 @@ jobs:
           import json
           manifest = json.loads((root / "room-identities.json").read_text(encoding="utf-8"))
           rooms = manifest["rooms"]
-          assert manifest["count"] == 35 and len(rooms) == 35, "Room identity manifest must contain exactly 35 destinations"
-          assert len({r["id"] for r in rooms}) == 35, "Room IDs must be unique"
-          assert len({r["name"] for r in rooms}) == 35, "Room names must be unique"
-          assert len({r["path"] for r in rooms}) == 35, "Room paths must be unique"
+          assert manifest["count"] == 37 and len(rooms) == 37, "Room identity manifest must contain exactly 37 destinations"
+          assert len({r["id"] for r in rooms}) == 37, "Room IDs must be unique"
+          assert len({r["name"] for r in rooms}) == 37, "Room names must be unique"
+          assert len({r["path"] for r in rooms}) == 37, "Room paths must be unique"
           for room in rooms:
               for field in ("palette", "visual", "interaction", "temporal", "memory"):
                   assert room.get(field, "").strip(), f'{room["name"]}: missing {field} contract'
-          assert len({r["interaction"] for r in rooms}) == 35, "Every destination needs its own interaction grammar"
+          assert len({r["interaction"] for r in rooms}) == 37, "Every destination needs its own interaction grammar"
           modes = {
               "001-observatory": "observatory",
               "002-machine-garden": "garden",
@@ -59,13 +59,20 @@ jobs:
               "010-composer": "composer",
           }
           doors = re.findall(r'<a class="room" href=', index)
-          assert len(doors) == 35, f"Expected 35 room-directory destinations, found {len(doors)}"
+          assert len(doors) == 37, f"Expected 37 room-directory destinations, found {len(doors)}"
           for folder, mode in modes.items():
               page = (root / "experiments" / folder / "index.html").read_text(encoding="utf-8")
               assert f"data-mode={mode}" in page, f"{folder}: page mode missing"
               assert f"function {mode}()" in engine, f"{mode}: procedural renderer missing"
               assert f'body[data-mode="{mode}"]' in styles, f"{mode}: art direction missing"
+          corridor = (root / "service-corridor/index.html").read_text(encoding="utf-8")
+          body_archive = (root / "body-archive/index.html").read_text(encoding="utf-8")
+          common_thread = (root / "common-thread/index.html").read_text(encoding="utf-8")
+          assert "Veteran Mission" in corridor and "877-424-3838" in corridor, "Service Corridor is missing practical support routes"
+          assert "988" in corridor and "838255" in corridor, "Service Corridor is missing crisis contact routes"
+          assert "localStorage" in body_archive and "diagnosis" in body_archive, "Body Archive privacy/clinical boundary missing"
+          assert "localStorage" in common_thread and "does not publish" in common_thread, "Common Thread sharing boundary missing"
           veteran = (root / "veterans/index.html").read_text(encoding="utf-8")
           assert 'content="0;url=./hub.html"' in veteran, "Veteran Hub redirect is not project-relative"
-          print("PASS: 35 directory destinations; 10 distinct renderers and art directions; Veteran Hub relative redirect.")
+          print("PASS: 37 directory destinations; 10 distinct renderers; Service Corridor, Body Archive, and Common Thread present; Veteran Hub relative redirect.")
           PY
