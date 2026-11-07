@@ -23,11 +23,27 @@ assert.ok(world.includes("setDialogue('I keep the doors from getting ideas. They
 assert.ok(world.includes('station cat</i></span>'), 'Jello must be visibly named in the scene');
 assert.ok(world.includes("speaker === 'JELLO' ? <div className=\"dialogue-choices\""), 'Jello must receive character-specific dialogue choices');
 assert.ok(style.includes('.jello-name{'), 'Jello name label must have visible styling');
-assert.ok(world.includes('speaking={speaker === "MORROW" && Boolean(dialogue)}'), 'Tazar facial animation must follow active dialogue');
+assert.ok(world.includes('speaking={speaker === "TAZAR" && Boolean(dialogue)}'), 'Tazar facial animation must follow active dialogue');
 assert.ok(world.includes('speaking={speaker === "JELLO" && Boolean(dialogue)}'), 'Jello facial animation must follow active dialogue');
 assert.ok(style.includes('.tazar.speaking .tazar-mouth'), 'Tazar mouth must animate while speaking');
 assert.ok(style.includes('.jello.speaking .jello-mouth'), 'Jello mouth must animate while speaking');
 assert.ok(world.includes('const toggleSound = async'), 'sound must be an explicit opt-in interaction');
+assert.ok(world.includes("const [micState, setMicState] = useState('off')"), 'microphone perception must start disabled');
+assert.ok(world.includes('navigator.mediaDevices?.getUserMedia'), 'microphone access must use the browser permission gate');
+assert.ok(world.includes('video: false'), 'the listening mode must not activate the camera');
+assert.ok(world.includes('analyser.getByteTimeDomainData(samples)'), 'the room sound envelope must be measured locally');
+assert.ok(world.includes('window.requestAnimationFrame(sample)'), 'sound perception must update continuously while enabled');
+assert.ok(world.includes("mic.stream?.getTracks().forEach((track) => track.stop())"), 'microphone tracks must stop on exit');
+assert.ok(world.includes("micState === 'listening' ? 'STOP LISTENING'"), 'visitors must be able to stop microphone access');
+assert.ok(world.includes('LET THEM HEAR'), 'microphone access must require an explicit visitor action');
+assert.ok(world.includes('micLevel={micLevel}'), 'measured sound must reach the character scene');
+assert.ok(style.includes('.living-scene.sound-active .tazar'), 'Tazar must react to detected room sound');
+assert.ok(style.includes('.living-scene.sound-active .jello'), 'Jello must react to detected room sound');
+assert.ok(!world.includes('fetch('), 'raw room audio must not be uploaded by the Living World');
+assert.ok(!world.includes('SpeechRecognition'), 'microphone perception must not transcribe speech');
+assert.ok(!world.includes('localStorage.setItem(MEMORY_KEY, JSON.stringify({ ...next, mic'), 'microphone signals must not enter visitor memory');
+assert.ok(!world.includes('MORROW') && !world.includes('VESPER'), 'retired character names must not remain in the Living World');
+
 assert.ok(style.includes('.presence-still .tazar-lantern'), 'Tazar must respond to visitor stillness');
 assert.ok(style.includes('.presence-still .jello-body'), 'Jello must have an independent stillness animation');
 assert.ok(style.includes('.presence-tazar-near .tazar-wings'), 'Tazar must react when approached');
