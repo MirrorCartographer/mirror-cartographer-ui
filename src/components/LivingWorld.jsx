@@ -77,6 +77,7 @@ function Jello({ onClick, onFocus, speaking }) {
 
 function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, speaker, dialogue, micLevel, visitorPhase, responseCue, perceptionCount }) {
   const lastObservationRef = useRef({ x: -1, y: -1, at: 0 });
+  useEffect(() => () => window.clearTimeout(walkTimerRef.current), []);
   const sceneRef = useRef(null);
   const walkTimerRef = useRef(null);
   const [visitorPosition, setVisitorPosition] = useState({ x: 0.16, y: 0.84 });
@@ -167,7 +168,9 @@ export default function LivingWorld() {
   const [perceptionCount, setPerceptionCount] = useState(0);
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
-  const autoNoticeRef = useRef({ tazar:false, jello:false });
+  const [approachEvent, setApproachEvent] = useState({ resident: null, sequence: 0 });
+  const handledApproachRef = useRef(0);
+  const approachCountsRef = useRef({ tazar: 0, jello: 0 });
   const [dialogue, setDialogue] = useState('');
   const [visitorMessage, setVisitorMessage] = useState('');
   const [worldConversationHistory, setWorldConversationHistory] = useState([]);
@@ -192,6 +195,7 @@ export default function LivingWorld() {
       updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'visitor-approach') {
       setPresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
+      setApproachEvent((current) => ({ resident: observation.value, sequence: current.sequence + 1 }));
       updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'pointer-stillness') {
       window.clearTimeout(presenceTimerRef.current);
@@ -350,17 +354,28 @@ export default function LivingWorld() {
     };
   }, []);
   useEffect(() => {
-    if (dialogue) return;
-    if (presence === 'tazar-near' && !autoNoticeRef.current.tazar) {
-      autoNoticeRef.current.tazar = true;
+    if (!approachEvent.resident || !approachEvent.sequence || handledApproachRef.current === approachEvent.sequence || dialogue) return;
+    handledApproachRef.current = approachEvent.sequence;
+    const resident = approachEvent.resident;
+    const count = ++approachCountsRef.current[resident];
+    if (resident === 'tazar') {
+      const lines = [
+        'You can look, you know. I am not a display.',
+        'Ah. You found the short route. It is mostly decorative.',
+        'Careful. The floor remembers where people stop.'
+      ];
       setSpeaker('TAZAR');
-      setDialogue('You can look, you know. I am not a display.');
-    } else if (presence === 'jello-near' && !autoNoticeRef.current.jello) {
-      autoNoticeRef.current.jello = true;
+      setDialogue(lines[(count - 1) % lines.length]);
+    } else {
+      const lines = [
+        'I saw you looking. I am deciding whether to be offended.',
+        'You came all this way. I hope you brought something interesting.',
+        'I was here first. Technically.'
+      ];
       setSpeaker('JELLO');
-      setDialogue('I saw you looking. I am deciding whether to be offended.');
+      setDialogue(lines[(count - 1) % lines.length]);
     }
-  }, [presence, dialogue]);
+  }, [approachEvent, dialogue]);
   const updatePresence = (nextPresence) => {
     window.clearTimeout(presenceTimerRef.current);
     setPresence(nextPresence);
