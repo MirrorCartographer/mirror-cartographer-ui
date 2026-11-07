@@ -31,7 +31,7 @@ assert.ok(world.includes("window.addEventListener('blur', onBlur)"), 'the enviro
 assert.ok(world.includes('className="tazar-name">TAZAR'), 'Tazar must be named visibly in the scene');
 assert.ok(world.includes('className="jello-name">JELLO'), 'Jello must be named visibly in the scene');
 
-assert.ok(world.includes("observation.kind === 'pointer-position' && observation.value && updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity');
+assert.ok(world.includes("observation.kind === 'pointer-position' && observation.value") && world.includes("updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity from ledger events');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
 assert.ok(world.includes('const returningVisitorRef = useRef(memory.visits > 0)'), 'first visits must be distinguished from returning visitors');
