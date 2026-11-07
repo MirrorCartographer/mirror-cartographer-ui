@@ -22,6 +22,21 @@ deployment by manifest digest
 
 Harbor is the first operational registry because it supplies project isolation, robot accounts, replication, tag immutability, audit integration, scanning hooks, and garbage collection. A different OCI implementation such as zot is required as the second online copy to prove that the catalog is not Harbor-specific. ORAS-compatible portable export is the offline exit and disaster-recovery path.
 
+## Executable acceptance gate
+
+Run `node platform/registry/oci-registry-gate.mjs` before a registry becomes an artifact-custody target.
+
+The gate verifies:
+
+- HTTPS unless an isolated fixture explicitly enables HTTP.
+- Registry HTTP API v2 evidence.
+- Exact manifest retrieval by immutable digest.
+- `Docker-Content-Digest` equality.
+- OCI 1.1 referrers discovery for SBOM, signature, and provenance attachment.
+- Explicit fallback mode when a temporary migration target lacks the referrers endpoint.
+
+Block production promotion when the capability report fails. Treat fallback mode as migration debt, not full conformance.
+
 ## Package custody
 
 Canonical builds install only from the project mirror. A lockfile is necessary but insufficient: the matching tarballs, integrity values, package metadata, transitive closure, and admitted lifecycle-script decisions must all remain in project custody. An upstream deletion, account suspension, or package-registry outage must not prevent clean-host reconstruction.
@@ -36,7 +51,7 @@ Tags remain convenience pointers. Release and deployment authority use manifest 
 
 ### Project-owned
 
-Artifact catalog, package closure, OCI graph inventory, digest policy, referrer relationships, retention holds, publication policy, replication reconciliation, deletion authority, portable exports, evidence, and recovery acceptance.
+Artifact catalog, package closure, OCI graph inventory, digest policy, referrer relationships, retention holds, publication policy, replication reconciliation, deletion authority, portable exports, evidence, recovery acceptance, registry acceptance criteria, and promotion gates.
 
 ### Replaceable
 
@@ -45,6 +60,14 @@ Harbor, zot, CNCF Distribution, ORAS, npm-compatible mirrors, object stores, fil
 ### Not physically owned
 
 Storage-hardware and CPU fabrication, firmware, facilities, utility power, transit, BGP, DNS roots, registrars, public CAs, and upstream package publishers.
+
+## Rejected claims
+
+- A container registry account equals artifact sovereignty.
+- Tags identify releases immutably.
+- Provider replication equals an independent recovery path.
+- Registry availability proves artifact integrity.
+- Supporting image pulls proves support for signatures, SBOMs, or provenance discovery.
 
 ## Production evidence still required
 
