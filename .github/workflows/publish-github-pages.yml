@@ -39,6 +39,8 @@ jobs:
         run: npm run test:resident-dialogue
       - name: Verify agency-preserving memory ledger
         run: npm run test:agency-memory-ledger
+      - name: Verify co-presence ontology and agency boundary
+        run: npm run test:copresence-boundary
       - uses: denoland/setup-deno@v2
       - name: Type-check the Supabase resident Edge Function
         run: deno check supabase/functions/resident-dialogue/index.ts
