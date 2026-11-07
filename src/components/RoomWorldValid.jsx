@@ -86,12 +86,23 @@ function PortalMap({ progress, onEnter, onClose }) {
   };
   return <div className="portal-map" role="dialog" aria-modal="true" aria-label="Room constellation" onKeyDown={containDialogFocus}>
     <button className="map-close" aria-label="Close constellation" autoFocus onClick={onClose}>×</button>
+    <section className="found-rooms" aria-label="Discover working rooms inside the field">
+      <div className="found-rooms-heading"><p>UNDER THE SURFACE / FIELD NOTES</p><h2>The world is strange.<br/><em>The rooms are real.</em></h2><span>The constellation is an atmosphere, not a category list. These are places you can actually enter and use.</span></div>
+      <div className="found-rooms-grid">
+        <a href="./atlas/rooms/signal-loom/"><small>BODY / EVIDENCE</small><strong>The Signal Loom</strong><span>Trace symptoms, measurements, interventions, context, and questions without turning a pattern into a diagnosis.</span><b>FOLLOW THE SIGNAL ↗</b></a>
+        <a href="./atlas/rooms/after-the-uniform/"><small>VETERANS DAY / TRANSITION</small><strong>After the Uniform</strong><span>A human field notebook for the long transition: stability, health, records, work, education, and belonging.</span><b>FIND THE NEXT MOVE ↗</b></a>
+        <a href="./atlas/rooms/body-archive/"><small>BODY / LOCAL ARCHIVE</small><strong>The Body Archive</strong><span>Keep direct observations, measurements, and possible explanations in separate places.</span><b>OPEN THE ARCHIVE ↗</b></a>
+        <a href="./atlas/rooms/common-thread/"><small>PEOPLE / RELATIONSHIPS</small><strong>Common Thread</strong><span>Build a private constellation of people, places, groups, questions, and shared work.</span><b>TRACE A CONNECTION ↗</b></a>
+        <a href="./atlas/rooms/screening-room/"><small>FILM / CULTURE</small><strong>The Picture House</strong><span>A little independent cinema. The current feature is a Veteran-made story of one person showing up for another.</span><b>ENTER THE SCREENING ↗</b></a>
+        <a href="./atlas/rooms/arcade/veteran-mission/"><small>VETERAN / PRACTICAL PATH</small><strong>The Mission</strong><span>Turn a broad situation into a manageable path, with room for evidence, constraints, and the next action.</span><b>OPEN THE MISSION MAP ↗</b></a>
+      </div>
+    </section>
     <div className="portal-grid">{ROOMS.map((room) => {
       const open = true;
       const seen = progress.visited.includes(room.id);
       return <button aria-label={open ? `Enter room ${room.id}, ${room.primary} form, ${room.motion} motion` : `Room ${room.id}, ${room.primary} form, locked`} key={room.id} className={`portal ${open ? 'open' : ''} ${seen ? 'seen' : ''}`} style={{ '--c': room.palette[2] }} onClick={() => open && onEnter(room.id)}><i aria-hidden="true">{open ? '◇' : '·'}</i></button>;
     })}</div>
-    <a className="map-all-rooms" href="./atlas/rooms/">All rooms and instruments ↗</a>
+    <a className="map-all-rooms" href="./atlas/rooms/">Browse all 39 rooms and instruments ↗</a>
   </div>;
 }
 
