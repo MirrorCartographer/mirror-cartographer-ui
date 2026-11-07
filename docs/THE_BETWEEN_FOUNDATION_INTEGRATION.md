@@ -34,7 +34,7 @@ A visitor may sign in with a Supabase magic link and explicitly enable cross-dev
 - a small interaction counter;
 - last station event.
 
-It does not contain microphone samples, pointer coordinates, submitted messages, transcripts, or inferred emotional states. The Memory Ledger lets the account owner inspect and remove saved choices or delete the account record.
+It does not contain microphone samples, pointer coordinates, submitted messages, transcripts, or inferred emotional states. The Agency-Preserving Memory Ledger labels each durable choice by source, claim state, confidence, sensitivity, permitted uses, review date, and editability. The account owner can inspect, annotate, review, remove individual entries, or delete the account record. A second, separate opt-in is required before Tazar/Jello's model provider may use this memory in dialogue.
 
 ### 3. Shared presence and relationships
 
@@ -66,7 +66,7 @@ The resident dialogue path supports:
 
 - separate Tazar and Jello system profiles;
 - bounded recent conversation turns held in page memory and sent with the current request;
-- optional, consent-gated private continuity context;
+- optional, separately consent-gated private continuity context and memory-ledger retrieval;
 - a replaceable OpenAI-compatible model endpoint;
 - server-side provider credentials;
 - no transcript persistence by Mirror Cartographer.
