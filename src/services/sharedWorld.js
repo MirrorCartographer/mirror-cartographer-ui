@@ -215,13 +215,19 @@ export async function savePrivateContinuity(memory = {}) {
 
   const occurrences = new Map();
   for (const choice of content.choices) occurrences.set(choice, (occurrences.get(choice) || 0) + 1);
+  const sourceKeys = [...occurrences.keys()].map((choice) => `living-world-choice:${choice}`);
+  const { data: existingEntries, error: existingError } = sourceKeys.length
+    ? await supabase.from('memory_ledger').select('source_key,content').eq('owner_id', user.id).in('source_key', sourceKeys)
+    : { data: [], error: null };
+  if (existingError) throw existingError;
+  const existingNotes = new Map((existingEntries || []).map((entry) => [entry.source_key, entry.content?.user_note || '']));
   const ledgerRows = [...occurrences.entries()].map(([choice, count]) => ({
     owner_id: user.id,
     source_key: `living-world-choice:${choice}`,
     memory_class: 'user-approved',
     source_scope: 'user-approved',
     retention_class: 'private-durable',
-    content: { choice_id: choice, occurrences: count },
+    content: { choice_id: choice, occurrences: count, user_note: existingNotes.get(`living-world-choice:${choice}`) || '' },
     source_pointer: `the-between/dialogue-choice/${choice}`,
     source_summary: 'Visitor selected an in-world dialogue option.',
     confidence: 'direct',
