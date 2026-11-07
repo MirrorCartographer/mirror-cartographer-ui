@@ -167,6 +167,9 @@ export default function LivingWorld() {
   const [eventIndex, setEventIndex] = useState(0);
   const [presence, setPresence] = useState('arrived');
   const [perceptionCount, setPerceptionCount] = useState(0);
+  const [perceptionFeed, setPerceptionFeed] = useState([]);
+  const [fieldLogOpen, setFieldLogOpen] = useState(false);
+  const lastAudioFeedAtRef = useRef(0);
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
   const [approachEvent, setApproachEvent] = useState({ resident: null, sequence: 0 });
@@ -192,6 +195,12 @@ export default function LivingWorld() {
   const accountMemoryReadyRef = useRef(false);
   useEffect(() => subscribePerceptionObservations((observation) => {
     setPerceptionCount((count) => count + 1);
+    const observedAt = Date.parse(observation.observedAt) || Date.now();
+    const includeInFeed = observation.kind !== 'pointer-position' && (observation.kind !== 'audio-envelope' || observedAt - lastAudioFeedAtRef.current >= 1500);
+    if (includeInFeed) {
+      if (observation.kind === 'audio-envelope') lastAudioFeedAtRef.current = observedAt;
+      setPerceptionFeed((items) => [observation, ...items].slice(0, 8));
+    }
     if (observation.kind === 'visitor-move') {
       lastApproachedResidentRef.current = null;
       setPresence('walking');
@@ -539,7 +548,16 @@ export default function LivingWorld() {
   return <main className="living-world">
     <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} speaker={speaker} dialogue={dialogue} micLevel={micLevel} visitorPhase={visitorPhase} responseCue={responseCue} perceptionCount={perceptionCount}/>
     <div className="world-vignette"/>
-    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
+    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={() => setFieldLogOpen((open) => !open)} aria-expanded={fieldLogOpen}>FIELD LOG</button><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'} title="Measures room sound level locally. No recording or transcription.">{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><SharedWorldPanel /><a href="./?view=field">THE FIELD</a></nav></header>
+    {fieldLogOpen && <aside className="field-receipt" aria-label="Local perception field log">
+      <div className="field-receipt-head"><b>FIELD RECEIPT</b><button onClick={() => setFieldLogOpen(false)} aria-label="Close field log">×</button></div>
+      <p>OBSERVED SIGNALS · LOCAL / EPHEMERAL</p>
+      {perceptionFeed.length ? perceptionFeed.map((item) => {
+        const labels = { 'visitor-move': 'VISITOR MOVED', 'visitor-approach': `APPROACH · ${String(item.value).toUpperCase()}`, 'pointer-touch': 'TOUCH INPUT', 'pointer-stillness': 'MOVEMENT SETTLED', 'character-focus': `FOCUS · ${String(item.value).toUpperCase()}`, 'audio-envelope': 'ROOM SOUND LEVEL', 'microphone-state': `MICROPHONE · ${String(item.value).toUpperCase()}`, 'page-visibility': item.value ? 'PAGE VISIBLE' : 'PAGE HIDDEN', 'window-focus': item.value ? 'WINDOW FOCUSED' : 'WINDOW BLURRED', 'submitted-language': 'MESSAGE SUBMITTED', 'resident-choice': `CHOICE · ${String(item.value).toUpperCase()}` };
+        return <div className="field-receipt-entry" key={item.id}><b>{labels[item.kind] || item.kind.toUpperCase()}</b><small>{item.source} · {item.permission}</small><small>{item.scope} / {item.retention}</small></div>;
+      }) : <div className="field-receipt-empty">Nothing observed yet. Move through the room or interact with an inhabitant.</div>}
+      <footer>CAMERA: NOT CONNECTED · NO RAW AUDIO OR COORDINATES SENT</footer>
+    </aside>}
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span>
 </section>
     <section className="tazar-dialogue" aria-live="polite"><p className="resident-ontology">FICTIONAL INHABITANTS · SCRIPTED OR AI-GENERATED DIALOGUE</p>{boundaryNotice && <p className="resident-boundary-notice">{boundaryNotice}</p>}<p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
