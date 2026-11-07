@@ -44,6 +44,15 @@ export default function LivingCountry() {
   const [draftContext,setDraftContext] = useState('embodied');
   const [healthOpen,setHealthOpen] = useState(false);
   const [companion,setCompanion] = useState('O’Malley');
+  const [territory,setTerritory] = useState('room');
+  const [shape,setShape] = useState('A light behind a curtain.');
+  const [booth,setBooth] = useState('category');
+  const [departure,setDeparture] = useState('');
+  const [arrival,setArrival] = useState('');
+  const [orchardId,setOrchardId] = useState('weather');
+  const [contrastId,setContrastId] = useState('echo');
+  const [thunderIds,setThunderIds] = useState({question:'echo',detail:'weather',system:'moss'});
+  const [reflection,setReflection] = useState('');
   const [noteStatus,setNoteStatus] = useState('Notes are stored only in this browser. No account or upload is connected.');
   const [testStatus,setTestStatus] = useState('');
   const [testDraft,setTestDraft] = useState({question:'',observation:'',interpretation:'',alternative:'',prediction:'',falsifier:''});
@@ -72,6 +81,26 @@ export default function LivingCountry() {
     persistNotes([item,...notes]); setSelected(item.id); setContext('all'); setDraft('');
   };
   const removeNote = id => { const next=notes.filter(n=>n.id!==id); persistNotes(next); setSelected(next[0]?.id||''); };
+  const addTerritoryNote = (title,body,noteKind='field note',noteContext='language') => {
+    const item={id:makeId(),title,body,kind:noteKind,context:noteContext,x:14+((notes.length*23)%72),y:17+((notes.length*31)%66),origin:'user',createdAt:new Date().toISOString()};
+    persistNotes([item,...notes]);setSelected(item.id);setContext('all');return item;
+  };
+  const boothData = {
+    category:{label:'Choose a category',line:'The form accepts the category but not the condition that made it matter.',question:'What context was lost when the experience was sorted?'},
+    simplify:{label:'Make it simpler',line:'The system compresses the record until the exception disappears.',question:'Which detail must survive simplification for the account to remain true?'},
+    unrelated:{label:'This is unrelated',line:'A connection is dismissed before anyone checks whether the relationship is structural.',question:'What shared variable or mechanism would make these two observations relevant to each other?'},
+    field:{label:'There is no field for that',line:'The experience exists, but the interface has no place to represent it.',question:'What new field, relationship, or representation would preserve the missing information?'},
+    prove:{label:'Come back when you can prove it',line:'The burden of proof arrives before the system has helped define what could count as evidence.',question:'What is the smallest safe, observable test that could change the decision?'},
+  };
+  const pinShape = () => addTerritoryNote('Before the room',shape,'field note','language');
+  const pinBooth = () => { const b=boothData[booth];addTerritoryNote('Carnival booth / '+b.label,b.line+'\n\nQuestion to carry: '+b.question,'contradiction','systems'); };
+  const pinJourney = () => addTerritoryNote('Ocean terminal / departure and arrival','Departure: '+(departure.trim()||'not yet named')+'\nArrival: '+(arrival.trim()||'not yet named')+'\n\nThe distance between them may be a delay, a missing transition, or a change in direction. Record the sequence before explaining it.','field note','temporal');
+  const revisitAfterimage = () => { const found=notes.find(n=>n.id===orchardId);if(found){setSelected(found.id);setContext('all');} };
+  const retireCurrent = () => { if(!current)return;persistNotes(notes.map(n=>n.id===current.id?{...n,status:'retired',retiredAt:new Date().toISOString()}:n)); };
+  const holdFaultline = () => { const other=notes.find(n=>n.id===contrastId);if(!current||!other||other.id===current.id)return;addTerritoryNote('Velvet faultline / '+current.title+' × '+other.title,'First account: '+current.body+'\n\nSecond account: '+other.body+'\n\nHold the difference. Do not collapse either statement just to make the page look clean.','contradiction','relational'); };
+  const doorText = () => { const q=notes.find(n=>n.id===thunderIds.question),d=notes.find(n=>n.id===thunderIds.detail),s=notes.find(n=>n.id===thunderIds.system);return 'A question that kept returning: '+(q?.title||'not chosen')+'.\nA small thing treated as if it mattered: '+(d?.title||'not chosen')+'.\nA system condition someone refused to call inevitable: '+(s?.title||'not chosen')+'.\n\nWhat could be made where these three meet?'; };
+  const makeDoor = () => addTerritoryNote('The door made of thunder',doorText(),'question','systems');
+  const saveReflection = () => { if(!reflection.trim())return;addTerritoryNote('Room after reading',reflection.trim(),'field note','language');setReflection(''); };
   const changeNoteContext = value => { if(!current||current.origin==='seed') return; persistNotes(notes.map(n=>n.id===current.id?{...n,context:value}:n)); setContext(value); };
   const addInvestigation = e => {
     e.preventDefault();
@@ -100,6 +129,22 @@ export default function LivingCountry() {
       <p>{companion==='O’Malley'?'Keeps the quiet records, including the ones nobody thought to file.':companion==='Bug'?'Checks every threshold. Prefers a door that stays open.':'Notices the weather before the map admits it has changed.'}</p>
     </section>
 
+    <section className="lyr-passage" aria-label="LYR territories">
+      <div className="lyr-heading"><span className="ink-label">LYR / THE UNFINISHED DOOR</span><h2>Eight territories.<br/><i>No assigned meaning.</i></h2><p>Come in by any door. These rooms are made from images, questions, and contradictions. They are not tests of you. Nothing here decides what you feel.</p></div>
+      <nav className="territory-tabs" aria-label="Choose a territory">{[
+        ['room','I / BEFORE'],['carnival','II / CARNIVAL'],['ocean','III / OCEAN'],['orchard','IV / ORCHARD'],['funeral','V / FUNERAL'],['faultline','VI / FAULTLINE'],['thunder','VII / THUNDER'],['after','VIII / AFTER']
+      ].map(([id,label])=><button type="button" key={id} aria-pressed={territory===id} onClick={()=>setTerritory(id)}>{label}</button>)}</nav>
+      <article className={'territory-scene scene-'+territory}>
+        {territory==='room'&&<><span className="scene-index">I / THE ROOM BEFORE THE ROOM</span><h3>What if the record is complete,<br/>and understanding is still missing?</h3><p>Before an explanation, there is a shape. It might be a light behind a curtain, a stone held underwater, a hallway that lengthens when approached, or no image at all.</p><div className="scene-controls"><label>CHOOSE A SHAPE<select aria-label="Choose a shape" value={shape} onChange={e=>setShape(e.target.value)}>{['A light behind a curtain.','A stone held underwater.','A hallway that lengthens when approached.','A bird calling from somewhere unseen.','A rhythm with no image.','No image. Just a change in pressure.'].map(x=><option key={x}>{x}</option>)}</select></label><button type="button" onClick={pinShape}>KEEP THIS FRAGMENT ↗</button></div></>}
+        {territory==='carnival'&&<><span className="scene-index">II / STATIC CARNIVAL</span><h3>Every booth promises an explanation.</h3><p>The lights are too bright. The music is almost familiar. Choose the booth that sounds most like a system you have encountered. Then inspect what it cannot see.</p><div className="booth-row">{Object.entries(boothData).map(([id,b])=><button type="button" key={id} aria-pressed={booth===id} onClick={()=>setBooth(id)}>{b.label}</button>)}</div><div className="booth-reveal"><b>WHAT THE BOOTH CANNOT SEE</b><p>{boothData[booth].line}</p><small>NEXT QUESTION: {boothData[booth].question}</small></div><button type="button" onClick={pinBooth}>PIN THE BLIND SPOT ↗</button></>}
+        {territory==='ocean'&&<><span className="scene-index">III / OCEAN TERMINAL</span><h3>The map says here.<br/>The body says toward.</h3><p>Departures are printed in clean rows. Arrivals are delayed. Record the two ends without pretending the route is already understood.</p><div className="scene-controls scene-two"><label>DEPARTURE<input value={departure} onChange={e=>setDeparture(e.target.value)} placeholder="What was the starting condition?"/></label><label>ARRIVAL<input value={arrival} onChange={e=>setArrival(e.target.value)} placeholder="What changed or arrived?"/></label><button type="button" onClick={pinJourney}>RECORD THE CROSSING ↗</button></div></>}
+        {territory==='orchard'&&<><span className="scene-index">IV / AFTERIMAGE ORCHARD</span><h3>Nothing here grows in a straight line.</h3><p>A sentence you almost deleted. A room you remember by its temperature. A question returning years later under a different name. Choose a trace and let it become visible again.</p><div className="scene-controls"><label>CHOOSE AN AFTERIMAGE<select aria-label="Choose an afterimage" value={orchardId} onChange={e=>setOrchardId(e.target.value)}>{notes.map(n=><option key={n.id} value={n.id}>{n.title}</option>)}</select></label><button type="button" disabled={!notes.length} onClick={revisitAfterimage}>TURN THE LIGHT ↗</button></div></>}
+        {territory==='funeral'&&<><span className="scene-index">V / SIGNAL FUNERAL</span><h3>We do not burn the evidence.</h3><p>This is a funeral for explanations that could not carry what they promised to carry. Retire a claim without deleting the observations beneath it. The history stays visible.</p><div className="retire-slip">{current?<><b>CURRENT FRAGMENT / {current.kind.toUpperCase()}</b><p>{current.title}</p><small>{current.status==='retired'?'THIS CLAIM IS ALREADY RETIRED.':'Retiring marks this interpretation as no longer sufficient; it does not erase the note.'}</small><button type="button" disabled={current.status==='retired'} onClick={retireCurrent}>RETIRE THIS EXPLANATION ↗</button></>:<p>No fragment selected.</p>}</div></>}
+        {territory==='faultline'&&<><span className="scene-index">VI / VELVET FAULTLINE</span><h3>Do not resolve the tension just to make the page look clean.</h3><p>Choose two fragments that do not quite agree. Their difference may be the most informative part of the map.</p><div className="scene-controls"><label>HOLD THIS BESIDE THE SELECTED FRAGMENT<select aria-label="Choose a contrasting fragment" value={contrastId} onChange={e=>setContrastId(e.target.value)}>{notes.filter(n=>n.id!==current?.id).map(n=><option key={n.id} value={n.id}>{n.title}</option>)}</select></label><button type="button" disabled={!current||!notes.some(n=>n.id===contrastId)} onClick={holdFaultline}>KEEP BOTH IN VIEW ↗</button></div></>}
+        {territory==='thunder'&&<><span className="scene-index">VII / THE DOOR MADE OF THUNDER</span><h3>Raw material first.<br/>Explanation second.</h3><p>Build a door from three things: a question that kept returning, a small thing treated as if it mattered, and a system failure someone refused to call inevitable.</p><div className="scene-controls scene-three">{[['question','THE RETURNING QUESTION'],['detail','THE SMALL THING'],['system','THE SYSTEM FAILURE']].map(([key,label])=><label key={key}>{label}<select value={thunderIds[key]} onChange={e=>setThunderIds({...thunderIds,[key]:e.target.value})}>{notes.map(n=><option key={n.id} value={n.id}>{n.title}</option>)}</select></label>)}</div><blockquote className="door-preview">{doorText()}</blockquote><button type="button" disabled={!notes.length} onClick={makeDoor}>MAKE THE NEXT THING ↗</button></>}
+        {territory==='after'&&<><span className="scene-index">VIII / THE ROOM AFTER READING</span><h3>Do not summarize too quickly.</h3><p>Which image stayed? Which line changed the temperature of the room? What did you want to reject? If nothing stayed, that is also information.</p><label className="reflection-label">LEAVE ONE TRACE<textarea value={reflection} onChange={e=>setReflection(e.target.value)} rows="3" placeholder="A line, an image, a refusal, or nothing at all…"/></label><button type="button" disabled={!reflection.trim()} onClick={saveReflection}>SAVE THE AFTERIMAGE ↗</button></>}
+      </article>
+    </section>
     <section className="country-map-section">
       <div className="section-scribble"><span>01 / THE OVERGROWN MAP</span><span>CLICK A MARK. FOLLOW A THREAD.</span></div>
       <div className="country-map" role="group" aria-label="Interactive map of field notes">
