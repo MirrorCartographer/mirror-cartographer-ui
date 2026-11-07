@@ -28,3 +28,16 @@
 .shared-requests>b{font:9px 'DM Mono',monospace;letter-spacing:.12em;color:#bba783}
 .shared-requests p{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .shared-requests p span{flex:1;min-width:80px}
+
+.shared-identity{display:grid;gap:7px;margin:16px 0;padding:12px;border:1px solid #bda98955;background:#0b0c11aa}
+.shared-identity small,.shared-connections>b,.shared-connections section>b{font:9px 'DM Mono',monospace;letter-spacing:.12em;color:#bba783}
+.shared-identity code{overflow-wrap:anywhere;color:#e8d9bd;font:10px 'DM Mono',monospace;user-select:all}
+.shared-identity button,.shared-connections p button{border:1px solid #9b866d66;background:#191720;color:#dfceb4;padding:7px 9px;font:8px 'DM Mono',monospace;letter-spacing:.08em;cursor:pointer}
+.shared-connections{margin:16px 0;padding:12px 0;border-top:1px solid #bda98955;border-bottom:1px solid #bda98955}
+.shared-connections>label{margin:10px 0}
+.shared-connections section{margin:16px 0 8px}
+.shared-connections section p{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #bda98922}
+.shared-connections section p code{font:9px 'DM Mono',monospace;color:#d6c5a7}
+.shared-connections section p span{display:flex;gap:5px}
+.shared-connections section p button{padding:6px}
+.shared-connections button:disabled{opacity:.45;cursor:wait}
