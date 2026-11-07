@@ -2,6 +2,23 @@ import { createClient } from '@supabase/supabase-js';
 
 let client = null;
 
+const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
+
+export function isPrivateMemorySyncEnabled() {
+  try { return window.localStorage.getItem(PRIVATE_MEMORY_SYNC_KEY) === 'true'; }
+  catch { return false; }
+}
+
+export function setPrivateMemorySyncEnabled(enabled) {
+  try {
+    if (enabled) window.localStorage.setItem(PRIVATE_MEMORY_SYNC_KEY, 'true');
+    else window.localStorage.removeItem(PRIVATE_MEMORY_SYNC_KEY);
+    window.dispatchEvent(new Event('mc-private-memory-sync-change'));
+  } catch {
+    throw new Error('This browser could not save the private-memory preference.');
+  }
+}
+
 export function sharedWorldConfigured(env = import.meta.env) {
   return Boolean(env.VITE_SUPABASE_URL && env.VITE_SUPABASE_ANON_KEY);
 }
