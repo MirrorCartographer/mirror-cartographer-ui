@@ -50,6 +50,7 @@ const FEATURES = [
 
 const CAPABILITY_REALITY = [
   {id:'atlas',title:'Operating atlas',level:'working local',works:'Dashboard, navigation, and local counts.',gap:'Not a live multi-user operating console.'},
+  {id:'reality',title:'Reality ledger',level:'working local',works:'Shows implementation boundaries and unconnected dependencies explicitly.',gap:'Must be revised whenever the underlying code or integrations change.'},
   {id:'country',title:'The Living Country',level:'working local',works:'Eight interactive LYR territories, fragment notes, context lenses, investigation records, and JSON export.',gap:'Browser-local only; no cross-device sync, account, or shared collaboration.'},
   {id:'judgment',title:'Human Judgment Lab',level:'working local',works:'Seeded simulation with explicit assumptions, accuracy/agreement metrics, ties, and reproducible JSON export.',gap:'Synthetic outcomes; not a field study or estimate of real evaluator behavior.'},
   {id:'archive',title:'Conversation archive',level:'manual prototype',works:'User-entered fragments can be searched and stored locally.',gap:'No complete conversation import or automatic cross-repository history graph.'},
