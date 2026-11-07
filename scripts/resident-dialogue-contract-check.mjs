@@ -8,7 +8,7 @@ const policy = fs.readFileSync('src/engine/residentResponsePolicy.js', 'utf8');
 const boundary = fs.readFileSync('src/engine/coPresenceBoundary.js', 'utf8');
 const quota = fs.readFileSync('db/003_resident_dialogue_limits.sql', 'utf8');
 
-assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history })"), 'resident messages must carry explicit language and a separate ambient scene cue');
+assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: currentSceneCue, ambientIntensity: currentSceneIntensity, history })"), 'resident messages must carry explicit language and a separate ambient scene cue');
 assert.ok(world.includes('worldConversationHistory.slice(-8)'), 'browser conversation history must be bounded');
 assert.ok(world.includes('setWorldConversationHistory([])'), 'conversation history must clear when the authenticated account changes');
 assert.ok(world.includes('setResponseIntensity(response.intensity)'), 'the scene response policy must pass bounded intensity to the agent');
