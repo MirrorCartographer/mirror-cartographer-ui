@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { deletePrivateContinuity, deletePrivateMemoryEntry, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, loadPrivateMemoryLedger, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, updatePrivateMemoryNote, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
+import { deletePrivateContinuity, deletePrivateMemoryEntry, enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, loadPrivateContinuity, loadPrivateMemoryLedger, requestSharedWorldLink, requestWorldConnection, savePrivateContinuity, sharedWorldConfigured, transitionWorldConnection, updatePrivateMemoryNote, isPrivateMemorySyncEnabled, isResidentMemoryUseEnabled, setPrivateMemorySyncEnabled, setResidentMemoryUseEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -15,6 +15,7 @@ export default function SharedWorldPanel() {
   const [targetId, setTargetId] = useState('');
   const [connectionBusy, setConnectionBusy] = useState(false);
   const [memorySync, setMemorySync] = useState(isPrivateMemorySyncEnabled);
+  const [residentMemoryUse, setResidentMemoryUse] = useState(isResidentMemoryUseEnabled);
   const [privateMemory, setPrivateMemory] = useState(null);
   const [memoryEntries, setMemoryEntries] = useState([]);
   const [memoryNotes, setMemoryNotes] = useState({});
@@ -88,6 +89,7 @@ export default function SharedWorldPanel() {
     try {
       setPrivateMemorySyncEnabled(enabled);
       setMemorySync(enabled);
+      if (!enabled) { setResidentMemoryUseEnabled(false); setResidentMemoryUse(false); }
       setMessage(enabled
         ? 'Private memory sync is on for this account. Your visit history and choices remain private.'
         : 'Private memory sync is off. This browser keeps its own separate visit history.');
@@ -184,6 +186,11 @@ export default function SharedWorldPanel() {
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
         <label className="shared-memory-sync"><input type="checkbox" checked={memorySync} onChange={(event) => updateMemorySync(event.target.checked)} /> <span>Carry my private memory across devices</span></label>
         <p className="shared-sync-note">Visit count, explicit choices, a small interaction counter, and last station event. Never visible to other visitors. Off by default.</p>
+        {memorySync && <label className="shared-memory-sync"><input type="checkbox" checked={residentMemoryUse} onChange={(event) => {
+          try { setResidentMemoryUseEnabled(event.target.checked); setResidentMemoryUse(event.target.checked); setMessage(event.target.checked ? 'Tazar and Jello may use your private continuity when replying. It is sent to the configured model provider.' : 'Resident access to private continuity is off.');
+          } catch (error) { setMessage(error.message || 'Could not update resident memory access.'); }
+        }} /> <span>Let Tazar and Jello consult my private memory when replying</span></label>}
+        {memorySync && <p className="shared-sync-note">This is separate from saving memory. Off by default. When enabled, only your private visit and choice summary may be included with a message sent to the model provider.</p>}
         {memorySync && <section className="shared-memory-ledger">
           <b>PRIVATE MEMORY LEDGER · PRIVATE DURABLE / VISITOR-ENABLED</b>
           <p>{privateMemory ? `${privateMemory.visits || 0} visits · ${privateMemory.trust || 0} interaction marks · last event: ${privateMemory.lastEvent || 'none'}` : 'Loading private memory…'}</p>
