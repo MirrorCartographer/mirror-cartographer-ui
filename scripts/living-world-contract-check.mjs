@@ -9,7 +9,7 @@ const perception = fs.readFileSync('src/engine/perceptionLedger.js', 'utf8');
 
 assert.ok(world.includes("const MEMORY_KEY = 'mc-living-world-visitor-v1'"), 'visitor memory must have a stable local key');
 
-assert.ok(world.includes("import { publishPerceptionObservation } from '../engine/perceptionLedger.js'"), 'the world must route signals through the perception ledger');
+assert.ok(world.includes("import { publishPerceptionObservation, subscribePerceptionObservations } from '../engine/perceptionLedger.js'"), 'the world must route signals through the perception ledger');
 assert.ok(world.includes("kind: 'pointer-position'"), 'pointer coordinates must be represented as a bounded observation');
 assert.ok(world.includes("kind: 'pointer-touch'"), 'touch input must be represented as a distinct observation');
 assert.ok(world.includes("kind: 'page-visibility'"), 'page visibility must be represented as a distinct observation');
@@ -20,7 +20,7 @@ assert.ok(perception.includes("scope: 'local-only'") && perception.includes("ret
 assert.ok(world.includes("'--sound-scale': 1 + micLevel * 0.04"), 'measured sound intensity must influence the character rig');
 assert.ok(world.includes("'--visitor-delay': `${-visitorPhase * 0.035}s`"), 'visitor identity must alter the idle choreography');
 assert.ok(world.includes('visitorId: typeof value.visitorId'), 'each browser visitor must receive a persistent identity');
-assert.ok(world.includes('visitorSeed(memory.visitorId)'), 'first encounter must be individualized per visitor');
+assert.ok(world.includes('visitorSeed(accountUserId || memory.visitorId)'), 'first encounter must be individualized per visitor');
 assert.ok(world.includes('memory.choices.includes'), 'return dialogue must respond to remembered choices');
 assert.ok(world.includes('onPointerMove={trackPresence}'), 'the environment must respond to continuous pointer presence');
 assert.ok(world.includes('onPointerDown={trackPresence}'), 'touch interaction must be observed without requiring pointer hover');
@@ -31,11 +31,11 @@ assert.ok(world.includes("window.addEventListener('blur', onBlur)"), 'the enviro
 assert.ok(world.includes('className="tazar-name">TAZAR'), 'Tazar must be named visibly in the scene');
 assert.ok(world.includes('className="jello-name">JELLO'), 'Jello must be named visibly in the scene');
 
-assert.ok(world.includes("onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity');
+assert.ok(world.includes("observation.kind === 'pointer-position' && observation.value && updatePresence(x > 0.34 && x < 0.66 && y > 0.42 ? 'tazar-near' : x > 0.66 && y > 0.5 ? 'jello-near' : 'nearby')"), 'the world must distinguish character proximity');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
 assert.ok(world.includes('const returningVisitorRef = useRef(memory.visits > 0)'), 'first visits must be distinguished from returning visitors');
-assert.ok(world.includes("onPointerLeave={() => onPresence('away')}"), 'the world must register when a visitor leaves the scene');
+assert.ok(world.includes("onPointerLeave={() => publishPerceptionObservation({ kind: 'pointer-leave'"), 'the world must register when a visitor leaves the scene');
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
 assert.ok(world.includes('function Tazar'), 'Tazar must be a real character component');
 assert.ok(world.includes('function Jello'), 'Jello must be a real character component');
