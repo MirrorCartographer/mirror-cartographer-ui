@@ -96,7 +96,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, speaker,
     const scene = sceneRef.current;
     if (!scene) return;
     const residents = ['tazar', 'jello'].map((name) => {
-      const element = scene.querySelector(`. ${name}`.replace('. ', '.'));
+      const element = scene.querySelector(`.${name}`);
       if (!element) return null;
       const rect = element.getBoundingClientRect();
       return { name, x: (rect.left + rect.width / 2 - scene.getBoundingClientRect().left) / scene.clientWidth, y: (rect.top + rect.height * 0.82 - scene.getBoundingClientRect().top) / scene.clientHeight };
@@ -121,6 +121,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, speaker,
 
   const handleGroundPointerDown = (event) => {
     if (event.target.closest('button, a, input, form, .scene-walk-controls')) return;
+    if (event.pointerType === 'touch') publishPerceptionObservation({ kind: 'pointer-touch', source: 'touchscreen', permission: 'explicit-touch', value: true, ttlMs: 2500 });
     const rect = event.currentTarget.getBoundingClientRect();
     moveVisitorTo((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
   };
