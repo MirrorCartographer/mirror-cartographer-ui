@@ -33,6 +33,8 @@ jobs:
         run: npm run test:living-world
       - name: Verify ephemeral perception provenance
         run: npm run test:perception-ledger
+      - name: Verify private and shared world boundaries
+        run: npm run test:shared-world
       - name: Build static application for GitHub Pages
         env:
           VITE_DEPLOYMENT_PROVIDER: github-pages
