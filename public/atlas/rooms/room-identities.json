@@ -1,7 +1,7 @@
 {
   "schema": "mc.room-identity.v1",
   "purpose": "A room is a distinct environment with its own visual grammar, interaction grammar, temporal behavior, and consequence. Shared infrastructure may handle navigation, accessibility, and persistence; it must not flatten room identity. The interaction and memory fields are design contracts, not claims that those features are already implemented.",
-  "count": 37,
+  "count": 39,
   "acceptance": {
     "distinctAxes": [
       "palette",
@@ -526,6 +526,34 @@
       "interaction": "Add people, places, groups, projects, questions, and resources; connect a new point to an existing one and export the local constellation",
       "temporal": "relationships evolve as points are added or removed",
       "memory": "browser-local storage only; no public publishing, messaging, or account connection"
+    },
+    {
+      "id": "038",
+      "name": "The Signal Loom",
+      "path": "./signal-loom/",
+      "kind": "instrument",
+      "palette": "deep ink / oxidized moss / muted rose / brass",
+      "visual": "evidence threads, dated traces, fine-grained labels, and a restrained intensity plot",
+      "interaction": "Add a dated body signal, measurement, intervention response, context, interpretation, or clinician question; filter the evidence ledger and export a source-preserving summary.",
+      "temporal": "chronological traces with user-entered dates and optional time",
+      "memory": "local-only evidence records with explicit type, source, context, and uncertainty; export is user initiated",
+      "implementation_status": "implemented-local-first",
+      "interaction_status": "functional local timeline, typed records, intensity plot, filters, removal, JSON export, and clinician-summary export",
+      "memory_status": "browser localStorage only; no network upload or account sync"
+    },
+    {
+      "id": "039",
+      "name": "After the Uniform",
+      "path": "./after-the-uniform/",
+      "kind": "experience",
+      "palette": "aged parchment / oxblood / projector black / field moss",
+      "visual": "distressed field notebook, torn-paper panels, service-to-civilian transition fragments, handbill typography",
+      "interaction": "Choose a pressure area and horizon, record the situation, obstacle, support needed, and one next move; save locally or export the notes.",
+      "temporal": "dated fragments with immediate, weekly, monthly, and longer horizons",
+      "memory": "local-only transition notes, removable and exportable by the visitor",
+      "implementation_status": "implemented-local-first",
+      "interaction_status": "functional transition note composer, local save, individual removal, JSON export, and linked external resource routes",
+      "memory_status": "browser localStorage only; no network upload or account sync"
     }
   ]
 }
