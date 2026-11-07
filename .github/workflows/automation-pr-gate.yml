@@ -1,0 +1,32 @@
+name: Automation PR Gate
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-automation-pr:
+    if: startsWith(github.head_ref, 'automation/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the trusted base revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate the pull-request evidence contract
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: node scripts/validate-automation-pr.mjs --body-env PR_BODY
+
+      - name: Run validator unit tests
+        run: node --test scripts/validate-automation-pr.test.mjs
