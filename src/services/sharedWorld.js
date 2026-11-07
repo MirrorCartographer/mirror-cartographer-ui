@@ -211,9 +211,72 @@ export async function savePrivateContinuity(memory = {}) {
     tags: ['living-world', 'mirror-memory']
   }, { onConflict: 'id,owner_id' });
   if (error) throw error;
+
+  const occurrences = new Map();
+  for (const choice of content.choices) occurrences.set(choice, (occurrences.get(choice) || 0) + 1);
+  const ledgerRows = [...occurrences.entries()].map(([choice, count]) => ({
+    owner_id: user.id,
+    source_key: `living-world-choice:${choice}`,
+    memory_class: 'user-approved',
+    source_scope: 'user-approved',
+    retention_class: 'private-durable',
+    content: { choice_id: choice, occurrences: count },
+    source_pointer: `the-between/dialogue-choice/${choice}`,
+    source_summary: 'Visitor selected an in-world dialogue option.',
+    confidence: 'direct',
+    sensitivity_class: 'low',
+    claim_status: 'observed',
+    allowed_uses: ['personalization', 'retrieval', 'ui_adaptation'],
+    prohibited_uses: ['diagnosis', 'identity_claim', 'public_artifact', 'model_training'],
+    reason_for_retention: 'Visitor explicitly enabled cross-device memory sync and selected this dialogue option.',
+    expiration_or_review_date: new Date(Date.now() + 180 * 86400000).toISOString(),
+    redaction_notes: '',
+    user_visible: true,
+    user_editable: true
+  }));
+  if (ledgerRows.length) {
+    const { error: ledgerError } = await supabase.from('memory_ledger').upsert(ledgerRows, { onConflict: 'owner_id,source_key' });
+    if (ledgerError) throw ledgerError;
+  }
   return true;
 }
 
+
+
+export async function loadPrivateMemoryLedger() {
+  if (!isPrivateMemorySyncEnabled()) return [];
+  const { supabase, user } = await requireSharedWorldUser();
+  const { data, error } = await supabase.from('memory_ledger')
+    .select('id,source_key,memory_class,source_scope,retention_class,content,source_pointer,source_summary,confidence,sensitivity_class,claim_status,allowed_uses,prohibited_uses,reason_for_retention,expiration_or_review_date,user_visible,user_editable,last_user_reviewed_at,created_at,updated_at')
+    .eq('owner_id', user.id)
+    .eq('retention_class', 'private-durable')
+    .order('updated_at', { ascending: false })
+    .limit(100);
+  if (error) throw error;
+  return data || [];
+}
+
+export async function updatePrivateMemoryNote(entryId, note) {
+  const { supabase, user } = await requireSharedWorldUser();
+  const { data: existing, error: readError } = await supabase.from('memory_ledger')
+    .select('content').eq('id', entryId).eq('owner_id', user.id).maybeSingle();
+  if (readError) throw readError;
+  if (!existing) throw new Error('That memory entry no longer exists.');
+  const content = { ...(existing.content || {}), user_note: String(note || '').slice(0, 500) };
+  const { error } = await supabase.from('memory_ledger').update({
+    content, last_user_reviewed_at: new Date().toISOString()
+  }).eq('id', entryId).eq('owner_id', user.id);
+  if (error) throw error;
+  return content;
+}
+
+export async function deletePrivateMemoryEntry(entryId) {
+  const { supabase, user } = await requireSharedWorldUser();
+  const { error } = await supabase.from('memory_ledger').delete()
+    .eq('id', entryId).eq('owner_id', user.id);
+  if (error) throw error;
+  return true;
+}
 
 export async function askResident(resident, message, perception = {}) {
   const { supabase } = await requireSharedWorldUser();
@@ -248,8 +311,10 @@ export async function askResident(resident, message, perception = {}) {
 
 export async function deletePrivateContinuity() {
   const { supabase, user } = await requireSharedWorldUser();
-  const { error } = await supabase.from('continuity_records')
+  const { error: recordError } = await supabase.from('continuity_records')
     .delete().eq('id', user.id).eq('owner_id', user.id).eq('collection', 'settings');
-  if (error) throw error;
+  if (recordError) throw recordError;
+  const { error: ledgerError } = await supabase.from('memory_ledger').delete().eq('owner_id', user.id);
+  if (ledgerError) throw ledgerError;
   return true;
 }
