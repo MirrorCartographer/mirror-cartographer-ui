@@ -57,8 +57,8 @@ for select using (
     and exists (
       select 1 from public.world_connections c
       where c.status = 'accepted'
-        and ((c.requester_id = auth.uid() and c.recipient_id = user_presence.user_id)
-          or (c.recipient_id = auth.uid() and c.requester_id = user_presence.user_id))
+        and ((c.requester_id = auth.uid() and c.recipient_id = world_presence.user_id)
+          or (c.recipient_id = auth.uid() and c.requester_id = world_presence.user_id))
     )
   )
 );
