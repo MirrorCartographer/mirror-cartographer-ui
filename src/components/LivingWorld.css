@@ -128,3 +128,11 @@
 .presence-vesper-near .vesper{filter:drop-shadow(0 0 17px #e7c99588);animation:vesper-notice .6s ease-out 1}
 .presence-vesper-near .vesper-tail{animation:vesper-tail .35s ease-in-out 4}
 @keyframes vesper-notice{0%{translate:0 0;rotate:0deg}35%{translate:-9px -9px;rotate:-7deg}100%{translate:0 0;rotate:0deg}}
+
+.morrow-mouth{transform-box:fill-box;transform-origin:center;transition:transform .12s ease}
+.morrow.speaking .morrow-mouth{animation:morrow-speech .2s ease-in-out infinite alternate}
+@keyframes morrow-speech{to{transform:scaleY(.32) translateY(-1px)}}
+.vesper-mouth{position:absolute;z-index:3;left:30px;top:43px;width:7px;height:3px;border-bottom:1px solid #d6b5a1;border-radius:50%;opacity:.65}
+.vesper.speaking .vesper-mouth{height:6px;background:#b77e83;border:1px solid #e0b0a0;animation:vesper-speech .22s ease-in-out infinite alternate}
+@keyframes vesper-speech{to{transform:scaleY(.45)}}
+@media(prefers-reduced-motion:reduce){.morrow.speaking .morrow-mouth,.vesper.speaking .vesper-mouth{animation:none}}
