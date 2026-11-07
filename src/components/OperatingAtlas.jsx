@@ -117,6 +117,7 @@ export default function OperatingAtlas() {
   const [active,setActive]=useState('atlas');
   const [crisis,setCrisis]=useState(false);
   const nav=useMemo(()=>FEATURES,[ ]);
+  useEffect(()=>{document.documentElement.classList.add('mc-operating-atlas');document.body.classList.add('mc-operating-atlas');return()=>{document.documentElement.classList.remove('mc-operating-atlas');document.body.classList.remove('mc-operating-atlas');document.body.classList.remove('atlas-nav-open');};},[]);
   useEffect(()=>{document.documentElement.dataset.atlasContrast=state.accessibility.highContrast?'high':'normal';document.documentElement.dataset.atlasMotion=state.accessibility.reducedMotion?'reduced':'full';document.documentElement.style.fontSize=`${state.accessibility.scale*100}%`;},[state.accessibility]);
   const exportData=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`mirror-cartographer-${today()}.json`;a.click();URL.revokeObjectURL(a.href);};
 
