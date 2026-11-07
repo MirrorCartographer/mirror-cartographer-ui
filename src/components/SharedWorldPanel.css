@@ -41,3 +41,7 @@
 .shared-connections section p span{display:flex;gap:5px}
 .shared-connections section p button{padding:6px}
 .shared-connections button:disabled{opacity:.45;cursor:wait}
+
+.shared-world-panel label.shared-memory-sync{display:flex;grid-template-columns:none;align-items:center;gap:10px;margin:14px 0 4px;font:10px/1.4 'DM Sans',sans-serif;letter-spacing:0;color:#e1d5bd}
+.shared-memory-sync input{width:17px;height:17px;accent-color:#c6a77c;flex:0 0 auto}
+.shared-sync-note{margin:0 0 14px 27px;color:#9e9589;font:10px/1.5 'DM Sans',sans-serif}
