@@ -26,5 +26,9 @@ export function deriveResidentResponse(observation) {
   if (observation.kind === 'page-visibility' && observation.value === true) return { cue: 'return', resident: null, intensity: 0 };
   if (observation.kind === 'window-focus' && observation.value === false) return { cue: 'away', resident: null, intensity: 0 };
   if (observation.kind === 'pointer-touch') return { cue: 'touch', resident: null, intensity: 1 };
+  if (observation.kind === 'pointer-leave') return { cue: 'away', resident: null, intensity: 0 };
+  if (observation.kind === 'pointer-stillness') return { cue: 'still', resident: null, intensity: 0 };
+  if (observation.kind === 'window-focus' && observation.value === true) return { cue: 'return', resident: null, intensity: 0 };
+
   return null;
 }
