@@ -39,8 +39,9 @@ assert.ok(world.includes('visitor-token') && world.includes('setVisitorPosition'
 assert.ok(style.includes('.visitor-token{') && style.includes('.scene-walk-controls{'), 'locomotion must be visible and touch-friendly');
 assert.ok(world.includes("intendedResident ? 'explicit-approach-control' : 'visitor-arrived-near-resident'"), 'explicit approach and ground-arrival observations must preserve their source');
 assert.ok(!world.includes("updatePresence(x > 0.34 && x < 0.66"), 'raw cursor coordinates must not be mistaken for physical approach');
-assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
-assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
+assert.ok(world.includes('setApproachEvent((current) => ({ resident: observation.value, sequence: current.sequence + 1 }))'), 'every arrival must create a distinct approach event');
+assert.ok(world.includes('approachCountsRef.current[resident]'), 'residents must recognize repeat approaches with changing local responses');
+assert.ok(world.includes('handledApproachRef.current === approachEvent.sequence'), 'an approach event must not reopen after the visitor dismisses its dialogue');
 assert.ok(world.includes('const returningVisitorRef = useRef(memory.visits > 0)'), 'first visits must be distinguished from returning visitors');
 assert.ok(world.includes("document.addEventListener('visibilitychange', onVisibility)"), 'leaving the page must be distinguished from moving a cursor out of the scene');
 assert.ok(world.includes("setPresence('still')"), 'stillness must produce a distinct environmental state');
