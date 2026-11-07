@@ -11,8 +11,6 @@ export default function SharedWorldPanel() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [people, setPeople] = useState([]);
-  const [incoming, setIncoming] = useState([]);
-  const [requested, setRequested] = useState([]);
   const [connections, setConnections] = useState([]);
   const [targetId, setTargetId] = useState('');
   const [connectionBusy, setConnectionBusy] = useState(false);
@@ -35,13 +33,6 @@ export default function SharedWorldPanel() {
 
   useEffect(() => () => { stopRef.current?.(); }, []);
 
-  useEffect(() => {
-    if (!session?.user?.id) { setIncoming([]); return; }
-    let active = true;
-    loadIncomingWorldConnections().then((items) => { if (active) setIncoming(items); })
-      .catch((error) => { if (active) setMessage(error.message); });
-    return () => { active = false; };
-  }, [session?.user?.id]);
   useEffect(() => {
     if (!open || !session) return undefined;
     let active = true;
@@ -112,19 +103,6 @@ export default function SharedWorldPanel() {
     finally { setBusy(false); }
   };
 
-  const connect = async (userId) => {
-    try { await requestWorldConnection(userId); setRequested((items) => [...items, userId]); setMessage('A connection request has been sent. They decide whether to open that door.'); }
-    catch (error) { setMessage(error.message || 'Could not send the connection request.'); }
-  };
-
-  const decide = async (requestId, decision) => {
-    try {
-      await decideWorldConnection(requestId, decision);
-      setIncoming((items) => items.filter((item) => item.id !== requestId));
-      setMessage(decision === 'accepted' ? 'Connection accepted. They can now see you when you choose connections-only presence.' : 'Request declined. No connection was created.');
-    } catch (error) { setMessage(error.message || 'Could not update that connection.'); }
-  };
-
   const leave = async () => {
     setBusy(true);
     try { await stopRef.current?.(); stopRef.current = null; }
@@ -179,9 +157,8 @@ export default function SharedWorldPanel() {
           ? <button className="shared-action" onClick={enter} disabled={busy}>{busy ? 'OPENING…' : 'ENTER THE ROOM'}</button>
           : <button className="shared-action" onClick={leave} disabled={busy}>{busy ? 'LEAVING…' : 'LEAVE THE ROOM'}</button>}
         {status === 'connected' && <div className="shared-visitors"><b>{visibility === 'private' ? 'YOUR PRIVATE ARRIVAL' : `${people.length} OTHER VISITOR${people.length === 1 ? '' : 'S'}`}</b>
-          {visibility !== 'private' && people.map((person) => <p key={person.user_id}><span>{person.display_name}</span><i>{person.activity_state}</i>{visibility === 'public' && <button className='shared-connect' disabled={requested.includes(person.user_id)} onClick={() => connect(person.user_id)}>{requested.includes(person.user_id) ? 'SENT' : 'CONNECT'}</button>}</p>)}
+          {visibility !== 'private' && people.map((person) => <p key={person.user_id}><span>{person.display_name}</span><i>{person.activity_state}</i></p>)}
           {visibility !== 'private' && people.length === 0 && <p className="shared-empty">No one else is here. Yet.</p>}
-          {incoming.length > 0 && <div className='shared-requests'><b>LETTERS AT THE DOOR</b>{incoming.map((request) => <p key={request.id}><span>{request.display_name}</span><button onClick={() => decide(request.id, 'accepted')}>ACCEPT</button><button onClick={() => decide(request.id, 'declined')}>DECLINE</button></p>)}</div>}
         </div>}
         <button className="shared-signout" onClick={signOut} disabled={busy}>SIGN OUT</button>
       </>}
