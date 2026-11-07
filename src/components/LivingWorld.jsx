@@ -29,8 +29,8 @@ function readMemory() {
   } catch { return { visitorId:makeVisitorId(), visits:0, trust:0, choices:[], lastEvent:'' }; }
 }
 
-function Morrow({ mood, onClick, noticed }) {
-  return <button className={`morrow ${mood}`} onClick={onClick} aria-label="Talk to Morrow, the station keeper">
+function Morrow({ mood, onClick, noticed, speaking }) {
+  return <button className={`morrow ${mood} ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Morrow, the station keeper">
     <span className="morrow-shadow" />
     <svg className="morrow-art" viewBox="0 0 250 340" role="img" aria-label="Morrow, a small moth-like station keeper in an oversized coat">
       <defs>
@@ -49,7 +49,7 @@ function Morrow({ mood, onClick, noticed }) {
       <path d="M79 117q4-51 46-49 44-1 48 49-22-20-47-18-24-2-47 18" fill="#342833"/>
       <g className="morrow-eyes" fill="#17151a" filter="url(#m-glow)"><ellipse cx="108" cy="126" rx="6" ry="10"/><ellipse cx="143" cy="126" rx="6" ry="10"/></g>
       <g className="morrow-blush" fill="#a66d71" opacity=".48"><ellipse cx="94" cy="143" rx="10" ry="5"/><ellipse cx="156" cy="143" rx="10" ry="5"/></g>
-      <path d="M119 151q7 6 14 0" fill="none" stroke="#66464a" strokeWidth="2" strokeLinecap="round"/>
+      <path className="morrow-mouth" d="M119 151q7 6 14 0" fill="none" stroke="#66464a" strokeWidth="2" strokeLinecap="round"/>
       <path d="M83 174q42-19 84 0l25 128q-66 36-134 0Z" fill="url(#m-coat)" stroke="#d0b28b" strokeWidth="2"/>
       <path d="M125 173v127m-23-112 23 24 23-24" fill="none" stroke="#d7bd96" strokeWidth="2"/>
       <path d="M83 188 48 266q-3 11 9 14l47-61m63-31 35 78q3 11-9 14l-47-61" fill="none" stroke="#b98e79" strokeWidth="15" strokeLinecap="round"/>
@@ -65,9 +65,9 @@ function Morrow({ mood, onClick, noticed }) {
 }
 
 
-function Vesper({ onClick }) {
-  return <button className="vesper" onClick={onClick} aria-label="Talk to Vesper, the station cat">
-    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-bell"/>
+function Vesper({ onClick, speaking }) {
+  return <button className={`vesper ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Vesper, the station cat">
+    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-mouth"/><span className="vesper-bell"/>
   </button>;
 }
 
@@ -94,7 +94,7 @@ function WorldScene({ event, onTalk, onVesper, onDoor, visits, presence, onPrese
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 1}/><Vesper onClick={onVesper}/>
+    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "MORROW" && Boolean(dialogue)}/><Vesper onClick={onVesper} speaking={speaker === "VESPER" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
