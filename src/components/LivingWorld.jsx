@@ -87,7 +87,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     const nearJello = x > 0.66 && y > 0.5;
     onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} style={{ '--sound-scale': 1 + micLevel * 0.04, '--visitor-delay': `${-visitorPhase * 0.035}s` }} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
