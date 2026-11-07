@@ -117,3 +117,6 @@ const responsePolicy = fs.readFileSync('src/engine/residentResponsePolicy.js', '
 assert.ok(world.includes('subscribePerceptionObservations'), 'perception events must be consumed by the living scene');
 assert.ok(world.includes('deriveResidentResponse(observation)'), 'resident reactions must pass through a bounded response policy');
 assert.ok(responsePolicy.includes("observation.scope !== 'local-only'"), 'the response policy must reject out-of-scope signals');
+
+assert.ok(world.includes('worldConversationHistory.slice(-8)'), 'Tazar and Jello must share short-lived in-world conversation context');
+assert.ok(world.includes("residentKey === 'tazar' ? 'Tazar' : 'Jello'"), 'shared context must preserve which resident spoke');
