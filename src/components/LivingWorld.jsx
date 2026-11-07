@@ -77,9 +77,9 @@ function Jello({ onClick, onFocus, speaking }) {
 
 function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, speaker, dialogue, micLevel, visitorPhase, responseCue, perceptionCount }) {
   const lastObservationRef = useRef({ x: -1, y: -1, at: 0 });
-  useEffect(() => () => window.clearTimeout(walkTimerRef.current), []);
   const sceneRef = useRef(null);
   const walkTimerRef = useRef(null);
+  useEffect(() => () => window.clearTimeout(walkTimerRef.current), []);
   const [visitorPosition, setVisitorPosition] = useState({ x: 0.16, y: 0.84 });
   const [walkState, setWalkState] = useState('resting');
 
@@ -203,9 +203,11 @@ export default function LivingWorld() {
       updateSharedPresenceActivity('present').catch(() => {});
     } else if (observation.kind === 'character-focus') {
       updatePresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
-    } else if (observation.kind === 'page-visibility' || observation.kind === 'window-focus') {
+    } else if (observation.kind === 'page-visibility') {
       updatePresence(observation.value ? 'arrived' : 'away');
       updateSharedPresenceActivity(observation.value ? 'present' : 'away').catch(() => {});
+    } else if (observation.kind === 'window-focus') {
+      updatePresence(observation.value ? 'arrived' : 'away');
     } else if (observation.kind === 'submitted-language' || observation.kind === 'resident-choice') {
       updateSharedPresenceActivity('in-conversation').catch(() => {});
     } else if (observation.kind === 'audio-envelope' && typeof observation.value === 'number') {
