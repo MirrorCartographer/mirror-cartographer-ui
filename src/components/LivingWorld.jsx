@@ -3,8 +3,7 @@ import './LivingWorld.css';
 import { publishPerceptionObservation, subscribePerceptionObservations } from '../engine/perceptionLedger.js';
 import { deriveResidentResponse } from '../engine/residentResponsePolicy.js';
 import SharedWorldPanel from './SharedWorldPanel.jsx';
-import { getSharedWorldClient, isPrivateMemorySyncEnabled, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
-import { getSharedWorldClient, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
+import { askResident, getSharedWorldClient, isPrivateMemorySyncEnabled, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
 const EVENTS = [
@@ -122,6 +121,8 @@ export default function LivingWorld() {
   const visitRecordedRef = useRef(false);
   const autoNoticeRef = useRef({ tazar:false, jello:false });
   const [dialogue, setDialogue] = useState('');
+  const [visitorMessage, setVisitorMessage] = useState('');
+  const [agentBusy, setAgentBusy] = useState(false);
   const [speaker, setSpeaker] = useState('TAZAR');
   const [ambient, setAmbient] = useState(false);
   const audioRef = useRef(null);
@@ -409,6 +410,19 @@ export default function LivingWorld() {
     if (audioRef.current) { audioRef.current.close().catch(() => {}); audioRef.current = null; }
     setAmbient(false);
   };
+  const sendResidentMessage = async (event) => {
+    event.preventDefault();
+    const message = visitorMessage.trim();
+    if (!message || agentBusy) return;
+    setAgentBusy(true);
+    try {
+      const reply = await askResident(speaker.toLowerCase(), message);
+      setDialogue(reply);
+      setVisitorMessage('');
+    } catch (error) {
+      setDialogue(error.message || 'The line went quiet. Try again later.');
+    } finally { setAgentBusy(false); }
+  };
   const talkToJello = () => {
     stopAmbient();
     setSpeaker('JELLO');
@@ -432,6 +446,11 @@ export default function LivingWorld() {
       {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={rememberJello}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
       : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-tazar', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
+      <form className="resident-message-form" onSubmit={sendResidentMessage}>
+        <input value={visitorMessage} onChange={(event) => setVisitorMessage(event.target.value)} maxLength={1200} placeholder={`Say something to ${speaker.toLowerCase()}…`} aria-label={`Message ${speaker.toLowerCase()}`} />
+        <button type="submit" disabled={agentBusy || !visitorMessage.trim()}>{agentBusy ? 'LISTENING…' : 'SEND'}</button>
+      </form>
+      <p className="resident-message-note">Free dialogue requires sign-in and a configured resident model. Messages are sent to that provider; Mirror Cartographer does not store the transcript.</p>
     </section>
     <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>MICROPHONE {micState.toUpperCase().replaceAll('-', ' ')} · LEVEL {Math.round(micLevel * 100)}{micState === 'listening' ? ' · LOCAL ONLY / NO RECORDING' : ''}</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
   </main>;
