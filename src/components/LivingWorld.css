@@ -104,3 +104,21 @@
 .presence-away .floating-specimens{opacity:.72}
 .living-scene{--gaze-x:0px;--gaze-y:0px}
 @media(prefers-reduced-motion:reduce){.morrow-eyes,.vesper-eye,.moon,.distant-city{transition:none}}
+
+/* The world notices presence without asking for a click. */
+.morrow-eyes{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .22s ease-out}
+.vesper-eye{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .28s ease-out}
+.moon{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .45s ease-out}
+.distant-city{translate:var(--gaze-x,0px) 0;transition:translate .55s ease-out}
+.presence-nearby .morrow-wings{animation:wing-flutter .7s ease-in-out 1}
+.presence-nearby .morrow-lantern{filter:drop-shadow(0 0 12px #ffe7a9)}
+.presence-still .morrow{filter:drop-shadow(0 14px 18px #05050a99) drop-shadow(0 0 13px #e9c99533)}
+.presence-still .morrow-lantern{animation:lantern-sway 1.5s ease-in-out infinite;filter:drop-shadow(0 0 15px #ffe7a9)}
+.presence-still .vesper{translate:-12px -5px;scale:1.12}
+.presence-still .vesper-body{animation:vesper-purr .7s ease-in-out infinite alternate}
+.presence-still .glasshouse-glow{opacity:.95}
+.presence-away .station-lamp{animation-duration:1.7s}
+.presence-away .floating-specimens{opacity:.72}
+.living-scene{--gaze-x:0px;--gaze-y:0px}
+@keyframes vesper-purr{to{scale:1.035 1.045}}
+@media(prefers-reduced-motion:reduce){.morrow-eyes,.vesper-eye,.moon,.distant-city{transition:none}.presence-still .vesper-body{animation:none}}
