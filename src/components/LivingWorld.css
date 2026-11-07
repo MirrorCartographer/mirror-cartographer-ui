@@ -122,3 +122,9 @@
 .living-scene{--gaze-x:0px;--gaze-y:0px}
 @keyframes vesper-purr{to{scale:1.035 1.045}}
 @media(prefers-reduced-motion:reduce){.morrow-eyes,.vesper-eye,.moon,.distant-city{transition:none}.presence-still .vesper-body{animation:none}}
+
+.presence-morrow-near .morrow-wings{animation:wing-flutter .38s ease-in-out 3}
+.presence-morrow-near .morrow-antennae{animation:antenna-twitch .45s ease-in-out 3}
+.presence-vesper-near .vesper{filter:drop-shadow(0 0 17px #e7c99588);animation:vesper-notice .6s ease-out 1}
+.presence-vesper-near .vesper-tail{animation:vesper-tail .35s ease-in-out 4}
+@keyframes vesper-notice{0%{translate:0 0;rotate:0deg}35%{translate:-9px -9px;rotate:-7deg}100%{translate:0 0;rotate:0deg}}
