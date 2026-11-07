@@ -5,6 +5,7 @@ const world = fs.readFileSync('src/components/LivingWorld.jsx', 'utf8');
 const service = fs.readFileSync('src/services/sharedWorld.js', 'utf8');
 const edge = fs.readFileSync('supabase/functions/resident-dialogue/index.ts', 'utf8');
 const policy = fs.readFileSync('src/engine/residentResponsePolicy.js', 'utf8');
+const quota = fs.readFileSync('db/003_resident_dialogue_limits.sql', 'utf8');
 
 assert.ok(world.includes('askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history })'), 'resident messages must carry the current bounded scene cue');
 assert.ok(world.includes('residentHistory[residentKey]'), 'each resident must have a separate conversation thread');
@@ -18,6 +19,14 @@ assert.ok(service.includes('content.slice(0, 600)'), 'each prior turn must have 
 assert.ok(service.includes('includeMemory: isPrivateMemorySyncEnabled()'), 'private continuity must be opt-in');
 assert.ok(edge.includes("authorization.startsWith('Bearer ')"), 'the inference function must require an authenticated session');
 assert.ok(edge.includes('supabase.auth.getUser(token)'), 'the inference function must verify the bearer token');
+assert.ok(edge.includes("supabase.rpc('consume_resident_dialogue_quota'"), 'the inference function must pass through a database-enforced user quota');
+assert.ok(edge.includes('p_max_requests: 12') && edge.includes('p_window_seconds: 60'), 'resident requests must be rate-limited to 12 per minute');
+assert.ok(edge.includes('withinQuota !== true') && edge.includes('429'), 'requests over quota must be rejected before provider use');
+assert.ok(quota.includes('enable row level security'), 'the quota table must have RLS enabled');
+assert.ok(quota.includes('revoke all on public.resident_dialogue_limits from anon, authenticated'), 'browser roles must not read or edit quota rows directly');
+assert.ok(quota.includes('security definer') && quota.includes('auth.uid()'), 'the quota RPC must derive the caller identity from the authenticated JWT');
+assert.ok(quota.includes('grant execute on function public.consume_resident_dialogue_quota(integer, integer) to authenticated'), 'authenticated users must only access the quota through the controlled RPC');
+
 assert.ok(edge.includes('allowedCues.has(requestedCue)'), 'the inference function must allowlist scene cues');
 assert.ok(edge.includes('Math.max(0, Math.min(1, payload.perception!.intensity!))'), 'scene intensity must be clamped');
 assert.ok(edge.includes("item.role === 'user' || item.role === 'assistant'"), 'the inference function must reject injected system roles');
