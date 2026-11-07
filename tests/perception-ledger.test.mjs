@@ -18,7 +18,7 @@ const approach = publishPerceptionObservation({ kind: 'visitor-approach', source
 assert.equal(approach.value, 'tazar');
 assert.equal(getPerceptionSnapshot().length, 3, 'the ledger should retain the sound, movement, and approach observations');
 assert.throws(() => publishPerceptionObservation({ kind: 'raw-audio', value: 'secret' }), /Unsupported/);
-assert.throws(() => publishPerceptionObservation({ kind: 'audio-envelope', value: { samples: [1, 2, 3] } }), /Unsupported/);
+assert.throws(() => publishPerceptionObservation({ kind: 'audio-envelope', value: { samples: [1, 2, 3] } }), /bounded scalar data/);
 unsubscribe();
 clearPerceptionObservations();
 assert.equal(getPerceptionSnapshot().length, 0);
