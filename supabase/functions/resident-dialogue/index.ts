@@ -169,7 +169,7 @@ Deno.serve(async (request: Request) => {
     transcriptStored: false,
     conversationHistory: 'ephemeral-request-context-only',
     ontologyLabel: boundary.ontologyLabel,
-    boundaryAction: boundary.action,
+    boundaryAction: boundary.action === 'block' ? 'softened' : 'allow',
     boundaryFlags: boundary.flags
   }, 200, requestOrigin || allowed[0] || '*');
 });
