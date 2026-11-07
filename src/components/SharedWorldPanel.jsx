@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection } from '../services/sharedWorld.js';
+import { enterSharedPresence, getSharedWorldClient, getSharedWorldSession, listWorldConnections, requestSharedWorldLink, requestWorldConnection, sharedWorldConfigured, transitionWorldConnection, isPrivateMemorySyncEnabled, setPrivateMemorySyncEnabled } from '../services/sharedWorld.js';
 import './SharedWorldPanel.css';
 
 export default function SharedWorldPanel() {
@@ -14,6 +14,7 @@ export default function SharedWorldPanel() {
   const [connections, setConnections] = useState([]);
   const [targetId, setTargetId] = useState('');
   const [connectionBusy, setConnectionBusy] = useState(false);
+  const [memorySync, setMemorySync] = useState(isPrivateMemorySyncEnabled);
   const [status, setStatus] = useState('idle');
   const stopRef = useRef(null);
   const configured = sharedWorldConfigured();
@@ -68,6 +69,16 @@ export default function SharedWorldPanel() {
     finally { setConnectionBusy(false); }
   };
 
+  const updateMemorySync = (enabled) => {
+    try {
+      setPrivateMemorySyncEnabled(enabled);
+      setMemorySync(enabled);
+      setMessage(enabled
+        ? 'Private memory sync is on for this account. Your visit history and choices remain private.'
+        : 'Private memory sync is off. This browser keeps its own separate visit history.');
+    } catch (error) { setMessage(error.message || 'Could not update the memory preference.'); }
+  };
+
   const copyConnectionCode = async () => {
     try {
       await navigator.clipboard.writeText(session.user.id);
@@ -112,6 +123,7 @@ export default function SharedWorldPanel() {
 
   const signOut = async () => {
     await leave();
+    updateMemorySync(false);
     const supabase = getSharedWorldClient();
     await supabase?.auth.signOut();
     setSession(null); setStatus('idle'); setPeople([]);
@@ -134,6 +146,8 @@ export default function SharedWorldPanel() {
         <button className="shared-action" onClick={signIn} disabled={busy || !email.trim()}>{busy ? 'SENDING…' : 'SEND ME A KEY'}</button>
       </> : <>
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
+        <label className="shared-memory-sync"><input type="checkbox" checked={memorySync} onChange={(event) => updateMemorySync(event.target.checked)} /> <span>Carry my private memory across devices</span></label>
+        <p className="shared-sync-note">Only your visit count and choices. Never visible to other visitors. Off by default.</p>
         <div className="shared-identity"><small>YOUR CONNECTION CODE</small><code>{session.user.id}</code><button type="button" onClick={copyConnectionCode}>COPY CODE</button></div>
         <div className="shared-connections">
           <b>FIND YOUR PEOPLE</b>
