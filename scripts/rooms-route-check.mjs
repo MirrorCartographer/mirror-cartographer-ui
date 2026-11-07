@@ -16,6 +16,7 @@ const required = [
   'rooms/index.html','rooms/mind/index.html','rooms/chatgpt/index.html',
   'rooms/experiments/index.html','rooms/experiments/engine.js','rooms/experiments/shared.css',
   'rooms/music/index.html','rooms/worlds/unreliable-observatory/index.html',
+  'rooms/signal-loom/index.html','rooms/after-the-uniform/index.html',
   ...experiments.map((slug) => 'rooms/experiments/' + slug + '/index.html'),
   'catalog-index.json','catalog-main.json','catalog-ui.json',
 ];
