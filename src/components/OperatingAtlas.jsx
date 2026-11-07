@@ -205,7 +205,7 @@ export default function OperatingAtlas() {
   return <div className={`operating-atlas ${state.accessibility.textMode?'text-mode':''}`}>
     <a className="skip" href="#atlas-main">Skip to content</a>
     <aside><div className="brand"><span>MC</span><strong>Mirror Cartographer</strong><small>continuity atlas</small></div><nav>{nav.map(([id,name],i)=><button key={id} className={active===id?'active':''} onClick={()=>setActive(id)}><b>{String(i+1).padStart(2,'0')}</b>{name}</button>)}</nav></aside>
-    <header className="topbar"><button className="menu" onClick={()=>document.body.classList.toggle('atlas-nav-open')}>☰</button><a className="field-return" href="./">← BACK TO THE FIELD</a><span>{FEATURES.find(x=>x[0]===active)?.[1]||'Atlas'}</span><button className="crisis-button" onClick={()=>setCrisis(true)}>Crisis override</button></header>
+    <header className="topbar"><button className="menu" onClick={()=>document.body.classList.toggle('atlas-nav-open')}>☰</button><a className="field-return" href="./">← BACK TO THE FIELD</a><span>{FEATURES.find(x=>x[0]===active)?.[1]||'Atlas'}</span><label className="lane-jump"><span>GO TO</span><select aria-label="Jump to workshop lane" value={active} onChange={e=>setActive(e.target.value)}>{FEATURES.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><button className="crisis-button" onClick={()=>setCrisis(true)}>Crisis override</button></header>
     <main id="atlas-main">{lane}</main>
   </div>;
 }
