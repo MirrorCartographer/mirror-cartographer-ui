@@ -30,7 +30,7 @@ assert.ok(panel.includes('PRIVATE MEMORY LEDGER'), 'visitors must be able to ins
 assert.ok(panel.includes('forgetMemoryChoice'), 'visitors must be able to remove individual saved choices');
 assert.ok(panel.includes('Off by default'), 'cross-device memory sync must begin disabled');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
-assert.ok(world.includes('askResident(speaker.toLowerCase(), message)'), 'the scene must route free dialogue to the resident provider');
+assert.ok(world.includes('askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history })'), 'the scene must route free dialogue to the resident provider');
 assert.ok(residentFunction.includes("payload.includeMemory === true"), 'the edge function must gate continuity context on opt-in');
 assert.ok(residentFunction.includes('MODEL_API_KEY') && residentFunction.includes('MODEL_API_URL') && residentFunction.includes('MODEL_NAME'), 'the model provider must be configured only server-side');
 assert.ok(residentFunction.includes('transcriptStored: false'), 'the resident function must not persist conversation transcripts');
