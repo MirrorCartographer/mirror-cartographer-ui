@@ -38,16 +38,19 @@ When a visitor sends a message, that message and the short in-session conversati
 
 Stopping listening stops the media tracks, cancels the animation frame, disconnects the source, and closes the audio context. Permission denial and unsupported browsers are surfaced as states rather than treated as successful sensing.
 
-## Existing MC infrastructure that is not yet connected here
+## Existing MC infrastructure and its actual connection state
 
-The wider repositories contain separate work for:
-- Supabase-backed authenticated continuity records in the UI's server API;
-- public interaction ingestion in the core repository's Pages Function;
-- audio capture/evidence and output-routing research tools;
-- peer execution runtimes with durable journals;
-- co-presence and memory boundary research.
+The wider project contains several related systems, but they do different jobs:
 
-Those components are not automatically part of this GitHub Pages scene. The UI's `api/` and `server/` modules require a compatible server deployment and configured secrets. The static Pages build does not make those server routes appear. The core repository's peer execution runtime is not a visitor-presence service. No live shared-world database, real-time visitor channel, or character inference API is claimed by this page.
+- **Face / signal protocols:** the core repository has face-value, signal-value, and nonverbal-signal methods. These are architecture and interpretation artifacts, not a deployed webcam/face-landmark runtime in The Between.
+- **Audio evidence tools:** the core repository's audio-capture and evidence-fusion modules validate browser output routing and human audibility. They are not microphone transcription or room-sound perception.
+- **Perception ledger:** The Between now has a working client-side observation ledger for pointer position, touch, focus, visibility, stillness, microphone permission, and local acoustic envelope. It is bounded and ephemeral.
+- **Resident response policy:** the UI maps those observations to allowlisted scene cues without inferring emotion, identity, health, or intent.
+- **Supabase continuity and shared presence:** the browser client now supports authenticated private continuity, opt-in memory sync, connection requests, and Realtime presence. The migration and project configuration still need to be applied to the live Supabase project.
+- **Resident inference:** a Supabase Edge Function now verifies the visitor, applies a per-user quota, and routes bounded scene cues plus an explicit message to a configured model provider. It is not a continuously running autonomous agent.
+- **Peer execution runtime:** the core peer runtime is a job/execution mechanism, not a visitor-presence sensor or a character mind.
+
+The UI's older `api/` and `server/` modules require a compatible server deployment. GitHub Pages does not execute those server routes. The new shared-world client and Edge Function are separate, purpose-built paths; they still require the Supabase setup described in `RESIDENT_RUNTIME_DEPLOYMENT.md`.
 
 ## Shared-world substrate
 
