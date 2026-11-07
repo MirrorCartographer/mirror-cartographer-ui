@@ -278,7 +278,31 @@ export default function RoomWorldValid() {
     enter(progress.unlocked.find((candidate) => !progress.visited.includes(candidate)) || progress.unlocked[(progress.unlocked.indexOf(roomId) + 1) % progress.unlocked.length] || 1);
   };
 
-  return <main className="room-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
+  return <main className="room-world mc-afterimage-world" style={{ '--p0': room.palette[0], '--p1': room.palette[1], '--p2': room.palette[2], '--p3': room.palette[3] }}>
+    <header className="mc-zine-masthead">
+      <a className="mc-zine-brand" href="/atlas/"><span className="mc-brand-mark">✳</span><span>MIRROR CARTOGRAPHER<small>FIELD RECORDS · VOL. 01</small></span></a>
+      <nav aria-label="Explore the archive"><a href="/atlas/">THE ATLAS ↗</a><a href="/atlas/rooms/music/">SOUND ARCHIVE ♫</a><a href="/art-machine/">IMAGE ORGANISM ↗</a></nav>
+      <span className="mc-zine-edition">AN INDEPENDENT UNIVERSE / EST. IN CURIOSITY</span>
+    </header>
+    <div className="mc-zine-collage" aria-hidden="true">
+      <div className="mc-paper-scrap mc-scrap-one">NOT ALL<br/>WHO WANDER<br/>ARE LOST.</div>
+      <div className="mc-paper-scrap mc-scrap-two">SIDE B<br/>PLAY IT LOUD</div>
+      <svg className="mc-zine-illustration" viewBox="0 0 680 760" role="presentation">
+        <defs><filter id="mc-rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="12"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter><linearGradient id="mc-glass" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d9d1b6"/><stop offset=".48" stopColor="#8ba39a"/><stop offset="1" stopColor="#6c3347"/></linearGradient></defs>
+        <path d="M337 45C480 63 588 190 570 336c-14 116-108 218-228 231-135 15-264-71-287-207C31 220 132 78 273 51" fill="none" stroke="#d8c8a5" strokeWidth="2" strokeDasharray="4 9"/>
+        <path d="M100 540C174 449 214 337 239 205c15-76 56-126 111-153M234 608c47-125 67-212 55-305-11-83 12-137 73-187M405 628c-30-100-12-194 61-281 47-57 65-111 38-175" fill="none" stroke="#9cad83" strokeWidth="5" strokeLinecap="round"/>
+        <g fill="#a8b58b" stroke="#e1d4b8" strokeWidth="2"><path d="M240 208c-82-18-113-72-98-131 69 1 117 45 113 108 30-75 81-104 143-93-8 72-58 118-131 119"/><path d="M290 302c-87-5-133-49-132-112 72-17 132 15 146 82 14-79 61-122 124-125 7 72-34 126-109 149"/><path d="M196 411c-76 19-131-10-148-68 56-41 121-31 158 26-12-76 17-131 77-155 35 66 16 130-55 176"/><path d="M390 420c34-77 92-104 151-80-9 70-57 112-124 106 70 27 98 79 82 139-71-7-115-55-109-126"/></g>
+        <g fill="none" stroke="#d6c7a5" strokeWidth="3"><path d="M338 160c-83 54-114 145-91 253 19 91 3 157-48 206M337 160c74 53 110 145 83 253-22 83-10 151 42 205"/><circle cx="340" cy="355" r="128" strokeDasharray="2 10"/><circle cx="340" cy="355" r="91" stroke="#9db3a6"/><path d="M340 224v262M209 355h262M247 262l186 186M433 262L247 448" opacity=".7"/></g>
+        <g filter="url(#mc-rough)"><circle cx="340" cy="355" r="88" fill="#6e3548" stroke="#ead9b8" strokeWidth="4"/><circle cx="340" cy="355" r="67" fill="url(#mc-glass)" stroke="#17131b" strokeWidth="5"/><path d="M310 350c22-27 49-27 70 0-21 28-48 28-70 0Z" fill="#17131b"/><circle cx="340" cy="350" r="13" fill="#e8d8b9"/></g>
+        <g fill="#e5d5b5"><circle cx="115" cy="165" r="4"/><circle cx="510" cy="125" r="3"/><circle cx="548" cy="520" r="5"/><circle cx="145" cy="600" r="3"/></g><path d="M86 675c94-38 178-36 254 5 76 42 154 43 250 0" fill="none" stroke="#9bb7ae" strokeWidth="3"/>
+      </svg><span className="mc-collage-caption">FIG. 01 — THE THING THAT LOOKS BACK</span>
+    </div>
+    <section className="mc-zine-copy" aria-label="Welcome">
+      <p className="mc-zine-kicker">A FIELD GUIDE TO THE BEAUTIFULLY UNFINISHED</p><h1>MAKE A<br/>LITTLE <em>WEIRD.</em></h1>
+      <p className="mc-zine-deck">A living archive for music, strange ideas, symbolic machinery, art, and other things that refuse to behave.</p>
+      <div className="mc-zine-actions"><a href="/atlas/">WANDER IN <span>↗</span></a><a href="/atlas/rooms/music/">PLAY SOMETHING <span>♫</span></a></div>
+      <p className="mc-zine-footnote">CURRENT FREQUENCY: ROOM {String(roomId).padStart(2,'0')} / {room.primary.toUpperCase()}</p>
+    </section><div className="mc-zine-stamp" aria-hidden="true">NO<br/>FIXED<br/>MEANING</div>
     {storageStatus && <span className="storage-warning" role="status">{storageStatus}</span>}
     <button aria-label="Explore. Use arrow keys to move and Enter or Space to interact." aria-describedby="explore-help" className="world-surface" onKeyDown={keyboardInteract} onPointerEnter={() => { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = window.setInterval(() => { if (!pointRef.current.down) { record(0.045, 'hover'); setPulse((value) => Math.min(1, value + 0.018)); } }, 280); }} onPointerLeave={() => { if (hoverTimerRef.current) window.clearInterval(hoverTimerRef.current); hoverTimerRef.current = null; }} onPointerDown={(event) => interact(event, 'down')} onPointerMove={(event) => interact(event, 'move')} onPointerUp={(event) => interact(event, 'up')} onPointerCancel={(event) => interact(event, 'up')}><canvas ref={canvasRef} /></button>
     <span id="explore-help" className="sr-only">Use the arrow keys to move through the field. Press Enter or Space to interact. Sound starts off. You can reduce motion.</span><span className="sr-only" aria-live="polite">Room {roomId} of {ROOM_COUNT}. {room.primary} form, {room.motion} motion. Layer {depth} of {LAYERS_PER_ROOM}.</span>
