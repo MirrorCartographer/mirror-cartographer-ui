@@ -47,7 +47,7 @@ Deno.serve(async (request: Request) => {
   if (!supabaseUrl || !anonKey) return json({ error: 'Authentication service is not configured.' }, 503, requestOrigin || allowed[0] || '*');
   if (!modelUrl || !modelKey || !modelName) return json({ error: 'The resident model provider is not configured yet.' }, 503, requestOrigin || allowed[0] || '*');
 
-  let payload: { resident?: string; message?: string; includeMemory?: boolean; perception?: { cue?: string; intensity?: number } };
+  let payload: { resident?: string; message?: string; includeMemory?: boolean; perception?: { cue?: string; intensity?: number }; history?: Array<{ role?: string; content?: string }> };
   try { payload = await request.json(); } catch { return json({ error: 'Invalid JSON.' }, 400, requestOrigin || allowed[0] || '*'); }
   const residentKey = String(payload.resident || '').toLowerCase() as keyof typeof residents;
   const resident = residents[residentKey];
@@ -60,6 +60,12 @@ Deno.serve(async (request: Request) => {
   const perceptionIntensity = Number.isFinite(payload.perception?.intensity)
     ? Math.max(0, Math.min(1, payload.perception!.intensity!))
     : 0;
+  const history = Array.isArray(payload.history)
+    ? payload.history.slice(-8).filter((item) =>
+      item && (item.role === 'user' || item.role === 'assistant')
+      && typeof item.content === 'string' && item.content.trim().length > 0
+    ).map((item) => ({ role: item.role as 'user' | 'assistant', content: item.content!.trim().slice(0, 600) }))
+    : [];
 
 
   const token = authorization.slice(7);
@@ -109,6 +115,7 @@ Deno.serve(async (request: Request) => {
         max_tokens: 240,
         messages: [
           { role: 'system', content: system + ' Visitor continuity (limited, private): ' + JSON.stringify(context) },
+          ...history,
           { role: 'user', content: message }
         ]
       }),
@@ -121,5 +128,5 @@ Deno.serve(async (request: Request) => {
   const result = await modelResponse.json().catch(() => null);
   const reply = result?.choices?.[0]?.message?.content;
   if (typeof reply !== 'string' || !reply.trim()) return json({ error: 'The resident had no reply this time.' }, 502, requestOrigin || allowed[0] || '*');
-  return json({ reply: reply.trim().slice(0, 1400), resident: residentKey, memory: payload.includeMemory === true ? 'private-consented-context-only' : 'none', perceptionCue, transcriptStored: false }, 200, requestOrigin || allowed[0] || '*');
+  return json({ reply: reply.trim().slice(0, 1400), resident: residentKey, memory: payload.includeMemory === true ? 'private-consented-context-only' : 'none', perceptionCue, transcriptStored: false, conversationHistory: 'ephemeral-request-context-only' }, 200, requestOrigin || allowed[0] || '*');
 });
