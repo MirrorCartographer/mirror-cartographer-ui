@@ -169,6 +169,7 @@ export default function LivingWorld() {
   const presenceTimerRef = useRef(null);
   const visitRecordedRef = useRef(false);
   const [approachEvent, setApproachEvent] = useState({ resident: null, sequence: 0 });
+  const lastApproachedResidentRef = useRef(null);
   const handledApproachRef = useRef(0);
   const approachCountsRef = useRef({ tazar: 0, jello: 0 });
   const [dialogue, setDialogue] = useState('');
@@ -191,19 +192,22 @@ export default function LivingWorld() {
   useEffect(() => subscribePerceptionObservations((observation) => {
     setPerceptionCount((count) => count + 1);
     if (observation.kind === 'visitor-move') {
+      lastApproachedResidentRef.current = null;
       setPresence('walking');
       updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'visitor-approach') {
+      lastApproachedResidentRef.current = observation.value;
       setPresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
       setApproachEvent((current) => ({ resident: observation.value, sequence: current.sequence + 1 }));
       updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'pointer-stillness') {
       window.clearTimeout(presenceTimerRef.current);
-      setPresence('still');
+      setPresence(lastApproachedResidentRef.current === 'tazar' ? 'tazar-near' : lastApproachedResidentRef.current === 'jello' ? 'jello-near' : 'still');
       updateSharedPresenceActivity('present').catch(() => {});
     } else if (observation.kind === 'character-focus') {
       updatePresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
     } else if (observation.kind === 'page-visibility') {
+      if (!observation.value) lastApproachedResidentRef.current = null;
       updatePresence(observation.value ? 'arrived' : 'away');
       updateSharedPresenceActivity(observation.value ? 'present' : 'away').catch(() => {});
     } else if (observation.kind === 'window-focus') {
@@ -501,7 +505,9 @@ export default function LivingWorld() {
     const residentKey = speaker.toLowerCase();
     const history = worldConversationHistory.slice(-8);
     try {
-      const response = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history });
+      const currentSceneCue = presence === 'tazar-near' ? 'approach-tazar' : presence === 'jello-near' ? 'approach-jello' : responseCue;
+      const currentSceneIntensity = presence === 'tazar-near' || presence === 'jello-near' ? 1 : responseIntensity;
+      const response = await askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: currentSceneCue, ambientIntensity: currentSceneIntensity, history });
       const reply = typeof response === 'string' ? response : response.reply;
       setDialogue(reply);
       setBoundaryNotice(response?.boundaryAction === 'softened' ? 'The reply was reframed to keep the boundary clear.' : '');
