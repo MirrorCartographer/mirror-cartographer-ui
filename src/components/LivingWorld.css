@@ -162,3 +162,9 @@
   .world-topbar nav a,.world-topbar nav button{font-size:7px;letter-spacing:.06em}
   .world-footer span:first-child{max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+
+/* Leaving the room changes the residents' posture; return is noticed without a claim of identity. */
+.presence-away .tazar{opacity:.76;filter:drop-shadow(0 8px 12px #05050a66)}
+.presence-away .jello{opacity:.72;translate:0 5px}
+.presence-arrived .tazar{animation-duration:5.1s}
+.presence-arrived .jello{filter:drop-shadow(0 0 12px #e8c99555)}
