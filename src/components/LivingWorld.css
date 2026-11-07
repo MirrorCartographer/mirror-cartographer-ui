@@ -209,3 +209,14 @@
 .presence-walking .visitor-token i{box-shadow:0 0 0 8px #f4d9a933,0 0 28px 12px #f4d9a977}
 @media(max-width:760px){.scene-walk-controls{top:clamp(260px,38vh,340px);gap:5px;padding:6px}.scene-walk-controls>span{display:none}.scene-walk-controls button{font-size:7px;padding:9px 8px}.visitor-token span{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.visitor-token{transition:none}.visitor-token.walking i{animation:none}}
+
+.field-receipt{position:absolute;z-index:12;top:76px;right:clamp(14px,4vw,56px);width:min(340px,calc(100vw - 28px));max-height:min(58vh,520px);overflow:auto;padding:13px 15px;background:linear-gradient(145deg,#17151ceF,#0d1015f2);border:1px solid #d1b68a66;box-shadow:7px 9px 0 #05050a77,0 0 30px #05050a66;color:#e9dcc6;backdrop-filter:blur(18px)}
+.field-receipt-head{display:flex;justify-content:space-between;align-items:center;color:#e8d2ad;font:10px 'DM Mono',monospace;letter-spacing:.16em}
+.field-receipt-head button{border:0;background:none;color:#d6c2a4;font:22px Georgia;cursor:pointer}
+.field-receipt>p{margin:4px 0 12px;color:#9c907f;font:7px 'DM Mono',monospace;letter-spacing:.12em}
+.field-receipt-entry{display:grid;gap:4px;padding:8px 0;border-top:1px solid #c7a77f33}
+.field-receipt-entry b{color:#e6d3b6;font:8px 'DM Mono',monospace;letter-spacing:.08em}
+.field-receipt-entry small{color:#9c9b9b;font:8px 'DM Mono',monospace;overflow-wrap:anywhere}
+.field-receipt-empty{padding:12px 0;color:#b7a994;font:italic 12px/1.5 Georgia}
+.field-receipt>footer{margin-top:10px;padding-top:9px;border-top:1px solid #c7a77f33;color:#8f9b92;font:7px/1.5 'DM Mono',monospace;letter-spacing:.07em}
+@media(max-width:760px){.field-receipt{top:68px;right:10px;width:min(320px,calc(100vw - 20px));max-height:55vh}}
