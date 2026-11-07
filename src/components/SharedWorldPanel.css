@@ -45,3 +45,11 @@
 .shared-world-panel label.shared-memory-sync{display:flex;grid-template-columns:none;align-items:center;gap:10px;margin:14px 0 4px;font:10px/1.4 'DM Sans',sans-serif;letter-spacing:0;color:#e1d5bd}
 .shared-memory-sync input{width:17px;height:17px;accent-color:#c6a77c;flex:0 0 auto}
 .shared-sync-note{margin:0 0 14px 27px;color:#9e9589;font:10px/1.5 'DM Sans',sans-serif}
+
+.shared-memory-ledger{margin:14px 0;padding:12px;border:1px solid #a9a18455;background:#11131999}
+.shared-memory-ledger>b{font:9px 'DM Mono',monospace;letter-spacing:.13em;color:#d0bd99}
+.shared-memory-ledger>p{margin:8px 0 4px;color:#d9cfbf;font:11px 'DM Sans',sans-serif}
+.shared-memory-ledger>small{display:block;color:#8f998d;font:9px/1.5 'DM Mono',monospace}
+.shared-memory-ledger .memory-entry{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:7px 0;border-top:1px solid #b9a17d33}
+.shared-memory-ledger .memory-entry span{font:10px 'DM Sans',sans-serif;color:#c9c0b3}
+.shared-memory-ledger .memory-entry button{border:0;background:none;color:#c7a77f;font:8px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer}
