@@ -24,6 +24,19 @@ The scene now routes bounded observations through `src/engine/perceptionLedger.j
 
 Current event types include cursor position, explicit visitor movement and resident approach, touch, stillness, resident focus, page visibility, window focus, microphone state, a short-lived microphone RMS envelope, the fact that a resident message was explicitly submitted, and explicit dialogue-choice IDs. Cursor position is used for eye gaze only; it does not count as physical approach. The visitor must move the in-scene marker by tapping/clicking the ground or selecting an approach control. The ledger does not retain the submitted text itself; the final message is sent to the configured resident provider only when the visitor submits it.
 
+## Relationship to the wider Mirror Cartographer architecture
+
+The core repository contains several established method and interface artifacts that inform this scene:
+
+- **Face Value / Signal Value** separates literal input, signal pattern, evidence, action, privacy, and uncertainty.
+- **Nonverbal Signal Ledger** preserves the chain from observed cue through context, candidate pattern, uncertainty, and validation.
+- **Affordance Ladder** asks what an input makes possible before assigning it a meaning.
+- **Ethogram-to-Atmosphere** maps observable behavior changes into environmental response without claiming to know an inner state.
+- **Umwelt Calibration** keeps each participant's actual sensory and action channels distinct from the system's hypotheses.
+- **Thought-to-Action Interface** specifies the translation loop from input through interpretation, feedback, correction, and saved trace.
+
+Those are real MC architecture artifacts, and some related text/symbol tooling exists elsewhere in the project. They are not the same thing as live sensors in this page. The Between currently operationalizes a limited browser-event subset: cursor gaze, explicit in-world movement, touch/focus, page visibility, and opt-in local microphone amplitude. It does not currently run webcam/face-landmark detection, eye tracking, pose estimation, speech recognition, or continuous autonomous agent loops. Connecting those would be separate runtime work with explicit permission, on-device processing where feasible, visible provenance, and a way to stop or revoke access.
+
 ## Microphone boundary
 
 "LET THEM HEAR" requests microphone access only after an explicit click. The stream is connected to a Web Audio analyser, not to the audio output. The app computes a short-lived RMS amplitude envelope in the browser and uses it only to animate Tazar and Jello.
