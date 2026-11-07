@@ -10,6 +10,7 @@ The GitHub Pages application remains a static frontend. Supabase supplies authen
    - `db/002_shared_world_presence.sql`
    - `db/003_resident_dialogue_limits.sql`
    - `db/004_agency_preserving_memory_ledger.sql`
+   - `db/004_agency_preserving_memory_ledger.sql`
 3. Confirm that Auth magic-link redirects allow:
    `https://mirrorcartographer.github.io/mirror-cartographer-ui/`
 4. Add these GitHub repository Actions variables (they are public browser configuration, not secrets):
@@ -20,7 +21,7 @@ The service-role key must never be added to GitHub Pages variables or browser co
 
 ## Resident dialogue provider
 
-The residents can accept free-text dialogue through the authenticated Edge Function. The function reads only the visitor's own continuity record, and only when private-memory sync is explicitly enabled. It does not write chat transcripts or new memories.
+The residents can accept free-text dialogue through the authenticated Edge Function. It reads the visitor's own continuity summary and low-sensitivity, user-approved memory ledger entries only when the visitor separately enables both cross-device memory sync and resident memory use. It does not write chat transcripts or new memories.
 
 Set server-side Supabase function secrets:
 
