@@ -24,7 +24,8 @@ const readArray = (key, fallback) => {
   try { const raw=localStorage.getItem(key); if(raw===null) return fallback; const parsed=JSON.parse(raw); return Array.isArray(parsed)?parsed: fallback; }
   catch { return fallback; }
 };
-const readNotes = () => { const current=readArray(NOTE_KEY,null); const source=current===null?readArray('mc-living-country-v1',seed):current; return source.map((n,i)=>({...n,id:n.id||'migrated-'+i,context:contexts.includes(n.context)?n.context:'embodied',kind:n.kind||'field note',x:Number.isFinite(n.x)?n.x:18+((i*19)%72),y:Number.isFinite(n.y)?n.y:17+((i*27)%66),origin:n.origin||(seed.some(s=>s.id===n.id)?'seed':'user')})); };\nconst makeId = () => globalThis.crypto?.randomUUID?.() || 'entry-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
+const readNotes = () => { const current=readArray(NOTE_KEY,null); const source=current===null?readArray('mc-living-country-v1',seed):current; return source.map((n,i)=>({...n,id:n.id||'migrated-'+i,context:contexts.includes(n.context)?n.context:'embodied',kind:n.kind||'field note',x:Number.isFinite(n.x)?n.x:18+((i*19)%72),y:Number.isFinite(n.y)?n.y:17+((i*27)%66),origin:n.origin||(seed.some(s=>s.id===n.id)?'seed':'user')})); };
+const makeId = () => globalThis.crypto?.randomUUID?.() || 'entry-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
 const downloadJSON = (name, data) => {
   const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url = URL.createObjectURL(blob);
