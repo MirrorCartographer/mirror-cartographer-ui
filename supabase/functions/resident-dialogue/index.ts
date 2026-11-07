@@ -96,7 +96,22 @@ Deno.serve(async (request: Request) => {
       .eq('collection', 'settings')
       .maybeSingle();
     if (memoryError) return json({ error: 'Private continuity could not be read.' }, 502, requestOrigin || allowed[0] || '*');
-    memory = memoryRecord?.content || {};
+    const { data: memoryEntries, error: ledgerError } = await supabase.from('memory_ledger')
+      .select('content')
+      .eq('owner_id', authData.user.id)
+      .eq('memory_class', 'user-approved')
+      .eq('retention_class', 'private-durable')
+      .eq('sensitivity_class', 'low')
+      .eq('user_visible', true)
+      .contains('allowed_uses', ['personalization'])
+      .gt('expiration_or_review_date', new Date().toISOString())
+      .order('updated_at', { ascending: false })
+      .limit(8);
+    if (ledgerError) return json({ error: 'The private memory ledger could not be read.' }, 502, requestOrigin || allowed[0] || '*');
+    memory = {
+      ...(memoryRecord?.content || {}),
+      choices: (memoryEntries || []).map((entry) => String(entry.content?.choice_id || '')).filter(Boolean)
+    };
   }
   const system = [
     'You provide dialogue for a fictional character in an interactive story-world called The Between.',
