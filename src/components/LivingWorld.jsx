@@ -3,6 +3,7 @@ import './LivingWorld.css';
 import { publishPerceptionObservation, subscribePerceptionObservations } from '../engine/perceptionLedger.js';
 import { deriveResidentResponse } from '../engine/residentResponsePolicy.js';
 import SharedWorldPanel from './SharedWorldPanel.jsx';
+import { getSharedWorldClient, isPrivateMemorySyncEnabled, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
 import { getSharedWorldClient, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
@@ -113,6 +114,8 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
 
 export default function LivingWorld() {
   const [memory, setMemory] = useState(readMemory);
+  const browserMemoryRef = useRef(memory);
+  const [accountUserId, setAccountUserId] = useState(null);
   const returningVisitorRef = useRef(memory.visits > 0);
   const [eventIndex, setEventIndex] = useState(0);
   const [presence, setPresence] = useState('arrived');
@@ -131,11 +134,15 @@ export default function LivingWorld() {
   const micRequestRef = useRef(0);
   const accountMemoryReadyRef = useRef(false);
   const event = EVENTS[eventIndex];
-  const visitorPhase = visitorSeed(memory.visitorId) % 100;
+  const visitorPhase = visitorSeed(accountUserId || memory.visitorId) % 100;
   const persistMemory = (next) => {
     setMemory(next);
-    try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
-    if (accountMemoryReadyRef.current) savePrivateContinuity(next).catch(() => {});
+    if (accountMemoryReadyRef.current && accountUserId && isPrivateMemorySyncEnabled()) {
+      savePrivateContinuity(next).catch(() => {});
+    } else {
+      browserMemoryRef.current = next;
+      try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
+    }
   };
   const rememberJello = () => {
     const next = { ...memory, trust: clamp(memory.trust + 1, 0, 8), choices: [...memory.choices, 'asked-jello'].slice(-12) };
@@ -174,25 +181,65 @@ export default function LivingWorld() {
     return () => { unsubscribe(); window.clearTimeout(responseTimerRef.current); };
   }, []);
   useEffect(() => {
-    let active = true;
-    const hydrate = () => loadPrivateContinuity().then((remote) => {
-      if (!active) return;
-      accountMemoryReadyRef.current = true;
-      if (!remote) return;
-      setMemory((current) => {
-        const next = { ...current, visits: Math.max(current.visits, Number(remote.visits) || 0), trust: clamp(Number(remote.trust) || 0, 0, 8), choices: Array.isArray(remote.choices) ? remote.choices.slice(-12) : current.choices, lastEvent: typeof remote.lastEvent === 'string' ? remote.lastEvent : current.lastEvent };
-        try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
-        return next;
-      });
-    }).catch(() => {});
     const supabase = getSharedWorldClient();
-    if (supabase) {
-      hydrate();
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => { if (session) window.setTimeout(hydrate, 0); });
-      return () => { active = false; data.subscription.unsubscribe(); };
-    }
-    return () => { active = false; };
+    let active = true;
+    const restoreBrowserMemory = () => {
+      accountMemoryReadyRef.current = false;
+      setAccountUserId(null);
+      setMemory(browserMemoryRef.current);
+      returningVisitorRef.current = browserMemoryRef.current.visits > 0;
+    };
+    const hydrate = async (session) => {
+      if (!active) return;
+      if (!session?.user || !isPrivateMemorySyncEnabled()) {
+        restoreBrowserMemory();
+        return;
+      }
+      try {
+        const remote = await loadPrivateContinuity();
+        if (!active) return;
+        const local = browserMemoryRef.current;
+        const next = remote ? {
+          visitorId: local.visitorId,
+          visits: clamp((Number(remote.visits) || 0) + 1, 0, 100000),
+          trust: clamp(Number(remote.trust) || 0, 0, 8),
+          choices: Array.isArray(remote.choices) ? remote.choices.slice(-12) : [],
+          lastEvent: typeof remote.lastEvent === 'string' ? remote.lastEvent : ''
+        } : local;
+        setAccountUserId(session.user.id);
+        accountMemoryReadyRef.current = true;
+        returningVisitorRef.current = Boolean(remote && Number(remote.visits) > 0);
+        setMemory(next);
+        savePrivateContinuity(next).catch(() => {});
+      } catch {
+        if (active) restoreBrowserMemory();
+      }
+    };
+    const refreshSession = () => {
+      if (!supabase) { restoreBrowserMemory(); return; }
+      supabase.auth.getSession().then(({ data, error }) => {
+        if (!error) hydrate(data.session);
+        else restoreBrowserMemory();
+      }).catch(restoreBrowserMemory);
+    };
+    refreshSession();
+    const onMemoryPreference = () => refreshSession();
+    window.addEventListener('mc-private-memory-sync-change', onMemoryPreference);
+    const subscription = supabase?.auth.onAuthStateChange((_event, session) => {
+      window.setTimeout(() => {
+        if (session && isPrivateMemorySyncEnabled()) hydrate(session);
+        else restoreBrowserMemory();
+      }, 0);
+    }).data.subscription;
+    return () => {
+      active = false;
+      window.removeEventListener('mc-private-memory-sync-change', onMemoryPreference);
+      subscription?.unsubscribe();
+    };
   }, []);
+  useEffect(() => {
+    if (accountUserId) setEventIndex((visitorSeed(accountUserId) + memory.visits) % EVENTS.length);
+  }, [accountUserId]);
   useEffect(() => {
     const onVisibility = () => {
       if (document.visibilityState === 'hidden') {
