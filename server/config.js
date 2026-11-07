@@ -9,11 +9,11 @@ function normalizeOrigin(env) {
   return 'http://localhost:5173';
 }
 
-export function infrastructureConfig(env = process.env) {
+export function infrastructureConfig(env = (globalThis.process?.env || {})) {
   const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL || '';
   const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
   const anonKey = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || '';
-  const production = env.NODE_ENV === 'production' || Boolean(env.VERCEL_ENV);
+  const production = env.APP_ENV === 'production' || env.NODE_ENV === 'production';
 
   return Object.freeze({
     production,
@@ -41,7 +41,6 @@ export function infrastructureConfig(env = process.env) {
 
 export function assertProductionConfig(config) {
   if (!config.production) return;
-  required('SESSION_SECRET', config.sessionSecret);
   if (!config.supabase.enabled) {
     throw new Error('Production persistence requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
