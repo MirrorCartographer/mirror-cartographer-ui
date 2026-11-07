@@ -87,7 +87,7 @@ No Vercel deployment is required for this path. The repository's older serverles
 
 The source implementation is present, but live service operation still requires:
 
-1. Apply db/001_continuity_records.sql, db/002_shared_world_presence.sql, and db/003_resident_dialogue_limits.sql to the actual Supabase project.
+1. Apply db/001_continuity_records.sql, db/002_shared_world_presence.sql, db/003_resident_dialogue_limits.sql, and db/004_agency_preserving_memory_ledger.sql to the actual Supabase project.
 2. Set GitHub Actions variables VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.
 3. Configure the Supabase Auth redirect allowlist for the GitHub Pages URL.
 4. Deploy supabase/functions/resident-dialogue.
