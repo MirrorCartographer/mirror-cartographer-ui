@@ -30,7 +30,7 @@ The research and systems work lives in the [other repository](https://github.com
 
 - **[Playable HTML Index](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/interactive-index.html)** — direct links to interactive HTML experiences, grouped by area. Link targets are routes, not code views; live behavior still needs browser verification.
 
-- **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — four distinct instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways.
+- **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — five instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways. The [full seeded Consensus Trap experiment](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/consensus-trap.html) can be run and exported separately.
 
 - **[Project completion map](PROJECT_COMPLETION_MAP.md)** — verified status, acceptance criteria, and remaining work.
 - **[The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md)** — the rooms, their rules, and how to wander.
