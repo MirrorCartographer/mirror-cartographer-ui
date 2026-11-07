@@ -17,13 +17,14 @@ assert.ok(client.includes('world-presence:') && client.includes('setInterval(() 
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
 assert.ok(client.includes('functions.invoke(\'resident-dialogue\''), 'resident dialogue must use the authenticated Supabase function');
 assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled() && isResidentMemoryUseEnabled()'), 'provider use of memory must require a separate opt-in from storage');
-assert.ok(client.includes('history.slice(-8)') && client.includes('perception: { cue, intensity, ambientCue, ambientIntensity }'), 'resident calls must carry bounded session history and separate ambient cues');
+assert.ok(client.includes('history.slice(-8)') && client.includes('ambientCue: isAmbientContextUseEnabled() ? ambientCue : \'quiet\''), 'resident calls must carry bounded history and keep ambient cues local by default');
 assert.ok(world.includes('worldConversationHistory.slice(-8)'), 'conversation continuity must be short-lived and bounded');
 assert.ok(world.includes('setWorldConversationHistory([])'), 'conversation history must clear when the authenticated account changes');
 assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history })"), 'the scene must route free dialogue with bounded perception context');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
 assert.ok(world.includes('FICTIONAL INHABITANTS · SCRIPTED OR AI-GENERATED DIALOGUE'), 'resident ontology must be visible');
 assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
+assert.ok(panel.includes('Let residents use the room-sound cue when replying'), 'ambient provider context must require a separate opt-in');
 assert.ok(panel.includes('Let Tazar and Jello consult my private memory when replying'), 'provider use of memory must have a separate opt-in');
 assert.ok(panel.includes('PRIVATE MEMORY LEDGER'), 'visitors must be able to inspect saved private memory');
 assert.ok(panel.includes('SAVE NOTE') && panel.includes('FORGET'), 'visitors must be able to revise and delete individual memory entries');
