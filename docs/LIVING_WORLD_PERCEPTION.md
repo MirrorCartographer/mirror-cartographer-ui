@@ -18,6 +18,8 @@ The Living World is a client-side experience served as a static GitHub Pages app
 
 The sound envelope is transient and used only for visual response. It is not retained in browser memory. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
 
+The residents currently use bounded, scripted dialogue and deterministic visual state changes. They are not LLM-backed autonomous agents, and they do not independently form beliefs or remember other visitors.
+
 The Living World does not:
 - record or retain audio;
 - upload microphone samples;
@@ -47,6 +49,7 @@ Those components are not automatically part of this GitHub Pages scene. The UI's
 5. **Session continuity** — distinguish browser-local memory from authenticated account memory.
 6. **Shared presence** — only after a real backend, authenticated identities, opt-in visibility, retention policy, and cross-user privacy tests exist.
 7. **Agentic character dialogue** — only when a real model/runtime, memory scope, provenance, safety boundary, and failure handling are connected and tested.
+8. **Perception-to-agent bridge** — connect signal records to a real inference runtime only with explicit provenance, bounded memory, consent scopes, and observable failure states.
 
 ## Release truth
 
