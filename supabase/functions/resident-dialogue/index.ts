@@ -74,6 +74,13 @@ Deno.serve(async (request: Request) => {
   const supabase = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: authorization } } });
   const { data: authData, error: authError } = await supabase.auth.getUser(token);
   if (authError || !authData.user) return json({ error: 'Session is invalid or expired.' }, 401, requestOrigin || allowed[0] || '*');
+  const { data: withinQuota, error: quotaError } = await supabase.rpc('consume_resident_dialogue_quota', {
+    p_max_requests: 12,
+    p_window_seconds: 60
+  });
+  if (quotaError) return json({ error: 'Resident request protection is unavailable.' }, 503, requestOrigin || allowed[0] || '*');
+  if (withinQuota !== true) return json({ error: 'Too many messages in a short period. Give the station a moment.' }, 429, requestOrigin || allowed[0] || '*');
+
 
   let memory: Record<string, unknown> = {};
   if (payload.includeMemory === true) {
