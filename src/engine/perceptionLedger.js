@@ -1,6 +1,6 @@
 const MAX_OBSERVATIONS = 64;
 const ALLOWED_KINDS = new Set([
-  'pointer-position', 'pointer-touch', 'pointer-leave', 'pointer-stillness', 'character-focus',
+  'pointer-position', 'pointer-touch', 'pointer-leave', 'pointer-stillness', 'character-focus', 'submitted-language', 'resident-choice',
   'page-visibility', 'window-focus', 'audio-envelope', 'microphone-state'
 ]);
 const listeners = new Set();
