@@ -59,7 +59,7 @@ async function requireSharedWorldUser() {
   if (!supabase) throw new Error('Shared world is not configured.');
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
-  if (!data.session?.user) throw new Error('Sign in before managing connections.');
+  if (!data.session?.user) throw new Error('Sign in to speak to the residents or use the shared world.');
   return { supabase, user: data.session.user };
 }
 
@@ -222,7 +222,7 @@ export async function askResident(resident, message, perception = {}) {
   const text = String(message || '').trim();
   if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
   const context = perception && typeof perception === 'object' ? perception : {};
-  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return']);
+  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
   const requestedCue = String(context.cue || 'quiet');
   const cue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
   const intensity = Number.isFinite(context.intensity) ? Math.max(0, Math.min(1, context.intensity)) : 0;
