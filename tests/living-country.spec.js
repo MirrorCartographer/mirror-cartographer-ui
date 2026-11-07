@@ -134,10 +134,16 @@ test.describe('The Living Country', () => {
     await expect(page.getByRole('heading', { name: 'Reality ledger' })).toBeVisible();
     await expect(page.locator('.reality-ledger')).toContainText('No OAuth, server-side identity');
     await expect(page.locator('.reality-ledger')).toContainText('Browser-local only');
+    await expect(page.locator('.reality-ledger')).toContainText('Supabase continuity backend');
+    await expect(page.locator('.reality-ledger')).toContainText('No verified project reference');
     await page.getByLabel('Jump to workshop lane').selectOption('judgment');
     await expect(page.getByRole('heading', { name: 'Human Judgment Lab' })).toBeVisible();
     await page.getByRole('link', { name: /OPEN THE REPRODUCIBLE EXPERIMENT/ }).click();
     await expect(page).toHaveURL(/field-instruments\/consensus-trap\.html$/);
+    await page.goto('/?view=workshop&lane=thread', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('heading', { name: 'Common Thread' })).toBeVisible();
+    await page.getByRole('link', { name: /OPEN COMMON THREAD/ }).click();
+    await expect(page).toHaveURL(/atlas\/rooms\/common-thread\/$/);
   });
 
   test('legacy browser notes migrate without being discarded', async ({ page }) => {
