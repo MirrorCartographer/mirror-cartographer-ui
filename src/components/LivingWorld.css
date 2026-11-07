@@ -41,102 +41,102 @@
 .foreground-plant i:nth-child(1){--leaf-y:32%;--leaf-r:-55deg}.foreground-plant i:nth-child(2){--leaf-y:52%;--leaf-r:20deg}.foreground-plant i:nth-child(3){--leaf-y:68%;--leaf-r:-35deg}.foreground-plant i:nth-child(4){--leaf-y:84%;--leaf-r:28deg}
 .floating-specimens{position:absolute;inset:18% 0 28%;pointer-events:none}.floating-specimens i{position:absolute;width:8px;height:8px;border:1px solid #ecd8b5;border-radius:50%;box-shadow:0 0 12px #ecd8b5;animation:specimen-float 7s ease-in-out infinite}.floating-specimens i:nth-child(1){left:42%;top:32%}.floating-specimens i:nth-child(2){left:76%;top:48%;animation-delay:-2s}.floating-specimens i:nth-child(3){left:25%;top:62%;animation-delay:-4s}.floating-specimens i:nth-child(4){left:59%;top:20%;animation-delay:-1s}.floating-specimens i:nth-child(5){left:88%;top:75%;animation-delay:-3s}
 @keyframes specimen-float{50%{transform:translate(13px,-18px) scale(1.7);opacity:.4}}
-.morrow{position:absolute;z-index:4;left:clamp(35%,calc(50% - 105px),56%);bottom:14%;width:clamp(150px,18vw,235px);height:clamp(215px,30vw,330px);border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 14px 18px #05050a99);animation:morrow-idle 4.2s ease-in-out infinite;transform-origin:50% 90%}
-@keyframes morrow-idle{0%,100%{translate:0 0;rotate:-1deg}50%{translate:0 -9px;rotate:1deg}}
-.morrow-art{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.morrow-wings{transform-box:fill-box;transform-origin:50% 55%;animation:wing-rest 3.2s ease-in-out infinite}.morrow:hover .morrow-wings{animation:wing-flutter .34s ease-in-out 4}
+.tazar{position:absolute;z-index:4;left:clamp(35%,calc(50% - 105px),56%);bottom:14%;width:clamp(150px,18vw,235px);height:clamp(215px,30vw,330px);border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 14px 18px #05050a99);animation:tazar-idle 4.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes tazar-idle{0%,100%{translate:0 0;rotate:-1deg}50%{translate:0 -9px;rotate:1deg}}
+.tazar-art{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.tazar-wings{transform-box:fill-box;transform-origin:50% 55%;animation:wing-rest 3.2s ease-in-out infinite}.tazar:hover .tazar-wings{animation:wing-flutter .34s ease-in-out 4}
 @keyframes wing-rest{50%{transform:scaleX(.94) rotate(1deg)}}@keyframes wing-flutter{50%{transform:scaleX(.72) rotate(8deg)}}
-.morrow-antennae{transform-box:fill-box;transform-origin:50% 100%;animation:antenna-twitch 5s ease-in-out infinite}.morrow:hover .morrow-antennae{animation:antenna-twitch .45s ease-in-out infinite}
+.tazar-antennae{transform-box:fill-box;transform-origin:50% 100%;animation:antenna-twitch 5s ease-in-out infinite}.tazar:hover .tazar-antennae{animation:antenna-twitch .45s ease-in-out infinite}
 @keyframes antenna-twitch{0%,90%,100%{rotate:0deg}94%{rotate:7deg}97%{rotate:-5deg}}
-.morrow-blush{opacity:.5}.morrow:hover .morrow-blush{opacity:.9}
-.morrow-eyes{transform-box:fill-box;transform-origin:center;animation:blink 5.4s infinite}.morrow-eyes ellipse{transform-box:fill-box;transform-origin:center;animation:blink 5.4s infinite}
+.tazar-blush{opacity:.5}.tazar:hover .tazar-blush{opacity:.9}
+.tazar-eyes{transform-box:fill-box;transform-origin:center;animation:blink 5.4s infinite}.tazar-eyes ellipse{transform-box:fill-box;transform-origin:center;animation:blink 5.4s infinite}
 @keyframes blink{0%,45%,48%,100%{scale:1 1}46.5%{scale:1 .08}}
-.morrow-lantern{transform-origin:187px 228px;animation:lantern-sway 3s ease-in-out infinite}
+.tazar-lantern{transform-origin:187px 228px;animation:lantern-sway 3s ease-in-out infinite}
 @keyframes lantern-sway{50%{rotate:8deg}}
-.morrow-shadow{position:absolute;left:23%;right:23%;bottom:3%;height:12px;background:#08080d99;border-radius:50%;filter:blur(7px);animation:shadow-breathe 4.2s infinite}
+.tazar-shadow{position:absolute;left:23%;right:23%;bottom:3%;height:12px;background:#08080d99;border-radius:50%;filter:blur(7px);animation:shadow-breathe 4.2s infinite}
 @keyframes shadow-breathe{50%{transform:scaleX(.78);opacity:.5}}
-.morrow-name{position:absolute;bottom:-4px;left:0;right:0;text-align:center;color:#dfcba9;font:10px 'DM Mono',monospace;letter-spacing:.18em;text-shadow:0 2px 8px #08080d}.morrow-name i{font-style:normal;opacity:.68;letter-spacing:0}
-.morrow-notice{position:absolute;top:5%;right:-30%;padding:7px 10px;background:#eee0c9;color:#30252c;font:italic 13px Georgia;transform:rotate(4deg);box-shadow:3px 4px 0 #09090c}
+.tazar-name{position:absolute;bottom:-4px;left:0;right:0;text-align:center;color:#dfcba9;font:10px 'DM Mono',monospace;letter-spacing:.18em;text-shadow:0 2px 8px #08080d}.tazar-name i{font-style:normal;opacity:.68;letter-spacing:0}
+.tazar-notice{position:absolute;top:5%;right:-30%;padding:7px 10px;background:#eee0c9;color:#30252c;font:italic 13px Georgia;transform:rotate(4deg);box-shadow:3px 4px 0 #09090c}
 .door-invitation{position:absolute;z-index:5;right:5%;bottom:9%;border:1px solid #cbb48a77;background:#19172099;color:#e4cfab;padding:11px 15px;font:9px 'DM Mono',monospace;letter-spacing:.14em;display:flex;gap:20px;align-items:center;cursor:pointer;backdrop-filter:blur(9px)}.door-invitation b{font-size:16px}
 .scene-signals{position:absolute;left:3%;right:3%;top:15%;display:flex;justify-content:space-between;color:#cbb89b88;font:8px 'DM Mono',monospace;letter-spacing:.16em}
 .world-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,transparent 28%,#09090dbb 100%),linear-gradient(180deg,#09090d66,transparent 25%,transparent 72%,#08090dcc)}
 .world-topbar{position:absolute;z-index:8;top:0;left:0;right:0;padding:clamp(15px,2.3vw,30px) clamp(18px,4vw,58px);display:flex;align-items:center;justify-content:space-between;color:#eadbc2}.world-wordmark{text-decoration:none;color:inherit;font:10px 'DM Mono',monospace;letter-spacing:.13em}.world-wordmark span{color:#b8a38c88}.world-topbar nav{display:flex;gap:clamp(12px,2vw,28px);align-items:center}.world-topbar nav a,.world-topbar nav button{border:0;background:none;color:#dfceb4;text-decoration:none;font:9px 'DM Mono',monospace;letter-spacing:.12em;cursor:pointer;opacity:.8}.world-topbar nav a:hover,.world-topbar nav button:hover{opacity:1;color:#fff0d0}
 .world-intro{position:absolute;z-index:6;left:clamp(20px,5vw,72px);top:22%;max-width:min(40vw,490px);pointer-events:none;text-shadow:0 2px 20px #09090d}.world-intro p{color:#d7b78f;font:9px 'DM Mono',monospace;letter-spacing:.22em}.world-intro h1{margin:14px 0 10px;font:700 clamp(2rem,4.3vw,4.7rem)/.96 'Playfair Display',Georgia,serif;letter-spacing:-.045em;color:#f0e4d1}.world-intro h1 em{color:#d7b99a;font-weight:600}.world-intro>span{font:italic 14px/1.5 Georgia,serif;color:#d6c4ae}
-.morrow-dialogue{position:absolute;z-index:9;left:clamp(20px,5vw,72px);bottom:clamp(80px,12vh,125px);width:min(400px,38vw);padding:18px 20px 16px;border:1px solid #d3bd9b55;background:linear-gradient(135deg,#1c1922dc,#14151add);box-shadow:8px 9px 0 #07070b66;backdrop-filter:blur(14px);color:#ecdfca}
+.tazar-dialogue{position:absolute;z-index:9;left:clamp(20px,5vw,72px);bottom:clamp(80px,12vh,125px);width:min(400px,38vw);padding:18px 20px 16px;border:1px solid #d3bd9b55;background:linear-gradient(135deg,#1c1922dc,#14151add);box-shadow:8px 9px 0 #07070b66;backdrop-filter:blur(14px);color:#ecdfca}
 .dialogue-name{margin:0 0 8px;color:#d9b88f;font:9px 'DM Mono',monospace;letter-spacing:.15em}.dialogue-name i{font-style:normal;color:#a99a8b}
 .dialogue-line{min-height:50px;margin:0 0 14px;font:italic 17px/1.35 'Playfair Display',Georgia,serif}
 .dialogue-choices{display:flex;flex-wrap:wrap;gap:7px}.dialogue-choices button{padding:7px 9px;border:1px solid #c5a98455;background:#33293488;color:#e5d5bd;font:9px 'DM Mono',monospace;cursor:pointer}.dialogue-choices button:hover{background:#6a4355aa;border-color:#d8bd96}
 .world-footer{position:absolute;z-index:7;left:clamp(20px,5vw,72px);right:clamp(20px,5vw,72px);bottom:20px;display:flex;justify-content:space-between;color:#b7a88f88;font:8px 'DM Mono',monospace;letter-spacing:.12em;pointer-events:none}
 .mood-bell .tower-face{box-shadow:0 0 22px #ffe1a5aa}.mood-garden .glasshouse-glow{opacity:1;filter:hue-rotate(45deg) brightness(1.5)}.mood-train .platform:after{content:'';position:absolute;top:10%;left:-35%;width:30%;height:3px;background:#e6d3ac;box-shadow:0 0 15px #e6d3ac;animation:train-pass 7s linear infinite}@keyframes train-pass{to{left:130%}}.mood-clock .tower-face{animation:clock-tick 1s steps(2) infinite alternate}@keyframes clock-tick{to{filter:brightness(1.8)}}.mood-music .floating-specimens i{animation-duration:3.5s}
-@media(max-width:760px){.world-intro{top:15%;max-width:68vw}.world-intro h1{font-size:clamp(2rem,8vw,3.5rem)}.glasshouse{left:-4%;width:38%;bottom:29%;min-width:150px}.clocktower{right:4%;width:14%;min-width:65px}.station{left:30%;width:48%;min-width:200px;bottom:25%}.morrow{left:43%;bottom:12%;width:clamp(130px,32vw,190px);height:245px}.morrow-dialogue{left:16px;bottom:74px;width:min(360px,calc(100vw - 32px));padding:13px 14px}.dialogue-line{font-size:15px;min-height:38px}.door-invitation{right:12px;bottom:34%;font-size:8px;padding:8px}.world-footer{bottom:9px;font-size:7px}.world-footer span:last-child{display:none}.world-topbar{align-items:flex-start}.world-topbar nav{gap:9px}.world-topbar nav a,.world-topbar nav button{font-size:8px}.world-wordmark{font-size:8px}.world-wordmark span{display:none}.scene-signals{top:12%;font-size:7px}}
-@media(max-width:430px){.world-intro{top:16%;max-width:76vw}.world-intro h1{font-size:2.25rem}.world-intro>span{font-size:12px}.station{left:25%;width:56%;bottom:29%;height:24%;min-width:0}.glasshouse{bottom:30%;height:29%;min-width:0}.clocktower{bottom:29%;height:43%}.morrow{left:39%;bottom:13%;width:150px;height:215px}.door-invitation{bottom:32%;right:8px;writing-mode:vertical-rl}.morrow-dialogue{bottom:68px}.world-footer{font-size:6px}}
+@media(max-width:760px){.world-intro{top:15%;max-width:68vw}.world-intro h1{font-size:clamp(2rem,8vw,3.5rem)}.glasshouse{left:-4%;width:38%;bottom:29%;min-width:150px}.clocktower{right:4%;width:14%;min-width:65px}.station{left:30%;width:48%;min-width:200px;bottom:25%}.tazar{left:43%;bottom:12%;width:clamp(130px,32vw,190px);height:245px}.tazar-dialogue{left:16px;bottom:74px;width:min(360px,calc(100vw - 32px));padding:13px 14px}.dialogue-line{font-size:15px;min-height:38px}.door-invitation{right:12px;bottom:34%;font-size:8px;padding:8px}.world-footer{bottom:9px;font-size:7px}.world-footer span:last-child{display:none}.world-topbar{align-items:flex-start}.world-topbar nav{gap:9px}.world-topbar nav a,.world-topbar nav button{font-size:8px}.world-wordmark{font-size:8px}.world-wordmark span{display:none}.scene-signals{top:12%;font-size:7px}}
+@media(max-width:430px){.world-intro{top:16%;max-width:76vw}.world-intro h1{font-size:2.25rem}.world-intro>span{font-size:12px}.station{left:25%;width:56%;bottom:29%;height:24%;min-width:0}.glasshouse{bottom:30%;height:29%;min-width:0}.clocktower{bottom:29%;height:43%}.tazar{left:39%;bottom:13%;width:150px;height:215px}.door-invitation{bottom:32%;right:8px;writing-mode:vertical-rl}.tazar-dialogue{bottom:68px}.world-footer{font-size:6px}}
 @media(prefers-reduced-motion:reduce){.living-world *, .living-world *:before,.living-world *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
-/* Vesper: a second resident, not a decorative icon. */
-.vesper{position:absolute;z-index:4;right:clamp(15%,calc(50% - 360px),35%);bottom:13%;width:94px;height:70px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 8px 9px #05050a99);animation:vesper-prowl 6s ease-in-out infinite}
-.vesper-body{position:absolute;left:18px;bottom:8px;width:62px;height:34px;border-radius:55% 55% 38% 42%;background:linear-gradient(145deg,#34333b,#11141b 72%);box-shadow:inset 8px 3px 0 #77708033}
-.vesper-head{position:absolute;left:8px;top:13px;width:43px;height:37px;border-radius:48% 48% 44% 44%;background:linear-gradient(145deg,#514957,#171923 78%)}
-.vesper-ear{position:absolute;top:3px;width:17px;height:24px;background:#27232d;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:1}.vesper-ear.ear-left{left:8px;rotate:-18deg}.vesper-ear.ear-right{left:34px;rotate:16deg}
-.vesper-eye{position:absolute;z-index:2;top:29px;width:5px;height:7px;border-radius:50%;background:#e9d19a;box-shadow:0 0 8px 3px #e9d19a88;animation:vesper-blink 5.8s infinite}
-.vesper-eye.eye-left{left:20px}.vesper-eye.eye-right{left:38px}
-.vesper-tail{position:absolute;z-index:-1;left:65px;top:18px;width:32px;height:30px;border:7px solid #292630;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;rotate:28deg;transform-origin:0 100%;animation:vesper-tail 2.4s ease-in-out infinite}
-.vesper-bell{position:absolute;left:52px;bottom:14px;width:8px;height:8px;border-radius:50%;background:#d9b982;box-shadow:0 0 10px #f4d59c}
-@keyframes vesper-prowl{0%,100%{translate:0 0}50%{translate:5px -4px}}
-@keyframes vesper-tail{50%{rotate:58deg}}
-@keyframes vesper-blink{0%,46%,49%,100%{scale:1 1}47.5%{scale:1 .08}}
-.vesper:hover{filter:drop-shadow(0 0 13px #e7c99599)}
-.vesper-name{position:absolute;left:4px;top:76px;white-space:nowrap;color:#e2c99f;font:8px 'DM Mono',monospace;letter-spacing:.13em;text-shadow:0 2px 5px #08070c}
-.vesper-name i{font-style:normal;color:#b8a99b;letter-spacing:.04em}
-.vesper:focus-visible,.morrow:focus-visible{outline:2px solid #e7c995;outline-offset:5px}
+/* Jello: a second resident, not a decorative icon. */
+.jello{position:absolute;z-index:4;right:clamp(15%,calc(50% - 360px),35%);bottom:13%;width:94px;height:70px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 8px 9px #05050a99);animation:jello-prowl 6s ease-in-out infinite}
+.jello-body{position:absolute;left:18px;bottom:8px;width:62px;height:34px;border-radius:55% 55% 38% 42%;background:linear-gradient(145deg,#34333b,#11141b 72%);box-shadow:inset 8px 3px 0 #77708033}
+.jello-head{position:absolute;left:8px;top:13px;width:43px;height:37px;border-radius:48% 48% 44% 44%;background:linear-gradient(145deg,#514957,#171923 78%)}
+.jello-ear{position:absolute;top:3px;width:17px;height:24px;background:#27232d;clip-path:polygon(50% 0,100% 100%,0 100%);z-index:1}.jello-ear.ear-left{left:8px;rotate:-18deg}.jello-ear.ear-right{left:34px;rotate:16deg}
+.jello-eye{position:absolute;z-index:2;top:29px;width:5px;height:7px;border-radius:50%;background:#e9d19a;box-shadow:0 0 8px 3px #e9d19a88;animation:jello-blink 5.8s infinite}
+.jello-eye.eye-left{left:20px}.jello-eye.eye-right{left:38px}
+.jello-tail{position:absolute;z-index:-1;left:65px;top:18px;width:32px;height:30px;border:7px solid #292630;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;rotate:28deg;transform-origin:0 100%;animation:jello-tail 2.4s ease-in-out infinite}
+.jello-bell{position:absolute;left:52px;bottom:14px;width:8px;height:8px;border-radius:50%;background:#d9b982;box-shadow:0 0 10px #f4d59c}
+@keyframes jello-prowl{0%,100%{translate:0 0}50%{translate:5px -4px}}
+@keyframes jello-tail{50%{rotate:58deg}}
+@keyframes jello-blink{0%,46%,49%,100%{scale:1 1}47.5%{scale:1 .08}}
+.jello:hover{filter:drop-shadow(0 0 13px #e7c99599)}
+.jello-name{position:absolute;left:4px;top:76px;white-space:nowrap;color:#e2c99f;font:8px 'DM Mono',monospace;letter-spacing:.13em;text-shadow:0 2px 5px #08070c}
+.jello-name i{font-style:normal;color:#b8a99b;letter-spacing:.04em}
+.jello:focus-visible,.tazar:focus-visible{outline:2px solid #e7c995;outline-offset:5px}
 
-@media(max-width:760px){.vesper{right:7%;bottom:16%;scale:.82}}
-@media(prefers-reduced-motion:reduce){.vesper,.vesper-tail,.vesper-eye{animation:none}}
+@media(max-width:760px){.jello{right:7%;bottom:16%;scale:.82}}
+@media(prefers-reduced-motion:reduce){.jello,.jello-tail,.jello-eye{animation:none}}
 
 .living-scene:after{content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:radial-gradient(ellipse 28vw 24vh at var(--field-x,50%) var(--field-y,50%),#e5cba01c,transparent 72%);mix-blend-mode:screen;transition:background-position .16s ease}
 
 /* The world notices presence without asking for a click. */
-.morrow-eyes{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .22s ease-out}
-.vesper-eye{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .28s ease-out}
+.tazar-eyes{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .22s ease-out}
+.jello-eye{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .28s ease-out}
 .moon{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .45s ease-out}
 .distant-city{translate:var(--gaze-x,0px) 0;transition:translate .55s ease-out}
-.presence-nearby .morrow-wings{animation:wing-flutter .7s ease-in-out 1}
-.presence-nearby .morrow-lantern{filter:drop-shadow(0 0 12px #ffe7a9)}
-.presence-still .morrow{filter:drop-shadow(0 14px 18px #05050a99) drop-shadow(0 0 13px #e9c99533)}
-.presence-still .morrow-lantern{animation:lantern-sway 1.5s ease-in-out infinite;filter:drop-shadow(0 0 15px #ffe7a9)}
-.presence-still .vesper{translate:-12px -5px;scale:1.12}
+.presence-nearby .tazar-wings{animation:wing-flutter .7s ease-in-out 1}
+.presence-nearby .tazar-lantern{filter:drop-shadow(0 0 12px #ffe7a9)}
+.presence-still .tazar{filter:drop-shadow(0 14px 18px #05050a99) drop-shadow(0 0 13px #e9c99533)}
+.presence-still .tazar-lantern{animation:lantern-sway 1.5s ease-in-out infinite;filter:drop-shadow(0 0 15px #ffe7a9)}
+.presence-still .jello{translate:-12px -5px;scale:1.12}
 .presence-still .glasshouse-glow{opacity:.95}
 .presence-away .station-lamp{animation-duration:1.7s}
 .presence-away .floating-specimens{opacity:.72}
 .living-scene{--gaze-x:0px;--gaze-y:0px}
-@media(prefers-reduced-motion:reduce){.morrow-eyes,.vesper-eye,.moon,.distant-city{transition:none}}
+@media(prefers-reduced-motion:reduce){.tazar-eyes,.jello-eye,.moon,.distant-city{transition:none}}
 
 /* The world notices presence without asking for a click. */
-.morrow-eyes{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .22s ease-out}
-.vesper-eye{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .28s ease-out}
+.tazar-eyes{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .22s ease-out}
+.jello-eye{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .28s ease-out}
 .moon{translate:var(--gaze-x,0px) var(--gaze-y,0px);transition:translate .45s ease-out}
 .distant-city{translate:var(--gaze-x,0px) 0;transition:translate .55s ease-out}
-.presence-nearby .morrow-wings{animation:wing-flutter .7s ease-in-out 1}
-.presence-nearby .morrow-lantern{filter:drop-shadow(0 0 12px #ffe7a9)}
-.presence-still .morrow{filter:drop-shadow(0 14px 18px #05050a99) drop-shadow(0 0 13px #e9c99533)}
-.presence-still .morrow-lantern{animation:lantern-sway 1.5s ease-in-out infinite;filter:drop-shadow(0 0 15px #ffe7a9)}
-.presence-still .vesper{translate:-12px -5px;scale:1.12}
-.presence-still .vesper-body{animation:vesper-purr .7s ease-in-out infinite alternate}
+.presence-nearby .tazar-wings{animation:wing-flutter .7s ease-in-out 1}
+.presence-nearby .tazar-lantern{filter:drop-shadow(0 0 12px #ffe7a9)}
+.presence-still .tazar{filter:drop-shadow(0 14px 18px #05050a99) drop-shadow(0 0 13px #e9c99533)}
+.presence-still .tazar-lantern{animation:lantern-sway 1.5s ease-in-out infinite;filter:drop-shadow(0 0 15px #ffe7a9)}
+.presence-still .jello{translate:-12px -5px;scale:1.12}
+.presence-still .jello-body{animation:jello-purr .7s ease-in-out infinite alternate}
 .presence-still .glasshouse-glow{opacity:.95}
 .presence-away .station-lamp{animation-duration:1.7s}
 .presence-away .floating-specimens{opacity:.72}
 .living-scene{--gaze-x:0px;--gaze-y:0px}
-@keyframes vesper-purr{to{scale:1.035 1.045}}
-@media(prefers-reduced-motion:reduce){.morrow-eyes,.vesper-eye,.moon,.distant-city{transition:none}.presence-still .vesper-body{animation:none}}
+@keyframes jello-purr{to{scale:1.035 1.045}}
+@media(prefers-reduced-motion:reduce){.tazar-eyes,.jello-eye,.moon,.distant-city{transition:none}.presence-still .jello-body{animation:none}}
 
-.presence-morrow-near .morrow-wings{animation:wing-flutter .38s ease-in-out 3}
-.presence-morrow-near .morrow-antennae{animation:antenna-twitch .45s ease-in-out 3}
-.presence-vesper-near .vesper{filter:drop-shadow(0 0 17px #e7c99588);animation:vesper-notice .6s ease-out 1}
-.presence-vesper-near .vesper-tail{animation:vesper-tail .35s ease-in-out 4}
-@keyframes vesper-notice{0%{translate:0 0;rotate:0deg}35%{translate:-9px -9px;rotate:-7deg}100%{translate:0 0;rotate:0deg}}
+.presence-tazar-near .tazar-wings{animation:wing-flutter .38s ease-in-out 3}
+.presence-tazar-near .tazar-antennae{animation:antenna-twitch .45s ease-in-out 3}
+.presence-jello-near .jello{filter:drop-shadow(0 0 17px #e7c99588);animation:jello-notice .6s ease-out 1}
+.presence-jello-near .jello-tail{animation:jello-tail .35s ease-in-out 4}
+@keyframes jello-notice{0%{translate:0 0;rotate:0deg}35%{translate:-9px -9px;rotate:-7deg}100%{translate:0 0;rotate:0deg}}
 
-.morrow-mouth{transform-box:fill-box;transform-origin:center;transition:transform .12s ease}
-.morrow.speaking .morrow-mouth{animation:morrow-speech .2s ease-in-out infinite alternate}
-@keyframes morrow-speech{to{transform:scaleY(.32) translateY(-1px)}}
-.vesper-mouth{position:absolute;z-index:3;left:30px;top:43px;width:7px;height:3px;border-bottom:1px solid #d6b5a1;border-radius:50%;opacity:.65}
-.vesper.speaking .vesper-mouth{height:6px;background:#b77e83;border:1px solid #e0b0a0;animation:vesper-speech .22s ease-in-out infinite alternate}
-@keyframes vesper-speech{to{transform:scaleY(.45)}}
-@media(prefers-reduced-motion:reduce){.morrow.speaking .morrow-mouth,.vesper.speaking .vesper-mouth{animation:none}}
+.tazar-mouth{transform-box:fill-box;transform-origin:center;transition:transform .12s ease}
+.tazar.speaking .tazar-mouth{animation:tazar-speech .2s ease-in-out infinite alternate}
+@keyframes tazar-speech{to{transform:scaleY(.32) translateY(-1px)}}
+.jello-mouth{position:absolute;z-index:3;left:30px;top:43px;width:7px;height:3px;border-bottom:1px solid #d6b5a1;border-radius:50%;opacity:.65}
+.jello.speaking .jello-mouth{height:6px;background:#b77e83;border:1px solid #e0b0a0;animation:jello-speech .22s ease-in-out infinite alternate}
+@keyframes jello-speech{to{transform:scaleY(.45)}}
+@media(prefers-reduced-motion:reduce){.tazar.speaking .tazar-mouth,.jello.speaking .jello-mouth{animation:none}}
