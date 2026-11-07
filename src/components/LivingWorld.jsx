@@ -184,6 +184,7 @@ export default function LivingWorld() {
     const supabase = getSharedWorldClient();
     let active = true;
     const restoreBrowserMemory = () => {
+      if (!active) return;
       accountMemoryReadyRef.current = false;
       setAccountUserId(null);
       setMemory(browserMemoryRef.current);
@@ -218,9 +219,10 @@ export default function LivingWorld() {
     const refreshSession = () => {
       if (!supabase) { restoreBrowserMemory(); return; }
       supabase.auth.getSession().then(({ data, error }) => {
+        if (!active) return;
         if (!error) hydrate(data.session);
         else restoreBrowserMemory();
-      }).catch(restoreBrowserMemory);
+      }).catch(() => { if (active) restoreBrowserMemory(); });
     };
     refreshSession();
     const onMemoryPreference = () => refreshSession();
