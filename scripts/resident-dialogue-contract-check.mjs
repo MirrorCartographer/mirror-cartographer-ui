@@ -7,12 +7,12 @@ const edge = fs.readFileSync('supabase/functions/resident-dialogue/index.ts', 'u
 const policy = fs.readFileSync('src/engine/residentResponsePolicy.js', 'utf8');
 const quota = fs.readFileSync('db/003_resident_dialogue_limits.sql', 'utf8');
 
-assert.ok(world.includes('askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history })'), 'resident messages must carry the current bounded scene cue');
+assert.ok(world.includes('askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history })'), 'resident messages must carry the current bounded scene cue');
 assert.ok(world.includes('residentHistory[residentKey]'), 'each resident must have a separate conversation thread');
 assert.ok(world.includes(".slice(-8)"), 'browser conversation history must be bounded');
 assert.ok(world.includes("setResidentHistory({ tazar:[], jello:[] })"), 'conversation history must clear when the authenticated account changes');
 assert.ok(world.includes('setResponseIntensity(response.intensity)'), 'the scene response policy must pass bounded intensity to the agent');
-assert.ok(service.includes('perception: { cue, intensity }'), 'the browser bridge must send only a normalized scene cue');
+assert.ok(service.includes('perception: { cue, intensity, ambientCue, ambientIntensity }'), 'the browser bridge must send only a normalized scene cue');
 assert.ok(service.includes('history.slice(-8)'), 'the browser bridge must bound conversation history');
 assert.ok(service.includes("['user', 'assistant'].includes(item.role)"), 'the browser bridge must reject system or unknown history roles');
 assert.ok(service.includes('content.slice(0, 600)'), 'each prior turn must have a strict character limit');
@@ -34,7 +34,7 @@ assert.ok(edge.includes("item.role === 'user' || item.role === 'assistant'"), 't
 assert.ok(edge.includes("payload.history.slice(-8)"), 'the inference function must bound history to eight turns');
 assert.ok(edge.includes("item.content!.trim().slice(0, 600)"), 'the inference function must bound prior message size');
 assert.ok(edge.includes('...history,'), 'the model must receive the bounded in-session conversation context');
-assert.ok(edge.includes('Current scene cue (bounded'), 'the model must receive a provenance-labelled environmental cue');
+assert.ok(edge.includes('bounded, short-lived scene cue'), 'the model must receive a provenance-labelled environmental cue');
 assert.ok(edge.includes('Do not infer emotion, health, identity, intent, or personality from sensory signals.'), 'sensory cues must not become psychological claims');
 assert.ok(edge.includes('transcriptStored: false'), 'the inference function must explicitly report that it stores no transcript');
 assert.ok(!/\.from\(['"]continuity_records['"]\)\s*\.insert|\.upsert/i.test(edge), 'the dialogue function must not persist conversation turns');
