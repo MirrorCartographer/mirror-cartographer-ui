@@ -89,7 +89,7 @@ function PortalMap({ progress, onEnter, onClose }) {
     <section className="found-rooms" aria-label="Discover working rooms inside the field">
       <div className="found-rooms-heading"><p>UNDER THE SURFACE / FIELD NOTES</p><h2>The world is strange.<br/><em>The rooms are real.</em></h2><span>The constellation is an atmosphere, not a category list. These are places you can actually enter and use.</span></div>
       <div className="found-rooms-grid">
-        <a href="./?view=workshop"><small>THE LIVING COUNTRY / FIELD ATLAS</small><strong>The Living Country</strong><span>Move through the artist’s field notes, switch contexts, make fragments, and return to grounded care.</span><b>ENTER THE COUNTRY ↗</b></a>
+        <a href="./?view=workshop&lane=country"><small>THE LIVING COUNTRY / FIELD ATLAS</small><strong>The Living Country</strong><span>Move through the artist’s field notes, switch contexts, make fragments, and return to grounded care.</span><b>ENTER THE COUNTRY ↗</b></a>
         <a href="./atlas/rooms/signal-loom/"><small>BODY / EVIDENCE</small><strong>The Signal Loom</strong><span>Trace symptoms, measurements, interventions, context, and questions without turning a pattern into a diagnosis.</span><b>FOLLOW THE SIGNAL ↗</b></a>
         <a href="./atlas/rooms/after-the-uniform/"><small>VETERANS DAY / TRANSITION</small><strong>After the Uniform</strong><span>A human field notebook for the long transition: stability, health, records, work, education, and belonging.</span><b>FIND THE NEXT MOVE ↗</b></a>
         <a href="./atlas/rooms/body-archive/"><small>BODY / LOCAL ARCHIVE</small><strong>The Body Archive</strong><span>Keep direct observations, measurements, and possible explanations in separate places.</span><b>OPEN THE ARCHIVE ↗</b></a>
