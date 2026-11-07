@@ -9,7 +9,7 @@ create table if not exists public.resident_dialogue_limits (
 );
 
 alter table public.resident_dialogue_limits enable row level security;
-revoke all on public.resident_dialogue_limits from anon, authenticated;
+revoke all on public.resident_dialogue_limits from public, anon, authenticated;
 
 create or replace function public.consume_resident_dialogue_quota(
   p_max_requests integer default 12,
