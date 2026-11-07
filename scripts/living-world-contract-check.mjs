@@ -82,7 +82,7 @@ assert.ok(style.includes('animation-delay:var(--visitor-delay,0s)'), 'visitor-sp
 assert.ok(style.includes('.presence-away .tazar'), 'Tazar must react when the visitor leaves');
 assert.ok(style.includes('.presence-arrived .jello'), 'Jello must react when the visitor returns');
 assert.ok(world.includes('LOCAL ONLY / NO RECORDING'), 'the listening mode must disclose its local-only behavior');
-assert.ok(d.includes('not LLM-backed autonomous agents'), 'documentation must distinguish scripted characters from AI agents');
+assert.ok(d.includes('not a self-directed autonomous agent'), 'documentation must distinguish scripted characters from AI agents');
 
 assert.ok(style.includes('@media(prefers-reduced-motion:reduce)'), 'all new sensory animations must respect reduced-motion');
 assert.ok(!world.includes('Morrow') && !world.includes('Vesper') && !style.includes('morrow') && !style.includes('vesper'), 'old resident names must be removed from the scene source');
