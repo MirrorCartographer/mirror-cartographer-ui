@@ -186,12 +186,49 @@ h1{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif!important;
 .room{border-radius:2px!important;border:1px solid #b69b7355!important;background:linear-gradient(145deg,#30232aee,#151115f2)!important;box-shadow:4px 5px 0 #080709!important;clip-path:polygon(0 1%,2% 0,99% 1%,100% 4%,99% 98%,97% 100%,1% 99%)}.room:nth-child(3n+1){transform:rotate(-.55deg)}.room:nth-child(3n+2){transform:rotate(.5deg)}.room:nth-child(3n){transform:rotate(-.2deg)}.room:hover{transform:translateY(-4px) rotate(0)!important;border-color:#d8b987!important;background:linear-gradient(145deg,#452a32,#1b1519)!important}.room h2{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif!important;text-transform:uppercase;color:#ead9bd!important;font-size:29px!important;text-shadow:2px 2px 0 #6b293b}.room .number,.room .enter{color:#d2b487!important;font-family:ui-monospace,monospace}.room p{color:#c8b99f!important}.controls button,.thread-actions button{border-radius:2px!important;background:#67283b!important;color:#f0dfc2!important;border-color:#d0ad7b!important;box-shadow:3px 3px 0 #080709}.thread{border-radius:2px!important;border-color:#b69b7355!important;background:#241b20!important}
 </style>
 <link rel="stylesheet" href="../../art-direction.css">
-</head>
+
+<style id="mc-fractured-field">
+:root{--ink:#f1e5d6;--muted:#b7a5a2;--gold:#d8b17c;--green:#a4c0a2}
+body{background:radial-gradient(ellipse at 8% 12%,#542b4a 0,transparent 34rem),radial-gradient(ellipse at 92% 62%,#174b49 0,transparent 38rem),radial-gradient(ellipse at 48% 105%,#6b3b2e55,transparent 40rem),#09090e!important}
+.veil{background:repeating-linear-gradient(177deg,#09090e05 0 3px,#0004 4px 5px),linear-gradient(112deg,#0b0a10c9,#101a18b8 48%,#100b11e8)!important}
+.headline{min-height:clamp(190px,28vw,340px);position:relative;align-items:center;padding:20px 0 34px}
+.headline:before{content:"";position:absolute;inset:0 12% 0 -8%;background:linear-gradient(100deg,#d2a57b0b,#a6c4a31a 38%,transparent 72%);clip-path:polygon(0 18%,84% 0,100% 68%,14% 100%);filter:blur(2px)}
+.headline h1{position:relative;font:900 clamp(4rem,13vw,10rem)/.78 Impact,"Arial Black",sans-serif;letter-spacing:-.045em;text-transform:uppercase;max-width:8ch;color:#f0dfc8;text-shadow:5px 3px #7b3d52,10px 9px #050609;transform:rotate(-2deg);mix-blend-mode:screen}
+.headline h1:after{content:" / WHERE AM I?";display:block;font:10px ui-monospace,monospace;letter-spacing:.25em;color:#d5a77c;margin-top:20px;text-shadow:none}
+.headnote{position:relative;max-width:270px;padding:14px;border-left:2px solid #d08d76;background:#120f18b8;color:#d2c0b3;font:italic 13px/1.6 Georgia,serif;transform:rotate(1.2deg)}
+.controls{background:#0d0d13aa;border-color:#d5ad7a44;backdrop-filter:blur(8px)}
+.controls button{border-radius:2px;transform:rotate(-1deg);font:9px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+.thread{border:1px dashed #d5ad7a55;background:#17121a99;padding:18px;margin-bottom:26px;transform:rotate(-.35deg)}
+.thread h2{font:italic 25px Georgia,serif;color:#e7c7a0}
+.grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;align-items:stretch}
+.room{grid-column:span 3;min-height:205px;border-radius:0;border:1px solid #d5ad7a4a;background:linear-gradient(135deg,#211923e8,#0c1213ed);padding:19px;clip-path:polygon(0 2%,97% 0,100% 93%,4% 100%);box-shadow:5px 7px 0 #0007;transition:transform .28s,filter .28s,border-color .28s}
+.room:nth-child(7n+1){grid-column:span 4;transform:rotate(-1deg)}
+.room:nth-child(7n+2){grid-column:span 3;transform:translateY(14px) rotate(1.1deg)}
+.room:nth-child(7n+3){grid-column:span 5;min-height:240px;transform:rotate(-.4deg)}
+.room:nth-child(7n+4){grid-column:span 3;transform:translateY(-8px) rotate(.8deg)}
+.room:nth-child(7n+5){grid-column:span 4;transform:rotate(-1.2deg)}
+.room:nth-child(7n+6){grid-column:span 3;transform:translateY(10px) rotate(.5deg)}
+.room:nth-child(7n){grid-column:span 5;transform:rotate(.7deg)}
+.room:hover{transform:translateY(-7px) rotate(0)!important;filter:saturate(1.25) contrast(1.08);border-color:#e3b98b}
+.room .number{color:#e0b77f;font-size:9px}
+.room h2{font:900 clamp(1.7rem,3vw,2.45rem)/.9 Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:.01em;text-shadow:2px 2px #6e3549}
+.room p{color:#d1c1b4;max-width:32ch}
+.room:nth-child(5n+2){clip-path:polygon(4% 0,100% 5%,96% 100%,0 92%)}
+.room:nth-child(5n+3){clip-path:polygon(0 0,94% 3%,100% 97%,7% 100%)}
+.room:nth-child(5n+4){clip-path:polygon(2% 4%,100% 0,97% 100%,0 94%)}
+.room:after{border-color:#e1b77b55;border-radius:48% 52% 32% 68%;transform:rotate(23deg)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}.room,.room:nth-child(n){grid-column:span 3;min-height:190px}.room:nth-child(3n){grid-column:span 6;min-height:210px}.headline{align-items:start;flex-direction:column}.headnote{max-width:480px}}
+@media(max-width:560px){main{padding-top:20px}.headline{min-height:210px}.headline h1{font-size:clamp(4.1rem,18vw,6.4rem)}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.room,.room:nth-child(n),.room:nth-child(3n){grid-column:span 1;min-height:185px;padding:15px}.room:nth-child(4n){grid-column:span 2;min-height:205px}.room h2{font-size:1.8rem}.room p{font-size:11px}.headnote{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.room,.room:hover{transform:none!important;transition:none!important}.headline h1{transform:none}}
+body[data-mode="text"] .room{clip-path:none!important;transform:none!important;background:#151219!important;border:1px solid #e0c79a66}
+body[data-mode="minimal"] .headline:before,body[data-mode="minimal"] .veil{display:none}
+body[data-mode="minimal"] .room{clip-path:none!important;transform:none!important;box-shadow:none;background:#111!important}
+</style></head>
 <body data-mode="visual" data-still="false">
 <canvas id="field" aria-hidden="true"></canvas><div class="veil" aria-hidden="true"></div>
 <header><a class="brand" href="../">MIRROR CARTOGRAPHER<span>RETURN TO THE FIELD</span></a><a class="mode-link" href="../archive.html">ARCHIVE ↗</a></header>
 <main>
-  <div class="headline"><div><h1>The Rooms</h1></div><div class="headnote">Choose a door. Leave whenever you want.</div></div>
+  <div class="headline"><div><h1>The map is lying.</h1></div><p class="headnote">A field of doors, false memories, useful rooms, and things that refuse to stay in their assigned place. There is no correct order. If the signal gets too loud, choose Stillness or Minimal.</p></div>
   <section class="controls" aria-label="Experience settings">
     <button type="button" data-mode="visual" aria-pressed="true">Visual</button>
     <button type="button" data-mode="text" aria-pressed="false">Text</button>
@@ -235,10 +272,12 @@ h1{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif!important;
     <a class="room" href="./house-that-forgets-gravity/"><span class="number">28 / GRAVITY HOUSE</span><div><h2>The House That Forgets Gravity</h2><p>Move through rooms that do not agree.</p></div><span class="enter">Enter ↗</span></a>
     <a class="room" href="./arcade/connections/"><span class="number">29 / ARCADE</span><div><h2>Connections</h2><p>Find the hidden pattern. Ten rooms wait inside.</p></div><span class="enter">Enter ↗</span></a>
     <a class="room" href="./arcade/veteran-mission/"><span class="number">30 / MISSION</span><div><h2>Veteran Mission</h2><p>Choose a path through the work ahead.</p></div><span class="enter">Enter ↗</span></a>
-    <a class="room" href="./veterans/"><span class="number">31 / COMMON GROUND</span><div><h2>Veteran Hub</h2><p>Resources, routes, and a place to begin.</p></div><span class="enter">Enter ↗</span></a>
+    <a class="room" href="./service-corridor/"><span class="number">31 / SERVICE CORRIDOR</span><div><h2>The Service Corridor</h2><p>Behind the wallpaper: the practical aftermath of service.</p></div><span class="enter">Find the passage ↗</span></a>
     <a class="room" href="./world/"><span class="number">32 / THE WORLD</span><div><h2>The World</h2><p>Let a world take shape. Then change it.</p></div><span class="enter">Enter ↗</span></a>
     <a class="room" href="./composition/"><span class="number">33 / COMPOSITION</span><div><h2>Composition Field</h2><p>Play, mutate, clear, and export.</p></div><span class="enter">Enter ↗</span></a>
     <a class="room" href="./unmapped/"><span class="number">34 / UNMAPPED</span><div><h2>The Unmapped</h2><p>Enter the field. Leave it unresolved.</p></div><span class="enter">Enter ↗</span></a>
+    <a class="room" href="./body-archive/"><span class="number">36 / BODY ARCHIVE</span><div><h2>The Body Archive</h2><p>Keep observation, measurement, and interpretation from collapsing into one thing.</p></div><span class="enter">Open instrument ↗</span></a>
+    <a class="room" href="./common-thread/"><span class="number">37 / COMMON THREAD</span><div><h2>Common Thread</h2><p>Map the invisible ties between people, places, questions, and work.</p></div><span class="enter">Enter the field ↗</span></a>
   </nav>
 </main>
 <footer><span>Move slowly. Or don't.</span><a href="../">Back to the field ↑</a></footer>
