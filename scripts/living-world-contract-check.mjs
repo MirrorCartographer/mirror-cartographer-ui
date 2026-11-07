@@ -36,6 +36,8 @@ assert.ok(world.includes("kind: 'visitor-move'"), 'explicit locomotion must ente
 assert.ok(world.includes("kind: 'visitor-approach'"), 'arrival near a resident must enter the perception ledger');
 assert.ok(world.includes('APPROACH TAZAR') && world.includes('FOLLOW JELLO'), 'the scene must expose direct resident approach affordances');
 assert.ok(world.includes('visitor-token') && world.includes('setVisitorPosition'), 'visitor movement must have a visible spatial representation');
+assert.ok(world.includes('FIELD RECEIPT') && world.includes('CAMERA: NOT CONNECTED') && world.includes('FIELD LOG'), 'the visitor must be able to inspect exactly what the scene observed');
+assert.ok(style.includes('.field-receipt{') && style.includes('.field-log-trigger{'), 'the provenance receipt must be accessible without crowding the scene');
 assert.ok(style.includes('.visitor-token{') && style.includes('.scene-walk-controls{'), 'locomotion must be visible and touch-friendly');
 assert.ok(world.includes("intendedResident ? 'explicit-approach-control' : 'visitor-arrived-near-resident'"), 'explicit approach and ground-arrival observations must preserve their source');
 assert.ok(!world.includes("updatePresence(x > 0.34 && x < 0.66"), 'raw cursor coordinates must not be mistaken for physical approach');
