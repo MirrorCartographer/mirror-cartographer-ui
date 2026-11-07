@@ -65,7 +65,8 @@
     "test:shared-world-contract": "node scripts/shared-world-presence-contract-check.mjs",
     "test:shared-world": "node scripts/shared-world-contract-check.mjs",
     "test:resident-response": "node --test tests/resident-response-policy.test.mjs",
-    "test:resident-dialogue": "node scripts/resident-dialogue-contract-check.mjs"
+    "test:resident-dialogue": "node scripts/resident-dialogue-contract-check.mjs",
+    "test:agency-memory-ledger": "node scripts/agency-memory-ledger-contract-check.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.45.0",
