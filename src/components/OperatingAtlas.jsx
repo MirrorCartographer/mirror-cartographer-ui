@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SkyWorld from './App';
+import LivingCountry from './LivingCountry';
 import { infrastructure } from '../services/infrastructure';
 import './OperatingAtlas.css';
 
@@ -12,6 +13,7 @@ const write = (key, value) => localStorage.setItem(key, JSON.stringify(value));
 
 const FEATURES = [
   ['atlas','Operating atlas','Follow the threads between experiences, ideas, evidence, and the work they become.'],
+  ['country','The Living Country','An interactive, hand-marked field atlas: fragments, context shifts, investigation, and a clear way back to grounded care.'],
   ['archive','Conversation archive','Find the fragments that return, change, contradict one another, or reveal a thread across time.'],
   ['accounts','Identity and accounts','Local profile plus provider-ready account boundary.'],
   ['memory','Persistent memory','Local-first saved state with export and reset.'],
@@ -63,13 +65,14 @@ function useAtlasState() {
 
 function Form({ fields, submitLabel = 'Add', onSubmit }) {
   const [value, setValue] = useState(() => Object.fromEntries(fields.map((f) => [f.name, f.default || ''])));
-  return <form className="atlas-form" onSubmit={(e) => { e.preventDefault(); onSubmit(value); setValue(Object.fromEntries(fields.map((f) => [f.name, f.default || '']))); }}>
+  const [notice, setNotice] = useState('');
+  return <form className="atlas-form" onSubmit={(e) => { e.preventDefault(); try { onSubmit(value); setValue(Object.fromEntries(fields.map((f) => [f.name, f.default || '']))); setNotice('Saved to this browser.'); } catch (error) { setNotice(error?.message || 'Could not save this entry.'); } }}>
     {fields.map((field) => field.type === 'select'
-      ? <select key={field.name} aria-label={field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })}>{field.options.map((o) => <option key={o}>{o}</option>)}</select>
+      ? <label className="atlas-field" key={field.name}><span>{field.label}</span><select required={field.required !== false} aria-label={field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })}>{field.options.map((o) => <option key={o}>{o}</option>)}</select></label>
       : field.type === 'textarea'
-        ? <textarea key={field.name} placeholder={field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })} />
-        : <input key={field.name} type={field.type || 'text'} placeholder={field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })} />)}
-    <button type="submit">{submitLabel}</button>
+        ? <label className="atlas-field" key={field.name}><span>{field.label}</span><textarea required={field.required !== false} aria-label={field.label} placeholder={field.placeholder || field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })} /></label>
+        : <label className="atlas-field" key={field.name}><span>{field.label}</span><input required={field.required !== false} min={field.min} max={field.max} step={field.step || (field.type === 'number' ? 'any' : undefined)} type={field.type || 'text'} placeholder={field.placeholder || field.label} value={value[field.name]} onChange={(e) => setValue({ ...value, [field.name]: e.target.value })} /></label>)}
+    <button type="submit">{submitLabel}</button><small className="form-status" role="status">{notice}</small>
   </form>;
 }
 
@@ -127,6 +130,7 @@ export default function OperatingAtlas() {
   const lane = (() => {
     if (crisis || active==='crisis') return <section className="lane crisis"><h2>Crisis override</h2><p>Symbolic interpretation is suspended. Use direct language, identify immediate danger, and focus only on the next concrete action. This switch changes the interface; it is not an emergency response service.</p><textarea placeholder="What is happening right now?"/><div className="crisis-resources"><p><strong>Immediate danger or medical emergency:</strong> call 911.</p><p><strong>U.S. crisis support:</strong> call or text 988.</p><p><strong>Veterans:</strong> call 988 and press 1, or text 838255.</p><a href="https://988lifeline.org/" target="_blank" rel="noreferrer">988 Lifeline ↗</a><a href="https://www.veteranscrisisline.net/" target="_blank" rel="noreferrer">Veterans Crisis Line ↗</a></div><button onClick={()=>setCrisis(false)}>Exit crisis mode</button></section>;
     if (active==='atlas') return <Dashboard state={state} setActive={setActive} backendStatus={backendStatus}/>;
+    if (active==='country') return <LivingCountry/>;
     if (active==='archive') return <Archive state={state} add={add} remove={remove}/>;
     if (active==='accounts') return <section className="lane"><h2>Identity and accounts</h2><Form fields={[{name:'name',label:'Display name'},{name:'provider',label:'Provider',type:'select',options:['local-only','email-ready','GitHub-ready']}]} onSubmit={(v)=>patch('profile',{...state.profile,...v})}/><pre>{JSON.stringify(state.profile,null,2)}</pre><p className="hint">Provider buttons are architecture boundaries; production OAuth still requires server credentials.</p></section>;
     if (active==='memory') return <section className="lane"><h2>Persistent memory</h2><p>All atlas data is saved to localStorage.</p><button onClick={exportData}>Export memory</button><button className="danger" onClick={()=>{localStorage.removeItem('mc-atlas-v1');setState(seed);}}>Reset memory</button></section>;
