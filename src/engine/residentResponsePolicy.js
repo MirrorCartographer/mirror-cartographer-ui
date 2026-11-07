@@ -6,11 +6,13 @@ const clamp = (value) => Math.max(0, Math.min(1, value));
  */
 export function deriveResidentResponse(observation) {
   if (!observation || observation.scope !== 'local-only' || observation.retention !== 'ephemeral') return null;
-  if (observation.kind === 'pointer-position' && observation.value && typeof observation.value === 'object') {
-    const { x, y } = observation.value;
-    if (y > 0.42 && x > 0.34 && x < 0.66) return { cue: 'approach-tazar', resident: 'tazar', intensity: clamp((y - 0.42) / 0.58) };
-    if (y > 0.5 && x >= 0.66) return { cue: 'approach-jello', resident: 'jello', intensity: clamp((x - 0.66) / 0.34) };
+  if (observation.kind === 'pointer-position') {
+    // Cursor gaze is not locomotion. Moving a pointer alone never means the visitor approached.
     return { cue: 'drift', resident: null, intensity: 0 };
+  }
+  if (observation.kind === 'visitor-move') return { cue: 'walking', resident: null, intensity: 0.35 };
+  if (observation.kind === 'visitor-approach' && ['tazar', 'jello'].includes(observation.value)) {
+    return { cue: observation.value === 'tazar' ? 'approach-tazar' : 'approach-jello', resident: observation.value, intensity: 1 };
   }
   if (observation.kind === 'audio-envelope' && typeof observation.value === 'number') {
     return observation.value >= 0.045
