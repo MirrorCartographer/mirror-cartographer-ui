@@ -46,3 +46,6 @@
 .operating-atlas .skip{z-index:99}
 @media(max-width:850px){.operating-atlas aside{background:#171216f8}.operating-atlas .topbar{left:0}.operating-atlas .field-return{display:none}.operating-atlas>main{padding:84px 16px 40px}}
 @media(prefers-reduced-motion:reduce){.operating-atlas *{animation:none!important;transition:none!important}}
+
+html.mc-operating-atlas,body.mc-operating-atlas,body.mc-operating-atlas #root{height:auto!important;min-height:100%!important;overflow:auto!important;background:#171216!important}
+body.mc-operating-atlas #root{min-height:100vh}
