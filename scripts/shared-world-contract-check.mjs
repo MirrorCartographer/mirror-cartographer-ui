@@ -24,7 +24,7 @@ assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled() && isResi
 assert.ok(client.includes('history.slice(-8)') && client.includes('ambientCue: isAmbientContextUseEnabled() ? ambientCue : \'quiet\''), 'resident calls must carry bounded history and keep ambient cues local by default');
 assert.ok(world.includes('worldConversationHistory.slice(-8)'), 'conversation continuity must be short-lived and bounded');
 assert.ok(world.includes('setWorldConversationHistory([])'), 'conversation history must clear when the authenticated account changes');
-assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: responseCue, ambientIntensity: responseIntensity, history })"), 'the scene must route free dialogue with bounded perception context');
+assert.ok(world.includes("askResident(residentKey, message, { cue: 'conversation', intensity: 1, ambientCue: currentSceneCue, ambientIntensity: currentSceneIntensity, history })"), 'the scene must route free dialogue with bounded perception context');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
 assert.ok(world.includes('FICTIONAL INHABITANTS · SCRIPTED OR AI-GENERATED DIALOGUE'), 'resident ontology must be visible');
 assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
