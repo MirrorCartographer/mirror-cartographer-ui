@@ -129,6 +129,7 @@ export default function LivingWorld() {
   const [micState, setMicState] = useState('off');
   const [micLevel, setMicLevel] = useState(0);
   const [responseCue, setResponseCue] = useState('quiet');
+  const [responseIntensity, setResponseIntensity] = useState(0);
   const responseTimerRef = useRef(null);
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
   const micRequestRef = useRef(0);
@@ -196,8 +197,9 @@ export default function LivingWorld() {
       const response = deriveResidentResponse(observation);
       if (!response) return;
       setResponseCue(response.cue);
+      setResponseIntensity(response.intensity);
       window.clearTimeout(responseTimerRef.current);
-      if (response.cue !== 'away' && response.cue !== 'return') responseTimerRef.current = window.setTimeout(() => setResponseCue('quiet'), 1800);
+      if (response.cue !== 'away' && response.cue !== 'return') responseTimerRef.current = window.setTimeout(() => { setResponseCue('quiet'); setResponseIntensity(0); }, 1800);
     });
     return () => { unsubscribe(); window.clearTimeout(responseTimerRef.current); };
   }, []);
@@ -416,7 +418,7 @@ export default function LivingWorld() {
     if (!message || agentBusy) return;
     setAgentBusy(true);
     try {
-      const reply = await askResident(speaker.toLowerCase(), message);
+      const reply = await askResident(speaker.toLowerCase(), message, { cue: responseCue, intensity: responseIntensity });
       setDialogue(reply);
       setVisitorMessage('');
     } catch (error) {
