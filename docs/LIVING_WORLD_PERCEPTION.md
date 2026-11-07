@@ -50,7 +50,7 @@ Those components are not automatically part of this GitHub Pages scene. The UI's
 
 `db/002_shared_world_presence.sql` adds authenticated connection requests and an expiring presence projection. Presence visibility is `private`, `connections`, or `public`; connection-only visibility requires an accepted relationship. The schema publishes the presence table to Supabase Realtime when the standard publication is available. It deliberately stores no microphone envelope, pointer coordinates, transcripts, inferred mood, or private continuity content.
 
-The browser-side shared-world client and entry panel are now implemented. They use Supabase Auth magic links, a public anon key, Realtime Postgres Changes, expiring heartbeat presence, and explicit private/connections/public visibility. This is a connection path, not proof of a live connection. The migration must still be applied to the actual Supabase project, and the GitHub repository must supply `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Actions variables. The deployed build must then pass the shared-world smoke test. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
+The browser-side shared-world client and entry panel are now implemented. They use Supabase Auth magic links, a public anon key, Realtime Postgres Changes, expiring heartbeat presence, and explicit private/connections/public visibility. Visitors can share a connection code, send requests, accept or decline incoming requests, cancel pending requests, and revoke accepted connections. Either participant can end an accepted connection. This is a connection path, not proof of a live connection. The migration must still be applied to the actual Supabase project, and the GitHub repository must supply `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Actions variables. The deployed build must then pass the shared-world smoke test. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
 
 ## Perception roadmap
 
@@ -58,9 +58,9 @@ The browser-side shared-world client and entry panel are now implemented. They u
 2. **Observation provenance** — implemented as a bounded, ephemeral, local-only ledger.
 3. **Character response policy** — map observable signals to bounded visual/dialogue changes; no hidden emotional claims.
 4. **Session continuity** — browser-local memory exists; authenticated account continuity remains separate and needs a compatible server or direct RLS-protected client.
-5. **Shared presence** — database schema is prepared; live authentication, client subscription, migration application, expiry cleanup, and cross-user privacy tests remain to be connected.
+5. **Shared presence** — browser client, sign-in, connection requests, visibility controls, Realtime subscription, and heartbeat code are implemented; live operation still depends on applying the migration, configuring GitHub Actions variables and Supabase redirect allowlists, and verifying cross-user behavior.
 6. **Agentic character dialogue** — requires a real model/runtime, memory scope, provenance, safety boundary, and failure handling. The current resident dialogue remains scripted.
-8. **Perception-to-agent bridge** — connect signal records to a real inference runtime only with explicit provenance, bounded memory, consent scopes, and observable failure states.
+7. **Perception-to-agent bridge** — connect signal records to a real inference runtime only with explicit provenance, bounded memory, consent scopes, and observable failure states.
 
 ## Release truth
 
