@@ -28,7 +28,7 @@ assert.ok(edge.includes("supabase.rpc('consume_resident_dialogue_quota'"), 'the 
 assert.ok(edge.includes('p_max_requests: 12') && edge.includes('p_window_seconds: 60'), 'resident requests must be rate-limited to 12 per minute');
 assert.ok(edge.includes('withinQuota !== true') && edge.includes('429'), 'requests over quota must be rejected before provider use');
 assert.ok(quota.includes('enable row level security'), 'the quota table must have RLS enabled');
-assert.ok(quota.includes('revoke all on public.resident_dialogue_limits from anon, authenticated'), 'browser roles must not read or edit quota rows directly');
+assert.ok(quota.includes('revoke all on public.resident_dialogue_limits from public, anon, authenticated'), 'browser roles must not read or edit quota rows directly');
 assert.ok(quota.includes('security definer') && quota.includes('auth.uid()'), 'the quota RPC must derive the caller identity from the authenticated JWT');
 assert.ok(quota.includes('p_max_requests <> 12 or p_window_seconds <> 60'), 'authenticated callers must not be able to weaken the fixed quota parameters');
 assert.ok(quota.includes('grant execute on function public.consume_resident_dialogue_quota(integer, integer) to authenticated'), 'authenticated users must only access the quota through the controlled RPC');
