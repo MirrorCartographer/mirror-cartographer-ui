@@ -186,3 +186,7 @@
 .resident-message-form button{border:1px solid #c9ae82;background:#c9ae82;color:#19171b;padding:0 13px;font:9px 'DM Mono',monospace;letter-spacing:.12em;cursor:pointer}
 .resident-message-form button:disabled{opacity:.5;cursor:wait}
 .resident-message-note{margin:7px 0 0;color:#9d9284;font:9px/1.45 'DM Mono',monospace;letter-spacing:.03em}
+
+.living-scene.signal-conversation .tazar-mouth,.living-scene.signal-conversation .jello-mouth{animation:resident-speak .16s ease-in-out infinite alternate}
+.living-scene.signal-choice .station-lamp{filter:brightness(1.25);box-shadow:0 0 14px 7px #ffe3a277}
+@keyframes resident-speak{to{transform:scaleY(1.8)}}
