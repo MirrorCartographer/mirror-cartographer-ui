@@ -11,12 +11,13 @@ The Living World is a client-side experience served as a static GitHub Pages app
 | Keyboard focus and touch | Browser event | Which resident control is focused or touched | Identity, intention, or attention beyond that action |
 | Browser-local visitor key | Browser storage | Return to the same browser profile | Real-world identity or cross-device identity |
 | Microphone amplitude | Explicit visitor action + browser permission | A local sound-level envelope | Words, speaker identity, intent, mood, or meaning |
+| Submitted resident message | Explicit submit action | Final text entered into Tazar/Jello conversation | Drafts, deleted text, general typing behavior, or hidden context |
 
 ## Observation provenance
 
 The scene now routes bounded observations through `src/engine/perceptionLedger.js`. Each event carries a source, permission state, observation timestamp, expiry, confidence, `local-only` scope, and `ephemeral` retention label. The in-memory ring buffer is capped at 64 observations and expires entries from snapshots. It accepts only bounded scalar values or normalized pointer coordinates; it rejects arbitrary objects and raw media payloads. The ledger is not written to localStorage, Supabase, or a network endpoint. It is a local sensing/provenance substrate, not a remote inference engine.
 
-Current event types include pointer position/touch, resident focus, page visibility, window focus, microphone state, and a short-lived microphone RMS envelope.
+Current event types include pointer position/touch/leave/stillness, resident focus, page visibility, window focus, microphone state, a short-lived microphone RMS envelope, the fact that a resident message was explicitly submitted, and explicit dialogue-choice IDs. The ledger does not retain the submitted text itself; the final message is sent to the configured resident provider only when the visitor submits it.
 
 ## Microphone boundary
 
