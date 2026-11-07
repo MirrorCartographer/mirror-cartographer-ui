@@ -42,6 +42,20 @@ assert.ok(style.includes('.living-scene.sound-active .jello'), 'Jello must react
 assert.ok(!world.includes('fetch('), 'raw room audio must not be uploaded by the Living World');
 assert.ok(!world.includes('SpeechRecognition'), 'microphone perception must not transcribe speech');
 assert.ok(!world.includes('localStorage.setItem(MEMORY_KEY, JSON.stringify({ ...next, mic'), 'microphone signals must not enter visitor memory');
+assert.ok(world.includes('const micRequestRef = useRef(0)'), 'pending permission requests must be cancellable');
+assert.ok(world.includes('micRequestRef.current += 1'), 'stopping or unmounting must invalidate pending microphone requests');
+assert.ok(world.includes("error?.name === 'NotAllowedError' ? 'permission-denied' : 'unavailable'"), 'permission denial must be represented honestly');
+assert.ok(world.includes('disabled={micState === \'requesting\'}'), 'duplicate permission prompts must be prevented');
+assert.ok(world.includes('source.connect(analyser)'), 'microphone input must feed only the local analyser');
+assert.ok(!world.includes('source.connect(context.destination)'), 'microphone input must never be routed to speakers');
+assert.ok(world.includes('mic.context.close().catch(() => {})'), 'the microphone audio context must be closed on stop');
+assert.ok(world.includes('micLevel > 0.045'), 'character reaction must be driven by measured acoustic level');
+assert.ok(world.includes("setMicState('unsupported')"), 'unsupported microphone environments must be reported');
+assert.ok(style.includes('.living-scene.sound-active .tazar-wings'), 'Tazar sound reaction must be animated');
+assert.ok(style.includes('.living-scene.sound-active .jello-ear'), 'Jello sound reaction must be animated');
+assert.ok(style.includes('@media(prefers-reduced-motion:reduce)'), 'all new sensory animations must respect reduced-motion');
+assert.ok(!world.includes('Morrow') && !world.includes('Vesper') && !style.includes('morrow') && !style.includes('vesper'), 'old resident names must be removed from the scene source');
+
 assert.ok(!world.includes('MORROW') && !world.includes('VESPER'), 'retired character names must not remain in the Living World');
 
 assert.ok(style.includes('.presence-still .tazar-lantern'), 'Tazar must respond to visitor stillness');
