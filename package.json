@@ -61,7 +61,8 @@
     "test:art-direction-parity": "node scripts/art-direction-parity-check.mjs",
     "test:execution-hub": "node scripts/execution-hub-contract-check.mjs",
     "test:living-world": "node scripts/living-world-contract-check.mjs",
-    "test:perception-ledger": "node --test tests/perception-ledger.test.mjs"
+    "test:perception-ledger": "node --test tests/perception-ledger.test.mjs",
+    "test:shared-world": "node scripts/shared-world-contract-check.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.45.0",
