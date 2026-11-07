@@ -125,6 +125,18 @@ test.describe('The Living Country', () => {
     await expect(page.locator('.selected-fragment h2')).toHaveText('Room after reading');
   });
 
+
+  test('the workshop labels its actual capabilities and links to the judgment experiment', async ({ page }) => {
+    await page.goto('/?view=workshop&lane=reality', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('heading', { name: 'Reality ledger' })).toBeVisible();
+    await expect(page.locator('.reality-ledger')).toContainText('No OAuth, server-side identity');
+    await expect(page.locator('.reality-ledger')).toContainText('Browser-local only');
+    await page.getByRole('button', { name: /Human Judgment Lab/ }).click();
+    await expect(page.getByRole('heading', { name: 'Human Judgment Lab' })).toBeVisible();
+    await page.getByRole('link', { name: /OPEN THE REPRODUCIBLE EXPERIMENT/ }).click();
+    await expect(page).toHaveURL(/field-instruments\/consensus-trap\.html$/);
+  });
+
   test('legacy browser notes migrate without being discarded', async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.removeItem('mc-living-country-v2');
