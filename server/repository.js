@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+const uuid = () => globalThis.uuid();
 
 const MEMORY = new Map();
 const TABLES = new Set([
@@ -19,7 +19,7 @@ function ensureTable(table) {
 function normalizeRecord(table, ownerId, input = {}) {
   const now = new Date().toISOString();
   return {
-    id: input.id || crypto.randomUUID(),
+    id: input.id || uuid(),
     owner_id: ownerId,
     collection: table,
     title: String(input.title || '').slice(0, 240),
@@ -129,10 +129,10 @@ export function createRepository(config) {
 
     async createSignedUpload(ownerId, file) {
       if (!remote) {
-        return { mode: 'metadata-only', path: `${ownerId}/${crypto.randomUUID()}-${file.name}`, uploadUrl: null };
+        return { mode: 'metadata-only', path: `${ownerId}/${uuid()}-${file.name}`, uploadUrl: null };
       }
       const safeName = String(file.name || 'file').replace(/[^a-zA-Z0-9._-]+/g, '-').slice(-160);
-      const path = `${ownerId}/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}-${safeName}`;
+      const path = `${ownerId}/${new Date().toISOString().slice(0, 10)}/${uuid()}-${safeName}`;
       const response = await fetch(`${config.supabase.url}/storage/v1/object/upload/sign/${config.supabase.bucket}/${path}`, {
         method: 'POST',
         headers: supabaseHeaders(config),
