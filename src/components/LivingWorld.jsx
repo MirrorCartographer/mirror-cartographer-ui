@@ -167,6 +167,7 @@ export default function LivingWorld() {
     }
   };
   const rememberJello = () => {
+    publishPerceptionObservation({ kind: 'resident-choice', source: 'dialogue-choice', permission: 'explicit-click', value: 'asked-jello', ttlMs: 5000 });
     const next = { ...memory, trust: clamp(memory.trust + 1, 0, 8), choices: [...memory.choices, 'asked-jello'].slice(-12) };
     persistMemory(next);
     setDialogue('I am not lost. I am exactly where I mean to be.');
@@ -307,6 +308,7 @@ export default function LivingWorld() {
     }
   };
   const remember = (choice, reply, trust = 1) => {
+    publishPerceptionObservation({ kind: 'resident-choice', source: 'dialogue-choice', permission: 'explicit-click', value: choice, ttlMs: 5000 });
     setSpeaker('TAZAR');
     const next = { ...memory, trust: clamp(memory.trust + trust, 0, 8), choices: [...memory.choices, choice].slice(-12), lastEvent: event.id };
     persistMemory(next);
@@ -416,6 +418,7 @@ export default function LivingWorld() {
     event.preventDefault();
     const message = visitorMessage.trim();
     if (!message || agentBusy) return;
+    publishPerceptionObservation({ kind: 'submitted-language', source: 'resident-text-input', permission: 'explicit-submit', value: speaker.toLowerCase(), ttlMs: 5000 });
     setAgentBusy(true);
     try {
       const reply = await askResident(speaker.toLowerCase(), message, { cue: responseCue, intensity: responseIntensity });
