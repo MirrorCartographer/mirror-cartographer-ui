@@ -14,7 +14,7 @@
 The public entry point is:
 
 - [The House of Mouths](https://mirrorcartographer.github.io/mirror-cartographer-ui/)
-- [The Living Country](https://mirrorcartographer.github.io/mirror-cartographer-ui/?view=workshop&lane=country)
+- The expanded Living Country route is pending review in [PR #179](https://github.com/MirrorCartographer/mirror-cartographer-ui/pull/179); verify its GitHub Pages route after merge.
 
 ## Retired provider path
 
