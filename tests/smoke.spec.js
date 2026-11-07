@@ -126,6 +126,7 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/?view=workshop', { waitUntil: 'networkidle' });
     await expect(page.locator('.operating-atlas')).toBeVisible();
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).overflowY)).toBe('auto');
     await expect(page.getByRole('heading', { name: 'Mirror Cartographer operating atlas' })).toBeVisible();
     await page.locator('aside nav button').filter({ hasText: 'Human health lane' }).click();
     await expect(page.getByRole('heading', { name: 'Human health continuity' })).toBeVisible();
