@@ -49,3 +49,11 @@
 
 html.mc-operating-atlas,body.mc-operating-atlas,body.mc-operating-atlas #root{height:auto!important;min-height:100%!important;overflow:auto!important;background:#171216!important}
 body.mc-operating-atlas #root{min-height:100vh}
+
+.operating-atlas .backend-status{display:grid;gap:7px;margin:12px 0 18px;padding:14px 16px;border:1px solid var(--line);border-left:3px solid #b59a72;background:#171416}
+.operating-atlas .backend-status strong{font:9px ui-monospace,monospace;letter-spacing:.14em;color:#d2b487}
+.operating-atlas .backend-status span{font:12px/1.5 Georgia,serif;color:#ead9bd}
+.operating-atlas .backend-status small{font:10px/1.45 ui-monospace,monospace;color:#aaa08f}
+.operating-atlas .backend-status[data-state="supabase"]{border-left-color:#9fb18a}
+.operating-atlas .backend-status[data-state="memory"]{border-left-color:#d6a46e}
+.operating-atlas .backend-status[data-state="unavailable"]{border-left-color:#d98b7a}
