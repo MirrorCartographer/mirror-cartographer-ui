@@ -18,6 +18,12 @@ assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a he
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
 assert.ok(client.includes("functions.invoke('resident-dialogue'"), 'resident dialogue must use the authenticated Supabase function');
 assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled()'), 'resident context must require the explicit memory-sync preference');
+assert.ok(client.includes('history') && client.includes('perception: { cue, intensity }'), 'resident calls must carry only bounded session history and perception cues');
+assert.ok(world.includes('residentHistory[residentKey]'), 'conversation continuity must be scoped by resident');
+assert.ok(world.includes("slice(-8)"), 'resident conversation history must remain bounded');
+assert.ok(residentFunction.includes('...history'), 'the provider may receive only the bounded ephemeral conversation turns');
+assert.ok(residentFunction.includes('perceptionIntensity'), 'perception intensity must be passed as a bounded scene cue');
+assert.ok(residentFunction.includes('Request is too large.'), 'the resident endpoint must bound request size');
 assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
 assert.ok(panel.includes('DELETE SAVED ACCOUNT MEMORY'), 'visitors must be able to delete private account memory');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
