@@ -27,8 +27,8 @@ begin
   if caller_id is null then
     raise exception 'Authentication required';
   end if;
-  if p_max_requests < 1 or p_window_seconds < 1 then
-    raise exception 'Quota settings must be positive';
+  if p_max_requests <> 12 or p_window_seconds <> 60 then
+    raise exception 'Quota parameters are fixed at 12 requests per 60 seconds';
   end if;
 
   insert into public.resident_dialogue_limits (user_id, window_started_at, request_count, updated_at)
