@@ -57,7 +57,7 @@ Deno.serve(async (request: Request) => {
   const message = String(payload.message || '').trim();
   if (!resident) return json({ error: 'Unknown resident.' }, 400, requestOrigin || allowed[0] || '*');
   if (!message || message.length > 1200) return json({ error: 'Message must contain 1–1,200 characters.' }, 400, requestOrigin || allowed[0] || '*');
-  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
+  const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'walking', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
   const requestedCue = String(payload.perception?.cue || 'quiet');
   const perceptionCue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
   const requestedAmbientCue = String(payload.perception?.ambientCue || 'quiet');
