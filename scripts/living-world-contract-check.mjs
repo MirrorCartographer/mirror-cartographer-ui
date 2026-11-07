@@ -37,7 +37,7 @@ assert.ok(world.includes("kind: 'visitor-approach'"), 'arrival near a resident m
 assert.ok(world.includes('APPROACH TAZAR') && world.includes('FOLLOW JELLO'), 'the scene must expose direct resident approach affordances');
 assert.ok(world.includes('visitor-token') && world.includes('setVisitorPosition'), 'visitor movement must have a visible spatial representation');
 assert.ok(style.includes('.visitor-token{') && style.includes('.scene-walk-controls{'), 'locomotion must be visible and touch-friendly');
-assert.ok(world.includes("source: 'explicit-approach-control'"), 'the explicit approach controls must produce a source-labelled approach observation');
+assert.ok(world.includes("intendedResident ? 'explicit-approach-control' : 'visitor-arrived-near-resident'"), 'explicit approach and ground-arrival observations must preserve their source');
 assert.ok(!world.includes("updatePresence(x > 0.34 && x < 0.66"), 'raw cursor coordinates must not be mistaken for physical approach');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
