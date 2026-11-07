@@ -68,7 +68,7 @@ jobs:
           corridor = (root / "service-corridor/index.html").read_text(encoding="utf-8")
           body_archive = (root / "body-archive/index.html").read_text(encoding="utf-8")
           common_thread = (root / "common-thread/index.html").read_text(encoding="utf-8")
-          assert "Veteran Mission" in corridor and "877-424-3838" in corridor, "Service Corridor is missing practical support routes"
+          assert "arcade/veteran-mission" in corridor and "877-424-3838" in corridor, "Service Corridor is missing practical support routes"
           assert "988" in corridor and "838255" in corridor, "Service Corridor is missing crisis contact routes"
           assert "localStorage" in body_archive and "diagnosis" in body_archive, "Body Archive privacy/clinical boundary missing"
           assert "localStorage" in common_thread and "does not publish" in common_thread, "Common Thread sharing boundary missing"
