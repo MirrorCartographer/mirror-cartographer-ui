@@ -66,7 +66,7 @@ function Vesper({ onClick }) {
 }
 
 function WorldScene({ event, onTalk, onVesper, onDoor, visits }) {
-  return <div className={`living-scene mood-${event.mood}`}>
+  return <div className={`living-scene mood-${event.mood}`} onPointerMove={(event) => { const rect = event.currentTarget.getBoundingClientRect(); event.currentTarget.style.setProperty("--field-x", `${((event.clientX - rect.left) / rect.width) * 100}%`); event.currentTarget.style.setProperty("--field-y", `${((event.clientY - rect.top) / rect.height) * 100}%`); }}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
