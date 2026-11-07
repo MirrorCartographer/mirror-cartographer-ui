@@ -66,7 +66,7 @@ The resident dialogue path supports:
 
 - separate Tazar and Jello system profiles;
 - bounded recent conversation turns held in page memory and sent with the current request;
-- optional, separately consent-gated private continuity context and memory-ledger retrieval;
+- optional, separately consent-gated private continuity context and memory-ledger retrieval; optional categorical scene cues under a third independent preference;
 - a replaceable OpenAI-compatible model endpoint;
 - server-side provider credentials;
 - no transcript persistence by Mirror Cartographer.
