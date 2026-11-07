@@ -124,6 +124,20 @@ test.describe('Mirror Cartographer phone-first smoke', () => {
 
     await expectWordlessBody(page);
   });
+  test('opens the deeper operating workshop and saves a health record locally', async ({ page }) => {
+    await page.addInitScript(() => localStorage.clear());
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/?view=workshop', { waitUntil: 'networkidle' });
+    await expect(page.locator('.operating-atlas')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mirror Cartographer operating atlas' })).toBeVisible();
+    await page.getByRole('button', { name: /Human health lane/ }).click();
+    await expect(page.getByRole('heading', { name: 'Human health continuity' })).toBeVisible();
+    await page.getByPlaceholder('Title').fill('Smoke-test observation');
+    await page.getByPlaceholder('Details').fill('A local record created by the browser test.');
+    await page.getByRole('button', { name: 'Add' }).click();
+    await expect(page.getByText('Smoke-test observation')).toBeVisible();
+  });
+
   test('workbench loads an artifact and runs an edited live design', async ({ page }) => {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
