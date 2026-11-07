@@ -6,6 +6,7 @@ const style = fs.readFileSync('src/components/LivingWorld.css', 'utf8');
 const entry = fs.readFileSync('src/main.jsx', 'utf8');
 const pages = fs.readFileSync('.github/workflows/publish-github-pages.yml', 'utf8');
 const perception = fs.readFileSync('src/engine/perceptionLedger.js', 'utf8');
+const docs = fs.readFileSync('docs/LIVING_WORLD_PERCEPTION.md', 'utf8');
 
 assert.ok(world.includes("const MEMORY_KEY = 'mc-living-world-visitor-v1'"), 'visitor memory must have a stable local key');
 
@@ -35,6 +36,8 @@ assert.ok(world.includes("kind: 'visitor-move'"), 'explicit locomotion must ente
 assert.ok(world.includes("kind: 'visitor-approach'"), 'arrival near a resident must enter the perception ledger');
 assert.ok(world.includes('APPROACH TAZAR') && world.includes('FOLLOW JELLO'), 'the scene must expose direct resident approach affordances');
 assert.ok(world.includes('visitor-token') && world.includes('setVisitorPosition'), 'visitor movement must have a visible spatial representation');
+assert.ok(style.includes('.visitor-token{') && style.includes('.scene-walk-controls{'), 'locomotion must be visible and touch-friendly');
+assert.ok(world.includes("source: 'explicit-approach-control'"), 'the explicit approach controls must produce a source-labelled approach observation');
 assert.ok(!world.includes("updatePresence(x > 0.34 && x < 0.66"), 'raw cursor coordinates must not be mistaken for physical approach');
 assert.ok(world.includes("presence === 'tazar-near' && !autoNoticeRef.current.tazar"), 'Tazar must initiate a proximity encounter without a click');
 assert.ok(world.includes("presence === 'jello-near' && !autoNoticeRef.current.jello"), 'Jello must initiate an independent proximity encounter');
@@ -86,7 +89,7 @@ assert.ok(style.includes('animation-delay:var(--visitor-delay,0s)'), 'visitor-sp
 assert.ok(style.includes('.presence-away .tazar'), 'Tazar must react when the visitor leaves');
 assert.ok(style.includes('.presence-arrived .jello'), 'Jello must react when the visitor returns');
 assert.ok(world.includes('LOCAL ONLY / NO RECORDING'), 'the listening mode must disclose its local-only behavior');
-assert.ok(d.includes('not a self-directed autonomous agent'), 'documentation must distinguish scripted characters from AI agents');
+assert.ok(docs.includes('not a self-directed autonomous agent'), 'documentation must distinguish scripted characters from AI agents');
 
 assert.ok(style.includes('@media(prefers-reduced-motion:reduce)'), 'all new sensory animations must respect reduced-motion');
 assert.ok(!world.includes('Morrow') && !world.includes('Vesper') && !style.includes('morrow') && !style.includes('vesper'), 'old resident names must be removed from the scene source');
