@@ -29,8 +29,8 @@ function readMemory() {
   } catch { return { visitorId:makeVisitorId(), visits:0, trust:0, choices:[], lastEvent:'' }; }
 }
 
-function Tazar({ mood, onClick, noticed, speaking }) {
-  return <button className={`tazar ${mood} ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Tazar, the station keeper">
+function Tazar({ mood, onClick, onFocus, noticed, speaking }) {
+  return <button className={`tazar ${mood} ${speaking ? "speaking" : ""}`} onClick={onClick} onFocus={onFocus} aria-label="Talk to Tazar, the station keeper">
     <span className="tazar-shadow" />
     <svg className="tazar-art" viewBox="0 0 250 340" role="img" aria-label="Tazar, a small moth-like station keeper in an oversized coat">
       <defs>
@@ -65,8 +65,8 @@ function Tazar({ mood, onClick, noticed, speaking }) {
 }
 
 
-function Jello({ onClick, speaking }) {
-  return <button className={`jello ${speaking ? "speaking" : ""}`} onClick={onClick} aria-label="Talk to Jello, the station cat">
+function Jello({ onClick, onFocus, speaking }) {
+  return <button className={`jello ${speaking ? "speaking" : ""}`} onClick={onClick} onFocus={onFocus} aria-label="Talk to Jello, the station cat">
     <span className="jello-tail"/><span className="jello-body"/><span className="jello-head"/><i className="jello-ear ear-left"/><i className="jello-ear ear-right"/><i className="jello-eye eye-left"/><i className="jello-eye eye-right"/><span className="jello-mouth"/><span className="jello-bell"/><span className="jello-name">JELLO <i>· station cat</i></span>
   </button>;
 }
@@ -84,7 +84,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     const nearJello = x > 0.66 && y > 0.5;
     onPresence(nearTazar ? 'tazar-near' : nearJello ? 'jello-near' : 'nearby');
   };
-  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} onPointerMove={trackPresence} onPointerLeave={() => onPresence('away')}>
+  return <div className={`living-scene mood-${event.mood} presence-${presence} ${micLevel > 0.045 ? 'sound-active' : ''}`} onPointerMove={trackPresence} onPointerDown={trackPresence} onPointerLeave={() => onPresence('away')}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
     <div className="glasshouse"><div className="glasshouse-roof"/><div className="glasshouse-frame"/><div className="glasshouse-glow"/><div className="glasshouse-plants"><i/><i/><i/><i/><i/></div></div>
@@ -94,7 +94,7 @@ function WorldScene({ event, onTalk, onJello, onDoor, visits, presence, onPresen
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Tazar mood={event.mood} onClick={onTalk} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
+    <Tazar mood={event.mood} onClick={onTalk} onFocus={() => onPresence('tazar-near')} noticed={visits > 1} speaking={speaker === "TAZAR" && Boolean(dialogue)}/><Jello onClick={onJello} onFocus={() => onPresence('jello-near')} speaking={speaker === "JELLO" && Boolean(dialogue)}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -139,6 +139,28 @@ export default function LivingWorld() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        window.clearTimeout(presenceTimerRef.current);
+        setPresence('away');
+      } else {
+        setPresence('arrived');
+      }
+    };
+    const onBlur = () => setPresence('away');
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') setPresence('arrived');
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', onFocus);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, []);
+  useEffect(() => {
     if (dialogue) return;
     if (presence === 'tazar-near' && !autoNoticeRef.current.tazar) {
       autoNoticeRef.current.tazar = true;
@@ -155,8 +177,6 @@ export default function LivingWorld() {
     setPresence(nextPresence);
     if (['nearby', 'tazar-near', 'jello-near'].includes(nextPresence)) {
       presenceTimerRef.current = window.setTimeout(() => setPresence('still'), 2600);
-    } else if (nextPresence === 'away') {
-      presenceTimerRef.current = window.setTimeout(() => setPresence('away'), 1200);
     }
   };
   const remember = (choice, reply, trust = 1) => {
