@@ -16,7 +16,7 @@ const movement = publishPerceptionObservation({ kind: 'visitor-move', source: 't
 assert.deepEqual(movement.value, { x: 0.4, y: 0.8 });
 const approach = publishPerceptionObservation({ kind: 'visitor-approach', source: 'resident-approach-control', value: 'tazar' });
 assert.equal(approach.value, 'tazar');
-assert.equal(getPerceptionSnapshot().length, 1);
+assert.equal(getPerceptionSnapshot().length, 3, 'the ledger should retain the sound, movement, and approach observations');
 assert.throws(() => publishPerceptionObservation({ kind: 'raw-audio', value: 'secret' }), /Unsupported/);
 assert.throws(() => publishPerceptionObservation({ kind: 'audio-envelope', value: { samples: [1, 2, 3] } }), /Unsupported/);
 unsubscribe();
