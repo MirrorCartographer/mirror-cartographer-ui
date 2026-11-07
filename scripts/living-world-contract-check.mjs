@@ -61,6 +61,17 @@ assert.ok(world.includes('micLevel > 0.045'), 'character reaction must be driven
 assert.ok(world.includes("setMicState('unsupported')"), 'unsupported microphone environments must be reported');
 assert.ok(style.includes('.living-scene.sound-active .tazar-wings'), 'Tazar sound reaction must be animated');
 assert.ok(style.includes('.living-scene.sound-active .jello-ear'), 'Jello sound reaction must be animated');
+assert.ok(world.includes('let smoothedLevel = 0'), 'microphone amplitude must be smoothed before presentation');
+assert.ok(world.includes('framesSincePublish >= 6'), 'microphone state updates must be throttled');
+assert.ok(world.includes("'--sound-scale': 1 + micLevel * 0.04"), 'sound intensity must map to a bounded visual scale');
+assert.ok(world.includes("'--visitor-delay': `${-visitorPhase * 0.035}s`"), 'visitor identity must individualize resident idle timing');
+assert.ok(style.includes('scale:var(--sound-scale,1)'), 'sound intensity must use a browser-compatible CSS value');
+assert.ok(style.includes('animation-delay:var(--visitor-delay,0s)'), 'visitor-specific motion must use a browser-compatible CSS value');
+assert.ok(style.includes('.presence-away .tazar'), 'Tazar must react when the visitor leaves');
+assert.ok(style.includes('.presence-arrived .jello'), 'Jello must react when the visitor returns');
+assert.ok(world.includes('LOCAL ONLY / NO RECORDING'), 'the listening mode must disclose its local-only behavior');
+assert.ok(d.includes('not LLM-backed autonomous agents'), 'documentation must distinguish scripted characters from AI agents');
+
 assert.ok(style.includes('@media(prefers-reduced-motion:reduce)'), 'all new sensory animations must respect reduced-motion');
 assert.ok(!world.includes('Morrow') && !world.includes('Vesper') && !style.includes('morrow') && !style.includes('vesper'), 'old resident names must be removed from the scene source');
 
