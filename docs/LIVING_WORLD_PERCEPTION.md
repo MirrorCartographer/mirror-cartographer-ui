@@ -25,9 +25,9 @@ Current event types include pointer position/touch/leave/stillness, resident foc
 
 "LET THEM HEAR" requests microphone access only after an explicit click. The stream is connected to a Web Audio analyser, not to the audio output. The app computes a short-lived RMS amplitude envelope in the browser and uses it only to animate Tazar and Jello.
 
-The sound envelope is transient and used only for visual response. It is not retained in browser memory. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
+The sound envelope is transient and used for local visual response. It is not retained in browser memory. If the visitor separately enables scene-cue sharing, only the derived cue and normalized intensity may accompany a submitted resident message. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
 
-The residents use deterministic local reactions and now have an optional, authenticated model-dialogue path through `supabase/functions/resident-dialogue`. A visitor can send a message to Tazar or Jello; the request includes only a bounded scene cue and up to eight prior turns held in browser memory. The function verifies the Supabase session, calls a configured model provider, and does not write the conversation transcript to Supabase. This is request/response character dialogue, not a self-directed autonomous agent with ongoing goals.
+The residents use deterministic local reactions and now have an optional, authenticated model-dialogue path through `supabase/functions/resident-dialogue`. Model use of private memory and sharing of ambient scene cues each require separate opt-ins. A visitor can send a message to Tazar or Jello; the request includes only a bounded scene cue and up to eight prior turns held in browser memory. The function verifies the Supabase session, calls a configured model provider, and does not write the conversation transcript to Supabase. This is request/response character dialogue, not a self-directed autonomous agent with ongoing goals.
 
 The Living World does not:
 - record or retain audio;
@@ -36,7 +36,7 @@ The Living World does not:
 - infer emotion, identity, health, or intent from sound;
 - store microphone levels in visitor memory.
 
-When a visitor sends a message, that message and the short in-session conversation context are transmitted to the configured model provider. Mirror Cartographer does not persist the transcript; provider-side processing and retention remain subject to that provider's terms. The model receives a coarse cue such as `sound`, `approach-tazar`, `still`, or `away`, never raw microphone samples or pointer coordinates.
+When a visitor sends a message, that message and the short in-session conversation context are transmitted to the configured model provider. Mirror Cartographer does not persist the transcript; provider-side processing and retention remain subject to that provider's terms. By default the model receives no ambient cue. A separate, off-by-default preference may send a categorical scene cue and normalized intensity, such as `sound`, `approach-tazar`, `still`, or `away`. It never receives raw microphone samples or pointer coordinates. Private memory storage and model use of private memory are separate opt-ins.
 
 Stopping listening stops the media tracks, cancels the animation frame, disconnects the source, and closes the audio context. Permission denial and unsupported browsers are surfaced as states rather than treated as successful sensing.
 
