@@ -7,8 +7,8 @@ const clamp = (value) => Math.max(0, Math.min(1, value));
 export function deriveResidentResponse(observation) {
   if (!observation || observation.scope !== 'local-only' || observation.retention !== 'ephemeral') return null;
   if (observation.kind === 'pointer-position') {
-    // Cursor gaze is not locomotion. Moving a pointer alone never means the visitor approached.
-    return { cue: 'drift', resident: null, intensity: 0 };
+    // Cursor gaze is not locomotion and is not sent as a resident response cue.
+    return null;
   }
   if (observation.kind === 'visitor-move') return { cue: 'walking', resident: null, intensity: 0.35 };
   if (observation.kind === 'visitor-approach' && ['tazar', 'jello'].includes(observation.value)) {
