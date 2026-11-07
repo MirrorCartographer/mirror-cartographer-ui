@@ -52,6 +52,7 @@ export default function LivingCountry() {
   const visibleNotes = useMemo(()=>notes.filter(n=>context==='all'||n.context===context),[notes,context]);
   const current = visibleNotes.find(n=>n.id===selected) || visibleNotes[0] || null;
   const guide = context==='all' ? null : contextNotes[context];
+  const lensReading = current ? (lens==='notebook' ? {label:'FIELD READING / METAPHOR IS A TOOL',text:'Let this fragment act like a lantern, not a verdict. Follow the image, notice what it helps you see, and leave room for it to be wrong.'} : {label:'PLAIN-LANGUAGE READING / EVIDENCE BOUNDARY',text:`This is a ${current.kind} recorded under the ${contextNotes[current.context]?.title||current.context} context. The next useful step is to identify an observable prediction and a result that would count against the interpretation. This fragment alone does not establish cause.`}) : null;
 
   useEffect(()=>{ if(current && current.id!==selected) setSelected(current.id); },[current?.id,selected]);
   const persistNotes = next => {
@@ -118,7 +119,7 @@ export default function LivingCountry() {
       </div>
       {guide&&<aside className="context-slip"><span className="ink-label">CONTEXT SWITCH / {guide.title.toUpperCase()}</span><p><b>What becomes visible:</b> {guide.reveals}</p><p><b>New question:</b> {guide.asks}</p><p><b>What this cannot prove:</b> {guide.limit}</p></aside>}
       {current&&<article className="selected-fragment">
-        <div><small>{current.kind} / {current.context} {current.origin==='user'?'· YOUR NOTE':'· FIELD SEED'}</small><h2>{current.title}</h2><p>{current.body}</p>
+        <div><small>{current.kind} / {current.context} {current.origin==='user'?'· YOUR NOTE':'· FIELD SEED'}</small><h2>{current.title}</h2><p>{current.body}</p><aside className={'lens-reading '+lens} aria-live="polite"><b>{lensReading.label}</b><p>{lensReading.text}</p></aside>
           {current.origin==='user'&&<label className="reclassify">MOVE THIS FRAGMENT<select aria-label="Move fragment to context" value={current.context} onChange={e=>changeNoteContext(e.target.value)}>{contexts.map(x=><option key={x} value={x}>{x}</option>)}</select></label>}
         </div>
         <div className="fragment-actions">{current.origin==='user'&&<button type="button" onClick={()=>removeNote(current.id)}>REMOVE NOTE</button>}<button type="button" onClick={()=>{setContext(current.context);document.querySelector('.context-slip')?.scrollIntoView({behavior:'smooth',block:'nearest'});}}>ISOLATE THIS TERRITORY ↗</button></div>
