@@ -33,6 +33,8 @@ jobs:
         run: npm run test:living-world
       - name: Verify ephemeral perception provenance
         run: npm run test:perception-ledger
+      - name: Verify bounded perception-to-resident policy
+        run: npm run test:resident-response
       - name: Verify shared-world privacy and RLS contract
         run: npm run test:shared-world-contract
       - name: Verify private and shared world boundaries
