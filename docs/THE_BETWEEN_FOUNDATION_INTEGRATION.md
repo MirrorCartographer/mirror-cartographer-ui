@@ -31,6 +31,7 @@ A visitor may sign in with a Supabase magic link and explicitly enable cross-dev
 
 - visit count;
 - explicit in-world choices;
+- a small interaction counter;
 - last station event.
 
 It does not contain microphone samples, pointer coordinates, submitted messages, transcripts, or inferred emotional states. The Memory Ledger lets the account owner inspect and remove saved choices or delete the account record.
