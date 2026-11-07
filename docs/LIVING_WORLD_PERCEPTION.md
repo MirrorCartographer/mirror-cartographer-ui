@@ -25,7 +25,7 @@ Current event types include pointer position/touch/leave/stillness, resident foc
 
 The sound envelope is transient and used only for visual response. It is not retained in browser memory. The experience also observes touch and keyboard focus, plus whether the page is visible or blurred.
 
-The residents currently use bounded, scripted dialogue and deterministic visual state changes. They are not LLM-backed autonomous agents, and they do not independently form beliefs or remember other visitors.
+The residents use deterministic local reactions and now have an optional, authenticated model-dialogue path through `supabase/functions/resident-dialogue`. A visitor can send a message to Tazar or Jello; the request includes only a bounded scene cue and up to eight prior turns held in browser memory. The function verifies the Supabase session, calls a configured model provider, and does not write the conversation transcript to Supabase. This is request/response character dialogue, not a self-directed autonomous agent with ongoing goals.
 
 The Living World does not:
 - record or retain audio;
@@ -33,6 +33,8 @@ The Living World does not:
 - run speech recognition or transcription;
 - infer emotion, identity, health, or intent from sound;
 - store microphone levels in visitor memory.
+
+When a visitor sends a message, that message and the short in-session conversation context are transmitted to the configured model provider. Mirror Cartographer does not persist the transcript; provider-side processing and retention remain subject to that provider's terms. The model receives a coarse cue such as `sound`, `approach-tazar`, `still`, or `away`, never raw microphone samples or pointer coordinates.
 
 Stopping listening stops the media tracks, cancels the animation frame, disconnects the source, and closes the audio context. Permission denial and unsupported browsers are surfaced as states rather than treated as successful sensing.
 
@@ -51,7 +53,7 @@ Those components are not automatically part of this GitHub Pages scene. The UI's
 
 `db/002_shared_world_presence.sql` adds authenticated connection requests and an expiring presence projection. Presence visibility is `private`, `connections`, or `public`; connection-only visibility requires an accepted relationship. The schema publishes the presence table to Supabase Realtime when the standard publication is available. It deliberately stores no microphone envelope, pointer coordinates, transcripts, inferred mood, or private continuity content.
 
-The browser-side shared-world client and entry panel are now implemented. They use Supabase Auth magic links, a public anon key, Realtime Postgres Changes, expiring heartbeat presence, and explicit private/connections/public visibility. Visitors can share a connection code, send requests, accept or decline incoming requests, cancel pending requests, and revoke accepted connections. Either participant can end an accepted connection. This is a connection path, not proof of a live connection. The migration must still be applied to the actual Supabase project, and the GitHub repository must supply `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Actions variables. The deployed build must then pass the shared-world smoke test. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
+The browser-side shared-world client and entry panel are implemented. They use Supabase Auth magic links, a public anon key, Realtime Postgres Changes, expiring heartbeat presence, and explicit private/connections/public visibility. Visitors can share a connection code, send requests, accept or decline incoming requests, cancel pending requests, and revoke accepted connections. Either participant can end an accepted connection. Private continuity sync is off by default and requires an explicit visitor choice; it is disabled on sign-out. This is a connection path, not proof of a live connection. The migration must still be applied to the actual Supabase project, and the GitHub repository must supply `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Actions variables. The deployed build must then pass the shared-world smoke test. GitHub Pages does not execute the repository's `api/` serverless routes. No service-role key may be placed in browser code.
 
 ## Perception roadmap
 
@@ -60,8 +62,8 @@ The browser-side shared-world client and entry panel are now implemented. They u
 3. **Character response policy** — map observable signals to bounded visual/dialogue changes; no hidden emotional claims.
 4. **Session continuity** — browser-local memory exists; authenticated account continuity remains separate and needs a compatible server or direct RLS-protected client.
 5. **Shared presence** — browser client, sign-in, connection requests, visibility controls, Realtime subscription, and heartbeat code are implemented; live operation still depends on applying the migration, configuring GitHub Actions variables and Supabase redirect allowlists, and verifying cross-user behavior.
-6. **Agentic character dialogue** — requires a real model/runtime, memory scope, provenance, safety boundary, and failure handling. The current resident dialogue remains scripted.
-7. **Perception-to-agent bridge** — connect signal records to a real inference runtime only with explicit provenance, bounded memory, consent scopes, and observable failure states.
+6. **Model-backed resident dialogue** — client bridge, authenticated Edge Function, bounded in-session history, and scene-cue payload are implemented in source; live replies require the Edge Function to be deployed and `MODEL_API_URL`, `MODEL_API_KEY`, `MODEL_NAME`, and allowed origins configured in Supabase.
+7. **Perception-to-agent bridge** — bounded cues now flow from the local ledger through the response policy into resident model requests. It does not pass raw audio, coordinates, or psychological inferences.
 
 ## Release truth
 
