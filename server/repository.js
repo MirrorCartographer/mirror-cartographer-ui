@@ -1,4 +1,4 @@
-const uuid = () => globalThis.uuid();
+const uuid = () => globalThis.crypto.randomUUID();
 
 const MEMORY = new Map();
 const TABLES = new Set([
