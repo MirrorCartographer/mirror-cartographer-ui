@@ -426,7 +426,7 @@
     },
     {
       "id": "030",
-      "name": "Veteran Mission",
+      "name": "The Mission",
       "path": "./arcade/veteran-mission/",
       "kind": "game",
       "palette": "navy / service blue / signal orange",
