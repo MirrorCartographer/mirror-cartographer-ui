@@ -13,6 +13,11 @@ assert.ok(world.includes(".slice(-8)"), 'browser conversation history must be bo
 assert.ok(world.includes("setResidentHistory({ tazar:[], jello:[] })"), 'conversation history must clear when the authenticated account changes');
 assert.ok(world.includes('setResponseIntensity(response.intensity)'), 'the scene response policy must pass bounded intensity to the agent');
 assert.ok(service.includes('perception: { cue, intensity, ambientCue, ambientIntensity }'), 'the browser bridge must send only a normalized scene cue');
+assert.ok(world.includes("cue: 'conversation', intensity: 1, ambientCue: responseCue"), 'explicit speech must be distinguished from the ambient scene cue');
+assert.ok(service.includes('ambientCue, ambientIntensity'), 'the browser bridge must carry both cues with bounded intensities');
+assert.ok(edge.includes('allowedCues.has(requestedAmbientCue)'), 'the edge function must allowlist the ambient scene cue independently');
+assert.ok(edge.includes('ambientCue, ambientIntensity'), 'the model context must preserve the ambient scene cue separately from speech');
+
 assert.ok(service.includes('history.slice(-8)'), 'the browser bridge must bound conversation history');
 assert.ok(service.includes("['user', 'assistant'].includes(item.role)"), 'the browser bridge must reject system or unknown history roles');
 assert.ok(service.includes('content.slice(0, 600)'), 'each prior turn must have a strict character limit');
