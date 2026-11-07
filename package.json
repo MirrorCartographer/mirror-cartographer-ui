@@ -63,7 +63,8 @@
     "test:living-world": "node scripts/living-world-contract-check.mjs",
     "test:perception-ledger": "node --test tests/perception-ledger.test.mjs",
     "test:shared-world-contract": "node scripts/shared-world-presence-contract-check.mjs",
-    "test:shared-world": "node scripts/shared-world-contract-check.mjs"
+    "test:shared-world": "node scripts/shared-world-contract-check.mjs",
+    "test:resident-response": "node --test tests/resident-response-policy.test.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.45.0",
