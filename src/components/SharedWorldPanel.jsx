@@ -165,10 +165,10 @@ export default function SharedWorldPanel() {
       </> : <>
         <p className="shared-note">You are signed in. Choose what the room is allowed to reveal.</p>
         <label className="shared-memory-sync"><input type="checkbox" checked={memorySync} onChange={(event) => updateMemorySync(event.target.checked)} /> <span>Carry my private memory across devices</span></label>
-        <p className="shared-sync-note">Only your visit count and choices. Never visible to other visitors. Off by default.</p>
+        <p className="shared-sync-note">Visit count, explicit choices, a small interaction counter, and last station event. Never visible to other visitors. Off by default.</p>
         {memorySync && <section className="shared-memory-ledger">
-          <b>PRIVATE MEMORY LEDGER</b>
-          <p>{privateMemory ? `${privateMemory.visits || 0} visits recorded` : 'Loading private memory…'}</p>
+          <b>PRIVATE MEMORY LEDGER · PRIVATE DURABLE / VISITOR-ENABLED</b>
+          <p>{privateMemory ? `${privateMemory.visits || 0} visits · ${privateMemory.trust || 0} interaction marks · last event: ${privateMemory.lastEvent || 'none'}` : 'Loading private memory…'}</p>
           <small>Only explicit in-world choices are saved. No typed messages, microphone samples, or inferred feelings.</small>
           {(privateMemory?.choices || []).map((choice) => <p className="memory-entry" key={choice}><span>{({
             'asked-jello': 'Asked Jello if she is always here',
