@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 let client = null;
 const PRIVATE_MEMORY_SYNC_KEY = 'mc-private-memory-sync-enabled';
+const RESIDENT_MEMORY_USE_KEY = 'mc-resident-memory-use-enabled';
 const notifyMemoryLedgerChanged = () => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('mc-memory-ledger-updated')); };
 
 export function isPrivateMemorySyncEnabled() {
@@ -9,10 +10,27 @@ export function isPrivateMemorySyncEnabled() {
   catch { return false; }
 }
 
+export function isResidentMemoryUseEnabled() {
+  try { return window.localStorage.getItem(RESIDENT_MEMORY_USE_KEY) === 'true'; }
+  catch { return false; }
+}
+
+export function setResidentMemoryUseEnabled(enabled) {
+  try {
+    if (enabled && isPrivateMemorySyncEnabled()) window.localStorage.setItem(RESIDENT_MEMORY_USE_KEY, 'true');
+    else window.localStorage.removeItem(RESIDENT_MEMORY_USE_KEY);
+  } catch {
+    throw new Error('This browser could not save the resident-memory preference.');
+  }
+}
+
 export function setPrivateMemorySyncEnabled(enabled) {
   try {
     if (enabled) window.localStorage.setItem(PRIVATE_MEMORY_SYNC_KEY, 'true');
-    else window.localStorage.removeItem(PRIVATE_MEMORY_SYNC_KEY);
+    else {
+      window.localStorage.removeItem(PRIVATE_MEMORY_SYNC_KEY);
+      window.localStorage.removeItem(RESIDENT_MEMORY_USE_KEY);
+    }
     window.dispatchEvent(new Event('mc-private-memory-sync-change'));
   } catch {
     throw new Error('This browser could not save the private-memory preference.');
@@ -308,7 +326,7 @@ export async function askResident(resident, message, perception = {}) {
     body: {
       resident: character,
       message: text,
-      includeMemory: isPrivateMemorySyncEnabled(),
+      includeMemory: isPrivateMemorySyncEnabled() && isResidentMemoryUseEnabled(),
       perception: { cue, intensity, ambientCue, ambientIntensity },
       history
     }
