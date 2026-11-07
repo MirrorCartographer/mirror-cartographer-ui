@@ -26,6 +26,9 @@ assert.ok(residentFunction.includes('perceptionIntensity'), 'perception intensit
 assert.ok(residentFunction.includes('Request is too large.'), 'the resident endpoint must bound request size');
 assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
 assert.ok(panel.includes('DELETE SAVED ACCOUNT MEMORY'), 'visitors must be able to delete private account memory');
+assert.ok(panel.includes('PRIVATE MEMORY LEDGER'), 'visitors must be able to inspect their saved private memory');
+assert.ok(panel.includes('forgetMemoryChoice'), 'visitors must be able to remove individual saved choices');
+assert.ok(panel.includes('Off by default'), 'cross-device memory sync must begin disabled');
 assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
 assert.ok(world.includes('askResident(speaker.toLowerCase(), message)'), 'the scene must route free dialogue to the resident provider');
 assert.ok(residentFunction.includes("payload.includeMemory === true"), 'the edge function must gate continuity context on opt-in');
