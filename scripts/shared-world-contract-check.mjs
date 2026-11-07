@@ -15,6 +15,11 @@ assert.ok(client.includes('visibility,') && client.includes('expires_at:'), 'pre
 assert.ok(client.includes('world-presence:'), 'the shared world must subscribe to realtime room changes');
 assert.ok(client.includes('setInterval(() =>'), 'presence must refresh with a heartbeat');
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
+assert.ok(client.includes('loadPrivateContinuity'), 'authenticated Mirror Memory must be retrievable');
+assert.ok(client.includes('savePrivateContinuity'), 'authenticated Mirror Memory must be writable');
+assert.ok(client.includes("collection: 'settings'"), 'private world memory must use the existing continuity store');
+assert.ok(world.includes('accountMemoryReadyRef'), 'guest state must not overwrite account memory before hydration');
+assert.ok(world.includes('persistMemory(next)'), 'resident choices must pass through the memory persistence boundary');
 assert.ok(client.includes('export async function listWorldConnections'), 'authenticated visitors must be able to list their connection requests');
 assert.ok(client.includes('export async function requestWorldConnection'), 'visitors must be able to send a connection request by account code');
 assert.ok(client.includes('export async function transitionWorldConnection'), 'visitors must be able to accept, decline, cancel, and revoke connections');
