@@ -75,6 +75,56 @@ test.describe('The Living Country', () => {
     await expect(page.getByRole('heading', { name: 'Health desk / plain language only' })).toBeHidden();
   });
 
+
+  test('LYR territories create records, preserve claims, and keep contradictions visible', async ({ page }) => {
+    await clearCountry(page);
+    await openCountry(page);
+    await page.getByRole('button', { name: 'I / BEFORE' }).click();
+    await page.getByLabel('Choose a shape').selectOption({ label: 'A stone held underwater.' });
+    await page.getByRole('button', { name: /KEEP THIS FRAGMENT/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toHaveText('Before the room');
+
+    await page.getByRole('button', { name: 'II / CARNIVAL' }).click();
+    await page.getByRole('button', { name: 'There is no field for that' }).click();
+    await expect(page.locator('.booth-reveal')).toContainText('no place to represent it');
+    await page.getByRole('button', { name: /PIN THE BLIND SPOT/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toContainText('Carnival booth');
+
+    await page.getByRole('button', { name: 'III / OCEAN' }).click();
+    await page.getByLabel('DEPARTURE').fill('A question without a category');
+    await page.getByLabel('ARRIVAL').fill('A testable record');
+    await page.getByRole('button', { name: /RECORD THE CROSSING/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toHaveText('Ocean terminal / departure and arrival');
+
+    await page.getByRole('button', { name: 'IV / ORCHARD' }).click();
+    await page.getByLabel('Choose an afterimage').selectOption('echo');
+    await page.getByRole('button', { name: /TURN THE LIGHT/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toHaveText('The echo that kept returning');
+
+    await page.locator('.country-form textarea').fill('This explanation is no longer sufficient.');
+    await page.getByLabel('TYPE').selectOption('hypothesis');
+    await page.getByRole('button', { name: /PIN TO THE COUNTRY/ }).click();
+    await page.getByRole('button', { name: 'V / FUNERAL' }).click();
+    await expect(page.getByLabel('Choose a claim to retire')).toBeVisible();
+    await page.getByRole('button', { name: /RETIRE THIS EXPLANATION/ }).click();
+    await expect(page.locator('.selected-fragment small')).toContainText('RETIRED CLAIM');
+
+    await page.getByRole('button', { name: 'VI / FAULTLINE' }).click();
+    await page.getByLabel('Choose a contrasting fragment').selectOption('moss');
+    await expect(page.locator('.faultline-pair')).toContainText('Moss on the machine');
+    await page.getByRole('button', { name: /KEEP BOTH IN VIEW/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toContainText('Velvet faultline');
+
+    await page.getByRole('button', { name: 'VII / THUNDER' }).click();
+    await page.getByRole('button', { name: /MAKE THE NEXT THING/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toHaveText('The door made of thunder');
+
+    await page.getByRole('button', { name: 'VIII / AFTER' }).click();
+    await page.locator('.reflection-label textarea').fill('The image that stayed was the door made from a question.');
+    await page.getByRole('button', { name: /SAVE THE AFTERIMAGE/ }).click();
+    await expect(page.locator('.selected-fragment h2')).toHaveText('Room after reading');
+  });
+
   test('legacy browser notes migrate without being discarded', async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.removeItem('mc-living-country-v2');
