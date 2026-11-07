@@ -10,6 +10,8 @@ The Living World is a client-side experience served as a static GitHub Pages app
 | Page visibility/focus | Browser event | Whether the page is visible/focused | Whether a person is present |
 | Keyboard focus and touch | Browser event | Which resident control is focused or touched | Identity, intention, or attention beyond that action |
 | Browser-local visitor key | Browser storage | Return to the same browser profile | Real-world identity or cross-device identity |
+| Authenticated account continuity | Explicit sign-in + opt-in private sync | Return to the same account across devices when Supabase is configured | Legal identity, another account, emotion, or intent |
+| Camera / face landmarks | Not connected in this scene | Nothing; no camera stream is requested | Face presence, gaze, expression, or identity |
 | Microphone amplitude | Explicit visitor action + browser permission | A local sound-level envelope | Words, speaker identity, intent, mood, or meaning |
 | Submitted resident message | Explicit submit action | Final text entered into Tazar/Jello conversation | Drafts, deleted text, general typing behavior, or hidden context |
 
