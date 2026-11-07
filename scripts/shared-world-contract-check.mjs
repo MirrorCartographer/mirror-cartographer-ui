@@ -14,6 +14,10 @@ assert.ok(world.includes('<SharedWorldPanel />'), 'The shared-world panel must b
 assert.ok(client.includes('createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY'), 'the browser client must use only public Supabase credentials');
 assert.ok(!client.includes('SERVICE_ROLE'), 'the browser client must never contain a service-role credential');
 assert.ok(client.includes('world-presence:') && client.includes('setInterval(() =>'), 'shared presence must use realtime and expiring heartbeats');
+assert.ok(client.includes('export function updateSharedPresenceActivity(activityState)'), 'the shared world must expose a bounded activity-state bridge');
+assert.ok(client.includes("['present', 'wandering', 'in-conversation', 'away'].includes(activityState)"), 'shared activity updates must use the database allowlist');
+assert.ok(world.includes("updateSharedPresenceActivity('wandering')") && world.includes("updateSharedPresenceActivity('in-conversation')"), 'scene movement and conversation must update coarse shared presence');
+assert.ok(world.includes("updateSharedPresenceActivity('away')"), 'leaving or hiding the page must update shared presence');
 assert.ok(client.includes('signInWithOtp'), 'shared-world entry must use authenticated sign-in');
 assert.ok(client.includes('functions.invoke(\'resident-dialogue\''), 'resident dialogue must use the authenticated Supabase function');
 assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled() && isResidentMemoryUseEnabled()'), 'provider use of memory must require a separate opt-in from storage');
