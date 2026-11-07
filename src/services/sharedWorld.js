@@ -38,6 +38,53 @@ export async function getSharedWorldSession() {
   return data.session;
 }
 
+async function requireSharedWorldUser() {
+  const supabase = getSharedWorldClient();
+  if (!supabase) throw new Error('Shared world is not configured.');
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  if (!data.session?.user) throw new Error('Sign in before managing connections.');
+  return { supabase, user: data.session.user };
+}
+
+export async function listWorldConnections() {
+  const { supabase, user } = await requireSharedWorldUser();
+  const { data, error } = await supabase.from('world_connections')
+    .select('id,requester_id,recipient_id,status,created_at,updated_at')
+    .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+    .order('updated_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function requestWorldConnection(recipientId) {
+  const { supabase, user } = await requireSharedWorldUser();
+  const target = String(recipientId || '').trim().toLowerCase();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(target)) {
+    throw new Error('Connection codes must be valid account IDs.');
+  }
+  if (target === user.id.toLowerCase()) throw new Error('You cannot connect to yourself.');
+  const { data, error } = await supabase.from('world_connections')
+    .insert({ requester_id: user.id, recipient_id: target, status: 'pending' })
+    .select('id,requester_id,recipient_id,status,created_at,updated_at')
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function transitionWorldConnection(connectionId, status) {
+  const { supabase } = await requireSharedWorldUser();
+  if (!['accepted', 'declined', 'revoked'].includes(status)) throw new Error('Unsupported connection action.');
+  const { data, error } = await supabase.from('world_connections')
+    .update({ status })
+    .eq('id', connectionId)
+    .select('id,requester_id,recipient_id,status,created_at,updated_at')
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error('That connection is no longer available for this action.');
+  return data;
+}
+
 export async function enterSharedPresence({ roomId = 'the-between', displayName = 'Wanderer', visibility = 'private', onChange = () => {} } = {}) {
   const supabase = getSharedWorldClient();
   if (!supabase) throw new Error('Shared world is not configured.');
