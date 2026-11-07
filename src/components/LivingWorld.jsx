@@ -258,7 +258,7 @@ export default function LivingWorld() {
       const nextUserId = session?.user?.id || null;
       if (residentSessionUserRef.current !== nextUserId) {
         residentSessionUserRef.current = nextUserId;
-        setResidentHistory({ tazar:[], jello:[] });
+        setWorldConversationHistory([]);
       }
       window.setTimeout(() => {
         if (session && isPrivateMemorySyncEnabled()) hydrate(session);
