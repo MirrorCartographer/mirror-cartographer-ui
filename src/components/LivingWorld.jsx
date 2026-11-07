@@ -3,7 +3,7 @@ import './LivingWorld.css';
 import { publishPerceptionObservation, subscribePerceptionObservations } from '../engine/perceptionLedger.js';
 import { deriveResidentResponse } from '../engine/residentResponsePolicy.js';
 import SharedWorldPanel from './SharedWorldPanel.jsx';
-import { askResident, getSharedWorldClient, isPrivateMemorySyncEnabled, loadPrivateContinuity, savePrivateContinuity } from '../services/sharedWorld.js';
+import { askResident, getSharedWorldClient, isPrivateMemorySyncEnabled, loadPrivateContinuity, savePrivateContinuity, updateSharedPresenceActivity } from '../services/sharedWorld.js';
 
 const MEMORY_KEY = 'mc-living-world-visitor-v1';
 const EVENTS = [
@@ -189,15 +189,21 @@ export default function LivingWorld() {
     setPerceptionCount((count) => count + 1);
     if (observation.kind === 'visitor-move') {
       setPresence('walking');
+      updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'visitor-approach') {
       setPresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
+      updateSharedPresenceActivity('wandering').catch(() => {});
     } else if (observation.kind === 'pointer-stillness') {
       window.clearTimeout(presenceTimerRef.current);
       setPresence('still');
+      updateSharedPresenceActivity('present').catch(() => {});
     } else if (observation.kind === 'character-focus') {
       updatePresence(observation.value === 'tazar' ? 'tazar-near' : 'jello-near');
     } else if (observation.kind === 'page-visibility' || observation.kind === 'window-focus') {
       updatePresence(observation.value ? 'arrived' : 'away');
+      updateSharedPresenceActivity(observation.value ? 'present' : 'away').catch(() => {});
+    } else if (observation.kind === 'submitted-language' || observation.kind === 'resident-choice') {
+      updateSharedPresenceActivity('in-conversation').catch(() => {});
     } else if (observation.kind === 'audio-envelope' && typeof observation.value === 'number') {
       setMicLevel(observation.value);
     } else if (observation.kind === 'microphone-state') {
