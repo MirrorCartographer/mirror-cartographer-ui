@@ -122,6 +122,8 @@ export default function LivingWorld() {
   const autoNoticeRef = useRef({ tazar:false, jello:false });
   const [dialogue, setDialogue] = useState('');
   const [visitorMessage, setVisitorMessage] = useState('');
+  const [residentHistory, setResidentHistory] = useState({ tazar:[], jello:[] });
+  const residentSessionUserRef = useRef(null);
   const [agentBusy, setAgentBusy] = useState(false);
   const [speaker, setSpeaker] = useState('TAZAR');
   const [ambient, setAmbient] = useState(false);
@@ -244,7 +246,7 @@ export default function LivingWorld() {
       if (!supabase) { restoreBrowserMemory(); return; }
       supabase.auth.getSession().then(({ data, error }) => {
         if (!active) return;
-        if (!error) hydrate(data.session);
+        if (!error) { residentSessionUserRef.current = data.session?.user?.id || null; hydrate(data.session); }
         else restoreBrowserMemory();
       }).catch(() => { if (active) restoreBrowserMemory(); });
     };
@@ -252,6 +254,11 @@ export default function LivingWorld() {
     const onMemoryPreference = () => refreshSession();
     window.addEventListener('mc-private-memory-sync-change', onMemoryPreference);
     const subscription = supabase?.auth.onAuthStateChange((_event, session) => {
+      const nextUserId = session?.user?.id || null;
+      if (residentSessionUserRef.current !== nextUserId) {
+        residentSessionUserRef.current = nextUserId;
+        setResidentHistory({ tazar:[], jello:[] });
+      }
       window.setTimeout(() => {
         if (session && isPrivateMemorySyncEnabled()) hydrate(session);
         else restoreBrowserMemory();
@@ -420,9 +427,15 @@ export default function LivingWorld() {
     if (!message || agentBusy) return;
     publishPerceptionObservation({ kind: 'submitted-language', source: 'resident-text-input', permission: 'explicit-submit', value: speaker.toLowerCase(), ttlMs: 5000 });
     setAgentBusy(true);
+    const residentKey = speaker.toLowerCase();
+    const history = residentHistory[residentKey] || [];
     try {
-      const reply = await askResident(speaker.toLowerCase(), message, { cue: responseCue, intensity: responseIntensity });
+      const reply = await askResident(residentKey, message, { cue: responseCue, intensity: responseIntensity, history });
       setDialogue(reply);
+      setResidentHistory((current) => ({
+        ...current,
+        [residentKey]: [...(current[residentKey] || []), { role: 'user', content: message }, { role: 'assistant', content: reply }].slice(-8)
+      }));
       setVisitorMessage('');
     } catch (error) {
       setDialogue(error.message || 'The line went quiet. Try again later.');
