@@ -28,6 +28,8 @@ Current event types include cursor position, explicit visitor movement and resid
 
 The sound envelope is transient and used for local visual response. It is not retained in browser memory. If the visitor separately enables scene-cue sharing, only the derived cue and normalized intensity may accompany a submitted resident message. The experience also observes explicit scene movement, touch and keyboard focus, plus whether the page is visible or blurred.
 
+When a visitor explicitly enters the shared room, the local scene also updates the shared presence projection with only one of four coarse states: `present`, `wandering`, `in-conversation`, or `away`. It never publishes the visitor marker position, cursor coordinates, approach target, microphone level, or typed text. The existing visibility selection and row-level security still determine who can see the projection.
+
 The residents use deterministic local reactions and now have an optional, authenticated model-dialogue path through `supabase/functions/resident-dialogue`. Model use of private memory and sharing of ambient scene cues each require separate opt-ins. A visitor can send a message to Tazar or Jello; the request includes only a bounded scene cue and up to eight prior turns held in browser memory. The function verifies the Supabase session, calls a configured model provider, and does not write the conversation transcript to Supabase. This is request/response character dialogue, not a self-directed autonomous agent with ongoing goals.
 
 The Living World does not:
