@@ -12,10 +12,10 @@ test.describe('The Living Country', () => {
     await clearCountry(page);
     await openCountry(page);
     await expect(page.getByRole('heading', { name: /THE LIVING COUNTRY/i })).toBeVisible();
-    await expect(page.getByText('A place where scraps of meaning grow wild.', { exact: false })).toBeVisible();
+    await expect(page.locator('.lens-reading')).toContainText('lantern');
     await page.getByRole('button', { name: 'INK / METAPHOR' }).click();
     await expect(page.getByRole('button', { name: 'PLAIN / OBSERVABLE' })).toBeVisible();
-    await expect(page.getByText('A workspace for recording observations', { exact: false })).toBeVisible();
+    await expect(page.locator('.lens-reading')).toContainText('This is a field note recorded');
     await page.getByRole('button', { name: /Bug threshold inspector/ }).click();
     await expect(page.getByText('Checks every threshold.', { exact: false })).toBeVisible();
     await expect(page.getByRole('button', { name: /Nimbus weather watcher/ })).toBeVisible();
@@ -30,7 +30,7 @@ test.describe('The Living Country', () => {
     await page.getByRole('button', { name: 'PIN TO THE COUNTRY +' }).click();
     await expect(page.locator('.selected-fragment h2')).toHaveText('A new signal');
     await page.getByLabel('Read through context').selectOption('temporal');
-    await expect(page.locator('.map-mark')).toContainText('A new signal');
+    await expect(page.locator('.map-mark').filter({ hasText: 'A new signal' })).toBeVisible();
     await expect(page.locator('.context-slip')).toContainText('Time / sequence');
     await page.getByLabel('Move fragment to context').selectOption('systems');
     await expect(page.locator('.context-slip')).toContainText('Systems / environment');
@@ -39,7 +39,7 @@ test.describe('The Living Country', () => {
     await page.getByLabel('Read through context').selectOption('all');
     await page.getByRole('button', { name: /A new signal/ }).click();
     await page.getByRole('button', { name: 'REMOVE NOTE' }).click();
-    await expect(page.locator('.map-mark')).not.toContainText('A new signal');
+    await expect(page.locator('.map-mark').filter({ hasText: 'A new signal' })).toHaveCount(0);
   });
 
   test('investigations record falsifiable predictions and survive reload', async ({ page }) => {
@@ -60,7 +60,7 @@ test.describe('The Living Country', () => {
     await expect(page.locator('.investigation-record h3')).toHaveText('Does the signal recur after the same exposure?');
     await expect(page.locator('.test-status')).toHaveText('WEAKENS');
     const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('button', { name: 'EXPORT NOTES + INVESTIGATIONS' }).click();
+    await page.getByRole('button', { name: /EXPORT NOTES \+ INVESTIGATIONS/ }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('mirror-cartographer-living-country.json');
   });
