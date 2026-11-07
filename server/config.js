@@ -18,6 +18,7 @@ export function infrastructureConfig(env = (globalThis.process?.env || {})) {
   return Object.freeze({
     production,
     appOrigin: normalizeOrigin(env),
+    appOriginConfigured: Boolean(env.APP_ORIGIN || env.PUBLIC_APP_URL),
     sessionSecret: env.SESSION_SECRET || (production ? '' : 'mirror-cartographer-local-development-secret'),
     supabase: {
       enabled: Boolean(supabaseUrl && serviceRoleKey),
@@ -41,7 +42,9 @@ export function infrastructureConfig(env = (globalThis.process?.env || {})) {
 
 export function assertProductionConfig(config) {
   if (!config.production) return;
+  required('APP_ORIGIN', config.appOriginConfigured);
   if (!config.supabase.enabled) {
     throw new Error('Production persistence requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
+  required('SUPABASE_ANON_KEY', config.supabase.anonKey);
 }
