@@ -53,3 +53,10 @@
 .shared-memory-ledger .memory-entry{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:7px 0;border-top:1px solid #b9a17d33}
 .shared-memory-ledger .memory-entry span{font:10px 'DM Sans',sans-serif;color:#c9c0b3}
 .shared-memory-ledger .memory-entry button{border:0;background:none;color:#c7a77f;font:8px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer}
+
+.shared-memory-ledger .memory-entry{display:grid;gap:7px;padding:10px 0;border-top:1px solid #b9a17d33}
+.shared-memory-ledger .memory-entry>span{font:10px 'DM Sans',sans-serif;color:#e1d4c2}
+.shared-memory-ledger .memory-entry>small{font:8px 'DM Mono',monospace;letter-spacing:.05em;color:#9eaa9a}
+.shared-memory-ledger .memory-entry input{width:100%;box-sizing:border-box;border:1px solid #9b866d55;background:#0d0e13;color:#f1e6d4;padding:8px;font:10px 'DM Sans',sans-serif}
+.shared-memory-ledger .memory-entry>div{display:flex;gap:12px}
+.shared-memory-ledger .memory-entry button{border:0;background:none;color:#c7a77f;font:8px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer}
