@@ -5,11 +5,11 @@
 > A question is a door.  
 > What is missing may matter most.
 
-**Canonical live experiences — preserve these URLs:** [Mirror Cartographer UI](https://mirror-cartographer-ui-3orp.vercel.app) · [AV Prototype V4](https://mirrorcartographeravprototypev4.vercel.app/#)
+**Canonical public experience — GitHub Pages:** [Enter the House of Mouths](https://mirrorcartographer.github.io/mirror-cartographer-ui/). The expanded Living Country and the Consensus Trap exhibit are under review in [PR #179](https://github.com/MirrorCartographer/mirror-cartographer-ui/pull/179); they are not called live until that change is merged and the published routes are verified.
 
 **Source / live-design workbench:** [Open the interactive workbench](https://mirrorcartographer.github.io/mirror-cartographer-ui/workbench.html) · 96 HTML artifacts with editable source and a live preview.  
 
-**GitHub Pages entry points:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
+**More rooms on the same public site:** [The House](https://mirrorcartographer.github.io/mirror-cartographer-ui/) · [Living Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/) · [Research Atlas](https://mirrorcartographer.github.io/mirror-cartographer-ui/research-atlas/) · [Self Cartographer](https://mirrorcartographer.github.io/mirror-cartographer-ui/self/) · [Image Organism](https://mirrorcartographer.github.io/mirror-cartographer-ui/art-machine/)
 
 ## What is this place?
 
@@ -30,7 +30,7 @@ The research and systems work lives in the [other repository](https://github.com
 
 - **[Playable HTML Index](https://mirrorcartographer.github.io/mirror-cartographer-ui/atlas/interactive-index.html)** — direct links to interactive HTML experiences, grouped by area. Link targets are routes, not code views; live behavior still needs browser verification.
 
-- **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — four distinct instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways.
+- **[Field Instruments](https://mirrorcartographer.github.io/mirror-cartographer-ui/field-instruments/)** — five instruments for symbolic mapping, the 101-dimension atlas, consensus pressure, missing evidence, and veteran pathways. The full seeded Consensus Trap experiment is included in [PR #179](https://github.com/MirrorCartographer/mirror-cartographer-ui/pull/179) and will be linked from the public route after publication.
 
 - **[Project completion map](PROJECT_COMPLETION_MAP.md)** — verified status, acceptance criteria, and remaining work.
 - **[The House of Mouths field guide](HOUSE_OF_MOUTHS_FIELD_GUIDE.md)** — the rooms, their rules, and how to wander.
@@ -61,7 +61,7 @@ The research and systems work lives in the [other repository](https://github.com
 - [Tests](tests/) — checks against what the software actually does.
 - [Source autobiography](source-autobiography.html) — a crafted narrative, not an independent factual record.
 
-## Run it
+## Hosting and release authority\n\nGitHub Pages is the sole supported public publishing path for this repository. The source, build checks, route validation, and release identity remain in GitHub. No external hosting provider is required. Historical provider-specific evidence is retained only where needed to explain past engineering decisions; it is not an active deployment path. See [hosting policy](HOSTING.md).\n\n## Run it
 
 ```bash
 npm ci

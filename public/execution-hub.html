@@ -116,7 +116,8 @@ function render(){
  </article>`).join("")||'<p>No tasks match this filter.</p>';
  document.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("change",e=>{const t=tasks.find(x=>x.id===e.target.dataset.id);if(t){t.status=e.target.value;save();render()}}));
 }
-function safeHref(v){try{const u=new URL(String(v),location.href);return u.protocol==="https:"?u.href:"#"}catch(e){return "#"}}\nfunction esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function safeHref(v){try{const u=new URL(String(v),location.href);return u.protocol==="https:"?u.href:"#"}catch(e){return "#"}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 document.getElementById("filter").addEventListener("change",render);
 document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({schema:"mc-hub-state-v1",exported_at:new Date().toISOString(),tasks},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mc-execution-hub-state.json";a.click();URL.revokeObjectURL(a.href)});
 document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());

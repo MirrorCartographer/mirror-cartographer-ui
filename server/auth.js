@@ -1,35 +1,61 @@
-import crypto from 'node:crypto';
-
 const encoder = new TextEncoder();
-const b64url = (input) => Buffer.from(input).toString('base64url');
-const fromB64url = (input) => Buffer.from(input, 'base64url').toString('utf8');
+const decoder = new TextDecoder();
 
-function signature(data, secret) {
-  return crypto.createHmac('sha256', secret).update(data).digest('base64url');
+function encodeBase64Url(bytes) {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/=/g, '').replace(/\\+/g, '-').replace(/\\//g, '_');
 }
 
-export function issueDevelopmentSession(identity, config, ttlSeconds = 60 * 60 * 24 * 7) {
+function decodeBase64Url(value) {
+  const normalized = String(value).replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, character => character.charCodeAt(0));
+}
+
+async function importHmacKey(secret, usages) {
+  return crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, usages);
+}
+
+async function signature(data, secret) {
+  const key = await importHmacKey(secret, ['sign']);
+  return encodeBase64Url(new Uint8Array(await crypto.subtle.sign('HMAC', key, encoder.encode(data))));
+}
+
+async function validSignature(data, provided, secret) {
+  try {
+    const key = await importHmacKey(secret, ['verify']);
+    return await crypto.subtle.verify('HMAC', key, decodeBase64Url(provided), encoder.encode(data));
+  } catch {
+    return false;
+  }
+}
+
+export async function issueDevelopmentSession(identity, config, ttlSeconds = 60 * 60 * 24 * 7) {
   if (config.production) throw new Error('Development sessions are disabled in production.');
   const now = Math.floor(Date.now() / 1000);
-  const payload = b64url(JSON.stringify({
+  const payload = encodeBase64Url(encoder.encode(JSON.stringify({
     sub: identity.id || crypto.randomUUID(),
     email: identity.email || 'local@mirrorcartographer.test',
     role: 'authenticated',
     iat: now,
     exp: now + ttlSeconds,
     provider: 'development',
-  }));
-  return `${payload}.${signature(payload, config.sessionSecret)}`;
+  })));
+  return `${payload}.${await signature(payload, config.sessionSecret)}`;
 }
 
-export function verifyDevelopmentSession(token, config) {
+export async function verifyDevelopmentSession(token, config) {
   const [payload, provided] = String(token || '').split('.');
-  if (!payload || !provided) return null;
-  const expected = signature(payload, config.sessionSecret);
-  if (provided.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected))) return null;
-  const identity = JSON.parse(fromB64url(payload));
-  if (!identity.exp || identity.exp < Math.floor(Date.now() / 1000)) return null;
-  return identity;
+  if (!payload || !provided || !(await validSignature(payload, provided, config.sessionSecret))) return null;
+  try {
+    const identity = JSON.parse(decoder.decode(decodeBase64Url(payload)));
+    if (!identity.exp || identity.exp < Math.floor(Date.now() / 1000)) return null;
+    return identity;
+  } catch {
+    return null;
+  }
 }
 
 async function verifySupabaseToken(token, config) {
@@ -52,7 +78,8 @@ async function verifySupabaseToken(token, config) {
 }
 
 export async function authenticateRequest(req, config, { optional = false } = {}) {
-  const authorization = String(req.headers.authorization || '');
+  const headers = req.headers;
+  const authorization = String(typeof headers?.get === 'function' ? headers.get('authorization') || '' : headers?.authorization || '');
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : '';
   if (!token) {
     if (optional) return null;
@@ -61,7 +88,7 @@ export async function authenticateRequest(req, config, { optional = false } = {}
     throw error;
   }
 
-  const development = verifyDevelopmentSession(token, config);
+  const development = await verifyDevelopmentSession(token, config);
   if (development) return development;
   const supabase = await verifySupabaseToken(token, config);
   if (supabase) return supabase;

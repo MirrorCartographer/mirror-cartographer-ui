@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Consensus Trap — A Mirror Cartographer Experiment</title>
+<style>
+:root{color-scheme:dark;--bg:#17130f;--panel:#241d17;--line:#67513d;--ink:#e9ddc7;--muted:#b1a087;--cyan:#9cad86;--pink:#b96a6c;--gold:#c8a36b;--red:#a64f3b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#51382a55,transparent 40%),repeating-linear-gradient(0deg,#ffffff04 0 1px,transparent 1px 5px),var(--bg);color:var(--ink);font:15px/1.55 Georgia,serif}
+main{max-width:1180px;margin:auto;padding:36px 22px 80px}.eyebrow{color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;font-size:11px;font-weight:700}
+h1{font-size:clamp(38px,7vw,76px);line-height:.98;letter-spacing:-.055em;max-width:850px;margin:18px 0}
+.lede{font-size:18px;color:#c5ced7;max-width:780px}.grid{display:grid;grid-template-columns: minmax(280px,.8fr) minmax(0,1.2fr);gap:16px;margin-top:30px}
+.panel{background:linear-gradient(145deg,#2b231b,#1b1611);border:1px solid var(--line);border-radius:0;padding:22px;min-width:0;box-shadow:5px 6px 0 #0006}
+h2{font-size:18px;margin:0 0 18px}h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin:0 0 8px}
+.control{margin:20px 0}.control-head{display:flex;justify-content:space-between;gap:12px}.control strong{color:var(--gold);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--cyan);margin:12px 0 4px}small,.muted{color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.metric{padding:16px;border:1px solid var(--line);border-radius:0;background:#17130f}.metric .value{font-size:clamp(28px,4vw,42px);letter-spacing:-.04em;font-weight:750;font-variant-numeric:tabular-nums}.metric .name{color:var(--muted);font-size:12px}
+.accuracy{color:var(--cyan)}.agreement{color:var(--pink)}
+.bar{height:9px;background:#26313f;border-radius:20px;overflow:hidden;margin-top:10px}.bar span{display:block;height:100%;background:var(--cyan);width:0;transition:width .2s}
+.chart{display:flex;align-items:end;gap:5px;height:125px;padding:12px 0 0;border-bottom:1px solid var(--line)}.colbar{flex:1;min-width:3px;background:linear-gradient(#ff9ac0,#a65d87);border-radius:4px 4px 0 0;position:relative}.colbar.truth{background:linear-gradient(#8ef0dd,#3a8f89)}.colbar.tie{background:linear-gradient(#e6c58a,#8b7146)}
+.callout{border-left:3px solid var(--gold);padding:12px 15px;background:#1b1b1a;color:#e6ddc9;border-radius:0 10px 10px 0;margin-top:18px}
+button{border:1px solid #9a5b43;background:#713d2d;color:#f3e5ce;border-radius:0;padding:10px 14px;font:inherit;cursor:pointer;letter-spacing:.03em}button:hover{background:#8b4a34}
+.backline{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px dashed var(--line);padding-bottom:12px;margin-bottom:24px;font:9px ui-monospace,monospace;letter-spacing:.14em;color:var(--muted)}.backline a{color:var(--gold);text-decoration:none}footer{margin-top:25px;color:var(--muted);font-size:12px}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}main{padding:26px 15px 60px}}
+</style>
+</head>
+<body><main>
+<nav class="backline"><a href="../">← THE HOUSE OF MOUTHS</a><span>THE WORKSHOP / HUMAN JUDGMENT LAB / 001</span></nav>
+<div class="eyebrow">Human Judgment Lab / Experiment 001</div>
+<h1>The Consensus Trap.</h1>
+<p class="lede">What if everyone agrees—and everyone is wrong? Increase shared bias, reduce the signal, or add more evaluators. Watch consensus and accuracy move independently.</p>
+<div class="grid">
+<section class="panel">
+<h2>Change the conditions</h2>
+<div class="control"><div class="control-head"><label for="signal">Strength of available evidence</label><strong id="signalVal">70%</strong></div><input id="signal" type="range" min="0" max="100" value="70"><small>How often an unbiased evaluator can detect the correct answer.</small></div>
+<div class="control"><div class="control-head"><label for="bias">Shared evaluator bias</label><strong id="biasVal">0%</strong></div><input id="bias" type="range" min="0" max="100" value="0"><small>Probability that evaluators are jointly pushed toward the same incorrect answer.</small></div>
+<div class="control"><div class="control-head"><label for="noise">Independent rater noise</label><strong id="noiseVal">15%</strong></div><input id="noise" type="range" min="0" max="60" value="15"><small>Individual mistakes that are not shared across evaluators.</small></div>
+<div class="control"><div class="control-head"><label for="count">Number of evaluators</label><strong id="countVal">5</strong></div><input id="count" type="range" min="1" max="30" step="1" value="5"><small>Panel sizes from 1–30; even-sized panels can produce ties. Each evaluator sees the same case.</small></div>
+<div class="control"><div class="control-head"><label for="trials">Cases in the experiment</label><strong id="trialsVal">2,000</strong></div><input id="trials" type="range" min="200" max="10000" step="200" value="2000"></div>
+<div class="control"><div class="control-head"><label for="seed">Random seed</label><strong id="seedVal">20261103</strong></div><input id="seed" type="number" min="0" max="2147483647" step="1" value="20261103"><small>Reuse a seed to reproduce the same simulated panel outcomes under the same settings.</small></div>
+<div class="actions"><button id="rerun">Run experiment again</button><button id="export-run">Export reproducible run record</button></div>
+</section>
+<section class="panel">
+<h2>What the panel actually produces</h2>
+<div class="metrics">
+<div class="metric"><div class="name">CORRECT-MAJORITY RATE</div><div class="value accuracy" id="accuracy">—</div><div class="bar"><span id="accuracyBar"></span></div></div>
+<div class="metric"><div class="name">PANEL AGREEMENT</div><div class="value agreement" id="agreement">—</div><div class="bar"><span id="agreementBar" style="background:var(--pink)"></span></div></div>
+<div class="metric"><div class="name">TIED CASES</div><div class="value" id="ties">—</div><div class="name">No strict majority; not counted as correct</div></div>
+<div class="metric"><div class="name">UNANIMOUS CASES</div><div class="value" id="unanimous">—</div><div class="name">All evaluators returned the same answer</div></div>
+<div class="metric"><div class="name">UNANIMOUSLY WRONG</div><div class="value" id="wrong">—</div><div class="name">Every evaluator returned the incorrect answer</div></div>
+</div>
+<h3 style="margin-top:22px">Rater vote split across the first 90 cases</h3>
+<div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>Correct majority</span><span><i class="dot" style="background:var(--pink)"></i>Incorrect majority</span><span><i class="dot" style="background:var(--gold)"></i>Tie</span></div>
+<div class="chart" id="chart" aria-label="Sample of case outcomes"></div>
+<div class="callout" id="interpretation" aria-live="polite">Run the experiment to inspect the relationship.</div>
+<p class="method-note">Correct-majority rate uses all simulated cases as its denominator. Ties are reported separately and are not counted as correct majorities; every rate is conditional on the model assumptions.</p>
+</section></div>
+<section class="panel" style="margin-top:16px">
+<h2>What this experiment is testing</h2>
+<p>Adding evaluators can reduce <em>independent</em> random error. It cannot automatically remove a bias shared by the whole panel. When evaluators inherit the same flawed rubric, framing, training signal, or missing context, their errors may be correlated.</p>
+<p>The simulation makes that mechanism visible. It does not claim that real evaluators have these exact probabilities; the controls are illustrative assumptions, not estimates from a field study.</p>
+<p><strong>The practical implication:</strong> do not treat high agreement as proof of validity. Add independent reference evidence, adversarial cases, subgroup analysis, rubric audits, and an adjudication path.</p>
+</section>
+<footer>Deterministic model structure; stochastic trials. A fixed seed reproduces the same run. No external data, tracking, or network requests. A synthetic experiment from the Mirror Cartographer Human Judgment Lab. The source and assumptions are part of the exhibit; no real-person evaluation data is used.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const controls=['signal','bias','noise','count','trials','seed'];
+const pct=x=>(x*100).toFixed(1)+'%';
+function createRng(seed){
+ let state=2166136261;
+ for(const character of String(seed)){state^=character.charCodeAt(0);state=Math.imul(state,16777619)>>>0;}
+ return ()=>{state+=0x6D2B79F5;let value=state;value=Math.imul(value^(value>>>15),value|1);value^=value+Math.imul(value^(value>>>7),value|61);return ((value^(value>>>14))>>>0)/4294967296;};
+}
+let lastRun = null;
+function simulate(){
+ const signal=+$('signal').value/100,bias=+$('bias').value/100,noise=+$('noise').value/100,n=+$('count').value,N=+$('trials').value,seed=Math.max(0,Math.min(2147483647,Math.floor(+$('seed').value)||0)),random=createRng(seed);
+ $('seed').value=String(seed);
+ controls.forEach(id=>$(id+'Val').textContent=id==='count'||id==='seed'?$(id).value:id==='trials'?Number($(id).value).toLocaleString():$(id).value+'%');
+ let correct=0,agree=0,unanimous=0,confWrong=0,ties=0;const sample=[];
+ for(let c=0;c<N;c++){
+  const sharedWrong=random()<bias;
+  let yes=0,no=0;
+  for(let r=0;r<n;r++){
+   let wrong=sharedWrong || random()>(signal);
+   if(random()<noise) wrong=!wrong;
+   if(wrong)no++;else yes++;
+  }
+  const maj=yes>no?1:no>yes?-1:0;
+  if(maj===1)correct++;else if(maj===0)ties++;
+  if(yes===n||no===n)unanimous++;
+  if((yes===n||no===n)&&maj===-1)confWrong++;
+  let pairs=0;for(let a=0;a<n;a++)for(let b=a+1;b<n;b++)if((a<yes)===(b<yes))pairs++;
+  agree+=pairs/(n*(n-1)/2||1);
+  if(c<90)sample.push({yes,wrong:maj===-1,tie:maj===0});
+ }
+ const a=correct/N,g=n===1?null:agree/N,u=unanimous/N,w=confWrong/N,tied=ties/N;
+ $('accuracy').textContent=pct(a);$('agreement').textContent=g===null?'N/A':pct(g);$('unanimous').textContent=pct(u);$('wrong').textContent=pct(w);$('ties').textContent=pct(tied);
+ lastRun={
+  schema_version:'1.0.0',
+  experiment_id:'consensus-trap',
+  model_version:'seeded-panel-v1',
+  seed,
+  parameters:{signal_strength:signal,shared_bias_probability:bias,independent_noise_probability:noise,panel_size:n,trials:N},
+  metrics:{correct_majority_rate:a,panel_agreement_rate:g,unanimous_case_rate:u,unanimously_wrong_rate:w,tie_rate:tied},
+  sample
+ };
+ $('accuracyBar').style.width=pct(a);$('agreementBar').style.width=g===null?'0%':pct(g);
+ $('chart').innerHTML=sample.map(x=>'<div class="colbar '+(x.tie?'tie':x.wrong?'':'truth')+'" style="height:'+Math.max(8,x.yes/ n*100)+'%" title="'+(x.tie?'Tie':x.wrong?'Incorrect':'Correct')+' majority"></div>').join('');
+ let msg;
+ if(n===1)msg='With one evaluator there is no inter-rater agreement to measure. Add a second evaluator before interpreting agreement.';
+ else if(g>a+.12)msg='The panel agrees more than it is accurate. Agreement is being inflated by shared error or common conditions. More votes alone are not a validity strategy.';
+ else if(a>.8&&g>.8)msg='Under these conditions, the panel is both relatively accurate and consistent. That is encouraging—but the result is conditional on the model assumptions.';
+ else msg='Accuracy and agreement are closer under these conditions. Inspect the controls: independent noise, weak evidence, and shared bias affect the panel in different ways.';
+ $('interpretation').textContent=msg+' These are simulated outcomes across '+N.toLocaleString()+' cases.';
+}
+function exportRun(){
+ if(!lastRun)simulate();
+ const blob=new Blob([JSON.stringify(lastRun,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='consensus-trap-seed-'+lastRun.seed+'.json';document.body.append(link);link.click();link.remove();
+ window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+controls.forEach(id=>$(id).addEventListener('input',simulate));
+$('rerun').addEventListener('click',simulate);
+$('export-run').addEventListener('click',exportRun);
+simulate();
+</script></body></html>

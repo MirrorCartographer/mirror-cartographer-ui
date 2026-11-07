@@ -5,19 +5,20 @@ const required = (name, value) => {
 
 function normalizeOrigin(env) {
   if (env.APP_ORIGIN) return String(env.APP_ORIGIN).replace(/\/$/, '');
-  if (env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${String(env.VERCEL_PROJECT_PRODUCTION_URL).replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+  if (env.PUBLIC_APP_URL) return String(env.PUBLIC_APP_URL).replace(/\/$/, '');
   return 'http://localhost:5173';
 }
 
-export function infrastructureConfig(env = process.env) {
+export function infrastructureConfig(env = (globalThis.process?.env || {})) {
   const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL || '';
   const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
   const anonKey = env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || '';
-  const production = env.NODE_ENV === 'production' || Boolean(env.VERCEL_ENV);
+  const production = env.APP_ENV === 'production' || env.NODE_ENV === 'production';
 
   return Object.freeze({
     production,
     appOrigin: normalizeOrigin(env),
+    appOriginConfigured: Boolean(env.APP_ORIGIN || env.PUBLIC_APP_URL),
     sessionSecret: env.SESSION_SECRET || (production ? '' : 'mirror-cartographer-local-development-secret'),
     supabase: {
       enabled: Boolean(supabaseUrl && serviceRoleKey),
@@ -41,8 +42,9 @@ export function infrastructureConfig(env = process.env) {
 
 export function assertProductionConfig(config) {
   if (!config.production) return;
-  required('SESSION_SECRET', config.sessionSecret);
+  required('APP_ORIGIN', config.appOriginConfigured);
   if (!config.supabase.enabled) {
     throw new Error('Production persistence requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
+  required('SUPABASE_ANON_KEY', config.supabase.anonKey);
 }
