@@ -20,7 +20,7 @@ assert.ok(client.includes("functions.invoke('resident-dialogue'"), 'resident dia
 assert.ok(client.includes('includeMemory: isPrivateMemorySyncEnabled()'), 'resident context must require the explicit memory-sync preference');
 assert.ok(panel.includes('Carry my private memory across devices'), 'account memory sync must be an explicit visitor choice');
 assert.ok(panel.includes('DELETE SAVED ACCOUNT MEMORY'), 'visitors must be able to delete private account memory');
-assert.ok(panel.includes('resident-message-form') === false || world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
+assert.ok(world.includes('resident-message-form'), 'free dialogue must be mounted in the scene');
 assert.ok(world.includes('askResident(speaker.toLowerCase(), message)'), 'the scene must route free dialogue to the resident provider');
 assert.ok(residentFunction.includes("payload.includeMemory === true"), 'the edge function must gate continuity context on opt-in');
 assert.ok(residentFunction.includes('MODEL_API_KEY') && residentFunction.includes('MODEL_API_URL') && residentFunction.includes('MODEL_NAME'), 'the model provider must be configured only server-side');
