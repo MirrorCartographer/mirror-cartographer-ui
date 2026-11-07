@@ -213,3 +213,17 @@ export async function savePrivateContinuity(memory = {}) {
   return true;
 }
 
+
+export async function askResident(resident, message) {
+  const { supabase, user } = await requireSharedWorldUser();
+  const character = String(resident || '').toLowerCase();
+  if (!['tazar', 'jello'].includes(character)) throw new Error('Unknown resident.');
+  const text = String(message || '').trim();
+  if (!text || text.length > 1200) throw new Error('Keep your message between 1 and 1,200 characters.');
+  const { data, error } = await supabase.functions.invoke('resident-dialogue', {
+    body: { resident: character, message: text }
+  });
+  if (error) throw error;
+  if (!data?.reply || typeof data.reply !== 'string') throw new Error('The resident could not find a reply.');
+  return data.reply.slice(0, 1400);
+}
