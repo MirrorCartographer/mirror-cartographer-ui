@@ -12,6 +12,19 @@ create table if not exists public.world_connections (
 );
 
 create index if not exists world_connections_requester_idx on public.world_connections(requester_id, status);
+
+do $
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'world_connections_not_self'
+      and conrelid = 'public.world_connections'::regclass
+  ) then
+    alter table public.world_connections
+      add constraint world_connections_not_self check (requester_id <> recipient_id);
+  end if;
+end;
+$;
 create index if not exists world_connections_recipient_idx on public.world_connections(recipient_id, status);
 create unique index if not exists world_connections_undirected_pair_idx on public.world_connections (least(requester_id, recipient_id), greatest(requester_id, recipient_id));
 alter table public.world_connections enable row level security;
