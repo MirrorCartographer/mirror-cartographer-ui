@@ -104,3 +104,47 @@ export async function enterSharedPresence({ roomId = 'the-between', displayName 
     onChange({ status: 'left', people: [] });
   };
 }
+
+export async function loadPrivateContinuity() {
+  const supabase = getSharedWorldClient();
+  if (!supabase) return null;
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  const user = sessionData.session?.user;
+  if (!user) return null;
+  const { data, error } = await supabase.from('continuity_records')
+    .select('content')
+    .eq('id', user.id)
+    .eq('owner_id', user.id)
+    .eq('collection', 'settings')
+    .maybeSingle();
+  if (error) throw error;
+  return data?.content || null;
+}
+
+export async function savePrivateContinuity(memory = {}) {
+  const supabase = getSharedWorldClient();
+  if (!supabase) return false;
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  const user = sessionData.session?.user;
+  if (!user) return false;
+  const content = {
+    visits: Number.isFinite(memory.visits) ? Math.max(0, Math.min(100000, memory.visits)) : 0,
+    trust: Number.isFinite(memory.trust) ? Math.max(0, Math.min(8, memory.trust)) : 0,
+    choices: Array.isArray(memory.choices) ? memory.choices.slice(-12).map((item) => String(item).slice(0, 80)) : [],
+    lastEvent: typeof memory.lastEvent === 'string' ? memory.lastEvent.slice(0, 80) : ''
+  };
+  const { error } = await supabase.from('continuity_records').upsert({
+    id: user.id,
+    owner_id: user.id,
+    collection: 'settings',
+    title: 'The Between — private memory',
+    content,
+    privacy: 'private',
+    source: 'living-world',
+    tags: ['living-world', 'mirror-memory']
+  }, { onConflict: 'id,owner_id' });
+  if (error) throw error;
+  return true;
+}
