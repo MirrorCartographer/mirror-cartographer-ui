@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171216"><title>Mallow Screening Room · Mirror Cartographer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#171216;color:#ead9bd;font:15px/1.5 Georgia,serif;background-image:radial-gradient(ellipse at 12% 4%,#592735 0,transparent 38%),radial-gradient(ellipse at 88% 90%,#35402b 0,transparent 36%),repeating-linear-gradient(0deg,#ffffff04 0 1px,transparent 1px 4px)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#d9b27c}.wrap{width:min(1180px,92vw);margin:auto;padding:28px 0 80px;position:relative}.ey{font:10px ui-monospace,monospace;letter-spacing:.22em;color:#d2b487;text-transform:uppercase}.back{display:inline-block;margin-bottom:44px;text-decoration:none}.head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:28px}h1{font:clamp(54px,10vw,118px)/.78 Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;text-transform:uppercase;letter-spacing:-.06em;margin:14px 0 20px;color:#ead9bd;text-shadow:4px 4px 0 #6b293b,8px 8px 0 #100d10;transform:rotate(-1deg)}.intro{max-width:420px;color:#cbbb9f;line-height:1.7}.stamp{border:1px solid #b99c6d;padding:12px 16px;transform:rotate(4deg);font:10px ui-monospace,monospace;letter-spacing:.14em;color:#d8bb8b}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:18px;align-items:start}.screen{background:#09080a;border:1px solid #a98b6455;padding:10px;box-shadow:7px 8px 0 #080709;transform:rotate(-.25deg)}video{display:block;width:100%;aspect-ratio:16/9;background:#050405;object-fit:contain}.screen-meta{display:flex;justify-content:space-between;gap:12px;padding:13px 5px 5px;color:#c7b596;font:10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}.panel{border:1px solid #b59a7255;background:linear-gradient(145deg,#302127ed,#151115f2);padding:20px;box-shadow:4px 5px 0 #080709}.panel h2{font:26px Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;text-transform:uppercase;margin:0 0 10px;color:#ead9bd}.panel p{color:#c9baa1;font-size:13px;line-height:1.6}.films{display:grid;gap:9px;margin:16px 0}.film{width:100%;text-align:left;padding:13px;border:1px solid #b59a7255;background:#120f12;color:#ead9bd;cursor:pointer;font:13px Georgia,serif}.film:hover,.film[aria-pressed=true]{border-color:#d9b27c;background:#3b242b}.film small{display:block;margin-top:5px;color:#b7a58b;font:9px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.btn{border:1px solid #d0ad7b;background:#67283b;color:#f0dfc2;padding:11px 14px;border-radius:2px;box-shadow:3px 3px 0 #080709;cursor:pointer;font:10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}.btn.secondary{background:#536044}.notice{margin-top:16px;padding:14px;border-left:3px solid #9c6b54;background:#100d10;color:#cbbb9f;font-size:12px;line-height:1.6}.file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.foot{margin-top:38px;padding-top:16px;border-top:1px solid #b59a7233;color:#9f9079;font:10px ui-monospace,monospace;letter-spacing:.12em}
+@media(max-width:760px){.head{display:block}.stamp{display:inline-block;margin:10px 0 18px}.layout{grid-template-columns:1fr}.back{margin-bottom:28px}.panel{order:2}}
+</style>
+</head>
+<body><main class="wrap">
+<a class="back ey" href="../">← RETURN TO THE ROOMS</a>
+<div class="head"><div><div class="ey">Mirror Cartographer · Little Cinema No. 01</div><h1>Mallow<br>After Dark.</h1><p class="intro">A tiny cinema for our very own films. Bring a film into the room, choose a seat, and let the story take over for a while.</p></div><div class="stamp">NO ADS<br>NO ALGORITHM<br>JUST OUR FILMS</div></div>
+<div class="layout">
+<section class="screen" aria-label="Film player"><video id="player" controls playsinline preload="metadata" aria-label="Mallow film player"></video><div class="screen-meta"><span id="now">Waiting for the projector</span><span>Field screening / 001</span></div></section>
+<aside class="panel"><h2>Tonight's program</h2><p>Choose a film, then load its video file from your device. The player stays right here on your website.</p>
+<div class="films">
+<button class="film" data-title="The Slug Who Carried the Moon" aria-pressed="false">The Slug Who Carried the Moon<small>Featurette · original film</small></button>
+<button class="film" data-title="Mallow — Anime Video Edit" aria-pressed="false">Mallow — Anime Video Edit<small>Video edit · Mallow collection</small></button>
+<button class="film" data-title="Mallow — Three-Minute Animatic" aria-pressed="false">Mallow — Three-Minute Animatic<small>Animatic · 3 minutes</small></button>
+<button class="film" data-title="Mallow Motion Engine Demo" aria-pressed="false">Mallow Motion Engine Demo<small>Behind the scenes · motion test</small></button>
+<button class="film" data-title="Mallow V1.1 Rig Demo" aria-pressed="false">Mallow V1.1 Rig Demo<small>Behind the scenes · character rig</small></button>
+</div>
+<input id="files" class="file-input" type="file" accept="video/mp4,video/webm,video/quicktime" multiple>
+<div class="actions"><button class="btn" id="load">Load film files</button><button class="btn secondary" id="full">Full screen</button></div>
+<div class="notice" id="status" role="status" aria-live="polite">The screening room is ready. The films are in your Library; choose the video files from your device to start playback.</div>
+</aside></div>
+<div class="foot">MIRROR CARTOGRAPHER / THE FILM CABINET / A ROOM FOR THINGS WE MADE</div>
+</main>
+<script>
+(()=>{const player=document.getElementById('player'),files=document.getElementById('files'),status=document.getElementById('status'),now=document.getElementById('now'),buttons=[...document.querySelectorAll('.film')];let chosen=null,urls=[];
+const match=(file,title)=>{const n=file.name.toLowerCase();if(title.includes('Slug'))return n.includes('slug_who_carried')||n.includes('slug');if(title.includes('Anime'))return n.includes('mallow_anime_video_edit');if(title.includes('Three-Minute'))return n.includes('mallow_three_min');if(title.includes('Motion'))return n.includes('mallow_motion_engine');if(title.includes('Rig'))return n.includes('mallow_v1_1_rig');return false};
+function select(title){chosen=title;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.title===title)));const file=[...files.files].find(f=>match(f,title));if(file){play(file,title);return}status.textContent='Choose “Load film files” and select the matching Mallow MP4 from your device. The film will play in this screen.';now.textContent=title}
+function play(file,title){const url=URL.createObjectURL(file);urls.push(url);player.src=url;player.load();now.textContent=title;status.textContent='Projector loaded: '+file.name+'. Playback is happening inside this page.';player.play().catch(()=>{})}
+buttons.forEach(b=>b.addEventListener('click',()=>select(b.dataset.title)));
+document.getElementById('load').addEventListener('click',()=>files.click());
+files.addEventListener('change',()=>{if(!files.files.length)return;status.textContent=files.files.length+' video file(s) ready. Choose a title from the program.';if(chosen)select(chosen);else{const f=files.files[0];play(f,f.name.replace(/\.[^.]+$/,''))}});
+document.getElementById('full').addEventListener('click',()=>{if(player.requestFullscreen)player.requestFullscreen();else if(player.webkitEnterFullscreen)player.webkitEnterFullscreen()});
+window.addEventListener('beforeunload',()=>urls.forEach(URL.revokeObjectURL));
+})();
+</script></body></html>
