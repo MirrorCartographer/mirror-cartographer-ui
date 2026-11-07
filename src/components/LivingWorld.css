@@ -201,10 +201,10 @@
 .visitor-token span{color:#f0dfc3;font:8px 'DM Mono',monospace;letter-spacing:.16em;text-shadow:0 1px 5px #09080d}
 .visitor-token.walking i{animation:visitor-footfall .22s ease-in-out infinite alternate}
 @keyframes visitor-footfall{to{scale:.65;box-shadow:0 0 0 8px #f4d9a911,0 0 25px 10px #f4d9a977}}
-.scene-walk-controls{position:absolute;z-index:7;left:50%;bottom:clamp(22px,6vh,62px);transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:7px 9px;background:#111018c9;border:1px solid #d7bd9655;backdrop-filter:blur(12px);white-space:nowrap}
+ .scene-walk-controls{position:relative;z-index:8;display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:max-content;max-width:100%;margin-top:18px;padding:7px 9px;background:#111018c9;border:1px solid #d7bd9655;backdrop-filter:blur(12px);white-space:nowrap;pointer-events:auto}
 .scene-walk-controls>span{color:#b7a68e;font:8px 'DM Mono',monospace;letter-spacing:.14em;margin:0 4px}
 .scene-walk-controls button{border:1px solid #c9ae8277;background:#28232c;color:#e8d8bf;padding:8px 10px;font:8px 'DM Mono',monospace;letter-spacing:.1em;cursor:pointer}
 .scene-walk-controls button:hover,.scene-walk-controls button:focus-visible{background:#594252;border-color:#e6c99d;outline:none}
 .presence-walking .visitor-token i{box-shadow:0 0 0 8px #f4d9a933,0 0 28px 12px #f4d9a977}
-@media(max-width:760px){.scene-walk-controls{bottom:clamp(22px,5vh,48px);gap:5px;padding:6px}.scene-walk-controls>span{display:none}.scene-walk-controls button{font-size:7px;padding:9px 8px}.visitor-token span{font-size:7px}}
+@media(max-width:760px){.scene-walk-controls{gap:5px;padding:6px;margin-top:13px}.scene-walk-controls>span{display:none}.scene-walk-controls button{font-size:7px;padding:9px 8px}.visitor-token span{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.visitor-token{transition:none}.visitor-token.walking i{animation:none}}
