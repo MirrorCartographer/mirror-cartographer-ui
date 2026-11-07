@@ -225,7 +225,10 @@ export async function askResident(resident, message, perception = {}) {
   const allowedCues = new Set(['quiet', 'approach-tazar', 'approach-jello', 'drift', 'sound', 'touch', 'still', 'away', 'return', 'conversation', 'choice']);
   const requestedCue = String(context.cue || 'quiet');
   const cue = allowedCues.has(requestedCue) ? requestedCue : 'quiet';
+  const requestedAmbientCue = String(context.ambientCue || 'quiet');
+  const ambientCue = allowedCues.has(requestedAmbientCue) ? requestedAmbientCue : 'quiet';
   const intensity = Number.isFinite(context.intensity) ? Math.max(0, Math.min(1, context.intensity)) : 0;
+  const ambientIntensity = Number.isFinite(context.ambientIntensity) ? Math.max(0, Math.min(1, context.ambientIntensity)) : 0;
   const history = Array.isArray(context.history) ? context.history.slice(-8).filter((item) =>
     item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string'
   ).map((item) => ({ role: item.role, content: item.content.slice(0, 600) })) : [];
@@ -234,7 +237,7 @@ export async function askResident(resident, message, perception = {}) {
       resident: character,
       message: text,
       includeMemory: isPrivateMemorySyncEnabled(),
-      perception: { cue, intensity },
+      perception: { cue, intensity, ambientCue, ambientIntensity },
       history
     }
   });
