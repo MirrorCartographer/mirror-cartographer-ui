@@ -58,7 +58,14 @@ function Morrow({ mood, onClick, noticed }) {
   </button>;
 }
 
-function WorldScene({ event, onTalk, onDoor, visits }) {
+
+function Vesper({ onClick }) {
+  return <button className="vesper" onClick={onClick} aria-label="Talk to Vesper, the station cat">
+    <span className="vesper-tail"/><span className="vesper-body"/><span className="vesper-head"/><i className="vesper-ear ear-left"/><i className="vesper-ear ear-right"/><i className="vesper-eye eye-left"/><i className="vesper-eye eye-right"/><span className="vesper-bell"/>
+  </button>;
+}
+
+function WorldScene({ event, onTalk, onVesper, onDoor, visits }) {
   return <div className={`living-scene mood-${event.mood}`}>
     <div className="scene-sky"><div className="moon"><i/></div><div className="cloud cloud-a"/><div className="cloud cloud-b"/><div className="sky-grain"/></div>
     <div className="distant-city"><i/><i/><i/><i/><i/><i/></div>
@@ -69,7 +76,7 @@ function WorldScene({ event, onTalk, onDoor, visits }) {
     <div className="foreground-plant plant-left"><i/><i/><i/><i/></div><div className="foreground-plant plant-right"><i/><i/><i/></div>
     <div className="floating-specimens"><i/><i/><i/><i/><i/></div>
     <div className="scene-signals" aria-hidden="true"><span>FIELD NOTE 0{visits + 1}</span><span>THE NIGHT IS IN PROGRESS</span></div>
-    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 0}/>
+    <Morrow mood={event.mood} onClick={onTalk} noticed={visits > 0}/><Vesper onClick={onVesper}/>
     <button className="door-invitation" onClick={onDoor}><span>THE DOOR ISN'T LOCKED</span><b>↗</b></button>
   </div>;
 }
@@ -79,6 +86,7 @@ export default function LivingWorld() {
   const [eventIndex, setEventIndex] = useState(() => Math.floor(Date.now() / 60000) % EVENTS.length);
   const [dialogue, setDialogue] = useState('');
   const [chapter, setChapter] = useState(0);
+  const [speaker, setSpeaker] = useState('MORROW');
   const [ambient, setAmbient] = useState(false);
   const audioRef = useRef(null);
   const event = EVENTS[eventIndex];
@@ -98,6 +106,7 @@ export default function LivingWorld() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const remember = (choice, reply, trust = 1) => {
+    setSpeaker('MORROW');
     const next = { ...memory, trust: clamp(memory.trust + trust, 0, 8), choices: [...memory.choices, choice].slice(-12), lastEvent: event.id };
     setMemory(next);
     setDialogue(reply);
@@ -125,7 +134,9 @@ export default function LivingWorld() {
       master.gain.setTargetAtTime(0.055, context.currentTime, 1.4); audioRef.current = context; setAmbient(true);
     } catch { setAmbient(false); }
   };
+  const talkToVesper = () => { setSpeaker('VESPER'); setDialogue('I live under the timetable. It is warmer there. Morrow says I am not supposed to eat the tickets.'); };
   const talk = () => {
+    setSpeaker('MORROW');
     setDialogue('');
     setChapter((value) => value + 1);
     setAmbient(false);
@@ -135,11 +146,11 @@ export default function LivingWorld() {
     setTimeout(() => { window.location.href = './atlas/'; }, 1800);
   };
   return <main className="living-world">
-    <WorldScene event={event} onTalk={talk} onDoor={openDoor} visits={memory.visits}/>
+    <WorldScene event={event} onTalk={talk} onVesper={talkToVesper} onDoor={openDoor} visits={memory.visits}/>
     <div className="world-vignette"/>
     <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
-    <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">MORROW <i>does not work here, technically</i></p><p className="dialogue-line">“{line}”</p>
+    <section className="morrow-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>resident of the station</i></p><p className="dialogue-line">“{line}”</p>
       {dialogue ? <div className="dialogue-choices"><button onClick={() => remember('asked-why', 'Because the station keeps receiving things nobody sent. I sort them. Badly, on purpose.', 1)}>Why are you here?</button><button onClick={() => remember('asked-about-world', 'It’s a place made of unfinished business. Some of it is yours. Most of it isn’t.', 1)}>What is this place?</button><button onClick={() => setDialogue('')}>I should look around.</button></div> : <div className="dialogue-choices"><button onClick={() => remember('asked-event', 'I noticed it before you did. That is not a competition. Yet.', 1)}>What happened?</button><button onClick={() => remember('asked-morrow', 'I keep the doors from getting ideas. They are very ambitious doors.', 1)}>Who are you?</button><button onClick={() => remember('left-silence', '…Good. Silence is underrated.', 0)}>Just listening.</button></div>}
     </section>
     <footer className="world-footer"><span>VISITOR RECORD {String(memory.visits).padStart(3,'0')} · {memory.choices.length} THINGS REMEMBERED</span><span>THE NIGHT SHIFT CONTINUES WHILE YOU ARE HERE.</span></footer>
