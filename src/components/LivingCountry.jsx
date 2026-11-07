@@ -21,6 +21,7 @@ export default function LivingCountry() {
   const [kind,setKind] = useState('field note');
   const [lens,setLens] = useState('artist');
   const [healthOpen,setHealthOpen] = useState(false);
+  const [companion,setCompanion] = useState('O’Malley');
   const [saved,setSaved] = useState(false);
   const current = notes.find(n=>n.id===selected) || notes[0];
   const filtered = useMemo(()=>notes.filter(n=>context==='all'||n.context===context),[notes,context]);
@@ -35,6 +36,7 @@ export default function LivingCountry() {
       <p className="opening-copy">{lens==='artist'?'A field of signals, scraps, repetitions, bright connections and unfinished maps. Not a diagnosis. Not a maze you must solve. An artwork with doors back out.':'A creative workspace for recording observations, questions, relationships, and testable ideas without treating interpretation as fact.'}</p>
       <div className="opening-stamp">FIELD COPY<br/>NOT A MAP<br/>OF YOU</div>
     </section>
+    <section className="pet-marginalia" aria-label="Companion field notes"><span className="ink-label">MARGINALIA / THE CREW</span><div>{[["O’Malley","night archivist"],["Bug","threshold inspector"],["Nimbus","weather watcher"]].map(([name,role])=><button key={name} className={companion===name?"chosen":""} onClick={()=>setCompanion(name)}>{name}<small>{role}</small></button>)}</div><p>{companion==="O’Malley"?"A quiet keeper of the things that would otherwise disappear.":companion==="Bug"?"A small guardian of every doorway, especially the ones that lead home.":"A soft-moving witness to every change in the weather."}</p></section>
     <section className="country-map-section">
       <div className="section-scribble"><span>01 / THE OVERGROWN MAP</span><span>SELECT A MARK. MOVE BETWEEN LENSES.</span></div>
       <div className="country-map" role="group" aria-label="Interactive map of notes">
