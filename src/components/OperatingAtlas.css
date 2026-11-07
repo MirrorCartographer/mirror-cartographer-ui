@@ -57,3 +57,15 @@ body.mc-operating-atlas #root{min-height:100vh}
 .operating-atlas .backend-status[data-state="supabase"]{border-left-color:#9fb18a}
 .operating-atlas .backend-status[data-state="memory"]{border-left-color:#d6a46e}
 .operating-atlas .backend-status[data-state="unavailable"]{border-left-color:#d98b7a}
+
+.reality-ledger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
+.reality-item{min-width:0;padding:16px;border:1px solid var(--line,#625b52);background:var(--panel,#211d18)}
+.reality-item-head{display:flex;justify-content:space-between;gap:10px;align-items:start;flex-wrap:wrap}
+.reality-item-head strong{font-size:1rem}
+.reality-status{display:inline-block;padding:4px 7px;border:1px solid currentColor;font:9px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.reality-status.working-local{color:#597b58}
+.reality-status.manual-prototype{color:#9b7741}
+.reality-status.not-connected{color:#a44d3e}
+.reality-item p{font-size:.88rem;line-height:1.5;margin:.8rem 0 0}
+.reality-item p b{font:9px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:760px){.reality-ledger{grid-template-columns:1fr}}
