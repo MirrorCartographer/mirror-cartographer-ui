@@ -114,6 +114,7 @@ export default function LivingWorld() {
   const [micState, setMicState] = useState('off');
   const [micLevel, setMicLevel] = useState(0);
   const micRef = useRef({ stream:null, context:null, source:null, analyser:null, frame:0 });
+  const micRequestRef = useRef(0);
   const event = EVENTS[eventIndex];
   const line = useMemo(() => {
     if (dialogue) return dialogue;
@@ -133,7 +134,7 @@ export default function LivingWorld() {
       try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {}
     }
     const timer = window.setInterval(() => setEventIndex((value) => (value + 1) % EVENTS.length), 42000);
-    return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); const mic = micRef.current; if (mic.frame) window.cancelAnimationFrame(mic.frame); mic.stream?.getTracks().forEach((track) => track.stop()); mic.source?.disconnect(); if (mic.context) mic.context.close().catch(() => {}); };
+    return () => { window.clearInterval(timer); window.clearTimeout(presenceTimerRef.current); if (audioRef.current) audioRef.current.close().catch(() => {}); micRequestRef.current += 1; const mic = micRef.current; if (mic.frame) window.cancelAnimationFrame(mic.frame); mic.stream?.getTracks().forEach((track) => track.stop()); mic.source?.disconnect(); if (mic.context) mic.context.close().catch(() => {}); };
     // A visit is counted once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -188,6 +189,7 @@ export default function LivingWorld() {
     } catch { setAmbient(false); }
   };
   const stopListening = () => {
+    micRequestRef.current += 1;
     const mic = micRef.current;
     if (mic.frame) window.cancelAnimationFrame(mic.frame);
     mic.stream?.getTracks().forEach((track) => track.stop());
@@ -198,17 +200,26 @@ export default function LivingWorld() {
     setMicState('off');
   };
   const startListening = async () => {
-    if (micState === 'listening' || micState === 'requesting') { stopListening(); return; }
+    if (micState === 'listening') { stopListening(); return; }
+    if (micState === 'requesting') return;
     if (!navigator.mediaDevices?.getUserMedia) { setMicState('unsupported'); return; }
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) { setMicState('unsupported'); return; }
+    const requestId = ++micRequestRef.current;
+    let stream = null;
+    let context = null;
     setMicState('requesting');
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true },
         video: false
       });
-      const context = new AudioContextClass();
+      if (requestId !== micRequestRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      context = new AudioContextClass();
+      micRef.current = { stream, context, source:null, analyser:null, frame:0 };
       await context.resume();
       const source = context.createMediaStreamSource(stream);
       const analyser = context.createAnalyser();
@@ -218,7 +229,7 @@ export default function LivingWorld() {
       micRef.current = { stream, context, source, analyser, frame:0 };
       setMicState('listening');
       const sample = () => {
-        if (!micRef.current.analyser) return;
+        if (!micRef.current.analyser || requestId !== micRequestRef.current) return;
         analyser.getByteTimeDomainData(samples);
         let sum = 0;
         for (let i = 0; i < samples.length; i += 1) {
@@ -231,8 +242,10 @@ export default function LivingWorld() {
       };
       sample();
     } catch (error) {
-      micRef.current.stream?.getTracks().forEach((track) => track.stop());
+      stream?.getTracks().forEach((track) => track.stop());
+      if (context) context.close().catch(() => {});
       micRef.current = { stream:null, context:null, source:null, analyser:null, frame:0 };
+      if (requestId !== micRequestRef.current) return;
       setMicState(error?.name === 'NotAllowedError' ? 'permission-denied' : 'unavailable');
     }
   };
@@ -257,7 +270,7 @@ export default function LivingWorld() {
   return <main className="living-world">
     <WorldScene event={event} onTalk={talk} onJello={talkToJello} onDoor={openDoor} visits={memory.visits} presence={presence} onPresence={updatePresence} speaker={speaker} dialogue={dialogue} micLevel={micLevel}/>
     <div className="world-vignette"/>
-    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} aria-pressed={micState === 'listening'}>{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><a href="./?view=field">THE FIELD</a></nav></header>
+    <header className="world-topbar"><a href="./" className="world-wordmark">MIRROR CARTOGRAPHER <span>· A WORLD IN PROGRESS</span></a><nav><a href="./atlas/">THE ATLAS</a><a href="./?view=workshop">THE WORKSHOP</a><button onClick={toggleSound} aria-pressed={ambient}>{ambient ? 'SOUND OFF' : 'SOUND ON'}</button><button onClick={startListening} disabled={micState === 'requesting'} aria-pressed={micState === 'listening'}>{micState === 'listening' ? 'STOP LISTENING' : micState === 'requesting' ? 'ASKING…' : 'LET THEM HEAR'}</button><a href="./?view=field">THE FIELD</a></nav></header>
     <section className="world-intro"><p>THE BETWEEN / NIGHT SHIFT</p><h1>Somewhere,<br/><em>something is happening.</em></h1><span>{event.cue}</span></section>
     <section className="tazar-dialogue" aria-live="polite"><p className="dialogue-name">{speaker} <i>{speaker === 'JELLO' ? 'station cat' : 'station keeper'}</i></p><p className="dialogue-line">“{line}”</p>
       {speaker === 'JELLO' ? <div className="dialogue-choices"><button onClick={() => { setDialogue('I am not lost. I am exactly where I mean to be.'); setMemory((m) => { const next = { ...m, trust: clamp(m.trust + 1, 0, 8), choices: [...m.choices, 'asked-jello'].slice(-12) }; try { localStorage.setItem(MEMORY_KEY, JSON.stringify(next)); } catch {} return next; }); }}>Are you always here?</button><button onClick={() => { setDialogue('Tazar keeps the keys. I keep track of which doors are lying.'); }}>What do you do?</button><button onClick={() => setDialogue('')}>I should look around.</button></div>
