@@ -26,7 +26,7 @@ jobs:
           node-version: 20
       - name: Parse the procedural room engine
         run: node --check public/atlas/rooms/experiments/engine.js
-      - name: Verify the ten authored encounters and 34 doors
+      - name: Verify the ten authored encounters and 35 doors
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -38,7 +38,7 @@ jobs:
           import json
           manifest = json.loads((root / "room-identities.json").read_text(encoding="utf-8"))
           rooms = manifest["rooms"]
-          assert manifest["count"] == 34 and len(rooms) == 34, "Room identity manifest must contain exactly 34 destinations"
+          assert manifest["count"] == 35 and len(rooms) == 35, "Room identity manifest must contain exactly 34 destinations"
           assert len({r["id"] for r in rooms}) == 34, "Room IDs must be unique"
           assert len({r["name"] for r in rooms}) == 34, "Room names must be unique"
           assert len({r["path"] for r in rooms}) == 34, "Room paths must be unique"
@@ -59,7 +59,7 @@ jobs:
               "010-composer": "composer",
           }
           doors = re.findall(r'<a class="room" href=', index)
-          assert len(doors) == 34, f"Expected 34 room-directory destinations, found {len(doors)}"
+          assert len(doors) == 35, f"Expected 35 room-directory destinations, found {len(doors)}"
           for folder, mode in modes.items():
               page = (root / "experiments" / folder / "index.html").read_text(encoding="utf-8")
               assert f"data-mode={mode}" in page, f"{folder}: page mode missing"
@@ -67,5 +67,5 @@ jobs:
               assert f'body[data-mode="{mode}"]' in styles, f"{mode}: art direction missing"
           veteran = (root / "veterans/index.html").read_text(encoding="utf-8")
           assert 'content="0;url=./hub.html"' in veteran, "Veteran Hub redirect is not project-relative"
-          print("PASS: 34 directory destinations; 10 distinct renderers and art directions; Veteran Hub relative redirect.")
+          print("PASS: 35 directory destinations; 10 distinct renderers and art directions; Veteran Hub relative redirect.")
           PY
