@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import RoomWorldValid from './components/RoomWorldValid';
+import LivingWorld from './components/LivingWorld';
 import OperatingAtlas from './components/OperatingAtlas';
 import ErrorBoundary from './components/ErrorBoundary';
 import { installCometGardenRuntime } from './engine/cometGardenRuntime';
@@ -28,12 +29,14 @@ installAudibilityOutcomeRuntime();
 installAudioEvidenceExportRuntime();
 installCometGardenRuntime();
 
-const isWorkshop = new URLSearchParams(window.location.search).get('view') === 'workshop';
+const view = new URLSearchParams(window.location.search).get('view');
+const isWorkshop = view === 'workshop';
+const isField = view === 'field';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      {isWorkshop ? <OperatingAtlas /> : <RoomWorldValid />}
+      {isWorkshop ? <OperatingAtlas /> : isField ? <RoomWorldValid /> : <LivingWorld />}
     </ErrorBoundary>
   </React.StrictMode>,
 );
