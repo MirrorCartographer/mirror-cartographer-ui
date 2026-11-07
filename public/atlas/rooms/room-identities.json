@@ -1,7 +1,7 @@
 {
   "schema": "mc.room-identity.v1",
   "purpose": "A room is a distinct environment with its own visual grammar, interaction grammar, temporal behavior, and consequence. Shared infrastructure may handle navigation, accessibility, and persistence; it must not flatten room identity. The interaction and memory fields are design contracts, not claims that those features are already implemented.",
-  "count": 35,
+  "count": 37,
   "acceptance": {
     "distinctAxes": [
       "palette",
@@ -440,17 +440,14 @@
     },
     {
       "id": "031",
-      "name": "Veteran Hub",
-      "path": "./veterans/",
-      "kind": "service",
-      "palette": "deep navy / calm cyan / high-contrast paper",
-      "visual": "clear service dashboard; urgent pathways distinct from exploration",
-      "interaction": "Choose a need area; receive explainable pathways, records checklist, and human handoff points.",
-      "temporal": "time-sensitive needs and follow-up states",
-      "memory": "locally held mission map and explicit next actions",
-      "implementation_status": "existing-destination-needs-audit",
-      "interaction_status": "design-contract-not-yet-implemented-or-verified",
-      "memory_status": "memory behavior not implemented or verified"
+      "name": "The Service Corridor",
+      "path": "./service-corridor/",
+      "kind": "experience",
+      "palette": "oxblood / tarnished brass / projector black / wet greenhouse green",
+      "visual": "a crooked passage behind the wallpaper; distressed institutional fragments, handbill typography, doors that reveal practical support only after entry",
+      "interaction": "Choose a passage into housing, benefits, health, records, education, or the existing Veteran Mission; follow official references without treating the site as a government service",
+      "temporal": "evergreen pathways with time-sensitive external program rules",
+      "memory": "no personal case data; external links only; no eligibility or account state stored"
     },
     {
       "id": "032",
@@ -507,6 +504,28 @@
       "implementation_status": "single-feature-player-present",
       "interaction_status": "embedded-player-and-configurable-feature-present",
       "memory_status": "program configuration is public; no personal viewing history is stored"
+    },
+    {
+      "id": "036",
+      "name": "The Body Archive",
+      "path": "./body-archive/",
+      "kind": "instrument",
+      "palette": "deep greenhouse / plum shadow / aged brass / oxidized moss",
+      "visual": "a field notebook crossed with a biological specimen archive; layered evidence slips and a living timeline",
+      "interaction": "Record dated observations, measurements, context, interpretations, confidence, and clinician questions; export a raw archive or a concise clinician note",
+      "temporal": "chronological observations with editable local records",
+      "memory": "browser-local storage only; export is user initiated; no diagnosis or server upload"
+    },
+    {
+      "id": "037",
+      "name": "Common Thread",
+      "path": "./common-thread/",
+      "kind": "instrument",
+      "palette": "bruise pink / sea glass / charcoal / tarnished gold",
+      "visual": "a hand-drawn constellation of human, spatial, and conceptual relationships; crooked lines and layered paper",
+      "interaction": "Add people, places, groups, projects, questions, and resources; connect a new point to an existing one and export the local constellation",
+      "temporal": "relationships evolve as points are added or removed",
+      "memory": "browser-local storage only; no public publishing, messaging, or account connection"
     }
   ]
 }
