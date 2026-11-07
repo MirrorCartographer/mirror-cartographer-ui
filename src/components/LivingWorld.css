@@ -86,3 +86,5 @@
 .vesper:hover{filter:drop-shadow(0 0 13px #e7c99599)}
 @media(max-width:760px){.vesper{right:7%;bottom:16%;scale:.82}}
 @media(prefers-reduced-motion:reduce){.vesper,.vesper-tail,.vesper-eye{animation:none}}
+
+.living-scene:after{content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:radial-gradient(ellipse 28vw 24vh at var(--field-x,50%) var(--field-y,50%),#e5cba01c,transparent 72%);mix-blend-mode:screen;transition:background-position .16s ease}
