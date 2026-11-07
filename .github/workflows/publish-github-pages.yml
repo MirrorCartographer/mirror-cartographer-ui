@@ -36,6 +36,8 @@ jobs:
       - name: Build static application for GitHub Pages
         env:
           VITE_DEPLOYMENT_PROVIDER: github-pages
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
         run: npm run build:pages
       - name: Verify hosted routes and immutable build identity
         run: |
