@@ -84,6 +84,10 @@
 @keyframes vesper-tail{50%{rotate:58deg}}
 @keyframes vesper-blink{0%,46%,49%,100%{scale:1 1}47.5%{scale:1 .08}}
 .vesper:hover{filter:drop-shadow(0 0 13px #e7c99599)}
+.vesper-name{position:absolute;left:4px;top:76px;white-space:nowrap;color:#e2c99f;font:8px 'DM Mono',monospace;letter-spacing:.13em;text-shadow:0 2px 5px #08070c}
+.vesper-name i{font-style:normal;color:#b8a99b;letter-spacing:.04em}
+.vesper:focus-visible,.morrow:focus-visible{outline:2px solid #e7c995;outline-offset:5px}
+
 @media(max-width:760px){.vesper{right:7%;bottom:16%;scale:.82}}
 @media(prefers-reduced-motion:reduce){.vesper,.vesper-tail,.vesper-eye{animation:none}}
 
