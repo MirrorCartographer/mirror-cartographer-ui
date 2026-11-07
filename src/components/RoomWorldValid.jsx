@@ -310,8 +310,8 @@ export default function RoomWorldValid() {
       </svg><span className="mc-collage-caption">FIG. 01 — THE THING THAT LOOKS BACK</span>
     </div>
     <section className="mc-zine-copy" aria-label="Welcome">
-      <p className="mc-zine-kicker">A FIELD GUIDE TO THE BEAUTIFULLY UNFINISHED</p><h1>MAKE A<br/>LITTLE <em>WEIRD.</em></h1>
-      <p className="mc-zine-deck">A living archive for music, strange ideas, symbolic machinery, art, and other things that refuse to behave.</p>
+      <p className="mc-zine-kicker">PERCEPTION IS NOT A FLOOR PLAN / THE MAP KEEPS MOVING</p><h1>THE WORLD<br/>KEEPS <em>SHIFTING.</em></h1>
+      <p className="mc-zine-deck">Fragments arrive out of order. A sound becomes a place. A memory changes shape. Some signals are noise; some are evidence; some are doors. Follow a thread. The rooms inside can hold a piece still long enough to work with it.</p>
       <div className="mc-zine-actions"><a href="./atlas/">WANDER IN <span>↗</span></a><a href="./atlas/rooms/music/">PLAY SOMETHING <span>♫</span></a></div>
       <p className="mc-zine-footnote">CURRENT FREQUENCY: ROOM {String(roomId).padStart(2,'0')} / {room.primary.toUpperCase()}</p>
     </section><div className="mc-zine-stamp" aria-hidden="true">NO<br/>FIXED<br/>MEANING</div>
