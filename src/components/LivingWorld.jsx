@@ -248,6 +248,9 @@ export default function LivingWorld() {
       const samples = new Uint8Array(analyser.fftSize);
       micRef.current = { stream, context, source, analyser, frame:0 };
       setMicState('listening');
+      let smoothedLevel = 0;
+      let lastPublishedLevel = 0;
+      let framesSincePublish = 0;
       const sample = () => {
         if (!micRef.current.analyser || requestId !== micRequestRef.current) return;
         analyser.getByteTimeDomainData(samples);
@@ -256,8 +259,14 @@ export default function LivingWorld() {
           const value = (samples[i] - 128) / 128;
           sum += value * value;
         }
-        const level = Math.min(1, Math.sqrt(sum / samples.length) * 5);
-        setMicLevel(level);
+        const measuredLevel = Math.min(1, Math.sqrt(sum / samples.length) * 5);
+        smoothedLevel = smoothedLevel * 0.72 + measuredLevel * 0.28;
+        framesSincePublish += 1;
+        if (framesSincePublish >= 6 || Math.abs(smoothedLevel - lastPublishedLevel) > 0.025) {
+          lastPublishedLevel = smoothedLevel;
+          framesSincePublish = 0;
+          setMicLevel(smoothedLevel);
+        }
         micRef.current.frame = window.requestAnimationFrame(sample);
       };
       sample();
