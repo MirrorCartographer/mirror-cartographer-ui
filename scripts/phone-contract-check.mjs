@@ -43,8 +43,8 @@ const visibleTextNodes = [...visibleSurface.matchAll(/<(?:p|span|div|button|labe
 assert('no visible instruction copy in app body', visibleTextNodes.length === 0, visibleTextNodes.map((match) => match[1].trim()).join(' | '));
 assert('smoke test exists', pkg.scripts?.['test:smoke'] === 'playwright test tests/smoke.spec.js --reporter=line');
 assert('smoke test uses phone viewport', smoke.includes('390') && smoke.includes('844'));
-assert('smoke test asserts wordless body without treating interface glyphs as copy', smoke.includes('visibleText.replace') && smoke.includes('readableText).toBe'));
-assert('smoke test asserts wordless body before and after first tap', smoke.indexOf('await expectWordlessBody(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectWordlessBody(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
+assert('smoke test asserts visible field copy alongside the wordless canvas', smoke.includes('const expectFieldCopy') && smoke.includes(".mc-zine-copy h1") && smoke.includes("button.world-surface"));
+assert('smoke test asserts field copy before and after first gesture', smoke.indexOf('await expectFieldCopy(page);') < smoke.indexOf('await sky.tap') && smoke.indexOf('await expectFieldCopy(page);', smoke.indexOf('await sky.tap')) > smoke.indexOf('await sky.tap'));
 assert('smoke test probes no autoplay before first tap', smoke.includes('__mirrorAudioContextsCreated') && smoke.includes('expect(await audioContextsCreated(page)).toBe(0)'));
 assert('smoke test keeps sound off until the visitor explicitly enables it', smoke.includes('await sound.click()') && smoke.includes('expect.poll(async () => audioContextsCreated(page)).toBeGreaterThanOrEqual(1)'));
 assert('playwright uses touch-capable mobile profile', pw.includes('isMobile: true') && pw.includes('hasTouch: true'));
