@@ -13,6 +13,7 @@ const write = (key, value) => localStorage.setItem(key, JSON.stringify(value));
 
 const FEATURES = [
   ['atlas','Operating atlas','Follow the threads between experiences, ideas, evidence, and the work they become.'],
+  ['reality','Reality ledger','Inspect what actually works locally, what remains a prototype, and what is not connected.'],
   ['country','The Living Country','An interactive, hand-marked field atlas: fragments, context shifts, investigation, and a clear way back to grounded care.'],
   ['archive','Conversation archive','Find the fragments that return, change, contradict one another, or reveal a thread across time.'],
   ['accounts','Identity and accounts','Local profile plus provider-ready account boundary.'],
@@ -47,6 +48,41 @@ const FEATURES = [
   ['arc','ARC lab','Solver expansion tracker and benchmark record.'],
 ];
 
+const CAPABILITY_REALITY = [
+  {id:'atlas',title:'Operating atlas',level:'working local',works:'Dashboard, navigation, and local counts.',gap:'Not a live multi-user operating console.'},
+  {id:'country',title:'The Living Country',level:'working local',works:'Eight interactive LYR territories, fragment notes, context lenses, investigation records, and JSON export.',gap:'Browser-local only; no cross-device sync, account, or shared collaboration.'},
+  {id:'judgment',title:'Human Judgment Lab',level:'working local',works:'Seeded simulation with explicit assumptions, accuracy/agreement metrics, ties, and reproducible JSON export.',gap:'Synthetic outcomes; not a field study or estimate of real evaluator behavior.'},
+  {id:'archive',title:'Conversation archive',level:'manual prototype',works:'User-entered fragments can be searched and stored locally.',gap:'No complete conversation import or automatic cross-repository history graph.'},
+  {id:'accounts',title:'Identity and accounts',level:'not connected',works:'Local display-name and provider preference fields.',gap:'No OAuth, server-side identity, authenticated sessions, or account recovery.'},
+  {id:'memory',title:'Persistent memory',level:'working local',works:'Local browser storage plus JSON export and reset.',gap:'Not encrypted, not synced, and not a server-backed memory service.'},
+  {id:'sessions',title:'Session modes',level:'manual prototype',works:'Stores a selected mode in the local profile.',gap:'No facilitator workflow, group session, or session orchestration.'},
+  {id:'tone',title:'Tone modes',level:'manual prototype',works:'Stores a symbolic, neutral, scientific, or adaptive preference.',gap:'Does not yet transform every lane or control a connected model.'},
+  {id:'symbols',title:'Symbol engine',level:'manual prototype',works:'User-entered glyphs, meanings, and links are stored locally.',gap:'Not yet wired to Repository C’s full authored corpus or its deterministic parser.'},
+  {id:'body',title:'Body map',level:'working local',works:'Places and removes spatial markers with user-entered notes.',gap:'No clinical measurement, anatomical inference, or clinician sync.'},
+  {id:'health',title:'Human health lane',level:'working local',works:'Stores user-entered symptom, lab, imaging, medication, and question records.',gap:'No medical-record connector, automatic interpretation, or diagnosis.'},
+  {id:'animals',title:'Animal health lane',level:'working local',works:'Stores local animal profiles and continuity notes.',gap:'No veterinary record connector or medication verification.'},
+  {id:'vet',title:'Veterinary connector',level:'not connected',works:'Connection methods and statuses can be recorded.',gap:'No clinic API, authenticated provider connection, or record retrieval.'},
+  {id:'vet-import',title:'Vet record import',level:'manual prototype',works:'Can queue file metadata in the local import list.',gap:'Does not parse file contents or extract a clinical timeline.'},
+  {id:'fiv',title:'FIV research lane',level:'manual prototype',works:'Can organize user-entered claims, sources, and evidence labels.',gap:'No live literature retrieval or automatic source verification.'},
+  {id:'proof',title:'Evidence graph',level:'manual prototype',works:'Stores claim records and displays a simple local graph/list.',gap:'No automatic provenance resolution, causal inference, or source validation.'},
+  {id:'concepts',title:'Concept graph',level:'manual prototype',works:'Stores named concepts and manually entered relationships.',gap:'No automatic semantic relationship engine.'},
+  {id:'decisions',title:'Decision log',level:'working local',works:'Stores decisions, rationale, and manually selected status.',gap:'No approval workflow or automatic supersession analysis.'},
+  {id:'projects',title:'Project graph',level:'working local',works:'Stores project names, status, and manually entered dependencies.',gap:'No dependency scheduler or automatic timeline reconstruction.'},
+  {id:'creative',title:'Creative world',level:'working local',works:'Runs the contained audiovisual experience in the browser.',gap:'No collaborative live performance or server-side media session.'},
+  {id:'access',title:'Accessibility',level:'manual prototype',works:'Stores text, contrast, motion, and scale preferences in the local profile.',gap:'Not every component has been audited against every preference.'},
+  {id:'crisis',title:'Crisis override',level:'working local',works:'Opens direct safety-first text and crisis-resource links.',gap:'Not a monitored service or emergency response system.'},
+  {id:'privacy',title:'Privacy controls',level:'manual prototype',works:'Adds local classification labels and a public-safe preference.',gap:'Labels do not encrypt data, enforce access control, or redact automatically.'},
+  {id:'imports',title:'Data import center',level:'manual prototype',works:'Queues selected file names, sizes, and MIME types.',gap:'Does not read, parse, or upload file contents.'},
+  {id:'artifacts',title:'Artifact library',level:'working local',works:'Stores local artifact descriptions and user-managed versions.',gap:'No content-addressed storage or cross-device artifact custody.'},
+  {id:'demos',title:'Public demo packets',level:'manual prototype',works:'Adds canned public-demo metadata records.',gap:'Does not generate or redact a complete evidence packet.'},
+  {id:'offers',title:'Paid offers',level:'manual prototype',works:'Stores service definitions, prices, and status drafts.',gap:'No published storefront, booking, or checkout.'},
+  {id:'support',title:'Payments and support',level:'manual prototype',works:'Stores labels and external destination URLs.',gap:'No payment processing or account verification.'},
+  {id:'money',title:'Money and stability',level:'working local',works:'Calculates a simple gap from entered need and expected amounts.',gap:'No financial-account connection or forecast.'},
+  {id:'film',title:'Proof film',level:'manual prototype',works:'Stores a scene list and production status.',gap:'No media editing, asset pipeline, or render service.'},
+  {id:'offline',title:'Standalone fallback',level:'not connected',works:'JSON export is available in local lanes.',gap:'No complete installable PWA or verified offline restore.'},
+  {id:'public',title:'Public-safe cleanup',level:'manual prototype',works:'Displays a review checklist.',gap:'Checklist state is not persisted and redaction is not automated.'},
+  {id:'arc',title:'ARC lab',level:'manual prototype',works:'Stores user-entered experiment notes and scores.',gap:'Does not execute or benchmark a solver from this lane.'},
+];
 const seed = {
   profile: { name: '', mode: 'persistent', tone: 'adaptive' },
   archive: [], symbols: [], bodyMarks: [], health: [], animals: [], vetSources: [], research: [], evidence: [], concepts: [], decisions: [], projects: [],
@@ -132,6 +168,7 @@ export default function OperatingAtlas() {
     if (crisis || active==='crisis') return <section className="lane crisis"><h2>Crisis override</h2><p>Symbolic interpretation is suspended. Use direct language, identify immediate danger, and focus only on the next concrete action. This switch changes the interface; it is not an emergency response service.</p><textarea placeholder="What is happening right now?"/><div className="crisis-resources"><p><strong>Immediate danger or medical emergency:</strong> call 911.</p><p><strong>U.S. crisis support:</strong> call or text 988.</p><p><strong>Veterans:</strong> call 988 and press 1, or text 838255.</p><a href="https://988lifeline.org/" target="_blank" rel="noreferrer">988 Lifeline ↗</a><a href="https://www.veteranscrisisline.net/" target="_blank" rel="noreferrer">Veterans Crisis Line ↗</a></div><button onClick={()=>setCrisis(false)}>Exit crisis mode</button></section>;
     if (active==='atlas') return <Dashboard state={state} setActive={setActive} backendStatus={backendStatus}/>;
     if (active==='country') return <LivingCountry/>;
+    if (active==='reality') return <section className="lane"><header><h2>Reality ledger</h2><p>This is the boundary between what the interface does today and what the architecture merely names. A label is not a connection. A form is not a service. A prototype is not a production system.</p></header><div className="reality-ledger">{CAPABILITY_REALITY.map(item=><article className="reality-item" key={item.id}><div className="reality-item-head"><strong>{item.title}</strong><span className={'reality-status '+item.level.replaceAll(' ','-')}>{item.level}</span></div><p><b>Works now:</b> {item.works}</p><p><b>Not yet:</b> {item.gap}</p></article>)}</div><p className="hint">Scope: current browser implementation and connected repository evidence. This ledger does not imply that private repository data is exposed to the public site.</p></section>;
     if (active==='judgment') return <section className="lane"><header><h2>Human Judgment Lab</h2><p>Agreement is a property of the panel. Accuracy is a property of the answer against a defensible reference. They can move independently.</p></header><article className="list-card"><strong>Experiment 001 / The Consensus Trap</strong><p>Run a seeded simulation. Change the evidence signal, shared bias, independent noise, panel size, and sample count. Export the exact parameters and results so another person can reproduce the run.</p><a href="./field-instruments/consensus-trap.html">OPEN THE REPRODUCIBLE EXPERIMENT ↗</a></article><p className="hint">The experiment uses synthetic outcomes and illustrative parameters. It does not estimate real evaluator behavior.</p></section>;
     if (active==='archive') return <Archive state={state} add={add} remove={remove}/>;
     if (active==='accounts') return <section className="lane"><h2>Identity and accounts</h2><Form fields={[{name:'name',label:'Display name'},{name:'provider',label:'Provider',type:'select',options:['local-only','email-ready','GitHub-ready']}]} onSubmit={(v)=>patch('profile',{...state.profile,...v})}/><pre>{JSON.stringify(state.profile,null,2)}</pre><p className="hint">Provider buttons are architecture boundaries; production OAuth still requires server credentials.</p></section>;
